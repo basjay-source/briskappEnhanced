@@ -10,7 +10,14 @@ import {
   Users,
   Download,
   Upload,
-  Brain
+  Brain,
+  Heart,
+  PiggyBank,
+  Users2,
+  Shield,
+  Gift,
+  Home,
+  Banknote
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -51,11 +58,25 @@ export default function PersonalTax() {
       color: 'text-purple-600'
     },
     {
-      title: 'Clients Served',
-      value: '34',
-      change: '+6 new clients',
-      icon: Users,
-      color: 'text-orange-600'
+      title: 'IHT Exposure',
+      value: '£2.1M',
+      change: 'Across 8 estates',
+      icon: Heart,
+      color: 'text-red-600'
+    },
+    {
+      title: 'Pension Allowance',
+      value: '87%',
+      change: 'Average utilization',
+      icon: PiggyBank,
+      color: 'text-indigo-600'
+    },
+    {
+      title: 'Family Tax Savings',
+      value: '£12,400',
+      change: 'Through optimization',
+      icon: Users2,
+      color: 'text-teal-600'
     }
   ]
 
@@ -157,16 +178,19 @@ export default function PersonalTax() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-5'}`}>
+          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-8'}`}>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="returns">SA Returns</TabsTrigger>
             {!isMobile && <TabsTrigger value="cgt">CGT Calculator</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="iht-planning">IHT Planning</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="pension-planning">Pension Planning</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="family-tax">Family Tax</TabsTrigger>}
             {!isMobile && <TabsTrigger value="optimization">Optimization</TabsTrigger>}
             {!isMobile && <TabsTrigger value="filing">Filing</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}>
+            <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon
                 return (
@@ -253,6 +277,14 @@ export default function PersonalTax() {
                       <div className="p-3 bg-purple-50 rounded-lg">
                         <p className="text-sm font-medium text-purple-900">Dividend Strategy</p>
                         <p className="text-xs text-purple-700">Optimize timing for 2 director clients</p>
+                      </div>
+                      <div className="p-3 bg-red-50 rounded-lg">
+                        <p className="text-sm font-medium text-red-900">IHT Planning</p>
+                        <p className="text-xs text-red-700">2 estates need gift planning review</p>
+                      </div>
+                      <div className="p-3 bg-teal-50 rounded-lg">
+                        <p className="text-sm font-medium text-teal-900">Family Tax Planning</p>
+                        <p className="text-xs text-teal-700">Marriage allowance opportunities for 5 couples</p>
                       </div>
                     </div>
                   </CardContent>
@@ -457,6 +489,283 @@ export default function PersonalTax() {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="iht-planning" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-red-600" />
+                  Inheritance Tax Planning
+                </CardTitle>
+                <CardDescription>IHT mitigation strategies and estate planning</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="estate-value">Total Estate Value</Label>
+                      <Input id="estate-value" placeholder="£0.00" />
+                    </div>
+                    <div>
+                      <Label htmlFor="nil-rate-band">Nil Rate Band Available</Label>
+                      <Input id="nil-rate-band" value="£325,000" readOnly />
+                    </div>
+                    <div>
+                      <Label htmlFor="residence-nil-rate">Residence Nil Rate Band</Label>
+                      <Input id="residence-nil-rate" value="£175,000" readOnly />
+                    </div>
+                    <div>
+                      <Label htmlFor="gifts-made">Gifts Made (Last 7 Years)</Label>
+                      <Input id="gifts-made" placeholder="£0.00" />
+                    </div>
+                    <Button className="w-full">
+                      <Calculator className="h-4 w-4 mr-2" />
+                      Calculate IHT Liability
+                    </Button>
+                  </div>
+                  <div className="space-y-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">IHT Calculation</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span>Estate Value</span>
+                            <span className="font-semibold">£0.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Total Nil Rate Bands</span>
+                            <span>£500,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Taxable Estate</span>
+                            <span className="font-semibold">£0.00</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2">
+                            <span>IHT Due (40%)</span>
+                            <span className="font-bold text-lg">£0.00</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Gift Planning</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="p-3 bg-green-50 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Gift className="h-4 w-4 text-green-600" />
+                              <span className="text-sm font-medium">Annual Exemption</span>
+                            </div>
+                            <p className="text-xs text-green-700">£3,000 per year available</p>
+                          </div>
+                          <div className="p-3 bg-blue-50 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Home className="h-4 w-4 text-blue-600" />
+                              <span className="text-sm font-medium">Potentially Exempt Transfers</span>
+                            </div>
+                            <p className="text-xs text-blue-700">7-year rule applies</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="pension-planning" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PiggyBank className="h-5 w-5 text-indigo-600" />
+                  Pension Planning & Optimization
+                </CardTitle>
+                <CardDescription>Annual and lifetime allowance planning</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="annual-income">Annual Income</Label>
+                      <Input id="annual-income" placeholder="£0.00" />
+                    </div>
+                    <div>
+                      <Label htmlFor="current-contributions">Current Pension Contributions</Label>
+                      <Input id="current-contributions" placeholder="£0.00" />
+                    </div>
+                    <div>
+                      <Label htmlFor="pension-value">Current Pension Value</Label>
+                      <Input id="pension-value" placeholder="£0.00" />
+                    </div>
+                    <div>
+                      <Label htmlFor="unused-allowance">Unused Allowance (3 years)</Label>
+                      <Input id="unused-allowance" placeholder="£0.00" />
+                    </div>
+                    <Button className="w-full">
+                      <Calculator className="h-4 w-4 mr-2" />
+                      Optimize Contributions
+                    </Button>
+                  </div>
+                  <div className="space-y-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Annual Allowance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span>Standard Allowance</span>
+                            <span>£40,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Tapered Allowance</span>
+                            <span className="font-semibold">£40,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Used This Year</span>
+                            <span>£0</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2">
+                            <span>Remaining Allowance</span>
+                            <span className="font-bold text-lg">£40,000</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Lifetime Allowance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span>Lifetime Allowance</span>
+                            <span>£1,073,100</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Current Value</span>
+                            <span>£0</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Utilization</span>
+                            <span className="font-semibold">0%</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2">
+                            <span>Remaining Capacity</span>
+                            <span className="font-bold text-lg">£1,073,100</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="family-tax" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users2 className="h-5 w-5 text-teal-600" />
+                  Family Tax Planning
+                </CardTitle>
+                <CardDescription>Income splitting and family allowance optimization</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Marriage Allowance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="spouse1-income">Spouse 1 Income</Label>
+                            <Input id="spouse1-income" placeholder="£0.00" />
+                          </div>
+                          <div>
+                            <Label htmlFor="spouse2-income">Spouse 2 Income</Label>
+                            <Input id="spouse2-income" placeholder="£0.00" />
+                          </div>
+                          <Button className="w-full" variant="outline">
+                            Calculate Marriage Allowance
+                          </Button>
+                          <div className="p-3 bg-teal-50 rounded-lg">
+                            <p className="text-sm font-medium text-teal-900">Potential Saving</p>
+                            <p className="text-lg font-bold text-teal-600">£252</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Child Benefit</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="children-count">Number of Children</Label>
+                            <Input id="children-count" type="number" placeholder="0" />
+                          </div>
+                          <div>
+                            <Label htmlFor="high-earner-income">High Earner Income</Label>
+                            <Input id="high-earner-income" placeholder="£0.00" />
+                          </div>
+                          <Button className="w-full" variant="outline">
+                            Calculate HICBC
+                          </Button>
+                          <div className="p-3 bg-orange-50 rounded-lg">
+                            <p className="text-sm font-medium text-orange-900">HICBC Charge</p>
+                            <p className="text-lg font-bold text-orange-600">£0</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Family Investment Planning</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="p-4 border rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Banknote className="h-4 w-4 text-blue-600" />
+                            <span className="font-medium">Junior ISAs</span>
+                          </div>
+                          <p className="text-sm text-gray-600">£9,000 annual allowance per child</p>
+                          <Button size="sm" className="mt-2" variant="outline">Setup</Button>
+                        </div>
+                        <div className="p-4 border rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Shield className="h-4 w-4 text-green-600" />
+                            <span className="font-medium">Education Planning</span>
+                          </div>
+                          <p className="text-sm text-gray-600">Tax-efficient education funding</p>
+                          <Button size="sm" className="mt-2" variant="outline">Plan</Button>
+                        </div>
+                        <div className="p-4 border rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Users className="h-4 w-4 text-purple-600" />
+                            <span className="font-medium">Income Splitting</span>
+                          </div>
+                          <p className="text-sm text-gray-600">Optimize family income distribution</p>
+                          <Button size="sm" className="mt-2" variant="outline">Analyze</Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </CardContent>
             </Card>
