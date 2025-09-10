@@ -63,24 +63,43 @@ export default function CorporationTax() {
   const aiRecommendations = [
     {
       type: 'savings',
-      title: 'R&D Relief Opportunity',
-      description: 'Additional £12,000 in qualifying expenditure identified for R&D claims.',
+      title: 'R and D Relief Opportunity',
+      description: 'Additional £12,000 in qualifying expenditure identified for R and D claims.',
       impact: '£3,600 tax saving',
-      confidence: 94
+      confidence: 94,
+      action: 'Review software development costs for Q3-Q4'
     },
     {
       type: 'timing',
       title: 'Capital Allowances Timing',
       description: 'Consider accelerating equipment purchases to maximize AIA relief.',
       impact: '£4,200 potential saving',
-      confidence: 87
+      confidence: 87,
+      action: 'Purchase planned equipment before year-end'
     },
     {
       type: 'compliance',
       title: 'Filing Deadline Alert',
       description: 'CT600 due in 45 days. All supporting documentation ready.',
       impact: 'Avoid penalties',
-      confidence: 99
+      confidence: 99,
+      action: 'Schedule final review meeting'
+    },
+    {
+      type: 'optimization',
+      title: 'Group Relief Optimization',
+      description: 'Brisk Services Ltd losses can offset £85,000 of current year profits.',
+      impact: '£20,400 tax saving',
+      confidence: 92,
+      action: 'Submit group relief election'
+    },
+    {
+      type: 'planning',
+      title: 'Patent Box Eligibility',
+      description: 'Recent IP development may qualify for 10% patent box rate.',
+      impact: '£7,650 annual saving',
+      confidence: 78,
+      action: 'Assess patent application timeline'
     }
   ]
 
@@ -214,45 +233,142 @@ export default function CorporationTax() {
                     <h3 className="text-lg font-semibold">R and D Claims</h3>
                     <Button size="sm">Add New Claim</Button>
                   </div>
-                  <div className="space-y-4">
-                    {rdClaims.map((claim, index) => (
-                      <div key={index} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium">{claim.project}</h4>
-                            <p className="text-sm text-gray-600">
-                              Expenditure: £{claim.expenditure.toLocaleString()} | 
-                              Relief: £{claim.relief.toLocaleString()}
-                            </p>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">R and D Calculator</CardTitle>
+                        <CardDescription>Calculate relief for qualifying expenditure</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Claim Type</label>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" className="bg-blue-50 border-blue-200">SME Scheme</Button>
+                            <Button variant="outline" size="sm">RDEC Scheme</Button>
                           </div>
-                          <Badge className={
-                            claim.status === 'approved' ? 'bg-green-100 text-green-800' :
-                            claim.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
-                          }>
-                            {claim.status}
-                          </Badge>
                         </div>
-                      </div>
-                    ))}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Qualifying Expenditure</label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
+                            <input 
+                              type="number" 
+                              className="w-full pl-8 pr-3 py-2 border rounded-md"
+                              placeholder="0"
+                              defaultValue="45000"
+                            />
+                          </div>
+                        </div>
+                        <div className="p-3 bg-green-50 rounded-lg">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-green-700">Enhanced Expenditure (130%)</span>
+                            <span className="font-semibold text-green-900">£58,500</span>
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-sm text-green-700">Additional Relief</span>
+                            <span className="font-semibold text-green-900">£13,500</span>
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-sm text-green-700">Tax Saving (19%)</span>
+                            <span className="font-semibold text-green-900">£2,565</span>
+                          </div>
+                        </div>
+                        <Button className="w-full">Calculate Relief</Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">Current Claims</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {rdClaims.map((claim, index) => (
+                            <div key={index} className="p-3 border rounded-lg">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-medium text-sm">{claim.project}</h4>
+                                  <p className="text-xs text-gray-600">
+                                    £{claim.expenditure.toLocaleString()} → £{claim.relief.toLocaleString()} relief
+                                  </p>
+                                </div>
+                                <Badge className={
+                                  claim.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                  claim.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }>
+                                  {claim.status}
+                                </Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-medium text-blue-900">R and D Relief Summary</h4>
-                    <div className="grid grid-cols-3 gap-4 mt-2">
-                      <div>
-                        <p className="text-sm text-blue-700">Total Expenditure</p>
-                        <p className="font-semibold text-blue-900">£105,000</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-blue-700">Total Relief</p>
-                        <p className="font-semibold text-blue-900">£31,500</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-blue-700">Tax Saving</p>
-                        <p className="font-semibold text-blue-900">£5,985</p>
-                      </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-medium text-blue-900">Total Expenditure</h4>
+                      <p className="text-2xl font-bold text-blue-600">£105,000</p>
+                      <p className="text-sm text-blue-700">Across 3 projects</p>
+                    </div>
+                    <div className="p-4 bg-green-50 rounded-lg">
+                      <h4 className="font-medium text-green-900">Total Relief</h4>
+                      <p className="text-2xl font-bold text-green-600">£31,500</p>
+                      <p className="text-sm text-green-700">30% enhancement rate</p>
+                    </div>
+                    <div className="p-4 bg-orange-50 rounded-lg">
+                      <h4 className="font-medium text-orange-900">Tax Saving</h4>
+                      <p className="text-2xl font-bold text-orange-600">£5,985</p>
+                      <p className="text-sm text-orange-700">19% corporation tax</p>
                     </div>
                   </div>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">R and D Eligibility Checker</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                          <h5 className="font-medium">Qualifying Activities</h5>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span>Scientific or technological advancement</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span>Resolving scientific uncertainty</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span>Systematic investigation</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <h5 className="font-medium">Qualifying Costs</h5>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Staff costs (65% of total)</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Software and consumables</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Subcontracted R and D</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
 
@@ -587,24 +703,39 @@ export default function CorporationTax() {
                   <div key={index} className={`p-3 rounded-lg ${
                     rec.type === 'savings' ? 'bg-green-50 border border-green-200' :
                     rec.type === 'timing' ? 'bg-blue-50 border border-blue-200' :
-                    'bg-yellow-50 border border-yellow-200'
+                    rec.type === 'compliance' ? 'bg-yellow-50 border border-yellow-200' :
+                    rec.type === 'optimization' ? 'bg-purple-50 border border-purple-200' :
+                    'bg-orange-50 border border-orange-200'
                   }`}>
                     <div className="flex items-start gap-2">
                       {rec.type === 'savings' && <TrendingUp className="h-4 w-4 text-green-600 mt-0.5" />}
                       {rec.type === 'timing' && <Calculator className="h-4 w-4 text-blue-600 mt-0.5" />}
                       {rec.type === 'compliance' && <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />}
+                      {rec.type === 'optimization' && <Target className="h-4 w-4 text-purple-600 mt-0.5" />}
+                      {rec.type === 'planning' && <Brain className="h-4 w-4 text-orange-600 mt-0.5" />}
                       <div className="flex-1">
                         <h4 className="font-medium text-sm">{rec.title}</h4>
                         <p className="text-xs text-gray-600 mt-1">{rec.description}</p>
                         <p className="text-xs font-medium text-green-600 mt-1">{rec.impact}</p>
-                        <div className="flex items-center gap-1 mt-2">
-                          <span className="text-xs text-gray-500">Confidence:</span>
-                          <span className="text-xs font-medium">{rec.confidence}%</span>
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-gray-500">Confidence:</span>
+                            <span className="text-xs font-medium">{rec.confidence}%</span>
+                          </div>
+                          <Button size="sm" variant="outline" className="text-xs h-6 px-2">
+                            {rec.action}
+                          </Button>
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
+                <div className="pt-3 border-t">
+                  <Button className="w-full" size="sm">
+                    <Brain className="h-4 w-4 mr-2" />
+                    Generate Tax Strategy Report
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
