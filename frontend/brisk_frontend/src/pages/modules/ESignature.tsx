@@ -203,7 +203,7 @@ export default function ESignature() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">e-Signature</h1>
-            <p className="text-gray-600">Digital signing workflows & document management</p>
+            <p className="text-gray-600">Digital signing workflows and document management</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size={isMobile ? "sm" : "default"}>
@@ -312,7 +312,7 @@ export default function ESignature() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-brisk-primary" />
-                  Security & Compliance
+                  Security and Compliance
                 </CardTitle>
                 <CardDescription>Digital signature security and audit information</CardDescription>
               </CardHeader>

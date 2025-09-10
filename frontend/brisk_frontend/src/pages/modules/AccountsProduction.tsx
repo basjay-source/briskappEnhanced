@@ -200,7 +200,7 @@ export default function AccountsProduction() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card>
                       <CardHeader className="pb-3">
-                        <CardTitle className="text-base">Profit & Loss</CardTitle>
+                        <CardTitle className="text-base">Profit &amp; Loss</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2 text-sm">

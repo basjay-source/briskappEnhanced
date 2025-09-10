@@ -178,7 +178,7 @@ export default function Bookkeeping() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">Bookkeeping</h1>
-            <p className="text-gray-600">Bank feeds, VAT MTD, reconciliation & management accounts</p>
+            <p className="text-gray-600">Bank feeds, VAT MTD, reconciliation and management accounts</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size={isMobile ? "sm" : "default"}>
@@ -536,7 +536,7 @@ export default function Bookkeeping() {
                   <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
                     <CardContent className="p-6 text-center">
                       <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">P&L Report</h3>
+                      <h3 className="font-semibold mb-1">P&amp;L Report</h3>
                       <p className="text-sm text-gray-600 mb-3">Profit and loss statement</p>
                       <Button size="sm" variant="outline">Generate</Button>
                     </CardContent>
