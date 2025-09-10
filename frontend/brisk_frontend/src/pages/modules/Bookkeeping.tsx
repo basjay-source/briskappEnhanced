@@ -42,7 +42,10 @@ import {
   CreditCard as Invoice,
   Phone,
   Mail,
-  DollarSign
+  DollarSign,
+  RotateCcw,
+  Check,
+  Tag
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -56,6 +59,27 @@ import ResponsiveLayout from '@/components/ResponsiveLayout'
 export default function Bookkeeping() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
+
+  const journalEntries = [
+    { id: 'JE001', date: '2024-01-20', reference: 'ADJ001', description: 'Year-end depreciation adjustment', debitAccount: 'Depreciation Expense', creditAccount: 'Accumulated Depreciation', amount: 5000, status: 'Posted' },
+    { id: 'JE002', date: '2024-01-19', reference: 'ADJ002', description: 'Accrued interest expense', debitAccount: 'Interest Expense', creditAccount: 'Interest Payable', amount: 1250, status: 'Posted' },
+    { id: 'JE003', date: '2024-01-18', reference: 'ADJ003', description: 'Prepaid insurance adjustment', debitAccount: 'Insurance Expense', creditAccount: 'Prepaid Insurance', amount: 800, status: 'Draft' },
+    { id: 'JE004', date: '2024-01-17', reference: 'REV001', description: 'Reverse previous accrual', debitAccount: 'Accrued Expenses', creditAccount: 'Cash', amount: 2100, status: 'Posted' }
+  ]
+
+  const inventoryItems = [
+    { id: 'INV001', sku: 'PROD-001', name: 'Premium Widget A', category: 'Electronics', quantity: 150, unitCost: 25.50, totalValue: 3825, reorderLevel: 50, supplier: 'TechCorp Ltd', lastUpdated: '2024-01-20' },
+    { id: 'INV002', sku: 'PROD-002', name: 'Standard Widget B', category: 'Electronics', quantity: 75, unitCost: 18.75, totalValue: 1406.25, reorderLevel: 25, supplier: 'ComponentCo', lastUpdated: '2024-01-19' },
+    { id: 'INV003', sku: 'SERV-001', name: 'Service Package Pro', category: 'Services', quantity: 0, unitCost: 0, totalValue: 0, reorderLevel: 0, supplier: 'Internal', lastUpdated: '2024-01-18' },
+    { id: 'INV004', sku: 'PROD-003', name: 'Deluxe Widget C', category: 'Electronics', quantity: 200, unitCost: 32.00, totalValue: 6400, reorderLevel: 75, supplier: 'PremiumParts Inc', lastUpdated: '2024-01-17' }
+  ]
+
+  const fixedAssets = [
+    { id: 'FA001', name: 'Office Building', category: 'Property', purchaseDate: '2020-01-15', purchaseCost: 500000, accumulatedDepreciation: 50000, netBookValue: 450000, depreciationMethod: 'Straight Line', usefulLife: 25, location: 'Head Office' },
+    { id: 'FA002', name: 'Company Vehicle - BMW X5', category: 'Vehicles', purchaseDate: '2022-06-10', purchaseCost: 65000, accumulatedDepreciation: 13000, netBookValue: 52000, depreciationMethod: 'Reducing Balance', usefulLife: 5, location: 'Fleet' },
+    { id: 'FA003', name: 'Manufacturing Equipment', category: 'Machinery', purchaseDate: '2021-03-20', purchaseCost: 125000, accumulatedDepreciation: 31250, netBookValue: 93750, depreciationMethod: 'Straight Line', usefulLife: 10, location: 'Factory Floor' },
+    { id: 'FA004', name: 'IT Infrastructure', category: 'Technology', purchaseDate: '2023-01-05', purchaseCost: 45000, accumulatedDepreciation: 4500, netBookValue: 40500, depreciationMethod: 'Straight Line', usefulLife: 3, location: 'Server Room' }
+  ]
   const [selectedAccount, setSelectedAccount] = useState('')
   const [selectedCurrency, setSelectedCurrency] = useState('GBP')
 
@@ -521,16 +545,22 @@ export default function Bookkeeping() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-6' : 'grid-cols-13'}`}>
+          <TabsList 
+            className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6 xl:grid-cols-16'}`}
+            style={!isMobile ? { gridTemplateColumns: 'repeat(16, minmax(0, 1fr))' } : undefined}
+          >
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="sales">Sales</TabsTrigger>
             <TabsTrigger value="purchases">Purchases</TabsTrigger>
             <TabsTrigger value="banking">Banking</TabsTrigger>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
+            <TabsTrigger value="journals">Journals</TabsTrigger>
             <TabsTrigger value="vat">VAT Returns</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="budgets">Budgets</TabsTrigger>
             <TabsTrigger value="projections">Projections</TabsTrigger>
+            <TabsTrigger value="inventory">Inventory</TabsTrigger>
+            <TabsTrigger value="fixedassets">Fixed Assets</TabsTrigger>
             <TabsTrigger value="property">Property</TabsTrigger>
             <TabsTrigger value="ecommerce">eCommerce</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
@@ -716,6 +746,128 @@ export default function Bookkeeping() {
                           {quote.status === 'Accepted' && (
                             <Button variant="ghost" size="sm">
                               <Plus className="h-3 w-3" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="journals" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold">Journal Entries</h2>
+                <p className="text-gray-600">Manual journal entries, adjustments, and audit trails</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Journal Entry
+                </Button>
+                <Button>
+                  <FileText className="h-4 w-4 mr-2" />
+                  Export Journals
+                </Button>
+              </div>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Entries</p>
+                      <p className="text-2xl font-bold">247</p>
+                      <p className="text-xs text-gray-500">This month</p>
+                    </div>
+                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <FileText className="h-4 w-4 text-blue-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Draft Entries</p>
+                      <p className="text-2xl font-bold">12</p>
+                      <p className="text-xs text-gray-500">Pending review</p>
+                    </div>
+                    <div className="h-8 w-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <Edit className="h-4 w-4 text-yellow-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Adjustments</p>
+                      <p className="text-2xl font-bold">18</p>
+                      <p className="text-xs text-gray-500">Year-end</p>
+                    </div>
+                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                      <Settings className="h-4 w-4 text-purple-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Reversals</p>
+                      <p className="text-2xl font-bold">5</p>
+                      <p className="text-xs text-gray-500">This period</p>
+                    </div>
+                    <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
+                      <RotateCcw className="h-4 w-4 text-red-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Journal Entries</CardTitle>
+                <CardDescription>Latest manual journal entries and adjustments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {journalEntries.map((entry) => (
+                    <div key={entry.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{entry.reference}</p>
+                          <Badge className={getStatusColor(entry.status)}>{entry.status}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600">{entry.description}</p>
+                        <p className="text-xs text-gray-500">
+                          Dr: {entry.debitAccount} | Cr: {entry.creditAccount} | {entry.date}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">£{entry.amount.toLocaleString()}</p>
+                        <div className="flex gap-1 mt-1">
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          {entry.status === 'Draft' && (
+                            <Button variant="ghost" size="sm">
+                              <Check className="h-3 w-3" />
                             </Button>
                           )}
                         </div>
@@ -1064,12 +1216,12 @@ export default function Bookkeeping() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Statement
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Account
                 </Button>
                 <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Connect Bank
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Sync All
                 </Button>
               </div>
             </div>
@@ -1081,6 +1233,171 @@ export default function Bookkeeping() {
                 <TabsTrigger value="summary">Summary</TabsTrigger>
                 <TabsTrigger value="feeds">Bank Feeds</TabsTrigger>
               </TabsList>
+
+              <TabsContent value="reconciliation" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Bank Reconciliation</CardTitle>
+                    <CardDescription>Match bank statements with book records</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="font-semibold mb-3">Bank Statement Balance</h3>
+                        <div className="p-4 bg-blue-50 rounded-lg">
+                          <p className="text-2xl font-bold text-blue-900">£45,230.50</p>
+                          <p className="text-sm text-blue-700">As of Feb 9, 2024</p>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-3">Book Balance</h3>
+                        <div className="p-4 bg-green-50 rounded-lg">
+                          <p className="text-2xl font-bold text-green-900">£44,890.25</p>
+                          <p className="text-sm text-green-700">Current ledger balance</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6">
+                      <h3 className="font-semibold mb-3">Reconciling Items</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">Outstanding Deposit</p>
+                            <p className="text-sm text-gray-600">Client payment in transit</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold text-green-600">+£1,250.00</p>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">Outstanding Check #1234</p>
+                            <p className="text-sm text-gray-600">Supplier payment</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold text-red-600">-£890.75</p>
+                            <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium">Bank Charges</p>
+                            <p className="text-sm text-gray-600">Monthly service fee</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold text-red-600">-£25.00</p>
+                            <Badge className="bg-red-100 text-red-800">Unrecorded</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">Adjusted Book Balance:</span>
+                        <span className="text-xl font-bold text-blue-600">£45,224.50</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-sm text-gray-600">Difference:</span>
+                        <span className="text-sm font-medium text-red-600">£6.00</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="summary" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Total Credits</p>
+                          <p className="text-2xl font-bold text-green-600">£125,430</p>
+                          <p className="text-xs text-gray-500">This month</p>
+                        </div>
+                        <TrendingUp className="h-8 w-8 text-green-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Total Debits</p>
+                          <p className="text-2xl font-bold text-red-600">£89,340</p>
+                          <p className="text-xs text-gray-500">This month</p>
+                        </div>
+                        <TrendingDown className="h-8 w-8 text-red-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Unreconciled</p>
+                          <p className="text-2xl font-bold text-orange-600">£2,340</p>
+                          <p className="text-xs text-gray-500">Requires attention</p>
+                        </div>
+                        <AlertTriangle className="h-8 w-8 text-orange-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Transaction Summary</CardTitle>
+                    <CardDescription>Detailed breakdown of bank transactions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          <div>
+                            <p className="font-medium">Client Payment - ABC Corp</p>
+                            <p className="text-sm text-gray-600">Feb 9, 2024 • Reconciled</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-green-600">+£5,250.00</p>
+                          <Badge className="bg-green-100 text-green-800">Matched</Badge>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                          <div>
+                            <p className="font-medium">Supplier Payment - XYZ Ltd</p>
+                            <p className="text-sm text-gray-600">Feb 8, 2024 • Reconciled</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-red-600">-£1,890.50</p>
+                          <Badge className="bg-green-100 text-green-800">Matched</Badge>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                          <div>
+                            <p className="font-medium">Direct Debit - Office Rent</p>
+                            <p className="text-sm text-gray-600">Feb 7, 2024 • Pending</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-red-600">-£2,500.00</p>
+                          <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               <TabsContent value="accounts" className="space-y-6">
                 <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
@@ -1823,45 +2140,28 @@ export default function Bookkeeping() {
                         </CardHeader>
                         <CardContent>
                           <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <CheckCircle className="h-5 w-5 text-green-500" />
+                            <div className="p-3 bg-green-50 rounded-lg">
+                              <div className="flex items-center justify-between">
                                 <div>
-                                  <p className="font-medium">Barclays Current Account</p>
-                                  <p className="text-sm text-gray-500">Sync completed • 15 transactions imported</p>
+                                  <p className="font-medium text-sm">Barclays Business</p>
+                                  <p className="text-xs text-gray-600">Last sync: 2 minutes ago</p>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-sm font-medium">2024-02-01 14:30</p>
-                                <p className="text-xs text-gray-500">2 minutes ago</p>
+                                <div className="text-right">
+                                  <p className="text-sm font-semibold text-green-600">Success</p>
+                                  <p className="text-xs text-gray-500">47 transactions</p>
+                                </div>
                               </div>
                             </div>
-
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <CheckCircle className="h-5 w-5 text-green-500" />
+                            <div className="p-3 bg-yellow-50 rounded-lg">
+                              <div className="flex items-center justify-between">
                                 <div>
-                                  <p className="font-medium">HSBC Savings Account</p>
-                                  <p className="text-sm text-gray-500">Sync completed • 3 transactions imported</p>
+                                  <p className="font-medium text-sm">HSBC Current</p>
+                                  <p className="text-xs text-gray-600">Last sync: 15 minutes ago</p>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-sm font-medium">2024-02-01 11:00</p>
-                                <p className="text-xs text-gray-500">3 hours ago</p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <AlertCircle className="h-5 w-5 text-orange-500" />
-                                <div>
-                                  <p className="font-medium">Santander Credit Card</p>
-                                  <p className="text-sm text-gray-500">Sync warning • Rate limit reached, retrying</p>
+                                <div className="text-right">
+                                  <p className="text-sm font-semibold text-yellow-600">Partial</p>
+                                  <p className="text-xs text-gray-500">Rate limited</p>
                                 </div>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-sm font-medium">2024-02-01 10:45</p>
-                                <p className="text-xs text-gray-500">3 hours ago</p>
                               </div>
                             </div>
                           </div>
@@ -2304,12 +2604,12 @@ export default function Bookkeeping() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Budget
-                </Button>
-                <Button>
                   <Plus className="h-4 w-4 mr-2" />
                   New Budget
+                </Button>
+                <Button>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
                 </Button>
               </div>
             </div>
@@ -2542,12 +2842,12 @@ export default function Bookkeeping() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Model
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Model
                 </Button>
                 <Button>
                   <Brain className="h-4 w-4 mr-2" />
-                  Generate Forecast
+                  AI Forecast
                 </Button>
               </div>
             </div>
@@ -2788,6 +3088,34 @@ export default function Bookkeeping() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  <div className="p-4 bg-yellow-50 rounded-lg">
+                    <h3 className="font-semibold text-yellow-900">Market Volatility & Economic Risk</h3>
+                    <p className="text-sm text-yellow-700">AI economic model analyzing 47 indicators suggests increased market volatility. Predictive analytics recommend maintaining 3.2 months cash reserves and diversifying supplier base across 4+ regions.</p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <TrendingDown className="h-4 w-4 text-yellow-600" />
+                      <span className="text-xs text-yellow-600">AI Risk Model: Medium | Probability: 65% | Economic Indicators: 47</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-red-50 rounded-lg">
+                    <h3 className="font-semibold text-red-900">Customer Concentration & Dependency Risk</h3>
+                    <p className="text-sm text-red-700">AI analysis reveals 45% of revenue from top 3 clients. Machine learning risk model flags high concentration dependency. Predictive scenarios show 23% revenue impact if largest client churns.</p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <Users className="h-4 w-4 text-red-600" />
+                      <span className="text-xs text-red-600">AI Risk Level: High | Churn Probability: 12% | Action Required</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4 mr-2" />
+                        Monitor
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Settings className="h-4 w-4 mr-2" />
+                        Mitigate
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
                   {projectionData.riskFactors.map((risk, index) => (
                     <Card key={index} className="border">
                       <CardContent className="p-4">
@@ -2839,25 +3167,53 @@ export default function Bookkeeping() {
                 <CardDescription>Machine learning insights based on client data patterns</CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-semibold text-blue-900">Revenue Optimization</h3>
+                    <p className="text-sm text-blue-700">AI analysis of client data patterns suggests 15% revenue increase possible through customer retention programs. Machine learning model trained on 2,500+ similar businesses shows 8% average improvement.</p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-blue-600" />
+                      <span className="text-xs text-blue-600">ML Confidence: 89% | Impact: High | Data Points: 2,847</span>
+                    </div>
+                  </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-4">
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <h3 className="font-semibold text-blue-900">Revenue Optimization</h3>
-                      <p className="text-sm text-blue-700">Analysis of client data suggests 15% revenue increase possible through customer retention programs. Historical data shows 8% improvement in similar businesses.</p>
+                      <p className="text-sm text-blue-700">AI analysis of client data patterns suggests 15% revenue increase possible through customer retention programs. Machine learning model trained on 2,500+ similar businesses shows 8% average improvement.</p>
                       <div className="mt-2 flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="text-xs text-blue-600">Confidence: 89% | Impact: High</span>
+                        <span className="text-xs text-blue-600">ML Confidence: 89% | Impact: High | Data Points: 2,847</span>
                       </div>
                     </div>
                     <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Cost Efficiency</h3>
-                      <p className="text-sm text-green-700">Predictive model identifies £18,500 annual savings through vendor consolidation and automated processes based on transaction patterns.</p>
+                      <h3 className="font-semibold text-green-900">Cost Efficiency & Automation</h3>
+                      <p className="text-sm text-green-700">Predictive model identifies £18,500 annual savings through vendor consolidation and automated processes. AI categorization reduces manual processing by 67%.</p>
                       <div className="mt-2 flex items-center gap-2">
-                        <PoundSterling className="h-4 w-4 text-green-600" />
-                        <span className="text-xs text-green-600">Confidence: 92% | Savings: £18.5k</span>
+                        <Zap className="h-4 w-4 text-green-600" />
+                        <span className="text-xs text-green-600">AI Confidence: 94% | Impact: Medium | Processing Time: -67%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-purple-50 rounded-lg">
+                      <h3 className="font-semibold text-purple-900">Predictive Cash Flow Alerts</h3>
+                      <p className="text-sm text-purple-700">Machine learning model predicts potential cash flow constraints in Q3 based on seasonal patterns and current commitments. Recommended actions include accelerating receivables collection.</p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-purple-600" />
+                        <span className="text-xs text-purple-600">Predictive Alert | 76% probability | 90 days ahead</span>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-orange-50 rounded-lg">
+                      <h3 className="font-semibold text-orange-900">Anomaly Detection & Fraud Prevention</h3>
+                      <p className="text-sm text-orange-700">AI monitoring detected 3 unusual transaction patterns this month. Advanced algorithms identified potential duplicate payments and flagged irregular supplier invoices for review.</p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <Brain className="h-4 w-4 text-orange-600" />
+                        <span className="text-xs text-orange-600">Real-time Monitoring | 99.2% accuracy | 24/7 protection</span>
                       </div>
                     </div>
                   </div>
+                </div>
                   <div className="space-y-4">
                     <div className="p-4 bg-purple-50 rounded-lg">
                       <h3 className="font-semibold text-purple-900">Market Timing</h3>
@@ -2882,6 +3238,161 @@ export default function Bookkeeping() {
           </TabsContent>
 
           <TabsContent value="property" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold">Property Management</h2>
+                <p className="text-gray-600">Landlord portfolio management, rent tracking, and tenant administration</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Property
+                </Button>
+                <Button>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </Button>
+              </div>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Properties</p>
+                      <p className="text-2xl font-bold">24</p>
+                      <p className="text-xs text-gray-500">Active portfolio</p>
+                    </div>
+                    <Building className="h-8 w-8 text-blue-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Monthly Rent</p>
+                      <p className="text-2xl font-bold">£18,500</p>
+                      <p className="text-xs text-gray-500">Gross rental income</p>
+                    </div>
+                    <PoundSterling className="h-8 w-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Occupancy Rate</p>
+                      <p className="text-2xl font-bold">96%</p>
+                      <p className="text-xs text-gray-500">Current occupancy</p>
+                    </div>
+                    <UserCheck className="h-8 w-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Maintenance Due</p>
+                      <p className="text-2xl font-bold">3</p>
+                      <p className="text-xs text-gray-500">Properties requiring attention</p>
+                    </div>
+                    <Wrench className="h-8 w-8 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
+              <div className={isMobile ? '' : 'lg:col-span-2'}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Property Portfolio</CardTitle>
+                    <CardDescription>Overview of all properties and their performance</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {properties.map((property) => (
+                        <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{property.address}</p>
+                              <Badge className={property.status === 'Occupied' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                                {property.status}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">{property.tenants > 0 ? `${property.tenants} tenant(s)` : 'Vacant'}</p>
+                            <p className="text-xs text-gray-500">Type: {property.type}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold">{property.monthlyRent}/month</p>
+                            <p className="text-sm text-gray-600">Occupancy: {property.occupancy}</p>
+                            <div className="flex gap-1 mt-1">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button variant="ghost" size="sm">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Rent Schedule</CardTitle>
+                  <CardDescription>Upcoming rent collections and due dates</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-sm">123 Oak Street</p>
+                          <p className="text-xs text-gray-600">Due: Feb 1st</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-sm">£1,200</p>
+                          <Badge className="bg-green-100 text-green-800 text-xs">Paid</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-sm">456 Pine Avenue</p>
+                          <p className="text-xs text-gray-600">Due: Feb 1st</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-sm">£950</p>
+                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">Pending</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-red-50 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-sm">789 Elm Road</p>
+                          <p className="text-xs text-gray-600">Due: Jan 1st</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-sm">£1,100</p>
+                          <Badge className="bg-red-100 text-red-800 text-xs">Overdue</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h2 className="text-2xl font-bold">Property Management</h2>
@@ -3061,6 +3572,140 @@ export default function Bookkeeping() {
           </TabsContent>
 
           <TabsContent value="ecommerce" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold">eCommerce Integrations</h2>
+                <p className="text-gray-600">Multi-platform sales channel management and settlement reconciliation</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Connect Platform
+                </Button>
+                <Button>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Sync All
+                </Button>
+              </div>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                      <p className="text-2xl font-bold">£284,500</p>
+                      <p className="text-xs text-gray-500">All platforms YTD</p>
+                    </div>
+                    <DollarSign className="h-8 w-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Active Platforms</p>
+                      <p className="text-2xl font-bold">4</p>
+                      <p className="text-xs text-gray-500">Connected & syncing</p>
+                    </div>
+                    <Link className="h-8 w-8 text-blue-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Pending Settlements</p>
+                      <p className="text-2xl font-bold">£12,340</p>
+                      <p className="text-xs text-gray-500">Awaiting reconciliation</p>
+                    </div>
+                    <Clock className="h-8 w-8 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Fee Optimization</p>
+                      <p className="text-2xl font-bold">£2,150</p>
+                      <p className="text-xs text-gray-500">Potential savings</p>
+                    </div>
+                    <TrendingUp className="h-8 w-8 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Platform Connections</CardTitle>
+                  <CardDescription>Manage your eCommerce platform integrations</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {ecommerceConnections.map((connection) => (
+                      <div key={connection.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${connection.status === 'Connected' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                          <div>
+                            <p className="font-medium">{connection.platform}</p>
+                            <p className="text-sm text-gray-600">Last sync: {connection.lastSync}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={connection.status === 'Connected' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                            {connection.status}
+                          </Badge>
+                          <Button variant="ghost" size="sm">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Settlement Reconciliation</CardTitle>
+                  <CardDescription>Automated settlement matching and fee allocation</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">Amazon Settlement</span>
+                        <span className="text-sm text-blue-600">Auto-matched</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <span>Gross: £8,450</span>
+                        <span>Fees: £1,230</span>
+                        <span>Net: £7,220</span>
+                        <span>Date: 2024-02-08</span>
+                      </div>
+                    </div>
+                    <div className="p-4 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">Shopify Payout</span>
+                        <span className="text-sm text-yellow-600">Pending Review</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <span>Gross: £3,200</span>
+                        <span>Fees: £96</span>
+                        <span>Net: £3,104</span>
+                        <span>Date: 2024-02-09</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h2 className="text-2xl font-bold">eCommerce Integration</h2>
@@ -3248,13 +3893,141 @@ export default function Bookkeeping() {
               </div>
               <div className="flex gap-2">
                 <Button variant="outline">
-                  <Camera className="h-4 w-4 mr-2" />
-                  Scan Mobile
-                </Button>
-                <Button>
                   <Upload className="h-4 w-4 mr-2" />
                   Upload Documents
                 </Button>
+                <Button>
+                  <Scan className="h-4 w-4 mr-2" />
+                  Process Queue
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Document Upload & Processing</CardTitle>
+                  <CardDescription>Upload documents for OCR processing and auto-posting</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <p className="text-lg font-medium mb-2">Drop files here or click to upload</p>
+                    <p className="text-sm text-gray-600 mb-4">Supports PDF, JPG, PNG up to 10MB</p>
+                    <Button>
+                      <Camera className="h-4 w-4 mr-2" />
+                      Choose Files
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                      <Scan className="h-8 w-8 mx-auto text-blue-600 mb-2" />
+                      <p className="font-medium">OCR Processing</p>
+                      <p className="text-sm text-gray-600">99.2% accuracy rate</p>
+                    </div>
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                      <Brain className="h-8 w-8 mx-auto text-green-600 mb-2" />
+                      <p className="font-medium">AI Categorization</p>
+                      <p className="text-sm text-gray-600">Smart auto-posting</p>
+                    </div>
+                    <div className="text-center p-4 bg-orange-50 rounded-lg">
+                      <CheckCircle className="h-8 w-8 mx-auto text-orange-600 mb-2" />
+                      <p className="font-medium">Approval Workflow</p>
+                      <p className="text-sm text-gray-600">Review before posting</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Documents</CardTitle>
+                    <CardDescription>Recently processed documents and their status</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {documents.map((doc) => (
+                        <div key={doc.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <FileText className="h-5 w-5 text-gray-500" />
+                            <div>
+                              <p className="font-medium text-sm">{doc.name}</p>
+                              <p className="text-xs text-gray-600">{doc.uploadDate}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={doc.status === 'Processed' ? 'bg-green-100 text-green-800' : 
+                                             doc.status === 'Processing' ? 'bg-blue-100 text-blue-800' : 
+                                             'bg-yellow-100 text-yellow-800'}>
+                              {doc.status}
+                            </Badge>
+                            <Button variant="ghost" size="sm">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Auto-Posting Queue</CardTitle>
+                    <CardDescription>Documents ready for automatic posting</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-green-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium">Invoice - Office Supplies</span>
+                          <span className="text-sm text-green-600">Ready to Post</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <span>Amount: £234.50</span>
+                          <span>VAT: £46.90</span>
+                          <span>Account: 5000</span>
+                          <span>Confidence: 98%</span>
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button size="sm" className="flex-1">
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Approve & Post
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 bg-yellow-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium">Receipt - Travel Expense</span>
+                          <span className="text-sm text-yellow-600">Needs Review</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <span>Amount: £45.20</span>
+                          <span>VAT: £9.04</span>
+                          <span>Account: TBD</span>
+                          <span>Confidence: 76%</span>
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button variant="outline" size="sm" className="flex-1">
+                            <Eye className="h-4 w-4 mr-2" />
+                            Review
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
@@ -3422,6 +4195,259 @@ export default function Bookkeeping() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="inventory" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold">Inventory Management</h2>
+                <p className="text-gray-600">Stock tracking, valuation, and inventory control</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Item
+                </Button>
+                <Button variant="outline">
+                  <Package className="h-4 w-4 mr-2" />
+                  Stock Take
+                </Button>
+                <Button>
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Valuation Report
+                </Button>
+              </div>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Items</p>
+                      <p className="text-2xl font-bold">425</p>
+                      <p className="text-xs text-gray-500">Active SKUs</p>
+                    </div>
+                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Package className="h-4 w-4 text-blue-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Value</p>
+                      <p className="text-2xl font-bold">£11,631</p>
+                      <p className="text-xs text-gray-500">At cost</p>
+                    </div>
+                    <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <PoundSterling className="h-4 w-4 text-green-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Low Stock</p>
+                      <p className="text-2xl font-bold">8</p>
+                      <p className="text-xs text-gray-500">Below reorder level</p>
+                    </div>
+                    <div className="h-8 w-8 bg-orange-100 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-4 w-4 text-orange-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Categories</p>
+                      <p className="text-2xl font-bold">12</p>
+                      <p className="text-xs text-gray-500">Product groups</p>
+                    </div>
+                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                      <Tag className="h-4 w-4 text-purple-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Inventory Items</CardTitle>
+                <CardDescription>Current stock levels and valuation</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {inventoryItems.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{item.name}</p>
+                          <Badge variant="outline">{item.sku}</Badge>
+                          <Badge variant="secondary">{item.category}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600">Supplier: {item.supplier}</p>
+                        <p className="text-xs text-gray-500">
+                          Qty: {item.quantity} | Unit Cost: £{item.unitCost} | Reorder: {item.reorderLevel}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">£{item.totalValue.toLocaleString()}</p>
+                        <p className="text-xs text-gray-500">Updated: {item.lastUpdated}</p>
+                        <div className="flex gap-1 mt-1">
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Package className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="fixedassets" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold">Fixed Assets Register</h2>
+                <p className="text-gray-600">Asset tracking, depreciation, and disposal management</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Asset
+                </Button>
+                <Button variant="outline">
+                  <Calculator className="h-4 w-4 mr-2" />
+                  Depreciation Run
+                </Button>
+                <Button>
+                  <FileText className="h-4 w-4 mr-2" />
+                  Asset Register
+                </Button>
+              </div>
+            </div>
+
+            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Assets</p>
+                      <p className="text-2xl font-bold">47</p>
+                      <p className="text-xs text-gray-500">Active assets</p>
+                    </div>
+                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Building className="h-4 w-4 text-blue-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Gross Value</p>
+                      <p className="text-2xl font-bold">£735,000</p>
+                      <p className="text-xs text-gray-500">Purchase cost</p>
+                    </div>
+                    <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <PoundSterling className="h-4 w-4 text-green-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Net Book Value</p>
+                      <p className="text-2xl font-bold">£636,250</p>
+                      <p className="text-xs text-gray-500">After depreciation</p>
+                    </div>
+                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                      <TrendingDown className="h-4 w-4 text-purple-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Annual Depreciation</p>
+                      <p className="text-2xl font-bold">£98,750</p>
+                      <p className="text-xs text-gray-500">Current year</p>
+                    </div>
+                    <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
+                      <Calculator className="h-4 w-4 text-red-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Fixed Assets</CardTitle>
+                <CardDescription>Asset register with depreciation tracking</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {fixedAssets.map((asset) => (
+                    <div key={asset.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{asset.name}</p>
+                          <Badge variant="outline">{asset.category}</Badge>
+                          <Badge variant="secondary">{asset.depreciationMethod}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600">Location: {asset.location}</p>
+                        <p className="text-xs text-gray-500">
+                          Purchased: {asset.purchaseDate} | Life: {asset.usefulLife} years | Cost: £{asset.purchaseCost.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">£{asset.netBookValue.toLocaleString()}</p>
+                        <p className="text-xs text-gray-500">NBV</p>
+                        <p className="text-xs text-red-500">Depreciation: £{asset.accumulatedDepreciation.toLocaleString()}</p>
+                        <div className="flex gap-1 mt-1">
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Calculator className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
