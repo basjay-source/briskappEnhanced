@@ -4,15 +4,12 @@ import {
   Receipt, 
   TrendingUp, 
   TrendingDown,
-  AlertTriangle,
-  AlertCircle,
   Download,
   Upload,
   Eye,
   Edit,
   Filter,
   Search,
-  Brain,
   Settings,
   Link,
   FileText,
@@ -20,17 +17,13 @@ import {
   PoundSterling,
   BarChart3,
   Building,
-  Camera,
   Users,
-  Calendar,
   CheckCircle,
   Plus,
   PieChart,
   LineChart,
   Activity,
   Target,
-  Wrench,
-  Zap,
   ShoppingCart,
   Percent,
   Package,
@@ -38,499 +31,271 @@ import {
   Scan,
   Clock,
   UserCheck,
-  Truck,
-  CreditCard as Invoice,
-  Phone,
-  Mail,
-  DollarSign,
-  RotateCcw,
-  Check,
-  Tag
+  ChevronDown,
+  ChevronRight,
+  FolderOpen,
+  Folder,
+  BookOpen,
+  Database,
+  FileSearch,
+  Landmark
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
-import ResponsiveLayout from '@/components/ResponsiveLayout'
 
 export default function Bookkeeping() {
+  const [activeMainTab, setActiveMainTab] = useState('dashboard')
+  const [activeSubTab, setActiveSubTab] = useState('')
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('dashboard')
+
+  type SubTabConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+  }
+
+  type MenuConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+    hasSubTabs: boolean
+    subTabs?: Record<string, SubTabConfig>
+  }
+
+  const menuStructure: Record<string, MenuConfig> = {
+    dashboard: { label: 'Dashboard', icon: Activity, hasSubTabs: false },
+    transactions: { 
+      label: 'Transactions', 
+      icon: Receipt, 
+      hasSubTabs: true,
+      subTabs: {
+        sales: { label: 'Sales', icon: TrendingUp },
+        purchases: { label: 'Purchases', icon: TrendingDown },
+        banking: { label: 'Banking', icon: CreditCard },
+        journals: { label: 'Journals', icon: BookOpen },
+        vat: { label: 'VAT Returns', icon: Percent }
+      }
+    },
+    accounts: {
+      label: 'Accounts',
+      icon: Database,
+      hasSubTabs: true,
+      subTabs: {
+        chartofaccounts: { label: 'Chart of Accounts', icon: FolderOpen },
+        inventory: { label: 'Inventory', icon: Package },
+        fixedassets: { label: 'Fixed Assets', icon: Building }
+      }
+    },
+    reports: {
+      label: 'Reports',
+      icon: FileText,
+      hasSubTabs: true,
+      subTabs: {
+        financial: { label: 'Financial Reports', icon: BarChart3 },
+        management: { label: 'Management Reports', icon: PieChart },
+        analytics: { label: 'Analytics', icon: LineChart }
+      }
+    },
+    projects: { label: 'Projects', icon: Target, hasSubTabs: false },
+    budgets: { label: 'Budgets', icon: Calculator, hasSubTabs: false },
+    property: { label: 'Property', icon: Landmark, hasSubTabs: false },
+    ecommerce: { label: 'eCommerce', icon: ShoppingCart, hasSubTabs: false },
+    documents: { label: 'Documents', icon: Scan, hasSubTabs: false },
+    integrations: { label: 'Integrations', icon: Link, hasSubTabs: false }
+  }
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    )
+  }
+
+  const handleMainTabClick = (tabKey: string) => {
+    setActiveMainTab(tabKey)
+    const tabConfig = menuStructure[tabKey]
+    if (tabConfig && tabConfig.hasSubTabs && tabConfig.subTabs) {
+      const firstSubTab = Object.keys(tabConfig.subTabs)[0]
+      setActiveSubTab(firstSubTab || '')
+      if (!expandedCategories.includes(tabKey)) {
+        toggleCategory(tabKey)
+      }
+    } else {
+      setActiveSubTab('')
+    }
+  }
+
+  const handleSubTabClick = (mainTab: string, subTab: string) => {
+    setActiveMainTab(mainTab)
+    setActiveSubTab(subTab)
+  }
+
+  const chartOfAccounts = [
+    { 
+      id: 'COA001', 
+      code: '1000', 
+      name: 'Assets', 
+      type: 'Asset', 
+      parent: null, 
+      level: 0,
+      balance: 125000,
+      children: [
+        { id: 'COA002', code: '1100', name: 'Current Assets', type: 'Asset', parent: 'COA001', level: 1, balance: 75000 },
+        { id: 'COA003', code: '1200', name: 'Fixed Assets', type: 'Asset', parent: 'COA001', level: 1, balance: 50000 }
+      ]
+    },
+    { 
+      id: 'COA004', 
+      code: '2000', 
+      name: 'Liabilities', 
+      type: 'Liability', 
+      parent: null, 
+      level: 0,
+      balance: 45000,
+      children: [
+        { id: 'COA005', code: '2100', name: 'Current Liabilities', type: 'Liability', parent: 'COA004', level: 1, balance: 25000 },
+        { id: 'COA006', code: '2200', name: 'Long-term Liabilities', type: 'Liability', parent: 'COA004', level: 1, balance: 20000 }
+      ]
+    },
+    { 
+      id: 'COA007', 
+      code: '3000', 
+      name: 'Equity', 
+      type: 'Equity', 
+      parent: null, 
+      level: 0,
+      balance: 80000,
+      children: [
+        { id: 'COA008', code: '3100', name: 'Share Capital', type: 'Equity', parent: 'COA007', level: 1, balance: 50000 },
+        { id: 'COA009', code: '3200', name: 'Retained Earnings', type: 'Equity', parent: 'COA007', level: 1, balance: 30000 }
+      ]
+    },
+    { 
+      id: 'COA010', 
+      code: '4000', 
+      name: 'Revenue', 
+      type: 'Revenue', 
+      parent: null, 
+      level: 0,
+      balance: 180000,
+      children: [
+        { id: 'COA011', code: '4100', name: 'Sales Revenue', type: 'Revenue', parent: 'COA010', level: 1, balance: 150000 },
+        { id: 'COA012', code: '4200', name: 'Other Income', type: 'Revenue', parent: 'COA010', level: 1, balance: 30000 }
+      ]
+    },
+    { 
+      id: 'COA013', 
+      code: '5000', 
+      name: 'Expenses', 
+      type: 'Expense', 
+      parent: null, 
+      level: 0,
+      balance: 95000,
+      children: [
+        { id: 'COA014', code: '5100', name: 'Cost of Sales', type: 'Expense', parent: 'COA013', level: 1, balance: 60000 },
+        { id: 'COA015', code: '5200', name: 'Operating Expenses', type: 'Expense', parent: 'COA013', level: 1, balance: 35000 }
+      ]
+    }
+  ]
 
   const journalEntries = [
-    { id: 'JE001', date: '2024-01-20', reference: 'ADJ001', description: 'Year-end depreciation adjustment', debitAccount: 'Depreciation Expense', creditAccount: 'Accumulated Depreciation', amount: 5000, status: 'Posted' },
-    { id: 'JE002', date: '2024-01-19', reference: 'ADJ002', description: 'Accrued interest expense', debitAccount: 'Interest Expense', creditAccount: 'Interest Payable', amount: 1250, status: 'Posted' },
-    { id: 'JE003', date: '2024-01-18', reference: 'ADJ003', description: 'Prepaid insurance adjustment', debitAccount: 'Insurance Expense', creditAccount: 'Prepaid Insurance', amount: 800, status: 'Draft' },
-    { id: 'JE004', date: '2024-01-17', reference: 'REV001', description: 'Reverse previous accrual', debitAccount: 'Accrued Expenses', creditAccount: 'Cash', amount: 2100, status: 'Posted' }
+    { id: 'JE001', date: '2024-01-15', description: 'Office supplies purchase', debit: 250, credit: 0, account: 'Office Expenses' },
+    { id: 'JE002', date: '2024-01-16', description: 'Client payment received', debit: 0, credit: 1500, account: 'Accounts Receivable' },
+    { id: 'JE003', date: '2024-01-17', description: 'Rent payment', debit: 800, credit: 0, account: 'Rent Expense' }
   ]
 
   const inventoryItems = [
-    { id: 'INV001', sku: 'PROD-001', name: 'Premium Widget A', category: 'Electronics', quantity: 150, unitCost: 25.50, totalValue: 3825, reorderLevel: 50, supplier: 'TechCorp Ltd', lastUpdated: '2024-01-20' },
-    { id: 'INV002', sku: 'PROD-002', name: 'Standard Widget B', category: 'Electronics', quantity: 75, unitCost: 18.75, totalValue: 1406.25, reorderLevel: 25, supplier: 'ComponentCo', lastUpdated: '2024-01-19' },
-    { id: 'INV003', sku: 'SERV-001', name: 'Service Package Pro', category: 'Services', quantity: 0, unitCost: 0, totalValue: 0, reorderLevel: 0, supplier: 'Internal', lastUpdated: '2024-01-18' },
-    { id: 'INV004', sku: 'PROD-003', name: 'Deluxe Widget C', category: 'Electronics', quantity: 200, unitCost: 32.00, totalValue: 6400, reorderLevel: 75, supplier: 'PremiumParts Inc', lastUpdated: '2024-01-17' }
+    { id: 'INV001', name: 'Product A', quantity: 150, unitCost: 25.50, totalValue: 3825, category: 'Electronics' },
+    { id: 'INV002', name: 'Product B', quantity: 75, unitCost: 45.00, totalValue: 3375, category: 'Accessories' },
+    { id: 'INV003', name: 'Product C', quantity: 200, unitCost: 12.75, totalValue: 2550, category: 'Supplies' }
   ]
 
   const fixedAssets = [
-    { id: 'FA001', name: 'Office Building', category: 'Property', purchaseDate: '2020-01-15', purchaseCost: 500000, accumulatedDepreciation: 50000, netBookValue: 450000, depreciationMethod: 'Straight Line', usefulLife: 25, location: 'Head Office' },
-    { id: 'FA002', name: 'Company Vehicle - BMW X5', category: 'Vehicles', purchaseDate: '2022-06-10', purchaseCost: 65000, accumulatedDepreciation: 13000, netBookValue: 52000, depreciationMethod: 'Reducing Balance', usefulLife: 5, location: 'Fleet' },
-    { id: 'FA003', name: 'Manufacturing Equipment', category: 'Machinery', purchaseDate: '2021-03-20', purchaseCost: 125000, accumulatedDepreciation: 31250, netBookValue: 93750, depreciationMethod: 'Straight Line', usefulLife: 10, location: 'Factory Floor' },
-    { id: 'FA004', name: 'IT Infrastructure', category: 'Technology', purchaseDate: '2023-01-05', purchaseCost: 45000, accumulatedDepreciation: 4500, netBookValue: 40500, depreciationMethod: 'Straight Line', usefulLife: 3, location: 'Server Room' }
+    { id: 'FA001', name: 'Office Equipment', purchaseDate: '2023-01-15', cost: 15000, depreciation: 1500, netValue: 13500, category: 'Equipment' },
+    { id: 'FA002', name: 'Company Vehicle', purchaseDate: '2023-06-01', cost: 25000, depreciation: 2500, netValue: 22500, category: 'Vehicles' },
+    { id: 'FA003', name: 'Computer Systems', purchaseDate: '2023-03-10', cost: 8000, depreciation: 1200, netValue: 6800, category: 'IT Equipment' }
   ]
-  const [selectedAccount, setSelectedAccount] = useState('')
-  const [selectedCurrency, setSelectedCurrency] = useState('GBP')
+
+  const financialReports = [
+    { id: 'RPT001', name: 'Profit & Loss', type: 'Financial', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT002', name: 'Balance Sheet', type: 'Financial', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT003', name: 'Cash Flow Statement', type: 'Financial', lastGenerated: '2024-01-14', status: 'Current' },
+    { id: 'RPT004', name: 'Comparative P&L', type: 'Financial', lastGenerated: '2024-01-13', status: 'Current' },
+    { id: 'RPT005', name: 'Budget Report', type: 'Management', lastGenerated: '2024-01-12', status: 'Current' },
+    { id: 'RPT006', name: 'Day Books', type: 'Management', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT007', name: 'Recent Transactions', type: 'Management', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT008', name: 'Account Details', type: 'Management', lastGenerated: '2024-01-14', status: 'Current' },
+    { id: 'RPT009', name: 'Nominal Ledger', type: 'Management', lastGenerated: '2024-01-14', status: 'Current' },
+    { id: 'RPT010', name: 'Cash and Bank Report', type: 'Management', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT011', name: 'Aged Debtors', type: 'Management', lastGenerated: '2024-01-15', status: 'Current' },
+    { id: 'RPT012', name: 'Aged Creditors', type: 'Management', lastGenerated: '2024-01-15', status: 'Current' }
+  ]
+
+  const integrationProviders = [
+    { id: 'INT001', name: 'Xero', status: 'Connected', lastSync: '2024-01-15 10:30', accounts: 45 },
+    { id: 'INT002', name: 'QuickBooks Online', status: 'Available', lastSync: null, accounts: 0 },
+    { id: 'INT003', name: 'Sage Business Cloud', status: 'Available', lastSync: null, accounts: 0 },
+    { id: 'INT004', name: 'FreeAgent', status: 'Available', lastSync: null, accounts: 0 },
+    { id: 'INT005', name: 'Zoho Books', status: 'Available', lastSync: null, accounts: 0 },
+    { id: 'INT006', name: 'FreshBooks', status: 'Available', lastSync: null, accounts: 0 }
+  ]
 
   const kpis = [
     {
-      title: 'Bank Balance',
-      value: '£45,230',
-      change: '+£2,340 this week',
-      icon: CreditCard,
-      color: 'text-blue-600'
-    },
-    {
-      title: 'Unreconciled',
-      value: '23',
-      change: 'Transactions pending',
-      icon: AlertTriangle,
-      color: 'text-orange-600'
-    },
-    {
-      title: 'VAT Due',
-      value: '£8,450',
-      change: 'Due in 12 days',
-      icon: Receipt,
-      color: 'text-red-600'
-    },
-    {
-      title: 'Monthly Profit',
-      value: '£12,680',
-      change: '+18% vs last month',
+      title: "Total Revenue",
+      value: "£125,430",
+      change: "+12.5%",
+      trend: "up",
       icon: TrendingUp,
-      color: 'text-green-600'
+      color: "text-green-600"
+    },
+    {
+      title: "Outstanding Invoices",
+      value: "£23,450",
+      change: "-8.2%",
+      trend: "down",
+      icon: Receipt,
+      color: "text-orange-600"
+    },
+    {
+      title: "Bank Balance",
+      value: "£45,230",
+      change: "+5.1%",
+      trend: "up",
+      icon: CreditCard,
+      color: "text-blue-600"
+    },
+    {
+      title: "Monthly Expenses",
+      value: "£18,920",
+      change: "+3.4%",
+      trend: "up",
+      icon: TrendingDown,
+      color: "text-red-600"
     }
   ]
-
-  const bankAccounts = [
-    {
-      id: 'BA001',
-      name: 'Current Account',
-      bank: 'Barclays',
-      number: '****1234',
-      balance: '£45,230.50',
-      status: 'Connected',
-      lastSync: '2024-01-20 16:30',
-      unreconciled: 5
-    },
-    {
-      id: 'BA002',
-      name: 'Savings Account',
-      bank: 'HSBC',
-      number: '****5678',
-      balance: '£25,000.00',
-      status: 'Connected',
-      lastSync: '2024-01-20 16:25',
-      unreconciled: 0
-    },
-    {
-      id: 'BA003',
-      name: 'Business Credit Card',
-      bank: 'Santander',
-      number: '****9012',
-      balance: '-£3,450.25',
-      status: 'Syncing',
-      lastSync: '2024-01-20 15:45',
-      unreconciled: 8
-    }
-  ]
-
-  const transactions = [
-    {
-      id: 'T001',
-      date: '2024-01-20',
-      description: 'Office Supplies Ltd',
-      amount: '-£234.50',
-      category: 'Office Expenses',
-      status: 'Categorized',
-      account: 'Current Account',
-      vatRate: '20%'
-    },
-    {
-      id: 'T002',
-      date: '2024-01-19',
-      description: 'Client Payment - ABC Corp',
-      amount: '+£5,000.00',
-      category: 'Sales',
-      status: 'Reconciled',
-      account: 'Current Account',
-      vatRate: '20%'
-    },
-    {
-      id: 'T003',
-      date: '2024-01-18',
-      description: 'Fuel Station',
-      amount: '-£85.60',
-      category: 'Travel',
-      status: 'Pending Review',
-      account: 'Business Credit Card',
-      vatRate: '20%'
-    }
-  ]
-
-  const vatReturns = [
-    {
-      id: 'VAT001',
-      period: 'Q4 2024',
-      dueDate: '2024-02-07',
-      status: 'In Progress',
-      vatDue: '£8,450.25',
-      salesVat: '£12,340.50',
-      purchaseVat: '£3,890.25',
-      progress: 75
-    },
-    {
-      id: 'VAT002',
-      period: 'Q3 2024',
-      dueDate: '2024-11-07',
-      status: 'Submitted',
-      vatDue: '£6,230.75',
-      salesVat: '£9,850.00',
-      purchaseVat: '£3,619.25',
-      progress: 100
-    }
-  ]
-
-  const properties = [
-    {
-      id: 'PROP001',
-      address: '123 High Street, London',
-      type: 'Residential',
-      tenants: 2,
-      monthlyRent: '£2,400',
-      occupancy: '100%',
-      nextRentDue: '2024-02-01',
-      maintenanceIssues: 0,
-      status: 'Occupied'
-    },
-    {
-      id: 'PROP002',
-      address: '456 Commercial Road, Manchester',
-      type: 'Commercial',
-      tenants: 1,
-      monthlyRent: '£4,800',
-      occupancy: '100%',
-      nextRentDue: '2024-02-15',
-      maintenanceIssues: 2,
-      status: 'Occupied'
-    },
-    {
-      id: 'PROP003',
-      address: '789 Garden Lane, Birmingham',
-      type: 'Residential',
-      tenants: 0,
-      monthlyRent: '£1,800',
-      occupancy: '0%',
-      nextRentDue: 'N/A',
-      maintenanceIssues: 1,
-      status: 'Vacant'
-    }
-  ]
-
-  const ecommerceConnections = [
-    {
-      id: 'ECOM001',
-      platform: 'Amazon',
-      storeName: 'BriskStore UK',
-      status: 'Connected',
-      lastSync: '2024-01-20 16:30',
-      monthlyRevenue: '£15,240',
-      pendingOrders: 23,
-      fees: '£2,286',
-      netRevenue: '£12,954'
-    },
-    {
-      id: 'ECOM002',
-      platform: 'Shopify',
-      storeName: 'Brisk Boutique',
-      status: 'Connected',
-      lastSync: '2024-01-20 16:25',
-      monthlyRevenue: '£8,950',
-      pendingOrders: 12,
-      fees: '£268',
-      netRevenue: '£8,682'
-    },
-    {
-      id: 'ECOM003',
-      platform: 'eBay',
-      storeName: 'BriskSales',
-      status: 'Syncing',
-      lastSync: '2024-01-20 15:45',
-      monthlyRevenue: '£3,420',
-      pendingOrders: 8,
-      fees: '£342',
-      netRevenue: '£3,078'
-    }
-  ]
-
-  const documents = [
-    {
-      id: 'DOC001',
-      name: 'Office Supplies Invoice.pdf',
-      type: 'Invoice',
-      uploadDate: '2024-01-20',
-      status: 'Processed',
-      ocrConfidence: 98,
-      suggestedCategory: 'Office Expenses',
-      amount: '£234.50',
-      supplier: 'Office Supplies Ltd'
-    },
-    {
-      id: 'DOC002',
-      name: 'Fuel Receipt.jpg',
-      type: 'Receipt',
-      uploadDate: '2024-01-19',
-      status: 'Pending Review',
-      ocrConfidence: 85,
-      suggestedCategory: 'Travel',
-      amount: '£85.60',
-      supplier: 'Shell Petrol Station'
-    },
-    {
-      id: 'DOC003',
-      name: 'Bank Statement.pdf',
-      type: 'Statement',
-      uploadDate: '2024-01-18',
-      status: 'Auto-Posted',
-      ocrConfidence: 95,
-      suggestedCategory: 'Bank Charges',
-      amount: '£25.00',
-      supplier: 'Barclays Bank'
-    }
-  ]
-
-  const currencies = [
-    { code: 'GBP', name: 'British Pound', rate: 1.0000, symbol: '£' },
-    { code: 'USD', name: 'US Dollar', rate: 0.7850, symbol: '$' },
-    { code: 'EUR', name: 'Euro', rate: 0.8650, symbol: '€' },
-    { code: 'CAD', name: 'Canadian Dollar', rate: 0.5920, symbol: 'C$' }
-  ]
-
-  const analyticsData = {
-    cashFlowTrend: [
-      { month: 'Aug', inflow: 45000, outflow: 32000, net: 13000 },
-      { month: 'Sep', inflow: 52000, outflow: 35000, net: 17000 },
-      { month: 'Oct', inflow: 48000, outflow: 38000, net: 10000 },
-      { month: 'Nov', inflow: 55000, outflow: 41000, net: 14000 },
-      { month: 'Dec', inflow: 62000, outflow: 45000, net: 17000 },
-      { month: 'Jan', inflow: 58000, outflow: 43000, net: 15000 }
-    ],
-    expenseBreakdown: [
-      { category: 'Office Expenses', amount: 8500, percentage: 25 },
-      { category: 'Travel', amount: 6800, percentage: 20 },
-      { category: 'Marketing', amount: 5100, percentage: 15 },
-      { category: 'Utilities', amount: 4250, percentage: 12.5 },
-      { category: 'Professional Fees', amount: 3400, percentage: 10 },
-      { category: 'Other', amount: 5950, percentage: 17.5 }
-    ]
-  }
-
-  const projectData = [
-    {
-      id: 'PROJ001',
-      name: 'Website Redesign',
-      client: 'ABC Corp',
-      budget: '£25,000',
-      actual: '£18,500',
-      variance: '+£6,500',
-      status: 'In Progress',
-      completion: 74,
-      startDate: '2024-01-01',
-      endDate: '2024-03-31',
-      manager: 'Sarah Johnson'
-    },
-    {
-      id: 'PROJ002',
-      name: 'ERP Implementation',
-      client: 'XYZ Ltd',
-      budget: '£85,000',
-      actual: '£92,300',
-      variance: '-£7,300',
-      status: 'Over Budget',
-      completion: 89,
-      startDate: '2023-10-01',
-      endDate: '2024-02-28',
-      manager: 'Mike Chen'
-    },
-    {
-      id: 'PROJ003',
-      name: 'Mobile App Development',
-      client: 'Tech Startup',
-      budget: '£45,000',
-      actual: '£12,800',
-      variance: '+£32,200',
-      status: 'On Track',
-      completion: 28,
-      startDate: '2024-01-15',
-      endDate: '2024-06-30',
-      manager: 'Emma Wilson'
-    }
-  ]
-
-  const budgetData = [
-    {
-      category: 'Revenue',
-      budgeted: 150000,
-      actual: 142500,
-      variance: -7500,
-      variancePercent: -5.0,
-      forecast: 155000
-    },
-    {
-      category: 'Cost of Sales',
-      budgeted: 60000,
-      actual: 58200,
-      variance: 1800,
-      variancePercent: 3.0,
-      forecast: 62000
-    },
-    {
-      category: 'Operating Expenses',
-      budgeted: 45000,
-      actual: 47800,
-      variance: -2800,
-      variancePercent: -6.2,
-      forecast: 46500
-    },
-    {
-      category: 'Marketing',
-      budgeted: 15000,
-      actual: 13200,
-      variance: 1800,
-      variancePercent: 12.0,
-      forecast: 16000
-    }
-  ]
-
-  const forecastData = {
-    cashFlow: [
-      { month: 'Feb', actual: 15000, forecast: 16200, confidence: 91 },
-      { month: 'Mar', actual: null, forecast: 18500, confidence: 87 },
-      { month: 'Apr', actual: null, forecast: 21000, confidence: 82 },
-      { month: 'May', actual: null, forecast: 19500, confidence: 78 },
-      { month: 'Jun', actual: null, forecast: 22000, confidence: 74 }
-    ],
-    scenarios: [
-      { name: 'Conservative', probability: 30, revenue: 140000, profit: 25000 },
-      { name: 'Most Likely', probability: 50, revenue: 155000, profit: 32000 },
-      { name: 'Optimistic', probability: 20, revenue: 175000, profit: 42000 }
-    ]
-  }
-
-  const projectionData = {
-    revenueProjections: [
-      { period: 'Q1 2024', historical: 125000, projected: 135000, confidence: 92, growth: 8.0 },
-      { period: 'Q2 2024', historical: 142000, projected: 158000, confidence: 88, growth: 11.3 },
-      { period: 'Q3 2024', historical: null, projected: 172000, confidence: 84, growth: 8.9 },
-      { period: 'Q4 2024', historical: null, projected: 185000, confidence: 79, growth: 7.6 }
-    ],
-    cashFlowProjections: [
-      { month: 'Mar 2024', opening: 45000, inflows: 158000, outflows: 142000, closing: 61000, cumulative: 61000 },
-      { month: 'Apr 2024', opening: 61000, inflows: 165000, outflows: 148000, closing: 78000, cumulative: 139000 },
-      { month: 'May 2024', opening: 78000, inflows: 172000, outflows: 155000, closing: 95000, cumulative: 234000 },
-      { month: 'Jun 2024', opening: 95000, inflows: 178000, outflows: 162000, closing: 111000, cumulative: 345000 }
-    ],
-    profitabilityProjections: [
-      { metric: 'Gross Profit Margin', current: 68.5, projected: 71.2, target: 75.0, trend: 'improving' },
-      { metric: 'Operating Margin', current: 24.8, projected: 27.3, target: 30.0, trend: 'improving' },
-      { metric: 'Net Profit Margin', current: 18.2, projected: 21.1, target: 25.0, trend: 'improving' },
-      { metric: 'EBITDA Margin', current: 32.1, projected: 35.8, target: 40.0, trend: 'improving' }
-    ],
-    keyDrivers: [
-      { driver: 'Customer Acquisition', current: 45, projected: 62, impact: 'High', confidence: 87 },
-      { driver: 'Average Order Value', current: 285, projected: 315, impact: 'Medium', confidence: 91 },
-      { driver: 'Customer Retention', current: 78, projected: 84, impact: 'High', confidence: 89 },
-      { driver: 'Market Expansion', current: 2, projected: 4, impact: 'Medium', confidence: 72 }
-    ],
-    riskFactors: [
-      { risk: 'Economic Downturn', probability: 25, impact: 'High', mitigation: 'Diversify revenue streams' },
-      { risk: 'Supply Chain Disruption', probability: 35, impact: 'Medium', mitigation: 'Multiple supplier strategy' },
-      { risk: 'Competitive Pressure', probability: 45, impact: 'Medium', mitigation: 'Innovation & differentiation' },
-      { risk: 'Regulatory Changes', probability: 20, impact: 'Low', mitigation: 'Compliance monitoring' }
-    ]
-  }
-
-  const salesData = {
-    invoices: [
-      { id: 'INV-001', customer: 'ABC Corp', amount: 2500, date: '2024-01-15', status: 'Paid', dueDate: '2024-02-14' },
-      { id: 'INV-002', customer: 'XYZ Ltd', amount: 1800, date: '2024-01-18', status: 'Overdue', dueDate: '2024-02-17' },
-      { id: 'INV-003', customer: 'Tech Solutions', amount: 3200, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
-      { id: 'INV-004', customer: 'Global Industries', amount: 4500, date: '2024-01-22', status: 'Draft', dueDate: '2024-02-21' }
-    ],
-    customers: [
-      { id: 'CUST-001', name: 'ABC Corp', email: 'contact@abccorp.com', phone: '+44 20 7123 4567', balance: 2500, status: 'Active' },
-      { id: 'CUST-002', name: 'XYZ Ltd', email: 'info@xyzltd.co.uk', phone: '+44 161 234 5678', balance: 1800, status: 'Overdue' },
-      { id: 'CUST-003', name: 'Tech Solutions', email: 'hello@techsolutions.com', phone: '+44 113 345 6789', balance: 3200, status: 'Active' },
-      { id: 'CUST-004', name: 'Global Industries', email: 'accounts@global.com', phone: '+44 121 456 7890', balance: 0, status: 'Active' }
-    ],
-    quotes: [
-      { id: 'QUO-001', customer: 'Potential Client A', amount: 5500, date: '2024-01-25', status: 'Sent', validUntil: '2024-02-25' },
-      { id: 'QUO-002', customer: 'Potential Client B', amount: 3800, date: '2024-01-26', status: 'Accepted', validUntil: '2024-02-26' },
-      { id: 'QUO-003', customer: 'Potential Client C', amount: 2200, date: '2024-01-27', status: 'Draft', validUntil: '2024-02-27' }
-    ]
-  }
-
-  const purchasesData = {
-    bills: [
-      { id: 'BILL-001', supplier: 'Office Supplies Ltd', amount: 850, date: '2024-01-10', status: 'Paid', dueDate: '2024-02-09' },
-      { id: 'BILL-002', supplier: 'Tech Equipment Co', amount: 2400, date: '2024-01-12', status: 'Pending', dueDate: '2024-02-11' },
-      { id: 'BILL-003', supplier: 'Utilities Provider', amount: 320, date: '2024-01-14', status: 'Overdue', dueDate: '2024-02-13' },
-      { id: 'BILL-004', supplier: 'Marketing Agency', amount: 1500, date: '2024-01-16', status: 'Draft', dueDate: '2024-02-15' }
-    ],
-    suppliers: [
-      { id: 'SUPP-001', name: 'Office Supplies Ltd', email: 'orders@officesupplies.co.uk', phone: '+44 20 8123 4567', balance: 0, status: 'Active' },
-      { id: 'SUPP-002', name: 'Tech Equipment Co', email: 'sales@techequipment.com', phone: '+44 161 234 5678', balance: 2400, status: 'Active' },
-      { id: 'SUPP-003', name: 'Utilities Provider', email: 'billing@utilities.co.uk', phone: '+44 113 345 6789', balance: 320, status: 'Overdue' },
-      { id: 'SUPP-004', name: 'Marketing Agency', email: 'hello@marketingagency.com', phone: '+44 121 456 7890', balance: 1500, status: 'Active' }
-    ],
-    purchaseOrders: [
-      { id: 'PO-001', supplier: 'Office Supplies Ltd', amount: 650, date: '2024-01-28', status: 'Delivered', expectedDate: '2024-02-05' },
-      { id: 'PO-002', supplier: 'Tech Equipment Co', amount: 3200, date: '2024-01-29', status: 'Pending', expectedDate: '2024-02-10' },
-      { id: 'PO-003', supplier: 'Marketing Agency', amount: 1800, date: '2024-01-30', status: 'Approved', expectedDate: '2024-02-15' }
-    ],
-    creditNotes: [
-      { id: 'CN-001', supplier: 'Office Supplies Ltd', amount: 120, date: '2024-01-20', reason: 'Damaged goods', status: 'Applied' },
-      { id: 'CN-002', supplier: 'Tech Equipment Co', amount: 350, date: '2024-01-22', reason: 'Partial return', status: 'Pending' }
-    ]
-  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Connected':
-      case 'Reconciled':
-      case 'Submitted':
-        return 'text-green-600 bg-green-50'
-      case 'Syncing':
-      case 'In Progress':
-      case 'Categorized':
-        return 'text-yellow-600 bg-yellow-50'
-      case 'Pending Review':
-      case 'Overdue':
-        return 'text-red-600 bg-red-50'
-      default:
-        return 'text-blue-600 bg-blue-50'
+      case 'Current': return 'bg-green-100 text-green-800'
+      case 'Connected': return 'bg-green-100 text-green-800'
+      case 'Available': return 'bg-blue-100 text-blue-800'
+      case 'Overdue': return 'bg-red-100 text-red-800'
+      case 'Draft': return 'bg-yellow-100 text-yellow-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   return (
-    <ResponsiveLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Bookkeeping</h1>
-            <p className="text-gray-600">Bank feeds, VAT MTD, reconciliation and management accounts</p>
+            <h1 className="text-3xl font-bold text-gray-900">Bookkeeping</h1>
+            <p className="text-gray-600">Comprehensive bookkeeping and financial management</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size={isMobile ? "sm" : "default"}>
@@ -544,2793 +309,657 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList 
-            className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6 xl:grid-cols-16'}`}
-            style={!isMobile ? { gridTemplateColumns: 'repeat(16, minmax(0, 1fr))' } : undefined}
-          >
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="sales">Sales</TabsTrigger>
-            <TabsTrigger value="purchases">Purchases</TabsTrigger>
-            <TabsTrigger value="banking">Banking</TabsTrigger>
-            <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            <TabsTrigger value="journals">Journals</TabsTrigger>
-            <TabsTrigger value="vat">VAT Returns</TabsTrigger>
-            <TabsTrigger value="projects">Projects</TabsTrigger>
-            <TabsTrigger value="budgets">Budgets</TabsTrigger>
-            <TabsTrigger value="projections">Projections</TabsTrigger>
-            <TabsTrigger value="inventory">Inventory</TabsTrigger>
-            <TabsTrigger value="fixedassets">Fixed Assets</TabsTrigger>
-            <TabsTrigger value="property">Property</TabsTrigger>
-            <TabsTrigger value="ecommerce">eCommerce</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          </TabsList>
+        <div className="flex gap-6">
+          {/* 2-Level Navigation Sidebar */}
+          <div className={`${isMobile ? 'w-full' : 'w-80'} bg-white rounded-lg shadow-sm border p-4`}>
+            <div className="space-y-2">
+              {Object.entries(menuStructure).map(([key, config]) => {
+                const Icon = config.icon
+                const isActive = activeMainTab === key
+                const isExpanded = expandedCategories.includes(key)
+                
+                return (
+                  <div key={key}>
+                    <button
+                      onClick={() => handleMainTabClick(key)}
+                      className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
+                        isActive 
+                          ? 'bg-brisk-primary text-white' 
+                          : 'hover:bg-gray-100 text-gray-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className="h-5 w-5" />
+                        <span className="font-medium">{config.label}</span>
+                      </div>
+                      {config.hasSubTabs && (
+                        isExpanded ? 
+                          <ChevronDown className="h-4 w-4" /> : 
+                          <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+                    
+                    {config.hasSubTabs && isExpanded && config.subTabs && (
+                      <div className="ml-8 mt-2 space-y-1">
+                        {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
+                          const SubIcon = subConfig.icon
+                          const isSubActive = activeMainTab === key && activeSubTab === subKey
+                          
+                          return (
+                            <button
+                              key={subKey}
+                              onClick={() => handleSubTabClick(key, subKey)}
+                              className={`w-full flex items-center gap-3 p-2 rounded-md text-left transition-colors ${
+                                isSubActive 
+                                  ? 'bg-brisk-primary/10 text-brisk-primary border-l-2 border-brisk-primary' 
+                                  : 'hover:bg-gray-50 text-gray-600'
+                              }`}
+                            >
+                              <SubIcon className="h-4 w-4" />
+                              <span className="text-sm">{subConfig.label}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
 
-          <TabsContent value="sales" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Sales Management</h2>
-                <p className="text-gray-600">Invoices, quotes, customers, and sales analytics</p>
+          {/* Main Content Area */}
+          <div className="flex-1">
+            {renderMainContent()}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  function renderMainContent() {
+    if (activeMainTab === 'dashboard') {
+      return renderDashboard()
+    } else if (activeMainTab === 'transactions') {
+      return renderTransactionsContent()
+    } else if (activeMainTab === 'accounts') {
+      return renderAccountsContent()
+    } else if (activeMainTab === 'reports') {
+      return renderReportsContent()
+    } else if (activeMainTab === 'projects') {
+      return renderProjectsContent()
+    } else if (activeMainTab === 'budgets') {
+      return renderBudgetsContent()
+    } else if (activeMainTab === 'property') {
+      return renderPropertyContent()
+    } else if (activeMainTab === 'ecommerce') {
+      return renderEcommerceContent()
+    } else if (activeMainTab === 'documents') {
+      return renderDocumentsContent()
+    } else if (activeMainTab === 'integrations') {
+      return renderIntegrationsContent()
+    }
+    return renderDashboard()
+  }
+
+  function renderDashboard() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Dashboard</h2>
+            <p className="text-gray-600">Overview of your bookkeeping activities</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        {/* KPI Cards */}
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          {kpis.map((kpi, index) => {
+            const Icon = kpi.icon
+            return (
+              <Card key={index}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                      <p className="text-2xl font-bold">{kpi.value}</p>
+                      <p className={`text-xs ${kpi.color}`}>{kpi.change}</p>
+                    </div>
+                    <Icon className={`h-8 w-8 ${kpi.color}`} />
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+
+        {/* Recent Activity */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Transactions</CardTitle>
+              <CardDescription>Latest financial activity</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {journalEntries.slice(0, 5).map((entry) => (
+                  <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{entry.description}</p>
+                      <p className="text-sm text-gray-600">{entry.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">
+                        {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : `£${entry.credit.toLocaleString()}`}
+                      </p>
+                      <p className="text-xs text-gray-500">{entry.account}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Common bookkeeping tasks</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3">
+                <Button variant="outline" className="justify-start">
                   <Plus className="h-4 w-4 mr-2" />
-                  New Invoice
+                  Create Invoice
                 </Button>
-                <Button>
-                  <UserCheck className="h-4 w-4 mr-2" />
-                  Add Customer
+                <Button variant="outline" className="justify-start">
+                  <Receipt className="h-4 w-4 mr-2" />
+                  Record Expense
                 </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Outstanding Invoices</p>
-                      <p className="text-2xl font-bold">£12,000</p>
-                      <p className="text-xs text-gray-500">4 invoices</p>
-                    </div>
-                    <Invoice className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Overdue Amount</p>
-                      <p className="text-2xl font-bold text-red-600">£1,800</p>
-                      <p className="text-xs text-gray-500">1 invoice</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-red-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Active Customers</p>
-                      <p className="text-2xl font-bold">24</p>
-                      <p className="text-xs text-gray-500">+3 this month</p>
-                    </div>
-                    <Users className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Monthly Sales</p>
-                      <p className="text-2xl font-bold">£45,200</p>
-                      <p className="text-xs text-green-600">+12% vs last month</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Invoices</CardTitle>
-                  <CardDescription>Latest sales invoices and their status</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {salesData.invoices.map((invoice) => (
-                      <div key={invoice.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{invoice.id}</p>
-                            <Badge className={getStatusColor(invoice.status)}>{invoice.status}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{invoice.customer}</p>
-                          <p className="text-xs text-gray-500">Due: {invoice.dueDate}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">£{invoice.amount.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Customer Overview</CardTitle>
-                  <CardDescription>Active customers and their balances</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {salesData.customers.map((customer) => (
-                      <div key={customer.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{customer.name}</p>
-                            <Badge className={getStatusColor(customer.status)}>{customer.status}</Badge>
-                          </div>
-                          <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                            <span className="flex items-center gap-1">
-                              <Mail className="h-3 w-3" />
-                              {customer.email}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              {customer.phone}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">£{customer.balance.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Quotes & Estimates</CardTitle>
-                <CardDescription>Pending quotes and their conversion status</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {salesData.quotes.map((quote) => (
-                    <div key={quote.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">{quote.id}</p>
-                          <Badge className={getStatusColor(quote.status)}>{quote.status}</Badge>
-                        </div>
-                        <p className="text-sm text-gray-600">{quote.customer}</p>
-                        <p className="text-xs text-gray-500">Valid until: {quote.validUntil}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">£{quote.amount.toLocaleString()}</p>
-                        <div className="flex gap-1 mt-1">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          {quote.status === 'Accepted' && (
-                            <Button variant="ghost" size="sm">
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="journals" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Journal Entries</h2>
-                <p className="text-gray-600">Manual journal entries, adjustments, and audit trails</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Journal Entry
+                <Button variant="outline" className="justify-start">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Bank Reconciliation
                 </Button>
-                <Button>
+                <Button variant="outline" className="justify-start">
                   <FileText className="h-4 w-4 mr-2" />
-                  Export Journals
+                  Generate Report
                 </Button>
               </div>
-            </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Entries</p>
-                      <p className="text-2xl font-bold">247</p>
-                      <p className="text-xs text-gray-500">This month</p>
-                    </div>
-                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <FileText className="h-4 w-4 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+  function renderTransactionsContent() {
+    if (activeSubTab === 'sales') {
+      return renderSalesContent()
+    } else if (activeSubTab === 'purchases') {
+      return renderPurchasesContent()
+    } else if (activeSubTab === 'banking') {
+      return renderBankingContent()
+    } else if (activeSubTab === 'journals') {
+      return renderJournalsContent()
+    } else if (activeSubTab === 'vat') {
+      return renderVATContent()
+    }
+    return renderSalesContent()
+  }
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Draft Entries</p>
-                      <p className="text-2xl font-bold">12</p>
-                      <p className="text-xs text-gray-500">Pending review</p>
-                    </div>
-                    <div className="h-8 w-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <Edit className="h-4 w-4 text-yellow-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+  function renderSalesContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Sales Management</h2>
+            <p className="text-gray-600">Invoices, quotes, customers, and sales analytics</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Invoice
+            </Button>
+            <Button>
+              <UserCheck className="h-4 w-4 mr-2" />
+              Add Customer
+            </Button>
+          </div>
+        </div>
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Adjustments</p>
-                      <p className="text-2xl font-bold">18</p>
-                      <p className="text-xs text-gray-500">Year-end</p>
-                    </div>
-                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <Settings className="h-4 w-4 text-purple-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Reversals</p>
-                      <p className="text-2xl font-bold">5</p>
-                      <p className="text-xs text-gray-500">This period</p>
-                    </div>
-                    <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
-                      <RotateCcw className="h-4 w-4 text-red-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Journal Entries</CardTitle>
-                <CardDescription>Latest manual journal entries and adjustments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {journalEntries.map((entry) => (
-                    <div key={entry.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">{entry.reference}</p>
-                          <Badge className={getStatusColor(entry.status)}>{entry.status}</Badge>
-                        </div>
-                        <p className="text-sm text-gray-600">{entry.description}</p>
-                        <p className="text-xs text-gray-500">
-                          Dr: {entry.debitAccount} | Cr: {entry.creditAccount} | {entry.date}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">£{entry.amount.toLocaleString()}</p>
-                        <div className="flex gap-1 mt-1">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          {entry.status === 'Draft' && (
-                            <Button variant="ghost" size="sm">
-                              <Check className="h-3 w-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Outstanding Invoices</p>
+                  <p className="text-2xl font-bold">£12,000</p>
+                  <p className="text-xs text-gray-500">4 invoices</p>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="purchases" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Purchase Management</h2>
-                <p className="text-gray-600">Bills, purchase orders, suppliers, and expense tracking</p>
+                <Receipt className="h-8 w-8 text-orange-600" />
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Bill
-                </Button>
-                <Button>
-                  <Truck className="h-4 w-4 mr-2" />
-                  Add Supplier
-                </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">This Month Sales</p>
+                  <p className="text-2xl font-bold">£28,500</p>
+                  <p className="text-xs text-green-600">+15.2%</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Active Customers</p>
+                  <p className="text-2xl font-bold">156</p>
+                  <p className="text-xs text-blue-600">+8 new</p>
+                </div>
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Avg. Invoice Value</p>
+                  <p className="text-2xl font-bold">£1,850</p>
+                  <p className="text-xs text-purple-600">+5.8%</p>
+                </div>
+                <Calculator className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Invoices</CardTitle>
+            <CardDescription>Latest sales invoices and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">INV-001</p>
+                    <Badge className="bg-green-100 text-green-800">Paid</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">ABC Corp</p>
+                  <p className="text-xs text-gray-500">Due: 2024-01-30</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£2,500</p>
+                  <div className="flex gap-1 mt-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Outstanding Bills</p>
-                      <p className="text-2xl font-bold">£5,070</p>
-                      <p className="text-xs text-gray-500">3 bills</p>
-                    </div>
-                    <FileText className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
+  function renderPurchasesContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Purchases Management</h2>
+            <p className="text-gray-600">Bills, expenses, suppliers, and purchase analytics</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Bill
+            </Button>
+            <Button>
+              <Building className="h-4 w-4 mr-2" />
+              Add Supplier
+            </Button>
+          </div>
+        </div>
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Overdue Bills</p>
-                      <p className="text-2xl font-bold text-red-600">£320</p>
-                      <p className="text-xs text-gray-500">1 bill</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-red-600" />
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Bills</CardTitle>
+            <CardDescription>Latest purchase bills and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">BILL-001</p>
+                    <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Active Suppliers</p>
-                      <p className="text-2xl font-bold">18</p>
-                      <p className="text-xs text-gray-500">+2 this month</p>
-                    </div>
-                    <Truck className="h-8 w-8 text-blue-600" />
+                  <p className="text-sm text-gray-600">Office Supplies Ltd</p>
+                  <p className="text-xs text-gray-500">Due: 2024-02-15</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£450</p>
+                  <div className="flex gap-1 mt-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Monthly Expenses</p>
-                      <p className="text-2xl font-bold">£28,400</p>
-                      <p className="text-xs text-red-600">+8% vs last month</p>
-                    </div>
-                    <DollarSign className="h-8 w-8 text-red-600" />
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Bills</CardTitle>
-                  <CardDescription>Latest supplier bills and payment status</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {purchasesData.bills.map((bill) => (
-                      <div key={bill.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{bill.id}</p>
-                            <Badge className={getStatusColor(bill.status)}>{bill.status}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{bill.supplier}</p>
-                          <p className="text-xs text-gray-500">Due: {bill.dueDate}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">£{bill.amount.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+  function renderBankingContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Banking & Reconciliation</h2>
+            <p className="text-gray-600">Bank feeds, reconciliation, and transaction management</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Account
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Sync All
+            </Button>
+          </div>
+        </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Supplier Overview</CardTitle>
-                  <CardDescription>Active suppliers and outstanding balances</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {purchasesData.suppliers.map((supplier) => (
-                      <div key={supplier.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{supplier.name}</p>
-                            <Badge className={getStatusColor(supplier.status)}>{supplier.status}</Badge>
-                          </div>
-                          <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                            <span className="flex items-center gap-1">
-                              <Mail className="h-3 w-3" />
-                              {supplier.email}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              {supplier.phone}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">£{supplier.balance.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+        <Card>
+          <CardHeader>
+            <CardTitle>Bank Accounts</CardTitle>
+            <CardDescription>Connected bank accounts and their balances</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-4">
+                  <CreditCard className="h-8 w-8 text-blue-600" />
+                  <div>
+                    <p className="font-medium">Barclays Business Current</p>
+                    <p className="text-sm text-gray-600">****1234</p>
+                    <p className="text-xs text-gray-500">Last sync: 2 mins ago</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold">£45,230</p>
+                  <Badge className="bg-green-100 text-green-800">Active</Badge>
+                </div>
+              </div>
             </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Purchase Orders</CardTitle>
-                  <CardDescription>Active purchase orders and delivery tracking</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {purchasesData.purchaseOrders.map((po) => (
-                      <div key={po.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{po.id}</p>
-                            <Badge className={getStatusColor(po.status)}>{po.status}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{po.supplier}</p>
-                          <p className="text-xs text-gray-500">Expected: {po.expectedDate}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">£{po.amount.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+  function renderJournalsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Journal Entries</h2>
+            <p className="text-gray-600">Manual journal entries, adjustments, and audit trails</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Entry
+            </Button>
+          </div>
+        </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Credit Notes</CardTitle>
-                  <CardDescription>Supplier credit notes and returns</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {purchasesData.creditNotes.map((cn) => (
-                      <div key={cn.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{cn.id}</p>
-                            <Badge className={getStatusColor(cn.status)}>{cn.status}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{cn.supplier}</p>
-                          <p className="text-xs text-gray-500">{cn.reason}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-green-600">£{cn.amount.toLocaleString()}</p>
-                          <div className="flex gap-1 mt-1">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="dashboard" className="space-y-6">
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              {kpis.map((kpi, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                        <p className="text-2xl font-bold">{kpi.value}</p>
-                        <p className="text-xs text-gray-500">{kpi.change}</p>
-                      </div>
-                      <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Journal Entries</CardTitle>
+            <CardDescription>Latest manual journal entries and adjustments</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {journalEntries.map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{entry.id}</p>
+                      <Badge className="bg-blue-100 text-blue-800">Posted</Badge>
                     </div>
-                  </CardContent>
-                </Card>
+                    <p className="text-sm text-gray-600">{entry.description}</p>
+                    <p className="text-xs text-gray-500">{entry.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">
+                      {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : `£${entry.credit.toLocaleString()}`}
+                    </p>
+                    <p className="text-xs text-gray-500">{entry.account}</p>
+                  </div>
+                </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Transactions</CardTitle>
-                  <CardDescription>Latest bank feed transactions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {transactions.slice(0, 3).map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">{transaction.description}</p>
-                            <Badge className={getStatusColor(transaction.status)}>
-                              {transaction.status}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{transaction.date} | {transaction.category}</p>
-                        </div>
+  function renderVATContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">VAT Returns</h2>
+            <p className="text-gray-600">VAT submissions and MTD compliance</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Calculator className="h-4 w-4 mr-2" />
+              Calculate VAT
+            </Button>
+            <Button>
+              <Upload className="h-4 w-4 mr-2" />
+              Submit Return
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>VAT Returns</CardTitle>
+            <CardDescription>Quarterly VAT return submissions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">Q4 2023</p>
+                    <Badge className="bg-yellow-100 text-yellow-800">Draft</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">Due: 2024-02-07</p>
+                  <div className="flex gap-4 text-xs text-gray-500 mt-1">
+                    <span>Sales VAT: £12,450</span>
+                    <span>Purchase VAT: £3,200</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-bold">£9,250</p>
+                  <p className="text-xs text-gray-500">Net VAT Due</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderAccountsContent() {
+    if (activeSubTab === 'chartofaccounts') {
+      return renderChartOfAccountsContent()
+    } else if (activeSubTab === 'inventory') {
+      return renderInventoryContent()
+    } else if (activeSubTab === 'fixedassets') {
+      return renderFixedAssetsContent()
+    }
+    return renderChartOfAccountsContent()
+  }
+
+  function renderChartOfAccountsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Chart of Accounts</h2>
+            <p className="text-gray-600">Hierarchical account structure and management</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import CSV
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Account
+            </Button>
+          </div>
+        </div>
+
+        {/* Search and Filter */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              Search Accounts
+            </CardTitle>
+            <CardDescription>Find accounts by code, name, or type</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Search</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search accounts..."
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Account Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">All Types</option>
+                  <option value="Asset">Assets</option>
+                  <option value="Liability">Liabilities</option>
+                  <option value="Equity">Equity</option>
+                  <option value="Revenue">Revenue</option>
+                  <option value="Expense">Expenses</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Status</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FolderOpen className="h-5 w-5" />
+              Account Hierarchy
+            </CardTitle>
+            <CardDescription>Organized account structure with balances</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {chartOfAccounts.map((account) => (
+                <div key={account.id}>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Folder className="h-5 w-5 text-blue-600" />
+                      <div>
                         <div className="flex items-center gap-2">
-                          <span className={`font-semibold ${transaction.amount.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                            {transaction.amount}
-                          </span>
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{account.code}</span>
+                          <span className="font-medium">{account.name}</span>
                         </div>
+                        <p className="text-xs text-gray-500">{account.type}</p>
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <p className="font-semibold">£{account.balance?.toLocaleString()}</p>
+                        <p className="text-xs text-gray-500">Balance</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Bank Account Status</CardTitle>
-                  <CardDescription>Connected accounts overview</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {bankAccounts.map((account) => (
-                      <div key={account.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
+                  
+                  {account.children && (
+                    <div className="ml-8 mt-2 space-y-2">
+                      {account.children.map((child) => (
+                        <div key={child.id} className="flex items-center justify-between p-2 border-l-2 border-gray-200 pl-4">
                           <div className="flex items-center gap-2">
-                            <p className="font-medium">{account.name}</p>
-                            <Badge className={getStatusColor(account.status)}>
-                              {account.status}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600">{account.bank} {account.number}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">{account.balance}</p>
-                          <p className="text-xs text-gray-500">{account.unreconciled} unreconciled</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-brisk-primary" />
-                  Bookkeeping AI Insights
-                </CardTitle>
-                <CardDescription>Intelligent categorization and recommendations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h3 className="font-semibold text-blue-900">Smart Categorization</h3>
-                    <p className="text-sm text-blue-700">23 transactions auto-categorized this week with 98% accuracy. Review suggested categories for 3 pending items.</p>
-                    <Button size="sm" className="mt-2">Review Categories</Button>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h3 className="font-semibold text-green-900">VAT Optimization</h3>
-                    <p className="text-sm text-green-700">Potential VAT savings of £450 identified through expense categorization improvements.</p>
-                  </div>
-                  <div className="p-4 bg-orange-50 rounded-lg">
-                    <h3 className="font-semibold text-orange-900">Cash Flow Alert</h3>
-                    <p className="text-sm text-orange-700">Large payment due next week may impact cash flow. Consider payment scheduling options.</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="banking" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Banking & Reconciliation</h2>
-                <p className="text-gray-600">Bank feeds, reconciliation, and comprehensive transaction management</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Account
-                </Button>
-                <Button>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Sync All
-                </Button>
-              </div>
-            </div>
-
-            <Tabs defaultValue="accounts" className="space-y-6">
-              <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-                <TabsTrigger value="accounts">Accounts</TabsTrigger>
-                <TabsTrigger value="reconciliation">Reconciliation</TabsTrigger>
-                <TabsTrigger value="summary">Summary</TabsTrigger>
-                <TabsTrigger value="feeds">Bank Feeds</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="reconciliation" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Bank Reconciliation</CardTitle>
-                    <CardDescription>Match bank statements with book records</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h3 className="font-semibold mb-3">Bank Statement Balance</h3>
-                        <div className="p-4 bg-blue-50 rounded-lg">
-                          <p className="text-2xl font-bold text-blue-900">£45,230.50</p>
-                          <p className="text-sm text-blue-700">As of Feb 9, 2024</p>
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold mb-3">Book Balance</h3>
-                        <div className="p-4 bg-green-50 rounded-lg">
-                          <p className="text-2xl font-bold text-green-900">£44,890.25</p>
-                          <p className="text-sm text-green-700">Current ledger balance</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <h3 className="font-semibold mb-3">Reconciling Items</h3>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
-                          <div>
-                            <p className="font-medium">Outstanding Deposit</p>
-                            <p className="text-sm text-gray-600">Client payment in transit</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold text-green-600">+£1,250.00</p>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
-                          <div>
-                            <p className="font-medium">Outstanding Check #1234</p>
-                            <p className="text-sm text-gray-600">Supplier payment</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold text-red-600">-£890.75</p>
-                            <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
-                          <div>
-                            <p className="font-medium">Bank Charges</p>
-                            <p className="text-sm text-gray-600">Monthly service fee</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold text-red-600">-£25.00</p>
-                            <Badge className="bg-red-100 text-red-800">Unrecorded</Badge>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Adjusted Book Balance:</span>
-                        <span className="text-xl font-bold text-blue-600">£45,224.50</span>
-                      </div>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-sm text-gray-600">Difference:</span>
-                        <span className="text-sm font-medium text-red-600">£6.00</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="summary" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Total Credits</p>
-                          <p className="text-2xl font-bold text-green-600">£125,430</p>
-                          <p className="text-xs text-gray-500">This month</p>
-                        </div>
-                        <TrendingUp className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Total Debits</p>
-                          <p className="text-2xl font-bold text-red-600">£89,340</p>
-                          <p className="text-xs text-gray-500">This month</p>
-                        </div>
-                        <TrendingDown className="h-8 w-8 text-red-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Unreconciled</p>
-                          <p className="text-2xl font-bold text-orange-600">£2,340</p>
-                          <p className="text-xs text-gray-500">Requires attention</p>
-                        </div>
-                        <AlertTriangle className="h-8 w-8 text-orange-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Transaction Summary</CardTitle>
-                    <CardDescription>Detailed breakdown of bank transactions</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                          <div>
-                            <p className="font-medium">Client Payment - ABC Corp</p>
-                            <p className="text-sm text-gray-600">Feb 9, 2024 • Reconciled</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-green-600">+£5,250.00</p>
-                          <Badge className="bg-green-100 text-green-800">Matched</Badge>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                          <div>
-                            <p className="font-medium">Supplier Payment - XYZ Ltd</p>
-                            <p className="text-sm text-gray-600">Feb 8, 2024 • Reconciled</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-red-600">-£1,890.50</p>
-                          <Badge className="bg-green-100 text-green-800">Matched</Badge>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                          <div>
-                            <p className="font-medium">Direct Debit - Office Rent</p>
-                            <p className="text-sm text-gray-600">Feb 7, 2024 • Pending</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-red-600">-£2,500.00</p>
-                          <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="accounts" className="space-y-6">
-                <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Total Balance</p>
-                          <p className="text-2xl font-bold">£67,890.75</p>
-                          <p className="text-xs text-gray-500">Across all accounts</p>
-                        </div>
-                        <PoundSterling className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Unreconciled</p>
-                          <p className="text-2xl font-bold">13</p>
-                          <p className="text-xs text-gray-500">Transactions pending</p>
-                        </div>
-                        <AlertCircle className="h-8 w-8 text-orange-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Auto-Matched</p>
-                          <p className="text-2xl font-bold">89%</p>
-                          <p className="text-xs text-gray-500">This month</p>
-                        </div>
-                        <CheckCircle className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Connected Banks</p>
-                          <p className="text-2xl font-bold">3</p>
-                          <p className="text-xs text-gray-500">Active connections</p>
-                        </div>
-                        <Building className="h-8 w-8 text-blue-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Bank Account Management</CardTitle>
-                    <CardDescription>Connect and manage bank feeds with real-time synchronization</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {bankAccounts.map((account) => (
-                        <Card key={account.id} className="border-l-4 border-l-brisk-primary">
-                          <CardContent className="p-4">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <h3 className="font-semibold">{account.name}</h3>
-                                  <Badge className={getStatusColor(account.status)}>
-                                    {account.status}
-                                  </Badge>
-                                  <Badge variant="outline">{account.bank}</Badge>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                                  <span>Balance: {account.balance}</span>
-                                  <span>Account: {account.number}</span>
-                                  <span>Unreconciled: {account.unreconciled}</span>
-                                  <span>Last sync: {account.lastSync}</span>
-                                </div>
-                                <div className="mt-2">
-                                  <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                    <span>Reconciliation Progress</span>
-                                    <span>87%</span>
-                                  </div>
-                                  <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '87%' }}></div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Zap className="h-4 w-4 mr-2" />
-                                  Sync Now
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <BarChart3 className="h-4 w-4 mr-2" />
-                                  Reconcile
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Settings className="h-4 w-4 mr-2" />
-                                  Settings
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View
-                                </Button>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Connect New Bank</CardTitle>
-                    <CardDescription>Add new bank connections via Open Banking, CSV import, or API integration</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                        <CardContent className="p-6 text-center">
-                          <CreditCard className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                          <h3 className="font-semibold mb-1">Open Banking</h3>
-                          <p className="text-sm text-gray-600 mb-3">Secure bank connection via Open Banking</p>
-                          <Button size="sm" variant="outline">Connect</Button>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                        <CardContent className="p-6 text-center">
-                          <Upload className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                          <h3 className="font-semibold mb-1">CSV Import</h3>
-                          <p className="text-sm text-gray-600 mb-3">Upload bank statements manually</p>
-                          <Button size="sm" variant="outline">Import</Button>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                        <CardContent className="p-6 text-center">
-                          <Link className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                          <h3 className="font-semibold mb-1">API Integration</h3>
-                          <p className="text-sm text-gray-600 mb-3">Connect via banking API</p>
-                          <Button size="sm" variant="outline">Setup</Button>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="reconciliation" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <BarChart3 className="h-5 w-5 text-brisk-primary" />
-                      Bank Reconciliation
-                    </CardTitle>
-                    <CardDescription>Statement vs book balance comparison with reconciling items</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6 lg:grid-cols-2">
-                      <Card className="border">
-                        <CardHeader>
-                          <CardTitle className="text-lg">Current Account - Barclays</CardTitle>
-                          <CardDescription>Reconciliation for period ending 31 Jan 2024</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="p-4 bg-blue-50 rounded-lg">
-                                <h3 className="font-semibold text-blue-900">Bank Statement Balance</h3>
-                                <p className="text-2xl font-bold text-blue-900">£45,230.50</p>
-                                <p className="text-sm text-blue-700">As per bank statement</p>
-                              </div>
-                              <div className="p-4 bg-green-50 rounded-lg">
-                                <h3 className="font-semibold text-green-900">Book Balance</h3>
-                                <p className="text-2xl font-bold text-green-900">£45,230.50</p>
-                                <p className="text-sm text-green-700">As per accounting records</p>
-                              </div>
-                            </div>
-                            
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold">Reconciliation Status</h3>
-                                <Badge className="bg-green-100 text-green-800">Reconciled</Badge>
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                <p>Difference: £0.00</p>
-                                <p>Last reconciled: 2024-01-31 16:30</p>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border">
-                        <CardHeader>
-                          <CardTitle className="text-lg">Savings Account - HSBC</CardTitle>
-                          <CardDescription>Reconciliation for period ending 31 Jan 2024</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="p-4 bg-blue-50 rounded-lg">
-                                <h3 className="font-semibold text-blue-900">Bank Statement Balance</h3>
-                                <p className="text-2xl font-bold text-blue-900">£25,000.00</p>
-                                <p className="text-sm text-blue-700">As per bank statement</p>
-                              </div>
-                              <div className="p-4 bg-orange-50 rounded-lg">
-                                <h3 className="font-semibold text-orange-900">Book Balance</h3>
-                                <p className="text-2xl font-bold text-orange-900">£24,850.00</p>
-                                <p className="text-sm text-orange-700">As per accounting records</p>
-                              </div>
-                            </div>
-                            
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold">Reconciliation Status</h3>
-                                <Badge className="bg-orange-100 text-orange-800">Pending</Badge>
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                <p>Difference: £150.00</p>
-                                <p>Reconciling items: 2</p>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <Card className="mt-6">
-                      <CardHeader>
-                        <CardTitle>Reconciling Items</CardTitle>
-                        <CardDescription>Outstanding items requiring reconciliation</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <div className="p-4 border rounded-lg">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <h3 className="font-semibold">Outstanding Deposit</h3>
-                                  <Badge className="bg-blue-100 text-blue-800">Deposit in Transit</Badge>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                                  <span>Date: 2024-01-30</span>
-                                  <span>Reference: DEP001</span>
-                                  <span>Account: Savings - HSBC</span>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-1">Customer payment not yet cleared by bank</p>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <span className="text-lg font-bold text-green-600">+£150.00</span>
-                                <div className="flex items-center gap-2">
-                                  <Button variant="outline" size="sm">
-                                    <CheckCircle className="h-4 w-4 mr-2" />
-                                    Match
-                                  </Button>
-                                  <Button variant="outline" size="sm">
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    Edit
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="p-4 border rounded-lg">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <h3 className="font-semibold">Bank Charges</h3>
-                                  <Badge className="bg-red-100 text-red-800">Outstanding Charge</Badge>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                                  <span>Date: 2024-01-31</span>
-                                  <span>Reference: CHG002</span>
-                                  <span>Account: Current - Barclays</span>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-1">Monthly account maintenance fee</p>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <span className="text-lg font-bold text-red-600">-£15.00</span>
-                                <div className="flex items-center gap-2">
-                                  <Button variant="outline" size="sm">
-                                    <CheckCircle className="h-4 w-4 mr-2" />
-                                    Match
-                                  </Button>
-                                  <Button variant="outline" size="sm">
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    Edit
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-6 pt-4 border-t">
-                          <div className="text-sm text-gray-600">
-                            <p>Total reconciling items: £135.00</p>
-                            <p>2 items pending reconciliation</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="outline">
-                              <Download className="h-4 w-4 mr-2" />
-                              Export Report
-                            </Button>
-                            <Button>
-                              <CheckCircle className="h-4 w-4 mr-2" />
-                              Complete Reconciliation
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="summary" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <PieChart className="h-5 w-5 text-brisk-primary" />
-                      Bank Summary Dashboard
-                    </CardTitle>
-                    <CardDescription>Comprehensive overview of banking activity and reconciliation status</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-                      <Card className="border">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-600">Total Credits</p>
-                              <p className="text-2xl font-bold text-green-600">£45,280</p>
-                              <p className="text-xs text-gray-500">This month</p>
-                            </div>
-                            <TrendingUp className="h-8 w-8 text-green-600" />
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-600">Total Debits</p>
-                              <p className="text-2xl font-bold text-red-600">£38,450</p>
-                              <p className="text-xs text-gray-500">This month</p>
-                            </div>
-                            <TrendingDown className="h-8 w-8 text-red-600" />
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-600">Net Movement</p>
-                              <p className="text-2xl font-bold text-green-600">+£6,830</p>
-                              <p className="text-xs text-gray-500">This month</p>
-                            </div>
-                            <BarChart3 className="h-8 w-8 text-blue-600" />
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-600">Reconciliation Rate</p>
-                              <p className="text-2xl font-bold text-blue-600">94%</p>
-                              <p className="text-xs text-gray-500">Auto-matched</p>
-                            </div>
-                            <CheckCircle className="h-8 w-8 text-green-600" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <div className="grid gap-6 lg:grid-cols-2 mt-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Transaction Categories</CardTitle>
-                          <CardDescription>Breakdown by transaction type</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                <span className="font-medium">Sales Receipts</span>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-bold text-green-600">£28,450</p>
-                                <p className="text-xs text-gray-500">63% of credits</p>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span className="font-medium">Other Income</span>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-bold text-green-600">£16,830</p>
-                                <p className="text-xs text-gray-500">37% of credits</p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                                <span className="font-medium">Supplier Payments</span>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-bold text-red-600">£22,150</p>
-                                <p className="text-xs text-gray-500">58% of debits</p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 border rounded-lg">
-                              <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                <span className="font-medium">Operating Expenses</span>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-bold text-red-600">£16,300</p>
-                                <p className="text-xs text-gray-500">42% of debits</p>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Reconciliation Status</CardTitle>
-                          <CardDescription>Account-by-account reconciliation overview</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold">Current Account</h3>
-                                <Badge className="bg-green-100 text-green-800">Reconciled</Badge>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                                <span>Balance: £45,230.50</span>
-                                <span>Unreconciled: 0</span>
-                                <span>Last reconciled: 31 Jan 2024</span>
-                                <span>Variance: £0.00</span>
-                              </div>
-                              <div className="mt-2">
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div className="bg-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold">Savings Account</h3>
-                                <Badge className="bg-orange-100 text-orange-800">Pending</Badge>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                                <span>Balance: £25,000.00</span>
-                                <span>Unreconciled: 2</span>
-                                <span>Last reconciled: 30 Jan 2024</span>
-                                <span>Variance: £150.00</span>
-                              </div>
-                              <div className="mt-2">
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: '85%' }}></div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold">Credit Card</h3>
-                                <Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                                <span>Balance: -£3,450.25</span>
-                                <span>Unreconciled: 8</span>
-                                <span>Last reconciled: 28 Jan 2024</span>
-                                <span>Variance: £125.50</span>
-                              </div>
-                              <div className="mt-2">
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '65%' }}></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <Card className="mt-6">
-                      <CardHeader>
-                        <CardTitle>Recent Banking Activity</CardTitle>
-                        <CardDescription>Latest transactions and reconciliation updates</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between p-3 border rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                              <div>
-                                <p className="font-medium">Customer Payment - ABC Ltd</p>
-                                <p className="text-sm text-gray-500">Current Account • 2024-02-01 09:15</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-green-600">+£2,450.00</p>
-                              <Badge className="bg-green-100 text-green-800 text-xs">Reconciled</Badge>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between p-3 border rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                              <div>
-                                <p className="font-medium">Supplier Payment - XYZ Supplies</p>
-                                <p className="text-sm text-gray-500">Current Account • 2024-02-01 08:30</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-red-600">-£1,250.00</p>
-                              <Badge className="bg-green-100 text-green-800 text-xs">Reconciled</Badge>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between p-3 border rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                              <div>
-                                <p className="font-medium">Bank Transfer</p>
-                                <p className="text-sm text-gray-500">Savings Account • 2024-01-31 16:45</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-blue-600">+£5,000.00</p>
-                              <Badge className="bg-orange-100 text-orange-800 text-xs">Pending</Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="feeds" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Zap className="h-5 w-5 text-brisk-primary" />
-                      Bank Feed Management
-                    </CardTitle>
-                    <CardDescription>Configure and monitor automated bank feed synchronization</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-                        <Card className="border">
-                          <CardContent className="p-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-600">Active Feeds</p>
-                                <p className="text-2xl font-bold">3</p>
-                                <p className="text-xs text-gray-500">Connected banks</p>
-                              </div>
-                              <Zap className="h-8 w-8 text-green-600" />
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border">
-                          <CardContent className="p-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-600">Sync Frequency</p>
-                                <p className="text-2xl font-bold">4x</p>
-                                <p className="text-xs text-gray-500">Daily updates</p>
-                              </div>
-                              <RefreshCw className="h-8 w-8 text-blue-600" />
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border">
-                          <CardContent className="p-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-600">Last Sync</p>
-                                <p className="text-2xl font-bold">2m</p>
-                                <p className="text-xs text-gray-500">Minutes ago</p>
-                              </div>
-                              <Clock className="h-8 w-8 text-orange-600" />
-                            </div>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border">
-                          <CardContent className="p-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-600">Success Rate</p>
-                                <p className="text-2xl font-bold">99.8%</p>
-                                <p className="text-xs text-gray-500">This month</p>
-                              </div>
-                              <CheckCircle className="h-8 w-8 text-green-600" />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Feed Configuration</CardTitle>
-                          <CardDescription>Manage bank feed settings and synchronization preferences</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                  <div>
-                                    <h3 className="font-semibold">Barclays Current Account</h3>
-                                    <p className="text-sm text-gray-500">Open Banking • ****1234</p>
-                                  </div>
-                                </div>
-                                <Badge className="bg-green-100 text-green-800">Active</Badge>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
-                                <span>Sync: Every 6 hours</span>
-                                <span>Auto-categorize: Enabled</span>
-                                <span>Last sync: 2 minutes ago</span>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Settings className="h-4 w-4 mr-2" />
-                                  Configure
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Zap className="h-4 w-4 mr-2" />
-                                  Sync Now
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View Log
-                                </Button>
-                              </div>
-                            </div>
-
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                  <div>
-                                    <h3 className="font-semibold">HSBC Savings Account</h3>
-                                    <p className="text-sm text-gray-500">Open Banking • ****5678</p>
-                                  </div>
-                                </div>
-                                <Badge className="bg-green-100 text-green-800">Active</Badge>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
-                                <span>Sync: Daily at 9 AM</span>
-                                <span>Auto-categorize: Enabled</span>
-                                <span>Last sync: 3 hours ago</span>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Settings className="h-4 w-4 mr-2" />
-                                  Configure
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Zap className="h-4 w-4 mr-2" />
-                                  Sync Now
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View Log
-                                </Button>
-                              </div>
-                            </div>
-
-                            <div className="p-4 border rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                  <div>
-                                    <h3 className="font-semibold">Santander Credit Card</h3>
-                                    <p className="text-sm text-gray-500">API Integration • ****9012</p>
-                                  </div>
-                                </div>
-                                <Badge className="bg-yellow-100 text-yellow-800">Syncing</Badge>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
-                                <span>Sync: Every 12 hours</span>
-                                <span>Auto-categorize: Enabled</span>
-                                <span>Last sync: In progress</span>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Settings className="h-4 w-4 mr-2" />
-                                  Configure
-                                </Button>
-                                <Button variant="outline" size="sm" disabled>
-                                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                                  Syncing...
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View Log
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Sync History & Logs</CardTitle>
-                          <CardDescription>Recent synchronization activity and error logs</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="p-3 bg-green-50 rounded-lg">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="font-medium text-sm">Barclays Business</p>
-                                  <p className="text-xs text-gray-600">Last sync: 2 minutes ago</p>
-                                </div>
-                                <div className="text-right">
-                                  <p className="text-sm font-semibold text-green-600">Success</p>
-                                  <p className="text-xs text-gray-500">47 transactions</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="p-3 bg-yellow-50 rounded-lg">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="font-medium text-sm">HSBC Current</p>
-                                  <p className="text-xs text-gray-600">Last sync: 15 minutes ago</p>
-                                </div>
-                                <div className="text-right">
-                                  <p className="text-sm font-semibold text-yellow-600">Partial</p>
-                                  <p className="text-xs text-gray-500">Rate limited</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </TabsContent>
-
-          <TabsContent value="transactions" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Transaction Management</CardTitle>
-                <CardDescription>Review and categorize transactions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <Input placeholder="Search transactions..." className="flex-1" />
-                  <Select value={selectedAccount} onValueChange={setSelectedAccount}>
-                    <SelectTrigger className="w-full sm:w-48">
-                      <SelectValue placeholder="Account" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Accounts</SelectItem>
-                      <SelectItem value="current">Current Account</SelectItem>
-                      <SelectItem value="savings">Savings Account</SelectItem>
-                      <SelectItem value="credit">Credit Card</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button>
-                    <Search className="h-4 w-4 mr-2" />
-                    Search
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  {transactions.map((transaction) => (
-                    <Card key={transaction.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{transaction.description}</h3>
-                              <Badge className={getStatusColor(transaction.status)}>
-                                {transaction.status}
-                              </Badge>
-                              <Badge variant="outline">{transaction.category}</Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                              <span>Date: {transaction.date}</span>
-                              <span>Account: {transaction.account}</span>
-                              <span>VAT: {transaction.vatRate}</span>
-                            </div>
+                            <span className="font-mono text-xs bg-gray-50 px-2 py-1 rounded">{child.code}</span>
+                            <span className="text-sm">{child.name}</span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className={`text-lg font-bold ${transaction.amount.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
-                              {transaction.amount}
-                            </span>
+                            <div className="text-right">
+                              <p className="text-sm font-medium">£{child.balance?.toLocaleString()}</p>
+                            </div>
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm">
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <Eye className="h-4 w-4 mr-2" />
-                                View
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="vat" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>VAT Returns Management</CardTitle>
-                <CardDescription>Making Tax Digital (MTD) compliance</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {vatReturns.map((vatReturn) => (
-                    <Card key={vatReturn.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{vatReturn.period}</h3>
-                              <Badge className={getStatusColor(vatReturn.status)}>
-                                {vatReturn.status}
-                              </Badge>
-                              <Badge variant="outline">Due: {vatReturn.dueDate}</Badge>
-                            </div>
-                            <div className="mb-2">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-sm text-gray-600">Progress:</span>
-                                <div className="flex-1 bg-gray-200 rounded-full h-2">
-                                  <div 
-                                    className="bg-brisk-primary h-2 rounded-full" 
-                                    style={{ width: `${vatReturn.progress}%` }}
-                                  ></div>
-                                </div>
-                                <span className="text-sm font-medium">{vatReturn.progress}%</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                              <span>VAT Due: {vatReturn.vatDue}</span>
-                              <span>Sales VAT: {vatReturn.salesVat}</span>
-                              <span>Purchase VAT: {vatReturn.purchaseVat}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <Calculator className="h-4 w-4 mr-2" />
-                              Calculate
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              Review
-                            </Button>
-                            <Button size="sm">
-                              <Upload className="h-4 w-4 mr-2" />
-                              Submit
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="reports" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Management Reports</CardTitle>
-                <CardDescription>Financial reports and analytics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">P&amp;L Report</h3>
-                      <p className="text-sm text-gray-600 mb-3">Profit and loss statement</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <PoundSterling className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Cash Flow</h3>
-                      <p className="text-sm text-gray-600 mb-3">Cash flow forecast</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Balance Sheet</h3>
-                      <p className="text-sm text-gray-600 mb-3">Assets and liabilities</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">KPI Dashboard</h3>
-                      <p className="text-sm text-gray-600 mb-3">Key performance indicators</p>
-                      <Button size="sm" variant="outline">View</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Receipt className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">VAT Analysis</h3>
-                      <p className="text-sm text-gray-600 mb-3">VAT breakdown and analysis</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Download className="h-8 w-8 text-gray-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Custom Report</h3>
-                      <p className="text-sm text-gray-600 mb-3">Build custom reports</p>
-                      <Button size="sm" variant="outline">Create</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="projects" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Project Management</h2>
-                <p className="text-gray-600">Advanced project tracking, cost centres, and resource management</p>
-              </div>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New Project
-              </Button>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Active Projects</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">2 on track, 1 over budget</p>
-                    </div>
-                    <Target className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Budget</p>
-                      <p className="text-2xl font-bold">£155,000</p>
-                      <p className="text-xs text-gray-500">Across all projects</p>
-                    </div>
-                    <PoundSterling className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Utilization</p>
-                      <p className="text-2xl font-bold">78%</p>
-                      <p className="text-xs text-gray-500">Resource allocation</p>
-                    </div>
-                    <Activity className="h-8 w-8 text-purple-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Profitability</p>
-                      <p className="text-2xl font-bold">24.5%</p>
-                      <p className="text-xs text-gray-500">Average margin</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Project Portfolio</CardTitle>
-                <CardDescription>Track project progress, budgets, and profitability</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {projectData.map((project) => (
-                    <Card key={project.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{project.name}</h3>
-                              <Badge className={getStatusColor(project.status)}>
-                                {project.status}
-                              </Badge>
-                              <Badge variant="outline">{project.client}</Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                              <span>Budget: {project.budget}</span>
-                              <span>Actual: {project.actual}</span>
-                              <span>Variance: {project.variance}</span>
-                              <span>Manager: {project.manager}</span>
-                            </div>
-                            <div className="flex items-center gap-4 mt-2">
-                              <div className="flex-1">
-                                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                  <span>Progress</span>
-                                  <span>{project.completion}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div 
-                                    className="bg-brisk-primary h-2 rounded-full" 
-                                    style={{ width: `${project.completion}%` }}
-                                  ></div>
-                                </div>
-                              </div>
-                              <span className="text-xs text-gray-500">{project.startDate} - {project.endDate}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Timeline
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Users className="h-4 w-4 mr-2" />
-                              Team
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              Details
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="h-5 w-5 text-brisk-primary" />
-                    Resource Allocation
-                  </CardTitle>
-                  <CardDescription>Team capacity and project assignments</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-blue-900">Development Team</h3>
-                        <span className="text-sm text-blue-700">85% utilized</span>
-                      </div>
-                      <div className="w-full bg-blue-200 rounded-full h-2">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '85%' }}></div>
-                      </div>
-                      <p className="text-sm text-blue-700 mt-1">5 developers across 3 projects</p>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-green-900">Design Team</h3>
-                        <span className="text-sm text-green-700">62% utilized</span>
-                      </div>
-                      <div className="w-full bg-green-200 rounded-full h-2">
-                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '62%' }}></div>
-                      </div>
-                      <p className="text-sm text-green-700 mt-1">3 designers, capacity available</p>
-                    </div>
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-orange-900">Project Managers</h3>
-                        <span className="text-sm text-orange-700">95% utilized</span>
-                      </div>
-                      <div className="w-full bg-orange-200 rounded-full h-2">
-                        <div className="bg-orange-600 h-2 rounded-full" style={{ width: '95%' }}></div>
-                      </div>
-                      <p className="text-sm text-orange-700 mt-1">2 PMs, near capacity</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-brisk-primary" />
-                    Project Profitability
-                  </CardTitle>
-                  <CardDescription>Revenue and margin analysis by project</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Website Redesign</span>
-                        <span className="text-sm text-green-600">High Margin</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <span>Revenue: £25,000</span>
-                        <span>Cost: £18,500</span>
-                        <span>Margin: 26%</span>
-                        <span>ROI: 35%</span>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">ERP Implementation</span>
-                        <span className="text-sm text-red-600">Low Margin</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <span>Revenue: £85,000</span>
-                        <span>Cost: £92,300</span>
-                        <span>Margin: -8.6%</span>
-                        <span>ROI: -8.6%</span>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Mobile App</span>
-                        <span className="text-sm text-blue-600">Projected</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <span>Revenue: £45,000</span>
-                        <span>Cost: £32,000 (est)</span>
-                        <span>Margin: 29% (proj)</span>
-                        <span>ROI: 41% (proj)</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="budgets" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Budgets & Forecasting</h2>
-                <p className="text-gray-600">Management accounts, variance analysis, and predictive modeling</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Budget
-                </Button>
-                <Button>
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Report
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Budget vs Actual</p>
-                      <p className="text-2xl font-bold">94.2%</p>
-                      <p className="text-xs text-gray-500">YTD performance</p>
-                    </div>
-                    <Target className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Forecast Accuracy</p>
-                      <p className="text-2xl font-bold">87%</p>
-                      <p className="text-xs text-gray-500">Rolling 12 months</p>
-                    </div>
-                    <Activity className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Variance Alert</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">Categories over threshold</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Next Forecast</p>
-                      <p className="text-2xl font-bold">£32k</p>
-                      <p className="text-xs text-gray-500">Projected profit</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-purple-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Budget vs Actual Analysis</CardTitle>
-                <CardDescription>Detailed variance analysis by category</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {budgetData.map((item, index) => (
-                    <Card key={index} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{item.category}</h3>
-                              <Badge className={item.variance >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                                {item.variancePercent > 0 ? '+' : ''}{item.variancePercent.toFixed(1)}%
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                              <span>Budgeted: £{item.budgeted.toLocaleString()}</span>
-                              <span>Actual: £{item.actual.toLocaleString()}</span>
-                              <span>Variance: £{item.variance.toLocaleString()}</span>
-                              <span>Forecast: £{item.forecast.toLocaleString()}</span>
-                            </div>
-                            <div className="mt-2">
-                              <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                <span>Progress vs Budget</span>
-                                <span>{((item.actual / item.budgeted) * 100).toFixed(1)}%</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
-                                  className={`h-2 rounded-full ${item.variance >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
-                                  style={{ width: `${Math.min((item.actual / item.budgeted) * 100, 100)}%` }}
-                                ></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <BarChart3 className="h-4 w-4 mr-2" />
-                              Trend
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4 mr-2" />
-                              Adjust
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <LineChart className="h-5 w-5 text-brisk-primary" />
-                    Cash Flow Forecast
-                  </CardTitle>
-                  <CardDescription>AI-powered cash flow predictions with confidence intervals</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="h-48 bg-gray-50 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <LineChart className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Interactive Cash Flow Chart</p>
-                        <p className="text-xs text-gray-500">Actual vs Forecast with Confidence Bands</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      {forecastData.cashFlow.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 border rounded">
-                          <span className="font-medium">{item.month}</span>
-                          <div className="flex items-center gap-4 text-sm">
-                            {item.actual && <span>Actual: £{item.actual.toLocaleString()}</span>}
-                            <span>Forecast: £{item.forecast.toLocaleString()}</span>
-                            <Badge variant="outline">{item.confidence}% confidence</Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-brisk-primary" />
-                    Scenario Planning
-                  </CardTitle>
-                  <CardDescription>Multiple forecast scenarios with probability weighting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {forecastData.scenarios.map((scenario, index) => (
-                      <div key={index} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-semibold">{scenario.name}</h3>
-                          <Badge variant="outline">{scenario.probability}% probability</Badge>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                          <span>Revenue: £{scenario.revenue.toLocaleString()}</span>
-                          <span>Profit: £{scenario.profit.toLocaleString()}</span>
-                        </div>
-                        <div className="mt-2">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-brisk-primary h-2 rounded-full" 
-                              style={{ width: `${scenario.probability}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Weighted Average</h3>
-                      <div className="grid grid-cols-2 gap-4 text-sm text-blue-700 mt-1">
-                        <span>Expected Revenue: £157,500</span>
-                        <span>Expected Profit: £33,100</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-brisk-primary" />
-                  AI Budget Insights
-                </CardTitle>
-                <CardDescription>Intelligent recommendations and predictive analytics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Cost Optimization</h3>
-                      <p className="text-sm text-green-700">Marketing spend is 12% under budget. Consider reallocating £1,800 to high-performing channels for Q2.</p>
-                    </div>
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Revenue Opportunity</h3>
-                      <p className="text-sm text-blue-700">Historical data suggests 15% revenue uptick in Q2. Adjust forecast and resource planning accordingly.</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Risk Alert</h3>
-                      <p className="text-sm text-orange-700">Operating expenses trending 6.2% over budget. Review discretionary spending and vendor contracts.</p>
-                    </div>
-                    <div className="p-4 bg-purple-50 rounded-lg">
-                      <h3 className="font-semibold text-purple-900">Seasonal Adjustment</h3>
-                      <p className="text-sm text-purple-700">Q3 typically shows 8% revenue decline. Plan cash flow and adjust expense budgets proactively.</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="projections" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Financial Projections & Modeling</h2>
-                <p className="text-gray-600">AI-powered forecasting, scenario planning, and predictive analytics based on client data</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Model
-                </Button>
-                <Button>
-                  <Brain className="h-4 w-4 mr-2" />
-                  AI Forecast
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Forecast Accuracy</p>
-                      <p className="text-2xl font-bold">91%</p>
-                      <p className="text-xs text-gray-500">Last 12 months</p>
-                    </div>
-                    <Target className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Revenue Growth</p>
-                      <p className="text-2xl font-bold">+12.8%</p>
-                      <p className="text-xs text-gray-500">Projected YoY</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Cash Position</p>
-                      <p className="text-2xl font-bold">£345k</p>
-                      <p className="text-xs text-gray-500">6-month projection</p>
-                    </div>
-                    <PoundSterling className="h-8 w-8 text-purple-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Risk Score</p>
-                      <p className="text-2xl font-bold">Low</p>
-                      <p className="text-xs text-gray-500">Weighted assessment</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Revenue Projections</CardTitle>
-                <CardDescription>AI-powered revenue forecasting with confidence intervals</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {projectionData.revenueProjections.map((item, index) => (
-                    <Card key={index} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{item.period}</h3>
-                              <Badge className="bg-blue-100 text-blue-800">
-                                {item.confidence}% confidence
-                              </Badge>
-                              <Badge className="bg-green-100 text-green-800">
-                                +{item.growth.toFixed(1)}% growth
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                              {item.historical && <span>Historical: £{item.historical.toLocaleString()}</span>}
-                              <span>Projected: £{item.projected.toLocaleString()}</span>
-                              <span>Growth: +{item.growth.toFixed(1)}%</span>
-                            </div>
-                            <div className="mt-2">
-                              <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                <span>Confidence Level</span>
-                                <span>{item.confidence}%</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
-                                  className="bg-blue-500 h-2 rounded-full" 
-                                  style={{ width: `${item.confidence}%` }}
-                                ></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <LineChart className="h-4 w-4 mr-2" />
-                              Trend
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4 mr-2" />
-                              Adjust
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <PoundSterling className="h-5 w-5 text-brisk-primary" />
-                    Cash Flow Projections
-                  </CardTitle>
-                  <CardDescription>Monthly cash flow forecasting with opening/closing balances</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="h-48 bg-gray-50 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <LineChart className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Interactive Cash Flow Chart</p>
-                        <p className="text-xs text-gray-500">Monthly Inflows vs Outflows</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      {projectionData.cashFlowProjections.map((item, index) => (
-                        <div key={index} className="p-3 border rounded-lg">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium">{item.month}</span>
-                            <span className="text-sm text-green-600">Net: £{(item.inflows - item.outflows).toLocaleString()}</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
-                            <span>Opening: £{item.opening.toLocaleString()}</span>
-                            <span>Closing: £{item.closing.toLocaleString()}</span>
-                            <span>Inflows: £{item.inflows.toLocaleString()}</span>
-                            <span>Outflows: £{item.outflows.toLocaleString()}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-brisk-primary" />
-                    Profitability Projections
-                  </CardTitle>
-                  <CardDescription>Margin analysis and profitability forecasting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {projectionData.profitabilityProjections.map((item, index) => (
-                      <div key={index} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-semibold">{item.metric}</h3>
-                          <Badge className={item.trend === 'improving' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                            {item.trend}
-                          </Badge>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 text-sm text-gray-600 mb-2">
-                          <span>Current: {item.current}%</span>
-                          <span>Projected: {item.projected}%</span>
-                          <span>Target: {item.target}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-brisk-primary h-2 rounded-full" 
-                            style={{ width: `${(item.projected / item.target) * 100}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
-                          <span>Progress to Target</span>
-                          <span>{((item.projected / item.target) * 100).toFixed(1)}%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-brisk-primary" />
-                  Key Performance Drivers
-                </CardTitle>
-                <CardDescription>Critical business metrics driving financial performance</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {projectionData.keyDrivers.map((driver, index) => (
-                    <div key={index} className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">{driver.driver}</h3>
-                        <div className="flex items-center gap-2">
-                          <Badge className={driver.impact === 'High' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}>
-                            {driver.impact} Impact
-                          </Badge>
-                          <Badge variant="outline">{driver.confidence}% confidence</Badge>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-2">
-                        <span>Current: {driver.current}</span>
-                        <span>Projected: {driver.projected}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${driver.impact === 'High' ? 'bg-red-500' : 'bg-yellow-500'}`}
-                          style={{ width: `${driver.confidence}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-brisk-primary" />
-                  Risk Assessment & Mitigation
-                </CardTitle>
-                <CardDescription>Identified risks and recommended mitigation strategies</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-yellow-50 rounded-lg">
-                    <h3 className="font-semibold text-yellow-900">Market Volatility & Economic Risk</h3>
-                    <p className="text-sm text-yellow-700">AI economic model analyzing 47 indicators suggests increased market volatility. Predictive analytics recommend maintaining 3.2 months cash reserves and diversifying supplier base across 4+ regions.</p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <TrendingDown className="h-4 w-4 text-yellow-600" />
-                      <span className="text-xs text-yellow-600">AI Risk Model: Medium | Probability: 65% | Economic Indicators: 47</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-red-50 rounded-lg">
-                    <h3 className="font-semibold text-red-900">Customer Concentration & Dependency Risk</h3>
-                    <p className="text-sm text-red-700">AI analysis reveals 45% of revenue from top 3 clients. Machine learning risk model flags high concentration dependency. Predictive scenarios show 23% revenue impact if largest client churns.</p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <Users className="h-4 w-4 text-red-600" />
-                      <span className="text-xs text-red-600">AI Risk Level: High | Churn Probability: 12% | Action Required</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        Monitor
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Mitigate
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  {projectionData.riskFactors.map((risk, index) => (
-                    <Card key={index} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{risk.risk}</h3>
-                              <Badge className={risk.probability > 40 ? 'bg-red-100 text-red-800' : risk.probability > 25 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}>
-                                {risk.probability}% probability
-                              </Badge>
-                              <Badge className={risk.impact === 'High' ? 'bg-red-100 text-red-800' : risk.impact === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}>
-                                {risk.impact} impact
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-2">
-                              <strong>Mitigation:</strong> {risk.mitigation}
-                            </p>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full ${risk.probability > 40 ? 'bg-red-500' : risk.probability > 25 ? 'bg-yellow-500' : 'bg-green-500'}`}
-                                style={{ width: `${risk.probability}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              Monitor
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Settings className="h-4 w-4 mr-2" />
-                              Mitigate
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-brisk-primary" />
-                  AI-Powered Insights & Recommendations
-                </CardTitle>
-                <CardDescription>Machine learning insights based on client data patterns</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h3 className="font-semibold text-blue-900">Revenue Optimization</h3>
-                    <p className="text-sm text-blue-700">AI analysis of client data patterns suggests 15% revenue increase possible through customer retention programs. Machine learning model trained on 2,500+ similar businesses shows 8% average improvement.</p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-blue-600" />
-                      <span className="text-xs text-blue-600">ML Confidence: 89% | Impact: High | Data Points: 2,847</span>
-                    </div>
-                  </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Revenue Optimization</h3>
-                      <p className="text-sm text-blue-700">AI analysis of client data patterns suggests 15% revenue increase possible through customer retention programs. Machine learning model trained on 2,500+ similar businesses shows 8% average improvement.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="text-xs text-blue-600">ML Confidence: 89% | Impact: High | Data Points: 2,847</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Cost Efficiency & Automation</h3>
-                      <p className="text-sm text-green-700">Predictive model identifies £18,500 annual savings through vendor consolidation and automated processes. AI categorization reduces manual processing by 67%.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Zap className="h-4 w-4 text-green-600" />
-                        <span className="text-xs text-green-600">AI Confidence: 94% | Impact: Medium | Processing Time: -67%</span>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-purple-50 rounded-lg">
-                      <h3 className="font-semibold text-purple-900">Predictive Cash Flow Alerts</h3>
-                      <p className="text-sm text-purple-700">Machine learning model predicts potential cash flow constraints in Q3 based on seasonal patterns and current commitments. Recommended actions include accelerating receivables collection.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-purple-600" />
-                        <span className="text-xs text-purple-600">Predictive Alert | 76% probability | 90 days ahead</span>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Anomaly Detection & Fraud Prevention</h3>
-                      <p className="text-sm text-orange-700">AI monitoring detected 3 unusual transaction patterns this month. Advanced algorithms identified potential duplicate payments and flagged irregular supplier invoices for review.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Brain className="h-4 w-4 text-orange-600" />
-                        <span className="text-xs text-orange-600">Real-time Monitoring | 99.2% accuracy | 24/7 protection</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-purple-50 rounded-lg">
-                      <h3 className="font-semibold text-purple-900">Market Timing</h3>
-                      <p className="text-sm text-purple-700">Seasonal analysis indicates optimal expansion timing in Q2. Client data patterns show 23% higher success rates for initiatives launched in this period.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-purple-600" />
-                        <span className="text-xs text-purple-600">Optimal Window: Q2 2024</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Cash Flow Optimization</h3>
-                      <p className="text-sm text-orange-700">Payment term adjustments could improve cash flow by £45,000 over 6 months. Model based on 500+ similar client scenarios.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <Activity className="h-4 w-4 text-orange-600" />
-                        <span className="text-xs text-orange-600">Improvement: £45k over 6 months</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="property" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Property Management</h2>
-                <p className="text-gray-600">Landlord portfolio management, rent tracking, and tenant administration</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Property
-                </Button>
-                <Button>
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Report
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Properties</p>
-                      <p className="text-2xl font-bold">24</p>
-                      <p className="text-xs text-gray-500">Active portfolio</p>
-                    </div>
-                    <Building className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Monthly Rent</p>
-                      <p className="text-2xl font-bold">£18,500</p>
-                      <p className="text-xs text-gray-500">Gross rental income</p>
-                    </div>
-                    <PoundSterling className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Occupancy Rate</p>
-                      <p className="text-2xl font-bold">96%</p>
-                      <p className="text-xs text-gray-500">Current occupancy</p>
-                    </div>
-                    <UserCheck className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Maintenance Due</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">Properties requiring attention</p>
-                    </div>
-                    <Wrench className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
-              <div className={isMobile ? '' : 'lg:col-span-2'}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Property Portfolio</CardTitle>
-                    <CardDescription>Overview of all properties and their performance</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {properties.map((property) => (
-                        <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <p className="font-medium">{property.address}</p>
-                              <Badge className={property.status === 'Occupied' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
-                                {property.status}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-600">{property.tenants > 0 ? `${property.tenants} tenant(s)` : 'Vacant'}</p>
-                            <p className="text-xs text-gray-500">Type: {property.type}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold">{property.monthlyRent}/month</p>
-                            <p className="text-sm text-gray-600">Occupancy: {property.occupancy}</p>
-                            <div className="flex gap-1 mt-1">
                               <Button variant="ghost" size="sm">
                                 <Eye className="h-3 w-3" />
                               </Button>
@@ -3342,1364 +971,731 @@ export default function Bookkeeping() {
                         </div>
                       ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Rent Schedule</CardTitle>
-                  <CardDescription>Upcoming rent collections and due dates</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">123 Oak Street</p>
-                          <p className="text-xs text-gray-600">Due: Feb 1st</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-sm">£1,200</p>
-                          <Badge className="bg-green-100 text-green-800 text-xs">Paid</Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">456 Pine Avenue</p>
-                          <p className="text-xs text-gray-600">Due: Feb 1st</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-sm">£950</p>
-                          <Badge className="bg-yellow-100 text-yellow-800 text-xs">Pending</Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 bg-red-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">789 Elm Road</p>
-                          <p className="text-xs text-gray-600">Due: Jan 1st</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-sm">£1,100</p>
-                          <Badge className="bg-red-100 text-red-800 text-xs">Overdue</Badge>
-                        </div>
-                      </div>
+  function renderInventoryContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Inventory Management</h2>
+            <p className="text-gray-600">Stock levels, valuations, and inventory tracking</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Item
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Inventory Items</CardTitle>
+            <CardDescription>Current stock levels and valuations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {inventoryItems.map((item) => (
+                <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Package className="h-8 w-8 text-blue-600" />
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-sm text-gray-600">{item.category}</p>
+                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="text-right">
+                    <p className="font-semibold">£{item.totalValue.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">£{item.unitCost} per unit</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Property Management</h2>
-                <p className="text-gray-600">Landlord portfolio, rent schedules, and tenant management</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderFixedAssetsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Fixed Assets Register</h2>
+            <p className="text-gray-600">Asset tracking, depreciation, and valuations</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Asset
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Fixed Assets</CardTitle>
+            <CardDescription>Asset register with depreciation tracking</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {fixedAssets.map((asset) => (
+                <div key={asset.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Building className="h-8 w-8 text-green-600" />
+                    <div>
+                      <p className="font-medium">{asset.name}</p>
+                      <p className="text-sm text-gray-600">{asset.category}</p>
+                      <p className="text-xs text-gray-500">Purchased: {asset.purchaseDate}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">£{asset.netValue.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">Cost: £{asset.cost.toLocaleString()}</p>
+                    <p className="text-xs text-red-500">Depreciation: £{asset.depreciation.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderReportsContent() {
+    if (activeSubTab === 'financial') {
+      return renderFinancialReportsContent()
+    } else if (activeSubTab === 'management') {
+      return renderManagementReportsContent()
+    } else if (activeSubTab === 'analytics') {
+      return renderAnalyticsContent()
+    }
+    return renderFinancialReportsContent()
+  }
+
+  function renderFinancialReportsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Financial Reports</h2>
+            <p className="text-gray-600">Standard financial statements and reports</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Report Settings
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Custom Report
+            </Button>
+          </div>
+        </div>
+
+        {/* Advanced Search & Filter Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              Search & Filter Reports
+            </CardTitle>
+            <CardDescription>Find reports quickly with advanced search and filtering options</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Search Reports</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search by name, type, or content..."
+                    className="pl-10"
+                  />
+                </div>
               </div>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Property
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Report Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">All Types</option>
+                  <option value="financial">Financial Statements</option>
+                  <option value="management">Management Reports</option>
+                  <option value="analytics">Analytics & KPIs</option>
+                  <option value="custom">Custom Reports</option>
+                  <option value="scheduled">Scheduled Reports</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Date Range</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">All Periods</option>
+                  <option value="today">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="quarter">This Quarter</option>
+                  <option value="year">This Year</option>
+                  <option value="custom">Custom Range</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Status</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">All Status</option>
+                  <option value="generated">Generated</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="draft">Draft</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                Apply Filters
+              </Button>
+              <Button variant="ghost" size="sm">
+                Clear All
               </Button>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Properties</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">2 occupied, 1 vacant</p>
-                    </div>
-                    <Building className="h-8 w-8 text-blue-600" />
+        {/* Financial Reports Grid */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-brisk-primary" />
+              Standard Financial Reports
+            </CardTitle>
+            <CardDescription>Core financial statements and reports</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Profit & Loss</h3>
+                  <p className="text-sm text-gray-600 mb-3">Comprehensive P&L with comparatives</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <FileText className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Balance Sheet</h3>
+                  <p className="text-sm text-gray-600 mb-3">Assets, liabilities & equity</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <PoundSterling className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Cash Flow Statement</h3>
+                  <p className="text-sm text-gray-600 mb-3">Operating, investing & financing</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Monthly Rent</p>
-                      <p className="text-2xl font-bold">£7,200</p>
-                      <p className="text-xs text-gray-500">66.7% occupancy</p>
-                    </div>
-                    <PoundSterling className="h-8 w-8 text-green-600" />
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <LineChart className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Comparative Reports</h3>
+                  <p className="text-sm text-gray-600 mb-3">Period-over-period comparisons</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Active Tenants</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">All rent current</p>
-                    </div>
-                    <Users className="h-8 w-8 text-purple-600" />
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <Calculator className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Budget Report</h3>
+                  <p className="text-sm text-gray-600 mb-3">Budget vs actual analysis</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Maintenance</p>
-                      <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-500">Issues pending</p>
-                    </div>
-                    <Wrench className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Property Portfolio</CardTitle>
-                <CardDescription>Manage your rental properties and tenants</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {properties.map((property) => (
-                    <Card key={property.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{property.address}</h3>
-                              <Badge className={getStatusColor(property.status)}>
-                                {property.status}
-                              </Badge>
-                              <Badge variant="outline">{property.type}</Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                              <span>Rent: {property.monthlyRent}</span>
-                              <span>Tenants: {property.tenants}</span>
-                              <span>Occupancy: {property.occupancy}</span>
-                              <span>Issues: {property.maintenanceIssues}</span>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">Next rent due: {property.nextRentDue}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <Users className="h-4 w-4 mr-2" />
-                              Tenants
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Schedule
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              View
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-brisk-primary" />
-                    Rent Schedule
-                  </CardTitle>
-                  <CardDescription>Upcoming rent payments and due dates</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-green-900">123 High Street</h3>
-                          <p className="text-sm text-green-700">Due: Feb 1, 2024</p>
-                        </div>
-                        <span className="text-lg font-bold text-green-900">£2,400</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-yellow-900">456 Commercial Road</h3>
-                          <p className="text-sm text-yellow-700">Due: Feb 15, 2024</p>
-                        </div>
-                        <span className="text-lg font-bold text-yellow-900">£4,800</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Wrench className="h-5 w-5 text-brisk-primary" />
-                    Maintenance Tracker
-                  </CardTitle>
-                  <CardDescription>Property maintenance and repair requests</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-red-50 rounded-lg">
-                      <h3 className="font-semibold text-red-900">Heating System Repair</h3>
-                      <p className="text-sm text-red-700">456 Commercial Road - Urgent</p>
-                      <p className="text-xs text-red-600 mt-1">Reported: Jan 18, 2024</p>
-                    </div>
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Plumbing Issue</h3>
-                      <p className="text-sm text-orange-700">789 Garden Lane - Medium</p>
-                      <p className="text-xs text-orange-600 mt-1">Reported: Jan 20, 2024</p>
-                    </div>
-                    <div className="p-4 bg-yellow-50 rounded-lg">
-                      <h3 className="font-semibold text-yellow-900">Window Cleaning</h3>
-                      <p className="text-sm text-yellow-700">456 Commercial Road - Low</p>
-                      <p className="text-xs text-yellow-600 mt-1">Scheduled: Feb 1, 2024</p>
-                    </div>
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <BookOpen className="h-8 w-8 text-indigo-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Day Books</h3>
+                  <p className="text-sm text-gray-600 mb-3">Daily transaction summaries</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">Generate</Button>
+                    <Button size="sm">Schedule</Button>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-          <TabsContent value="ecommerce" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">eCommerce Integrations</h2>
-                <p className="text-gray-600">Multi-platform sales channel management and settlement reconciliation</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Connect Platform
-                </Button>
-                <Button>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Sync All
-                </Button>
-              </div>
-            </div>
+  function renderManagementReportsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Management Reports</h2>
+            <p className="text-gray-600">Detailed operational and management reports</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export All
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Custom Report
+            </Button>
+          </div>
+        </div>
 
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                      <p className="text-2xl font-bold">£284,500</p>
-                      <p className="text-xs text-gray-500">All platforms YTD</p>
-                    </div>
-                    <DollarSign className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Active Platforms</p>
-                      <p className="text-2xl font-bold">4</p>
-                      <p className="text-xs text-gray-500">Connected & syncing</p>
-                    </div>
-                    <Link className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Pending Settlements</p>
-                      <p className="text-2xl font-bold">£12,340</p>
-                      <p className="text-xs text-gray-500">Awaiting reconciliation</p>
-                    </div>
-                    <Clock className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Fee Optimization</p>
-                      <p className="text-2xl font-bold">£2,150</p>
-                      <p className="text-xs text-gray-500">Potential savings</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Platform Connections</CardTitle>
-                  <CardDescription>Manage your eCommerce platform integrations</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {ecommerceConnections.map((connection) => (
-                      <div key={connection.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-3 h-3 rounded-full ${connection.status === 'Connected' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                          <div>
-                            <p className="font-medium">{connection.platform}</p>
-                            <p className="text-sm text-gray-600">Last sync: {connection.lastSync}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={connection.status === 'Connected' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                            {connection.status}
-                          </Badge>
-                          <Button variant="ghost" size="sm">
-                            <Settings className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+        {/* Management Reports Grid */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <PieChart className="h-5 w-5 text-brisk-primary" />
+              Management & Operational Reports
+            </CardTitle>
+            <CardDescription>Detailed reports for business management and analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <Clock className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Recent Transactions</h3>
+                  <p className="text-sm text-gray-600 mb-3">Latest transaction activity</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Settlement Reconciliation</CardTitle>
-                  <CardDescription>Automated settlement matching and fee allocation</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Amazon Settlement</span>
-                        <span className="text-sm text-blue-600">Auto-matched</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <span>Gross: £8,450</span>
-                        <span>Fees: £1,230</span>
-                        <span>Net: £7,220</span>
-                        <span>Date: 2024-02-08</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Shopify Payout</span>
-                        <span className="text-sm text-yellow-600">Pending Review</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <span>Gross: £3,200</span>
-                        <span>Fees: £96</span>
-                        <span>Net: £3,104</span>
-                        <span>Date: 2024-02-09</span>
-                      </div>
-                    </div>
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <FileSearch className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Account Details</h3>
+                  <p className="text-sm text-gray-600 mb-3">Detailed account breakdowns</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <Database className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Nominal Ledger</h3>
+                  <p className="text-sm text-gray-600 mb-3">Complete ledger with all accounts</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <CreditCard className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Cash and Bank Report</h3>
+                  <p className="text-sm text-gray-600 mb-3">Cash flow and bank reconciliation</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <TrendingUp className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Aged Debtors</h3>
+                  <p className="text-sm text-gray-600 mb-3">Outstanding customer balances</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <TrendingDown className="h-8 w-8 text-indigo-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Aged Creditors</h3>
+                  <p className="text-sm text-gray-600 mb-3">Outstanding supplier balances</p>
+                  <div className="flex gap-2 justify-center">
+                    <Button size="sm" variant="outline">View</Button>
+                    <Button size="sm">Export</Button>
                   </div>
                 </CardContent>
               </Card>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">eCommerce Integration</h2>
-                <p className="text-gray-600">Multi-platform sales, settlement parsing, and reconciliation</p>
-              </div>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Connect Platform
-              </Button>
-            </div>
+          </CardContent>
+        </Card>
 
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                      <p className="text-2xl font-bold">£27,610</p>
-                      <p className="text-xs text-gray-500">This month</p>
+        {/* Recent Reports Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Reports</CardTitle>
+            <CardDescription>Recently generated management reports</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {financialReports.filter(report => report.type === 'Management').map((report) => (
+                <div key={report.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{report.name}</p>
+                      <Badge className={getStatusColor(report.status)}>{report.status}</Badge>
                     </div>
-                    <ShoppingCart className="h-8 w-8 text-blue-600" />
+                    <p className="text-sm text-gray-600">Last generated: {report.lastGenerated}</p>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Platform Fees</p>
-                      <p className="text-2xl font-bold">£2,896</p>
-                      <p className="text-xs text-gray-500">10.5% of revenue</p>
-                    </div>
-                    <Percent className="h-8 w-8 text-red-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Net Settlement</p>
-                      <p className="text-2xl font-bold">£24,714</p>
-                      <p className="text-xs text-gray-500">After fees</p>
-                    </div>
-                    <PoundSterling className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Pending Orders</p>
-                      <p className="text-2xl font-bold">43</p>
-                      <p className="text-xs text-gray-500">Awaiting fulfillment</p>
-                    </div>
-                    <Package className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Platform Connections</CardTitle>
-                <CardDescription>Manage your eCommerce platform integrations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {ecommerceConnections.map((connection) => (
-                    <Card key={connection.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{connection.storeName}</h3>
-                              <Badge className={getStatusColor(connection.status)}>
-                                {connection.status}
-                              </Badge>
-                              <Badge variant="outline">{connection.platform}</Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                              <span>Revenue: {connection.monthlyRevenue}</span>
-                              <span>Fees: {connection.fees}</span>
-                              <span>Net: {connection.netRevenue}</span>
-                              <span>Orders: {connection.pendingOrders}</span>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">Last sync: {connection.lastSync}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <RefreshCw className="h-4 w-4 mr-2" />
-                              Sync
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <BarChart3 className="h-4 w-4 mr-2" />
-                              Analytics
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Settings className="h-4 w-4 mr-2" />
-                              Settings
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Settlement Parsing</CardTitle>
-                  <CardDescription>Automated fee breakdown and reconciliation</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Amazon Settlement</h3>
-                      <div className="grid grid-cols-2 gap-2 text-sm text-blue-700 mt-2">
-                        <span>Gross Sales: £15,240</span>
-                        <span>Referral Fees: £1,524</span>
-                        <span>FBA Fees: £762</span>
-                        <span>Net Settlement: £12,954</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Shopify Payout</h3>
-                      <div className="grid grid-cols-2 gap-2 text-sm text-green-700 mt-2">
-                        <span>Gross Sales: £8,950</span>
-                        <span>Transaction Fees: £268</span>
-                        <span>Chargebacks: £0</span>
-                        <span>Net Payout: £8,682</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Multi-Channel SKU Mapping</CardTitle>
-                  <CardDescription>Product synchronization across platforms</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">Wireless Headphones</h3>
-                        <Badge variant="outline">SKU: WH001</Badge>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2 text-sm text-gray-600">
-                        <span>Amazon: B08XYZ123</span>
-                        <span>eBay: 123456789</span>
-                        <span>Shopify: WH-001-BLK</span>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">Bluetooth Speaker</h3>
-                        <Badge variant="outline">SKU: BS002</Badge>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2 text-sm text-gray-600">
-                        <span>Amazon: B09ABC456</span>
-                        <span>eBay: 987654321</span>
-                        <span>Shopify: BS-002-WHT</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="documents" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Document Management & OCR</h2>
-                <p className="text-gray-600">Intelligent document processing with auto-posting and approval workflows</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload Documents
-                </Button>
-                <Button>
-                  <Scan className="h-4 w-4 mr-2" />
-                  Process Queue
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Document Upload & Processing</CardTitle>
-                  <CardDescription>Upload documents for OCR processing and auto-posting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                    <p className="text-lg font-medium mb-2">Drop files here or click to upload</p>
-                    <p className="text-sm text-gray-600 mb-4">Supports PDF, JPG, PNG up to 10MB</p>
-                    <Button>
-                      <Camera className="h-4 w-4 mr-2" />
-                      Choose Files
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <RefreshCw className="h-4 w-4" />
                     </Button>
                   </div>
-                  
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <Scan className="h-8 w-8 mx-auto text-blue-600 mb-2" />
-                      <p className="font-medium">OCR Processing</p>
-                      <p className="text-sm text-gray-600">99.2% accuracy rate</p>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <Brain className="h-8 w-8 mx-auto text-green-600 mb-2" />
-                      <p className="font-medium">AI Categorization</p>
-                      <p className="text-sm text-gray-600">Smart auto-posting</p>
-                    </div>
-                    <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <CheckCircle className="h-8 w-8 mx-auto text-orange-600 mb-2" />
-                      <p className="font-medium">Approval Workflow</p>
-                      <p className="text-sm text-gray-600">Review before posting</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recent Documents</CardTitle>
-                    <CardDescription>Recently processed documents and their status</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {documents.map((doc) => (
-                        <div key={doc.id} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <FileText className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="font-medium text-sm">{doc.name}</p>
-                              <p className="text-xs text-gray-600">{doc.uploadDate}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge className={doc.status === 'Processed' ? 'bg-green-100 text-green-800' : 
-                                             doc.status === 'Processing' ? 'bg-blue-100 text-blue-800' : 
-                                             'bg-yellow-100 text-yellow-800'}>
-                              {doc.status}
-                            </Badge>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Auto-Posting Queue</CardTitle>
-                    <CardDescription>Documents ready for automatic posting</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="p-4 bg-green-50 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">Invoice - Office Supplies</span>
-                          <span className="text-sm text-green-600">Ready to Post</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <span>Amount: £234.50</span>
-                          <span>VAT: £46.90</span>
-                          <span>Account: 5000</span>
-                          <span>Confidence: 98%</span>
-                        </div>
-                        <div className="flex gap-2 mt-3">
-                          <Button size="sm" className="flex-1">
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Approve & Post
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                      
-                      <div className="p-4 bg-yellow-50 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">Receipt - Travel Expense</span>
-                          <span className="text-sm text-yellow-600">Needs Review</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <span>Amount: £45.20</span>
-                          <span>VAT: £9.04</span>
-                          <span>Account: TBD</span>
-                          <span>Confidence: 76%</span>
-                        </div>
-                        <div className="flex gap-2 mt-3">
-                          <Button variant="outline" size="sm" className="flex-1">
-                            <Eye className="h-4 w-4 mr-2" />
-                            Review
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Documents Processed</p>
-                      <p className="text-2xl font-bold">156</p>
-                      <p className="text-xs text-gray-500">This month</p>
-                    </div>
-                    <FileText className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">OCR Accuracy</p>
-                      <p className="text-2xl font-bold">94%</p>
-                      <p className="text-xs text-gray-500">Average confidence</p>
-                    </div>
-                    <Scan className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Auto-Posted</p>
-                      <p className="text-2xl font-bold">89</p>
-                      <p className="text-xs text-gray-500">57% automation rate</p>
-                    </div>
-                    <CheckCircle className="h-8 w-8 text-purple-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Pending Review</p>
-                      <p className="text-2xl font-bold">12</p>
-                      <p className="text-xs text-gray-500">Awaiting approval</p>
-                    </div>
-                    <Clock className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Document Processing Queue</CardTitle>
-                <CardDescription>OCR processing and auto-posting suggestions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {documents.map((document) => (
-                    <Card key={document.id} className="border">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{document.name}</h3>
-                              <Badge className={getStatusColor(document.status)}>
-                                {document.status}
-                              </Badge>
-                              <Badge variant="outline">{document.type}</Badge>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm text-gray-600">
-                              <span>Amount: {document.amount}</span>
-                              <span>Supplier: {document.supplier}</span>
-                              <span>Category: {document.suggestedCategory}</span>
-                              <span>Confidence: {document.ocrConfidence}%</span>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1">Uploaded: {document.uploadDate}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-2" />
-                              Preview
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
-                            </Button>
-                            <Button size="sm">
-                              <CheckCircle className="h-4 w-4 mr-2" />
-                              Approve
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
                 </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-brisk-primary" />
-                    AI Document Insights
-                  </CardTitle>
-                  <CardDescription>Intelligent categorization and anomaly detection</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Smart Categorization</h3>
-                      <p className="text-sm text-blue-700">12 documents auto-categorized with 95%+ confidence. Review 3 uncertain classifications.</p>
-                      <Button size="sm" className="mt-2">Review Suggestions</Button>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Duplicate Detection</h3>
-                      <p className="text-sm text-green-700">2 potential duplicate invoices detected. Prevent double-posting with smart matching.</p>
-                    </div>
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Expense Anomaly</h3>
-                      <p className="text-sm text-orange-700">Office supplies expense 40% higher than usual. Review for accuracy.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Approval Workflow</CardTitle>
-                  <CardDescription>Multi-step approval process for document posting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">High-Value Expenses</h3>
-                        <Badge variant="outline">£500+ threshold</Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">Requires manager approval before posting</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">Auto-approved: 23 documents</span>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold">Uncertain Classifications</h3>
-                        <Badge variant="outline">&lt;85% confidence</Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">Manual review required for accuracy</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Clock className="h-4 w-4 text-orange-500" />
-                        <span className="text-sm">Pending review: 5 documents</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              ))}
             </div>
-          </TabsContent>
-
-          <TabsContent value="inventory" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Inventory Management</h2>
-                <p className="text-gray-600">Stock tracking, valuation, and inventory control</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Item
-                </Button>
-                <Button variant="outline">
-                  <Package className="h-4 w-4 mr-2" />
-                  Stock Take
-                </Button>
-                <Button>
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Valuation Report
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Items</p>
-                      <p className="text-2xl font-bold">425</p>
-                      <p className="text-xs text-gray-500">Active SKUs</p>
-                    </div>
-                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Package className="h-4 w-4 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Value</p>
-                      <p className="text-2xl font-bold">£11,631</p>
-                      <p className="text-xs text-gray-500">At cost</p>
-                    </div>
-                    <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                      <PoundSterling className="h-4 w-4 text-green-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Low Stock</p>
-                      <p className="text-2xl font-bold">8</p>
-                      <p className="text-xs text-gray-500">Below reorder level</p>
-                    </div>
-                    <div className="h-8 w-8 bg-orange-100 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-4 w-4 text-orange-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Categories</p>
-                      <p className="text-2xl font-bold">12</p>
-                      <p className="text-xs text-gray-500">Product groups</p>
-                    </div>
-                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <Tag className="h-4 w-4 text-purple-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Inventory Items</CardTitle>
-                <CardDescription>Current stock levels and valuation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {inventoryItems.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">{item.name}</p>
-                          <Badge variant="outline">{item.sku}</Badge>
-                          <Badge variant="secondary">{item.category}</Badge>
-                        </div>
-                        <p className="text-sm text-gray-600">Supplier: {item.supplier}</p>
-                        <p className="text-xs text-gray-500">
-                          Qty: {item.quantity} | Unit Cost: £{item.unitCost} | Reorder: {item.reorderLevel}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">£{item.totalValue.toLocaleString()}</p>
-                        <p className="text-xs text-gray-500">Updated: {item.lastUpdated}</p>
-                        <div className="flex gap-1 mt-1">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Package className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="fixedassets" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Fixed Assets Register</h2>
-                <p className="text-gray-600">Asset tracking, depreciation, and disposal management</p>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Asset
-                </Button>
-                <Button variant="outline">
-                  <Calculator className="h-4 w-4 mr-2" />
-                  Depreciation Run
-                </Button>
-                <Button>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Asset Register
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Assets</p>
-                      <p className="text-2xl font-bold">47</p>
-                      <p className="text-xs text-gray-500">Active assets</p>
-                    </div>
-                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Building className="h-4 w-4 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Gross Value</p>
-                      <p className="text-2xl font-bold">£735,000</p>
-                      <p className="text-xs text-gray-500">Purchase cost</p>
-                    </div>
-                    <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                      <PoundSterling className="h-4 w-4 text-green-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Net Book Value</p>
-                      <p className="text-2xl font-bold">£636,250</p>
-                      <p className="text-xs text-gray-500">After depreciation</p>
-                    </div>
-                    <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <TrendingDown className="h-4 w-4 text-purple-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Annual Depreciation</p>
-                      <p className="text-2xl font-bold">£98,750</p>
-                      <p className="text-xs text-gray-500">Current year</p>
-                    </div>
-                    <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
-                      <Calculator className="h-4 w-4 text-red-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Fixed Assets</CardTitle>
-                <CardDescription>Asset register with depreciation tracking</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {fixedAssets.map((asset) => (
-                    <div key={asset.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">{asset.name}</p>
-                          <Badge variant="outline">{asset.category}</Badge>
-                          <Badge variant="secondary">{asset.depreciationMethod}</Badge>
-                        </div>
-                        <p className="text-sm text-gray-600">Location: {asset.location}</p>
-                        <p className="text-xs text-gray-500">
-                          Purchased: {asset.purchaseDate} | Life: {asset.usefulLife} years | Cost: £{asset.purchaseCost.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">£{asset.netBookValue.toLocaleString()}</p>
-                        <p className="text-xs text-gray-500">NBV</p>
-                        <p className="text-xs text-red-500">Depreciation: £{asset.accumulatedDepreciation.toLocaleString()}</p>
-                        <div className="flex gap-1 mt-1">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Calculator className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Advanced Analytics</h2>
-                <p className="text-gray-600">Interactive dashboards, forecasting, and business intelligence</p>
-              </div>
-              <div className="flex gap-2">
-                <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {currencies.map((currency) => (
-                      <SelectItem key={currency.code} value={currency.code}>
-                        {currency.symbol} {currency.code}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export
-                </Button>
-              </div>
-            </div>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Cash Flow Trend</p>
-                      <p className="text-2xl font-bold">+12.5%</p>
-                      <p className="text-xs text-gray-500">vs last period</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Expense Ratio</p>
-                      <p className="text-2xl font-bold">74.2%</p>
-                      <p className="text-xs text-gray-500">Of total revenue</p>
-                    </div>
-                    <PieChart className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Profit Margin</p>
-                      <p className="text-2xl font-bold">25.8%</p>
-                      <p className="text-xs text-gray-500">Net margin</p>
-                    </div>
-                    <Target className="h-8 w-8 text-purple-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Forecast Accuracy</p>
-                      <p className="text-2xl font-bold">91%</p>
-                      <p className="text-xs text-gray-500">AI prediction</p>
-                    </div>
-                    <Activity className="h-8 w-8 text-orange-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cash Flow Analysis</CardTitle>
-                  <CardDescription>6-month trend with forecasting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <LineChart className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Interactive Cash Flow Chart</p>
-                        <p className="text-xs text-gray-500">Inflow vs Outflow Trends</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <p className="text-sm font-medium text-green-600">Average Inflow</p>
-                        <p className="text-lg font-bold">£53,333</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-red-600">Average Outflow</p>
-                        <p className="text-lg font-bold">£39,000</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-blue-600">Net Average</p>
-                        <p className="text-lg font-bold">£14,333</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Expense Breakdown</CardTitle>
-                  <CardDescription>Category analysis with trends</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <PieChart className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Interactive Expense Pie Chart</p>
-                        <p className="text-xs text-gray-500">Category Breakdown</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      {analyticsData.expenseBreakdown.slice(0, 3).map((category, index) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <span className="text-sm">{category.category}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">£{category.amount.toLocaleString()}</span>
-                            <span className="text-xs text-gray-500">{category.percentage}%</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-brisk-primary" />
-                  AI-Powered Business Insights
-                </CardTitle>
-                <CardDescription>Predictive analytics and recommendations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <h3 className="font-semibold text-blue-900">Cash Flow Forecast</h3>
-                      <p className="text-sm text-blue-700">Based on current trends, expect £16,200 net cash flow next month with 91% confidence.</p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="text-xs text-blue-600">12% improvement vs current month</span>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <h3 className="font-semibold text-green-900">Expense Optimization</h3>
-                      <p className="text-sm text-green-700">Potential savings of £2,400/month identified through vendor consolidation and contract renegotiation.</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <h3 className="font-semibold text-orange-900">Seasonal Patterns</h3>
-                      <p className="text-sm text-orange-700">Revenue typically increases 18% in Q2. Consider increasing inventory and marketing spend.</p>
-                    </div>
-                    <div className="p-4 bg-purple-50 rounded-lg">
-                      <h3 className="font-semibold text-purple-900">Risk Assessment</h3>
-                      <p className="text-sm text-purple-700">Customer concentration risk: Top 3 clients represent 45% of revenue. Diversification recommended.</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Multi-Currency Dashboard</CardTitle>
-                  <CardDescription>Real-time FX rates and currency exposure</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {currencies.map((currency) => (
-                      <div key={currency.code} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-bold">{currency.symbol}</span>
-                          </div>
-                          <div>
-                            <p className="font-medium">{currency.code}</p>
-                            <p className="text-sm text-gray-600">{currency.name}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">{currency.rate.toFixed(4)}</p>
-                          <p className="text-xs text-gray-500">vs GBP</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Benchmarks</CardTitle>
-                  <CardDescription>Industry comparisons and KPI tracking</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Gross Margin</span>
-                        <span className="text-sm text-green-600">Above Average</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '78%' }}></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>Your: 78%</span>
-                        <span>Industry: 65%</span>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">Operating Efficiency</span>
-                        <span className="text-sm text-yellow-600">Average</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '62%' }}></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>Your: 62%</span>
-                        <span>Industry: 68%</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </CardContent>
+        </Card>
       </div>
-    </ResponsiveLayout>
-  )
+    )
+  }
+
+  function renderAnalyticsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
+            <p className="text-gray-600">Advanced analytics and business intelligence</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh Data
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <LineChart className="h-5 w-5 text-brisk-primary" />
+              Interactive Analytics
+            </CardTitle>
+            <CardDescription>Visual analytics and trend analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-semibold mb-2">Revenue Trends</h3>
+                <div className="h-48 bg-gray-50 rounded flex items-center justify-center">
+                  <p className="text-gray-500">Interactive chart placeholder</p>
+                </div>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-semibold mb-2">Expense Analysis</h3>
+                <div className="h-48 bg-gray-50 rounded flex items-center justify-center">
+                  <p className="text-gray-500">Interactive chart placeholder</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderIntegrationsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Integrations & Import</h2>
+            <p className="text-gray-600">Connect external bookkeeping software and import trial balance data</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import CSV
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Integration
+            </Button>
+          </div>
+        </div>
+
+        {/* CSV Import Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5 text-brisk-primary" />
+              Trial Balance CSV Import
+            </CardTitle>
+            <CardDescription>Import trial balance data from CSV files with automatic mapping</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Upload Trial Balance CSV</h3>
+              <p className="text-gray-600 mb-4">Drag and drop your CSV file here, or click to browse</p>
+              <Button>
+                <Upload className="h-4 w-4 mr-2" />
+                Choose File
+              </Button>
+              <p className="text-xs text-gray-500 mt-2">Supports CSV files up to 10MB</p>
+            </div>
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <h4 className="font-semibold text-blue-900 mb-2">CSV Format Requirements:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Account Code, Account Name, Debit, Credit columns required</li>
+                <li>• First row should contain column headers</li>
+                <li>• Amounts should be numeric (no currency symbols)</li>
+                <li>• UTF-8 encoding recommended</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Integration Providers */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Link className="h-5 w-5 text-brisk-primary" />
+              Bookkeeping Software Integrations
+            </CardTitle>
+            <CardDescription>Connect with popular bookkeeping platforms for seamless data sync</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {integrationProviders.map((provider) => (
+                <Card key={provider.id} className="border-2 border-gray-200 hover:border-brisk-primary transition-colors">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-lg">{provider.name}</h3>
+                      <Badge className={getStatusColor(provider.status)}>{provider.status}</Badge>
+                    </div>
+                    {provider.status === 'Connected' ? (
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600">Last sync: {provider.lastSync}</p>
+                        <p className="text-sm text-gray-600">Accounts: {provider.accounts}</p>
+                        <div className="flex gap-2 mt-4">
+                          <Button size="sm" variant="outline">
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Sync Now
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <Settings className="h-4 w-4 mr-2" />
+                            Configure
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600">Connect to sync trial balance and transaction data</p>
+                        <Button size="sm" className="w-full">
+                          <Link className="h-4 w-4 mr-2" />
+                          Connect {provider.name}
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sync History */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Sync Activity</CardTitle>
+            <CardDescription>History of data imports and synchronizations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Xero Trial Balance Import</p>
+                    <p className="text-sm text-gray-600">45 accounts imported successfully</p>
+                    <p className="text-xs text-gray-500">2024-01-15 10:30 AM</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm">
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Upload className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium">CSV Trial Balance Upload</p>
+                    <p className="text-sm text-gray-600">trial_balance_dec_2023.csv</p>
+                    <p className="text-xs text-gray-500">2024-01-14 2:15 PM</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm">
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderProjectsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Project Management</h2>
+            <p className="text-gray-600">Advanced project tracking and profitability analysis</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-gray-500">Project management content will be displayed here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderBudgetsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Budgets & Forecasting</h2>
+            <p className="text-gray-600">Budget planning and financial forecasting</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-gray-500">Budget and forecasting content will be displayed here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderPropertyContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Property Management</h2>
+            <p className="text-gray-600">Rental property management and tracking</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-gray-500">Property management content will be displayed here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderEcommerceContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">eCommerce Integration</h2>
+            <p className="text-gray-600">Multi-platform eCommerce management</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-gray-500">eCommerce integration content will be displayed here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderDocumentsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Document Management</h2>
+            <p className="text-gray-600">OCR processing and document automation</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-gray-500">Document management content will be displayed here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 }
