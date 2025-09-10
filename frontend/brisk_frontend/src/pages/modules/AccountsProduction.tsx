@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { 
   Calculator, 
   FileText, 
@@ -666,7 +666,7 @@ export default function AccountsProduction() {
                   <Tabs defaultValue="summary" className="w-full">
                     <TabsList className="grid w-full grid-cols-4">
                       <TabsTrigger value="summary">Summary</TabsTrigger>
-                      <TabsTrigger value="detailed">Detailed P&L</TabsTrigger>
+                      <TabsTrigger value="detailed">Detailed P&amp;L</TabsTrigger>
                       <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
                       <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
                     </TabsList>
@@ -864,7 +864,7 @@ export default function AccountsProduction() {
                     <TabsContent value="detailed" className="space-y-4">
                       <Card>
                         <CardHeader>
-                          <CardTitle>Detailed Profit & Loss Account</CardTitle>
+                          <CardTitle>Detailed Profit &amp; Loss Account</CardTitle>
                           <CardDescription>For the year ended 31 December 2024</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -945,7 +945,7 @@ export default function AccountsProduction() {
                               </div>
                             </div>
                             <div>
-                              <h4 className="font-semibold mb-3">LIABILITIES & EQUITY</h4>
+                              <h4 className="font-semibold mb-3">LIABILITIES &amp; EQUITY</h4>
                               <div className="space-y-2 text-sm">
                                 <div className="font-medium">Current Liabilities</div>
                                 <div className="ml-4 space-y-1">
@@ -974,7 +974,7 @@ export default function AccountsProduction() {
                                 </div>
                                 <Separator />
                                 <div className="flex justify-between font-semibold">
-                                  <span>TOTAL LIABILITIES & EQUITY</span>
+                                  <span>TOTAL LIABILITIES &amp; EQUITY</span>
                                   <span className="tabular-nums">£68,500</span>
                                 </div>
                               </div>
@@ -1481,7 +1481,7 @@ export default function AccountsProduction() {
               {activeTab === 'ixbrl' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">iXBRL Generation & Filing</h3>
+                    <h3 className="text-lg font-semibold">iXBRL Generation &amp; Filing</h3>
                     <div className="flex items-center gap-2">
                       <Select defaultValue="uk-gaap">
                         <SelectTrigger className="w-32">
@@ -1603,7 +1603,7 @@ export default function AccountsProduction() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           <div className="p-4 border rounded-lg">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium">Profit & Loss</span>
+                              <span className="text-sm font-medium">Profit &amp; Loss</span>
                               <Badge className="bg-green-100 text-green-800">100%</Badge>
                             </div>
                             <Progress value={100} className="h-2" />
