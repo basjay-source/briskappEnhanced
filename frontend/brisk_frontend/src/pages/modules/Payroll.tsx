@@ -566,7 +566,7 @@ export default function Payroll() {
                   <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
                     <CardContent className="p-6 text-center">
                       <Calculator className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Tax & NI Report</h3>
+                      <h3 className="font-semibold mb-1">Tax and NI Report</h3>
                       <p className="text-sm text-gray-600 mb-3">PAYE and NI calculations</p>
                       <Button size="sm" variant="outline">Generate</Button>
                     </CardContent>

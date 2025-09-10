@@ -148,7 +148,7 @@ export default function AMLCompliance() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">AML/KYC Compliance</h1>
-            <p className="text-gray-600">Risk assessment, identity verification & compliance monitoring</p>
+            <p className="text-gray-600">Risk assessment, identity verification and compliance monitoring</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size={isMobile ? "sm" : "default"}>
