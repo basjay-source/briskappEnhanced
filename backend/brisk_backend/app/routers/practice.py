@@ -38,7 +38,25 @@ class TimeEntryCreate(BaseModel):
     description: Optional[str] = None
     hours: Decimal
     billable: bool = True
+    hourly_rate: Optional[Decimal] = None
     date: date
+
+class JobCodeCreate(BaseModel):
+    code: str
+    name: str
+    default_rate: Decimal
+    billable: bool = True
+    category: str
+
+class EmployeeRateCreate(BaseModel):
+    employee_id: str
+    job_code_id: str
+    hourly_rate: Decimal
+
+class TimeEntryApproval(BaseModel):
+    time_entry_id: str
+    status: str  # 'approved' or 'rejected'
+    notes: Optional[str] = None
 
 @router.get("/dashboard")
 def get_practice_dashboard(
@@ -398,5 +416,103 @@ def get_workflow_templates(
             "vat_return": len([t for t in templates if t.job_type == "vat_return"]),
             "year_end": len([t for t in templates if t.job_type == "year_end"]),
             "payroll": len([t for t in templates if t.job_type == "payroll"])
+        }
+    }
+
+@router.get("/time-entries")
+def get_time_entries(
+    status: Optional[str] = None,
+    employee_id: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(TimeEntry).filter(TimeEntry.tenant_id == request.state.tenant_id)
+    
+    if status:
+        query = query.filter(TimeEntry.status == status)
+    if employee_id:
+        query = query.filter(TimeEntry.user_id == employee_id)
+    if start_date:
+        query = query.filter(TimeEntry.date >= start_date)
+    if end_date:
+        query = query.filter(TimeEntry.date <= end_date)
+    
+    time_entries = query.all()
+    return time_entries
+
+@router.post("/time-entries/{time_entry_id}/approve")
+def approve_time_entry(
+    time_entry_id: str,
+    approval: TimeEntryApproval,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    time_entry = db.query(TimeEntry).filter(
+        TimeEntry.id == time_entry_id,
+        TimeEntry.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not time_entry:
+        raise HTTPException(status_code=404, detail="Time entry not found")
+    
+    time_entry.status = approval.status
+    if approval.notes:
+        time_entry.approval_notes = approval.notes
+    
+    db.commit()
+    db.refresh(time_entry)
+    
+    return time_entry
+
+@router.get("/job-codes")
+def get_job_codes(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    return [
+        {"id": "1", "code": "ACC001", "name": "Accounts Preparation", "default_rate": 85, "billable": True, "category": "Accounts"},
+        {"id": "2", "code": "TAX001", "name": "Corporation Tax", "default_rate": 95, "billable": True, "category": "Tax"},
+        {"id": "3", "code": "VAT001", "name": "VAT Returns", "default_rate": 75, "billable": True, "category": "VAT"},
+        {"id": "4", "code": "PAY001", "name": "Payroll Processing", "default_rate": 65, "billable": True, "category": "Payroll"},
+        {"id": "5", "code": "ADM001", "name": "Administration", "default_rate": 0, "billable": False, "category": "Admin"}
+    ]
+
+@router.get("/employee-rates")
+def get_employee_rates(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    return [
+        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "1", "hourly_rate": 90},
+        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "2", "hourly_rate": 100},
+        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "1", "hourly_rate": 85},
+        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "3", "hourly_rate": 80},
+        {"employee_id": "3", "employee_name": "Emma Wilson", "job_code_id": "4", "hourly_rate": 70}
+    ]
+
+@router.get("/time-analytics")
+def get_time_analytics(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    return {
+        "total_hours": 156.5,
+        "billable_hours": 124.2,
+        "utilization_rate": 87,
+        "revenue": 45200,
+        "team_utilization": [
+            {"employee": "Sarah Johnson", "utilization": 95, "billable_hours": 38.5, "total_hours": 40},
+            {"employee": "Mike Chen", "utilization": 87, "billable_hours": 34.8, "total_hours": 40},
+            {"employee": "Emma Wilson", "utilization": 78, "billable_hours": 31.2, "total_hours": 40}
+        ],
+        "revenue_by_category": {
+            "accounts": 18500,
+            "tax": 15200,
+            "vat": 8900,
+            "payroll": 2600
         }
     }

@@ -9,7 +9,8 @@ import {
   FileSignature,
   BarChart3,
   Home,
-  Briefcase
+  Briefcase,
+  Clock
 } from 'lucide-react'
 import { 
   SidebarMenu, 
@@ -78,6 +79,12 @@ const modules = [
     path: '/app/esign',
     icon: FileSignature,
     description: 'Digital signing workflows'
+  },
+  {
+    name: 'Time Management',
+    path: '/app/time',
+    icon: Clock,
+    description: 'Advanced time tracking & billing'
   }
 ]
 
