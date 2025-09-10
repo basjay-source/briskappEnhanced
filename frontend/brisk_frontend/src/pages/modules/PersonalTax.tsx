@@ -587,7 +587,7 @@ export default function PersonalTax() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PiggyBank className="h-5 w-5 text-indigo-600" />
-                  Pension Planning & Optimization
+                  Pension Planning and Optimization
                 </CardTitle>
                 <CardDescription>Annual and lifetime allowance planning</CardDescription>
               </CardHeader>
@@ -774,7 +774,7 @@ export default function PersonalTax() {
           <TabsContent value="filing" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>HMRC Filing & Submissions</CardTitle>
+                <CardTitle>HMRC Filing and Submissions</CardTitle>
                 <CardDescription>Submit returns and track filing status</CardDescription>
               </CardHeader>
               <CardContent>
