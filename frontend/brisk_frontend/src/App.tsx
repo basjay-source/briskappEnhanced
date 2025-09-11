@@ -13,7 +13,7 @@ import AMLCompliance from '@/pages/modules/AMLCompliance'
 import CompanySecretarial from '@/pages/modules/CompanySecretarial'
 import Bookkeeping from '@/pages/modules/Bookkeeping'
 import ESignature from '@/pages/modules/ESignature'
-import TimeAndFeesModule from '@/pages/modules/TimeAndFeesModule'
+import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
 import ClientPortal from '@/components/ClientPortal'
 
@@ -37,7 +37,7 @@ function App() {
             <Route path="cosec" element={<CompanySecretarial />} />
             <Route path="books" element={<Bookkeeping />} />
             <Route path="esign" element={<ESignature />} />
-            <Route path="time" element={<TimeAndFeesModule />} />
+            <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
             <Route path="portal" element={<ClientPortal />} />
           </Route>
         </Routes>
