@@ -22,6 +22,7 @@ import {
   Copy,
   MoreHorizontal,
   Calendar,
+  Calendar as CalendarIcon,
   DollarSign,
   Smartphone,
   Globe,
@@ -34,6 +35,7 @@ import {
   MousePointer,
   Type,
   Square,
+  CheckSquare,
   PenTool,
   CreditCard,
   UserCheck,
@@ -48,7 +50,10 @@ import {
   Code,
   Database,
   Cloud,
-  WifiOff
+  WifiOff,
+  Settings,
+  Palette,
+  Image
 } from 'lucide-react'
 import '../../styles/signature-fonts.css'
 import { useState, useEffect } from 'react'
@@ -91,6 +96,16 @@ export default function DocuSignage() {
   const [isOnline, setIsOnline] = useState(true)
   const [showSignatureFontSelector, setShowSignatureFontSelector] = useState(false)
   const [selectedSignatureFont, setSelectedSignatureFont] = useState('elegant-script')
+  const [showTemplateEditor, setShowTemplateEditor] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<typeof templates[0] | null>(null)
+  const [templateBranding, setTemplateBranding] = useState({
+    companyName: '',
+    logoUrl: '',
+    primaryColor: '#0B5FFF',
+    secondaryColor: '#FF7A00',
+    fontFamily: 'Inter'
+  })
+  const [dragActive, setDragActive] = useState(false)
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true)
@@ -917,11 +932,25 @@ export default function DocuSignage() {
           <TabsContent value="templates" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-brisk-primary" />
-                  Advanced Template Library
-                </CardTitle>
-                <CardDescription>Smart templates with conditional logic, payment collection, and industry-specific designs</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-brisk-primary" />
+                      Advanced Template Library
+                    </CardTitle>
+                    <CardDescription>Smart templates with conditional logic, payment collection, and industry-specific designs</CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size={isMobile ? "sm" : "default"} onClick={() => setShowTemplateEditor(true)}>
+                      <Settings className="h-4 w-4 mr-2" />
+                      Template Settings
+                    </Button>
+                    <Button size={isMobile ? "sm" : "default"}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Template
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="flex gap-4 mb-6">
@@ -1014,7 +1043,14 @@ export default function DocuSignage() {
                               <Copy className="h-4 w-4 mr-2" />
                               Clone
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setSelectedTemplate(template)
+                                setShowTemplateEditor(true)
+                              }}
+                            >
                               <Edit className="h-4 w-4 mr-2" />
                               Edit
                             </Button>
@@ -1844,6 +1880,434 @@ export default function DocuSignage() {
                   </Button>
                   <Button onClick={() => setShowSignatureFontSelector(false)}>
                     Apply Font
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Template Editor Dialog */}
+        <Dialog open={showTemplateEditor} onOpenChange={setShowTemplateEditor}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Template Editor
+              </DialogTitle>
+              <DialogDescription>
+                Customize template appearance, branding, and field configuration
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-6">
+              <Tabs defaultValue="branding" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="branding">Branding</TabsTrigger>
+                  <TabsTrigger value="fields">Fields</TabsTrigger>
+                  <TabsTrigger value="layout">Layout</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="branding" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Palette className="h-5 w-5" />
+                        Company Branding
+                      </CardTitle>
+                      <CardDescription>
+                        Customize your company's appearance in documents
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="company-name">Company Name</Label>
+                            <Input
+                              id="company-name"
+                              value={templateBranding.companyName}
+                              onChange={(e) => setTemplateBranding({
+                                ...templateBranding,
+                                companyName: e.target.value
+                              })}
+                              placeholder="Enter company name"
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor="primary-color">Primary Color</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                id="primary-color"
+                                type="color"
+                                value={templateBranding.primaryColor}
+                                onChange={(e) => setTemplateBranding({
+                                  ...templateBranding,
+                                  primaryColor: e.target.value
+                                })}
+                                className="w-16 h-10"
+                              />
+                              <Input
+                                value={templateBranding.primaryColor}
+                                onChange={(e) => setTemplateBranding({
+                                  ...templateBranding,
+                                  primaryColor: e.target.value
+                                })}
+                                placeholder="#0B5FFF"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <Label htmlFor="secondary-color">Secondary Color</Label>
+                            <div className="flex gap-2">
+                              <Input
+                                id="secondary-color"
+                                type="color"
+                                value={templateBranding.secondaryColor}
+                                onChange={(e) => setTemplateBranding({
+                                  ...templateBranding,
+                                  secondaryColor: e.target.value
+                                })}
+                                className="w-16 h-10"
+                              />
+                              <Input
+                                value={templateBranding.secondaryColor}
+                                onChange={(e) => setTemplateBranding({
+                                  ...templateBranding,
+                                  secondaryColor: e.target.value
+                                })}
+                                placeholder="#FF7A00"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <Label htmlFor="font-family">Font Family</Label>
+                            <Select
+                              value={templateBranding.fontFamily}
+                              onValueChange={(value) => setTemplateBranding({
+                                ...templateBranding,
+                                fontFamily: value
+                              })}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Inter">Inter</SelectItem>
+                                <SelectItem value="Roboto">Roboto</SelectItem>
+                                <SelectItem value="Open Sans">Open Sans</SelectItem>
+                                <SelectItem value="Lato">Lato</SelectItem>
+                                <SelectItem value="Montserrat">Montserrat</SelectItem>
+                                <SelectItem value="Poppins">Poppins</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Company Logo</Label>
+                            <div 
+                              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                                dragActive ? 'border-brisk-primary bg-blue-50' : 'border-gray-300'
+                              }`}
+                              onDragOver={(e) => {
+                                e.preventDefault()
+                                setDragActive(true)
+                              }}
+                              onDragLeave={() => setDragActive(false)}
+                              onDrop={(e) => {
+                                e.preventDefault()
+                                setDragActive(false)
+                                const files = Array.from(e.dataTransfer.files)
+                                if (files.length > 0 && files[0].type.startsWith('image/')) {
+                                  const reader = new FileReader()
+                                  reader.onload = (event) => {
+                                    setTemplateBranding({
+                                      ...templateBranding,
+                                      logoUrl: event.target?.result as string
+                                    })
+                                  }
+                                  reader.readAsDataURL(files[0])
+                                }
+                              }}
+                            >
+                              {templateBranding.logoUrl ? (
+                                <div className="space-y-3">
+                                  <img 
+                                    src={templateBranding.logoUrl} 
+                                    alt="Company Logo" 
+                                    className="max-h-20 mx-auto"
+                                  />
+                                  <div className="flex gap-2 justify-center">
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={() => setTemplateBranding({
+                                        ...templateBranding,
+                                        logoUrl: ''
+                                      })}
+                                    >
+                                      Remove
+                                    </Button>
+                                    <Button variant="outline" size="sm">
+                                      Replace
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="space-y-3">
+                                  <Image className="h-12 w-12 text-gray-400 mx-auto" />
+                                  <div>
+                                    <p className="text-sm font-medium">Drop logo here or click to upload</p>
+                                    <p className="text-xs text-gray-500">PNG, JPG, SVG up to 2MB</p>
+                                  </div>
+                                  <Button variant="outline" size="sm">
+                                    <Upload className="h-4 w-4 mr-2" />
+                                    Choose File
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="p-4 bg-gray-50 rounded-lg">
+                            <h4 className="font-medium mb-2">Branding Preview</h4>
+                            <div 
+                              className="p-4 bg-white rounded border"
+                              style={{ 
+                                fontFamily: templateBranding.fontFamily,
+                                borderColor: templateBranding.primaryColor
+                              }}
+                            >
+                              {templateBranding.logoUrl && (
+                                <img 
+                                  src={templateBranding.logoUrl} 
+                                  alt="Logo" 
+                                  className="h-8 mb-2"
+                                />
+                              )}
+                              <h5 
+                                className="font-semibold"
+                                style={{ color: templateBranding.primaryColor }}
+                              >
+                                {templateBranding.companyName || 'Your Company Name'}
+                              </h5>
+                              <p className="text-sm text-gray-600">Sample document content</p>
+                              <div 
+                                className="mt-2 px-3 py-1 rounded text-white text-sm inline-block"
+                                style={{ backgroundColor: templateBranding.secondaryColor }}
+                              >
+                                Action Button
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="fields" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Template Fields</CardTitle>
+                      <CardDescription>
+                        Configure signature fields, text inputs, and other form elements
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                          <Button variant="outline" className="flex items-center gap-2 h-auto p-4">
+                            <Type className="h-5 w-5" />
+                            <div className="text-left">
+                              <div className="font-medium">Signature</div>
+                              <div className="text-xs text-gray-500">Digital signature field</div>
+                            </div>
+                          </Button>
+                          <Button variant="outline" className="flex items-center gap-2 h-auto p-4">
+                            <FileText className="h-5 w-5" />
+                            <div className="text-left">
+                              <div className="font-medium">Text Field</div>
+                              <div className="text-xs text-gray-500">Single line input</div>
+                            </div>
+                          </Button>
+                          <Button variant="outline" className="flex items-center gap-2 h-auto p-4">
+                            <CheckSquare className="h-5 w-5" />
+                            <div className="text-left">
+                              <div className="font-medium">Checkbox</div>
+                              <div className="text-xs text-gray-500">Yes/No selection</div>
+                            </div>
+                          </Button>
+                          <Button variant="outline" className="flex items-center gap-2 h-auto p-4">
+                            <CalendarIcon className="h-5 w-5" />
+                            <div className="text-left">
+                              <div className="font-medium">Date</div>
+                              <div className="text-xs text-gray-500">Date picker field</div>
+                            </div>
+                          </Button>
+                        </div>
+                        
+                        <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+                          <MousePointer className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-gray-600">Document preview will appear here</p>
+                          <p className="text-sm text-gray-500">Drag and drop fields onto the document</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="layout" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Layout Settings</CardTitle>
+                      <CardDescription>
+                        Configure document layout, margins, and positioning
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Page Size</Label>
+                            <Select defaultValue="a4">
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="a4">A4 (210 × 297 mm)</SelectItem>
+                                <SelectItem value="letter">Letter (8.5 × 11 in)</SelectItem>
+                                <SelectItem value="legal">Legal (8.5 × 14 in)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          <div>
+                            <Label>Orientation</Label>
+                            <RadioGroup defaultValue="portrait">
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="portrait" id="portrait" />
+                                <Label htmlFor="portrait">Portrait</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="landscape" id="landscape" />
+                                <Label htmlFor="landscape">Landscape</Label>
+                              </div>
+                            </RadioGroup>
+                          </div>
+
+                          <div>
+                            <Label>Margins (mm)</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Input placeholder="Top" defaultValue="20" />
+                              <Input placeholder="Right" defaultValue="20" />
+                              <Input placeholder="Bottom" defaultValue="20" />
+                              <Input placeholder="Left" defaultValue="20" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Header</Label>
+                            <Textarea 
+                              placeholder="Enter header content..."
+                              className="min-h-[80px]"
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label>Footer</Label>
+                            <Textarea 
+                              placeholder="Enter footer content..."
+                              className="min-h-[80px]"
+                            />
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            <Switch id="page-numbers" />
+                            <Label htmlFor="page-numbers">Show page numbers</Label>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="preview" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Template Preview</CardTitle>
+                      <CardDescription>
+                        Preview how your template will appear to signers
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border rounded-lg p-6 bg-white min-h-[400px]">
+                        <div className="space-y-4">
+                          {templateBranding.logoUrl && (
+                            <div className="flex justify-center">
+                              <img 
+                                src={templateBranding.logoUrl} 
+                                alt="Company Logo" 
+                                className="max-h-16"
+                              />
+                            </div>
+                          )}
+                          
+                          <div className="text-center">
+                            <h3 
+                              className="text-xl font-semibold mb-2"
+                              style={{ 
+                                color: templateBranding.primaryColor,
+                                fontFamily: templateBranding.fontFamily
+                              }}
+                            >
+                              {templateBranding.companyName || 'Your Company Name'}
+                            </h3>
+                            <h4 className="text-lg font-medium mb-4">
+                              {selectedTemplate?.name || 'Document Template'}
+                            </h4>
+                          </div>
+
+                          <div className="space-y-4">
+                            <p className="text-gray-700">
+                              This is a preview of your customized template. The actual document will include your content and signature fields as configured.
+                            </p>
+                            
+                            <div className="border-2 border-dashed border-gray-300 rounded p-4 text-center">
+                              <Type className="h-6 w-6 text-gray-400 mx-auto mb-2" />
+                              <p className="text-sm text-gray-500">Signature Field</p>
+                            </div>
+
+                            <div className="border-2 border-dashed border-gray-300 rounded p-4 text-center">
+                              <CalendarIcon className="h-6 w-6 text-gray-400 mx-auto mb-2" />
+                              <p className="text-sm text-gray-500">Date Field</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+
+              <div className="flex justify-between items-center pt-4 border-t">
+                <div className="text-sm text-gray-600">
+                  Template changes will be saved automatically
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setShowTemplateEditor(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setShowTemplateEditor(false)}>
+                    Save Template
                   </Button>
                 </div>
               </div>
