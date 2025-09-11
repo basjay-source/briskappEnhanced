@@ -11,7 +11,17 @@ import {
   Settings,
   Filter,
   Plus,
-  Edit
+  Edit,
+  Shield,
+  Network,
+  FileText,
+  Zap,
+  Globe,
+  UserCheck,
+  AlertCircle,
+  Target,
+  Activity,
+  BarChart3
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -44,6 +54,20 @@ export default function AMLCompliance() {
       color: 'text-red-600'
     },
     {
+      title: 'PEP Matches',
+      value: '7',
+      change: '2 new this week',
+      icon: UserCheck,
+      color: 'text-orange-600'
+    },
+    {
+      title: 'Sanctions Hits',
+      value: '0',
+      change: 'All clear',
+      icon: Shield,
+      color: 'text-green-600'
+    },
+    {
       title: 'Completed KYC',
       value: '156',
       change: 'This month',
@@ -56,6 +80,20 @@ export default function AMLCompliance() {
       change: '-15% from last month',
       icon: Clock,
       color: 'text-purple-600'
+    },
+    {
+      title: 'SARs Filed',
+      value: '2',
+      change: 'This quarter',
+      icon: FileText,
+      color: 'text-red-600'
+    },
+    {
+      title: 'AI Alerts',
+      value: '12',
+      change: '5 resolved today',
+      icon: Brain,
+      color: 'text-brisk-primary'
     }
   ]
 
@@ -68,7 +106,10 @@ export default function AMLCompliance() {
       status: 'Under Review',
       lastUpdated: '2024-01-20',
       assignee: 'Sarah Johnson',
-      flags: ['PEP Check', 'Enhanced DD']
+      flags: ['PEP Check', 'Enhanced DD'],
+      aiInsights: 'Elevated risk due to cross-border operations in medium-risk jurisdictions',
+      screenings: { pep: 1, sanctions: 0, adverseMedia: 0 },
+      uboComplexity: 'Medium'
     },
     {
       id: 'RA002',
@@ -78,7 +119,10 @@ export default function AMLCompliance() {
       status: 'Enhanced DD',
       lastUpdated: '2024-01-19',
       assignee: 'Mike Chen',
-      flags: ['Sanctions', 'High Value', 'Complex Structure']
+      flags: ['Sanctions', 'High Value', 'Complex Structure'],
+      aiInsights: 'Complex ownership structure with multiple jurisdictions requires enhanced monitoring',
+      screenings: { pep: 2, sanctions: 0, adverseMedia: 1 },
+      uboComplexity: 'High'
     },
     {
       id: 'RA003',
@@ -88,7 +132,10 @@ export default function AMLCompliance() {
       status: 'Approved',
       lastUpdated: '2024-01-18',
       assignee: 'Emma Wilson',
-      flags: ['Standard KYC']
+      flags: ['Standard KYC'],
+      aiInsights: 'Low risk profile with straightforward business model and local operations',
+      screenings: { pep: 0, sanctions: 0, adverseMedia: 0 },
+      uboComplexity: 'Low'
     }
   ]
 
@@ -163,18 +210,20 @@ export default function AMLCompliance() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'}`}>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="risk">Risk Assessment</TabsTrigger>
-            <TabsTrigger value="kyc">KYC Checks</TabsTrigger>
+            <TabsTrigger value="kyc">KYC &amp; IDV</TabsTrigger>
+            <TabsTrigger value="screening">Screening</TabsTrigger>
+            <TabsTrigger value="ubo">UBO Mapping</TabsTrigger>
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+            <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
               {kpis.map((kpi, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
+                <Card key={index} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
@@ -409,11 +458,236 @@ export default function AMLCompliance() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="screening" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-brisk-primary" />
+                  PEP &amp; Sanctions Screening
+                </CardTitle>
+                <CardDescription>Real-time screening against global watchlists</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-3 mb-6">
+                  <Card className="border-l-4 border-l-green-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Clean Screens</p>
+                          <p className="text-2xl font-bold text-green-600">847</p>
+                        </div>
+                        <CheckCircle className="h-8 w-8 text-green-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-l-4 border-l-orange-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">PEP Matches</p>
+                          <p className="text-2xl font-bold text-orange-600">7</p>
+                        </div>
+                        <UserCheck className="h-8 w-8 text-orange-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-l-4 border-l-red-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Sanctions Hits</p>
+                          <p className="text-2xl font-bold text-red-600">0</p>
+                        </div>
+                        <AlertTriangle className="h-8 w-8 text-red-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">Recent Screening Results</h3>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      New Screening
+                    </Button>
+                  </div>
+                  
+                  {riskAssessments.map((assessment) => (
+                    <Card key={assessment.id} className="border">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold">{assessment.client}</h3>
+                              <Badge className={getRiskColor(assessment.riskLevel)}>
+                                {assessment.riskLevel} Risk
+                              </Badge>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <span className="text-gray-600">PEP:</span>
+                                <span className={`ml-1 font-medium ${assessment.screenings.pep > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                                  {assessment.screenings.pep} matches
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-gray-600">Sanctions:</span>
+                                <span className={`ml-1 font-medium ${assessment.screenings.sanctions > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                  {assessment.screenings.sanctions} matches
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-gray-600">Adverse Media:</span>
+                                <span className={`ml-1 font-medium ${assessment.screenings.adverseMedia > 0 ? 'text-yellow-600' : 'text-green-600'}`}>
+                                  {assessment.screenings.adverseMedia} matches
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-2" />
+                              Review
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Zap className="h-4 w-4 mr-2" />
+                              Re-screen
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ubo" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Network className="h-5 w-5 text-brisk-primary" />
+                  Ultimate Beneficial Ownership Mapping
+                </CardTitle>
+                <CardDescription>Corporate structure analysis and UBO identification</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-4 mb-6">
+                  <Card className="border-l-4 border-l-blue-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Mapped Entities</p>
+                          <p className="text-2xl font-bold text-blue-600">156</p>
+                        </div>
+                        <Network className="h-8 w-8 text-blue-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-l-4 border-l-green-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Simple Structures</p>
+                          <p className="text-2xl font-bold text-green-600">89</p>
+                        </div>
+                        <Target className="h-8 w-8 text-green-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-l-4 border-l-yellow-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">Complex Structures</p>
+                          <p className="text-2xl font-bold text-yellow-600">45</p>
+                        </div>
+                        <AlertCircle className="h-8 w-8 text-yellow-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-l-4 border-l-red-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">High Complexity</p>
+                          <p className="text-2xl font-bold text-red-600">22</p>
+                        </div>
+                        <Activity className="h-8 w-8 text-red-500" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">Corporate Structures</h3>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Map Structure
+                    </Button>
+                  </div>
+                  
+                  {riskAssessments.map((assessment) => (
+                    <Card key={assessment.id} className="border">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold">{assessment.client}</h3>
+                              <Badge variant="outline">
+                                {assessment.uboComplexity} Complexity
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-gray-600 mb-2">
+                              {assessment.aiInsights}
+                            </div>
+                            <div className="flex items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1">
+                                <Globe className="h-4 w-4 text-gray-400" />
+                                <span>3 jurisdictions</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Users className="h-4 w-4 text-gray-400" />
+                                <span>5 entities</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <BarChart3 className="h-4 w-4 text-gray-400" />
+                                <span>2 levels deep</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                              <Network className="h-4 w-4 mr-2" />
+                              View Structure
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4 mr-2" />
+                              Update
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="monitoring" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Transaction Monitoring</CardTitle>
-                <CardDescription>Suspicious activity detection and alerts</CardDescription>
+                <CardTitle>Transaction Monitoring &amp; Alerts</CardTitle>
+                <CardDescription>Suspicious activity detection and continuous monitoring</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
