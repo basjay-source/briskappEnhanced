@@ -444,7 +444,7 @@ export default function TimeAndFeesModuleAdvanced() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>
-              Advanced Time Management & Fees
+              Time Management & Fees
             </h1>
             <p className="text-gray-600 mt-2">
               AI-powered time tracking, advanced analytics, and intelligent workflow automation
