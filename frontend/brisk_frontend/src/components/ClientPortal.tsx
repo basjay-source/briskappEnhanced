@@ -148,7 +148,7 @@ export default function ClientPortal() {
                       <div className="flex items-center gap-2">
                         <Badge className={
                           doc.status === 'approved' ? 'bg-green-100 text-green-800' :
-                          'bg-yellow-100 text-yellow-800'
+                          'bg-brisk-primary-50 text-brisk-primary'
                         }>
                           {doc.status}
                         </Badge>

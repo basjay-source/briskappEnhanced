@@ -106,7 +106,7 @@ export default function PracticeManagement() {
       case 'in_progress':
         return <Circle className="h-4 w-4 text-blue-600" />
       case 'on_hold':
-        return <Pause className="h-4 w-4 text-yellow-600" />
+        return <Pause className="h-4 w-4 text-brisk-primary" />
       default:
         return <Circle className="h-4 w-4 text-gray-400" />
     }
@@ -268,7 +268,7 @@ export default function PracticeManagement() {
                       <p className="text-xs text-gray-500">{deadline.date}</p>
                     </div>
                     <Badge 
-                      className={`${deadline.days <= 7 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}
+                      className={`${deadline.days <= 7 ? 'bg-red-100 text-red-800' : 'bg-brisk-primary-50 text-brisk-primary'}`}
                     >
                       {deadline.days} days
                     </Badge>

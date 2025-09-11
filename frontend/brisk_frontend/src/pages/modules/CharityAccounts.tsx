@@ -327,7 +327,7 @@ const CharityAccounts: React.FC = () => {
 
   const getComplianceColor = (score: number) => {
     if (score >= 90) return 'text-green-600'
-    if (score >= 75) return 'text-yellow-600'
+    if (score >= 75) return 'text-brisk-primary'
     return 'text-red-600'
   }
 

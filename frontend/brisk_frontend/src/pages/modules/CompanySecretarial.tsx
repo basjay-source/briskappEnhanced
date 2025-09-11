@@ -189,7 +189,7 @@ export default function CompanySecretarial() {
       case 'Active':
         return 'bg-green-100 text-green-800'
       case 'Dormant':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-brisk-primary-50 text-brisk-primary'
       case 'Dissolved':
         return 'bg-red-100 text-red-800'
       default:
@@ -292,11 +292,11 @@ export default function CompanySecretarial() {
                   <p className="text-sm text-red-700">Local Trading Ltd CS01 was due 2024-02-28</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <Clock className="h-5 w-5 text-yellow-500 mt-0.5" />
+              <div className="flex items-start gap-3 p-3 bg-brisk-primary-50 border border-brisk-primary-200 rounded-lg">
+                <Clock className="h-5 w-5 text-brisk-primary mt-0.5" />
                 <div>
-                  <p className="font-medium text-yellow-900">Due Soon</p>
-                  <p className="text-sm text-yellow-700">TechCorp Ltd CS01 due in 14 days</p>
+                  <p className="font-medium text-brisk-primary">Due Soon</p>
+                  <p className="text-sm text-brisk-primary">TechCorp Ltd CS01 due in 14 days</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -534,9 +534,9 @@ export default function CompanySecretarial() {
               </div>
             </div>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-              <h4 className="font-semibold text-yellow-900 mb-2">Filing Fee</h4>
-              <p className="text-sm text-yellow-800">
+            <div className="p-4 bg-brisk-primary-50 border border-brisk-primary-200 rounded">
+              <h4 className="font-semibold text-brisk-primary mb-2">Filing Fee</h4>
+              <p className="text-sm text-brisk-primary">
                 The filing fee for this confirmation statement is £13 if filed online, or £40 if filed by post.
               </p>
             </div>
@@ -564,7 +564,7 @@ export default function CompanySecretarial() {
           <h2 className="text-2xl font-bold">Annual Return (AR01)</h2>
           <p className="text-gray-600">Annual return for companies incorporated before 30 June 2016</p>
         </div>
-        <Badge variant="outline" className="bg-yellow-100 text-yellow-800">Legacy Form</Badge>
+        <Badge variant="outline" className="bg-brisk-primary-50 text-brisk-primary">Legacy Form</Badge>
       </div>
 
       <Card className="border-2 border-[#003078] bg-blue-50/30">
@@ -946,9 +946,9 @@ export default function CompanySecretarial() {
               </div>
             </div>
 
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
-              <h4 className="font-semibold text-yellow-900 mb-2">Important Notes</h4>
-              <ul className="text-sm text-yellow-800 space-y-1">
+            <div className="p-4 bg-brisk-primary-50 border border-brisk-primary-200 rounded">
+              <h4 className="font-semibold text-brisk-primary mb-2">Important Notes</h4>
+              <ul className="text-sm text-brisk-primary space-y-1">
                 <li>• You must register within 30 days of exceeding the threshold</li>
                 <li>• Late registration may result in penalties</li>
                 <li>• You'll receive your VAT number within 2-3 weeks</li>
@@ -994,9 +994,9 @@ export default function CompanySecretarial() {
         </CardHeader>
         <CardContent className="p-6 bg-white">
           <div className="space-y-6">
-            <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-              <h3 className="font-semibold text-yellow-900 mb-2">When You Must Register</h3>
-              <p className="text-sm text-yellow-800">
+            <div className="p-4 bg-brisk-primary-50 border-l-4 border-brisk-primary rounded">
+              <h3 className="font-semibold text-brisk-primary mb-2">When You Must Register</h3>
+              <p className="text-sm text-brisk-primary">
                 You must register if you pay any employee £123 or more per week, or if you employ someone 
                 who has another job or receives a pension.
               </p>
@@ -1147,9 +1147,9 @@ export default function CompanySecretarial() {
                 or 3 months after you receive your UTR, whichever is later.
               </p>
             </div>
-            <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-              <h3 className="font-semibold text-yellow-900 mb-2">Important Dates</h3>
-              <ul className="text-sm text-yellow-800 space-y-1">
+            <div className="p-4 bg-brisk-primary-50 border-l-4 border-brisk-primary rounded">
+              <h3 className="font-semibold text-brisk-primary mb-2">Important Dates</h3>
+              <ul className="text-sm text-brisk-primary space-y-1">
                 <li>• Corporation Tax return: 12 months after accounting period ends</li>
                 <li>• Corporation Tax payment: 9 months and 1 day after accounting period ends</li>
                 <li>• Late filing penalty: £100 minimum (increases with delay)</li>
@@ -1277,12 +1277,12 @@ export default function CompanySecretarial() {
                 <Button size="sm" variant="outline" className="mt-2">Read More</Button>
               </div>
               
-              <div className="p-3 bg-yellow-50 rounded-lg">
+              <div className="p-3 bg-brisk-primary-50 rounded-lg">
                 <div className="flex items-center gap-2 mb-1">
-                  <AlertCircle className="h-4 w-4 text-yellow-500" />
-                  <span className="font-medium text-yellow-900">Fee Changes</span>
+                  <AlertCircle className="h-4 w-4 text-brisk-primary" />
+                  <span className="font-medium text-brisk-primary">Fee Changes</span>
                 </div>
-                <p className="text-sm text-yellow-700">Companies House filing fees increased by 5% from March 2024</p>
+                <p className="text-sm text-brisk-primary">Companies House filing fees increased by 5% from March 2024</p>
                 <Button size="sm" variant="outline" className="mt-2">View Details</Button>
               </div>
               

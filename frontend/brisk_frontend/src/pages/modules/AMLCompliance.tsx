@@ -167,7 +167,7 @@ export default function AMLCompliance() {
         return <CheckCircle className="h-4 w-4 text-green-500" />
       case 'Pending Documents':
       case 'Under Review':
-        return <Clock className="h-4 w-4 text-yellow-500" />
+        return <Clock className="h-4 w-4 text-brisk-primary" />
       case 'Enhanced DD':
       case 'High Risk':
         return <AlertTriangle className="h-4 w-4 text-red-500" />
@@ -181,7 +181,7 @@ export default function AMLCompliance() {
       case 'High':
         return 'text-red-600 bg-red-50'
       case 'Medium':
-        return 'text-yellow-600 bg-yellow-50'
+        return 'text-brisk-primary bg-brisk-primary-50'
       case 'Low':
         return 'text-green-600 bg-green-50'
       default:
@@ -541,7 +541,7 @@ export default function AMLCompliance() {
                               </div>
                               <div>
                                 <span className="text-gray-600">Adverse Media:</span>
-                                <span className={`ml-1 font-medium ${assessment.screenings.adverseMedia > 0 ? 'text-yellow-600' : 'text-green-600'}`}>
+                                <span className={`ml-1 font-medium ${assessment.screenings.adverseMedia > 0 ? 'text-brisk-primary' : 'text-green-600'}`}>
                                   {assessment.screenings.adverseMedia} matches
                                 </span>
                               </div>
@@ -601,14 +601,14 @@ export default function AMLCompliance() {
                     </CardContent>
                   </Card>
                   
-                  <Card className="border-l-4 border-l-yellow-500">
+                  <Card className="border-l-4 border-l-brisk-primary">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium text-gray-600">Complex Structures</p>
-                          <p className="text-2xl font-bold text-yellow-600">45</p>
+                          <p className="text-2xl font-bold text-brisk-primary">45</p>
                         </div>
-                        <AlertCircle className="h-8 w-8 text-yellow-500" />
+                        <AlertCircle className="h-8 w-8 text-brisk-primary" />
                       </div>
                     </CardContent>
                   </Card>
@@ -732,10 +732,10 @@ export default function AMLCompliance() {
                         </div>
                         <Button size="sm" variant="destructive">Investigate</Button>
                       </div>
-                      <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center justify-between p-3 bg-brisk-primary-50 rounded-lg">
                         <div>
-                          <p className="font-medium text-yellow-900">Threshold Exceeded</p>
-                          <p className="text-sm text-yellow-700">TechCorp Ltd - Transaction above £10,000 limit</p>
+                          <p className="font-medium text-brisk-primary">Threshold Exceeded</p>
+                          <p className="text-sm text-brisk-primary">TechCorp Ltd - Transaction above £10,000 limit</p>
                         </div>
                         <Button size="sm" variant="outline">Review</Button>
                       </div>

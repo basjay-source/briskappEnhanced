@@ -315,7 +315,7 @@ export default function PersonalTax() {
                           <p className="font-medium text-sm">CGT Annual Exemption</p>
                           <p className="text-xs text-gray-600">Planning required</p>
                         </div>
-                        <Badge className="bg-yellow-100 text-yellow-800">45 days</Badge>
+                        <Badge className="bg-brisk-primary-50 text-brisk-primary">45 days</Badge>
                       </div>
                     </div>
                   </CardContent>

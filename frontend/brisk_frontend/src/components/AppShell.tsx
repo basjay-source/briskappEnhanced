@@ -26,8 +26,7 @@ export default function AppShell() {
         <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
           <div className="flex items-center gap-3">
             <MobileNavigation />
-            <BriskLogo className="h-6 w-6" />
-            <span className="font-semibold text-brisk-primary">Brisk</span>
+            <BriskLogo className="h-6 w-6" showText={false} />
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon">
@@ -51,8 +50,7 @@ export default function AppShell() {
         <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-2">
-            <BriskLogo className="h-8 w-8" />
-            <span className="font-semibold text-lg text-brisk-primary">Brisk Practice</span>
+            <BriskLogo className="h-8 w-8" showText={true} />
           </div>
         </SidebarHeader>
         

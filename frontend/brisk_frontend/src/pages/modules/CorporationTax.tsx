@@ -295,7 +295,7 @@ export default function CorporationTax() {
                                 </div>
                                 <Badge className={
                                   claim.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                  claim.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                  claim.status === 'pending' ? 'bg-brisk-primary-50 text-brisk-primary' :
                                   'bg-gray-100 text-gray-800'
                                 }>
                                   {claim.status}
@@ -500,7 +500,7 @@ export default function CorporationTax() {
                                 <p className="font-medium">Brisk Tech Ltd</p>
                                 <p className="text-sm text-gray-600">Subsidiary</p>
                               </div>
-                              <Badge className="bg-yellow-100 text-yellow-800">Break Even</Badge>
+                              <Badge className="bg-brisk-primary-50 text-brisk-primary">Break Even</Badge>
                             </div>
                             <div className="mt-2 text-sm">
                               <span className="text-gray-600">Taxable Profit: </span>
@@ -593,7 +593,7 @@ export default function CorporationTax() {
                               </div>
                               <div className="text-right">
                                 <p className="font-bold">£5,654</p>
-                                <Badge className="bg-yellow-100 text-yellow-800">Due</Badge>
+                                <Badge className="bg-brisk-primary-50 text-brisk-primary">Due</Badge>
                               </div>
                             </div>
                           </div>
@@ -628,10 +628,10 @@ export default function CorporationTax() {
                               <p className="text-sm text-green-700">Paid to Date</p>
                             </div>
                           </div>
-                          <div className="p-4 bg-yellow-50 rounded-lg">
-                            <h4 className="font-medium text-yellow-900">Next Payment Due</h4>
-                            <p className="text-xl font-bold text-yellow-600">£5,654</p>
-                            <p className="text-sm text-yellow-700">Due: 14 January 2025 (in 45 days)</p>
+                          <div className="p-4 bg-brisk-primary-50 rounded-lg">
+                            <h4 className="font-medium text-brisk-primary">Next Payment Due</h4>
+                            <p className="text-xl font-bold text-brisk-primary">£5,654</p>
+                            <p className="text-sm text-brisk-primary">Due: 14 January 2025 (in 45 days)</p>
                           </div>
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
@@ -664,7 +664,7 @@ export default function CorporationTax() {
                           <p className="text-sm text-gray-600">Due: 31 March 2024</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge>
+                          <Badge className="bg-brisk-primary-50 text-brisk-primary">In Progress</Badge>
                           <Button size="sm">Complete Filing</Button>
                         </div>
                       </div>
@@ -703,14 +703,14 @@ export default function CorporationTax() {
                   <div key={index} className={`p-3 rounded-lg ${
                     rec.type === 'savings' ? 'bg-green-50 border border-green-200' :
                     rec.type === 'timing' ? 'bg-blue-50 border border-blue-200' :
-                    rec.type === 'compliance' ? 'bg-yellow-50 border border-yellow-200' :
+                    rec.type === 'compliance' ? 'bg-brisk-primary-50 border border-brisk-primary-200' :
                     rec.type === 'optimization' ? 'bg-purple-50 border border-purple-200' :
                     'bg-orange-50 border border-orange-200'
                   }`}>
                     <div className="flex items-start gap-2">
                       {rec.type === 'savings' && <TrendingUp className="h-4 w-4 text-green-600 mt-0.5" />}
                       {rec.type === 'timing' && <Calculator className="h-4 w-4 text-blue-600 mt-0.5" />}
-                      {rec.type === 'compliance' && <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />}
+                      {rec.type === 'compliance' && <AlertCircle className="h-4 w-4 text-brisk-primary mt-0.5" />}
                       {rec.type === 'optimization' && <Target className="h-4 w-4 text-purple-600 mt-0.5" />}
                       {rec.type === 'planning' && <Brain className="h-4 w-4 text-orange-600 mt-0.5" />}
                       <div className="flex-1">

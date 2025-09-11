@@ -284,7 +284,7 @@ export default function Bookkeeping() {
       case 'Connected': return 'bg-green-100 text-green-800'
       case 'Available': return 'bg-blue-100 text-blue-800'
       case 'Overdue': return 'bg-red-100 text-red-800'
-      case 'Draft': return 'bg-yellow-100 text-yellow-800'
+      case 'Draft': return 'bg-brisk-primary-50 text-brisk-primary'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -653,7 +653,7 @@ export default function Bookkeeping() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="font-medium">BILL-001</p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                    <Badge className="bg-brisk-primary-50 text-brisk-primary">Pending</Badge>
                   </div>
                   <p className="text-sm text-gray-600">Office Supplies Ltd</p>
                   <p className="text-xs text-gray-500">Due: 2024-02-15</p>
@@ -808,7 +808,7 @@ export default function Bookkeeping() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="font-medium">Q4 2023</p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Draft</Badge>
+                    <Badge className="bg-brisk-primary-50 text-brisk-primary">Draft</Badge>
                   </div>
                   <p className="text-sm text-gray-600">Due: 2024-02-07</p>
                   <div className="flex gap-4 text-xs text-gray-500 mt-1">

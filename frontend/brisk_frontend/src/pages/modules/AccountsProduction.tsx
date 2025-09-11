@@ -586,7 +586,7 @@ export default function AccountsProduction() {
                                         {account.confidence}%
                                       </Badge>
                                     ) : (
-                                      <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+                                      <Badge className="bg-brisk-primary-50 text-brisk-primary text-xs">
                                         <AlertCircle className="h-3 w-3 mr-1" />
                                         Review
                                       </Badge>
@@ -646,7 +646,7 @@ export default function AccountsProduction() {
                             <span>No duplicate codes</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
-                            <AlertCircle className="h-4 w-4 text-yellow-600" />
+                            <AlertCircle className="h-4 w-4 text-brisk-primary" />
                             <span>1 unmapped account</span>
                           </div>
                         </div>
@@ -702,7 +702,7 @@ export default function AccountsProduction() {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold">£850</p>
-                          <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                          <Badge className="bg-brisk-primary-50 text-brisk-primary">Pending</Badge>
                         </div>
                       </div>
                     </div>
@@ -917,11 +917,11 @@ export default function AccountsProduction() {
                                 <span>Creditors note</span>
                               </div>
                               <div className="flex items-center gap-2 text-sm">
-                                <AlertCircle className="h-4 w-4 text-yellow-600" />
+                                <AlertCircle className="h-4 w-4 text-brisk-primary" />
                                 <span>Related party transactions</span>
                               </div>
                               <div className="flex items-center gap-2 text-sm">
-                                <AlertCircle className="h-4 w-4 text-yellow-600" />
+                                <AlertCircle className="h-4 w-4 text-brisk-primary" />
                                 <span>Post balance sheet events</span>
                               </div>
                             </div>
@@ -2000,7 +2000,7 @@ export default function AccountsProduction() {
                               </div>
                               <div className="flex justify-between">
                                 <span>Status:</span>
-                                <span className="text-yellow-600">Configure</span>
+                                <span className="text-brisk-primary">Configure</span>
                               </div>
                               <Button size="sm" className="w-full mt-3">Configure</Button>
                             </div>
@@ -2143,11 +2143,11 @@ export default function AccountsProduction() {
                             <span className="text-sm">Business rules validated</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4 text-yellow-600" />
+                            <AlertCircle className="h-4 w-4 text-brisk-primary" />
                             <span className="text-sm">3 optional tags missing</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4 text-yellow-600" />
+                            <AlertCircle className="h-4 w-4 text-brisk-primary" />
                             <span className="text-sm">1 warning: date format</span>
                           </div>
                         </div>
@@ -2214,7 +2214,7 @@ export default function AccountsProduction() {
                           <div className="p-4 border rounded-lg">
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-sm font-medium">Notes</span>
-                              <Badge className="bg-yellow-100 text-yellow-800">88%</Badge>
+                              <Badge className="bg-brisk-primary-50 text-brisk-primary">88%</Badge>
                             </div>
                             <Progress value={88} className="h-2" />
                             <p className="text-xs text-gray-600 mt-1">22/25 tags</p>
@@ -2268,7 +2268,7 @@ export default function AccountsProduction() {
                                 <td className="p-3 font-mono text-xs">uk-bus:FixedAssets</td>
                                 <td className="p-3 text-right">£45,000</td>
                                 <td className="p-3 text-center">
-                                  <Badge className="bg-yellow-100 text-yellow-800">Review</Badge>
+                                  <Badge className="bg-brisk-primary-50 text-brisk-primary">Review</Badge>
                                 </td>
                                 <td className="p-3 text-center">
                                   <Button size="sm" variant="outline">Fix</Button>
@@ -2327,12 +2327,12 @@ export default function AccountsProduction() {
                   <TabsContent value="insights" className="space-y-3 mt-4">
                     {aiInsights.map((insight, index) => (
                       <div key={index} className={`p-3 rounded-lg border ${
-                        insight.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+                        insight.type === 'warning' ? 'bg-brisk-primary-50 border-brisk-primary-200' :
                         insight.type === 'success' ? 'bg-green-50 border-green-200' :
                         'bg-blue-50 border-blue-200'
                       }`}>
                         <div className="flex items-start gap-2">
-                          {insight.type === 'warning' && <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />}
+                          {insight.type === 'warning' && <AlertCircle className="h-4 w-4 text-brisk-primary mt-0.5" />}
                           {insight.type === 'success' && <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />}
                           {insight.type === 'info' && <FileText className="h-4 w-4 text-blue-600 mt-0.5" />}
                           <div className="flex-1">
@@ -2340,7 +2340,7 @@ export default function AccountsProduction() {
                               <h4 className="font-medium text-sm">{insight.title}</h4>
                               <Badge className={`text-xs ${
                                 insight.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                insight.priority === 'medium' ? 'bg-brisk-primary-50 text-brisk-primary' :
                                 'bg-gray-100 text-gray-800'
                               }`}>
                                 {insight.priority}
@@ -2428,7 +2428,7 @@ export default function AccountsProduction() {
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
-                            <Lightbulb className="h-3 w-3 text-yellow-600 mt-0.5" />
+                            <Lightbulb className="h-3 w-3 text-brisk-primary mt-0.5" />
                             <div>
                               <p className="font-medium">Operational</p>
                               <p>Implement expense monitoring controls to maintain cost discipline.</p>

@@ -366,7 +366,7 @@ export default function DocuSignage() {
       case 'Pending Signatures':
       case 'Sent':
       case 'Pending':
-        return <Clock className="h-4 w-4 text-yellow-500" />
+        return <Clock className="h-4 w-4 text-brisk-primary" />
       case 'Draft':
         return <Edit className="h-4 w-4 text-gray-500" />
       case 'Viewed':
@@ -385,7 +385,7 @@ export default function DocuSignage() {
       case 'Pending Signatures':
       case 'Sent':
       case 'Pending':
-        return 'text-yellow-600 bg-yellow-50'
+        return 'text-brisk-primary bg-brisk-primary-50'
       case 'Draft':
         return 'text-gray-600 bg-gray-50'
       case 'Viewed':

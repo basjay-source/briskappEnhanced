@@ -462,7 +462,7 @@ export default function TimeAndFeesModule() {
                         Start
                       </Button>
                     ) : (
-                      <Button onClick={pauseTimer} className="bg-yellow-600 hover:bg-yellow-700">
+                      <Button onClick={pauseTimer} className="bg-brisk-primary hover:bg-brisk-primary-600">
                         <Pause className="h-4 w-4 mr-2" />
                         Pause
                       </Button>

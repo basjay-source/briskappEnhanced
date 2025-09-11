@@ -405,7 +405,7 @@ export default function Payroll() {
                           <p className="font-medium text-sm">P11D Preparation</p>
                           <p className="text-xs text-gray-600">Benefits reporting</p>
                         </div>
-                        <Badge className="bg-yellow-100 text-yellow-800">Due 6 Jul</Badge>
+                        <Badge className="bg-brisk-primary-50 text-brisk-primary">Due 6 Jul</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>

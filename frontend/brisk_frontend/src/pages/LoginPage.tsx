@@ -21,7 +21,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <BriskLogo className="h-10 w-10" animated />
+            <BriskLogo className="h-10 w-10" animated showText={false} />
             <span className="text-2xl font-bold text-brisk-primary">Brisk Practice</span>
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
