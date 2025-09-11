@@ -14,6 +14,7 @@ import CompanySecretarial from '@/pages/modules/CompanySecretarial'
 import Bookkeeping from '@/pages/modules/Bookkeeping'
 import ESignature from '@/pages/modules/ESignature'
 import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced'
+import AdminModule from '@/pages/modules/AdminModule'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
 import ClientPortal from '@/components/ClientPortal'
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="books" element={<Bookkeeping />} />
             <Route path="esign" element={<ESignature />} />
             <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
+            <Route path="admin" element={<AdminModule />} />
             <Route path="portal" element={<ClientPortal />} />
           </Route>
         </Routes>
