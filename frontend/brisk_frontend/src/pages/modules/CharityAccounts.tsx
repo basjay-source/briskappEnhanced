@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { 
@@ -16,7 +14,6 @@ import {
   PoundSterling,
   Shield,
   Download,
-  Filter,
   Plus,
   Edit,
   Eye,
@@ -24,7 +21,15 @@ import {
   BarChart3,
   PieChart,
   Lightbulb,
-  Zap
+  Zap,
+  Activity,
+  Heart,
+  FileCheck,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  Gift,
+  Link
 } from 'lucide-react'
 
 interface CharityAccount {
@@ -92,8 +97,77 @@ interface SofaEntry {
 
 const CharityAccounts: React.FC = () => {
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeMainTab, setActiveMainTab] = useState('dashboard')
+  const [activeSubTab, setActiveSubTab] = useState('')
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['accounts', 'reports'])
   const [searchTerm, setSearchTerm] = useState('')
+
+  type SubTabConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+  }
+
+  type MenuConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+    hasSubTabs: boolean
+    subTabs?: Record<string, SubTabConfig>
+  }
+
+  const menuStructure: Record<string, MenuConfig> = {
+    dashboard: { label: 'Dashboard', icon: Activity, hasSubTabs: false },
+    accounts: { 
+      label: 'Charity Accounts', 
+      icon: Heart, 
+      hasSubTabs: true,
+      subTabs: {
+        fundaccounting: { label: 'Fund Accounting', icon: PoundSterling },
+        sofa: { label: 'SOFA Generation', icon: FileText },
+        trustees: { label: 'Trustee Management', icon: Users },
+        compliance: { label: 'SORP Compliance', icon: Shield }
+      }
+    },
+    grants: { label: 'Grants Management', icon: Gift, hasSubTabs: false },
+    reports: {
+      label: 'Reports & Filing',
+      icon: FileCheck,
+      hasSubTabs: true,
+      subTabs: {
+        annual: { label: 'Annual Reports', icon: FileText },
+        financial: { label: 'Financial Statements', icon: BarChart3 },
+        compliance: { label: 'Compliance Reports', icon: Shield },
+        analytics: { label: 'Analytics & Insights', icon: PieChart }
+      }
+    },
+    integrations: { label: 'Integrations', icon: Link, hasSubTabs: false }
+  }
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    )
+  }
+
+  const handleMainTabClick = (tabKey: string) => {
+    setActiveMainTab(tabKey)
+    const tabConfig = menuStructure[tabKey]
+    if (tabConfig && tabConfig.hasSubTabs && tabConfig.subTabs) {
+      const firstSubTab = Object.keys(tabConfig.subTabs)[0]
+      setActiveSubTab(firstSubTab || '')
+      if (!expandedCategories.includes(tabKey)) {
+        toggleCategory(tabKey)
+      }
+    } else {
+      setActiveSubTab('')
+    }
+  }
+
+  const handleSubTabClick = (mainTab: string, subTab: string) => {
+    setActiveMainTab(mainTab)
+    setActiveSubTab(subTab)
+  }
 
   const [charities] = useState<CharityAccount[]>([
     {
@@ -250,14 +324,6 @@ const CharityAccounts: React.FC = () => {
     }).format(amount)
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'bg-green-100 text-green-800'
-      case 'dormant': return 'bg-yellow-100 text-yellow-800'
-      case 'pending': return 'bg-blue-100 text-blue-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   const getComplianceColor = (score: number) => {
     if (score >= 90) return 'text-green-600'
@@ -270,589 +336,848 @@ const CharityAccounts: React.FC = () => {
     charity.registrationNumber.includes(searchTerm)
   )
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+  function renderMainContent() {
+    if (activeMainTab === 'dashboard') {
+      return renderDashboard()
+    } else if (activeMainTab === 'accounts') {
+      return renderAccountsContent()
+    } else if (activeMainTab === 'grants') {
+      return renderGrantsContent()
+    } else if (activeMainTab === 'reports') {
+      return renderReportsContent()
+    } else if (activeMainTab === 'integrations') {
+      return renderIntegrationsContent()
+    }
+    return renderDashboard()
+  }
+
+  function renderDashboard() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Charity & Academy Accounts</h1>
-            <p className="text-gray-600">SORP compliance, fund accounting, and trustee management</p>
+            <h2 className="text-2xl font-bold">Dashboard</h2>
+            <p className="text-gray-600">Overview of your charity accounts</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Export Data
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
             </Button>
-            <Button size="sm">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Charity
+            <Button>
+              <Eye className="h-4 w-4 mr-2" />
+              View All
             </Button>
           </div>
         </div>
 
         {/* KPI Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Charities</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{charities.length}</div>
-              <p className="text-xs text-muted-foreground">
-                +2 from last month
-              </p>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Charities</p>
+                  <p className="text-2xl font-bold">{charities.length}</p>
+                  <p className="text-xs text-green-600">+2 this month</p>
+                </div>
+                <Building2 className="h-8 w-8 text-blue-500" />
+              </div>
             </CardContent>
           </Card>
-
+          
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Income</p>
+                  <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}</p>
+                  <p className="text-xs text-green-600">+15% vs last year</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-green-500" />
               </div>
-              <p className="text-xs text-muted-foreground">
-                +12.5% from last year
-              </p>
             </CardContent>
           </Card>
-
+          
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Net Assets</CardTitle>
-              <PoundSterling className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Net Assets</p>
+                  <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
+                  <p className="text-xs text-blue-600">Stable</p>
+                </div>
+                <PoundSterling className="h-8 w-8 text-blue-500" />
               </div>
-              <p className="text-xs text-muted-foreground">
-                +8.2% from last year
-              </p>
             </CardContent>
           </Card>
-
+          
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Compliance</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Compliance Score</p>
+                  <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
+                  <p className="text-xs text-green-600">Excellent</p>
+                </div>
+                <Shield className="h-8 w-8 text-green-500" />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Excellent rating
-              </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-8'}`}>
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="funds">Fund Accounting</TabsTrigger>
-            <TabsTrigger value="sofa">SOFA</TabsTrigger>
-            <TabsTrigger value="trustees">Trustees</TabsTrigger>
-            <TabsTrigger value="compliance">Compliance</TabsTrigger>
-            <TabsTrigger value="grants">Grants</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-            <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="dashboard" className="space-y-4">
-            {/* Search and Filter */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Charity Portfolio</CardTitle>
-                <CardDescription>Manage your charity and academy accounts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-4 mb-4">
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Search charities..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-                  <Button variant="outline" size="sm">
-                    <Filter className="mr-2 h-4 w-4" />
-                    Filter
-                  </Button>
-                </div>
-
-                {/* Charity List */}
-                <div className="space-y-4">
+        {/* Charity Portfolio and AI Adviser */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                Charity Portfolio
+              </CardTitle>
+              <CardDescription>Search and manage your charity accounts</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Input
+                  placeholder="Search charities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
+                />
+                <div className="space-y-3">
                   {filteredCharities.map((charity) => (
-                    <Card key={charity.id} className="cursor-pointer hover:shadow-md transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{charity.name}</h3>
-                              <Badge className={getStatusColor(charity.status)}>
-                                {charity.status}
-                              </Badge>
-                              <Badge variant="outline">
-                                {charity.type}
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
-                              <div>
-                                <span className="font-medium">Reg No:</span> {charity.registrationNumber}
-                              </div>
-                              <div>
-                                <span className="font-medium">Year End:</span> {charity.yearEnd}
-                              </div>
-                              <div>
-                                <span className="font-medium">Income:</span> {formatCurrency(charity.totalIncome)}
-                              </div>
-                              <div>
-                                <span className="font-medium">Net Assets:</span> {formatCurrency(charity.netAssets)}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="text-right">
-                              <div className={`text-sm font-medium ${getComplianceColor(charity.complianceScore)}`}>
-                                {charity.complianceScore}% Compliance
-                              </div>
-                              <div className="text-xs text-gray-500">
-                                Next due: {charity.nextDue}
-                              </div>
-                            </div>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </div>
+                    <div key={charity.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium">{charity.name}</h4>
+                          <Badge variant={charity.status === 'active' ? 'default' : 'secondary'}>
+                            {charity.status}
+                          </Badge>
                         </div>
-                      </CardContent>
-                    </Card>
+                        <p className="text-sm text-gray-600">Reg: {charity.registrationNumber}</p>
+                        <p className="text-sm text-gray-600">Year End: {charity.yearEnd}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">{formatCurrency(charity.totalIncome)}</p>
+                        <p className="text-sm text-gray-600">Income</p>
+                        <Badge className={getComplianceColor(charity.complianceScore)}>
+                          {charity.complianceScore}% Compliant
+                        </Badge>
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              </div>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="funds" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Fund Accounting</CardTitle>
-                    <CardDescription>Manage unrestricted, restricted, and endowment funds</CardDescription>
-                  </div>
-                  <Button size="sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Fund
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* Fund Summary */}
-                <div className="grid gap-4 md:grid-cols-3 mb-6">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Unrestricted Funds</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-blue-600">
-                        {formatCurrency(funds.filter(f => f.type === 'unrestricted').reduce((sum, f) => sum + f.balance, 0))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Restricted Funds</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-green-600">
-                        {formatCurrency(funds.filter(f => f.type === 'restricted').reduce((sum, f) => sum + f.balance, 0))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Endowment Funds</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-purple-600">
-                        {formatCurrency(funds.filter(f => f.type === 'endowment').reduce((sum, f) => sum + f.balance, 0))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Fund Details */}
-                <div className="space-y-4">
-                  {funds.map((fund) => (
-                    <Card key={fund.id}>
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle className="text-lg">{fund.name}</CardTitle>
-                            <CardDescription>{fund.purpose}</CardDescription>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-xl font-bold">{formatCurrency(fund.balance)}</div>
-                            <Badge variant="outline">{fund.type}</Badge>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="mb-4">
-                          <Label className="text-sm font-medium">Restrictions:</Label>
-                          <p className="text-sm text-gray-600">{fund.restrictions}</p>
-                        </div>
-                        
-                        {/* Recent Movements */}
-                        <div>
-                          <Label className="text-sm font-medium mb-2 block">Recent Movements:</Label>
-                          <div className="space-y-2">
-                            {fund.movements.slice(0, 3).map((movement) => (
-                              <div key={movement.id} className="flex items-center justify-between text-sm">
-                                <div>
-                                  <span className="font-medium">{movement.description}</span>
-                                  <span className="text-gray-500 ml-2">({movement.reference})</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-gray-500">{movement.date}</span>
-                                  <span className={`font-medium ${movement.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    {formatCurrency(Math.abs(movement.amount))}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="sofa" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Statement of Financial Activities (SOFA)</CardTitle>
-                    <CardDescription>SORP-compliant financial reporting</CardDescription>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="mr-2 h-4 w-4" />
-                      Export
-                    </Button>
-                    <Button size="sm">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Entry
-                    </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Lightbulb className="h-5 w-5 text-brisk-primary" />
+                AI Charity Adviser
+              </CardTitle>
+              <CardDescription>Intelligent insights and recommendations</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-blue-900">Upcoming Deadline</h4>
+                      <p className="text-sm text-blue-700">
+                        Annual return for Hope Foundation due in 14 days
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-2">Category</th>
-                        <th className="text-right p-2">Unrestricted</th>
-                        <th className="text-right p-2">Restricted</th>
-                        <th className="text-right p-2">Endowment</th>
-                        <th className="text-right p-2">Total 2024</th>
-                        <th className="text-right p-2">Total 2023</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sofaData.map((entry) => (
-                        <tr key={entry.id} className="border-b hover:bg-gray-50">
-                          <td className="p-2">
-                            <div>
-                              <div className="font-medium">{entry.category}</div>
-                              <div className="text-sm text-gray-600">{entry.subcategory}</div>
-                            </div>
-                          </td>
-                          <td className="text-right p-2">{formatCurrency(entry.unrestricted)}</td>
-                          <td className="text-right p-2">{formatCurrency(entry.restricted)}</td>
-                          <td className="text-right p-2">{formatCurrency(entry.endowment)}</td>
-                          <td className="text-right p-2 font-medium">{formatCurrency(entry.total)}</td>
-                          <td className="text-right p-2 text-gray-600">{formatCurrency(entry.priorYear)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="trustees" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Trustee Management</CardTitle>
-                    <CardDescription>Manage trustee appointments and records</CardDescription>
+                
+                <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-green-900">Fund Optimization</h4>
+                      <p className="text-sm text-green-700">
+                        Consider transferring £15,000 from general fund to building maintenance reserve
+                      </p>
+                    </div>
                   </div>
-                  <Button size="sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Trustee
-                  </Button>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {trustees.map((trustee) => (
-                    <Card key={trustee.id}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{trustee.name}</h3>
-                              <Badge className={trustee.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                                {trustee.status}
-                              </Badge>
-                            </div>
-                            <div className="grid gap-2 text-sm text-gray-600">
-                              <div><span className="font-medium">Role:</span> {trustee.role}</div>
-                              <div><span className="font-medium">Appointed:</span> {trustee.appointmentDate}</div>
-                              <div><span className="font-medium">Occupation:</span> {trustee.occupation}</div>
-                              <div><span className="font-medium">Address:</span> {trustee.address}</div>
-                              {trustee.otherTrusteeships.length > 0 && (
-                                <div><span className="font-medium">Other Trusteeships:</span> {trustee.otherTrusteeships.join(', ')}</div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                
+                <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                  <div className="flex items-start gap-3">
+                    <Zap className="h-5 w-5 text-orange-500 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-orange-900">SORP Update</h4>
+                      <p className="text-sm text-orange-700">
+                        New guidance on volunteer time valuation available - review impact on accounts
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
-          <TabsContent value="compliance" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>SORP Compliance Dashboard</CardTitle>
-                <CardDescription>Monitor compliance with charity accounting standards</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Compliance Checklist</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Annual Return Filed</span>
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Accounts Submitted</span>
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Trustee Declarations</span>
-                          <AlertCircle className="h-5 w-5 text-yellow-600" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Public Benefit Statement</span>
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Risk Management</span>
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+  function renderAccountsContent() {
+    if (activeSubTab === 'fundaccounting') {
+      return renderFundAccountingContent()
+    } else if (activeSubTab === 'sofa') {
+      return renderSofaContent()
+    } else if (activeSubTab === 'trustees') {
+      return renderTrusteesContent()
+    } else if (activeSubTab === 'compliance') {
+      return renderComplianceContent()
+    }
+    return renderFundAccountingContent()
+  }
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Filing Deadlines</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-medium text-sm">Annual Return</div>
-                            <div className="text-xs text-gray-600">St. Mary's Academy</div>
-                          </div>
-                          <Badge variant="outline">31 Jan 2025</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-medium text-sm">Accounts Filing</div>
-                            <div className="text-xs text-gray-600">Community Support</div>
-                          </div>
-                          <Badge className="bg-yellow-100 text-yellow-800">31 Dec 2024</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-medium text-sm">Trustee Report</div>
-                            <div className="text-xs text-gray-600">St. Mary's Academy</div>
-                          </div>
-                          <Badge variant="outline">31 Jan 2025</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+  function renderFundAccountingContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Fund Accounting</h2>
+            <p className="text-gray-600">Manage unrestricted, restricted, and endowment funds</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Fund
+            </Button>
+            <Button>
+              <Eye className="h-4 w-4 mr-2" />
+              View Report
+            </Button>
+          </div>
+        </div>
 
-          <TabsContent value="reports" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Charity Reports</CardTitle>
-                <CardDescription>Generate SORP-compliant reports and statements</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <FileText className="h-8 w-8 text-blue-600" />
-                        <div>
-                          <h3 className="font-semibold">Annual Report</h3>
-                          <p className="text-sm text-gray-600">Complete annual report with trustee report</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+        {/* Fund Types */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <PoundSterling className="h-5 w-5 text-green-500" />
+                Unrestricted Funds
+              </CardTitle>
+              <CardDescription>General charitable activities</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {funds.filter(f => f.type === 'unrestricted').map((fund) => (
+                  <div key={fund.id} className="p-3 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">{fund.name}</h4>
+                      <span className="font-semibold text-green-600">{formatCurrency(fund.balance)}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{fund.purpose}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-blue-500" />
+                Restricted Funds
+              </CardTitle>
+              <CardDescription>Specific purposes or restrictions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {funds.filter(f => f.type === 'restricted').map((fund) => (
+                  <div key={fund.id} className="p-3 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">{fund.name}</h4>
+                      <span className="font-semibold text-blue-600">{formatCurrency(fund.balance)}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{fund.purpose}</p>
+                    <p className="text-xs text-red-600 mt-1">Restrictions: {fund.restrictions}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-purple-500" />
+                Endowment Funds
+              </CardTitle>
+              <CardDescription>Permanent funds - income only</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {funds.filter(f => f.type === 'endowment').map((fund) => (
+                  <div key={fund.id} className="p-3 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">{fund.name}</h4>
+                      <span className="font-semibold text-purple-600">{formatCurrency(fund.balance)}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{fund.purpose}</p>
+                    <p className="text-xs text-purple-600 mt-1">Capital preserved</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <BarChart3 className="h-8 w-8 text-green-600" />
-                        <div>
-                          <h3 className="font-semibold">SOFA Report</h3>
-                          <p className="text-sm text-gray-600">Statement of Financial Activities</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+  function renderSofaContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Statement of Financial Activities (SOFA)</h2>
+            <p className="text-gray-600">SORP-compliant financial statement</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export SOFA
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Generate Report
+            </Button>
+          </div>
+        </div>
 
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <PieChart className="h-8 w-8 text-purple-600" />
-                        <div>
-                          <h3 className="font-semibold">Fund Analysis</h3>
-                          <p className="text-sm text-gray-600">Detailed fund movement analysis</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <Users className="h-8 w-8 text-orange-600" />
-                        <div>
-                          <h3 className="font-semibold">Trustee Register</h3>
-                          <p className="text-sm text-gray-600">Complete trustee information</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <Shield className="h-8 w-8 text-red-600" />
-                        <div>
-                          <h3 className="font-semibold">Compliance Report</h3>
-                          <p className="text-sm text-gray-600">SORP compliance status</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-3">
-                        <Target className="h-8 w-8 text-teal-600" />
-                        <div>
-                          <h3 className="font-semibold">Impact Report</h3>
-                          <p className="text-sm text-gray-600">Charitable impact and outcomes</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        {/* AI Insights Panel */}
         <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-yellow-600" />
-              <CardTitle>AI Charity Adviser</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-blue-900">Compliance Alert</h4>
-                  <p className="text-sm text-blue-800">
-                    Community Support Foundation's accounts filing deadline is approaching (31 Dec 2024). 
-                    Consider scheduling the preparation process.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-green-900">Fund Optimization</h4>
-                  <p className="text-sm text-green-800">
-                    St. Mary's Academy has significant unrestricted reserves. Consider designating funds 
-                    for specific projects to improve transparency.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-                <Zap className="h-5 w-5 text-yellow-600 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-yellow-900">SORP Update</h4>
-                  <p className="text-sm text-yellow-800">
-                    New SORP guidance on digital assets reporting. Review your cryptocurrency 
-                    and digital investment disclosures.
-                  </p>
-                </div>
-              </div>
+          <CardContent className="p-6">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 p-3 text-left">Category</th>
+                    <th className="border border-gray-300 p-3 text-right">Unrestricted</th>
+                    <th className="border border-gray-300 p-3 text-right">Restricted</th>
+                    <th className="border border-gray-300 p-3 text-right">Endowment</th>
+                    <th className="border border-gray-300 p-3 text-right">Total 2024</th>
+                    <th className="border border-gray-300 p-3 text-right">Total 2023</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sofaData.map((entry) => (
+                    <tr key={entry.id}>
+                      <td className="border border-gray-300 p-3">{entry.subcategory}</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(entry.unrestricted)}</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(entry.restricted)}</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(entry.endowment)}</td>
+                      <td className="border border-gray-300 p-3 text-right font-semibold">{formatCurrency(entry.total)}</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(entry.priorYear)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
+      </div>
+    )
+  }
+
+  function renderTrusteesContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Trustee Management</h2>
+            <p className="text-gray-600">Manage trustee appointments and records</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Trustee
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Register
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              {trustees.map((trustee) => (
+                <div key={trustee.id} className="p-4 border rounded-lg">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold">{trustee.name}</h4>
+                        <Badge variant={trustee.status === 'active' ? 'default' : 'secondary'}>
+                          {trustee.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">{trustee.role}</p>
+                      <p className="text-sm text-gray-600">Appointed: {trustee.appointmentDate}</p>
+                      <p className="text-sm text-gray-600 mt-2">{trustee.occupation}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderComplianceContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">SORP Compliance</h2>
+            <p className="text-gray-600">Ensure compliance with charity accounting standards</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Compliance Checklist</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span>Trustee Annual Report</span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Complete</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span>Public Benefit Statement</span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Complete</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="h-5 w-5 text-orange-500" />
+                    <span>Risk Management Policy</span>
+                  </div>
+                  <Badge className="bg-orange-100 text-orange-800">In Progress</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Filing Deadlines</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-3 border-l-4 border-red-500 bg-red-50 rounded-r-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-red-900">Annual Return</p>
+                      <p className="text-sm text-red-700">Hope Foundation</p>
+                    </div>
+                    <Badge className="bg-red-100 text-red-800">14 days</Badge>
+                  </div>
+                </div>
+                <div className="p-3 border-l-4 border-orange-500 bg-orange-50 rounded-r-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-orange-900">Accounts Filing</p>
+                      <p className="text-sm text-orange-700">Community Trust</p>
+                    </div>
+                    <Badge className="bg-orange-100 text-orange-800">45 days</Badge>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderGrantsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Grants Management</h2>
+            <p className="text-gray-600">Track and manage grant applications</p>
+          </div>
+          <div className="flex gap-2">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Grant
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-8">
+            <div className="text-center">
+              <Gift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Grants Management</h3>
+              <p className="text-gray-600 mb-4">
+                Comprehensive grant tracking system
+              </p>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Grant Application
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderReportsContent() {
+    if (activeSubTab === 'annual') {
+      return renderAnnualReportsContent()
+    } else if (activeSubTab === 'financial') {
+      return renderFinancialReportsContent()
+    } else if (activeSubTab === 'compliance') {
+      return renderComplianceReportsContent()
+    } else if (activeSubTab === 'analytics') {
+      return renderAnalyticsContent()
+    }
+    return renderAnnualReportsContent()
+  }
+
+  function renderAnnualReportsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Annual Reports</h2>
+            <p className="text-gray-600">Generate comprehensive annual reports</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <FileText className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Trustee Annual Report</h3>
+              <p className="text-sm text-gray-600 mb-3">Comprehensive annual report</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Shield className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Public Benefit Report</h3>
+              <p className="text-sm text-gray-600 mb-3">Public benefit statement</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Target className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Impact Assessment</h3>
+              <p className="text-sm text-gray-600 mb-3">Social return analysis</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderFinancialReportsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Financial Reports</h2>
+            <p className="text-gray-600">Financial statements and analysis</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">SOFA Report</h3>
+              <p className="text-sm text-gray-600 mb-3">Statement of Financial Activities</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <PieChart className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Balance Sheet</h3>
+              <p className="text-sm text-gray-600 mb-3">Assets, liabilities & funds</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Cash Flow Statement</h3>
+              <p className="text-sm text-gray-600 mb-3">Operating & financing activities</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderComplianceReportsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Compliance Reports</h2>
+            <p className="text-gray-600">SORP compliance and regulatory reports</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Shield className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">SORP Compliance</h3>
+              <p className="text-sm text-gray-600 mb-3">Full SORP compliance report</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Users className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Trustee Register</h3>
+              <p className="text-sm text-gray-600 mb-3">Complete trustee information</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <AlertCircle className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Risk Assessment</h3>
+              <p className="text-sm text-gray-600 mb-3">Risk management report</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">Generate</Button>
+                <Button size="sm">Schedule</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderAnalyticsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Analytics & Insights</h2>
+            <p className="text-gray-600">Performance analytics and benchmarking</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Performance Dashboard</h3>
+              <p className="text-sm text-gray-600 mb-3">Key performance indicators</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">View</Button>
+                <Button size="sm">Export</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <PieChart className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Sector Benchmarking</h3>
+              <p className="text-sm text-gray-600 mb-3">Compare against sector averages</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">View</Button>
+                <Button size="sm">Export</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Trend Analysis</h3>
+              <p className="text-sm text-gray-600 mb-3">Multi-year trend analysis</p>
+              <div className="flex gap-2 justify-center">
+                <Button size="sm" variant="outline">View</Button>
+                <Button size="sm">Export</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderIntegrationsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Integrations</h2>
+            <p className="text-gray-600">Connect with external systems</p>
+          </div>
+          <div className="flex gap-2">
+            <Button>
+              <Link className="h-4 w-4 mr-2" />
+              Add Integration
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-8">
+            <div className="text-center">
+              <Link className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">System Integrations</h3>
+              <p className="text-gray-600 mb-4">
+                Connect with Charity Commission API and other platforms
+              </p>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Integration
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar */}
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <Heart className="h-6 w-6 text-brisk-primary" />
+            Charity & Academy Accounts
+          </h1>
+        </div>
+        
+        <nav className="flex-1 p-4 space-y-2">
+          {Object.entries(menuStructure).map(([categoryKey, category]) => (
+            <div key={categoryKey}>
+              <button
+                onClick={() => toggleCategory(categoryKey)}
+                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div className="flex items-center gap-2">
+                  <category.icon className="h-4 w-4" />
+                  {category.label}
+                </div>
+                {expandedCategories.includes(categoryKey) ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+              </button>
+              
+              {expandedCategories.includes(categoryKey) && category.subTabs && (
+                <div className="ml-6 mt-1 space-y-1">
+                  {Object.entries(category.subTabs).map(([subKey, subTab]) => (
+                    <button
+                      key={subKey}
+                      onClick={() => {
+                        handleSubTabClick(categoryKey, subKey)
+                      }}
+                      className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                        activeMainTab === categoryKey && activeSubTab === subKey
+                          ? 'bg-brisk-primary text-white'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {subTab.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              
+              {!category.subTabs && (
+                <div className="ml-6 mt-1">
+                  <button
+                    onClick={() => handleMainTabClick(categoryKey)}
+                    className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                      activeMainTab === categoryKey
+                        ? 'bg-brisk-primary text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    View {category.label}
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-6">
+          {renderMainContent()}
+        </div>
       </div>
     </div>
   )
