@@ -32,11 +32,24 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
+import AIPromptSection from '@/components/AIPromptSection'
 
 export default function AMLCompliance() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('')
+  const [isAILoading, setIsAILoading] = useState(false)
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
 
   const kpis = [
     {
@@ -747,6 +760,21 @@ export default function AMLCompliance() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <AIPromptSection
+        title="Ask your AML Compliance Adviser"
+        description="Get expert AML and compliance guidance for your practice"
+        placeholder="Ask about PEP screening, risk assessments, due diligence requirements, or regulatory updates..."
+        recentQuestions={[
+          "What are the latest PEP screening requirements?",
+          "How often should we update client risk assessments?",
+          "What documentation is needed for enhanced due diligence?",
+          "How do we handle suspicious activity reporting?",
+          "What are the current AML record-keeping requirements?"
+        ]}
+        onSubmit={handleAIQuestion}
+        isLoading={isAILoading}
+      />
     </ResponsiveLayout>
   )
 }

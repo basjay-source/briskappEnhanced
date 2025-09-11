@@ -29,10 +29,23 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import AIPromptSection from '../../components/AIPromptSection'
 
 export default function PersonalTax() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [isAILoading, setIsAILoading] = useState(false)
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
   const [selectedClient, setSelectedClient] = useState('')
 
   const kpis = [
@@ -289,6 +302,21 @@ export default function PersonalTax() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <AIPromptSection
+                  title="Ask your Personal Tax Adviser"
+                  description="Get personalized tax optimization advice and planning strategies"
+                  placeholder="Ask about pension contributions, CGT planning, dividend timing, or IHT strategies..."
+                  recentQuestions={[
+                    "How can I optimize my client's pension contributions?",
+                    "What CGT planning opportunities exist for this tax year?",
+                    "When should we defer dividend payments?",
+                    "What are the current IHT allowances and planning options?",
+                    "How can married couples optimize their tax allowances?"
+                  ]}
+                  onSubmit={handleAIQuestion}
+                  isLoading={isAILoading}
+                />
 
                 <Card>
                   <CardHeader>

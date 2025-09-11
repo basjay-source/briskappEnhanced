@@ -31,6 +31,7 @@ import {
   Gift,
   Link
 } from 'lucide-react'
+import AIPromptSection from '@/components/AIPromptSection'
 
 interface CharityAccount {
   id: string
@@ -101,6 +102,18 @@ const CharityAccounts: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['accounts', 'reports'])
   const [searchTerm, setSearchTerm] = useState('')
+  const [isAILoading, setIsAILoading] = useState(false)
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
 
   type SubTabConfig = {
     label: string
@@ -1178,6 +1191,22 @@ const CharityAccounts: React.FC = () => {
         <div className="p-6">
           {renderMainContent()}
         </div>
+        
+        <AIPromptSection
+          title="Ask your Charity Accountant"
+          description="Get expert charity accounting guidance on SORP, trustees, charity commission regulations, and fund management"
+          placeholder="Ask about SORP requirements, trustees, charity commission, grants and donations, restricted/unrestricted funds, surpluses and deficits..."
+          recentQuestions={[
+            "What are the latest SORP requirements for charity accounts?",
+            "How do we manage restricted vs unrestricted funds properly?",
+            "What are the current charity commission filing requirements?",
+            "How should we account for grants and donations?",
+            "What trustee report sections are mandatory under SORP?",
+            "How do we handle surpluses and deficits in charity accounts?"
+          ]}
+          onSubmit={handleAIQuestion}
+          isLoading={isAILoading}
+        />
       </div>
     </div>
   )

@@ -23,11 +23,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import AIPromptSection from '../../components/AIPromptSection'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedEmployee, setSelectedEmployee] = useState('')
+  const [isAILoading, setIsAILoading] = useState(false)
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
 
   const kpis = [
     {
@@ -969,6 +982,21 @@ export default function Payroll() {
             </Card>
           </TabsContent>
         </Tabs>
+        
+        <AIPromptSection
+          title="Ask your HR Adviser"
+          description="Get expert HR and payroll guidance for your practice"
+          placeholder="Ask about minimum wage rates, statutory payments, pension auto-enrollment, or employment law..."
+          recentQuestions={[
+            "What are the current minimum wage rates?",
+            "How do I handle statutory sick pay calculations?",
+            "What pension auto-enrollment requirements apply?",
+            "How should we manage holiday pay accruals?",
+            "What are the latest IR35 compliance requirements?"
+          ]}
+          onSubmit={handleAIQuestion}
+          isLoading={isAILoading}
+        />
       </div>
     </ResponsiveLayout>
   )

@@ -35,13 +35,26 @@ import { useIsMobile } from '../../hooks/use-mobile'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import CompaniesHouseLogo from '../../components/CompaniesHouseLogo'
 import HMRCLogo from '../../components/HMRCLogo'
+import AIPromptSection from '../../components/AIPromptSection'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['forms', 'hmrc'])
   const [selectedCompany, setSelectedCompany] = useState('all')
+  const [isAILoading, setIsAILoading] = useState(false)
   const isMobile = useIsMobile()
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
 
   type SubTabConfig = {
     label: string
@@ -1430,6 +1443,21 @@ export default function CompanySecretarial() {
             {renderMainContent()}
           </div>
         </div>
+        
+        <AIPromptSection
+          title="Ask your Company Secretary"
+          description="Get instant guidance on company law, filings, and compliance"
+          placeholder="Ask about company formations, annual returns, PSC registers, or compliance deadlines..."
+          recentQuestions={[
+            "What are the deadlines for confirmation statements?",
+            "How do I register a new PSC?",
+            "What forms are needed for a director resignation?",
+            "How do we handle share allotment procedures?",
+            "What are the latest Companies House filing requirements?"
+          ]}
+          onSubmit={handleAIQuestion}
+          isLoading={isAILoading}
+        />
       </div>
     </ResponsiveLayout>
   )

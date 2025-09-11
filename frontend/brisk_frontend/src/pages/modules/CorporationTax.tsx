@@ -17,9 +17,22 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import AIPromptSection from '../../components/AIPromptSection'
 
 export default function CorporationTax() {
   const [activeTab, setActiveTab] = useState('computation')
+  const [isAILoading, setIsAILoading] = useState(false)
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true)
+    try {
+      console.log('AI Question:', question)
+    } catch (error) {
+      console.error('Error asking AI:', error)
+    } finally {
+      setIsAILoading(false)
+    }
+  }
 
   const tabs = [
     { id: 'computation', label: 'CT Computation', icon: Calculator },
@@ -739,6 +752,21 @@ export default function CorporationTax() {
               </div>
             </CardContent>
           </Card>
+
+          <AIPromptSection
+            title="Ask your Business Tax Adviser"
+            description="Get expert corporation tax advice and optimization strategies"
+            placeholder="Ask about R&D relief, group structures, tax planning, or compliance requirements..."
+            recentQuestions={[
+              "What R&D relief opportunities are available for our clients?",
+              "How can we optimize group relief structures?",
+              "What are the latest corporation tax rates and allowances?",
+              "When should we consider quarterly instalment payments?",
+              "How can we maximize capital allowances claims?"
+            ]}
+            onSubmit={handleAIQuestion}
+            isLoading={isAILoading}
+          />
         </div>
       </div>
     </div>
