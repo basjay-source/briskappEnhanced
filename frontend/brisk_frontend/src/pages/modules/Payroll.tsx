@@ -221,6 +221,7 @@ export default function Payroll() {
             {!isMobile && <TabsTrigger value="payruns">Pay Runs</TabsTrigger>}
             {!isMobile && <TabsTrigger value="rti">RTI</TabsTrigger>}
             {!isMobile && <TabsTrigger value="statutory">Statutory</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="calculator">PAYE Calc</TabsTrigger>}
             {!isMobile && <TabsTrigger value="reports">Reports</TabsTrigger>}
           </TabsList>
 
@@ -736,6 +737,85 @@ export default function Payroll() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="calculator" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>PAYE Calculator</CardTitle>
+                <CardDescription>Calculate PAYE tax and National Insurance contributions for 2024-25</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium">Annual Gross Salary (£)</label>
+                      <input 
+                        type="number" 
+                        className="w-full mt-1 p-2 border rounded-md" 
+                        placeholder="30000"
+                        defaultValue="30000"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Tax Code</label>
+                      <input 
+                        type="text" 
+                        className="w-full mt-1 p-2 border rounded-md" 
+                        placeholder="1257L"
+                        defaultValue="1257L"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Annual Pension Contribution (£)</label>
+                      <input 
+                        type="number" 
+                        className="w-full mt-1 p-2 border rounded-md" 
+                        placeholder="900"
+                        defaultValue="900"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="student-loan" />
+                      <label htmlFor="student-loan" className="text-sm">Student Loan Deductions</label>
+                    </div>
+                    <Button className="w-full bg-brisk-primary hover:bg-brisk-primary-600">
+                      Calculate PAYE
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold">Calculation Results</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between p-3 bg-gray-50 rounded">
+                        <span>Gross Annual Salary:</span>
+                        <span className="font-medium">£30,000</span>
+                      </div>
+                      <div className="flex justify-between p-3 bg-red-50 rounded">
+                        <span>Income Tax (Annual):</span>
+                        <span className="font-medium text-red-700">£3,486</span>
+                      </div>
+                      <div className="flex justify-between p-3 bg-blue-50 rounded">
+                        <span>National Insurance (Annual):</span>
+                        <span className="font-medium text-blue-700">£2,091</span>
+                      </div>
+                      <div className="flex justify-between p-3 bg-purple-50 rounded">
+                        <span>Pension Contribution:</span>
+                        <span className="font-medium text-purple-700">£900</span>
+                      </div>
+                      <div className="flex justify-between p-3 bg-green-50 rounded border-2 border-green-200">
+                        <span className="font-semibold">Net Annual Salary:</span>
+                        <span className="font-bold text-green-700">£23,523</span>
+                      </div>
+                      <div className="flex justify-between p-3 bg-green-100 rounded">
+                        <span className="font-semibold">Net Monthly Salary:</span>
+                        <span className="font-bold text-green-800">£1,960</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="reports" className="space-y-6">
             <Card>
               <CardHeader>
@@ -748,7 +828,34 @@ export default function Payroll() {
                     <CardContent className="p-6 text-center">
                       <FileText className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                       <h3 className="font-semibold mb-1">Payroll Summary</h3>
-                      <p className="text-sm text-gray-600 mb-3">Monthly payroll breakdown</p>
+                      <p className="text-sm text-gray-600 mb-3">Comprehensive payroll breakdown</p>
+                      <Button size="sm" variant="outline">Generate</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Periodic Tax and NI</h3>
+                      <p className="text-sm text-gray-600 mb-3">Monthly/quarterly tax and NI reports</p>
+                      <Button size="sm" variant="outline">Generate</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Year To Date Details</h3>
+                      <p className="text-sm text-gray-600 mb-3">Comprehensive YTD employee summaries</p>
+                      <Button size="sm" variant="outline">Generate</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Departmental Reports</h3>
+                      <p className="text-sm text-gray-600 mb-3">Payroll breakdown by department</p>
                       <Button size="sm" variant="outline">Generate</Button>
                     </CardContent>
                   </Card>
