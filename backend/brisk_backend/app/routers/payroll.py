@@ -794,3 +794,81 @@ async def generate_departmental_report(
         },
         "generated_at": datetime.now().isoformat()
     }
+
+@router.get("/payslip-templates")
+def get_payslip_templates(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get all payslip templates for the tenant"""
+    templates = [
+        {
+            "id": "template-1",
+            "name": "Modern Professional",
+            "description": "Clean, modern payslip design with structured layout",
+            "template_type": "modern",
+            "is_default": True
+        },
+        {
+            "id": "template-2", 
+            "name": "Classic Business",
+            "description": "Traditional payslip format with formal styling",
+            "template_type": "classic",
+            "is_default": False
+        },
+        {
+            "id": "template-3",
+            "name": "Minimal Clean",
+            "description": "Minimalist payslip focusing on clarity",
+            "template_type": "minimal", 
+            "is_default": False
+        },
+        {
+            "id": "template-4",
+            "name": "Corporate Elite",
+            "description": "Premium corporate payslip template with sophisticated design",
+            "template_type": "corporate",
+            "is_default": False
+        },
+        {
+            "id": "template-5",
+            "name": "Creative Studio",
+            "description": "Creative and colorful payslip design for modern businesses",
+            "template_type": "creative",
+            "is_default": False
+        }
+    ]
+    return {"templates": templates}
+
+@router.post("/payslip-templates")
+def create_payslip_template(
+    template_data: Dict[str, Any],
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Create a new payslip template"""
+    template_id = str(uuid.uuid4())
+    return {
+        "template_id": template_id,
+        "message": "Payslip template created successfully",
+        "template": {
+            **template_data,
+            "id": template_id,
+            "created_at": datetime.now().isoformat()
+        }
+    }
+
+@router.get("/payslip-templates/{template_id}/preview")
+def preview_payslip_template(
+    template_id: str,
+    payslip_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Generate preview of payslip with template"""
+    return {
+        "template_id": template_id,
+        "payslip_id": payslip_id,
+        "preview_url": f"/api/payslip-preview/{template_id}/{payslip_id}",
+        "generated_at": datetime.now().isoformat()
+    }

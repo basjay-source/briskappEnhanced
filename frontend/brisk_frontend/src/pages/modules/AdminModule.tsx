@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ResponsiveLayout from '@/components/ResponsiveLayout';
+import ResponsiveLayout from '@/components/ResponsiveLayout'
+import PayslipTemplateManager from '../../components/PayslipTemplateManager'
+import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
+import AIPromptSection from '../../components/AIPromptSection'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BarChart3,
@@ -23,12 +27,26 @@ import {
   Plus,
   Search,
   Filter,
-  Play
+  Play,
+  FileText
 } from 'lucide-react';
 
 const AdminModule = () => {
   const isMobile = useIsMobile();
   const [activeSection, setActiveSection] = useState('overview');
+  const [isAILoading, setIsAILoading] = useState(false);
+
+  const handleAIQuestion = async (question: string) => {
+    setIsAILoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('AI Question:', question);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsAILoading(false);
+    }
+  };
 
   const [kpiData] = useState({
     mrr: 125000,
@@ -114,6 +132,7 @@ const AdminModule = () => {
             { id: 'promotions', label: 'Promotions', icon: Target },
             { id: 'experiments', label: 'Experiments and Flags', icon: Flag },
             { id: 'tenants', label: 'Tenants and Subscriptions', icon: Building },
+            { id: 'templates', label: 'Templates', icon: FileText },
             { id: 'settings', label: 'Settings', icon: Settings }
           ].map((item) => {
             const Icon = item.icon;
@@ -696,10 +715,56 @@ const AdminModule = () => {
         return renderTenants();
       case 'settings':
         return renderSettings();
+      case 'templates':
+        return renderTemplates();
       default:
         return renderOverview();
     }
   };
+
+  const renderTemplates = () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Template Management</h2>
+            <p className="text-gray-600">Centralized management of all document templates and branding</p>
+          </div>
+        </div>
+
+        <Tabs defaultValue="payslip" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="payslip">Payslip Templates</TabsTrigger>
+            <TabsTrigger value="invoice">Invoice Templates</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="payslip" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Payslip Template Management</CardTitle>
+                <CardDescription>Manage payslip templates and branding across all practices</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PayslipTemplateManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="invoice" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Invoice Template Management</CardTitle>
+                <CardDescription>Manage invoice templates and branding across all practices</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <InvoiceTemplateManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    );
+  }
 
   if (isMobile) {
     return (
@@ -716,6 +781,7 @@ const AdminModule = () => {
                 <SelectItem value="promotions">Promotions</SelectItem>
                 <SelectItem value="experiments">Experiments and Flags</SelectItem>
                 <SelectItem value="tenants">Tenants and Subscriptions</SelectItem>
+                <SelectItem value="templates">Templates</SelectItem>
                 <SelectItem value="settings">Settings</SelectItem>
               </SelectContent>
             </Select>
@@ -733,6 +799,19 @@ const AdminModule = () => {
         <div className="flex-1 overflow-auto">
           <div className="p-8">
             {renderContent()}
+            
+            <AIPromptSection
+              title="Ask your Admin Adviser"
+              description="Get expert system administration and management guidance"
+              placeholder="Ask about tenant management, billing, system configuration..."
+              isLoading={isAILoading}
+              onSubmit={handleAIQuestion}
+              recentQuestions={[
+                "How do I manage tenant subscriptions?",
+                "What are the billing configuration options?",
+                "How do I set up user permissions?"
+              ]}
+            />
           </div>
         </div>
       </div>

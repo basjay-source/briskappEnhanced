@@ -24,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
+import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
@@ -228,12 +229,13 @@ export default function Payroll() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'}`}>
+          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-7'}`}>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="employees">Employees</TabsTrigger>
             {!isMobile && <TabsTrigger value="payruns">Pay Runs</TabsTrigger>}
             {!isMobile && <TabsTrigger value="rti">RTI</TabsTrigger>}
             {!isMobile && <TabsTrigger value="statutory">Statutory</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="templates">Templates</TabsTrigger>}
             {!isMobile && <TabsTrigger value="calculator">PAYE Calc</TabsTrigger>}
             {!isMobile && <TabsTrigger value="reports">Reports</TabsTrigger>}
           </TabsList>
@@ -829,6 +831,16 @@ export default function Payroll() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="templates" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold">Payslip Templates</h2>
+                <p className="text-gray-600">Customize payslip templates with your company branding</p>
+              </div>
+            </div>
+            <PayslipTemplateManager />
+          </TabsContent>
+
           <TabsContent value="reports" className="space-y-6">
             <Card>
               <CardHeader>
@@ -985,17 +997,15 @@ export default function Payroll() {
         
         <AIPromptSection
           title="Ask your HR Adviser"
-          description="Get expert HR and payroll guidance for your practice"
-          placeholder="Ask about minimum wage rates, statutory payments, pension auto-enrollment, or employment law..."
-          recentQuestions={[
-            "What are the current minimum wage rates?",
-            "How do I handle statutory sick pay calculations?",
-            "What pension auto-enrollment requirements apply?",
-            "How should we manage holiday pay accruals?",
-            "What are the latest IR35 compliance requirements?"
-          ]}
-          onSubmit={handleAIQuestion}
+          description="Get expert HR and payroll guidance"
+          placeholder="Ask about payroll processing, employee benefits, compliance..."
           isLoading={isAILoading}
+          onSubmit={handleAIQuestion}
+          recentQuestions={[
+            "How do I process monthly payroll?",
+            "What are the pension auto-enrollment requirements?",
+            "How do I handle statutory sick pay?"
+          ]}
         />
       </div>
     </ResponsiveLayout>
