@@ -391,34 +391,36 @@ export default function CompanySecretarial() {
     </div>
   )
 
-  const renderFormsOverview = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Forms & Filing</h2>
-          <p className="text-gray-600">Companies House forms and submissions</p>
+  const renderFormsOverview = () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Forms & Filing</h2>
+            <p className="text-gray-600">Companies House forms and submissions</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {Object.entries(menuStructure.forms.subTabs || {}).map(([key, subTab]) => (
+            <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
+              <CardContent className="p-6 text-center">
+                {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
+                  <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                ) : key === 'vat' || key === 'paye' ? (
+                  <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                ) : (
+                  <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                )}
+                <h3 className="font-semibold mb-1">{subTab.label}</h3>
+                <p className="text-sm text-gray-600">Generate and submit form</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {Object.entries(menuStructure.forms.subTabs || {}).map(([key, subTab]) => (
-          <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
-            <CardContent className="p-6 text-center">
-              {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
-                <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              ) : key === 'vat' || key === 'paye' ? (
-                <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              ) : (
-                <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              )}
-              <h3 className="font-semibold mb-1">{subTab.label}</h3>
-              <p className="text-sm text-gray-600">Generate and submit form</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
+    )
+  }
 
   const renderConfirmationStatementForm = () => (
     <div className="space-y-6">
