@@ -33,6 +33,8 @@ import { Input } from '../../components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
 import { useIsMobile } from '../../hooks/use-mobile'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
+import CompaniesHouseLogo from '../../components/CompaniesHouseLogo'
+import HMRCLogo from '../../components/HMRCLogo'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -402,7 +404,13 @@ export default function CompanySecretarial() {
         {Object.entries(menuStructure.forms.subTabs || {}).map(([key, subTab]) => (
           <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
             <CardContent className="p-6 text-center">
-              <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
+                <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              ) : key === 'vat' || key === 'paye' ? (
+                <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              ) : (
+                <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              )}
               <h3 className="font-semibold mb-1">{subTab.label}</h3>
               <p className="text-sm text-gray-600">Generate and submit form</p>
             </CardContent>
@@ -425,10 +433,10 @@ export default function CompanySecretarial() {
         </Button>
       </div>
 
-      <Card className="border-2 border-blue-200 bg-blue-50/30">
-        <CardHeader className="bg-blue-600 text-white">
+      <Card className="border-2 border-[#003078] bg-blue-50/30">
+        <CardHeader className="bg-[#003078] text-white">
           <CardTitle className="flex items-center gap-2">
-            <Landmark className="h-5 w-5" />
+            <CompaniesHouseLogo className="h-6 w-6" />
             Companies House - Confirmation Statement
           </CardTitle>
           <CardDescription className="text-blue-100">
@@ -536,7 +544,7 @@ export default function CompanySecretarial() {
                 <Download className="h-4 w-4 mr-2" />
                 Save Draft
               </Button>
-              <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+              <Button className="flex-1 bg-[#003078] hover:bg-[#003078]/90">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Submit to Companies House
               </Button>
@@ -557,10 +565,13 @@ export default function CompanySecretarial() {
         <Badge variant="outline" className="bg-yellow-100 text-yellow-800">Legacy Form</Badge>
       </div>
 
-      <Card className="border-2 border-yellow-200 bg-yellow-50/30">
-        <CardHeader className="bg-yellow-600 text-white">
-          <CardTitle>Annual Return (AR01)</CardTitle>
-          <CardDescription className="text-yellow-100">
+      <Card className="border-2 border-[#003078] bg-blue-50/30">
+        <CardHeader className="bg-[#003078] text-white">
+          <CardTitle className="flex items-center gap-2">
+            <CompaniesHouseLogo className="h-6 w-6" />
+            Annual Return (AR01)
+          </CardTitle>
+          <CardDescription className="text-blue-100">
             For companies incorporated before 30 June 2016
           </CardDescription>
         </CardHeader>
@@ -599,11 +610,11 @@ export default function CompanySecretarial() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-2 border-green-200 hover:border-green-400 transition-colors cursor-pointer">
-          <CardHeader className="bg-green-600 text-white">
+        <Card className="border-2 border-[#003078] hover:border-[#003078]/80 transition-colors cursor-pointer">
+          <CardHeader className="bg-[#003078] text-white">
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Appointment of Director/Secretary (AP01)
+              <CompaniesHouseLogo className="h-5 w-5" />
+              Appointment of Director (AP01)
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -624,7 +635,7 @@ export default function CompanySecretarial() {
                   </ul>
                 </div>
               </div>
-              <Button className="w-full bg-green-600 hover:bg-green-700">
+              <Button className="w-full bg-[#003078] hover:bg-[#003078]/90">
                 <Plus className="h-4 w-4 mr-2" />
                 Start AP01 Form
               </Button>
@@ -632,10 +643,10 @@ export default function CompanySecretarial() {
           </CardContent>
         </Card>
         
-        <Card className="border-2 border-red-200 hover:border-red-400 transition-colors cursor-pointer">
-          <CardHeader className="bg-red-600 text-white">
+        <Card className="border-2 border-[#003078] hover:border-[#003078]/80 transition-colors cursor-pointer">
+          <CardHeader className="bg-[#003078] text-white">
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+              <CompaniesHouseLogo className="h-5 w-5" />
               Termination of Appointment (TM01)
             </CardTitle>
           </CardHeader>
@@ -655,8 +666,8 @@ export default function CompanySecretarial() {
                   </ul>
                 </div>
               </div>
-              <Button className="w-full bg-red-600 hover:bg-red-700">
-                <Users className="h-4 w-4 mr-2" />
+              <Button className="w-full bg-[#003078] hover:bg-[#003078]/90">
+                <Plus className="h-4 w-4 mr-2" />
                 Start TM01 Form
               </Button>
             </div>
@@ -675,10 +686,13 @@ export default function CompanySecretarial() {
         </div>
       </div>
 
-      <Card className="border-2 border-purple-200 bg-purple-50/30">
-        <CardHeader className="bg-purple-600 text-white">
-          <CardTitle>Return of Allotment of Shares (SH01)</CardTitle>
-          <CardDescription className="text-purple-100">
+      <Card className="border-2 border-[#003078] bg-blue-50/30">
+        <CardHeader className="bg-[#003078] text-white">
+          <CardTitle className="flex items-center gap-2">
+            <CompaniesHouseLogo className="h-6 w-6" />
+            Share Allotment (SH01)
+          </CardTitle>
+          <CardDescription className="text-blue-100">
             Details of shares being allotted
           </CardDescription>
         </CardHeader>
@@ -720,12 +734,23 @@ export default function CompanySecretarial() {
               </div>
             </div>
             
-            <div className="p-4 bg-purple-50 border border-purple-200 rounded">
-              <h4 className="font-semibold text-purple-900 mb-2">Filing Requirements</h4>
-              <p className="text-sm text-purple-800">
+            <div className="p-4 bg-blue-50 border border-[#003078] rounded">
+              <h4 className="font-semibold text-[#003078] mb-2">Filing Requirements</h4>
+              <p className="text-sm text-blue-800">
                 This return must be delivered to Companies House within one month of the allotment.
                 The filing fee is £15 if filed online, or £40 if filed by post.
               </p>
+            </div>
+            
+            <div className="flex gap-4 pt-4 border-t">
+              <Button variant="outline" className="flex-1">
+                <Download className="h-4 w-4 mr-2" />
+                Save Draft
+              </Button>
+              <Button className="flex-1 bg-[#003078] hover:bg-[#003078]/90">
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Submit to Companies House
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -804,7 +829,13 @@ export default function CompanySecretarial() {
         {Object.entries(menuStructure.hmrc.subTabs || {}).map(([key, subTab]) => (
           <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
             <CardContent className="p-6 text-center">
-              <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
+                <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              ) : key === 'vat' || key === 'paye' ? (
+                <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              ) : (
+                <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              )}
               <h3 className="font-semibold mb-1">{subTab.label}</h3>
               <p className="text-sm text-gray-600">Register with HMRC</p>
             </CardContent>
@@ -824,10 +855,10 @@ export default function CompanySecretarial() {
         <Badge variant="outline" className="bg-green-100 text-green-800">Estimated time: 30 minutes</Badge>
       </div>
 
-      <Card className="border-2 border-green-200 bg-green-50/30">
-        <CardHeader className="bg-green-700 text-white">
+      <Card className="border-2 border-[#00703c] bg-green-50/30">
+        <CardHeader className="bg-[#00703c] text-white">
           <CardTitle className="flex items-center gap-2">
-            <Receipt className="h-5 w-5" />
+            <HMRCLogo className="h-6 w-6" />
             HM Revenue and Customs - VAT Registration
           </CardTitle>
           <CardDescription className="text-green-100">
@@ -928,7 +959,7 @@ export default function CompanySecretarial() {
                 <Download className="h-4 w-4 mr-2" />
                 Save Draft
               </Button>
-              <Button className="flex-1 bg-green-700 hover:bg-green-800">
+              <Button className="flex-1 bg-[#00703c] hover:bg-[#00703c]/90">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Submit to HMRC
               </Button>
@@ -949,13 +980,13 @@ export default function CompanySecretarial() {
         <Badge variant="outline" className="bg-blue-100 text-blue-800">Estimated time: 20 minutes</Badge>
       </div>
 
-      <Card className="border-2 border-blue-200 bg-blue-50/30">
-        <CardHeader className="bg-blue-700 text-white">
+      <Card className="border-2 border-[#00703c] bg-green-50/30">
+        <CardHeader className="bg-[#00703c] text-white">
           <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
+            <HMRCLogo className="h-6 w-6" />
             HM Revenue and Customs - PAYE Registration
           </CardTitle>
-          <CardDescription className="text-blue-100">
+          <CardDescription className="text-green-100">
             Register as an employer for Pay As You Earn (PAYE)
           </CardDescription>
         </CardHeader>
@@ -1067,7 +1098,7 @@ export default function CompanySecretarial() {
                 <Download className="h-4 w-4 mr-2" />
                 Save Draft
               </Button>
-              <Button className="flex-1 bg-blue-700 hover:bg-blue-800">
+              <Button className="flex-1 bg-[#00703c] hover:bg-[#00703c]/90">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Submit to HMRC
               </Button>
@@ -1088,9 +1119,12 @@ export default function CompanySecretarial() {
         <Badge variant="outline" className="bg-green-100 text-green-800">Automatic for new companies</Badge>
       </div>
 
-      <Card className="border-2 border-green-200 bg-green-50/30">
-        <CardHeader className="bg-green-700 text-white">
-          <CardTitle>Corporation Tax Registration</CardTitle>
+      <Card className="border-2 border-[#00703c] bg-green-50/30">
+        <CardHeader className="bg-[#00703c] text-white">
+          <CardTitle className="flex items-center gap-2">
+            <HMRCLogo className="h-6 w-6" />
+            HM Revenue and Customs - Corporation Tax Registration
+          </CardTitle>
           <CardDescription className="text-green-100">
             Automatic registration when you incorporate your company
           </CardDescription>
