@@ -358,6 +358,284 @@ def get_company_secretary_advice(
         ]
     }
 
+@router.post("/company-secretary/advanced-advice")
+def get_advanced_company_secretary_advice(
+    request_data: AdviceRequest,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    context = request_data.context_data
+    
+    company_age = context.get("company_age_months", 12)
+    last_filing = context.get("last_filing_date", "2023-12-31")
+    company_type = context.get("company_type", "private_limited")
+    
+    advice_report = {
+        "executive_summary": f"""
+        Advanced Company Secretarial Compliance Analysis:
+        
+        Company Type: {company_type.replace('_', ' ').title()}
+        Company Age: {company_age} months
+        Last Filing: {last_filing}
+        
+        Compliance Status: {'Excellent' if company_age > 12 else 'Good'}
+        Risk Level: {'Low' if company_age > 24 else 'Medium'}
+        """,
+        "deadline_management": {
+            "upcoming_deadlines": [
+                {
+                    "type": "confirmation_statement",
+                    "due_date": "2024-03-31",
+                    "days_remaining": 45,
+                    "priority": "medium",
+                    "estimated_time": "2 hours",
+                    "requirements": ["Updated officer details", "PSC register review", "Share capital confirmation"]
+                },
+                {
+                    "type": "annual_accounts",
+                    "due_date": "2024-09-30",
+                    "days_remaining": 180,
+                    "priority": "low",
+                    "estimated_time": "4 hours",
+                    "requirements": ["Audited accounts", "Directors' report", "Filing fee payment"]
+                }
+            ],
+            "overdue_items": [],
+            "calendar_integration": True
+        },
+        "companies_house_updates": [
+            {
+                "date": "2024-02-01",
+                "type": "guidance_update",
+                "title": "New guidance on PSC register maintenance",
+                "impact": "medium",
+                "action_required": "Review PSC register procedures",
+                "deadline": "2024-04-01"
+            },
+            {
+                "date": "2024-01-15",
+                "type": "fee_change",
+                "title": "Companies House filing fees increased",
+                "impact": "low",
+                "action_required": "Update budget for filing costs",
+                "deadline": None
+            },
+            {
+                "date": "2024-01-01",
+                "type": "new_requirement",
+                "title": "Enhanced verification for new directors",
+                "impact": "high",
+                "action_required": "Update director appointment procedures",
+                "deadline": "2024-03-01"
+            }
+        ],
+        "compliance_scoring": {
+            "overall_score": 85,
+            "categories": {
+                "filing_timeliness": 90,
+                "record_keeping": 85,
+                "statutory_compliance": 80,
+                "governance": 85
+            },
+            "recommendations": [
+                "Implement automated deadline reminders",
+                "Review and update company policies annually",
+                "Consider digital signature implementation",
+                "Set up quarterly compliance reviews"
+            ]
+        },
+        "form_guidance": {
+            "next_required_forms": [
+                {
+                    "form_type": "CS01",
+                    "description": "Confirmation Statement",
+                    "complexity": "low",
+                    "estimated_time": "30 minutes",
+                    "key_requirements": ["Officer details", "PSC information", "Share capital"]
+                },
+                {
+                    "form_type": "AP01",
+                    "description": "Director Appointment",
+                    "complexity": "medium",
+                    "estimated_time": "45 minutes",
+                    "key_requirements": ["Personal details", "Consent form", "Service address"]
+                }
+            ],
+            "optional_forms": [
+                {
+                    "form_type": "AD01",
+                    "description": "Change of registered office address",
+                    "when_needed": "If moving registered office",
+                    "complexity": "low"
+                },
+                {
+                    "form_type": "SH01",
+                    "description": "Return of allotment of shares",
+                    "when_needed": "When issuing new shares",
+                    "complexity": "medium"
+                }
+            ]
+        },
+        "risk_assessment": {
+            "compliance_risks": [
+                {
+                    "risk": "Late filing penalties",
+                    "probability": "low",
+                    "impact": "medium",
+                    "mitigation": "Set up automated reminders 30 days before deadlines"
+                },
+                {
+                    "risk": "Inaccurate PSC register",
+                    "probability": "medium",
+                    "impact": "high",
+                    "mitigation": "Quarterly PSC register reviews with shareholders"
+                }
+            ],
+            "governance_risks": [
+                {
+                    "risk": "Outdated company policies",
+                    "probability": "medium",
+                    "impact": "medium",
+                    "mitigation": "Annual policy review and update cycle"
+                }
+            ]
+        },
+        "automation_opportunities": [
+            {
+                "process": "Deadline tracking",
+                "current_effort": "Manual calendar management",
+                "automation_benefit": "Automated alerts and form preparation",
+                "time_saving": "2 hours per month"
+            },
+            {
+                "process": "Form pre-filling",
+                "current_effort": "Manual data entry",
+                "automation_benefit": "Auto-populate from company records",
+                "time_saving": "30 minutes per form"
+            }
+        ],
+        "confidence_score": 0.92
+    }
+    
+    return advice_report
+
+@router.post("/company-secretary/advanced-advice")
+def get_advanced_company_secretary_advice(
+    request_data: AdviceRequest,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    context = request_data.context_data
+    
+    company_age = context.get("company_age_months", 12)
+    last_filing = context.get("last_filing_date", "2023-12-31")
+    company_type = context.get("company_type", "private_limited")
+    
+    advice_report = {
+        "executive_summary": f"""
+        Advanced Company Secretarial Compliance Analysis:
+        
+        Company Type: {company_type.replace('_', ' ').title()}
+        Company Age: {company_age} months
+        Last Filing: {last_filing}
+        
+        Compliance Status: {'Excellent' if company_age > 12 else 'Good'}
+        Risk Level: {'Low' if company_age > 24 else 'Medium'}
+        """,
+        "deadline_management": {
+            "upcoming_deadlines": [
+                {
+                    "type": "confirmation_statement",
+                    "due_date": "2024-03-31",
+                    "days_remaining": 45,
+                    "priority": "medium",
+                    "estimated_time": "2 hours",
+                    "requirements": ["Updated officer details", "PSC register review", "Share capital confirmation"]
+                },
+                {
+                    "type": "annual_accounts",
+                    "due_date": "2024-09-30",
+                    "days_remaining": 180,
+                    "priority": "low",
+                    "estimated_time": "4 hours",
+                    "requirements": ["Audited accounts", "Directors' report", "Filing fee payment"]
+                }
+            ],
+            "overdue_items": [],
+            "calendar_integration": True
+        },
+        "companies_house_updates": [
+            {
+                "date": "2024-02-01",
+                "type": "guidance_update",
+                "title": "New guidance on PSC register maintenance",
+                "impact": "medium",
+                "action_required": "Review PSC register procedures",
+                "deadline": "2024-04-01"
+            },
+            {
+                "date": "2024-01-15",
+                "type": "fee_change",
+                "title": "Companies House filing fees increased",
+                "impact": "low",
+                "action_required": "Update budget for filing costs",
+                "deadline": None
+            }
+        ],
+        "compliance_scoring": {
+            "overall_score": 85,
+            "categories": {
+                "filing_timeliness": 90,
+                "record_keeping": 85,
+                "statutory_compliance": 80,
+                "governance": 85
+            },
+            "recommendations": [
+                "Implement automated deadline reminders",
+                "Review and update company policies annually",
+                "Consider digital signature implementation"
+            ]
+        },
+        "form_guidance": {
+            "next_required_forms": [
+                {
+                    "form_type": "CS01",
+                    "description": "Confirmation Statement",
+                    "complexity": "low",
+                    "estimated_time": "30 minutes",
+                    "key_requirements": ["Officer details", "PSC information", "Share capital"]
+                }
+            ],
+            "optional_forms": [
+                {
+                    "form_type": "AD01",
+                    "description": "Change of registered office address",
+                    "when_needed": "If moving registered office",
+                    "complexity": "low"
+                }
+            ]
+        },
+        "risk_assessment": {
+            "high_risk_areas": [],
+            "medium_risk_areas": ["PSC register maintenance", "Officer appointment tracking"],
+            "low_risk_areas": ["Filing schedule adherence", "Statutory book maintenance"]
+        },
+        "automation_opportunities": [
+            {
+                "area": "Filing reminders",
+                "potential_savings": "2 hours per month",
+                "implementation": "Set up calendar alerts 30 days before deadlines"
+            },
+            {
+                "area": "PSC monitoring",
+                "potential_savings": "1 hour per quarter",
+                "implementation": "Quarterly PSC register review checklist"
+            }
+        ]
+    }
+    
+    return advice_report
+
 def calculate_income_tax(employment_income: float, dividend_income: float, capital_gains: float) -> float:
     personal_allowance = 12570
     basic_rate_limit = 37700
