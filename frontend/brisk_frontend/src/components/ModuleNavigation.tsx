@@ -10,7 +10,8 @@ import {
   BarChart3,
   Home,
   Briefcase,
-  Clock
+  Clock,
+  Heart
 } from 'lucide-react'
 import { 
   SidebarMenu, 
@@ -73,6 +74,12 @@ const modules = [
     path: '/app/books',
     icon: BookOpen,
     description: 'Bank feeds, VAT MTD'
+  },
+  {
+    name: 'Charity & Academy Accounts',
+    path: '/app/charity',
+    icon: Heart,
+    description: 'SORP compliance, fund accounting'
   },
   {
     name: 'e-Signature',

@@ -5,6 +5,7 @@ import LandingPage from '@/pages/LandingPage'
 import LoginPage from '@/pages/LoginPage'
 import EcosystemHub from '@/pages/EcosystemHub'
 import AccountsProduction from '@/pages/modules/AccountsProduction'
+import CharityAccounts from '@/pages/modules/CharityAccounts'
 import CorporationTax from '@/pages/modules/CorporationTax'
 import PersonalTax from '@/pages/modules/PersonalTax'
 import Payroll from '@/pages/modules/Payroll'
@@ -28,6 +29,7 @@ function App() {
             <Route path="hub" element={<EcosystemHub />} />
             <Route path="practice" element={<PracticeManagement />} />
             <Route path="accounts" element={<AccountsProduction />} />
+            <Route path="charity" element={<CharityAccounts />} />
             <Route path="tax/ct" element={<CorporationTax />} />
             <Route path="tax/sa" element={<PersonalTax />} />
             <Route path="payroll" element={<Payroll />} />
