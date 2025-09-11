@@ -28,11 +28,19 @@ import {
   Scan,
   UserCheck,
   ChevronDown,
-  FolderOpen,
   BookOpen,
   Database,
   Landmark,
-  Clock
+  Clock,
+  Copy,
+  RotateCcw,
+  AlertCircle,
+  ExternalLink,
+  CheckCircle,
+  Search,
+  Settings,
+  Calendar,
+  ArrowLeftRight
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -75,26 +83,60 @@ export default function Bookkeeping() {
 
   const menuStructure: Record<string, MenuConfig> = {
     dashboard: { label: 'Dashboard', icon: Activity, hasSubTabs: false },
-    transactions: { 
-      label: 'Transactions', 
-      icon: Receipt, 
+    accounts: { label: 'Chart of Accounts', icon: Database, hasSubTabs: false },
+    sales: { 
+      label: 'Sales', 
+      icon: TrendingUp, 
       hasSubTabs: true,
       subTabs: {
-        sales: { label: 'Sales', icon: TrendingUp },
-        purchases: { label: 'Purchases', icon: TrendingDown },
-        banking: { label: 'Banking', icon: CreditCard },
-        journals: { label: 'Journals', icon: BookOpen },
-        vat: { label: 'VAT Returns', icon: Percent }
+        invoices: { label: 'Invoices', icon: Receipt },
+        quotes: { label: 'Quotes', icon: FileText },
+        customers: { label: 'Customers', icon: Users },
+        products: { label: 'Products', icon: Package }
       }
     },
-    accounts: {
-      label: 'Accounts',
-      icon: Database,
+    purchases: { 
+      label: 'Purchases', 
+      icon: TrendingDown, 
       hasSubTabs: true,
       subTabs: {
-        chartofaccounts: { label: 'Chart of Accounts', icon: FolderOpen },
-        inventory: { label: 'Inventory', icon: Package },
-        fixedassets: { label: 'Fixed Assets', icon: Building }
+        bills: { label: 'Bills', icon: Receipt },
+        orders: { label: 'Purchase Orders', icon: ShoppingCart },
+        suppliers: { label: 'Suppliers', icon: Building },
+        expenses: { label: 'Expenses', icon: CreditCard }
+      }
+    },
+    banking: { 
+      label: 'Banking', 
+      icon: CreditCard, 
+      hasSubTabs: true,
+      subTabs: {
+        bankaccounts: { label: 'Bank Accounts', icon: Landmark },
+        transactions: { label: 'Transactions', icon: Receipt },
+        reconciliation: { label: 'Reconciliation', icon: RefreshCw },
+        feeds: { label: 'Bank Feeds', icon: Link }
+      }
+    },
+    journals: { 
+      label: 'Journals', 
+      icon: BookOpen, 
+      hasSubTabs: true,
+      subTabs: {
+        general: { label: 'General Journal', icon: Edit },
+        adjustments: { label: 'Adjustments', icon: RefreshCw },
+        reversals: { label: 'Reversals', icon: RotateCcw },
+        templates: { label: 'Templates', icon: Copy }
+      }
+    },
+    vat: { 
+      label: 'VAT', 
+      icon: Percent, 
+      hasSubTabs: true,
+      subTabs: {
+        returns: { label: 'VAT Returns', icon: FileText },
+        schemes: { label: 'VAT Schemes', icon: RefreshCw },
+        reports: { label: 'VAT Reports', icon: BarChart3 },
+        compliance: { label: 'Compliance', icon: UserCheck }
       }
     },
     reports: {
@@ -221,15 +263,38 @@ export default function Bookkeeping() {
   function renderMainContent() {
     if (activeMainTab === 'dashboard') {
       return renderDashboard()
-    } else if (activeMainTab === 'transactions') {
-      if (activeSubTab === 'sales') return renderSalesContent()
-      if (activeSubTab === 'purchases') return renderPurchasesContent()
-      if (activeSubTab === 'banking') return renderBankingContent()
-      if (activeSubTab === 'journals') return renderJournalsContent()
-      if (activeSubTab === 'vat') return renderVATContent()
-      return renderTransactionsContent()
     } else if (activeMainTab === 'accounts') {
-      return renderAccountsContent()
+      return renderChartOfAccounts()
+    } else if (activeMainTab === 'sales') {
+      if (activeSubTab === 'invoices') return renderInvoicesManagement()
+      if (activeSubTab === 'quotes') return renderQuotesManagement()
+      if (activeSubTab === 'customers') return renderCustomersManagement()
+      if (activeSubTab === 'products') return renderProductsManagement()
+      return renderSalesContent()
+    } else if (activeMainTab === 'purchases') {
+      if (activeSubTab === 'bills') return renderBillsManagement()
+      if (activeSubTab === 'orders') return renderPurchaseOrdersManagement()
+      if (activeSubTab === 'suppliers') return renderSuppliersManagement()
+      if (activeSubTab === 'expenses') return renderExpensesManagement()
+      return renderPurchasesContent()
+    } else if (activeMainTab === 'banking') {
+      if (activeSubTab === 'bankaccounts') return renderBankAccountsManagement()
+      if (activeSubTab === 'transactions') return renderBankTransactionsManagement()
+      if (activeSubTab === 'reconciliation') return renderReconciliationManagement()
+      if (activeSubTab === 'feeds') return renderBankFeedsManagement()
+      return renderBankingContent()
+    } else if (activeMainTab === 'journals') {
+      if (activeSubTab === 'general') return renderGeneralJournal()
+      if (activeSubTab === 'adjustments') return renderJournalAdjustments()
+      if (activeSubTab === 'reversals') return renderJournalReversals()
+      if (activeSubTab === 'templates') return renderJournalTemplates()
+      return renderJournalsContent()
+    } else if (activeMainTab === 'vat') {
+      if (activeSubTab === 'returns') return renderVATReturns()
+      if (activeSubTab === 'schemes') return renderVATSchemes()
+      if (activeSubTab === 'reports') return renderVATReports()
+      if (activeSubTab === 'compliance') return renderVATCompliance()
+      return renderVATContent()
     } else if (activeMainTab === 'reports') {
       return renderReportsContent()
     } else if (activeMainTab === 'projects') {
@@ -360,20 +425,6 @@ export default function Bookkeeping() {
     )
   }
 
-  function renderTransactionsContent() {
-    if (activeSubTab === 'sales') {
-      return renderSalesContent()
-    } else if (activeSubTab === 'purchases') {
-      return renderPurchasesContent()
-    } else if (activeSubTab === 'banking') {
-      return renderBankingContent()
-    } else if (activeSubTab === 'journals') {
-      return renderJournalsContent()
-    } else if (activeSubTab === 'vat') {
-      return renderVATContent()
-    }
-    return renderSalesContent()
-  }
 
   function renderSalesContent() {
     return (
@@ -496,52 +547,149 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Purchases Management</h2>
-            <p className="text-gray-600">Bills, expenses, suppliers, and purchase analytics</p>
+            <h2 className="text-2xl font-bold">Purchases Overview</h2>
+            <p className="text-gray-600">Complete purchase management dashboard and quick access to all purchase functions</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
               <Plus className="h-4 w-4 mr-2" />
-              New Bill
+              Quick Bill
             </Button>
             <Button>
-              <Building className="h-4 w-4 mr-2" />
-              Add Supplier
+              <FileText className="h-4 w-4 mr-2" />
+              Purchase Report
             </Button>
           </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Bills</CardTitle>
-            <CardDescription>Latest purchase bills and expenses</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium">BILL-001</p>
-                    <Badge className="bg-orange-100 text-orange-800">Pending</Badge>
-                  </div>
-                  <p className="text-sm text-gray-600">Office Supplies Ltd</p>
-                  <p className="text-xs text-gray-500">Due: 2024-02-15</p>
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Outstanding Bills</p>
+                  <p className="text-2xl font-bold">£18,750</p>
+                  <p className="text-xs text-gray-500">8 bills</p>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold">£450</p>
-                  <div className="flex gap-1 mt-1">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
+                <Receipt className="h-8 w-8 text-red-600" />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">This Month Purchases</p>
+                  <p className="text-2xl font-bold">£32,400</p>
+                  <p className="text-xs text-orange-600">+8.5%</p>
+                </div>
+                <TrendingDown className="h-8 w-8 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Active Suppliers</p>
+                  <p className="text-2xl font-bold">89</p>
+                  <p className="text-xs text-blue-600">+3 new</p>
+                </div>
+                <Building className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Avg. Bill Value</p>
+                  <p className="text-2xl font-bold">£1,245</p>
+                  <p className="text-xs text-purple-600">-2.1%</p>
+                </div>
+                <PoundSterling className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Purchase Functions</CardTitle>
+              <CardDescription>Quick access to all purchase management features</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-3">
+                <Button variant="outline" className="justify-start h-12" onClick={() => handleSubTabClick('bills', 'purchases')}>
+                  <Receipt className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Bill Management</div>
+                    <div className="text-sm text-gray-600">Process, approve, and track bills</div>
+                  </div>
+                </Button>
+                <Button variant="outline" className="justify-start h-12" onClick={() => handleSubTabClick('orders', 'purchases')}>
+                  <ShoppingCart className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Purchase Orders</div>
+                    <div className="text-sm text-gray-600">Create and track purchase orders</div>
+                  </div>
+                </Button>
+                <Button variant="outline" className="justify-start h-12" onClick={() => handleSubTabClick('suppliers', 'purchases')}>
+                  <Building className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Supplier Database</div>
+                    <div className="text-sm text-gray-600">Manage supplier information and terms</div>
+                  </div>
+                </Button>
+                <Button variant="outline" className="justify-start h-12" onClick={() => handleSubTabClick('expenses', 'purchases')}>
+                  <CreditCard className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Expense Management</div>
+                    <div className="text-sm text-gray-600">Track and categorize expenses</div>
+                  </div>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Latest purchase transactions and updates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { type: 'Bill', ref: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, status: 'Pending', time: '1 hour ago' },
+                  { type: 'PO', ref: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, status: 'Approved', time: '3 hours ago' },
+                  { type: 'Expense', ref: 'EXP-2024-045', supplier: 'Travel Agency', amount: 185, status: 'Submitted', time: '5 hours ago' }
+                ].map((activity, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{activity.ref}</p>
+                        <Badge className={`${
+                          activity.status === 'Approved' ? 'bg-green-100 text-green-800' : 
+                          activity.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 
+                          'bg-orange-100 text-orange-800'
+                        }`}>
+                          {activity.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600">{activity.supplier}</p>
+                      <p className="text-xs text-gray-500">{activity.time}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">£{activity.amount}</p>
+                      <p className="text-sm text-gray-600">{activity.type}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }
@@ -685,52 +833,6 @@ export default function Bookkeeping() {
     )
   }
 
-  function renderAccountsContent() {
-    return (
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">Chart of Accounts</h2>
-            <p className="text-gray-600">Account structure and balances</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Account
-            </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Summary</CardTitle>
-            <CardDescription>Overview of account categories and balances</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
-                  <FolderOpen className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <p className="font-medium">Assets</p>
-                    <p className="text-sm text-gray-600">Current & Fixed Assets</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-semibold">£125,000</p>
-                  <p className="text-xs text-gray-500">15 accounts</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
 
   function renderReportsContent() {
     return (
@@ -2557,6 +2659,1506 @@ export default function Bookkeeping() {
     )
   }
 
+  function renderInvoicesManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Invoice Management</h2>
+            <p className="text-gray-600">Create, manage, and track all customer invoices</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Invoice
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Outstanding</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£23,450</div>
+              <p className="text-sm text-gray-600">12 invoices</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Overdue</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">£8,200</div>
+              <p className="text-sm text-gray-600">3 invoices</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Paid This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£45,600</div>
+              <p className="text-sm text-gray-600">28 invoices</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">£1,850</div>
+              <p className="text-sm text-gray-600">Per invoice</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Invoices</CardTitle>
+            <CardDescription>Latest invoice activity and payment status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { number: 'INV-2024-001', customer: 'ABC Corporation', amount: 2500, date: '2024-01-15', status: 'Paid', dueDate: '2024-02-14' },
+                { number: 'INV-2024-002', customer: 'XYZ Limited', amount: 1850, date: '2024-01-16', status: 'Outstanding', dueDate: '2024-02-15' },
+                { number: 'INV-2024-003', customer: 'StartupCo Ltd', amount: 950, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
+                { number: 'INV-2024-004', customer: 'Tech Solutions Inc', amount: 3200, date: '2024-01-18', status: 'Outstanding', dueDate: '2024-02-17' },
+                { number: 'INV-2024-005', customer: 'Marketing Pro Ltd', amount: 1450, date: '2024-01-19', status: 'Paid', dueDate: '2024-02-18' }
+              ].map((invoice, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{invoice.number}</p>
+                      <Badge className={`${
+                        invoice.status === 'Paid' ? 'bg-green-100 text-green-800' : 
+                        invoice.status === 'Overdue' ? 'bg-red-100 text-red-800' : 
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {invoice.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{invoice.customer}</p>
+                    <p className="text-xs text-gray-500">Due: {invoice.dueDate}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{invoice.amount}</p>
+                    <p className="text-sm text-gray-600">{invoice.date}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Download className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Invoice Template Management</CardTitle>
+            <CardDescription>Customize invoice templates with your company branding</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <InvoiceTemplateManager />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderQuotesManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Quote Management</h2>
+            <p className="text-gray-600">Create, manage, and convert quotes to invoices</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Quote
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Pending Quotes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">15</div>
+              <p className="text-sm text-gray-600">Awaiting response</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Accepted</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">8</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Conversion Rate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">68%</div>
+              <p className="text-sm text-gray-600">Quotes to sales</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">£34,750</div>
+              <p className="text-sm text-gray-600">Pending quotes</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Quotes</CardTitle>
+            <CardDescription>Latest quotes and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { number: 'QUO-2024-015', customer: 'ABC Corporation', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20' },
+                { number: 'QUO-2024-016', customer: 'XYZ Limited', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19' },
+                { number: 'QUO-2024-017', customer: 'StartupCo Ltd', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18' },
+                { number: 'QUO-2024-018', customer: 'Tech Solutions Inc', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17' },
+                { number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16' }
+              ].map((quote, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{quote.number}</p>
+                      <Badge className={`${
+                        quote.status === 'Accepted' ? 'bg-green-100 text-green-800' : 
+                        quote.status === 'Declined' ? 'bg-red-100 text-red-800' : 
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {quote.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{quote.customer}</p>
+                    <p className="text-xs text-gray-500">Valid until: {quote.validUntil}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{quote.amount}</p>
+                    <p className="text-sm text-gray-600">{quote.date}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      {quote.status === 'Accepted' && (
+                        <Button variant="ghost" size="sm">
+                          <Receipt className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderCustomersManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Customer Management</h2>
+            <p className="text-gray-600">Manage customer information, contacts, and transaction history</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Customer
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Customers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">156</div>
+              <p className="text-sm text-gray-600">Active customers</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">New This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">8</div>
+              <p className="text-sm text-gray-600">+12% growth</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Top Customer Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£12,450</div>
+              <p className="text-sm text-gray-600">Lifetime value</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Order</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-purple-600">£1,850</div>
+              <p className="text-sm text-gray-600">Per customer</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Customer Database</CardTitle>
+            <CardDescription>Complete customer information and transaction history</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'ABC Corporation', email: 'accounts@abccorp.com', phone: '+44 20 7123 4567', totalSpent: 12450, lastOrder: '2024-01-15', status: 'Active' },
+                { name: 'XYZ Limited', email: 'finance@xyzltd.com', phone: '+44 161 234 5678', totalSpent: 8750, lastOrder: '2024-01-12', status: 'Active' },
+                { name: 'StartupCo Ltd', email: 'admin@startupco.com', phone: '+44 113 345 6789', totalSpent: 3200, lastOrder: '2024-01-10', status: 'Active' },
+                { name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', totalSpent: 15600, lastOrder: '2024-01-08', status: 'VIP' },
+                { name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', totalSpent: 5400, lastOrder: '2024-01-05', status: 'Active' }
+              ].map((customer, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{customer.name}</p>
+                      <Badge className={`${
+                        customer.status === 'VIP' ? 'bg-purple-100 text-purple-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {customer.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{customer.email}</p>
+                    <p className="text-xs text-gray-500">{customer.phone}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-semibold">£{customer.totalSpent}</p>
+                    <p className="text-sm text-gray-600">Total spent</p>
+                    <p className="text-xs text-gray-500">Last: {customer.lastOrder}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Receipt className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderProductsManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Product Catalog</h2>
+            <p className="text-gray-600">Manage products, services, pricing, and inventory</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Catalog
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Products</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">45</div>
+              <p className="text-sm text-gray-600">Active products</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Services</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">28</div>
+              <p className="text-sm text-gray-600">Service offerings</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Top Seller</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£45,600</div>
+              <p className="text-sm text-gray-600">Revenue this month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Price</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-purple-600">£1,245</div>
+              <p className="text-sm text-gray-600">Per product</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Catalog</CardTitle>
+            <CardDescription>Complete product and service listings with pricing</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Professional Services Package', category: 'Services', price: 2500, cost: 1200, margin: 52, sales: 24, status: 'Active' },
+                { name: 'Consultation Services', category: 'Services', price: 1800, cost: 800, margin: 56, sales: 18, status: 'Active' },
+                { name: 'Software License', category: 'Products', price: 850, cost: 400, margin: 53, sales: 35, status: 'Active' },
+                { name: 'Training Program', category: 'Services', price: 1500, cost: 600, margin: 60, sales: 12, status: 'Active' },
+                { name: 'Support Package', category: 'Services', price: 950, cost: 350, margin: 63, sales: 28, status: 'Active' }
+              ].map((product, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{product.name}</p>
+                      <Badge className="bg-blue-100 text-blue-800">{product.category}</Badge>
+                      <Badge className={`${
+                        product.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {product.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">Cost: £{product.cost} | Margin: {product.margin}%</p>
+                    <p className="text-xs text-gray-500">{product.sales} units sold this month</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{product.price}</p>
+                    <p className="text-sm text-gray-600">Unit price</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <BarChart3 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderBillsManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Bill Management</h2>
+            <p className="text-gray-600">Process, approve, and track supplier bills and payments</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Bill
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Outstanding Bills</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">£18,750</div>
+              <p className="text-sm text-gray-600">8 bills</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Overdue</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£5,200</div>
+              <p className="text-sm text-gray-600">2 bills</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Paid This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£32,400</div>
+              <p className="text-sm text-gray-600">18 bills</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">£1,245</div>
+              <p className="text-sm text-gray-600">Per bill</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Bills</CardTitle>
+            <CardDescription>Latest supplier bills and payment status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
+                { number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18' },
+                { number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17' },
+                { number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
+                { number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15' }
+              ].map((bill, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{bill.number}</p>
+                      <Badge className={`${
+                        bill.status === 'Paid' ? 'bg-green-100 text-green-800' : 
+                        bill.status === 'Overdue' ? 'bg-red-100 text-red-800' : 
+                        bill.status === 'Approved' ? 'bg-blue-100 text-blue-800' :
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {bill.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{bill.supplier}</p>
+                    <p className="text-xs text-gray-500">Due: {bill.dueDate}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{bill.amount}</p>
+                    <p className="text-sm text-gray-600">{bill.date}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      {bill.status === 'Approved' && (
+                        <Button variant="ghost" size="sm">
+                          <CreditCard className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderPurchaseOrdersManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Purchase Order Management</h2>
+            <p className="text-gray-600">Create, track, and manage purchase orders</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New PO
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Active POs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">12</div>
+              <p className="text-sm text-gray-600">In progress</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Pending Approval</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">5</div>
+              <p className="text-sm text-gray-600">Awaiting approval</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Completed</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">28</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">£45,600</div>
+              <p className="text-sm text-gray-600">Active POs</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Purchase Orders</CardTitle>
+            <CardDescription>Latest purchase orders and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { number: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-20', status: 'Approved', deliveryDate: '2024-02-05' },
+                { number: 'PO-2024-009', supplier: 'Office Furniture Ltd', amount: 1650, date: '2024-01-19', status: 'Pending', deliveryDate: '2024-02-10' },
+                { number: 'PO-2024-010', supplier: 'Software Vendor', amount: 950, date: '2024-01-18', status: 'Delivered', deliveryDate: '2024-01-25' },
+                { number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30' },
+                { number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08' }
+              ].map((po, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{po.number}</p>
+                      <Badge className={`${
+                        po.status === 'Delivered' ? 'bg-green-100 text-green-800' : 
+                        po.status === 'In Transit' ? 'bg-blue-100 text-blue-800' : 
+                        po.status === 'Approved' ? 'bg-purple-100 text-purple-800' :
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {po.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{po.supplier}</p>
+                    <p className="text-xs text-gray-500">Delivery: {po.deliveryDate}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{po.amount}</p>
+                    <p className="text-sm text-gray-600">{po.date}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <ShoppingCart className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderSuppliersManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Supplier Management</h2>
+            <p className="text-gray-600">Manage supplier information, payment terms, and transaction history</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Supplier
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export List
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Suppliers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">89</div>
+              <p className="text-sm text-gray-600">Active suppliers</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">New This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">3</div>
+              <p className="text-sm text-gray-600">+5% growth</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Top Supplier Spend</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£8,450</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Payment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-purple-600">£1,245</div>
+              <p className="text-sm text-gray-600">Per supplier</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Supplier Database</CardTitle>
+            <CardDescription>Complete supplier information and payment terms</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred' },
+                { name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active' },
+                { name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active' },
+                { name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active' },
+                { name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active' }
+              ].map((supplier, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{supplier.name}</p>
+                      <Badge className={`${
+                        supplier.status === 'Preferred' ? 'bg-purple-100 text-purple-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {supplier.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{supplier.email}</p>
+                    <p className="text-xs text-gray-500">{supplier.phone} | Terms: {supplier.paymentTerms}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-semibold">£{supplier.totalSpent}</p>
+                    <p className="text-sm text-gray-600">Total spent</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Receipt className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderExpensesManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Expense Management</h2>
+            <p className="text-gray-600">Track, categorize, and manage business expenses</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Expense
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">£12,450</div>
+              <p className="text-sm text-gray-600">Total expenses</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Pending Approval</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£2,850</div>
+              <p className="text-sm text-gray-600">8 expenses</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Reimbursable</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">£1,650</div>
+              <p className="text-sm text-gray-600">Employee expenses</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Average Expense</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">£185</div>
+              <p className="text-sm text-gray-600">Per transaction</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Expenses</CardTitle>
+            <CardDescription>Latest expense submissions and approvals</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith' },
+                { reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson' },
+                { reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen' },
+                { reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson' },
+                { reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown' }
+              ].map((expense, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{expense.reference}</p>
+                      <Badge className={`${
+                        expense.status === 'Approved' ? 'bg-green-100 text-green-800' : 
+                        expense.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {expense.status}
+                      </Badge>
+                      <Badge className="bg-gray-100 text-gray-800">{expense.category}</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{expense.description}</p>
+                    <p className="text-xs text-gray-500">By: {expense.submittedBy} | {expense.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{expense.amount}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <FileText className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Expense Categories</CardTitle>
+              <CardDescription>Breakdown by expense category</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary' },
+                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500' },
+                  { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500' },
+                  { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500' },
+                  { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500' }
+                ].map((category, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium">{category.category}</p>
+                      <p className="font-semibold">£{category.amount}</p>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${category.color}`}
+                        style={{ width: `${category.percentage}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-sm text-gray-600">{category.percentage}% of total expenses</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Trend</CardTitle>
+              <CardDescription>Expense trends over the last 6 months</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { month: 'January 2024', amount: 12450, change: '+8%' },
+                  { month: 'December 2023', amount: 11520, change: '-3%' },
+                  { month: 'November 2023', amount: 11890, change: '+12%' },
+                  { month: 'October 2023', amount: 10620, change: '+5%' },
+                  { month: 'September 2023', amount: 10120, change: '-2%' },
+                  { month: 'August 2023', amount: 10350, change: '+7%' }
+                ].map((month, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{month.month}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">£{month.amount}</p>
+                      <p className={`text-sm ${month.change.startsWith('+') ? 'text-red-600' : 'text-green-600'}`}>
+                        {month.change}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderBankAccountsManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Bank Account Management</h2>
+            <p className="text-gray-600">Manage bank accounts, balances, and account settings</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Account
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Balance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£125,430</div>
+              <p className="text-sm text-gray-600">Across all accounts</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Active Accounts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">8</div>
+              <p className="text-sm text-gray-600">Connected accounts</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Monthly Inflow</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">£45,230</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Monthly Outflow</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">£32,180</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Bank Accounts</CardTitle>
+            <CardDescription>All connected bank accounts and their current balances</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Business Current Account', bank: 'Barclays', accountNumber: '****1234', balance: 45230, type: 'Current', status: 'Active' },
+                { name: 'Business Savings Account', bank: 'HSBC', accountNumber: '****5678', balance: 32100, type: 'Savings', status: 'Active' },
+                { name: 'Payroll Account', bank: 'Lloyds', accountNumber: '****9012', balance: 28900, type: 'Current', status: 'Active' },
+                { name: 'Tax Reserve Account', bank: 'NatWest', accountNumber: '****3456', balance: 12800, type: 'Savings', status: 'Active' },
+                { name: 'Petty Cash Account', bank: 'Santander', accountNumber: '****7890', balance: 6400, type: 'Current', status: 'Active' }
+              ].map((account, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Landmark className="h-8 w-8 text-brisk-primary" />
+                    <div>
+                      <p className="font-medium">{account.name}</p>
+                      <p className="text-sm text-gray-600">{account.bank} • {account.accountNumber}</p>
+                      <div className="flex gap-2 mt-1">
+                        <Badge className="bg-blue-100 text-blue-800">{account.type}</Badge>
+                        <Badge className="bg-green-100 text-green-800">{account.status}</Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold">£{account.balance.toLocaleString()}</p>
+                    <div className="flex gap-1 mt-2">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <RefreshCw className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderBankTransactionsManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Bank Transactions</h2>
+            <p className="text-gray-600">View, categorize, and manage all bank transactions</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">1,245</div>
+              <p className="text-sm text-gray-600">Total transactions</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Uncategorized</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">23</div>
+              <p className="text-sm text-gray-600">Need attention</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Income</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£45,230</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Expenses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">£32,180</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Transactions</CardTitle>
+            <CardDescription>Latest bank transactions across all accounts</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { date: '2024-01-20', description: 'Customer Payment - INV-001', account: 'Business Current', amount: 2500, type: 'Credit', category: 'Sales', status: 'Categorized' },
+                { date: '2024-01-20', description: 'Office Rent Payment', account: 'Business Current', amount: -1200, type: 'Debit', category: 'Rent', status: 'Categorized' },
+                { date: '2024-01-19', description: 'Supplier Payment - Tech Co', account: 'Business Current', amount: -850, type: 'Debit', category: 'Purchases', status: 'Categorized' },
+                { date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', amount: 5000, type: 'Credit', category: '', status: 'Uncategorized' },
+                { date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', amount: -185, type: 'Debit', category: 'Utilities', status: 'Categorized' }
+              ].map((transaction, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{transaction.description}</p>
+                      <Badge className={`${
+                        transaction.status === 'Categorized' ? 'bg-green-100 text-green-800' : 
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {transaction.status}
+                      </Badge>
+                      {transaction.category && (
+                        <Badge className="bg-blue-100 text-blue-800">{transaction.category}</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600">{transaction.account} • {transaction.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-lg font-semibold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {transaction.amount > 0 ? '+' : ''}£{Math.abs(transaction.amount)}
+                    </p>
+                    <p className="text-sm text-gray-600">{transaction.type}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderReconciliationManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Bank Reconciliation</h2>
+            <p className="text-gray-600">Reconcile bank statements with your accounting records</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Statement
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Auto Reconcile
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Reconciled</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£123,450</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Outstanding</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">£2,850</div>
+              <p className="text-sm text-gray-600">Needs attention</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Discrepancies</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">3</div>
+              <p className="text-sm text-gray-600">Items to review</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Match Rate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">97.8%</div>
+              <p className="text-sm text-gray-600">Auto-matched</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Reconciliation Status</CardTitle>
+              <CardDescription>Current reconciliation status by account</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { account: 'Business Current Account', lastReconciled: '2024-01-15', status: 'Complete', balance: 45230, difference: 0 },
+                  { account: 'Business Savings Account', lastReconciled: '2024-01-10', status: 'Outstanding', balance: 32100, difference: 150 },
+                  { account: 'Payroll Account', lastReconciled: '2024-01-12', status: 'Complete', balance: 28900, difference: 0 },
+                  { account: 'Tax Reserve Account', lastReconciled: '2024-01-08', status: 'Pending', balance: 12800, difference: -75 }
+                ].map((account, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{account.account}</p>
+                      <p className="text-sm text-gray-600">Last: {account.lastReconciled}</p>
+                      <Badge className={`${
+                        account.status === 'Complete' ? 'bg-green-100 text-green-800' : 
+                        account.status === 'Outstanding' ? 'bg-orange-100 text-orange-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {account.status}
+                      </Badge>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">£{account.balance.toLocaleString()}</p>
+                      {account.difference !== 0 && (
+                        <p className={`text-sm ${account.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {account.difference > 0 ? '+' : ''}£{account.difference}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Outstanding Items</CardTitle>
+              <CardDescription>Items requiring manual reconciliation</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { description: 'Unmatched Deposit', amount: 1500, date: '2024-01-18', type: 'Credit' },
+                  { description: 'Bank Charges', amount: -25, date: '2024-01-17', type: 'Debit' },
+                  { description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit' },
+                  { description: 'Unknown Transfer', amount: -200, date: '2024-01-15', type: 'Debit' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{item.description}</p>
+                      <p className="text-sm text-gray-600">{item.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`font-semibold ${item.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount)}
+                      </p>
+                      <div className="flex gap-1 mt-1">
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <UserCheck className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderBankFeedsManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Bank Feed Management</h2>
+            <p className="text-gray-600">Manage automatic bank feed connections and data synchronization</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Feed
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Sync All
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Active Feeds</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">8</div>
+              <p className="text-sm text-gray-600">Connected banks</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Last Sync</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">2 hrs</div>
+              <p className="text-sm text-gray-600">Ago</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">New Transactions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">45</div>
+              <p className="text-sm text-gray-600">Since last sync</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Sync Success</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-orange-600">99.2%</div>
+              <p className="text-sm text-gray-600">Success rate</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Bank Feed Status</CardTitle>
+            <CardDescription>Status and configuration of all bank feed connections</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { bank: 'Barclays Business', account: '****1234', status: 'Active', lastSync: '2 hours ago', frequency: 'Every 4 hours', transactions: 156 },
+                { bank: 'HSBC Business', account: '****5678', status: 'Active', lastSync: '1 hour ago', frequency: 'Every 2 hours', transactions: 89 },
+                { bank: 'Lloyds Payroll', account: '****9012', status: 'Active', lastSync: '3 hours ago', frequency: 'Daily', transactions: 23 },
+                { bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5 },
+                { bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0 }
+              ].map((feed, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Link className={`h-6 w-6 ${
+                      feed.status === 'Active' ? 'text-green-600' : 
+                      feed.status === 'Warning' ? 'text-orange-600' : 
+                      'text-red-600'
+                    }`} />
+                    <div>
+                      <p className="font-medium">{feed.bank}</p>
+                      <p className="text-sm text-gray-600">{feed.account} • {feed.frequency}</p>
+                      <div className="flex gap-2 mt-1">
+                        <Badge className={`${
+                          feed.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                          feed.status === 'Warning' ? 'bg-orange-100 text-orange-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {feed.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">{feed.transactions} transactions</p>
+                    <p className="text-sm text-gray-600">Last sync: {feed.lastSync}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <RefreshCw className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Feed Configuration</CardTitle>
+            <CardDescription>Configure automatic categorization rules and sync settings</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <h4 className="font-medium">Auto-Categorization Rules</h4>
+                {[
+                  { rule: 'Contains "SALARY" → Payroll', matches: 45 },
+                  { rule: 'Contains "RENT" → Office Expenses', matches: 12 },
+                  { rule: 'Contains "HMRC" → Tax Payments', matches: 8 },
+                  { rule: 'Amount > £1000 → Manual Review', matches: 23 }
+                ].map((rule, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <p className="text-sm">{rule.rule}</p>
+                    <Badge className="bg-blue-100 text-blue-800">{rule.matches} matches</Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-medium">Sync Settings</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Auto-sync frequency</span>
+                    <span className="text-sm font-medium">Every 2 hours</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Duplicate detection</span>
+                    <span className="text-sm font-medium">Enabled</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Auto-categorization</span>
+                    <span className="text-sm font-medium">Enabled</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Notification alerts</span>
+                    <span className="text-sm font-medium">Email + In-app</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   function renderSalesAnalytics() {
     return (
       <div className="space-y-6">
@@ -2674,6 +4276,872 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
         </div>
+      </div>
+    )
+  }
+
+  function renderChartOfAccounts() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Chart of Accounts</h2>
+            <p className="text-gray-600">Manage your complete chart of accounts structure</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Account
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Chart
+            </Button>
+          </div>
+        </div>
+
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Accounts</p>
+                  <p className="text-2xl font-bold">247</p>
+                  <p className="text-xs text-blue-600">Active accounts</p>
+                </div>
+                <Database className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Asset Accounts</p>
+                  <p className="text-2xl font-bold">89</p>
+                  <p className="text-xs text-green-600">Including current assets</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Liability Accounts</p>
+                  <p className="text-2xl font-bold">34</p>
+                  <p className="text-xs text-orange-600">Current & long-term</p>
+                </div>
+                <TrendingDown className="h-8 w-8 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Revenue Accounts</p>
+                  <p className="text-2xl font-bold">45</p>
+                  <p className="text-xs text-purple-600">Income streams</p>
+                </div>
+                <PoundSterling className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Categories</CardTitle>
+            <CardDescription>Organized by account type and classification</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets' },
+                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets' },
+                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities' },
+                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
+                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
+              ].map((category, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{category.category}</p>
+                      <Badge className={`${
+                        category.type === 'Assets' ? 'bg-green-100 text-green-800' : 
+                        category.type === 'Liabilities' ? 'bg-red-100 text-red-800' : 
+                        category.type === 'Income' ? 'bg-blue-100 text-blue-800' :
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {category.type}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{category.accounts} accounts</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">{category.balance}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderGeneralJournal() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">General Journal</h2>
+            <p className="text-gray-600">Record and manage all journal entries</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Entry
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export Journal
+            </Button>
+          </div>
+        </div>
+
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Entries</p>
+                  <p className="text-2xl font-bold">1,247</p>
+                  <p className="text-xs text-blue-600">This period</p>
+                </div>
+                <BookOpen className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Pending Review</p>
+                  <p className="text-2xl font-bold">23</p>
+                  <p className="text-xs text-orange-600">Awaiting approval</p>
+                </div>
+                <AlertCircle className="h-8 w-8 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Auto Entries</p>
+                  <p className="text-2xl font-bold">456</p>
+                  <p className="text-xs text-green-600">System generated</p>
+                </div>
+                <RefreshCw className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Manual Entries</p>
+                  <p className="text-2xl font-bold">791</p>
+                  <p className="text-xs text-purple-600">User created</p>
+                </div>
+                <Edit className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Journal Entries</CardTitle>
+            <CardDescription>Latest journal entries and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { id: 'JE-2024-001', description: 'Monthly depreciation', date: '2024-01-31', amount: 2500, status: 'Posted' },
+                { id: 'JE-2024-002', description: 'Accrued expenses adjustment', date: '2024-01-30', amount: 1850, status: 'Pending' },
+                { id: 'JE-2024-003', description: 'Bank reconciliation adjustment', date: '2024-01-29', amount: 450, status: 'Posted' },
+                { id: 'JE-2024-004', description: 'Prepaid insurance allocation', date: '2024-01-28', amount: 750, status: 'Draft' }
+              ].map((entry, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{entry.id}</p>
+                      <Badge className={`${
+                        entry.status === 'Posted' ? 'bg-green-100 text-green-800' : 
+                        entry.status === 'Pending' ? 'bg-orange-100 text-orange-800' : 
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {entry.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{entry.description}</p>
+                    <p className="text-xs text-gray-500">{entry.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{entry.amount}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderJournalAdjustments() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Journal Adjustments</h2>
+            <p className="text-gray-600">Period-end adjustments and corrections</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Adjustment
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Process All
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Adjustment Categories</CardTitle>
+            <CardDescription>Common adjustment types and their impact</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                { type: 'Accruals', count: 12, amount: 15600, description: 'Expenses incurred but not yet recorded' },
+                { type: 'Prepayments', count: 8, amount: 9200, description: 'Expenses paid in advance' },
+                { type: 'Depreciation', count: 15, amount: 22400, description: 'Asset depreciation charges' },
+                { type: 'Bad Debt', count: 3, amount: 4500, description: 'Provision for doubtful debts' }
+              ].map((adjustment, index) => (
+                <div key={index} className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">{adjustment.type}</h3>
+                    <Badge>{adjustment.count} entries</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">{adjustment.description}</p>
+                  <p className="text-lg font-semibold">£{adjustment.amount.toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderJournalReversals() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Journal Reversals</h2>
+            <p className="text-gray-600">Reverse and correct journal entries</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <RotateCcw className="h-4 w-4 mr-2" />
+              New Reversal
+            </Button>
+            <Button>
+              <Search className="h-4 w-4 mr-2" />
+              Find Entry
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Reversal History</CardTitle>
+            <CardDescription>Recently reversed journal entries</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { original: 'JE-2024-045', reversal: 'JE-2024-046', date: '2024-01-25', amount: 1200, reason: 'Incorrect account coding' },
+                { original: 'JE-2024-032', reversal: 'JE-2024-047', date: '2024-01-24', amount: 850, reason: 'Duplicate entry' },
+                { original: 'JE-2024-028', reversal: 'JE-2024-048', date: '2024-01-23', amount: 2100, reason: 'Wrong period' }
+              ].map((reversal, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{reversal.original}</p>
+                      <ArrowLeftRight className="h-4 w-4 text-gray-400" />
+                      <p className="font-medium">{reversal.reversal}</p>
+                    </div>
+                    <p className="text-sm text-gray-600">{reversal.reason}</p>
+                    <p className="text-xs text-gray-500">{reversal.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{reversal.amount}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderJournalTemplates() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Journal Templates</h2>
+            <p className="text-gray-600">Reusable journal entry templates</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Template
+            </Button>
+            <Button>
+              <Copy className="h-4 w-4 mr-2" />
+              Use Template
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Available Templates</CardTitle>
+            <CardDescription>Pre-configured journal entry templates</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                { name: 'Monthly Depreciation', category: 'Fixed Assets', usage: 12, description: 'Standard monthly depreciation entries' },
+                { name: 'Accrued Expenses', category: 'Liabilities', usage: 8, description: 'Period-end expense accruals' },
+                { name: 'Prepaid Insurance', category: 'Assets', usage: 6, description: 'Insurance prepayment allocation' },
+                { name: 'Bank Charges', category: 'Expenses', usage: 15, description: 'Monthly bank fee entries' }
+              ].map((template, index) => (
+                <div key={index} className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">{template.name}</h3>
+                    <Badge variant="outline">{template.category}</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">{template.description}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-500">Used {template.usage} times</p>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderVATReturns() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">VAT Returns</h2>
+            <p className="text-gray-600">Manage VAT returns and submissions</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Return
+            </Button>
+            <Button>
+              <Upload className="h-4 w-4 mr-2" />
+              Submit to HMRC
+            </Button>
+          </div>
+        </div>
+
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Current Period</p>
+                  <p className="text-2xl font-bold">Q1 2024</p>
+                  <p className="text-xs text-blue-600">Due: 7 May 2024</p>
+                </div>
+                <Calendar className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">VAT Due</p>
+                  <p className="text-2xl font-bold">£8,450</p>
+                  <p className="text-xs text-red-600">Amount payable</p>
+                </div>
+                <PoundSterling className="h-8 w-8 text-red-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">VAT Reclaim</p>
+                  <p className="text-2xl font-bold">£3,200</p>
+                  <p className="text-xs text-green-600">Input VAT</p>
+                </div>
+                <TrendingDown className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Net Due</p>
+                  <p className="text-2xl font-bold">£5,250</p>
+                  <p className="text-xs text-orange-600">Final amount</p>
+                </div>
+                <Calculator className="h-8 w-8 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>VAT Return History</CardTitle>
+            <CardDescription>Previous VAT return submissions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { period: 'Q4 2023', submitted: '2024-02-07', due: 5250, status: 'Submitted', reference: 'VAT-2023-Q4' },
+                { period: 'Q3 2023', submitted: '2023-11-06', due: 4800, status: 'Paid', reference: 'VAT-2023-Q3' },
+                { period: 'Q2 2023', submitted: '2023-08-05', due: 6100, status: 'Paid', reference: 'VAT-2023-Q2' }
+              ].map((return_, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{return_.period}</p>
+                      <Badge className={`${
+                        return_.status === 'Paid' ? 'bg-green-100 text-green-800' : 
+                        return_.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {return_.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{return_.reference}</p>
+                    <p className="text-xs text-gray-500">Submitted: {return_.submitted}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{return_.due}</p>
+                    <div className="flex gap-1 mt-1">
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Download className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderVATSchemes() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">VAT Schemes</h2>
+            <p className="text-gray-600">Manage VAT scheme settings and configurations</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Change Scheme
+            </Button>
+            <Button>
+              <Calculator className="h-4 w-4 mr-2" />
+              Calculate Impact
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Current VAT Scheme</CardTitle>
+            <CardDescription>Your active VAT registration details</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="p-4 border rounded-lg bg-blue-50">
+                <h3 className="font-medium text-blue-900">Standard VAT Scheme</h3>
+                <p className="text-sm text-blue-700 mt-1">Standard rate: 20%</p>
+                <p className="text-sm text-blue-700">Registration: GB123456789</p>
+                <p className="text-sm text-blue-700">Effective from: 1 April 2023</p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Quarterly returns</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Digital submissions</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">MTD compliant</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Available VAT Schemes</CardTitle>
+            <CardDescription>Compare different VAT scheme options</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Standard VAT', rate: '20%', threshold: '£85,000', description: 'Standard VAT registration with full input tax recovery' },
+                { name: 'Flat Rate Scheme', rate: '16.5%', threshold: '£150,000', description: 'Simplified scheme with fixed percentage on turnover' },
+                { name: 'Cash Accounting', rate: '20%', threshold: '£1.35m', description: 'Pay VAT when you receive payment from customers' },
+                { name: 'Annual Accounting', rate: '20%', threshold: '£1.35m', description: 'Make monthly payments with annual return' }
+              ].map((scheme, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{scheme.name}</p>
+                      <Badge variant="outline">{scheme.rate}</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{scheme.description}</p>
+                    <p className="text-xs text-gray-500">Threshold: {scheme.threshold}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Calculator className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderVATReports() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">VAT Reports</h2>
+            <p className="text-gray-600">Comprehensive VAT analysis and reporting</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Custom Report
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export All
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>VAT Summary</CardTitle>
+              <CardDescription>Current period overview</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Output VAT</span>
+                  <span className="font-medium">£8,450</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Input VAT</span>
+                  <span className="font-medium">£3,200</span>
+                </div>
+                <div className="flex justify-between border-t pt-2">
+                  <span className="font-medium">Net VAT Due</span>
+                  <span className="font-bold">£5,250</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>VAT by Rate</CardTitle>
+              <CardDescription>Breakdown by VAT rates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Standard (20%)</span>
+                  <span className="font-medium">£7,200</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Reduced (5%)</span>
+                  <span className="font-medium">£850</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Zero (0%)</span>
+                  <span className="font-medium">£400</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Compliance Status</CardTitle>
+              <CardDescription>VAT compliance indicators</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">MTD Compliant</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Returns Up to Date</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">No Penalties</span>
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>VAT Analysis by Month</CardTitle>
+            <CardDescription>Monthly VAT liability trends</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { month: 'January 2024', output: 2800, input: 1200, net: 1600 },
+                { month: 'February 2024', output: 3200, input: 1100, net: 2100 },
+                { month: 'March 2024', output: 2450, input: 900, net: 1550 }
+              ].map((month, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <p className="font-medium">{month.month}</p>
+                    <div className="flex gap-4 mt-1">
+                      <span className="text-sm text-gray-600">Output: £{month.output}</span>
+                      <span className="text-sm text-gray-600">Input: £{month.input}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">£{month.net}</p>
+                    <p className="text-xs text-gray-500">Net VAT</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderVATCompliance() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">VAT Compliance</h2>
+            <p className="text-gray-600">Monitor VAT compliance and regulatory requirements</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              Check Status
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Compliance Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Compliance Checklist</CardTitle>
+              <CardDescription>Essential VAT compliance requirements</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { item: 'VAT registration up to date', status: 'complete', description: 'Registration details current' },
+                  { item: 'Quarterly returns submitted', status: 'complete', description: 'All returns filed on time' },
+                  { item: 'MTD software compliant', status: 'complete', description: 'Using approved software' },
+                  { item: 'Digital records maintained', status: 'complete', description: 'Records stored digitally' },
+                  { item: 'VAT invoices compliant', status: 'warning', description: 'Some invoices missing details' }
+                ].map((check, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                    <div className="mt-1">
+                      {check.status === 'complete' ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-orange-600" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{check.item}</p>
+                      <p className="text-sm text-gray-600">{check.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Deadlines</CardTitle>
+              <CardDescription>Important VAT dates and deadlines</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { task: 'Q1 2024 VAT Return', date: '7 May 2024', days: 15, type: 'return' },
+                  { task: 'VAT Payment Due', date: '7 May 2024', days: 15, type: 'payment' },
+                  { task: 'Annual VAT Review', date: '31 March 2024', days: -5, type: 'review' }
+                ].map((deadline, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium">{deadline.task}</p>
+                      <p className="text-sm text-gray-600">{deadline.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <Badge className={`${
+                        deadline.days < 0 ? 'bg-red-100 text-red-800' : 
+                        deadline.days <= 7 ? 'bg-orange-100 text-orange-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {deadline.days < 0 ? `${Math.abs(deadline.days)} days overdue` : 
+                         deadline.days === 0 ? 'Due today' : 
+                         `${deadline.days} days`}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Compliance Alerts</CardTitle>
+            <CardDescription>Recent compliance notifications and actions required</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { type: 'warning', message: 'VAT invoice missing customer VAT number', date: '2024-01-28', action: 'Update invoice template' },
+                { type: 'info', message: 'New VAT rate changes effective April 2024', date: '2024-01-25', action: 'Review rate settings' },
+                { type: 'success', message: 'Q4 2023 VAT return successfully submitted', date: '2024-01-20', action: 'No action required' }
+              ].map((alert, index) => (
+                <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+                  <div className="mt-1">
+                    {alert.type === 'warning' ? (
+                      <AlertCircle className="h-4 w-4 text-orange-600" />
+                    ) : alert.type === 'success' ? (
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <ExternalLink className="h-4 w-4 text-blue-600" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium">{alert.message}</p>
+                    <p className="text-sm text-gray-600">{alert.action}</p>
+                    <p className="text-xs text-gray-500">{alert.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
