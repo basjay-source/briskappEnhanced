@@ -215,11 +215,12 @@ export default function Payroll() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-5'}`}>
+          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'}`}>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="employees">Employees</TabsTrigger>
             {!isMobile && <TabsTrigger value="payruns">Pay Runs</TabsTrigger>}
             {!isMobile && <TabsTrigger value="rti">RTI</TabsTrigger>}
+            {!isMobile && <TabsTrigger value="statutory">Statutory</TabsTrigger>}
             {!isMobile && <TabsTrigger value="reports">Reports</TabsTrigger>}
           </TabsList>
 
@@ -296,23 +297,90 @@ export default function Payroll() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Brain className="h-5 w-5 text-brisk-primary" />
-                      HR Adviser
+                      Enhanced HR Adviser
                     </CardTitle>
-                    <CardDescription>Payroll insights and recommendations</CardDescription>
+                    <CardDescription>Advanced HR insights, policy templates, and cost simulations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      <div className="p-3 bg-blue-50 rounded-lg">
-                        <p className="text-sm font-medium text-blue-900">Pension Auto-Enrollment</p>
-                        <p className="text-xs text-blue-700">3 employees need pension enrollment</p>
+                    <div className="space-y-4">
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className="p-3 bg-blue-50 rounded-lg">
+                          <h4 className="font-semibold text-blue-900">Compliance Score: 85/100</h4>
+                          <p className="text-xs text-blue-700">3 employees need pension auto-enrollment review</p>
+                          <Button className="mt-2" size="sm">
+                            Review Compliance
+                          </Button>
+                        </div>
+                        
+                        <div className="p-3 bg-amber-50 rounded-lg">
+                          <h4 className="font-semibold text-amber-900">Policy Updates</h4>
+                          <p className="text-xs text-amber-700">New minimum wage rates effective April 2024</p>
+                          <Button className="mt-2" size="sm" variant="outline">
+                            View Updates
+                          </Button>
+                        </div>
                       </div>
-                      <div className="p-3 bg-orange-50 rounded-lg">
-                        <p className="text-sm font-medium text-orange-900">Minimum Wage Review</p>
-                        <p className="text-xs text-orange-700">Check rates for April 2024 changes</p>
+
+                      <div>
+                        <h5 className="font-semibold mb-2">Policy Templates</h5>
+                        <div className="grid gap-2">
+                          <Card className="border border-gray-200 hover:shadow-sm transition-shadow">
+                            <CardContent className="p-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h6 className="font-medium text-sm">Employment Contract</h6>
+                                  <p className="text-xs text-gray-600">Comprehensive template with statutory requirements</p>
+                                </div>
+                                <Button size="sm" variant="outline">Generate</Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="border border-gray-200 hover:shadow-sm transition-shadow">
+                            <CardContent className="p-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h6 className="font-medium text-sm">Employee Handbook</h6>
+                                  <p className="text-xs text-gray-600">Complete policies and procedures guide</p>
+                                </div>
+                                <Button size="sm" variant="outline">Generate</Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
                       </div>
-                      <div className="p-3 bg-green-50 rounded-lg">
-                        <p className="text-sm font-medium text-green-900">RTI Compliance</p>
-                        <p className="text-xs text-green-700">All submissions on time this year</p>
+
+                      <div>
+                        <h5 className="font-semibold mb-2">Cost Simulations</h5>
+                        <div className="space-y-2">
+                          <Card className="border border-green-200 bg-green-50">
+                            <CardContent className="p-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h6 className="font-medium text-green-900 text-sm">5% Salary Increase</h6>
+                                  <p className="text-xs text-green-700">Annual cost: £6,270 (inc. NI &amp; pension)</p>
+                                </div>
+                                <Button size="sm" variant="outline" className="border-green-300">
+                                  Details
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          <Card className="border border-purple-200 bg-purple-50">
+                            <CardContent className="p-3">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h6 className="font-medium text-purple-900 text-sm">Enhanced Benefits</h6>
+                                  <p className="text-xs text-purple-700">£90,000 annual cost, 15-25% turnover reduction</p>
+                                </div>
+                                <Button size="sm" variant="outline" className="border-purple-300">
+                                  Calculate ROI
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -546,11 +614,133 @@ export default function Payroll() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="statutory" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Statutory Payments</CardTitle>
+                <CardDescription>Manage SSP, SMP, SPP, SAP, and Shared Parental Pay</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <h3 className="font-semibold mb-4">Current Statutory Payments</h3>
+                    <div className="space-y-3">
+                      <Card className="border-l-4 border-l-blue-500">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">Sarah Johnson - Maternity Pay</h4>
+                              <p className="text-sm text-gray-600">SMP: £172.48/week • 12 weeks remaining</p>
+                              <p className="text-xs text-gray-500">Started: 15 Jan 2024</p>
+                            </div>
+                            <Badge className="bg-blue-100 text-blue-800">Active</Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-l-4 border-l-green-500">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">Michael Brown - Sick Pay</h4>
+                              <p className="text-sm text-gray-600">SSP: £109.40/week • 2 weeks</p>
+                              <p className="text-xs text-gray-500">Started: 1 Feb 2024</p>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Active</Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-4">Calculate New Statutory Payment</h3>
+                    <Card>
+                      <CardContent className="p-4 space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Employee</label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select employee" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">John Smith</SelectItem>
+                              <SelectItem value="2">Sarah Johnson</SelectItem>
+                              <SelectItem value="3">Michael Brown</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium">Payment Type</label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select payment type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="SSP">Statutory Sick Pay (SSP)</SelectItem>
+                              <SelectItem value="SMP">Statutory Maternity Pay (SMP)</SelectItem>
+                              <SelectItem value="SPP">Statutory Paternity Pay (SPP)</SelectItem>
+                              <SelectItem value="SAP">Statutory Adoption Pay (SAP)</SelectItem>
+                              <SelectItem value="ShPP">Shared Parental Pay (ShPP)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium">Start Date</label>
+                            <input type="date" className="w-full p-2 border rounded-md" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Expected Duration</label>
+                            <input type="number" placeholder="Weeks" className="w-full p-2 border rounded-md" />
+                          </div>
+                        </div>
+
+                        <Button className="w-full">Calculate Payment</Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="font-semibold mb-4">Statutory Payment Rates (2024)</h3>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Card className="bg-blue-50 border-blue-200">
+                      <CardContent className="p-4 text-center">
+                        <h4 className="font-semibold text-blue-900">SSP</h4>
+                        <p className="text-2xl font-bold text-blue-800">£109.40</p>
+                        <p className="text-sm text-blue-600">per week</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-green-50 border-green-200">
+                      <CardContent className="p-4 text-center">
+                        <h4 className="font-semibold text-green-900">SMP/SPP/SAP</h4>
+                        <p className="text-2xl font-bold text-green-800">£172.48</p>
+                        <p className="text-sm text-green-600">per week</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-purple-50 border-purple-200">
+                      <CardContent className="p-4 text-center">
+                        <h4 className="font-semibold text-purple-900">ShPP</h4>
+                        <p className="text-2xl font-bold text-purple-800">£172.48</p>
+                        <p className="text-sm text-purple-600">per week</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="reports" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Payroll Reports</CardTitle>
-                <CardDescription>Generate payroll reports and analytics</CardDescription>
+                <CardTitle>Advanced Payroll Reports</CardTitle>
+                <CardDescription>Generate comprehensive payroll reports and analytics</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -580,6 +770,93 @@ export default function Payroll() {
                       <Button size="sm" variant="outline">Generate</Button>
                     </CardContent>
                   </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <FileText className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">P60 Certificates</h3>
+                      <p className="text-sm text-gray-600 mb-3">Year-end tax certificates</p>
+                      <Button size="sm" variant="outline">Generate P60s</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">P11D Benefits</h3>
+                      <p className="text-sm text-gray-600 mb-3">Benefits in kind reporting</p>
+                      <Button size="sm" variant="outline">Generate P11Ds</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <Calculator className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Statutory Payments</h3>
+                      <p className="text-sm text-gray-600 mb-3">SSP, SMP, SPP, SAP, ShPP</p>
+                      <Button size="sm" variant="outline">Calculate</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <TrendingUp className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Payroll Analytics</h3>
+                      <p className="text-sm text-gray-600 mb-3">Trends and insights</p>
+                      <Button size="sm" variant="outline">View Analytics</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <FileText className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">CIS Reports</h3>
+                      <p className="text-sm text-gray-600 mb-3">Construction industry scheme</p>
+                      <Button size="sm" variant="outline">Generate CIS</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                    <CardContent className="p-6 text-center">
+                      <Download className="h-8 w-8 text-gray-500 mx-auto mb-2" />
+                      <h3 className="font-semibold mb-1">Payslip Archive</h3>
+                      <p className="text-sm text-gray-600 mb-3">Historical payslips</p>
+                      <Button size="sm" variant="outline">Access Archive</Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card className="bg-blue-50 border-blue-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-blue-900">Year-End Processing</h4>
+                            <p className="text-sm text-blue-700">Generate all P60s and P11Ds for tax year</p>
+                          </div>
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                            Start Process
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-green-50 border-green-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-green-900">Pension Auto-Enrollment</h4>
+                            <p className="text-sm text-green-700">Review and process new enrollments</p>
+                          </div>
+                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                            Review Queue
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
               </CardContent>
             </Card>
