@@ -404,7 +404,7 @@ export default function TimeAndFeesModuleAdvanced() {
       case 'high':
         return 'border-red-200 bg-red-50'
       case 'medium':
-        return 'border-yellow-200 bg-yellow-50'
+        return 'border-orange-200 bg-orange-50'
       case 'low':
         return 'border-blue-200 bg-blue-50'
       default:
@@ -735,7 +735,7 @@ export default function TimeAndFeesModuleAdvanced() {
                             <h3 className="font-medium">{insight.title}</h3>
                             <Badge variant="outline" className={`text-xs ${
                               insight.impact === 'high' ? 'border-red-300 text-red-700' :
-                              insight.impact === 'medium' ? 'border-yellow-300 text-yellow-700' :
+                              insight.impact === 'medium' ? 'border-orange-300 text-orange-700' :
                               'border-blue-300 text-blue-700'
                             }`}>
                               {insight.impact} impact
@@ -862,7 +862,7 @@ export default function TimeAndFeesModuleAdvanced() {
                         Start
                       </Button>
                     ) : (
-                      <Button onClick={pauseTimer} className="bg-yellow-600 hover:bg-yellow-700">
+                      <Button onClick={pauseTimer} className="bg-brisk-primary hover:bg-brisk-primary-600">
                         <Pause className="h-4 w-4 mr-2" />
                         Pause
                       </Button>
@@ -1263,15 +1263,15 @@ export default function TimeAndFeesModuleAdvanced() {
                   <div>
                     <h3 className="font-medium mb-4">Capacity Forecasting</h3>
                     <div className="space-y-4">
-                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
                         <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                          <h4 className="font-medium text-yellow-800">Capacity Alert</h4>
+                          <AlertTriangle className="h-4 w-4 text-orange-600" />
+                          <h4 className="font-medium text-orange-800">Capacity Alert</h4>
                         </div>
-                        <p className="text-sm text-yellow-700 mb-3">
+                        <p className="text-sm text-orange-700 mb-3">
                           Team utilization will exceed 95% in week 3. Consider resource reallocation.
                         </p>
-                        <Button size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-white">
+                        <Button size="sm" className="bg-brisk-primary hover:bg-brisk-primary-600 text-white">
                           View Recommendations
                         </Button>
                       </div>
@@ -1367,7 +1367,7 @@ export default function TimeAndFeesModuleAdvanced() {
                       <div className="p-3 border rounded-lg">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-medium">DEF Consulting</h4>
-                          <Badge className="bg-yellow-100 text-yellow-800">72% margin</Badge>
+                          <Badge className="bg-orange-100 text-orange-800">72% margin</Badge>
                         </div>
                         <div className="text-sm text-gray-600">
                           <div className="flex justify-between">
@@ -1395,7 +1395,7 @@ export default function TimeAndFeesModuleAdvanced() {
                             <h4 className="font-medium">{code.name}</h4>
                             <Badge className={`${
                               code.profitMargin && code.profitMargin > 70 ? 'bg-green-100 text-green-800' :
-                              code.profitMargin && code.profitMargin > 60 ? 'bg-yellow-100 text-yellow-800' :
+                              code.profitMargin && code.profitMargin > 60 ? 'bg-orange-100 text-orange-800' :
                               'bg-red-100 text-red-800'
                             }`}>
                               {code.profitMargin}% margin
