@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { 
   CreditCard, 
   Receipt, 
@@ -17,6 +17,7 @@ import {
   PoundSterling,
   BarChart3,
   Building,
+  Building2,
   Users,
   CheckCircle,
   Plus,
@@ -38,7 +39,13 @@ import {
   BookOpen,
   Database,
   FileSearch,
-  Landmark
+  Landmark,
+  AlertTriangle,
+  DollarSign,
+  Globe,
+  Zap,
+  Archive,
+  FileSpreadsheet
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -1617,10 +1624,147 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Project Management</h2>
             <p className="text-gray-600">Advanced project tracking and profitability analysis</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Project Reports
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+          </div>
         </div>
+
+        {/* Project Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground">+3 from last month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£145,230</div>
+              <p className="text-xs text-muted-foreground">+12% from last month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Utilization Rate</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">87%</div>
+              <p className="text-xs text-muted-foreground">+5% from last month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Overdue Tasks</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">7</div>
+              <p className="text-xs text-muted-foreground">-2 from yesterday</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Project List */}
         <Card>
-          <CardContent className="p-6">
-            <p className="text-gray-500">Project management content will be displayed here</p>
+          <CardHeader>
+            <CardTitle>Current Projects</CardTitle>
+            <CardDescription>Track progress and profitability across all active projects</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'ABC Ltd - Year End Accounts', client: 'ABC Ltd', progress: 75, budget: 15000, actual: 11250, status: 'On Track' },
+                { name: 'XYZ Corp - Tax Planning', client: 'XYZ Corp', progress: 45, budget: 8000, actual: 3600, status: 'On Track' },
+                { name: 'Smith & Co - Payroll Setup', client: 'Smith & Co', progress: 90, budget: 5000, actual: 4800, status: 'Nearly Complete' },
+                { name: 'Johnson Ltd - VAT Returns', client: 'Johnson Ltd', progress: 30, budget: 3000, actual: 1200, status: 'Behind Schedule' }
+              ].map((project, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{project.name}</h4>
+                    <p className="text-sm text-gray-600">{project.client}</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progress</span>
+                        <span>{project.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-brisk-primary h-2 rounded-full" 
+                          style={{ width: `${project.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right ml-4">
+                    <div className="text-sm">
+                      <span className="font-medium">£{project.actual.toLocaleString()}</span>
+                      <span className="text-gray-500"> / £{project.budget.toLocaleString()}</span>
+                    </div>
+                    <Badge variant={project.status === 'On Track' ? 'default' : project.status === 'Nearly Complete' ? 'secondary' : 'destructive'}>
+                      {project.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Gantt Chart View */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Project Timeline</CardTitle>
+            <CardDescription>Gantt chart view of project schedules and dependencies</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-12 gap-2 text-xs text-gray-500 border-b pb-2">
+                <div className="col-span-3">Project</div>
+                <div className="col-span-9 grid grid-cols-12 gap-1">
+                  {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(month => (
+                    <div key={month} className="text-center">{month}</div>
+                  ))}
+                </div>
+              </div>
+              {[
+                { name: 'ABC Ltd - Year End', start: 2, duration: 4 },
+                { name: 'XYZ Corp - Tax Planning', start: 1, duration: 6 },
+                { name: 'Smith & Co - Payroll', start: 3, duration: 2 },
+                { name: 'Johnson Ltd - VAT', start: 4, duration: 3 }
+              ].map((project, index) => (
+                <div key={index} className="grid grid-cols-12 gap-2 items-center">
+                  <div className="col-span-3 text-sm font-medium">{project.name}</div>
+                  <div className="col-span-9 grid grid-cols-12 gap-1">
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <div 
+                        key={i} 
+                        className={`h-6 rounded ${
+                          i >= project.start && i < project.start + project.duration 
+                            ? 'bg-brisk-primary' 
+                            : 'bg-gray-100'
+                        }`}
+                      ></div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1635,10 +1779,202 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Budgets & Forecasting</h2>
             <p className="text-gray-600">Budget planning and financial forecasting</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Budget
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Budget
+            </Button>
+          </div>
         </div>
+
+        {/* Budget Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£250,000</div>
+              <p className="text-xs text-muted-foreground">Annual budget 2024</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Actual Spend</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£187,500</div>
+              <p className="text-xs text-muted-foreground">75% of budget used</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Variance</CardTitle>
+              <BarChart3 className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">-£12,500</div>
+              <p className="text-xs text-muted-foreground">5% under budget</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Forecast</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£235,000</div>
+              <p className="text-xs text-muted-foreground">Year-end projection</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Budget vs Actual Analysis */}
         <Card>
-          <CardContent className="p-6">
-            <p className="text-gray-500">Budget and forecasting content will be displayed here</p>
+          <CardHeader>
+            <CardTitle>Budget vs Actual Analysis</CardTitle>
+            <CardDescription>Compare budgeted amounts with actual spending across categories</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { category: 'Revenue', budget: 300000, actual: 285000, variance: -15000, percentage: 95 },
+                { category: 'Cost of Sales', budget: 120000, actual: 114000, variance: -6000, percentage: 95 },
+                { category: 'Operating Expenses', budget: 80000, actual: 73500, variance: -6500, percentage: 92 },
+                { category: 'Marketing', budget: 25000, actual: 28000, variance: 3000, percentage: 112 },
+                { category: 'Staff Costs', budget: 150000, actual: 155000, variance: 5000, percentage: 103 }
+              ].map((item, index) => (
+                <div key={index} className="grid grid-cols-6 gap-4 items-center p-4 border rounded-lg">
+                  <div className="font-medium">{item.category}</div>
+                  <div className="text-right">£{item.budget.toLocaleString()}</div>
+                  <div className="text-right">£{item.actual.toLocaleString()}</div>
+                  <div className={`text-right font-medium ${item.variance < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    £{Math.abs(item.variance).toLocaleString()}
+                  </div>
+                  <div className="text-right">{item.percentage}%</div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full ${item.percentage <= 100 ? 'bg-green-500' : 'bg-red-500'}`}
+                      style={{ width: `${Math.min(item.percentage, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cash Flow Forecast */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Cash Flow Forecast</CardTitle>
+            <CardDescription>12-month rolling cash flow projection</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-13 gap-2 text-xs text-gray-500 border-b pb-2">
+                <div>Category</div>
+                {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(month => (
+                  <div key={month} className="text-center">{month}</div>
+                ))}
+              </div>
+              {[
+                { category: 'Opening Balance', values: [50000, 55000, 52000, 58000, 62000, 65000, 68000, 70000, 72000, 75000, 78000, 80000] },
+                { category: 'Cash Inflows', values: [25000, 22000, 28000, 26000, 30000, 28000, 32000, 30000, 28000, 26000, 24000, 22000] },
+                { category: 'Cash Outflows', values: [-20000, -25000, -22000, -22000, -27000, -25000, -30000, -28000, -25000, -23000, -22000, -20000] },
+                { category: 'Closing Balance', values: [55000, 52000, 58000, 62000, 65000, 68000, 70000, 72000, 75000, 78000, 80000, 82000] }
+              ].map((row, index) => (
+                <div key={index} className={`grid grid-cols-13 gap-2 items-center text-sm ${index === 3 ? 'font-bold border-t pt-2' : ''}`}>
+                  <div className="font-medium">{row.category}</div>
+                  {row.values.map((value, i) => (
+                    <div key={i} className={`text-right ${value < 0 ? 'text-red-600' : value > 50000 ? 'text-green-600' : ''}`}>
+                      £{Math.abs(value).toLocaleString()}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Scenario Planning */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Scenario Planning</CardTitle>
+            <CardDescription>What-if analysis for different business scenarios</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg text-green-600">Best Case</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Revenue Growth:</span>
+                      <span className="font-medium">+15%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cost Reduction:</span>
+                      <span className="font-medium">-5%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Net Profit:</span>
+                      <span className="font-medium text-green-600">£95,000</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg text-blue-600">Most Likely</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Revenue Growth:</span>
+                      <span className="font-medium">+8%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cost Increase:</span>
+                      <span className="font-medium">+3%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Net Profit:</span>
+                      <span className="font-medium text-blue-600">£75,000</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg text-red-600">Worst Case</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Revenue Decline:</span>
+                      <span className="font-medium">-10%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cost Increase:</span>
+                      <span className="font-medium">+8%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Net Profit:</span>
+                      <span className="font-medium text-red-600">£45,000</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1653,10 +1989,195 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Property Management</h2>
             <p className="text-gray-600">Rental property management and tracking</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Property Reports
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+          </div>
         </div>
+
+        {/* Property Portfolio Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Properties</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-xs text-muted-foreground">+2 this quarter</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Monthly Rental Income</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£18,500</div>
+              <p className="text-xs text-muted-foreground">+8% from last month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Occupancy Rate</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">92%</div>
+              <p className="text-xs text-muted-foreground">11 of 12 occupied</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Maintenance Costs</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-orange-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£2,340</div>
+              <p className="text-xs text-muted-foreground">This month</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Property List */}
         <Card>
-          <CardContent className="p-6">
-            <p className="text-gray-500">Property management content will be displayed here</p>
+          <CardHeader>
+            <CardTitle>Property Portfolio</CardTitle>
+            <CardDescription>Overview of all rental properties and their performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { address: '123 Oak Street, London', tenant: 'John Smith', rent: 1800, status: 'Occupied', lease_end: '2024-12-31', yield: 5.2 },
+                { address: '456 Pine Avenue, Manchester', tenant: 'Sarah Johnson', rent: 1200, status: 'Occupied', lease_end: '2024-08-15', yield: 6.1 },
+                { address: '789 Elm Road, Birmingham', tenant: 'Vacant', rent: 1500, status: 'Vacant', lease_end: null, yield: 0 },
+                { address: '321 Maple Close, Leeds', tenant: 'Mike Wilson', rent: 1100, status: 'Occupied', lease_end: '2025-03-20', yield: 5.8 }
+              ].map((property, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{property.address}</h4>
+                    <p className="text-sm text-gray-600">
+                      {property.status === 'Occupied' ? `Tenant: ${property.tenant}` : 'Available for rent'}
+                    </p>
+                    {property.lease_end && (
+                      <p className="text-xs text-gray-500">Lease ends: {property.lease_end}</p>
+                    )}
+                  </div>
+                  <div className="text-right ml-4">
+                    <div className="text-lg font-semibold">£{property.rent}/month</div>
+                    <div className="text-sm text-gray-600">Yield: {property.yield}%</div>
+                    <Badge variant={property.status === 'Occupied' ? 'default' : 'secondary'}>
+                      {property.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tenant Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tenant Management</CardTitle>
+            <CardDescription>Track tenant information, lease agreements, and payment history</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold mb-3">Recent Payments</h4>
+                <div className="space-y-2">
+                  {[
+                    { tenant: 'John Smith', amount: 1800, date: '2024-01-01', status: 'Paid' },
+                    { tenant: 'Sarah Johnson', amount: 1200, date: '2024-01-01', status: 'Paid' },
+                    { tenant: 'Mike Wilson', amount: 1100, date: '2024-01-01', status: 'Pending' }
+                  ].map((payment, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-medium">{payment.tenant}</div>
+                        <div className="text-sm text-gray-600">{payment.date}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold">£{payment.amount}</div>
+                        <Badge variant={payment.status === 'Paid' ? 'default' : 'secondary'}>
+                          {payment.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Upcoming Lease Renewals</h4>
+                <div className="space-y-2">
+                  {[
+                    { tenant: 'Sarah Johnson', property: '456 Pine Avenue', date: '2024-08-15', action: 'Review Required' },
+                    { tenant: 'Mike Wilson', property: '321 Maple Close', date: '2025-03-20', action: 'Renewal Notice' }
+                  ].map((renewal, index) => (
+                    <div key={index} className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                      <div className="font-medium">{renewal.tenant}</div>
+                      <div className="text-sm text-gray-600">{renewal.property}</div>
+                      <div className="text-sm">Expires: {renewal.date}</div>
+                      <Badge variant="outline" className="mt-1">
+                        {renewal.action}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Property Performance Analytics */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Property Performance</CardTitle>
+            <CardDescription>Financial performance and ROI analysis by property</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-7 gap-4 text-sm font-medium text-gray-500 border-b pb-2">
+                <div>Property</div>
+                <div className="text-right">Monthly Rent</div>
+                <div className="text-right">Annual Income</div>
+                <div className="text-right">Expenses</div>
+                <div className="text-right">Net Income</div>
+                <div className="text-right">ROI</div>
+                <div className="text-right">Yield</div>
+              </div>
+              {[
+                { property: '123 Oak Street', rent: 1800, expenses: 3200, value: 350000 },
+                { property: '456 Pine Avenue', rent: 1200, expenses: 2100, value: 200000 },
+                { property: '789 Elm Road', rent: 1500, expenses: 2800, value: 280000 },
+                { property: '321 Maple Close', rent: 1100, expenses: 1900, value: 180000 }
+              ].map((property, index) => {
+                const annualIncome = property.rent * 12;
+                const netIncome = annualIncome - property.expenses;
+                const roi = ((netIncome / property.value) * 100).toFixed(1);
+                const yield_rate = ((annualIncome / property.value) * 100).toFixed(1);
+                
+                return (
+                  <div key={index} className="grid grid-cols-7 gap-4 text-sm items-center py-2">
+                    <div className="font-medium">{property.property}</div>
+                    <div className="text-right">£{property.rent}</div>
+                    <div className="text-right">£{annualIncome.toLocaleString()}</div>
+                    <div className="text-right">£{property.expenses.toLocaleString()}</div>
+                    <div className="text-right font-medium">£{netIncome.toLocaleString()}</div>
+                    <div className={`text-right font-medium ${parseFloat(roi) > 5 ? 'text-green-600' : 'text-orange-600'}`}>
+                      {roi}%
+                    </div>
+                    <div className="text-right">{yield_rate}%</div>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1671,10 +2192,198 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">eCommerce Integration</h2>
             <p className="text-gray-600">Multi-platform eCommerce management</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Sync All Platforms
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Connect Platform
+            </Button>
+          </div>
         </div>
+
+        {/* Platform Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Connected Platforms</CardTitle>
+              <Globe className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5</div>
+              <p className="text-xs text-muted-foreground">Amazon, eBay, Shopify, Etsy, WooCommerce</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£45,230</div>
+              <p className="text-xs text-muted-foreground">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Platform Fees</CardTitle>
+              <TrendingDown className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£3,420</div>
+              <p className="text-xs text-muted-foreground">7.6% of sales</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Net Settlement</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">£41,810</div>
+              <p className="text-xs text-muted-foreground">After fees and returns</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Platform Connections */}
         <Card>
-          <CardContent className="p-6">
-            <p className="text-gray-500">eCommerce integration content will be displayed here</p>
+          <CardHeader>
+            <CardTitle>Platform Connections</CardTitle>
+            <CardDescription>Manage your eCommerce platform integrations and sync status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { platform: 'Amazon', status: 'Connected', lastSync: '2 hours ago', sales: 18500, fees: 1850, orders: 145 },
+                { platform: 'eBay', status: 'Connected', lastSync: '1 hour ago', sales: 12300, fees: 1230, orders: 89 },
+                { platform: 'Shopify', status: 'Connected', lastSync: '30 minutes ago', sales: 8900, fees: 267, orders: 67 },
+                { platform: 'Etsy', status: 'Connected', lastSync: '45 minutes ago', sales: 3200, fees: 160, orders: 34 },
+                { platform: 'WooCommerce', status: 'Error', lastSync: '2 days ago', sales: 2330, fees: 70, orders: 23 }
+              ].map((platform, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Globe className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{platform.platform}</h4>
+                      <p className="text-sm text-gray-600">Last sync: {platform.lastSync}</p>
+                      <Badge variant={platform.status === 'Connected' ? 'default' : 'destructive'}>
+                        {platform.status}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-semibold">£{platform.sales.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">{platform.orders} orders</div>
+                    <div className="text-sm text-red-600">-£{platform.fees} fees</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sales Analytics */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales Analytics</CardTitle>
+            <CardDescription>Performance breakdown by platform and product category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold mb-3">Sales by Platform</h4>
+                <div className="space-y-3">
+                  {[
+                    { platform: 'Amazon', percentage: 41, amount: 18500, color: 'bg-orange-500' },
+                    { platform: 'eBay', percentage: 27, amount: 12300, color: 'bg-blue-500' },
+                    { platform: 'Shopify', percentage: 20, amount: 8900, color: 'bg-green-500' },
+                    { platform: 'Etsy', percentage: 7, amount: 3200, color: 'bg-purple-500' },
+                    { platform: 'WooCommerce', percentage: 5, amount: 2330, color: 'bg-gray-500' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-4 h-4 rounded ${item.color}`}></div>
+                        <span className="font-medium">{item.platform}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold">£{item.amount.toLocaleString()}</div>
+                        <div className="text-sm text-gray-600">{item.percentage}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3">Top Products</h4>
+                <div className="space-y-3">
+                  {[
+                    { product: 'Wireless Headphones', sales: 8500, units: 85, platform: 'Amazon' },
+                    { product: 'Phone Case Set', sales: 6200, units: 124, platform: 'eBay' },
+                    { product: 'Laptop Stand', sales: 4800, units: 48, platform: 'Shopify' },
+                    { product: 'Desk Organizer', sales: 3100, units: 62, platform: 'Etsy' },
+                    { product: 'USB Cable Pack', sales: 2400, units: 96, platform: 'Amazon' }
+                  ].map((product, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-medium">{product.product}</div>
+                        <div className="text-sm text-gray-600">{product.platform} • {product.units} units</div>
+                      </div>
+                      <div className="font-semibold">£{product.sales.toLocaleString()}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Fee Analysis */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Fee Analysis</CardTitle>
+            <CardDescription>Breakdown of platform fees and profit margins</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-6 gap-4 text-sm font-medium text-gray-500 border-b pb-2">
+                <div>Platform</div>
+                <div className="text-right">Gross Sales</div>
+                <div className="text-right">Platform Fees</div>
+                <div className="text-right">Payment Fees</div>
+                <div className="text-right">Total Fees</div>
+                <div className="text-right">Net Revenue</div>
+              </div>
+              {[
+                { platform: 'Amazon', gross: 18500, platformFee: 1480, paymentFee: 370, total: 1850 },
+                { platform: 'eBay', gross: 12300, platformFee: 984, paymentFee: 246, total: 1230 },
+                { platform: 'Shopify', gross: 8900, platformFee: 178, paymentFee: 89, total: 267 },
+                { platform: 'Etsy', gross: 3200, platformFee: 128, paymentFee: 32, total: 160 },
+                { platform: 'WooCommerce', gross: 2330, platformFee: 47, paymentFee: 23, total: 70 }
+              ].map((row, index) => {
+                const netRevenue = row.gross - row.total;
+                const feePercentage = ((row.total / row.gross) * 100).toFixed(1);
+                
+                return (
+                  <div key={index} className="grid grid-cols-6 gap-4 text-sm items-center py-2">
+                    <div className="font-medium">{row.platform}</div>
+                    <div className="text-right">£{row.gross.toLocaleString()}</div>
+                    <div className="text-right">£{row.platformFee.toLocaleString()}</div>
+                    <div className="text-right">£{row.paymentFee.toLocaleString()}</div>
+                    <div className="text-right font-medium text-red-600">
+                      £{row.total.toLocaleString()} ({feePercentage}%)
+                    </div>
+                    <div className="text-right font-medium text-green-600">
+                      £{netRevenue.toLocaleString()}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1689,10 +2398,220 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Document Management</h2>
             <p className="text-gray-600">OCR processing and document automation</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Search className="h-4 w-4 mr-2" />
+              Search Documents
+            </Button>
+            <Button>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload Documents
+            </Button>
+          </div>
         </div>
+
+        {/* Document Processing Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Documents</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">1,247</div>
+              <p className="text-xs text-muted-foreground">+89 this month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Processed Today</CardTitle>
+              <Zap className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">23</div>
+              <p className="text-xs text-muted-foreground">OCR completed</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+              <Eye className="h-4 w-4 text-orange-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">7</div>
+              <p className="text-xs text-muted-foreground">Requires approval</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Auto-Posted</CardTitle>
+              <CheckCircle className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">16</div>
+              <p className="text-xs text-muted-foreground">Automatically processed</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Document Upload Area */}
         <Card>
-          <CardContent className="p-6">
-            <p className="text-gray-500">Document management content will be displayed here</p>
+          <CardHeader>
+            <CardTitle>Upload Documents</CardTitle>
+            <CardDescription>Drag and drop files or click to browse. Supports PDF, JPG, PNG formats</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brisk-primary transition-colors">
+              <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Drop files here to upload</h3>
+              <p className="text-gray-600 mb-4">or click to browse from your computer</p>
+              <Button>
+                <Upload className="h-4 w-4 mr-2" />
+                Choose Files
+              </Button>
+            </div>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <FileText className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                <h4 className="font-semibold">Invoices</h4>
+                <p className="text-sm text-gray-600">Auto-extract vendor, amount, date</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <Receipt className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                <h4 className="font-semibold">Receipts</h4>
+                <p className="text-sm text-gray-600">Categorize expenses automatically</p>
+              </div>
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <FileSpreadsheet className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                <h4 className="font-semibold">Bank Statements</h4>
+                <p className="text-sm text-gray-600">Import transactions directly</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Documents */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Documents</CardTitle>
+            <CardDescription>Latest uploaded and processed documents</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Invoice_ABC_Ltd_001.pdf', type: 'Invoice', amount: 1250.00, date: '2024-01-15', status: 'Processed', confidence: 98 },
+                { name: 'Receipt_Office_Supplies.jpg', type: 'Receipt', amount: 45.99, date: '2024-01-14', status: 'Review Required', confidence: 85 },
+                { name: 'Bank_Statement_Jan_2024.pdf', type: 'Bank Statement', amount: null, date: '2024-01-13', status: 'Processed', confidence: 100 },
+                { name: 'Invoice_XYZ_Corp_045.pdf', type: 'Invoice', amount: 2800.00, date: '2024-01-12', status: 'Processed', confidence: 95 },
+                { name: 'Expense_Receipt_Fuel.jpg', type: 'Receipt', amount: 78.50, date: '2024-01-11', status: 'Auto-Posted', confidence: 92 }
+              ].map((doc, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <FileText className="h-5 w-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{doc.name}</h4>
+                      <p className="text-sm text-gray-600">{doc.type} • {doc.date}</p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Badge variant={
+                          doc.status === 'Processed' || doc.status === 'Auto-Posted' ? 'default' : 
+                          doc.status === 'Review Required' ? 'secondary' : 'outline'
+                        }>
+                          {doc.status}
+                        </Badge>
+                        <span className="text-xs text-gray-500">
+                          {doc.confidence}% confidence
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    {doc.amount && (
+                      <div className="text-lg font-semibold">£{doc.amount.toFixed(2)}</div>
+                    )}
+                    <div className="flex space-x-2 mt-2">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* OCR Processing Queue */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Processing Queue</CardTitle>
+            <CardDescription>Documents currently being processed by OCR engine</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Invoice_DEF_Ltd_078.pdf', progress: 85, stage: 'Extracting data fields' },
+                { name: 'Receipt_Restaurant_Bill.jpg', progress: 60, stage: 'Text recognition' },
+                { name: 'Statement_Credit_Card.pdf', progress: 30, stage: 'Document analysis' }
+              ].map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{item.name}</h4>
+                    <p className="text-sm text-gray-600">{item.stage}</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progress</span>
+                        <span>{item.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-brisk-primary h-2 rounded-full transition-all duration-300" 
+                          style={{ width: `${item.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <RefreshCw className="h-5 w-5 text-brisk-primary animate-spin" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Document Categories */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Document Categories</CardTitle>
+            <CardDescription>Organize and filter documents by category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[
+                { category: 'Invoices', count: 342, icon: FileText, color: 'bg-blue-100 text-blue-600' },
+                { category: 'Receipts', count: 189, icon: Receipt, color: 'bg-green-100 text-green-600' },
+                { category: 'Bank Statements', count: 24, icon: FileSpreadsheet, color: 'bg-purple-100 text-purple-600' },
+                { category: 'Contracts', count: 67, icon: FileText, color: 'bg-orange-100 text-orange-600' },
+                { category: 'Tax Documents', count: 45, icon: Archive, color: 'bg-red-100 text-red-600' },
+                { category: 'Other', count: 89, icon: FileText, color: 'bg-gray-100 text-gray-600' }
+              ].map((cat, index) => {
+                const Icon = cat.icon;
+                return (
+                  <div key={index} className="text-center p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+                    <div className={`w-12 h-12 rounded-lg ${cat.color} flex items-center justify-center mx-auto mb-2`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h4 className="font-semibold text-sm">{cat.category}</h4>
+                    <p className="text-xs text-gray-600">{cat.count} documents</p>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       </div>
