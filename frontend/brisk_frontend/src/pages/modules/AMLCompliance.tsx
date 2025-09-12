@@ -27,7 +27,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
+import KPICard from '../../components/KPICard'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
@@ -263,20 +265,111 @@ export default function AMLCompliance() {
 
           <TabsContent value="dashboard" className="space-y-6">
             <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-              {kpis.map((kpi, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                        <p className="text-2xl font-bold">{kpi.value}</p>
-                        <p className="text-xs text-gray-500">{kpi.change}</p>
+              {kpis.map((kpi, index) => {
+                const Icon = kpi.icon
+                const drillDownData = {
+                  title: `${kpi.title} Analysis`,
+                  description: `Detailed AML compliance analysis and breakdown for ${kpi.title.toLowerCase()}`,
+                  content: (
+                    <div className="space-y-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Current Status</h4>
+                          <p className="text-2xl font-bold">{kpi.value}</p>
+                          <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
+                        </div>
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Compliance Score</h4>
+                          <p className="text-sm text-gray-600">AML regulatory compliance</p>
+                          <div className="mt-2">
+                            <div className="flex justify-between text-xs">
+                              <span>Overall Score</span>
+                              <span className="text-green-600">96%</span>
+                            </div>
+                            <Progress value={96} className="h-2" />
+                          </div>
+                        </div>
                       </div>
-                      <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+                      
+                      {kpi.title === 'Active Cases' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Case Risk Profile</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Low Risk</span>
+                              <span className="font-semibold">15 cases (65%)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Medium Risk</span>
+                              <span className="font-semibold">6 cases (26%)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>High Risk</span>
+                              <span className="font-semibold">2 cases (9%)</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'High Risk Clients' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Risk Assessment</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Enhanced DD Required</span>
+                              <Badge variant="destructive">2 clients</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Under Review</span>
+                              <Badge variant="secondary">1 client</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Monitoring Required</span>
+                              <Badge variant="outline">3 clients</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Completed KYC' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">KYC Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Standard KYC</span>
+                              <span className="font-semibold">142 completed</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Enhanced KYC</span>
+                              <span className="font-semibold">12 completed</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Simplified KYC</span>
+                              <span className="font-semibold">2 completed</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                        <Button variant="outline">Export Compliance Report</Button>
+                        <Button>Generate SAR</Button>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  )
+                }
+                return (
+                  <KPICard
+                    key={index}
+                    title={kpi.title}
+                    value={kpi.value}
+                    change={kpi.change}
+                    icon={Icon}
+                    color={kpi.color}
+                    drillDownData={drillDownData}
+                  />
+                )
+              })}
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">

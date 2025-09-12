@@ -63,13 +63,14 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import KPICard from '@/components/KPICard'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -481,25 +482,116 @@ export default function DocuSignage() {
 
           <TabsContent value="dashboard" className="space-y-6">
             <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-3'}`}>
-              {kpis.map((kpi, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                        <p className="text-2xl font-bold">{kpi.value}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          {kpi.trend === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
-                          {kpi.trend === 'down' && <TrendingUp className="h-3 w-3 text-red-500 rotate-180" />}
-                          {kpi.trend === 'neutral' && <Activity className="h-3 w-3 text-gray-500" />}
-                          <p className="text-xs text-gray-500">{kpi.change}</p>
+              {kpis.map((kpi, index) => {
+                const Icon = kpi.icon
+                const drillDownData = {
+                  title: `${kpi.title} Analysis`,
+                  description: `Detailed e-signature analysis and breakdown for ${kpi.title.toLowerCase()}`,
+                  content: (
+                    <div className="space-y-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Current Status</h4>
+                          <p className="text-2xl font-bold">{kpi.value}</p>
+                          <div className="flex items-center gap-1 mt-1">
+                            {kpi.trend === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
+                            {kpi.trend === 'down' && <TrendingUp className="h-3 w-3 text-red-500 rotate-180" />}
+                            {kpi.trend === 'neutral' && <Activity className="h-3 w-3 text-gray-500" />}
+                            <p className="text-xs text-gray-500">{kpi.change}</p>
+                          </div>
+                        </div>
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Completion Rate</h4>
+                          <p className="text-sm text-gray-600">Document signing efficiency</p>
+                          <div className="mt-2">
+                            <div className="flex justify-between text-xs">
+                              <span>Overall Rate</span>
+                              <span className="text-green-600">94%</span>
+                            </div>
+                            <Progress value={94} className="h-2" />
+                          </div>
                         </div>
                       </div>
-                      <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+                      
+                      {kpi.title === 'Active Envelopes' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Envelope Status</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Pending Signature</span>
+                              <span className="font-semibold">18 envelopes</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>In Progress</span>
+                              <span className="font-semibold">7 envelopes</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Completed Today</span>
+                              <span className="font-semibold">12 envelopes</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Pending Signatures' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Signature Analysis</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Urgent (Due Today)</span>
+                              <Badge variant="destructive">3 signatures</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Due This Week</span>
+                              <Badge variant="secondary">8 signatures</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Overdue</span>
+                              <Badge variant="outline">2 signatures</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Completed This Month' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Monthly Performance</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>This Week</span>
+                              <span className="font-semibold">47 completed</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Last Week</span>
+                              <span className="font-semibold">52 completed</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Monthly Target</span>
+                              <span className="font-semibold">200 documents</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                        <Button variant="outline">Export Signature Data</Button>
+                        <Button>Create Envelope</Button>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  )
+                }
+                return (
+                  <KPICard
+                    key={index}
+                    title={kpi.title}
+                    value={kpi.value}
+                    change={kpi.change}
+                    icon={Icon}
+                    color={kpi.color}
+                    drillDownData={drillDownData}
+                  />
+                )
+              })}
             </div>
 
             <div className="grid gap-6 lg:grid-cols-3">

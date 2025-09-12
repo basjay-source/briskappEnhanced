@@ -27,7 +27,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
+import KPICard from '../../components/KPICard'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
@@ -238,19 +240,107 @@ export default function PersonalTax() {
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon
-                return (
-                  <Card key={index}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                const drillDownData = {
+                  title: `${kpi.title} Analysis`,
+                  description: `Detailed personal tax analysis and breakdown for ${kpi.title.toLowerCase()}`,
+                  content: (
+                    <div className="space-y-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Current Period</h4>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
-                        <Icon className={`h-8 w-8 ${kpi.color}`} />
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Tax Efficiency</h4>
+                          <p className="text-sm text-gray-600">Personal tax optimization</p>
+                          <div className="mt-2">
+                            <div className="flex justify-between text-xs">
+                              <span>Efficiency Score</span>
+                              <span className="text-green-600">88%</span>
+                            </div>
+                            <Progress value={88} className="h-2" />
+                          </div>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      
+                      {kpi.title === 'Active SA Returns' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Return Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>In Progress</span>
+                              <span className="font-semibold">8 returns</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Ready for Review</span>
+                              <span className="font-semibold">3 returns</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Submitted</span>
+                              <span className="font-semibold">1 return</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Tax Saved (YTD)' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Savings Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Pension Contributions</span>
+                              <span className="font-semibold">£18,500</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>CGT Optimization</span>
+                              <span className="font-semibold">£15,200</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Allowance Utilization</span>
+                              <span className="font-semibold">£11,500</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'CGT Optimization' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">CGT Opportunities</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Timing Optimization</span>
+                              <Badge variant="default">£4,200</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Annual Exemption</span>
+                              <Badge variant="secondary">£2,800</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Loss Harvesting</span>
+                              <Badge variant="outline">£1,500</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                        <Button variant="outline">Export Tax Data</Button>
+                        <Button>Generate SA100</Button>
+                      </div>
+                    </div>
+                  )
+                }
+                return (
+                  <KPICard
+                    key={index}
+                    title={kpi.title}
+                    value={kpi.value}
+                    change={kpi.change}
+                    icon={Icon}
+                    color={kpi.color}
+                    drillDownData={drillDownData}
+                  />
                 )
               })}
             </ResponsiveGrid>

@@ -17,6 +17,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
@@ -165,42 +167,221 @@ export default function CorporationTax() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600">Taxable Profit</p>
-              <p className="text-2xl font-bold">£{taxData.taxableProfit.toLocaleString()}</p>
-              <p className="text-sm text-blue-600">+6.8% vs last year</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600">Corporation Tax</p>
-              <p className="text-2xl font-bold">£{taxData.corporationTax.toLocaleString()}</p>
-              <p className="text-sm text-red-600">19% rate applied</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600">R and D Relief</p>
-              <p className="text-2xl font-bold">£{taxData.rdRelief.toLocaleString()}</p>
-              <p className="text-sm text-green-600">£4,500 tax saving</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600">Optimized Tax</p>
-              <p className="text-2xl font-bold">£{taxData.optimizedTax.toLocaleString()}</p>
-              <p className="text-sm text-green-600">£2,750 saved</p>
-            </div>
-          </CardContent>
-        </Card>
+        <KPICard
+          title="Taxable Profit"
+          value={`£${taxData.taxableProfit.toLocaleString()}`}
+          change="+6.8% vs last year"
+          icon={Calculator}
+          color="text-blue-600"
+          drillDownData={{
+            title: "Taxable Profit Analysis",
+            description: "Detailed breakdown of taxable profit components and adjustments",
+            content: (
+              <div className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Current Period</h4>
+                    <p className="text-2xl font-bold">£{taxData.taxableProfit.toLocaleString()}</p>
+                    <p className="text-sm text-blue-600">+6.8% vs last year</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Tax Efficiency</h4>
+                    <p className="text-sm text-gray-600">Corporation tax optimization</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Efficiency Score</span>
+                        <span className="text-green-600">92%</span>
+                      </div>
+                      <Progress value={92} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Profit Breakdown</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Trading Profit</span>
+                      <span className="font-semibold">£{(taxData.profitBeforeTax).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Adjustments</span>
+                      <span className="font-semibold">£{taxData.adjustments.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Final Taxable Profit</span>
+                      <span className="font-semibold">£{taxData.taxableProfit.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline">Export Profit Analysis</Button>
+                  <Button>Generate CT600</Button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="Corporation Tax"
+          value={`£${taxData.corporationTax.toLocaleString()}`}
+          change="19% rate applied"
+          icon={DollarSign}
+          color="text-red-600"
+          drillDownData={{
+            title: "Corporation Tax Calculation",
+            description: "Detailed corporation tax computation and rate analysis",
+            content: (
+              <div className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Tax Liability</h4>
+                    <p className="text-2xl font-bold">£{taxData.corporationTax.toLocaleString()}</p>
+                    <p className="text-sm text-red-600">19% rate applied</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Effective Rate</h4>
+                    <p className="text-sm text-gray-600">Actual tax rate after reliefs</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Effective Rate</span>
+                        <span className="text-orange-600">17.2%</span>
+                      </div>
+                      <Progress value={17.2} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Tax Calculation</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Main Rate (19%)</span>
+                      <span className="font-semibold">£{taxData.corporationTax.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>R&D Relief Applied</span>
+                      <span className="font-semibold text-green-600">-£{taxData.rdRelief.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Final Tax Due</span>
+                      <span className="font-semibold">£{taxData.optimizedTax.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline">Export Tax Calculation</Button>
+                  <Button>Submit CT600</Button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="R&D Relief"
+          value={`£${taxData.rdRelief.toLocaleString()}`}
+          change="£4,500 tax saving"
+          icon={TrendingUp}
+          color="text-green-600"
+          drillDownData={{
+            title: "R&D Relief Analysis",
+            description: "Research and development tax relief claims and opportunities",
+            content: (
+              <div className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Total Relief</h4>
+                    <p className="text-2xl font-bold">£{taxData.rdRelief.toLocaleString()}</p>
+                    <p className="text-sm text-green-600">£4,500 tax saving</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Claim Success Rate</h4>
+                    <p className="text-sm text-gray-600">R&D claims approved</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Success Rate</span>
+                        <span className="text-green-600">95%</span>
+                      </div>
+                      <Progress value={95} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">R&D Claims</h4>
+                  <div className="space-y-2">
+                    {rdClaims.map((claim, index) => (
+                      <div key={index} className="flex justify-between items-center p-2 border rounded">
+                        <span>{claim.project}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">£{claim.relief.toLocaleString()}</span>
+                          <Badge variant={claim.status === 'approved' ? 'default' : claim.status === 'pending' ? 'secondary' : 'outline'}>
+                            {claim.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline">Export R&D Data</Button>
+                  <Button>Submit New Claim</Button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="Optimized Tax"
+          value={`£${taxData.optimizedTax.toLocaleString()}`}
+          change="£2,750 saved"
+          icon={Target}
+          color="text-green-600"
+          drillDownData={{
+            title: "Tax Optimization Analysis",
+            description: "Tax savings achieved through strategic planning and reliefs",
+            content: (
+              <div className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Optimized Tax</h4>
+                    <p className="text-2xl font-bold">£{taxData.optimizedTax.toLocaleString()}</p>
+                    <p className="text-sm text-green-600">£2,750 saved</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Optimization Score</h4>
+                    <p className="text-sm text-gray-600">Tax efficiency achieved</p>
+                    <div className="mt-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Efficiency</span>
+                        <span className="text-green-600">89%</span>
+                      </div>
+                      <Progress value={89} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Optimization Breakdown</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Base Corporation Tax</span>
+                      <span className="font-semibold">£{taxData.corporationTax.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>R&D Relief Savings</span>
+                      <span className="font-semibold text-green-600">-£{(taxData.corporationTax - taxData.optimizedTax).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between p-2 border rounded">
+                      <span>Final Optimized Tax</span>
+                      <span className="font-semibold">£{taxData.optimizedTax.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline">Export Optimization Report</Button>
+                  <Button>Plan Next Year</Button>
+                </div>
+              </div>
+            )
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

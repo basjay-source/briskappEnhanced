@@ -37,9 +37,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import KPICard from '../../components/KPICard'
 
 interface TimeEntry {
   id: string
@@ -595,22 +597,110 @@ export default function TimeAndFeesModuleAdvanced() {
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon
-                return (
-                  <Card key={index} className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                const drillDownData = {
+                  title: `${kpi.title} Analysis`,
+                  description: `Detailed time management analysis and breakdown for ${kpi.title.toLowerCase()}`,
+                  content: (
+                    <div className="space-y-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Current Period</h4>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color} flex items-center gap-1`}>
                             {kpi.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                             {kpi.change} from last week
                           </p>
                         </div>
-                        <Icon className={`h-8 w-8 ${kpi.color}`} />
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Efficiency Score</h4>
+                          <p className="text-sm text-gray-600">Time tracking efficiency</p>
+                          <div className="mt-2">
+                            <div className="flex justify-between text-xs">
+                              <span>Overall Score</span>
+                              <span className="text-green-600">92%</span>
+                            </div>
+                            <Progress value={92} className="h-2" />
+                          </div>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      
+                      {kpi.title === 'Total Hours' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Hours Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Billable Hours</span>
+                              <span className="font-semibold">156.5 hours</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Non-Billable Hours</span>
+                              <span className="font-semibold">23.5 hours</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Admin Time</span>
+                              <span className="font-semibold">8.0 hours</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Billable Hours' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Billing Analysis</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Standard Rate</span>
+                              <Badge variant="default">£125/hour</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Premium Rate</span>
+                              <Badge variant="secondary">£175/hour</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Discounted Rate</span>
+                              <Badge variant="outline">£95/hour</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Utilization Rate' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Utilization Trends</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>This Week</span>
+                              <span className="font-semibold">87%</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Last Week</span>
+                              <span className="font-semibold">82%</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Monthly Average</span>
+                              <span className="font-semibold">85%</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                        <Button variant="outline">Export Time Data</Button>
+                        <Button>Generate Timesheet</Button>
+                      </div>
+                    </div>
+                  )
+                }
+                return (
+                  <KPICard
+                    key={index}
+                    title={kpi.title}
+                    value={kpi.value}
+                    change={`${kpi.change} from last week`}
+                    icon={Icon}
+                    color={kpi.color}
+                    drillDownData={drillDownData}
+                  />
                 )
               })}
             </ResponsiveGrid>

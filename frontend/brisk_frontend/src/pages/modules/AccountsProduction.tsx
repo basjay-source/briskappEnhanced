@@ -24,7 +24,9 @@ import {
   Building2,
   Globe
 } from 'lucide-react'
+import { Progress } from '@/components/ui/progress'
 import AIPromptSection from '@/components/AIPromptSection'
+import KPICard from '@/components/KPICard'
 
 const AccountsProduction: React.FC = () => {
   const tabs = [
@@ -840,21 +842,114 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          {kpis.map((kpi, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.label}</p>
-                    <p className="text-2xl font-bold text-gray-900">{kpi.value}</p>
+          {kpis.map((kpi, index) => {
+            const drillDownData = {
+              title: `${kpi.label} Analysis`,
+              description: `Detailed financial analysis and breakdown for ${kpi.label.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Position</h4>
+                      <p className="text-2xl font-bold">{kpi.value}</p>
+                      <p className={`text-sm ${kpi.positive ? 'text-green-600' : 'text-red-600'}`}>{kpi.change}</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Year-on-Year</h4>
+                      <p className="text-sm text-gray-600">Comparative analysis</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>vs Last Year</span>
+                          <span className="text-green-600">+12.5%</span>
+                        </div>
+                        <Progress value={85} className="mt-1" />
+                      </div>
+                    </div>
                   </div>
-                  <div className={`text-sm font-medium ${kpi.positive ? 'text-green-600' : 'text-red-600'}`}>
-                    {kpi.change}
+                  
+                  {kpi.label === 'Total Assets' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Asset Breakdown</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Current Assets</span>
+                          <span className="font-semibold">£156,300 (75%)</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Fixed Assets</span>
+                          <span className="font-semibold">£52,200 (25%)</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.label === 'Total Liabilities' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Liability Breakdown</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Current Liabilities</span>
+                          <Badge variant="secondary">£34,500</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Long-term Debt</span>
+                          <Badge variant="outline">£50,000</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.label === 'Net Equity' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Equity Components</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Share Capital</span>
+                          <span className="font-semibold">£50,000 (40%)</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Retained Earnings</span>
+                          <span className="font-semibold">£74,000 (60%)</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.label === 'Working Capital' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Working Capital Analysis</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Current Assets - £90,500</span>
+                          <Badge variant="default">Healthy 2.6:1</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Current Liabilities - £34,500</span>
+                          <Badge variant="outline">Manageable</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Report</Button>
+                    <Button>View Balance Sheet</Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={kpi.label}
+                value={kpi.value}
+                change={kpi.change}
+                icon={Calculator}
+                color={kpi.positive ? 'text-green-600' : 'text-red-600'}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
         </div>
 
         <Card>

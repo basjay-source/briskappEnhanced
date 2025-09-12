@@ -3,7 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
+import KPICard from '@/components/KPICard'
 import { 
   Building2, 
   Users, 
@@ -387,57 +389,233 @@ const CharityAccounts: React.FC = () => {
 
         {/* KPI Cards */}
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Charities</p>
-                  <p className="text-2xl font-bold">{charities.length}</p>
-                  <p className="text-xs text-green-600">+2 this month</p>
+          <KPICard
+            title="Total Charities"
+            value={charities.length.toString()}
+            change="+2 this month"
+            icon={Building2}
+            color="text-blue-500"
+            drillDownData={{
+              title: "Total Charities Analysis",
+              description: "Detailed breakdown of charity portfolio and registration status",
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Portfolio</h4>
+                      <p className="text-2xl font-bold">{charities.length}</p>
+                      <p className="text-sm text-green-600">+2 this month</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Growth Rate</h4>
+                      <p className="text-sm text-gray-600">Portfolio expansion</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Annual Growth</span>
+                          <span className="text-green-600">12%</span>
+                        </div>
+                        <Progress value={12} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3">Charity Types</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Registered Charities</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'charity').length}</span>
+                      </div>
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Academy Trusts</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'academy').length}</span>
+                      </div>
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Other Trusts</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'trust').length}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Portfolio</Button>
+                    <Button>Add New Charity</Button>
+                  </div>
                 </div>
-                <Building2 className="h-8 w-8 text-blue-500" />
-              </div>
-            </CardContent>
-          </Card>
+              )
+            }}
+          />
           
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Income</p>
-                  <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}</p>
-                  <p className="text-xs text-green-600">+15% vs last year</p>
+          <KPICard
+            title="Total Income"
+            value={formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}
+            change="+15% vs last year"
+            icon={TrendingUp}
+            color="text-green-500"
+            drillDownData={{
+              title: "Total Income Analysis",
+              description: "Detailed breakdown of charity income sources and trends",
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Total Income</h4>
+                      <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}</p>
+                      <p className="text-sm text-green-600">+15% vs last year</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Income Growth</h4>
+                      <p className="text-sm text-gray-600">Year-over-year growth</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Growth Rate</span>
+                          <span className="text-green-600">15%</span>
+                        </div>
+                        <Progress value={15} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3">Income Sources</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Donations & Grants</span>
+                        <Badge variant="default">£2.1M (65%)</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Trading Activities</span>
+                        <Badge variant="secondary">£850K (26%)</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Investment Income</span>
+                        <Badge variant="outline">£290K (9%)</Badge>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Income Report</Button>
+                    <Button>Generate SOFA</Button>
+                  </div>
                 </div>
-                <TrendingUp className="h-8 w-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
+              )
+            }}
+          />
           
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Net Assets</p>
-                  <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
-                  <p className="text-xs text-blue-600">Stable</p>
+          <KPICard
+            title="Net Assets"
+            value={formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}
+            change="Stable"
+            icon={PoundSterling}
+            color="text-blue-500"
+            drillDownData={{
+              title: "Net Assets Analysis",
+              description: "Detailed breakdown of charity assets and fund allocation",
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Total Net Assets</h4>
+                      <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
+                      <p className="text-sm text-blue-600">Stable</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Asset Utilization</h4>
+                      <p className="text-sm text-gray-600">Efficiency ratio</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Utilization Rate</span>
+                          <span className="text-blue-600">78%</span>
+                        </div>
+                        <Progress value={78} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3">Fund Breakdown</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Unrestricted Funds</span>
+                        <span className="font-semibold">£4.2M</span>
+                      </div>
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Restricted Funds</span>
+                        <span className="font-semibold">£2.8M</span>
+                      </div>
+                      <div className="flex justify-between p-2 border rounded">
+                        <span>Endowment Funds</span>
+                        <span className="font-semibold">£1.5M</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Balance Sheet</Button>
+                    <Button>Fund Analysis</Button>
+                  </div>
                 </div>
-                <PoundSterling className="h-8 w-8 text-blue-500" />
-              </div>
-            </CardContent>
-          </Card>
+              )
+            }}
+          />
           
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Compliance Score</p>
-                  <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
-                  <p className="text-xs text-green-600">Excellent</p>
+          <KPICard
+            title="Compliance Score"
+            value={`${Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%`}
+            change="Excellent"
+            icon={Shield}
+            color="text-green-500"
+            drillDownData={{
+              title: "Compliance Score Analysis",
+              description: "Detailed breakdown of charity compliance and regulatory status",
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Overall Score</h4>
+                      <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
+                      <p className="text-sm text-green-600">Excellent</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Compliance Trend</h4>
+                      <p className="text-sm text-gray-600">6-month improvement</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Improvement</span>
+                          <span className="text-green-600">+8%</span>
+                        </div>
+                        <Progress value={95} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3">Compliance Areas</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Annual Returns</span>
+                        <Badge variant="default">100% Complete</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Trustee Updates</span>
+                        <Badge variant="secondary">95% Complete</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Financial Reporting</span>
+                        <Badge variant="outline">92% Complete</Badge>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Compliance Report</Button>
+                    <Button>Review Actions</Button>
+                  </div>
                 </div>
-                <Shield className="h-8 w-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
+              )
+            }}
+          />
         </div>
 
         {/* Charity Portfolio and AI Adviser */}

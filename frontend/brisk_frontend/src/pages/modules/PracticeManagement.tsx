@@ -26,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import KPICard from '@/components/KPICard'
 import EmailSystem from '@/components/EmailSystem'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
@@ -274,19 +275,127 @@ export default function PracticeManagement() {
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}>
             {kpis.map((kpi, index) => {
               const Icon = kpi.icon
-              return (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+              const drillDownData = {
+                title: `${kpi.title} Analysis`,
+                description: `Detailed breakdown and insights for ${kpi.title.toLowerCase()}`,
+                content: (
+                  <div className="space-y-6">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="p-4 border rounded-lg">
+                        <h4 className="font-semibold mb-2">Current Period</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change} from last month</p>
                       </div>
-                      <Icon className={`h-8 w-8 ${kpi.color}`} />
+                      <div className="p-4 border rounded-lg">
+                        <h4 className="font-semibold mb-2">Trend Analysis</h4>
+                        <p className="text-sm text-gray-600">Historical performance and projections</p>
+                        <div className="mt-2">
+                          <div className="flex justify-between text-xs">
+                            <span>Last 3 months</span>
+                            <span className="text-green-600">+15%</span>
+                          </div>
+                          <Progress value={75} className="mt-1" />
+                        </div>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    {kpi.title === 'Active Jobs' && (
+                      <div>
+                        <h4 className="font-semibold mb-3">Job Breakdown by Status</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between p-2 border rounded">
+                            <span>In Progress</span>
+                            <span className="font-semibold">18 (75%)</span>
+                          </div>
+                          <div className="flex justify-between p-2 border rounded">
+                            <span>Review</span>
+                            <span className="font-semibold">4 (17%)</span>
+                          </div>
+                          <div className="flex justify-between p-2 border rounded">
+                            <span>Pending</span>
+                            <span className="font-semibold">2 (8%)</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {kpi.title === 'Overdue Tasks' && (
+                      <div>
+                        <h4 className="font-semibold mb-3">Overdue Tasks by Priority</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>VAT Return Q4 - ABC Corp</span>
+                            <Badge variant="destructive">5 days</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Annual Accounts - XYZ Ltd</span>
+                            <Badge variant="secondary">2 days</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Payroll Review - DEF Services</span>
+                            <Badge variant="outline">1 day</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {kpi.title === 'Team Utilization' && (
+                      <div>
+                        <h4 className="font-semibold mb-3">Team Member Utilization</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Sarah Johnson - 8 jobs</span>
+                            <Badge variant="destructive">95% Overloaded</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Mike Chen - 6 jobs</span>
+                            <Badge variant="default">85% Optimal</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Emma Wilson - 4 jobs</span>
+                            <Badge variant="secondary">65% Available</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {kpi.title === 'Avg. Completion' && (
+                      <div>
+                        <h4 className="font-semibold mb-3">Completion Time by Job Type</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>VAT Returns - 2.5 days</span>
+                            <Badge variant="default">On Target</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Annual Accounts - 8.2 days</span>
+                            <Badge variant="destructive">Behind</Badge>
+                          </div>
+                          <div className="flex justify-between items-center p-2 border rounded">
+                            <span>Payroll - 1.8 days</span>
+                            <Badge variant="default">Ahead</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="flex gap-2 pt-4">
+                      <Button variant="outline">Export Data</Button>
+                      <Button>View Full Report</Button>
+                    </div>
+                  </div>
+                )
+              }
+              return (
+                <KPICard
+                  key={index}
+                  title={kpi.title}
+                  value={kpi.value}
+                  change={`${kpi.change} from last month`}
+                  icon={Icon}
+                  color={kpi.color}
+                  drillDownData={drillDownData}
+                />
               )
             })}
             </ResponsiveGrid>

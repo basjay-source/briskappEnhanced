@@ -28,6 +28,8 @@ import {
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import { Progress } from '../../components/ui/progress'
+import KPICard from '../../components/KPICard'
 import { Badge } from '../../components/ui/badge'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
@@ -2129,20 +2131,111 @@ export default function CompanySecretarial() {
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {kpis.map((kpi, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                    <p className="text-2xl font-bold">{kpi.value}</p>
-                    <p className="text-xs text-gray-500">{kpi.change}</p>
+          {kpis.map((kpi, index) => {
+            const Icon = kpi.icon
+            const drillDownData = {
+              title: `${kpi.title} Analysis`,
+              description: `Detailed company secretarial analysis and breakdown for ${kpi.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Status</h4>
+                      <p className="text-2xl font-bold">{kpi.value}</p>
+                      <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Compliance Score</h4>
+                      <p className="text-sm text-gray-600">Companies House compliance</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Overall Score</span>
+                          <span className="text-green-600">94%</span>
+                        </div>
+                        <Progress value={94} className="h-2" />
+                      </div>
+                    </div>
                   </div>
-                  <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+                  
+                  {kpi.title === 'Active Companies' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Company Breakdown</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Private Limited</span>
+                          <span className="font-semibold">20 companies</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Public Limited</span>
+                          <span className="font-semibold">3 companies</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>LLP</span>
+                          <span className="font-semibold">1 company</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.title === 'Pending Filings' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Filing Status</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Confirmation Statements - 5 filings</span>
+                          <Badge variant="default">Due Soon</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Annual Returns - 2 filings</span>
+                          <Badge variant="secondary">In Progress</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Overdue - 1 filing</span>
+                          <Badge variant="destructive">Urgent</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.title === 'PSC Updates' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">PSC Register Status</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Up to Date</span>
+                          <span className="font-semibold">20 companies</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Pending Updates</span>
+                          <span className="font-semibold">3 companies</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Verification Required</span>
+                          <span className="font-semibold">1 company</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Company Data</Button>
+                    <Button>File Returns</Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={kpi.title}
+                value={kpi.value}
+                change={kpi.change}
+                icon={Icon}
+                color={kpi.color}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

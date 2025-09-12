@@ -25,9 +25,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import FormWizard from '../../components/FormWizard'
@@ -280,19 +282,131 @@ export default function Payroll() {
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon
-                return (
-                  <Card key={index}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                const drillDownData = {
+                  title: `${kpi.title} Analysis`,
+                  description: `Detailed payroll analysis and breakdown for ${kpi.title.toLowerCase()}`,
+                  content: (
+                    <div className="space-y-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Current Period</h4>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
-                        <Icon className={`h-8 w-8 ${kpi.color}`} />
+                        <div className="p-4 border rounded-lg">
+                          <h4 className="font-semibold mb-2">Compliance Status</h4>
+                          <p className="text-sm text-gray-600">HMRC & pension compliance</p>
+                          <div className="mt-2">
+                            <div className="flex justify-between text-xs">
+                              <span>Compliance Score</span>
+                              <span className="text-green-600">98%</span>
+                            </div>
+                            <Progress value={98} className="h-2" />
+                          </div>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      
+                      {kpi.title === 'Active Employees' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Employee Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Administration</span>
+                              <span className="font-semibold">18 (15 FT, 3 PT)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Operations</span>
+                              <span className="font-semibold">22 (20 FT, 2 PT)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Management</span>
+                              <span className="font-semibold">5 (5 FT, 0 PT)</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Monthly Payroll' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Payroll Breakdown</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Gross Salaries</span>
+                              <span className="font-semibold">£98,200 (78%)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Employer NI</span>
+                              <span className="font-semibold">£15,800 (13%)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Pension Contributions</span>
+                              <span className="font-semibold">£8,400 (7%)</span>
+                            </div>
+                            <div className="flex justify-between p-2 border rounded">
+                              <span>Other Benefits</span>
+                              <span className="font-semibold">£3,000 (2%)</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'Pension Enrolled' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">Pension Enrollment Status</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Auto-enrolled - 38 (84%)</span>
+                              <Badge variant="default">None</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Opted out - 4 (9%)</span>
+                              <Badge variant="secondary">Monitor</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>Pending enrollment - 3 (7%)</span>
+                              <Badge variant="destructive">Action needed</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {kpi.title === 'RTI Submissions' && (
+                        <div>
+                          <h4 className="font-semibold mb-3">RTI Submission History</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>January 2024 - 45 employees</span>
+                              <Badge variant="default">Accepted</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>December 2023 - 42 employees</span>
+                              <Badge variant="default">Accepted</Badge>
+                            </div>
+                            <div className="flex justify-between items-center p-2 border rounded">
+                              <span>November 2023 - 42 employees</span>
+                              <Badge variant="default">Accepted</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                        <Button variant="outline">Export Payroll Data</Button>
+                        <Button>Generate Report</Button>
+                      </div>
+                    </div>
+                  )
+                }
+                return (
+                  <KPICard
+                    key={index}
+                    title={kpi.title}
+                    value={kpi.value}
+                    change={kpi.change}
+                    icon={Icon}
+                    color={kpi.color}
+                    drillDownData={drillDownData}
+                  />
                 )
               })}
             </ResponsiveGrid>

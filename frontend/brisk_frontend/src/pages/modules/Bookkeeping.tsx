@@ -45,9 +45,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
+import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 
@@ -386,19 +388,123 @@ export default function Bookkeeping() {
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon
-            return (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+            const drillDownData = {
+              title: `${kpi.title} Analysis`,
+              description: `Detailed breakdown and insights for ${kpi.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Value</h4>
                       <p className="text-2xl font-bold">{kpi.value}</p>
-                      <p className={`text-xs ${kpi.color}`}>{kpi.change}</p>
+                      <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
-                    <Icon className={`h-8 w-8 ${kpi.color}`} />
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Monthly Trend</h4>
+                      <p className="text-sm text-gray-600">Performance over time</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Last 6 months</span>
+                          <span className="text-green-600">+18%</span>
+                        </div>
+                        <Progress value={72} className="mt-1" />
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                  
+                  {kpi.title === 'Total Revenue' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Revenue Breakdown</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Product Sales</span>
+                          <span className="font-semibold">£89,200 (71%)</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Services</span>
+                          <span className="font-semibold">£28,430 (23%)</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Other Income</span>
+                          <span className="font-semibold">£7,800 (6%)</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.title === 'Outstanding Invoices' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Outstanding Invoice Details</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>INV-001 - ABC Corp</span>
+                          <Badge variant="destructive">£12,500 (15 days)</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>INV-002 - XYZ Ltd</span>
+                          <Badge variant="secondary">£8,950 (5 days)</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>INV-003 - DEF Services</span>
+                          <Badge variant="outline">£2,000 (current)</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.title === 'Bank Balance' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Account Balances</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Current Account</span>
+                          <span className="font-semibold">£32,450</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Savings Account</span>
+                          <span className="font-semibold">£12,780</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {kpi.title === 'Monthly Expenses' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Expense Categories</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Office Rent - £8,500</span>
+                          <Badge variant="default">On Budget</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Utilities - £2,420</span>
+                          <Badge variant="destructive">+£420 over</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Marketing - £4,200</span>
+                          <Badge variant="default">-£800 under</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Data</Button>
+                    <Button>View Detailed Report</Button>
+                  </div>
+                </div>
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={kpi.title}
+                value={kpi.value}
+                change={kpi.change}
+                icon={Icon}
+                color={kpi.color}
+                drillDownData={drillDownData}
+              />
             )
           })}
         </div>
