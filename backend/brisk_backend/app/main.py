@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import create_tables
-from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice
+from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, search
 from app.middleware.tenant import TenantMiddleware
 from app.middleware.auth import AuthMiddleware
 
@@ -44,6 +44,7 @@ app.include_router(ai_advisers.router, prefix="/api/v1/ai", tags=["AI Advisers"]
 app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["Integrations"])
 app.include_router(admin.router, prefix="/api/v1/admin", tags=["Administration"])
 app.include_router(practice.router, prefix="/api/v1/practice", tags=["Practice Management"])
+app.include_router(search.router, prefix="/api/v1", tags=["Search"])
 
 @app.get("/")
 def read_root():

@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useResponsive } from '@/hooks/use-responsive'
 
 export default function ClientPortal() {
-  const isMobile = useIsMobile()
+  const { isMobile } = useResponsive()
 
   const jobs = [
     {

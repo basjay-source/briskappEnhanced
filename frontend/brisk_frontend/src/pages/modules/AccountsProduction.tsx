@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Calculator, 
   FileText, 
@@ -8,14 +8,26 @@ import {
   Download,
   Upload,
   Brain,
-  Eye
+  Eye,
+  RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useResponsive } from '@/hooks/use-responsive'
+import { apiClient } from '@/lib/api'
 
 export default function AccountsProduction() {
+  const { isMobile, isTablet } = useResponsive()
   const [activeTab, setActiveTab] = useState('trial-balance')
+  const [trialBalanceData, setTrialBalanceData] = useState<Array<{
+    code: string;
+    name: string;
+    debit: number;
+    credit: number;
+  }>>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const tabs = [
     { id: 'trial-balance', label: 'Trial Balance', icon: Calculator },
@@ -24,14 +36,38 @@ export default function AccountsProduction() {
     { id: 'ixbrl', label: 'iXBRL', icon: Eye }
   ]
 
-  const trialBalanceData = [
-    { code: '1000', name: 'Bank Current Account', debit: 15000, credit: 0 },
-    { code: '1200', name: 'Trade Debtors', debit: 8500, credit: 0 },
-    { code: '2100', name: 'Trade Creditors', debit: 0, credit: 4200 },
-    { code: '4000', name: 'Sales', debit: 0, credit: 45000 },
-    { code: '5000', name: 'Cost of Sales', debit: 18000, credit: 0 },
-    { code: '6000', name: 'Office Expenses', debit: 3200, credit: 0 }
-  ]
+  useEffect(() => {
+    const loadTrialBalance = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const data = await apiClient.getTrialBalance('default-company')
+        setTrialBalanceData(data.trial_balance || [
+          { code: '1000', name: 'Bank Current Account', debit: 15000, credit: 0 },
+          { code: '1200', name: 'Trade Debtors', debit: 8500, credit: 0 },
+          { code: '2100', name: 'Trade Creditors', debit: 0, credit: 4200 },
+          { code: '4000', name: 'Sales', debit: 0, credit: 45000 },
+          { code: '5000', name: 'Cost of Sales', debit: 18000, credit: 0 },
+          { code: '6000', name: 'Office Expenses', debit: 3200, credit: 0 }
+        ])
+      } catch (error) {
+        console.error('Failed to load trial balance:', error)
+        setError('Failed to load trial balance data')
+        setTrialBalanceData([
+          { code: '1000', name: 'Bank Current Account', debit: 15000, credit: 0 },
+          { code: '1200', name: 'Trade Debtors', debit: 8500, credit: 0 },
+          { code: '2100', name: 'Trade Creditors', debit: 0, credit: 4200 },
+          { code: '4000', name: 'Sales', debit: 0, credit: 45000 },
+          { code: '5000', name: 'Cost of Sales', debit: 18000, credit: 0 },
+          { code: '6000', name: 'Office Expenses', debit: 3200, credit: 0 }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTrialBalance()
+  }, [])
 
   const kpis = [
     { label: 'Total Assets', value: '£125,400', change: '+8.2%', color: 'text-green-600' },
@@ -61,32 +97,70 @@ export default function AccountsProduction() {
     }
   ]
 
+  const handleImportTrialBalance = async () => {
+    setLoading(true)
+    try {
+      console.log('Importing trial balance...')
+    } catch (error) {
+      console.error('Failed to import trial balance:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleExportAccounts = async () => {
+    try {
+      const data = await apiClient.getFinancialStatements('default-company')
+      console.log('Exporting accounts:', data)
+    } catch (error) {
+      console.error('Failed to export accounts:', error)
+    }
+  }
+
   return (
-    <div className="p-6 space-y-8">
-      <div className="flex items-center justify-between">
+    <div className={`space-y-8 ${isMobile ? 'p-4' : 'p-6'}`}>
+      <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Accounts Production</h1>
+          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>
+            Accounts Production
+          </h1>
           <p className="text-gray-600 mt-2">FRS 102/105, IFRS compliance, and iXBRL generation</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline">
-            <Upload className="h-4 w-4 mr-2" />
+        <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
+          <Button 
+            variant="outline" 
+            onClick={handleImportTrialBalance}
+            disabled={loading}
+            className={isMobile ? 'w-full' : ''}
+          >
+            {loading ? (
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4 mr-2" />
+            )}
             Import TB
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+          <Button 
+            className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}
+            onClick={handleExportAccounts}
+          >
             <Download className="h-4 w-4 mr-2" />
             Export Accounts
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`grid gap-6 ${
+        isMobile ? 'grid-cols-1' : 
+        isTablet ? 'grid-cols-2' : 
+        'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+      }`}>
         {kpis.map((kpi, index) => (
           <Card key={index}>
-            <CardContent className="p-6">
+            <CardContent className={`${isMobile ? 'p-4' : 'p-6'}`}>
               <div className="space-y-2">
                 <p className="text-sm font-medium text-gray-600">{kpi.label}</p>
-                <p className="text-2xl font-bold">{kpi.value}</p>
+                <p className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'}`}>{kpi.value}</p>
                 <p className={`text-sm ${kpi.color}`}>{kpi.change} vs last period</p>
               </div>
             </CardContent>
@@ -94,8 +168,8 @@ export default function AccountsProduction() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3">
+      <div className={`grid gap-8 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'}`}>
+        <div className={isMobile ? '' : 'lg:col-span-3'}>
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -124,41 +198,62 @@ export default function AccountsProduction() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">Trial Balance</h3>
-                    <Badge className="bg-green-100 text-green-800">Balanced</Badge>
+                    <div className="flex items-center gap-2">
+                      {error && (
+                        <Badge variant="destructive" className="text-xs">
+                          Error loading data
+                        </Badge>
+                      )}
+                      <Badge className="bg-green-100 text-green-800">
+                        {loading ? 'Loading...' : 'Balanced'}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left p-2">Code</th>
-                          <th className="text-left p-2">Account Name</th>
-                          <th className="text-right p-2">Debit</th>
-                          <th className="text-right p-2">Credit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {trialBalanceData.map((account, index) => (
-                          <tr key={index} className="border-b hover:bg-gray-50">
-                            <td className="p-2 font-mono text-sm">{account.code}</td>
-                            <td className="p-2">{account.name}</td>
-                            <td className="p-2 text-right tabular-nums">
-                              {account.debit > 0 ? `£${account.debit.toLocaleString()}` : '-'}
+                  
+                  {loading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+                      <span className="ml-2 text-gray-600">Loading trial balance...</span>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left p-2">Code</th>
+                            <th className="text-left p-2">Account Name</th>
+                            <th className="text-right p-2">Debit</th>
+                            <th className="text-right p-2">Credit</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {trialBalanceData.map((account, index) => (
+                            <tr key={index} className="border-b hover:bg-gray-50">
+                              <td className="p-2 font-mono text-sm">{account.code}</td>
+                              <td className="p-2">{account.name}</td>
+                              <td className="p-2 text-right tabular-nums">
+                                {account.debit > 0 ? `£${account.debit.toLocaleString()}` : '-'}
+                              </td>
+                              <td className="p-2 text-right tabular-nums">
+                                {account.credit > 0 ? `£${account.credit.toLocaleString()}` : '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                        <tfoot>
+                          <tr className="border-t-2 font-semibold">
+                            <td className="p-2" colSpan={2}>Total</td>
+                            <td className="p-2 text-right">
+                              £{trialBalanceData.reduce((sum, acc) => sum + acc.debit, 0).toLocaleString()}
                             </td>
-                            <td className="p-2 text-right tabular-nums">
-                              {account.credit > 0 ? `£${account.credit.toLocaleString()}` : '-'}
+                            <td className="p-2 text-right">
+                              £{trialBalanceData.reduce((sum, acc) => sum + acc.credit, 0).toLocaleString()}
                             </td>
                           </tr>
-                        ))}
-                      </tbody>
-                      <tfoot>
-                        <tr className="border-t-2 font-semibold">
-                          <td className="p-2" colSpan={2}>Total</td>
-                          <td className="p-2 text-right">£44,700</td>
-                          <td className="p-2 text-right">£49,200</td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
+                        </tfoot>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -197,7 +292,11 @@ export default function AccountsProduction() {
               {activeTab === 'statements' && (
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Financial Statements</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className={`grid gap-4 ${
+                    isMobile ? 'grid-cols-1' : 
+                    isTablet ? 'grid-cols-2' : 
+                    'grid-cols-1 md:grid-cols-3'
+                  }`}>
                     <Card>
                       <CardHeader className="pb-3">
                         <CardTitle className="text-base">Profit & Loss</CardTitle>

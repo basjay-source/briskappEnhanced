@@ -12,18 +12,85 @@ import {
   Pause,
   Mail
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useResponsive } from '@/hooks/use-responsive'
+import { apiClient } from '@/lib/api'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import EmailSystem from '@/components/EmailSystem'
 
 export default function PracticeManagement() {
-  const isMobile = useIsMobile()
+  const { isMobile } = useResponsive()
   const [activeTab, setActiveTab] = useState('dashboard')
+  
+  const staticJobsData = useMemo(() => [
+    {
+      id: '1',
+      title: 'VAT Return Q4 2024',
+      client: 'ABC Manufacturing Ltd',
+      status: 'in-progress',
+      type: 'VAT Return',
+      priority: 'high',
+      due_date: '2024-01-31',
+      dueDate: '2024-01-31',
+      assignedTo: 'Sarah Johnson',
+      progress: 75
+    },
+    {
+      id: '2',
+      title: 'Annual Accounts 2023',
+      client: 'Tech Solutions Ltd',
+      status: 'review',
+      type: 'Annual Accounts',
+      priority: 'medium',
+      due_date: '2024-02-15',
+      dueDate: '2024-02-15',
+      assignedTo: 'Mike Chen',
+      progress: 90
+    },
+    {
+      id: '3',
+      title: 'Corporation Tax Return',
+      client: 'Green Energy Co',
+      status: 'pending',
+      type: 'CT600',
+      priority: 'low',
+      due_date: '2024-03-01',
+      dueDate: '2024-03-01',
+      assignedTo: 'Emma Davis',
+      progress: 25
+    }
+  ], [])
+
+  const [jobsData, setJobsData] = useState<Array<{
+    id: string;
+    title: string;
+    client: string;
+    status: string;
+    type: string;
+    priority: string;
+    due_date: string;
+    dueDate: string;
+    assignedTo: string;
+    progress: number;
+  }>>(staticJobsData)
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const data = await apiClient.getJobs()
+        setJobsData(data.jobs || staticJobsData)
+      } catch (error) {
+        console.error('Failed to load jobs:', error)
+        setJobsData(staticJobsData)
+      }
+    }
+
+    loadJobs()
+  }, [staticJobsData])
 
   const kpis = [
     {
@@ -56,41 +123,6 @@ export default function PracticeManagement() {
     }
   ]
 
-  const jobs = [
-    {
-      id: '1',
-      title: 'VAT Return Q4 2024',
-      client: 'ABC Manufacturing Ltd',
-      type: 'VAT Return',
-      status: 'in_progress',
-      priority: 'high',
-      dueDate: '2024-01-31',
-      assignedTo: 'Sarah Johnson',
-      progress: 75
-    },
-    {
-      id: '2',
-      title: 'Annual Accounts 2023',
-      client: 'XYZ Services Ltd',
-      type: 'Year End',
-      status: 'not_started',
-      priority: 'medium',
-      dueDate: '2024-02-15',
-      assignedTo: 'Mike Chen',
-      progress: 0
-    },
-    {
-      id: '3',
-      title: 'Payroll Processing',
-      client: 'DEF Consulting',
-      type: 'Payroll',
-      status: 'completed',
-      priority: 'high',
-      dueDate: '2024-01-28',
-      assignedTo: 'Emma Wilson',
-      progress: 100
-    }
-  ]
 
   const upcomingDeadlines = [
     { type: 'VAT Return', client: 'ABC Ltd', date: '2024-01-31', days: 3 },
@@ -203,7 +235,7 @@ export default function PracticeManagement() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {jobs.map((job) => (
+                {jobsData.map((job) => (
                   <div key={job.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                     <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                       {getStatusIcon(job.status)}
