@@ -78,6 +78,18 @@ const modules = [
     path: '/app/esign',
     icon: FileSignature,
     description: 'Digital signing workflows'
+  },
+  {
+    name: 'Reports',
+    path: '/app/reports',
+    icon: BarChart3,
+    description: 'Financial reports & analytics'
+  },
+  {
+    name: 'Client Portal',
+    path: '/app/portal',
+    icon: FileSignature,
+    description: 'Client communication & documents'
   }
 ]
 

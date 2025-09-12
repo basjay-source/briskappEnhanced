@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useResponsive } from '@/hooks/use-responsive'
 import ModuleNavigation from './ModuleNavigation'
 
 export default function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const isMobile = useIsMobile()
+  const { isMobile } = useResponsive()
 
   if (!isMobile) return null
 
