@@ -14,7 +14,8 @@ import {
   Settings,
   Eye,
   Edit,
-  Mail
+  Mail,
+  ChevronLeft
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -22,11 +23,15 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import AIPromptSection from '../../components/AIPromptSection'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
+import FormWizard from '../../components/FormWizard'
+import HMRCLogo from '../../components/HMRCLogo'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
@@ -38,6 +43,8 @@ export default function Payroll() {
   const [selectedPayPeriod, setSelectedPayPeriod] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [selectedPayrollForm, setSelectedPayrollForm] = useState<string | null>(null)
+  const [payrollFormData, setPayrollFormData] = useState<Record<string, string>>({})
 
   const departmentOptions = [
     { label: 'All Departments', value: 'all' },
@@ -891,99 +898,544 @@ export default function Payroll() {
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Reports & Downloads</CardTitle>
-                <CardDescription>
-                  Generate P35, P60, P45, P46, payslips, summaries with PDF and CSV downloads
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    <Card className="border-2 border-[#00703c] bg-green-50/30">
-                      <CardHeader className="bg-[#00703c] text-white">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                          <FileText className="h-5 w-5" />
-                          P35 - End of Year Return
-                        </CardTitle>
-                        <CardDescription className="text-green-100">Annual summary for HMRC</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground">
-                            Generate annual P35 return with employee summaries
+            {selectedPayrollForm ? (
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <Button variant="outline" onClick={() => setSelectedPayrollForm(null)}>
+                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    Back to Reports
+                  </Button>
+                  <h3 className="text-lg font-semibold">
+                    {selectedPayrollForm === 'p35' && 'P35 - End of Year Return'}
+                    {selectedPayrollForm === 'p60' && 'P60 - End of Year Certificate'}
+                    {selectedPayrollForm === 'p45' && 'P45 - Leaving Certificate'}
+                    {selectedPayrollForm === 'p46' && 'P46 - New Employee'}
+                  </h3>
+                </div>
+
+                {selectedPayrollForm === 'p35' && (
+                  <FormWizard
+                    title="P35 - End of Year Return"
+                    logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    pages={[
+                      {
+                        title: "Employer Details",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="employerName">Employer name</Label>
+                                <Input 
+                                  id="employerName"
+                                  value={payrollFormData.employerName || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, employerName: e.target.value})}
+                                  placeholder="Enter employer name" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="payeReference">PAYE reference</Label>
+                                <Input 
+                                  id="payeReference"
+                                  value={payrollFormData.payeReference || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, payeReference: e.target.value})}
+                                  placeholder="123/AB12345" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="accountsOfficeRef">Accounts office reference</Label>
+                                <Input 
+                                  id="accountsOfficeRef"
+                                  value={payrollFormData.accountsOfficeRef || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, accountsOfficeRef: e.target.value})}
+                                  placeholder="123PA00012345" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="taxYearEnd">Tax year ending</Label>
+                                <Input 
+                                  id="taxYearEnd"
+                                  type="date"
+                                  value={payrollFormData.taxYearEnd || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, taxYearEnd: e.target.value})}
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <Button variant="outline" className="w-full">
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate P35
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-[#00703c] bg-green-50/30">
-                      <CardHeader className="bg-[#00703c] text-white">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                          <FileText className="h-5 w-5" />
-                          P60 - End of Year Certificate
-                        </CardTitle>
-                        <CardDescription className="text-green-100">Employee tax year summary</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground">
-                            Generate P60 certificates for all employees
+                        )
+                      },
+                      {
+                        title: "Employee Summary",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="totalEmployees">Total number of employees</Label>
+                                <Input 
+                                  id="totalEmployees"
+                                  type="number"
+                                  value={payrollFormData.totalEmployees || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalEmployees: e.target.value})}
+                                  placeholder="0" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="totalPay">Total pay</Label>
+                                <Input 
+                                  id="totalPay"
+                                  value={payrollFormData.totalPay || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalPay: e.target.value})}
+                                  placeholder="£0.00" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="totalTaxDeducted">Total tax deducted</Label>
+                                <Input 
+                                  id="totalTaxDeducted"
+                                  value={payrollFormData.totalTaxDeducted || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalTaxDeducted: e.target.value})}
+                                  placeholder="£0.00" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="totalNI">Total NI contributions</Label>
+                                <Input 
+                                  id="totalNI"
+                                  value={payrollFormData.totalNI || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalNI: e.target.value})}
+                                  placeholder="£0.00" 
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <Button variant="outline" className="w-full">
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate P60s
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-[#00703c] bg-green-50/30">
-                      <CardHeader className="bg-[#00703c] text-white">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                          <FileText className="h-5 w-5" />
-                          P45 - Leaving Certificate
-                        </CardTitle>
-                        <CardDescription className="text-green-100">Employee leaving documentation</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground">
-                            Generate P45 for employees leaving employment
+                        )
+                      },
+                      {
+                        title: "Declaration",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded-lg">
+                              <h4 className="font-semibold mb-2">Declaration</h4>
+                              <p className="text-sm text-gray-700 mb-4">
+                                I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
+                              </p>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <Label htmlFor="declarantName">Declarant name</Label>
+                                  <Input 
+                                    id="declarantName"
+                                    value={payrollFormData.declarantName || ''} 
+                                    onChange={(e) => setPayrollFormData({...payrollFormData, declarantName: e.target.value})}
+                                    placeholder="Enter full name" 
+                                  />
+                                </div>
+                                <div>
+                                  <Label htmlFor="declarantPosition">Position</Label>
+                                  <Input 
+                                    id="declarantPosition"
+                                    value={payrollFormData.declarantPosition || ''} 
+                                    onChange={(e) => setPayrollFormData({...payrollFormData, declarantPosition: e.target.value})}
+                                    placeholder="e.g. Director, Accountant" 
+                                  />
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <Button variant="outline" className="w-full">
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate P45
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-[#00703c] bg-green-50/30">
-                      <CardHeader className="bg-[#00703c] text-white">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                          <FileText className="h-5 w-5" />
-                          P46 - New Employee
-                        </CardTitle>
-                        <CardDescription className="text-green-100">New starter documentation</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground">
-                            Generate P46 for new employees without P45
+                        )
+                      }
+                    ]}
+                    formData={payrollFormData}
+                    onSubmit={(data) => {
+                      console.log('P35 submitted:', data)
+                      alert('P35 End of Year Return submitted successfully!')
+                    }}
+                    onSaveDraft={(data) => {
+                      console.log('P35 draft saved:', data)
+                      alert('P35 draft saved successfully!')
+                    }}
+                  />
+                )}
+
+                {selectedPayrollForm === 'p45' && (
+                  <FormWizard
+                    title="P45 - Leaving Certificate"
+                    logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    pages={[
+                      {
+                        title: "Employee Details",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="employeeName">Employee name</Label>
+                                <Input 
+                                  id="employeeName"
+                                  value={payrollFormData.employeeName || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeName: e.target.value})}
+                                  placeholder="Enter employee full name" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="employeeNI">National Insurance number</Label>
+                                <Input 
+                                  id="employeeNI"
+                                  value={payrollFormData.employeeNI || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeNI: e.target.value})}
+                                  placeholder="AB123456C" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="employeeDOB">Date of birth</Label>
+                                <Input 
+                                  id="employeeDOB"
+                                  type="date"
+                                  value={payrollFormData.employeeDOB || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeDOB: e.target.value})}
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="leavingDate">Leaving date</Label>
+                                <Input 
+                                  id="leavingDate"
+                                  type="date"
+                                  value={payrollFormData.leavingDate || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, leavingDate: e.target.value})}
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <Button variant="outline" className="w-full">
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate P46
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        )
+                      },
+                      {
+                        title: "Employment Details",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="totalPayInEmployment">Total pay in employment</Label>
+                                <Input 
+                                  id="totalPayInEmployment"
+                                  value={payrollFormData.totalPayInEmployment || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalPayInEmployment: e.target.value})}
+                                  placeholder="£0.00" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="totalTaxInEmployment">Total tax deducted</Label>
+                                <Input 
+                                  id="totalTaxInEmployment"
+                                  value={payrollFormData.totalTaxInEmployment || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalTaxInEmployment: e.target.value})}
+                                  placeholder="£0.00" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="taxCode">Tax code</Label>
+                                <Input 
+                                  id="taxCode"
+                                  value={payrollFormData.taxCode || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, taxCode: e.target.value})}
+                                  placeholder="1257L" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="weekMonthNumber">Week/Month number</Label>
+                                <Input 
+                                  id="weekMonthNumber"
+                                  value={payrollFormData.weekMonthNumber || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, weekMonthNumber: e.target.value})}
+                                  placeholder="52" 
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                    ]}
+                    formData={payrollFormData}
+                    onSubmit={(data) => {
+                      console.log('P45 submitted:', data)
+                      alert('P45 Leaving Certificate generated successfully!')
+                    }}
+                    onSaveDraft={(data) => {
+                      console.log('P45 draft saved:', data)
+                      alert('P45 draft saved successfully!')
+                    }}
+                  />
+                )}
+
+                {selectedPayrollForm === 'p46' && (
+                  <FormWizard
+                    title="P46 - New Employee"
+                    logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    pages={[
+                      {
+                        title: "New Employee Details",
+                        component: (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="newEmployeeName">Employee name</Label>
+                                <Input 
+                                  id="newEmployeeName"
+                                  value={payrollFormData.newEmployeeName || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeName: e.target.value})}
+                                  placeholder="Enter employee full name" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="newEmployeeNI">National Insurance number</Label>
+                                <Input 
+                                  id="newEmployeeNI"
+                                  value={payrollFormData.newEmployeeNI || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeNI: e.target.value})}
+                                  placeholder="AB123456C" 
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="newEmployeeDOB">Date of birth</Label>
+                                <Input 
+                                  id="newEmployeeDOB"
+                                  type="date"
+                                  value={payrollFormData.newEmployeeDOB || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeDOB: e.target.value})}
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="startDate">Start date</Label>
+                                <Input 
+                                  id="startDate"
+                                  type="date"
+                                  value={payrollFormData.startDate || ''} 
+                                  onChange={(e) => setPayrollFormData({...payrollFormData, startDate: e.target.value})}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      },
+                      {
+                        title: "Tax Information",
+                        component: (
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="studentLoan">Student loan deductions</Label>
+                              <Select value={payrollFormData.studentLoan || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, studentLoan: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select option" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">No student loan</SelectItem>
+                                  <SelectItem value="plan1">Plan 1</SelectItem>
+                                  <SelectItem value="plan2">Plan 2</SelectItem>
+                                  <SelectItem value="postgrad">Postgraduate loan</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label htmlFor="taxCodeBasis">Tax code basis</Label>
+                              <Select value={payrollFormData.taxCodeBasis || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, taxCodeBasis: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select basis" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="cumulative">Cumulative basis</SelectItem>
+                                  <SelectItem value="week1">Week 1/Month 1 basis</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        )
+                      }
+                    ]}
+                    formData={payrollFormData}
+                    onSubmit={(data) => {
+                      console.log('P46 submitted:', data)
+                      alert('P46 New Employee form completed successfully!')
+                    }}
+                    onSaveDraft={(data) => {
+                      console.log('P46 draft saved:', data)
+                      alert('P46 draft saved successfully!')
+                    }}
+                  />
+                )}
+
+                {selectedPayrollForm === 'p60' && (
+                  <FormWizard
+                    title="P60 - End of Year Certificate"
+                    logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    pages={[
+                      {
+                        title: "Employee Selection",
+                        component: (
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="p60Employees">Select employees for P60 generation</Label>
+                              <Select value={payrollFormData.p60Employees || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Employees: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select employees" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">All employees</SelectItem>
+                                  <SelectItem value="active">Active employees only</SelectItem>
+                                  <SelectItem value="selected">Selected employees</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label htmlFor="p60TaxYear">Tax year</Label>
+                              <Select value={payrollFormData.p60TaxYear || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60TaxYear: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select tax year" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="2023-24">2023-24</SelectItem>
+                                  <SelectItem value="2022-23">2022-23</SelectItem>
+                                  <SelectItem value="2021-22">2021-22</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        )
+                      },
+                      {
+                        title: "Generation Options",
+                        component: (
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="p60Format">Output format</Label>
+                              <Select value={payrollFormData.p60Format || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Format: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select format" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pdf">PDF</SelectItem>
+                                  <SelectItem value="csv">CSV</SelectItem>
+                                  <SelectItem value="both">Both PDF and CSV</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label htmlFor="p60Email">Email to employees</Label>
+                              <Select value={payrollFormData.p60Email || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Email: value})}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select option" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="yes">Yes, email P60s</SelectItem>
+                                  <SelectItem value="no">No, download only</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        )
+                      }
+                    ]}
+                    formData={payrollFormData}
+                    onSubmit={(data) => {
+                      console.log('P60 submitted:', data)
+                      alert('P60 certificates generated successfully!')
+                    }}
+                    onSaveDraft={(data) => {
+                      console.log('P60 draft saved:', data)
+                      alert('P60 draft saved successfully!')
+                    }}
+                  />
+                )}
+              </div>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Reports & Downloads</CardTitle>
+                  <CardDescription>
+                    Generate P35, P60, P45, P46, payslips, summaries with PDF and CSV downloads
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p35')}>
+                        <CardHeader className="bg-[#00703c] text-white">
+                          <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            <FileText className="h-5 w-5" />
+                            P35 - End of Year Return
+                          </CardTitle>
+                          <CardDescription className="text-green-100">Annual summary for HMRC</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <div className="text-sm text-muted-foreground">
+                              Complete multi-page P35 return with employee summaries
+                            </div>
+                            <Button variant="outline" className="w-full">
+                              <FileText className="mr-2 h-4 w-4" />
+                              Complete P35 Form
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p60')}>
+                        <CardHeader className="bg-[#00703c] text-white">
+                          <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            <FileText className="h-5 w-5" />
+                            P60 - End of Year Certificate
+                          </CardTitle>
+                          <CardDescription className="text-green-100">Employee tax year summary</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <div className="text-sm text-muted-foreground">
+                              Generate P60 certificates for all employees
+                            </div>
+                            <Button variant="outline" className="w-full">
+                              <FileText className="mr-2 h-4 w-4" />
+                              Complete P60 Form
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p45')}>
+                        <CardHeader className="bg-[#00703c] text-white">
+                          <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            <FileText className="h-5 w-5" />
+                            P45 - Leaving Certificate
+                          </CardTitle>
+                          <CardDescription className="text-green-100">Employee leaving documentation</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <div className="text-sm text-muted-foreground">
+                              Complete P45 form for employees leaving employment
+                            </div>
+                            <Button variant="outline" className="w-full">
+                              <FileText className="mr-2 h-4 w-4" />
+                              Complete P45 Form
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p46')}>
+                        <CardHeader className="bg-[#00703c] text-white">
+                          <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            <FileText className="h-5 w-5" />
+                            P46 - New Employee
+                          </CardTitle>
+                          <CardDescription className="text-green-100">New starter documentation</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <div className="text-sm text-muted-foreground">
+                              Complete P46 form for new employees without P45
+                            </div>
+                            <Button variant="outline" className="w-full">
+                              <FileText className="mr-2 h-4 w-4" />
+                              Complete P46 Form
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
                     
                     <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
                       <CardContent className="p-6 text-center">
@@ -1201,6 +1653,7 @@ export default function Payroll() {
                 </div>
               </CardContent>
             </Card>
+            )}
           </TabsContent>
         </Tabs>
         

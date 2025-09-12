@@ -37,6 +37,7 @@ import CompaniesHouseLogo from '../../components/CompaniesHouseLogo'
 import HMRCLogo from '../../components/HMRCLogo'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import FormWizard from '../../components/FormWizard'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -47,6 +48,8 @@ export default function CompanySecretarial() {
   const [selectedCompanyType, setSelectedCompanyType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [in01FormData, setIn01FormData] = useState<Record<string, string>>({})
+  const [formData, setFormData] = useState<Record<string, string>>({})
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -249,32 +252,32 @@ export default function CompanySecretarial() {
 
   // Companies House Forms
   const renderIN01Form = () => {
-    return (
-      <div className="space-y-6">
-        <div className="bg-[#003078] text-white p-6 rounded-lg">
-          <div className="flex items-center space-x-4">
-            <CompaniesHouseLogo className="h-12 w-12" />
-            <div>
-              <h2 className="text-2xl font-bold">Application to register a company (IN01)</h2>
-              <p className="text-blue-100">Register a new company with Companies House</p>
-            </div>
-          </div>
-        </div>
+    const handleSubmit = (data: Record<string, string>) => {
+      console.log('Submitting IN01 form:', data)
+    }
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Company Details</CardTitle>
-            <CardDescription>Enter the basic information about your new company</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+    const handleSaveDraft = (data: Record<string, string>) => {
+      console.log('Saving IN01 draft:', data)
+    }
+
+    const pages = [
+      {
+        title: "Company Details",
+        component: (
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="companyName">Proposed company name</Label>
-                <Input id="companyName" placeholder="Enter company name" />
+                <Input 
+                  id="companyName" 
+                  placeholder="Enter company name"
+                  value={in01FormData.companyName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, companyName: e.target.value})}
+                />
               </div>
               <div>
                 <Label htmlFor="companyType">Company type</Label>
-                <Select>
+                <Select value={in01FormData.companyType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, companyType: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select company type" />
                   </SelectTrigger>
@@ -286,20 +289,35 @@ export default function CompanySecretarial() {
                 </Select>
               </div>
             </div>
-
             <div>
               <Label htmlFor="registeredOffice">Registered office address</Label>
-              <Textarea id="registeredOffice" placeholder="Enter full registered office address" />
+              <Textarea 
+                id="registeredOffice" 
+                placeholder="Enter full registered office address"
+                value={in01FormData.registeredOffice || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, registeredOffice: e.target.value})}
+              />
             </div>
-
+          </div>
+        )
+      },
+      {
+        title: "Share Capital",
+        component: (
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="shareCapital">Share capital</Label>
-                <Input id="shareCapital" placeholder="£100" />
+                <Input 
+                  id="shareCapital" 
+                  placeholder="£100"
+                  value={in01FormData.shareCapital || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, shareCapital: e.target.value})}
+                />
               </div>
               <div>
                 <Label htmlFor="shareClass">Share class</Label>
-                <Select>
+                <Select value={in01FormData.shareClass || ''} onValueChange={(value) => setIn01FormData({...in01FormData, shareClass: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select share class" />
                   </SelectTrigger>
@@ -310,14 +328,281 @@ export default function CompanySecretarial() {
                 </Select>
               </div>
             </div>
-
-            <div className="flex space-x-4">
-              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
-              <Button variant="outline">Submit Application</Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="numberOfShares">Number of shares</Label>
+                <Input 
+                  id="numberOfShares" 
+                  placeholder="100"
+                  value={in01FormData.numberOfShares || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, numberOfShares: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="nominalValue">Nominal value per share</Label>
+                <Input 
+                  id="nominalValue" 
+                  placeholder="£1.00"
+                  value={in01FormData.nominalValue || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, nominalValue: e.target.value})}
+                />
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        )
+      },
+      {
+        title: "Directors Information",
+        component: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="directorName">Director full name</Label>
+                <Input 
+                  id="directorName" 
+                  placeholder="Enter director's full name"
+                  value={in01FormData.directorName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, directorName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="directorDOB">Date of birth</Label>
+                <Input 
+                  id="directorDOB" 
+                  type="date"
+                  value={in01FormData.directorDOB || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, directorDOB: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="directorAddress">Director's service address</Label>
+              <Textarea 
+                id="directorAddress" 
+                placeholder="Enter director's service address"
+                value={in01FormData.directorAddress || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, directorAddress: e.target.value})}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="directorNationality">Nationality</Label>
+                <Input 
+                  id="directorNationality" 
+                  placeholder="British"
+                  value={in01FormData.directorNationality || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, directorNationality: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="directorOccupation">Occupation</Label>
+                <Input 
+                  id="directorOccupation" 
+                  placeholder="Director"
+                  value={in01FormData.directorOccupation || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, directorOccupation: e.target.value})}
+                />
+              </div>
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "Company Secretary",
+        component: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="secretaryName">Secretary name</Label>
+                <Input 
+                  id="secretaryName" 
+                  placeholder="Enter secretary's name"
+                  value={in01FormData.secretaryName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, secretaryName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="secretaryType">Secretary type</Label>
+                <Select value={in01FormData.secretaryType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, secretaryType: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="individual">Individual</SelectItem>
+                    <SelectItem value="corporate">Corporate body</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="secretaryAddress">Secretary's service address</Label>
+              <Textarea 
+                id="secretaryAddress" 
+                placeholder="Enter secretary's service address"
+                value={in01FormData.secretaryAddress || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, secretaryAddress: e.target.value})}
+              />
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "Shareholders",
+        component: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="shareholderName">Shareholder name</Label>
+                <Input 
+                  id="shareholderName" 
+                  placeholder="Enter shareholder's name"
+                  value={in01FormData.shareholderName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, shareholderName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="shareholderShares">Number of shares</Label>
+                <Input 
+                  id="shareholderShares" 
+                  placeholder="100"
+                  value={in01FormData.shareholderShares || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, shareholderShares: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="shareholderAddress">Shareholder address</Label>
+              <Textarea 
+                id="shareholderAddress" 
+                placeholder="Enter shareholder's address"
+                value={in01FormData.shareholderAddress || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, shareholderAddress: e.target.value})}
+              />
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "PSC Information",
+        component: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="pscName">PSC name</Label>
+                <Input 
+                  id="pscName" 
+                  placeholder="Enter PSC's name"
+                  value={in01FormData.pscName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, pscName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="pscDOB">Date of birth</Label>
+                <Input 
+                  id="pscDOB" 
+                  type="date"
+                  value={in01FormData.pscDOB || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, pscDOB: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="pscAddress">PSC address</Label>
+              <Textarea 
+                id="pscAddress" 
+                placeholder="Enter PSC's address"
+                value={in01FormData.pscAddress || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, pscAddress: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="pscNature">Nature of control</Label>
+              <Textarea 
+                id="pscNature" 
+                placeholder="Describe the nature of control"
+                value={in01FormData.pscNature || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, pscNature: e.target.value})}
+              />
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "Articles of Association",
+        component: (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="articlesType">Articles type</Label>
+              <Select value={in01FormData.articlesType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, articlesType: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select articles type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="model">Model articles</SelectItem>
+                  <SelectItem value="bespoke">Bespoke articles</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="articlesRestrictions">Share transfer restrictions</Label>
+              <Textarea 
+                id="articlesRestrictions" 
+                placeholder="Enter any restrictions on share transfers"
+                value={in01FormData.articlesRestrictions || ''}
+                onChange={(e) => setIn01FormData({...in01FormData, articlesRestrictions: e.target.value})}
+              />
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "Declaration & Submission",
+        component: (
+          <div className="space-y-4">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-semibold mb-2">Declaration</h4>
+              <p className="text-sm text-gray-700">
+                I confirm that the information provided in this application is true to the best of my knowledge and belief.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="declarantName">Declarant name</Label>
+                <Input 
+                  id="declarantName" 
+                  placeholder="Enter your full name"
+                  value={in01FormData.declarantName || ''}
+                  onChange={(e) => setIn01FormData({...in01FormData, declarantName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="declarantCapacity">Capacity</Label>
+                <Select value={in01FormData.declarantCapacity || ''} onValueChange={(value) => setIn01FormData({...in01FormData, declarantCapacity: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select capacity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="director">Director</SelectItem>
+                    <SelectItem value="secretary">Company Secretary</SelectItem>
+                    <SelectItem value="agent">Agent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    ]
+
+    return (
+      <FormWizard
+        title="Application to register a company (IN01)"
+        pages={pages}
+        onSubmit={handleSubmit}
+        onSaveDraft={handleSaveDraft}
+        formData={in01FormData}
+        logoComponent={<CompaniesHouseLogo className="h-12 w-12" />}
+      />
     )
   }
 
@@ -750,117 +1035,405 @@ export default function CompanySecretarial() {
 
   const renderSA100Form = () => {
     return (
-      <div className="space-y-6">
-        <div className="bg-[#00703c] text-white p-6 rounded-lg">
-          <div className="flex items-center space-x-4">
-            <HMRCLogo className="h-12 w-12" />
-            <div>
-              <h2 className="text-2xl font-bold">Self Assessment tax return (SA100)</h2>
-              <p className="text-green-100">Complete your annual Self Assessment return</p>
-            </div>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Personal Details</CardTitle>
-            <CardDescription>Enter your personal information</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="utr">Unique Taxpayer Reference (UTR)</Label>
-                <Input id="utr" placeholder="1234567890" />
+      <FormWizard
+        title="Self Assessment (SA100)"
+        logoComponent={<HMRCLogo className="h-16 w-16" />}
+        pages={[
+          {
+            title: "Personal Details",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="utr">Unique Taxpayer Reference (UTR)</Label>
+                    <Input 
+                      id="utr" 
+                      value={formData.utr || ''} 
+                      onChange={(e) => setFormData({...formData, utr: e.target.value})}
+                      placeholder="1234567890" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxYear">Tax year</Label>
+                    <Select value={formData.taxYear || ''} onValueChange={(value) => setFormData({...formData, taxYear: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select tax year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="2023-24">2023-24</SelectItem>
+                        <SelectItem value="2022-23">2022-23</SelectItem>
+                        <SelectItem value="2021-22">2021-22</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="niNumber">National Insurance Number</Label>
+                    <Input 
+                      id="niNumber"
+                      value={formData.niNumber || ''} 
+                      onChange={(e) => setFormData({...formData, niNumber: e.target.value})}
+                      placeholder="AB123456C" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="dateOfBirth">Date of birth</Label>
+                    <Input 
+                      id="dateOfBirth"
+                      type="date"
+                      value={formData.dateOfBirth || ''} 
+                      onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="taxYear">Tax year</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tax year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2023-24">2023-24</SelectItem>
-                    <SelectItem value="2022-23">2022-23</SelectItem>
-                    <SelectItem value="2021-22">2021-22</SelectItem>
-                  </SelectContent>
-                </Select>
+            )
+          },
+          {
+            title: "Employment Income",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="employmentPay">Pay from employment</Label>
+                    <Input 
+                      id="employmentPay"
+                      value={formData.employmentPay || ''} 
+                      onChange={(e) => setFormData({...formData, employmentPay: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxDeducted">UK tax deducted</Label>
+                    <Input 
+                      id="taxDeducted"
+                      value={formData.taxDeducted || ''} 
+                      onChange={(e) => setFormData({...formData, taxDeducted: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="tipsPayments">Tips and other payments</Label>
+                    <Input 
+                      id="tipsPayments"
+                      value={formData.tipsPayments || ''} 
+                      onChange={(e) => setFormData({...formData, tipsPayments: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="employmentBenefits">Benefits from employment</Label>
+                    <Input 
+                      id="employmentBenefits"
+                      value={formData.employmentBenefits || ''} 
+                      onChange={(e) => setFormData({...formData, employmentBenefits: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="totalIncome">Total income</Label>
-                <Input id="totalIncome" placeholder="£0" />
+            )
+          },
+          {
+            title: "Self Employment",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="businessName">Business name</Label>
+                    <Input 
+                      id="businessName"
+                      value={formData.businessName || ''} 
+                      onChange={(e) => setFormData({...formData, businessName: e.target.value})}
+                      placeholder="Enter business name" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="businessDescription">Business description</Label>
+                    <Input 
+                      id="businessDescription"
+                      value={formData.businessDescription || ''} 
+                      onChange={(e) => setFormData({...formData, businessDescription: e.target.value})}
+                      placeholder="Describe your business" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="businessIncome">Business income</Label>
+                    <Input 
+                      id="businessIncome"
+                      value={formData.businessIncome || ''} 
+                      onChange={(e) => setFormData({...formData, businessIncome: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="businessExpenses">Business expenses</Label>
+                    <Input 
+                      id="businessExpenses"
+                      value={formData.businessExpenses || ''} 
+                      onChange={(e) => setFormData({...formData, businessExpenses: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="taxDue">Tax due</Label>
-                <Input id="taxDue" placeholder="£0" readOnly />
+            )
+          },
+          {
+            title: "Other Income",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="propertyIncome">UK property income</Label>
+                    <Input 
+                      id="propertyIncome"
+                      value={formData.propertyIncome || ''} 
+                      onChange={(e) => setFormData({...formData, propertyIncome: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="dividends">UK dividends</Label>
+                    <Input 
+                      id="dividends"
+                      value={formData.dividends || ''} 
+                      onChange={(e) => setFormData({...formData, dividends: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="interest">UK interest</Label>
+                    <Input 
+                      id="interest"
+                      value={formData.interest || ''} 
+                      onChange={(e) => setFormData({...formData, interest: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="otherIncome">Other UK income</Label>
+                    <Input 
+                      id="otherIncome"
+                      value={formData.otherIncome || ''} 
+                      onChange={(e) => setFormData({...formData, otherIncome: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
-              <Button variant="outline">Submit Return</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            )
+          },
+          {
+            title: "Tax Calculation",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="totalIncome">Total income</Label>
+                    <Input 
+                      id="totalIncome"
+                      value={formData.totalIncome || ''} 
+                      onChange={(e) => setFormData({...formData, totalIncome: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxDue">Tax due</Label>
+                    <Input 
+                      id="taxDue"
+                      value={formData.taxDue || ''} 
+                      onChange={(e) => setFormData({...formData, taxDue: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxPaid">Tax already paid</Label>
+                    <Input 
+                      id="taxPaid"
+                      value={formData.taxPaid || ''} 
+                      onChange={(e) => setFormData({...formData, taxPaid: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxBalance">Tax to pay or refund</Label>
+                    <Input 
+                      id="taxBalance"
+                      value={formData.taxBalance || ''} 
+                      onChange={(e) => setFormData({...formData, taxBalance: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        ]}
+        formData={formData}
+        onSubmit={(data) => {
+          console.log('SA100 submitted:', data)
+          alert('SA100 Self Assessment submitted successfully!')
+        }}
+        onSaveDraft={(data) => {
+          console.log('SA100 draft saved:', data)
+          alert('SA100 draft saved successfully!')
+        }}
+      />
     )
   }
 
   const renderCT600Form = () => {
     return (
-      <div className="space-y-6">
-        <div className="bg-[#00703c] text-white p-6 rounded-lg">
-          <div className="flex items-center space-x-4">
-            <HMRCLogo className="h-12 w-12" />
-            <div>
-              <h2 className="text-2xl font-bold">Company Tax Return (CT600)</h2>
-              <p className="text-green-100">Submit your corporation tax return</p>
-            </div>
-          </div>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Company Details</CardTitle>
-            <CardDescription>Enter your company tax information</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="companyUTR">Company UTR</Label>
-                <Input id="companyUTR" placeholder="1234567890" />
+      <FormWizard
+        title="Corporation Tax (CT600)"
+        logoComponent={<HMRCLogo className="h-16 w-16" />}
+        pages={[
+          {
+            title: "Company Details",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="companyName">Company name</Label>
+                    <Input 
+                      id="companyName"
+                      value={formData.companyName || ''} 
+                      onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                      placeholder="Enter company name" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="companyNumber">Company registration number</Label>
+                    <Input 
+                      id="companyNumber"
+                      value={formData.companyNumber || ''} 
+                      onChange={(e) => setFormData({...formData, companyNumber: e.target.value})}
+                      placeholder="12345678" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="ctReference">Corporation Tax reference</Label>
+                    <Input 
+                      id="ctReference"
+                      value={formData.ctReference || ''} 
+                      onChange={(e) => setFormData({...formData, ctReference: e.target.value})}
+                      placeholder="1234567890" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="periodEndDate">Accounting period end date</Label>
+                    <Input 
+                      id="periodEndDate"
+                      type="date"
+                      value={formData.periodEndDate || ''} 
+                      onChange={(e) => setFormData({...formData, periodEndDate: e.target.value})}
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="accountingPeriod">Accounting period end</Label>
-                <Input id="accountingPeriod" type="date" />
+            )
+          },
+          {
+            title: "Profit and Loss",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="turnover">Turnover</Label>
+                    <Input 
+                      id="turnover"
+                      value={formData.turnover || ''} 
+                      onChange={(e) => setFormData({...formData, turnover: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="totalExpenses">Total expenses</Label>
+                    <Input 
+                      id="totalExpenses"
+                      value={formData.totalExpenses || ''} 
+                      onChange={(e) => setFormData({...formData, totalExpenses: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="netProfit">Net profit before tax</Label>
+                    <Input 
+                      id="netProfit"
+                      value={formData.netProfit || ''} 
+                      onChange={(e) => setFormData({...formData, netProfit: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxAdjustments">Tax adjustments</Label>
+                    <Input 
+                      id="taxAdjustments"
+                      value={formData.taxAdjustments || ''} 
+                      onChange={(e) => setFormData({...formData, taxAdjustments: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="totalProfit">Total profits</Label>
-                <Input id="totalProfit" placeholder="£0" />
+            )
+          },
+          {
+            title: "Tax Calculation",
+            component: (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="taxableProfit">Taxable profit</Label>
+                    <Input 
+                      id="taxableProfit"
+                      value={formData.taxableProfit || ''} 
+                      onChange={(e) => setFormData({...formData, taxableProfit: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="corporationTaxDue">Corporation tax due</Label>
+                    <Input 
+                      id="corporationTaxDue"
+                      value={formData.corporationTaxDue || ''} 
+                      onChange={(e) => setFormData({...formData, corporationTaxDue: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="corporationTaxPaid">Tax already paid</Label>
+                    <Input 
+                      id="corporationTaxPaid"
+                      value={formData.corporationTaxPaid || ''} 
+                      onChange={(e) => setFormData({...formData, corporationTaxPaid: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="corporationTaxPayable">Tax payable</Label>
+                    <Input 
+                      id="corporationTaxPayable"
+                      value={formData.corporationTaxPayable || ''} 
+                      onChange={(e) => setFormData({...formData, corporationTaxPayable: e.target.value})}
+                      placeholder="£0" 
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <Label htmlFor="corporationTax">Corporation tax</Label>
-                <Input id="corporationTax" placeholder="£0" readOnly />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="computationFile">Upload tax computation</Label>
-              <Input id="computationFile" type="file" accept=".pdf,.doc,.docx" />
-            </div>
-
-            <div className="flex space-x-4">
-              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
-              <Button variant="outline">Submit Return</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            )
+          }
+        ]}
+        formData={formData}
+        onSubmit={(data) => {
+          console.log('CT600 submitted:', data)
+          alert('CT600 Corporation Tax return submitted successfully!')
+        }}
+        onSaveDraft={(data) => {
+          console.log('CT600 draft saved:', data)
+          alert('CT600 draft saved successfully!')
+        }}
+      />
     )
   }
 
@@ -1940,7 +2513,7 @@ export default function CompanySecretarial() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Gift className="h-5 w-5" />
-                <span>Benefits & Expenses (P11D)</span>
+                <span>Benefits &amp; Expenses (P11D)</span>
               </CardTitle>
               <CardDescription>Report employee benefits</CardDescription>
             </CardHeader>
