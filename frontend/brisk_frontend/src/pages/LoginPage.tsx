@@ -18,16 +18,16 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <div className="flex justify-center mb-6">
-            <BriskLogo className="h-16 w-16" animated showText={false} />
+      <div className="w-full max-w-md mx-auto">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <BriskLogo className="h-20 w-20" animated showText={false} />
           </div>
           <h1 className="text-4xl font-bold text-blue-600 mb-2">Brisk Practice Suite</h1>
           <p className="text-gray-600">Professional Accountancy Practice Management</p>
         </div>
         
-        <Card className="w-full shadow-lg">
+        <Card className="w-full shadow-lg border-0">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>
