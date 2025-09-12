@@ -468,29 +468,52 @@ def approve_time_entry(
 
 @router.get("/job-codes")
 def get_job_codes(
+    search: Optional[str] = None,
+    category: Optional[str] = None,
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    return [
+    job_codes = [
         {"id": "1", "code": "ACC001", "name": "Accounts Preparation", "default_rate": 85, "billable": True, "category": "Accounts"},
         {"id": "2", "code": "TAX001", "name": "Corporation Tax", "default_rate": 95, "billable": True, "category": "Tax"},
         {"id": "3", "code": "VAT001", "name": "VAT Returns", "default_rate": 75, "billable": True, "category": "VAT"},
         {"id": "4", "code": "PAY001", "name": "Payroll Processing", "default_rate": 65, "billable": True, "category": "Payroll"},
-        {"id": "5", "code": "ADM001", "name": "Administration", "default_rate": 0, "billable": False, "category": "Admin"}
+        {"id": "5", "code": "ADM001", "name": "Administration", "default_rate": 0, "billable": False, "category": "Admin"},
+        {"id": "6", "code": "AUD001", "name": "Audit Services", "default_rate": 120, "billable": True, "category": "Audit"},
+        {"id": "7", "code": "CON001", "name": "Consultancy", "default_rate": 150, "billable": True, "category": "Advisory"},
+        {"id": "8", "code": "BOO001", "name": "Bookkeeping", "default_rate": 45, "billable": True, "category": "Bookkeeping"}
     ]
+    
+    if search:
+        job_codes = [jc for jc in job_codes if search.lower() in jc["name"].lower() or search.lower() in jc["code"].lower()]
+    if category:
+        job_codes = [jc for jc in job_codes if jc["category"].lower() == category.lower()]
+    
+    return job_codes
 
 @router.get("/employee-rates")
 def get_employee_rates(
+    search: Optional[str] = None,
+    employee_id: Optional[str] = None,
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    return [
-        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "1", "hourly_rate": 90},
-        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "2", "hourly_rate": 100},
-        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "1", "hourly_rate": 85},
-        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "3", "hourly_rate": 80},
-        {"employee_id": "3", "employee_name": "Emma Wilson", "job_code_id": "4", "hourly_rate": 70}
+    employee_rates = [
+        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "1", "hourly_rate": 90, "role": "Senior Accountant"},
+        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "2", "hourly_rate": 100, "role": "Senior Accountant"},
+        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "1", "hourly_rate": 85, "role": "Accountant"},
+        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "3", "hourly_rate": 80, "role": "Accountant"},
+        {"employee_id": "3", "employee_name": "Emma Wilson", "job_code_id": "4", "hourly_rate": 70, "role": "Payroll Specialist"},
+        {"employee_id": "4", "employee_name": "James Smith", "job_code_id": "6", "hourly_rate": 125, "role": "Audit Manager"},
+        {"employee_id": "5", "employee_name": "Lisa Brown", "job_code_id": "7", "hourly_rate": 160, "role": "Senior Consultant"}
     ]
+    
+    if search:
+        employee_rates = [er for er in employee_rates if search.lower() in er["employee_name"].lower()]
+    if employee_id:
+        employee_rates = [er for er in employee_rates if er["employee_id"] == employee_id]
+    
+    return employee_rates
 
 @router.get("/time-analytics")
 def get_time_analytics(

@@ -251,26 +251,47 @@ def create_screening(
         reference=f"SCR-{screening_data.aml_case_id[:8]}-{screening_data.screening_type}"
     )
     
-    mock_results = []
-    matches_found = 0
+    existing_screenings = db.query(Screening).filter(
+        Screening.tenant_id == request.state.tenant_id,
+        Screening.entity_name == screening_data.entity_name,
+        Screening.screening_type == screening_data.screening_type
+    ).all()
     
-    if screening_data.screening_type == "pep":
-        mock_results = [
-            {
-                "match_type": "PEP",
-                "confidence": 0.85,
-                "entity": screening_data.entity_name,
-                "position": "Former Minister of Finance",
-                "country": "UK",
-                "source": "HMT PEP List"
-            }
-        ]
-        matches_found = 1
-    elif screening_data.screening_type == "sanctions":
-        mock_results = []
+    if existing_screenings:
+        screening.results = existing_screenings[0].results
+        screening.matches_found = existing_screenings[0].matches_found
+    else:
+        results = []
         matches_found = 0
-    
-    screening.results = mock_results
+        
+        if screening_data.screening_type == "pep":
+            if hash(screening_data.entity_name) % 10 == 0:  # 10% chance of PEP match
+                results = [
+                    {
+                        "match_type": "PEP",
+                        "confidence": 0.85,
+                        "entity": screening_data.entity_name,
+                        "position": "Former Minister of Finance",
+                        "country": "UK",
+                        "source": "HMT PEP List"
+                    }
+                ]
+                matches_found = 1
+        elif screening_data.screening_type == "sanctions":
+            if hash(screening_data.entity_name) % 50 == 0:  # 2% chance of sanctions match
+                results = [
+                    {
+                        "match_type": "SANCTIONS",
+                        "confidence": 0.92,
+                        "entity": screening_data.entity_name,
+                        "list": "OFAC SDN List",
+                        "country": "Various",
+                        "source": "US Treasury OFAC"
+                    }
+                ]
+                matches_found = 1
+        
+        screening.results = results
     screening.matches_found = matches_found
     
     db.add(screening)
