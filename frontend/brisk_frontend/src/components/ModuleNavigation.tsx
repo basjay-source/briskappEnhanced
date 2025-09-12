@@ -82,7 +82,7 @@ const modules = [
     description: 'SORP compliance, fund accounting'
   },
   {
-    name: 'e-Signature',
+    name: 'DocuSignage',
     path: '/app/esign',
     icon: FileSignature,
     description: 'Digital signing workflows'

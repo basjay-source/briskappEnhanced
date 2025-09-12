@@ -17,13 +17,19 @@ import {
   Shield,
   Gift,
   Home,
-  Banknote
+  Banknote,
+  BarChart3,
+  Edit,
+  Settings,
+  Target,
+  ChevronDown,
+  PieChart,
+  Eye
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -36,7 +42,9 @@ import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function PersonalTax() {
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeMainTab, setActiveMainTab] = useState('dashboard')
+  const [activeSubTab, setActiveSubTab] = useState('')
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['returns', 'planning'])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
@@ -81,6 +89,83 @@ export default function PersonalTax() {
     { label: 'Dividends', value: 'dividends' },
     { label: 'Capital Gains', value: 'capital-gains' }
   ]
+
+  type SubTabConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+  }
+
+  type MenuConfig = {
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+    hasSubTabs: boolean
+    subTabs?: Record<string, SubTabConfig>
+  }
+
+  const menuStructure: Record<string, MenuConfig> = {
+    dashboard: { label: 'Dashboard', icon: BarChart3, hasSubTabs: false },
+    returns: { 
+      label: 'SA Returns', 
+      icon: FileText, 
+      hasSubTabs: true,
+      subTabs: {
+        current: { label: 'Current Returns', icon: FileText },
+        drafts: { label: 'Draft Returns', icon: Edit },
+        submitted: { label: 'Submitted Returns', icon: CheckCircle },
+        amendments: { label: 'Amendments', icon: Settings }
+      }
+    },
+    cgt: { 
+      label: 'CGT Calculator', 
+      icon: Calculator, 
+      hasSubTabs: true,
+      subTabs: {
+        calculator: { label: 'CGT Calculator', icon: Calculator },
+        optimization: { label: 'Tax Optimization', icon: Target },
+        records: { label: 'Asset Records', icon: FileText },
+        reports: { label: 'CGT Reports', icon: BarChart3 }
+      }
+    },
+    planning: { 
+      label: 'Tax Planning', 
+      icon: Target, 
+      hasSubTabs: true,
+      subTabs: {
+        iht: { label: 'IHT Planning', icon: Users },
+        pension: { label: 'Pension Planning', icon: PieChart },
+        family: { label: 'Family Tax', icon: Users },
+        optimization: { label: 'Optimization', icon: TrendingUp }
+      }
+    },
+    filing: { label: 'Filing & Compliance', icon: Upload, hasSubTabs: false }
+  }
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    )
+  }
+
+  const handleMainTabClick = (tabKey: string) => {
+    setActiveMainTab(tabKey)
+    const tabConfig = menuStructure[tabKey]
+    if (tabConfig && tabConfig.hasSubTabs && tabConfig.subTabs) {
+      const firstSubTab = Object.keys(tabConfig.subTabs)[0]
+      setActiveSubTab(firstSubTab || '')
+      if (!expandedCategories.includes(tabKey)) {
+        toggleCategory(tabKey)
+      }
+    } else {
+      setActiveSubTab('')
+    }
+  }
+
+  const handleSubTabClick = (subTab: string, mainTab: string) => {
+    setActiveSubTab(subTab)
+    setActiveMainTab(mainTab)
+  }
 
   const kpis = [
     {
@@ -162,19 +247,22 @@ export default function PersonalTax() {
       client: 'John Smith',
       opportunity: 'Pension Contribution',
       potentialSaving: 1200,
-      description: 'Increase annual pension contribution to maximize tax relief'
+      description: 'Increase annual pension contribution to maximize tax relief',
+      priority: 'High'
     },
     {
       client: 'Sarah Johnson',
       opportunity: 'CGT Timing',
       potentialSaving: 800,
-      description: 'Defer capital gains to next tax year for better rate'
+      description: 'Defer capital gains to next tax year for better rate',
+      priority: 'Medium'
     },
     {
       client: 'Michael Brown',
       opportunity: 'Dividend Timing',
       potentialSaving: 450,
-      description: 'Optimize dividend extraction timing'
+      description: 'Optimize dividend extraction timing',
+      priority: 'Low'
     }
   ]
 
@@ -204,12 +292,39 @@ export default function PersonalTax() {
     }
   }
 
-  return (
-    <ResponsiveLayout>
+  function renderMainContent() {
+    if (activeSubTab) {
+      switch (activeSubTab) {
+        case 'current': return renderCurrentReturns()
+        case 'drafts': return renderCurrentReturns()
+        case 'submitted': return renderCurrentReturns()
+        case 'amendments': return renderCurrentReturns()
+        case 'calculator': return renderCGTCalculator()
+        case 'optimization': return renderOptimization()
+        case 'records': return renderCGTCalculator()
+        case 'reports': return renderCGTCalculator()
+        case 'iht': return renderIHTPlanning()
+        case 'pension': return renderPensionPlanning()
+        case 'family': return renderFamilyTax()
+        default: return renderDashboard()
+      }
+    }
+
+    switch (activeMainTab) {
+      case 'returns': return renderCurrentReturns()
+      case 'cgt': return renderCGTCalculator()
+      case 'planning': return renderIHTPlanning()
+      case 'filing': return renderFiling()
+      default: return renderDashboard()
+    }
+  }
+
+  function renderDashboard() {
+    return (
       <div className="space-y-6">
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
-            <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Personal Tax</h1>
+            <h2 className={`font-bold text-gray-900 ${isMobile ? 'text-xl' : 'text-2xl'}`}>Personal Tax Dashboard</h2>
             <p className="text-gray-600 mt-2">SA returns, CGT optimization, and personal tax planning</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
@@ -224,19 +339,114 @@ export default function PersonalTax() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-8'}`}>
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="returns">SA Returns</TabsTrigger>
-            {!isMobile && <TabsTrigger value="cgt">CGT Calculator</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="iht-planning">IHT Planning</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="pension-planning">Pension Planning</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="family-tax">Family Tax</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="optimization">Optimization</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="filing">Filing</TabsTrigger>}
-          </TabsList>
+        <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
+          {kpis.map((kpi, index) => {
+            const Icon = kpi.icon
+            const drillDownData = {
+              title: `${kpi.title} Analysis`,
+              description: `Detailed breakdown of ${kpi.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-3 border rounded">
+                      <div className="text-sm text-gray-600">Current Period</div>
+                      <div className="text-lg font-semibold">{kpi.value}</div>
+                      <div className="text-xs text-green-600">{kpi.change}</div>
+                    </div>
+                    <div className="p-3 border rounded">
+                      <div className="text-sm text-gray-600">Previous Period</div>
+                      <div className="text-lg font-semibold">£125,000</div>
+                      <div className="text-xs text-green-600">+8%</div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Key Insights</h4>
+                    <ul className="text-sm space-y-1">
+                      <li>• Strong performance in Q2 with 15% growth</li>
+                      <li>• Seasonal trends showing consistent improvement</li>
+                      <li>• Efficiency gains from process automation</li>
+                    </ul>
+                  </div>
+                </div>
+              )
+            }
 
-          <TabsContent value="dashboard" className="space-y-6">
+            return (
+              <KPICard
+                key={index}
+                title={kpi.title}
+                value={kpi.value}
+                change={kpi.change}
+                icon={Icon}
+                color={kpi.color}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
+        </ResponsiveGrid>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Recent SA Returns
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {saReturns.map((saReturn, index) => {
+                  return (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        {getStatusIcon(saReturn.status)}
+                        <div>
+                          <div className="font-medium">{saReturn.client}</div>
+                          <div className="text-sm text-gray-500">Tax Year: {saReturn.taxYear}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-medium">£{saReturn.estimatedTax.toLocaleString()}</div>
+                        <Badge variant={saReturn.status === 'submitted' ? 'default' : 'secondary'}>
+                          {saReturn.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Tax Optimization Opportunities
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {optimizationOpportunities.map((opportunity, index) => (
+                  <div key={index} className="p-3 border rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-medium">{opportunity.opportunity}</div>
+                      <Badge variant="outline">£{opportunity.potentialSaving}</Badge>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2">{opportunity.description}</div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500">Priority: {opportunity.priority}</span>
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-3 w-3 mr-1" />
+                        Review
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon
@@ -472,9 +682,13 @@ export default function PersonalTax() {
                 </Card>
               </div>
             </div>
-          </TabsContent>
+          </div>
+    )
+  }
 
-          <TabsContent value="returns" className="space-y-6">
+  function renderCurrentReturns() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -577,9 +791,13 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+      </div>
+    )
+  }
 
-          <TabsContent value="cgt" className="space-y-6">
+  function renderCGTCalculator() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Capital Gains Tax Calculator</CardTitle>
@@ -639,9 +857,13 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+      </div>
+    )
+  }
 
-          <TabsContent value="optimization" className="space-y-6">
+  function renderOptimization() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Tax Optimization Opportunities</CardTitle>
@@ -674,9 +896,13 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+      </div>
+    )
+  }
 
-          <TabsContent value="iht-planning" className="space-y-6">
+  function renderIHTPlanning() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -762,9 +988,13 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+      </div>
+    )
+  }
 
-          <TabsContent value="pension-planning" className="space-y-6">
+  function renderPensionPlanning() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -852,9 +1082,13 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+      </div>
+    )
+  }
 
-          <TabsContent value="family-tax" className="space-y-6">
+  function renderFamilyTax() {
+    return (
+      <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -951,43 +1185,117 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="filing" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>HMRC Filing and Submissions</CardTitle>
-                <CardDescription>Submit returns and track filing status</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h3 className="font-semibold text-blue-900">Ready for Filing</h3>
-                    <p className="text-sm text-blue-700">3 SA returns completed and ready for HMRC submission</p>
-                    <Button className="mt-2" size="sm">
-                      Submit to HMRC
-                    </Button>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h3 className="font-semibold text-green-900">Successfully Filed</h3>
-                    <p className="text-sm text-green-700">8 returns filed this month with confirmation receipts</p>
-                    <Button variant="outline" className="mt-2" size="sm">
-                      View Receipts
-                    </Button>
-                  </div>
-                  <div className="p-4 bg-orange-50 rounded-lg">
-                    <h3 className="font-semibold text-orange-900">Pending Review</h3>
-                    <p className="text-sm text-orange-700">2 returns require client approval before filing</p>
-                    <Button variant="outline" className="mt-2" size="sm">
-                      Send for Approval
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
       </div>
+    )
+  }
+
+  function renderFiling() {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>HMRC Filing and Submissions</CardTitle>
+            <CardDescription>Submit returns and track filing status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-semibold text-blue-900">Ready for Filing</h3>
+                <p className="text-sm text-blue-700">3 SA returns completed and ready for HMRC submission</p>
+                <Button className="mt-2" size="sm">
+                  Submit to HMRC
+                </Button>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h3 className="font-semibold text-green-900">Successfully Filed</h3>
+                <p className="text-sm text-green-700">8 returns filed this month with confirmation receipts</p>
+                <Button variant="outline" className="mt-2" size="sm">
+                  View Receipts
+                </Button>
+              </div>
+              <div className="p-4 bg-orange-50 rounded-lg">
+                <h3 className="font-semibold text-orange-900">Pending Review</h3>
+                <p className="text-sm text-orange-700">2 returns require client approval before filing</p>
+                <Button variant="outline" className="mt-2" size="sm">
+                  Send for Approval
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <ResponsiveLayout>
+      <div className="flex h-full bg-blue-50">
+        {/* Left Sidebar Navigation */}
+        <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
+          <div className="p-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Tax</h2>
+            <nav className="space-y-1">
+              {Object.entries(menuStructure).map(([key, config]) => (
+                <div key={key}>
+                  <button
+                    onClick={() => handleMainTabClick(key)}
+                    className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      activeMainTab === key 
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <config.icon className="h-4 w-4 mr-2" />
+                      {config.label}
+                    </div>
+                    {config.hasSubTabs && (
+                      <ChevronDown className={`h-4 w-4 transition-transform ${
+                        expandedCategories.includes(key) ? 'rotate-180' : ''
+                      }`} />
+                    )}
+                  </button>
+                  
+                  {config.hasSubTabs && expandedCategories.includes(key) && config.subTabs && (
+                    <div className="ml-4 mt-1 space-y-1">
+                      {Object.entries(config.subTabs).map(([subKey, subConfig]) => (
+                        <button
+                          key={subKey}
+                          onClick={() => handleSubTabClick(subKey, key)}
+                          className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                            activeSubTab === subKey 
+                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                              : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                          }`}
+                        >
+                          <subConfig.icon className="h-3 w-3 mr-2" />
+                          {subConfig.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
+          <div className="p-6">
+            {renderMainContent()}
+          </div>
+        </div>
+      </div>
+
+      <AIPromptSection
+        isLoading={isAILoading}
+        onSubmit={handleAIQuestion}
+        placeholder="Ask about personal tax planning, SA returns, CGT calculations..."
+        title="Personal Tax AI Assistant"
+        description="Get expert guidance on personal tax planning, SA returns, and CGT calculations"
+        recentQuestions={[]}
+      />
     </ResponsiveLayout>
   )
 }

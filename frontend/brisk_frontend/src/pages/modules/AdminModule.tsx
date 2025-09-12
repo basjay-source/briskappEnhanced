@@ -9,7 +9,6 @@ import InvoiceTemplateManager from '../../components/InvoiceTemplateManager';
 import AIPromptSection from '../../components/AIPromptSection';
 import KPICard from '../../components/KPICard';
 import { SearchFilterHeader } from '../../components/SearchFilterHeader';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
   BarChart3,
@@ -209,10 +208,10 @@ const AdminModule = () => {
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                 activeSection === item.id
-                  ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
+                  : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
               }`}
             >
               <Icon className="mr-3 h-5 w-5" />
@@ -957,14 +956,7 @@ const AdminModule = () => {
         />
       </div>
 
-      <Tabs defaultValue="invoices" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          <TabsTrigger value="dunning">Dunning Queue</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="invoices">
+      <div className="space-y-6">
           <SearchFilterHeader
             searchPlaceholder="Search invoices..."
             searchValue={searchTerm}
@@ -1028,12 +1020,7 @@ const AdminModule = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="templates">
-          <InvoiceTemplateManager />
-        </TabsContent>
-      </Tabs>
+        </div>
     </div>
   );
 
@@ -1092,13 +1079,7 @@ const AdminModule = () => {
         />
       </div>
 
-      <Tabs defaultValue="partners" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="partners">Partners</TabsTrigger>
-          <TabsTrigger value="referrals">Referrals</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="partners">
+      <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Partner Management</CardTitle>
@@ -1130,9 +1111,7 @@ const AdminModule = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="referrals">
+        
           <Card>
             <CardHeader>
               <CardTitle>Referral Management</CardTitle>
@@ -1163,8 +1142,7 @@ const AdminModule = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
     </div>
   );
 

@@ -6061,7 +6061,7 @@ export default function Bookkeeping() {
 
   return (
     <ResponsiveLayout>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-blue-50">
         <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Bookkeeping</h2>
@@ -6078,10 +6078,10 @@ export default function Bookkeeping() {
                   <div key={key} className="mb-1">
                     <button
                       onClick={() => handleMainTabClick(key)}
-                      className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                         isActive 
-                          ? 'bg-brisk-primary text-white' 
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                          : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                       }`}
                     >
                       <div className="flex items-center">
@@ -6105,10 +6105,10 @@ export default function Bookkeeping() {
                             <button
                               key={subKey}
                               onClick={() => handleSubTabClick(subKey, key)}
-                              className={`w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                                 isSubActive 
-                                  ? 'bg-brisk-primary/10 text-brisk-primary border-l-2 border-brisk-primary' 
-                                  : 'text-gray-600 hover:bg-gray-50'
+                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >
                               <SubIcon className="h-4 w-4 mr-3" />

@@ -7,46 +7,34 @@ import {
   CheckCircle,
   Clock,
   PoundSterling,
-  Download,
-  Brain,
-  UserPlus,
   Play,
-  Settings,
-  Eye,
-  Edit,
-  Mail,
-  ChevronLeft
+  ChevronLeft,
+  BarChart3,
+  Shield,
+  Building,
+  Calendar
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
-import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import ResponsiveLayout from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
-import PayslipTemplateManager from '../../components/PayslipTemplateManager'
-import FormWizard from '../../components/FormWizard'
-import HMRCLogo from '../../components/HMRCLogo'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeMainTab, setActiveMainTab] = useState('dashboard')
+  const [activeSubTab, setActiveSubTab] = useState('')
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['processing'])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedPayPeriod, setSelectedPayPeriod] = useState('all')
-  const [dateFrom, setDateFrom] = useState('')
-  const [dateTo, setDateTo] = useState('')
-  const [selectedPayrollForm, setSelectedPayrollForm] = useState<string | null>(null)
-  const [payrollFormData, setPayrollFormData] = useState<Record<string, string>>({})
 
   const departmentOptions = [
     { label: 'All Departments', value: 'all' },
@@ -81,1713 +69,540 @@ export default function Payroll() {
     }
   }
 
-  const kpis = [
+  const menuStructure = [
     {
-      title: 'Active Employees',
-      value: '45',
-      change: '+3 this month',
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: BarChart3,
+      hasSubTabs: false
+    },
+    {
+      id: 'processing',
+      label: 'Payroll Processing',
+      icon: Calculator,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'run-payroll', label: 'Run Payroll' },
+        { id: 'payslips', label: 'Payslips' },
+        { id: 'adjustments', label: 'Adjustments' },
+        { id: 'approvals', label: 'Approvals' }
+      ]
+    },
+    {
+      id: 'employees',
+      label: 'Employee Management',
       icon: Users,
-      color: 'text-blue-600'
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'employee-records', label: 'Employee Records' },
+        { id: 'starters-leavers', label: 'Starters & Leavers' },
+        { id: 'benefits', label: 'Benefits & Deductions' },
+        { id: 'timesheets', label: 'Timesheets' }
+      ]
     },
     {
-      title: 'Monthly Payroll',
-      value: '£125,400',
-      change: '+5.2% vs last month',
-      icon: PoundSterling,
-      color: 'text-green-600'
+      id: 'rti',
+      label: 'RTI Submissions',
+      icon: FileText,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'fps', label: 'Full Payment Submission' },
+        { id: 'eps', label: 'Employer Payment Summary' },
+        { id: 'earlier-year', label: 'Earlier Year Updates' },
+        { id: 'submission-history', label: 'Submission History' }
+      ]
     },
     {
-      title: 'Pension Enrolled',
-      value: '42/45',
-      change: '93% compliance',
+      id: 'pensions',
+      label: 'Auto Enrolment',
+      icon: Shield,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'ae-assessment', label: 'AE Assessment' },
+        { id: 'contributions', label: 'Contributions' },
+        { id: 'opt-outs', label: 'Opt Outs' },
+        { id: 'provider-files', label: 'Provider Files' }
+      ]
+    },
+    {
+      id: 'cis',
+      label: 'CIS Processing',
+      icon: Building,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'subcontractors', label: 'Subcontractors' },
+        { id: 'verification', label: 'Verification' },
+        { id: 'deductions', label: 'Deductions' },
+        { id: 'monthly-returns', label: 'Monthly Returns' }
+      ]
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
       icon: TrendingUp,
-      color: 'text-purple-600'
-    },
-    {
-      title: 'RTI Submissions',
-      value: '12/12',
-      change: 'All on time',
-      icon: CheckCircle,
-      color: 'text-green-600'
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'payroll-reports', label: 'Payroll Reports' },
+        { id: 'statutory-reports', label: 'Statutory Reports' },
+        { id: 'analytics', label: 'Analytics' },
+        { id: 'custom-reports', label: 'Custom Reports' }
+      ]
     }
   ]
 
-  const employees = [
-    {
-      id: '1',
-      name: 'John Smith',
-      position: 'Senior Developer',
-      salary: 55000,
-      status: 'active',
-      pensionEnrolled: true,
-      lastPayRun: '2024-01-15',
-      ytdGross: 4583.33,
-      ytdTax: 916.67,
-      ytdNI: 458.33
-    },
-    {
-      id: '2',
-      name: 'Sarah Johnson',
-      position: 'Marketing Manager',
-      salary: 45000,
-      status: 'active',
-      pensionEnrolled: true,
-      lastPayRun: '2024-01-15',
-      ytdGross: 3750.00,
-      ytdTax: 625.00,
-      ytdNI: 375.00
-    },
-    {
-      id: '3',
-      name: 'Michael Brown',
-      position: 'Accountant',
-      salary: 38000,
-      status: 'active',
-      pensionEnrolled: false,
-      lastPayRun: '2024-01-15',
-      ytdGross: 3166.67,
-      ytdTax: 483.33,
-      ytdNI: 316.67
-    }
-  ]
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    )
+  }
 
-  const payRuns = [
-    {
-      id: '1',
-      period: 'January 2024',
-      payDate: '2024-01-31',
-      status: 'completed',
-      employeeCount: 45,
-      grossPay: 125400,
-      totalTax: 25080,
-      totalNI: 12540,
-      netPay: 87780
-    },
-    {
-      id: '2',
-      period: 'December 2023',
-      payDate: '2023-12-31',
-      status: 'completed',
-      employeeCount: 42,
-      grossPay: 119200,
-      totalTax: 23840,
-      totalNI: 11920,
-      netPay: 83440
-    },
-    {
-      id: '3',
-      period: 'February 2024',
-      payDate: '2024-02-29',
-      status: 'draft',
-      employeeCount: 45,
-      grossPay: 0,
-      totalTax: 0,
-      totalNI: 0,
-      netPay: 0
-    }
-  ]
-
-  const rtiSubmissions = [
-    {
-      id: '1',
-      type: 'FPS',
-      period: 'January 2024',
-      submittedDate: '2024-01-31',
-      status: 'accepted',
-      employeeCount: 45,
-      reference: 'FPS240131001'
-    },
-    {
-      id: '2',
-      type: 'EPS',
-      period: 'January 2024',
-      submittedDate: '2024-01-31',
-      status: 'accepted',
-      employeeCount: 45,
-      reference: 'EPS240131001'
-    },
-    {
-      id: '3',
-      type: 'FPS',
-      period: 'February 2024',
-      submittedDate: null,
-      status: 'pending',
-      employeeCount: 45,
-      reference: null
-    }
-  ]
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed':
-      case 'accepted':
-        return <CheckCircle className="h-4 w-4 text-green-600" />
-      case 'pending':
-      case 'draft':
-        return <Clock className="h-4 w-4 text-orange-600" />
-      case 'active':
-        return <CheckCircle className="h-4 w-4 text-green-600" />
-      default:
-        return <AlertCircle className="h-4 w-4 text-gray-400" />
+  const handleMainTabClick = (tabId: string) => {
+    setActiveMainTab(tabId)
+    setActiveSubTab('')
+    
+    const category = menuStructure.find(cat => cat.id === tabId)
+    if (category?.hasSubTabs && !expandedCategories.includes(tabId)) {
+      toggleCategory(tabId)
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-      case 'accepted':
-      case 'active':
-        return 'bg-green-100 text-green-800'
-      case 'pending':
-      case 'draft':
-        return 'bg-orange-100 text-orange-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
+  const handleSubTabClick = (subTabId: string) => {
+    setActiveSubTab(subTabId)
+  }
+
+  const kpis = [
+    {
+      title: 'Active Employees',
+      value: '247',
+      change: '+12 this month',
+      icon: Users,
+      color: 'text-blue-600',
+      drillDownData: {
+        title: 'Employee Analysis',
+        description: 'Detailed breakdown of active employees',
+        content: (
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold mb-2">Department Breakdown</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Development</span>
+                    <span className="font-semibold">89 employees</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Marketing</span>
+                    <span className="font-semibold">45 employees</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Finance</span>
+                    <span className="font-semibold">32 employees</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>HR</span>
+                    <span className="font-semibold">18 employees</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold mb-2">Employment Status</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Full-time</span>
+                    <span className="font-semibold">198 employees</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Part-time</span>
+                    <span className="font-semibold">34 employees</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Contract</span>
+                    <span className="font-semibold">15 employees</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    },
+    {
+      title: 'Monthly Payroll',
+      value: '£1.2M',
+      change: '+5.2% vs last month',
+      icon: PoundSterling,
+      color: 'text-green-600',
+      drillDownData: {
+        title: 'Payroll Analysis',
+        description: 'Monthly payroll breakdown and trends',
+        content: (
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-semibold mb-2">Cost Breakdown</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Gross Pay</span>
+                  <span className="font-semibold">£980,000</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Employer NI</span>
+                  <span className="font-semibold">£135,000</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Pension Contributions</span>
+                  <span className="font-semibold">£85,000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    },
+    {
+      title: 'RTI Submissions',
+      value: '98.5%',
+      change: 'On-time rate',
+      icon: FileText,
+      color: 'text-green-600',
+      drillDownData: {
+        title: 'RTI Compliance',
+        description: 'Real Time Information submission status',
+        content: (
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-semibold mb-2">Submission History</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>December 2024</span>
+                  <Badge variant="default">Submitted</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>November 2024</span>
+                  <Badge variant="default">Submitted</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>October 2024</span>
+                  <Badge variant="default">Submitted</Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    },
+    {
+      title: 'Pending Actions',
+      value: '7',
+      change: '3 urgent',
+      icon: AlertCircle,
+      color: 'text-orange-600',
+      drillDownData: {
+        title: 'Pending Actions',
+        description: 'Outstanding payroll tasks requiring attention',
+        content: (
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-semibold mb-2">Action Items</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>New starter forms</span>
+                  <Badge variant="destructive">Urgent</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Pension opt-outs</span>
+                  <Badge variant="secondary">Review</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Salary adjustments</span>
+                  <Badge variant="outline">Pending</Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
     }
+  ]
+
+  const renderMainContent = () => {
+    if (activeMainTab === 'dashboard') {
+      return (
+        <div className="space-y-6">
+          <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+            {kpis.map((kpi, index) => {
+              const Icon = kpi.icon
+              return (
+                <KPICard
+                  key={index}
+                  title={kpi.title}
+                  value={kpi.value}
+                  change={kpi.change}
+                  icon={Icon}
+                  color={kpi.color}
+                  drillDownData={kpi.drillDownData}
+                />
+              )
+            })}
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  Upcoming Payroll Dates
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <div>
+                      <p className="font-medium">Monthly Payroll</p>
+                      <p className="text-sm text-gray-600">December 2024</p>
+                    </div>
+                    <Badge variant="outline">Due: 28 Dec</Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium">RTI Submission</p>
+                      <p className="text-sm text-gray-600">FPS December</p>
+                    </div>
+                    <Badge variant="secondary">Due: 19 Jan</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  Payroll Trends
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Average Monthly Cost</span>
+                      <span className="font-semibold">£1.15M</span>
+                    </div>
+                    <Progress value={85} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Employee Satisfaction</span>
+                      <span className="font-semibold">94%</span>
+                    </div>
+                    <Progress value={94} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Compliance Score</span>
+                      <span className="font-semibold">98%</span>
+                    </div>
+                    <Progress value={98} className="h-2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )
+    }
+
+    if (activeMainTab === 'processing' && !activeSubTab) {
+      return (
+        <div className="text-center py-8">
+          <Calculator className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Select a Payroll Processing Option</h3>
+          <p className="text-gray-600">Choose from the sub-menu to access payroll processing features</p>
+        </div>
+      )
+    }
+
+    if (activeMainTab === 'processing' && activeSubTab === 'run-payroll') {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">Run Payroll</h3>
+            <Button>
+              <Play className="h-4 w-4 mr-2" />
+              Start Payroll Run
+            </Button>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Current Pay Period</CardTitle>
+                <CardDescription>December 2024 - Monthly</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span>Employees to Process</span>
+                    <span className="font-semibold">247</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Estimated Gross Pay</span>
+                    <span className="font-semibold">£980,000</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Status</span>
+                    <Badge variant="secondary">Ready to Process</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Payroll Checklist</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                    <span className="text-sm">Timesheets approved</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                    <span className="text-sm">Expenses processed</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 text-orange-600 mr-2" />
+                    <span className="text-sm">Salary adjustments pending</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="text-center py-8">
+        <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
+        <p className="text-gray-600">This section is under development</p>
+      </div>
+    )
   }
 
   return (
     <ResponsiveLayout>
-      <div className="space-y-6">
-        <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
-          <div>
-            <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Payroll</h1>
-            <p className="text-gray-600 mt-2">RTI submissions, pensions, and payroll management</p>
+      <div className="flex h-screen bg-blue-50">
+        {/* Left Sidebar Navigation */}
+        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h1 className="text-xl font-bold text-gray-900">Payroll</h1>
+            <p className="text-sm text-gray-600 mt-1">Comprehensive payroll management</p>
           </div>
-          <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Add Employee
-            </Button>
-            <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
-              <Play className="h-4 w-4 mr-2" />
-              New Pay Run
-            </Button>
+          
+          <div className="flex-1 overflow-y-auto p-4">
+            <nav className="space-y-2">
+              {menuStructure.map((item) => {
+                const Icon = item.icon
+                const isActive = activeMainTab === item.id
+                const isExpanded = expandedCategories.includes(item.id)
+                
+                return (
+                  <div key={item.id}>
+                    <button
+                      onClick={() => handleMainTabClick(item.id)}
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                        isActive 
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                          : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <Icon className="h-4 w-4 mr-2" />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.hasSubTabs && (
+                        <ChevronLeft className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      )}
+                    </button>
+                    
+                    {item.hasSubTabs && isExpanded && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {item.subTabs?.map((subTab) => {
+                          const isSubActive = activeSubTab === subTab.id
+                          return (
+                            <button
+                              key={subTab.id}
+                              onClick={() => handleSubTabClick(subTab.id)}
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                                isSubActive 
+                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                              }`}
+                            >
+                              <span>{subTab.label}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </nav>
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-7'}`}>
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="employees">Employees</TabsTrigger>
-            {!isMobile && <TabsTrigger value="payruns">Pay Runs</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="rti">RTI</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="statutory">Statutory</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="templates">Templates</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="calculator">PAYE Calc</TabsTrigger>}
-            {!isMobile && <TabsTrigger value="reports">Reports</TabsTrigger>}
-          </TabsList>
-
-          <TabsContent value="dashboard" className="space-y-6">
-            <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}>
-              {kpis.map((kpi, index) => {
-                const Icon = kpi.icon
-                const drillDownData = {
-                  title: `${kpi.title} Analysis`,
-                  description: `Detailed payroll analysis and breakdown for ${kpi.title.toLowerCase()}`,
-                  content: (
-                    <div className="space-y-6">
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="p-4 border rounded-lg">
-                          <h4 className="font-semibold mb-2">Current Period</h4>
-                          <p className="text-2xl font-bold">{kpi.value}</p>
-                          <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
-                        </div>
-                        <div className="p-4 border rounded-lg">
-                          <h4 className="font-semibold mb-2">Compliance Status</h4>
-                          <p className="text-sm text-gray-600">HMRC & pension compliance</p>
-                          <div className="mt-2">
-                            <div className="flex justify-between text-xs">
-                              <span>Compliance Score</span>
-                              <span className="text-green-600">98%</span>
-                            </div>
-                            <Progress value={98} className="h-2" />
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {kpi.title === 'Active Employees' && (
-                        <div>
-                          <h4 className="font-semibold mb-3">Employee Breakdown</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Administration</span>
-                              <span className="font-semibold">18 (15 FT, 3 PT)</span>
-                            </div>
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Operations</span>
-                              <span className="font-semibold">22 (20 FT, 2 PT)</span>
-                            </div>
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Management</span>
-                              <span className="font-semibold">5 (5 FT, 0 PT)</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {kpi.title === 'Monthly Payroll' && (
-                        <div>
-                          <h4 className="font-semibold mb-3">Payroll Breakdown</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Gross Salaries</span>
-                              <span className="font-semibold">£98,200 (78%)</span>
-                            </div>
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Employer NI</span>
-                              <span className="font-semibold">£15,800 (13%)</span>
-                            </div>
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Pension Contributions</span>
-                              <span className="font-semibold">£8,400 (7%)</span>
-                            </div>
-                            <div className="flex justify-between p-2 border rounded">
-                              <span>Other Benefits</span>
-                              <span className="font-semibold">£3,000 (2%)</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {kpi.title === 'Pension Enrolled' && (
-                        <div>
-                          <h4 className="font-semibold mb-3">Pension Enrollment Status</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>Auto-enrolled - 38 (84%)</span>
-                              <Badge variant="default">None</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>Opted out - 4 (9%)</span>
-                              <Badge variant="secondary">Monitor</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>Pending enrollment - 3 (7%)</span>
-                              <Badge variant="destructive">Action needed</Badge>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {kpi.title === 'RTI Submissions' && (
-                        <div>
-                          <h4 className="font-semibold mb-3">RTI Submission History</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>January 2024 - 45 employees</span>
-                              <Badge variant="default">Accepted</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>December 2023 - 42 employees</span>
-                              <Badge variant="default">Accepted</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
-                              <span>November 2023 - 42 employees</span>
-                              <Badge variant="default">Accepted</Badge>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="flex gap-2 pt-4">
-                        <Button variant="outline">Export Payroll Data</Button>
-                        <Button>Generate Report</Button>
-                      </div>
-                    </div>
-                  )
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          <div className="p-4 border-b border-gray-200 bg-white">
+            <SearchFilterHeader
+              searchPlaceholder="Search employees, payslips, or submissions..."
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              filters={[
+                {
+                  label: "Department",
+                  options: departmentOptions,
+                  value: selectedDepartment,
+                  onChange: setSelectedDepartment
+                },
+                {
+                  label: "Status",
+                  options: statusOptions,
+                  value: selectedStatus,
+                  onChange: setSelectedStatus
+                },
+                {
+                  label: "Pay Period",
+                  options: payPeriodOptions,
+                  value: selectedPayPeriod,
+                  onChange: setSelectedPayPeriod
                 }
-                return (
-                  <KPICard
-                    key={index}
-                    title={kpi.title}
-                    value={kpi.value}
-                    change={kpi.change}
-                    icon={Icon}
-                    color={kpi.color}
-                    drillDownData={drillDownData}
-                  />
-                )
-              })}
-            </ResponsiveGrid>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
-              <div className={isMobile ? '' : 'lg:col-span-2'}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recent Pay Runs</CardTitle>
-                    <CardDescription>Latest payroll processing activity</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {payRuns.slice(0, 3).map((payRun) => (
-                        <div key={payRun.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                          <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
-                            {getStatusIcon(payRun.status)}
-                            <div className="flex-1">
-                              <h4 className="font-medium">{payRun.period}</h4>
-                              <p className="text-sm text-gray-600">Pay Date: {payRun.payDate}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge className={`text-xs ${getStatusColor(payRun.status)}`}>
-                                  {payRun.status}
-                                </Badge>
-                                <span className="text-xs text-gray-500">{payRun.employeeCount} employees</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
-                            <div>
-                              <p className="text-sm font-medium">Gross: £{payRun.grossPay.toLocaleString()}</p>
-                              <p className="text-sm text-gray-600">Net: £{payRun.netPay.toLocaleString()}</p>
-                            </div>
-                            <div className={`flex gap-2 ${isMobile ? '' : 'ml-4'}`}>
-                              <Button size="sm" variant="outline">
-                                <Eye className="h-3 w-3" />
-                              </Button>
-                              {payRun.status === 'draft' && (
-                                <Button size="sm">
-                                  <Play className="h-3 w-3" />
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brain className="h-5 w-5 text-brisk-primary" />
-                      Enhanced HR Adviser
-                    </CardTitle>
-                    <CardDescription>Advanced HR insights, policy templates, and cost simulations</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <div className="p-3 bg-blue-50 rounded-lg">
-                          <h4 className="font-semibold text-blue-900">Compliance Score: 85/100</h4>
-                          <p className="text-xs text-blue-700">3 employees need pension auto-enrollment review</p>
-                          <Button className="mt-2" size="sm">
-                            Review Compliance
-                          </Button>
-                        </div>
-                        
-                        <div className="p-3 bg-amber-50 rounded-lg">
-                          <h4 className="font-semibold text-amber-900">Policy Updates</h4>
-                          <p className="text-xs text-amber-700">New minimum wage rates effective April 2024</p>
-                          <Button className="mt-2" size="sm" variant="outline">
-                            View Updates
-                          </Button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h5 className="font-semibold mb-2">Policy Templates</h5>
-                        <div className="grid gap-2">
-                          <Card className="border border-gray-200 hover:shadow-sm transition-shadow">
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium text-sm">Employment Contract</h6>
-                                  <p className="text-xs text-gray-600">Comprehensive template with statutory requirements</p>
-                                </div>
-                                <Button size="sm" variant="outline">Generate</Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border border-gray-200 hover:shadow-sm transition-shadow">
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium text-sm">Employee Handbook</h6>
-                                  <p className="text-xs text-gray-600">Complete policies and procedures guide</p>
-                                </div>
-                                <Button size="sm" variant="outline">Generate</Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h5 className="font-semibold mb-2">Cost Simulations</h5>
-                        <div className="space-y-2">
-                          <Card className="border border-green-200 bg-green-50">
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium text-green-900 text-sm">5% Salary Increase</h6>
-                                  <p className="text-xs text-green-700">Annual cost: £6,270 (inc. NI &amp; pension)</p>
-                                </div>
-                                <Button size="sm" variant="outline" className="border-green-300">
-                                  Details
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border border-purple-200 bg-purple-50">
-                            <CardContent className="p-3">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium text-purple-900 text-sm">Enhanced Benefits</h6>
-                                  <p className="text-xs text-purple-700">£90,000 annual cost, 15-25% turnover reduction</p>
-                                </div>
-                                <Button size="sm" variant="outline" className="border-purple-300">
-                                  Calculate ROI
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upcoming Tasks</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">February Pay Run</p>
-                          <p className="text-xs text-gray-600">45 employees</p>
-                        </div>
-                        <Badge className="bg-orange-100 text-orange-800">Due 29 Feb</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">P11D Preparation</p>
-                          <p className="text-xs text-gray-600">Benefits reporting</p>
-                        </div>
-                        <Badge className="bg-brisk-primary-50 text-brisk-primary">Due 6 Jul</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">Pension Contributions</p>
-                          <p className="text-xs text-gray-600">Monthly submission</p>
-                        </div>
-                        <Badge className="bg-blue-100 text-blue-800">Due 22 Feb</Badge>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="employees" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Employee Management</CardTitle>
-                    <CardDescription>Manage employee records and payroll details</CardDescription>
-                  </div>
-                  <Button>
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Add Employee
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <SearchFilterHeader
-                  searchPlaceholder="Search employees, departments, positions..."
-                  searchValue={searchTerm}
-                  onSearchChange={setSearchTerm}
-                  filters={[
-                    {
-                      label: 'Department',
-                      options: departmentOptions,
-                      value: selectedDepartment,
-                      onChange: setSelectedDepartment
-                    },
-                    {
-                      label: 'Status',
-                      options: statusOptions,
-                      value: selectedStatus,
-                      onChange: setSelectedStatus
-                    },
-                    {
-                      label: 'Pay Period',
-                      options: payPeriodOptions,
-                      value: selectedPayPeriod,
-                      onChange: setSelectedPayPeriod
-                    }
-                  ]}
-                  dateRange={{
-                    from: dateFrom,
-                    to: dateTo,
-                    onFromChange: setDateFrom,
-                    onToChange: setDateTo
-                  }}
-                />
-                
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <Button variant="outline">
-                      <Download className="h-4 w-4 mr-2" />
-                      Export
-                    </Button>
-                  </div></div>
-
-                  <div className="grid gap-4">
-                    {employees.map((employee) => (
-                      <Card key={employee.id} className="hover:shadow-md transition-shadow">
-                        <CardContent className="p-6">
-                          <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
-                            <div className="flex items-center gap-4">
-                              {getStatusIcon(employee.status)}
-                              <div>
-                                <h3 className="font-semibold">{employee.name}</h3>
-                                <p className="text-sm text-gray-600">{employee.position}</p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge className={`text-xs ${getStatusColor(employee.status)}`}>
-                                    {employee.status}
-                                  </Badge>
-                                  <Badge className={`text-xs ${employee.pensionEnrolled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                                    {employee.pensionEnrolled ? 'Pension Enrolled' : 'No Pension'}
-                                  </Badge>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={`${isMobile ? 'grid grid-cols-2 gap-4' : 'text-right'}`}>
-                              <div>
-                                <p className="font-semibold">£{employee.salary.toLocaleString()}</p>
-                                <p className="text-sm text-gray-600">Annual Salary</p>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium">YTD: £{employee.ytdGross.toLocaleString()}</p>
-                                <p className="text-xs text-gray-600">Last: {employee.lastPayRun}</p>
-                              </div>
-                              <div className={`flex gap-2 ${isMobile ? 'col-span-2' : 'ml-4'}`}>
-                                <Button size="sm" variant="outline">
-                                  <Edit className="h-3 w-3" />
-                                </Button>
-                                <Button size="sm" variant="outline">
-                                  <Eye className="h-3 w-3" />
-                                </Button>
-                                <Button size="sm" variant="outline">
-                                  <Settings className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-          <TabsContent value="payruns" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Pay Run Management</CardTitle>
-                <CardDescription>Process payroll and manage pay runs</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {payRuns.map((payRun) => (
-                    <Card key={payRun.id} className="border-l-4 border-l-brisk-primary">
-                      <CardContent className="p-4">
-                        <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                          <div className="flex items-center gap-4">
-                            {getStatusIcon(payRun.status)}
-                            <div>
-                              <h3 className="font-semibold">{payRun.period}</h3>
-                              <p className="text-sm text-gray-600">Pay Date: {payRun.payDate}</p>
-                              <Badge className={`text-xs mt-1 ${getStatusColor(payRun.status)}`}>
-                                {payRun.status}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className={`${isMobile ? 'grid grid-cols-2 gap-4' : 'flex gap-8'}`}>
-                            <div>
-                              <p className="text-sm font-medium">Gross Pay</p>
-                              <p className="text-lg font-bold">£{payRun.grossPay.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Net Pay</p>
-                              <p className="text-lg font-bold">£{payRun.netPay.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Employees</p>
-                              <p className="text-lg font-bold">{payRun.employeeCount}</p>
-                            </div>
-                            <div className={`flex gap-2 ${isMobile ? 'col-span-2' : ''}`}>
-                              <Button size="sm" variant="outline">View</Button>
-                              {payRun.status === 'draft' && <Button size="sm">Process</Button>}
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="rti" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>RTI Submissions</CardTitle>
-                <CardDescription>Real Time Information submissions to HMRC</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h3 className="font-semibold text-blue-900">Ready for Submission</h3>
-                    <p className="text-sm text-blue-700">February 2024 FPS ready for HMRC submission</p>
-                    <Button className="mt-2" size="sm">
-                      Submit to HMRC
-                    </Button>
-                  </div>
-
-                  <div className="grid gap-4">
-                    {rtiSubmissions.map((submission) => (
-                      <Card key={submission.id} className="hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                            <div className="flex items-center gap-4">
-                              {getStatusIcon(submission.status)}
-                              <div>
-                                <h3 className="font-semibold">{submission.type} - {submission.period}</h3>
-                                <p className="text-sm text-gray-600">
-                                  {submission.submittedDate ? `Submitted: ${submission.submittedDate}` : 'Not submitted'}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge className={`text-xs ${getStatusColor(submission.status)}`}>
-                                    {submission.status}
-                                  </Badge>
-                                  <span className="text-xs text-gray-500">{submission.employeeCount} employees</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
-                              <div>
-                                {submission.reference && (
-                                  <p className="text-sm font-medium">Ref: {submission.reference}</p>
-                                )}
-                                <p className="text-xs text-gray-600">
-                                  {submission.status === 'accepted' ? 'Successfully processed' : 'Awaiting submission'}
-                                </p>
-                              </div>
-                              <div className={`flex gap-2 ${isMobile ? '' : 'ml-4'}`}>
-                                <Button size="sm" variant="outline">View</Button>
-                                {submission.status === 'pending' && <Button size="sm">Submit</Button>}
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="statutory" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Statutory Payments</CardTitle>
-                <CardDescription>Manage SSP, SMP, SPP, SAP, and Shared Parental Pay</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div>
-                    <h3 className="font-semibold mb-4">Current Statutory Payments</h3>
-                    <div className="space-y-3">
-                      <Card className="border-l-4 border-l-blue-500">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium">Sarah Johnson - Maternity Pay</h4>
-                              <p className="text-sm text-gray-600">SMP: £172.48/week • 12 weeks remaining</p>
-                              <p className="text-xs text-gray-500">Started: 15 Jan 2024</p>
-                            </div>
-                            <Badge className="bg-blue-100 text-blue-800">Active</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border-l-4 border-l-green-500">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium">Michael Brown - Sick Pay</h4>
-                              <p className="text-sm text-gray-600">SSP: £109.40/week • 2 weeks</p>
-                              <p className="text-xs text-gray-500">Started: 1 Feb 2024</p>
-                            </div>
-                            <Badge className="bg-green-100 text-green-800">Active</Badge>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold mb-4">Calculate New Statutory Payment</h3>
-                    <Card>
-                      <CardContent className="p-4 space-y-4">
-                        <div>
-                          <label className="text-sm font-medium">Employee</label>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select employee" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1">John Smith</SelectItem>
-                              <SelectItem value="2">Sarah Johnson</SelectItem>
-                              <SelectItem value="3">Michael Brown</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <label className="text-sm font-medium">Payment Type</label>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select payment type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="SSP">Statutory Sick Pay (SSP)</SelectItem>
-                              <SelectItem value="SMP">Statutory Maternity Pay (SMP)</SelectItem>
-                              <SelectItem value="SPP">Statutory Paternity Pay (SPP)</SelectItem>
-                              <SelectItem value="SAP">Statutory Adoption Pay (SAP)</SelectItem>
-                              <SelectItem value="ShPP">Shared Parental Pay (ShPP)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium">Start Date</label>
-                            <input type="date" className="w-full p-2 border rounded-md" />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Expected Duration</label>
-                            <input type="number" placeholder="Weeks" className="w-full p-2 border rounded-md" />
-                          </div>
-                        </div>
-
-                        <Button className="w-full">Calculate Payment</Button>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <h3 className="font-semibold mb-4">Statutory Payment Rates (2024)</h3>
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    <Card className="bg-blue-50 border-blue-200">
-                      <CardContent className="p-4 text-center">
-                        <h4 className="font-semibold text-blue-900">SSP</h4>
-                        <p className="text-2xl font-bold text-blue-800">£109.40</p>
-                        <p className="text-sm text-blue-600">per week</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-green-50 border-green-200">
-                      <CardContent className="p-4 text-center">
-                        <h4 className="font-semibold text-green-900">SMP/SPP/SAP</h4>
-                        <p className="text-2xl font-bold text-green-800">£172.48</p>
-                        <p className="text-sm text-green-600">per week</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-purple-50 border-purple-200">
-                      <CardContent className="p-4 text-center">
-                        <h4 className="font-semibold text-purple-900">ShPP</h4>
-                        <p className="text-2xl font-bold text-purple-800">£172.48</p>
-                        <p className="text-sm text-purple-600">per week</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="calculator" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>PAYE Calculator</CardTitle>
-                <CardDescription>Calculate PAYE tax and National Insurance contributions for 2024-25</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium">Annual Gross Salary (£)</label>
-                      <input 
-                        type="number" 
-                        className="w-full mt-1 p-2 border rounded-md" 
-                        placeholder="30000"
-                        defaultValue="30000"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Tax Code</label>
-                      <input 
-                        type="text" 
-                        className="w-full mt-1 p-2 border rounded-md" 
-                        placeholder="1257L"
-                        defaultValue="1257L"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Annual Pension Contribution (£)</label>
-                      <input 
-                        type="number" 
-                        className="w-full mt-1 p-2 border rounded-md" 
-                        placeholder="900"
-                        defaultValue="900"
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="student-loan" />
-                      <label htmlFor="student-loan" className="text-sm">Student Loan Deductions</label>
-                    </div>
-                    <Button className="w-full bg-brisk-primary hover:bg-brisk-primary-600">
-                      Calculate PAYE
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Calculation Results</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between p-3 bg-gray-50 rounded">
-                        <span>Gross Annual Salary:</span>
-                        <span className="font-medium">£30,000</span>
-                      </div>
-                      <div className="flex justify-between p-3 bg-red-50 rounded">
-                        <span>Income Tax (Annual):</span>
-                        <span className="font-medium text-red-700">£3,486</span>
-                      </div>
-                      <div className="flex justify-between p-3 bg-blue-50 rounded">
-                        <span>National Insurance (Annual):</span>
-                        <span className="font-medium text-blue-700">£2,091</span>
-                      </div>
-                      <div className="flex justify-between p-3 bg-purple-50 rounded">
-                        <span>Pension Contribution:</span>
-                        <span className="font-medium text-purple-700">£900</span>
-                      </div>
-                      <div className="flex justify-between p-3 bg-green-50 rounded border-2 border-green-200">
-                        <span className="font-semibold">Net Annual Salary:</span>
-                        <span className="font-bold text-green-700">£23,523</span>
-                      </div>
-                      <div className="flex justify-between p-3 bg-green-100 rounded">
-                        <span className="font-semibold">Net Monthly Salary:</span>
-                        <span className="font-bold text-green-800">£1,960</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="templates" className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold">Payslip Templates</h2>
-                <p className="text-gray-600">Customize payslip templates with your company branding</p>
-              </div>
-            </div>
-            <PayslipTemplateManager />
-          </TabsContent>
-
-          <TabsContent value="reports" className="space-y-6">
-            {selectedPayrollForm ? (
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <Button variant="outline" onClick={() => setSelectedPayrollForm(null)}>
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Back to Reports
-                  </Button>
-                  <h3 className="text-lg font-semibold">
-                    {selectedPayrollForm === 'p35' && 'P35 - End of Year Return'}
-                    {selectedPayrollForm === 'p60' && 'P60 - End of Year Certificate'}
-                    {selectedPayrollForm === 'p45' && 'P45 - Leaving Certificate'}
-                    {selectedPayrollForm === 'p46' && 'P46 - New Employee'}
-                  </h3>
-                </div>
-
-                {selectedPayrollForm === 'p35' && (
-                  <FormWizard
-                    title="P35 - End of Year Return"
-                    logoComponent={<HMRCLogo className="h-16 w-16" />}
-                    colorScheme="white-green"
-                    pages={[
-                      {
-                        title: "Employer Details",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="employerName">Employer name</Label>
-                                <Input 
-                                  id="employerName"
-                                  value={payrollFormData.employerName || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, employerName: e.target.value})}
-                                  placeholder="Enter employer name" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="payeReference">PAYE reference</Label>
-                                <Input 
-                                  id="payeReference"
-                                  value={payrollFormData.payeReference || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, payeReference: e.target.value})}
-                                  placeholder="123/AB12345" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="accountsOfficeRef">Accounts office reference</Label>
-                                <Input 
-                                  id="accountsOfficeRef"
-                                  value={payrollFormData.accountsOfficeRef || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, accountsOfficeRef: e.target.value})}
-                                  placeholder="123PA00012345" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="taxYearEnd">Tax year ending</Label>
-                                <Input 
-                                  id="taxYearEnd"
-                                  type="date"
-                                  value={payrollFormData.taxYearEnd || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, taxYearEnd: e.target.value})}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      },
-                      {
-                        title: "Employee Summary",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="totalEmployees">Total number of employees</Label>
-                                <Input 
-                                  id="totalEmployees"
-                                  type="number"
-                                  value={payrollFormData.totalEmployees || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalEmployees: e.target.value})}
-                                  placeholder="0" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="totalPay">Total pay</Label>
-                                <Input 
-                                  id="totalPay"
-                                  value={payrollFormData.totalPay || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalPay: e.target.value})}
-                                  placeholder="£0.00" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="totalTaxDeducted">Total tax deducted</Label>
-                                <Input 
-                                  id="totalTaxDeducted"
-                                  value={payrollFormData.totalTaxDeducted || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalTaxDeducted: e.target.value})}
-                                  placeholder="£0.00" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="totalNI">Total NI contributions</Label>
-                                <Input 
-                                  id="totalNI"
-                                  value={payrollFormData.totalNI || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalNI: e.target.value})}
-                                  placeholder="£0.00" 
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      },
-                      {
-                        title: "Declaration",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="bg-blue-50 p-4 rounded-lg">
-                              <h4 className="font-semibold mb-2">Declaration</h4>
-                              <p className="text-sm text-gray-700 mb-4">
-                                I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
-                              </p>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                  <Label htmlFor="declarantName">Declarant name</Label>
-                                  <Input 
-                                    id="declarantName"
-                                    value={payrollFormData.declarantName || ''} 
-                                    onChange={(e) => setPayrollFormData({...payrollFormData, declarantName: e.target.value})}
-                                    placeholder="Enter full name" 
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor="declarantPosition">Position</Label>
-                                  <Input 
-                                    id="declarantPosition"
-                                    value={payrollFormData.declarantPosition || ''} 
-                                    onChange={(e) => setPayrollFormData({...payrollFormData, declarantPosition: e.target.value})}
-                                    placeholder="e.g. Director, Accountant" 
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      }
-                    ]}
-                    formData={payrollFormData}
-                    onSubmit={(data) => {
-                      console.log('P35 submitted:', data)
-                      alert('P35 End of Year Return submitted successfully!')
-                    }}
-                    onSaveDraft={(data) => {
-                      console.log('P35 draft saved:', data)
-                      alert('P35 draft saved successfully!')
-                    }}
-                  />
-                )}
-
-                {selectedPayrollForm === 'p45' && (
-                  <FormWizard
-                    title="P45 - Leaving Certificate"
-                    logoComponent={<HMRCLogo className="h-16 w-16" />}
-                    colorScheme="white-green"
-                    pages={[
-                      {
-                        title: "Employee Details",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="employeeName">Employee name</Label>
-                                <Input 
-                                  id="employeeName"
-                                  value={payrollFormData.employeeName || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeName: e.target.value})}
-                                  placeholder="Enter employee full name" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="employeeNI">National Insurance number</Label>
-                                <Input 
-                                  id="employeeNI"
-                                  value={payrollFormData.employeeNI || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeNI: e.target.value})}
-                                  placeholder="AB123456C" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="employeeDOB">Date of birth</Label>
-                                <Input 
-                                  id="employeeDOB"
-                                  type="date"
-                                  value={payrollFormData.employeeDOB || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, employeeDOB: e.target.value})}
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="leavingDate">Leaving date</Label>
-                                <Input 
-                                  id="leavingDate"
-                                  type="date"
-                                  value={payrollFormData.leavingDate || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, leavingDate: e.target.value})}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      },
-                      {
-                        title: "Employment Details",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="totalPayInEmployment">Total pay in employment</Label>
-                                <Input 
-                                  id="totalPayInEmployment"
-                                  value={payrollFormData.totalPayInEmployment || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalPayInEmployment: e.target.value})}
-                                  placeholder="£0.00" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="totalTaxInEmployment">Total tax deducted</Label>
-                                <Input 
-                                  id="totalTaxInEmployment"
-                                  value={payrollFormData.totalTaxInEmployment || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, totalTaxInEmployment: e.target.value})}
-                                  placeholder="£0.00" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="taxCode">Tax code</Label>
-                                <Input 
-                                  id="taxCode"
-                                  value={payrollFormData.taxCode || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, taxCode: e.target.value})}
-                                  placeholder="1257L" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="weekMonthNumber">Week/Month number</Label>
-                                <Input 
-                                  id="weekMonthNumber"
-                                  value={payrollFormData.weekMonthNumber || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, weekMonthNumber: e.target.value})}
-                                  placeholder="52" 
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      }
-                    ]}
-                    formData={payrollFormData}
-                    onSubmit={(data) => {
-                      console.log('P45 submitted:', data)
-                      alert('P45 Leaving Certificate generated successfully!')
-                    }}
-                    onSaveDraft={(data) => {
-                      console.log('P45 draft saved:', data)
-                      alert('P45 draft saved successfully!')
-                    }}
-                  />
-                )}
-
-                {selectedPayrollForm === 'p46' && (
-                  <FormWizard
-                    title="P46 - New Employee"
-                    logoComponent={<HMRCLogo className="h-16 w-16" />}
-                    colorScheme="white-green"
-                    pages={[
-                      {
-                        title: "New Employee Details",
-                        component: (
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <Label htmlFor="newEmployeeName">Employee name</Label>
-                                <Input 
-                                  id="newEmployeeName"
-                                  value={payrollFormData.newEmployeeName || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeName: e.target.value})}
-                                  placeholder="Enter employee full name" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="newEmployeeNI">National Insurance number</Label>
-                                <Input 
-                                  id="newEmployeeNI"
-                                  value={payrollFormData.newEmployeeNI || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeNI: e.target.value})}
-                                  placeholder="AB123456C" 
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="newEmployeeDOB">Date of birth</Label>
-                                <Input 
-                                  id="newEmployeeDOB"
-                                  type="date"
-                                  value={payrollFormData.newEmployeeDOB || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, newEmployeeDOB: e.target.value})}
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="startDate">Start date</Label>
-                                <Input 
-                                  id="startDate"
-                                  type="date"
-                                  value={payrollFormData.startDate || ''} 
-                                  onChange={(e) => setPayrollFormData({...payrollFormData, startDate: e.target.value})}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      },
-                      {
-                        title: "Tax Information",
-                        component: (
-                          <div className="space-y-4">
-                            <div>
-                              <Label htmlFor="studentLoan">Student loan deductions</Label>
-                              <Select value={payrollFormData.studentLoan || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, studentLoan: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select option" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="none">No student loan</SelectItem>
-                                  <SelectItem value="plan1">Plan 1</SelectItem>
-                                  <SelectItem value="plan2">Plan 2</SelectItem>
-                                  <SelectItem value="postgrad">Postgraduate loan</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div>
-                              <Label htmlFor="taxCodeBasis">Tax code basis</Label>
-                              <Select value={payrollFormData.taxCodeBasis || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, taxCodeBasis: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select basis" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="cumulative">Cumulative basis</SelectItem>
-                                  <SelectItem value="week1">Week 1/Month 1 basis</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                        )
-                      }
-                    ]}
-                    formData={payrollFormData}
-                    onSubmit={(data) => {
-                      console.log('P46 submitted:', data)
-                      alert('P46 New Employee form completed successfully!')
-                    }}
-                    onSaveDraft={(data) => {
-                      console.log('P46 draft saved:', data)
-                      alert('P46 draft saved successfully!')
-                    }}
-                  />
-                )}
-
-                {selectedPayrollForm === 'p60' && (
-                  <FormWizard
-                    title="P60 - End of Year Certificate"
-                    logoComponent={<HMRCLogo className="h-16 w-16" />}
-                    colorScheme="white-green"
-                    pages={[
-                      {
-                        title: "Employee Selection",
-                        component: (
-                          <div className="space-y-4">
-                            <div>
-                              <Label htmlFor="p60Employees">Select employees for P60 generation</Label>
-                              <Select value={payrollFormData.p60Employees || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Employees: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select employees" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="all">All employees</SelectItem>
-                                  <SelectItem value="active">Active employees only</SelectItem>
-                                  <SelectItem value="selected">Selected employees</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div>
-                              <Label htmlFor="p60TaxYear">Tax year</Label>
-                              <Select value={payrollFormData.p60TaxYear || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60TaxYear: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select tax year" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="2023-24">2023-24</SelectItem>
-                                  <SelectItem value="2022-23">2022-23</SelectItem>
-                                  <SelectItem value="2021-22">2021-22</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                        )
-                      },
-                      {
-                        title: "Generation Options",
-                        component: (
-                          <div className="space-y-4">
-                            <div>
-                              <Label htmlFor="p60Format">Output format</Label>
-                              <Select value={payrollFormData.p60Format || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Format: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select format" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="pdf">PDF</SelectItem>
-                                  <SelectItem value="csv">CSV</SelectItem>
-                                  <SelectItem value="both">Both PDF and CSV</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div>
-                              <Label htmlFor="p60Email">Email to employees</Label>
-                              <Select value={payrollFormData.p60Email || ''} onValueChange={(value) => setPayrollFormData({...payrollFormData, p60Email: value})}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select option" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="yes">Yes, email P60s</SelectItem>
-                                  <SelectItem value="no">No, download only</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                        )
-                      }
-                    ]}
-                    formData={payrollFormData}
-                    onSubmit={(data) => {
-                      console.log('P60 submitted:', data)
-                      alert('P60 certificates generated successfully!')
-                    }}
-                    onSaveDraft={(data) => {
-                      console.log('P60 draft saved:', data)
-                      alert('P60 draft saved successfully!')
-                    }}
-                  />
-                )}
-              </div>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Reports & Downloads</CardTitle>
-                  <CardDescription>
-                    Generate P35, P60, P45, P46, payslips, summaries with PDF and CSV downloads
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p35')}>
-                        <CardHeader className="bg-[#00703c] text-white">
-                          <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            P35 - End of Year Return
-                          </CardTitle>
-                          <CardDescription className="text-green-100">Annual summary for HMRC</CardDescription>
-                        </CardHeader>
-                        <CardContent className="p-4">
-                          <div className="space-y-2">
-                            <div className="text-sm text-muted-foreground">
-                              Complete multi-page P35 return with employee summaries
-                            </div>
-                            <Button variant="outline" className="w-full">
-                              <FileText className="mr-2 h-4 w-4" />
-                              Complete P35 Form
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p60')}>
-                        <CardHeader className="bg-[#00703c] text-white">
-                          <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            P60 - End of Year Certificate
-                          </CardTitle>
-                          <CardDescription className="text-green-100">Employee tax year summary</CardDescription>
-                        </CardHeader>
-                        <CardContent className="p-4">
-                          <div className="space-y-2">
-                            <div className="text-sm text-muted-foreground">
-                              Generate P60 certificates for all employees
-                            </div>
-                            <Button variant="outline" className="w-full">
-                              <FileText className="mr-2 h-4 w-4" />
-                              Complete P60 Form
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p45')}>
-                        <CardHeader className="bg-[#00703c] text-white">
-                          <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            P45 - Leaving Certificate
-                          </CardTitle>
-                          <CardDescription className="text-green-100">Employee leaving documentation</CardDescription>
-                        </CardHeader>
-                        <CardContent className="p-4">
-                          <div className="space-y-2">
-                            <div className="text-sm text-muted-foreground">
-                              Complete P45 form for employees leaving employment
-                            </div>
-                            <Button variant="outline" className="w-full">
-                              <FileText className="mr-2 h-4 w-4" />
-                              Complete P45 Form
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-2 border-[#00703c] bg-green-50/30 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedPayrollForm('p46')}>
-                        <CardHeader className="bg-[#00703c] text-white">
-                          <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            P46 - New Employee
-                          </CardTitle>
-                          <CardDescription className="text-green-100">New starter documentation</CardDescription>
-                        </CardHeader>
-                        <CardContent className="p-4">
-                          <div className="space-y-2">
-                            <div className="text-sm text-muted-foreground">
-                              Complete P46 form for new employees without P45
-                            </div>
-                            <Button variant="outline" className="w-full">
-                              <FileText className="mr-2 h-4 w-4" />
-                              Complete P46 Form
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <FileText className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Payroll Summary</h3>
-                        <p className="text-sm text-gray-600 mb-3">Monthly payroll reports</p>
-                        <Button size="sm" variant="outline">
-                          <FileText className="mr-2 h-4 w-4" />
-                          Generate Summary
-                        </Button>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Custom Reports</h3>
-                        <p className="text-sm text-gray-600 mb-3">Bespoke payroll analysis</p>
-                        <Button size="sm" variant="outline">
-                          <FileText className="mr-2 h-4 w-4" />
-                          Create Report
-                        </Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Periodic Tax and NI</h3>
-                        <p className="text-sm text-gray-600 mb-3">Monthly/quarterly tax and NI reports</p>
-                        <Button size="sm" variant="outline">Generate</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Year To Date Details</h3>
-                        <p className="text-sm text-gray-600 mb-3">Comprehensive YTD employee summaries</p>
-                        <Button size="sm" variant="outline">Generate</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Departmental Reports</h3>
-                        <p className="text-sm text-gray-600 mb-3">Payroll breakdown by department</p>
-                        <Button size="sm" variant="outline">Generate</Button>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <Calculator className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Tax and NI Report</h3>
-                        <p className="text-sm text-gray-600 mb-3">PAYE and NI calculations</p>
-                        <Button size="sm" variant="outline">Generate</Button>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <TrendingUp className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Pension Report</h3>
-                        <p className="text-sm text-gray-600 mb-3">Auto-enrollment status</p>
-                        <Button size="sm" variant="outline">Generate</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">P11D Benefits</h3>
-                        <p className="text-sm text-gray-600 mb-3">Benefits in kind reporting</p>
-                        <Button size="sm" variant="outline">Generate P11Ds</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <Calculator className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Statutory Payments</h3>
-                        <p className="text-sm text-gray-600 mb-3">SSP, SMP, SPP, SAP, ShPP</p>
-                        <Button size="sm" variant="outline">Calculate</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <TrendingUp className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Payroll Analytics</h3>
-                        <p className="text-sm text-gray-600 mb-3">Trends and insights</p>
-                        <Button size="sm" variant="outline">View Analytics</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <FileText className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">CIS Reports</h3>
-                        <p className="text-sm text-gray-600 mb-3">Construction industry scheme</p>
-                        <Button size="sm" variant="outline">Generate CIS</Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                      <CardContent className="p-6 text-center">
-                        <Download className="h-8 w-8 text-gray-500 mx-auto mb-2" />
-                        <h3 className="font-semibold mb-1">Payslip Archive</h3>
-                        <p className="text-sm text-gray-600 mb-3">Historical payslips</p>
-                        <Button size="sm" variant="outline">Access Archive</Button>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold mb-4">Generated Reports</h4>
-                    <div className="border rounded-lg overflow-hidden">
-                      <table className="w-full">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Report Type</th>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Period</th>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Generated Date</th>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Format</th>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Emailed</th>
-                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                          <tr>
-                            <td className="px-4 py-3 text-sm font-medium">P60</td>
-                            <td className="px-4 py-3 text-sm text-gray-600">2023-24</td>
-                            <td className="px-4 py-3 text-sm text-gray-600">05/04/2024</td>
-                            <td className="px-4 py-3 text-sm">
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">PDF</span>
-                            </td>
-                            <td className="px-4 py-3 text-sm">
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                Sent
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-sm">
-                              <div className="flex space-x-2">
-                                <Button variant="outline" size="sm">
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Mail className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-3 text-sm font-medium">P45</td>
-                            <td className="px-4 py-3 text-sm text-gray-600">March 2024</td>
-                            <td className="px-4 py-3 text-sm text-gray-600">15/03/2024</td>
-                            <td className="px-4 py-3 text-sm">
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">PDF</span>
-                            </td>
-                            <td className="px-4 py-3 text-sm">
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                Not Sent
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-sm">
-                              <div className="flex space-x-2">
-                                <Button variant="outline" size="sm">
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                  <Mail className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card className="bg-blue-50 border-blue-200">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-semibold text-blue-900">Year-End Processing</h4>
-                            <p className="text-sm text-blue-700">Generate all P60s and P11Ds for tax year</p>
-                          </div>
-                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                            Start Process
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-green-50 border-green-200">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-semibold text-green-900">Pension Auto-Enrollment</h4>
-                            <p className="text-sm text-green-700">Review and process new enrollments</p>
-                          </div>
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                            Review Queue
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            )}
-          </TabsContent>
-        </Tabs>
-        
-        <AIPromptSection
-          title="Ask your HR Adviser"
-          description="Get expert HR and payroll guidance"
-          placeholder="Ask about payroll processing, employee benefits, compliance..."
-          isLoading={isAILoading}
-          onSubmit={handleAIQuestion}
-          recentQuestions={[
-            "How do I process monthly payroll?",
-            "What are the pension auto-enrollment requirements?",
-            "How do I handle statutory sick pay?"
-          ]}
-        />
+              ]}
+            />
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-6">
+            {renderMainContent()}
+          </div>
+        </div>
       </div>
+      
+      <AIPromptSection
+        title="Ask your HR Adviser"
+        description="Get expert HR and payroll guidance"
+        placeholder="Ask about payroll processing, employee benefits, compliance..."
+        isLoading={isAILoading}
+        onSubmit={handleAIQuestion}
+        recentQuestions={[
+          "How do I process monthly payroll?",
+          "What are the pension auto-enrollment requirements?",
+          "How do I handle statutory sick pay?"
+        ]}
+      />
     </ResponsiveLayout>
   )
 }

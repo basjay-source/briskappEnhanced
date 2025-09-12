@@ -85,12 +85,12 @@ export default function EcosystemHub() {
       color: 'bg-teal-500'
     },
     {
-      name: 'e-Signature',
+      name: 'DocuSignage',
       path: '/app/esign',
       icon: FileSignature,
       description: 'Digital signing workflows',
       status: 'active',
-      color: 'bg-brisk-primary'
+      color: 'bg-blue-500'
     }
   ]
 
