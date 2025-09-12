@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import date, datetime
@@ -7,6 +8,7 @@ from decimal import Decimal
 
 from app.database import get_db
 from app.models import BankConnection, EcommerceConnection, JournalEntry
+from app.models.client import Client
 
 router = APIRouter()
 
@@ -620,17 +622,27 @@ def get_customers(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    customers = [
-        {"id": "1", "name": "ABC Corporation", "email": "contact@abc.com", "phone": "+44 20 1234 5678"},
-        {"id": "2", "name": "XYZ Ltd", "email": "info@xyz.co.uk", "phone": "+44 161 987 6543"},
-        {"id": "3", "name": "Tech Solutions Inc", "email": "hello@techsolutions.com", "phone": "+44 113 456 7890"},
-        {"id": "4", "name": "Green Energy Co", "email": "contact@greenenergy.co.uk", "phone": "+44 117 234 5678"}
-    ]
+    query = db.query(Client).filter(Client.tenant_id == request.state.tenant_id)
     
     if search:
-        customers = [c for c in customers if search.lower() in c["name"].lower() or search.lower() in c["email"].lower()]
+        query = query.filter(
+            or_(
+                Client.name.ilike(f"%{search}%"),
+                Client.email.ilike(f"%{search}%")
+            )
+        )
     
-    return customers
+    customers = query.all()
+    
+    return [
+        {
+            "id": str(customer.id),
+            "name": customer.name,
+            "email": customer.email,
+            "phone": customer.phone or "+44 20 1234 5678"
+        }
+        for customer in customers
+    ]
 
 @router.get("/suppliers")
 def get_suppliers(
@@ -638,17 +650,30 @@ def get_suppliers(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    suppliers = [
-        {"id": "1", "name": "Office Supplies Ltd", "email": "orders@officesupplies.co.uk", "phone": "+44 20 9876 5432"},
-        {"id": "2", "name": "Tech Equipment Co", "email": "sales@techequipment.com", "phone": "+44 161 543 2109"},
-        {"id": "3", "name": "Utilities Provider", "email": "billing@utilities.co.uk", "phone": "+44 113 876 5432"},
-        {"id": "4", "name": "Marketing Agency", "email": "hello@marketingagency.com", "phone": "+44 117 654 3210"}
-    ]
+    query = db.query(Client).filter(
+        Client.tenant_id == request.state.tenant_id,
+        Client.client_type == "supplier"
+    )
     
     if search:
-        suppliers = [s for s in suppliers if search.lower() in s["name"].lower() or search.lower() in s["email"].lower()]
+        query = query.filter(
+            or_(
+                Client.name.ilike(f"%{search}%"),
+                Client.email.ilike(f"%{search}%")
+            )
+        )
     
-    return suppliers
+    suppliers = query.all()
+    
+    return [
+        {
+            "id": str(supplier.id),
+            "name": supplier.name,
+            "email": supplier.email,
+            "phone": supplier.phone or "+44 20 9876 5432"
+        }
+        for supplier in suppliers
+    ]
 
 @router.get("/transactions")
 def get_bank_transactions(

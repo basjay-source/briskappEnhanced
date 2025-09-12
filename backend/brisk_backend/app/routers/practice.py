@@ -112,6 +112,9 @@ def get_jobs(
     status: Optional[str] = None,
     assigned_to: Optional[str] = None,
     client_id: Optional[str] = None,
+    search: Optional[str] = None,
+    date_from: Optional[date] = None,
+    date_to: Optional[date] = None,
     request: Request = None,
     db: Session = Depends(get_db)
 ):
@@ -123,6 +126,15 @@ def get_jobs(
         query = query.filter(Job.assigned_to == assigned_to)
     if client_id:
         query = query.filter(Job.client_id == client_id)
+    if search:
+        query = query.filter(
+            Job.title.ilike(f"%{search}%") | 
+            Job.description.ilike(f"%{search}%")
+        )
+    if date_from:
+        query = query.filter(Job.due_date >= date_from)
+    if date_to:
+        query = query.filter(Job.due_date <= date_to)
     
     jobs = query.order_by(Job.due_date.asc()).all()
     
@@ -425,6 +437,8 @@ def get_time_entries(
     employee_id: Optional[str] = None,
     start_date: Optional[date] = None,
     end_date: Optional[date] = None,
+    search: Optional[str] = None,
+    job_id: Optional[str] = None,
     request: Request = None,
     db: Session = Depends(get_db)
 ):
@@ -438,6 +452,13 @@ def get_time_entries(
         query = query.filter(TimeEntry.date >= start_date)
     if end_date:
         query = query.filter(TimeEntry.date <= end_date)
+    if search:
+        query = query.filter(
+            TimeEntry.description.ilike(f"%{search}%") |
+            TimeEntry.notes.ilike(f"%{search}%")
+        )
+    if job_id:
+        query = query.filter(TimeEntry.job_id == job_id)
     
     time_entries = query.all()
     return time_entries
@@ -473,21 +494,51 @@ def get_job_codes(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    job_codes = [
-        {"id": "1", "code": "ACC001", "name": "Accounts Preparation", "default_rate": 85, "billable": True, "category": "Accounts"},
-        {"id": "2", "code": "TAX001", "name": "Corporation Tax", "default_rate": 95, "billable": True, "category": "Tax"},
-        {"id": "3", "code": "VAT001", "name": "VAT Returns", "default_rate": 75, "billable": True, "category": "VAT"},
-        {"id": "4", "code": "PAY001", "name": "Payroll Processing", "default_rate": 65, "billable": True, "category": "Payroll"},
-        {"id": "5", "code": "ADM001", "name": "Administration", "default_rate": 0, "billable": False, "category": "Admin"},
-        {"id": "6", "code": "AUD001", "name": "Audit Services", "default_rate": 120, "billable": True, "category": "Audit"},
-        {"id": "7", "code": "CON001", "name": "Consultancy", "default_rate": 150, "billable": True, "category": "Advisory"},
-        {"id": "8", "code": "BOO001", "name": "Bookkeeping", "default_rate": 45, "billable": True, "category": "Bookkeeping"}
-    ]
+    from app.models.practice import JobCode
+    
+    query = db.query(JobCode).filter(JobCode.tenant_id == request.state.tenant_id)
     
     if search:
-        job_codes = [jc for jc in job_codes if search.lower() in jc["name"].lower() or search.lower() in jc["code"].lower()]
+        query = query.filter(
+            JobCode.name.ilike(f"%{search}%") |
+            JobCode.code.ilike(f"%{search}%")
+        )
     if category:
-        job_codes = [jc for jc in job_codes if jc["category"].lower() == category.lower()]
+        query = query.filter(JobCode.category.ilike(f"%{category}%"))
+    
+    job_codes = query.all()
+    
+    if not job_codes:
+        default_codes = [
+            {"code": "ACC001", "name": "Accounts Preparation", "default_rate": 85, "billable": True, "category": "Accounts"},
+            {"code": "TAX001", "name": "Corporation Tax", "default_rate": 95, "billable": True, "category": "Tax"},
+            {"code": "VAT001", "name": "VAT Returns", "default_rate": 75, "billable": True, "category": "VAT"},
+            {"code": "PAY001", "name": "Payroll Processing", "default_rate": 65, "billable": True, "category": "Payroll"},
+            {"code": "ADM001", "name": "Administration", "default_rate": 0, "billable": False, "category": "Admin"},
+            {"code": "AUD001", "name": "Audit Services", "default_rate": 120, "billable": True, "category": "Audit"},
+            {"code": "CON001", "name": "Consultancy", "default_rate": 150, "billable": True, "category": "Advisory"},
+            {"code": "BOO001", "name": "Bookkeeping", "default_rate": 45, "billable": True, "category": "Bookkeeping"}
+        ]
+        
+        for code_data in default_codes:
+            job_code = JobCode(
+                tenant_id=request.state.tenant_id,
+                **code_data
+            )
+            db.add(job_code)
+        
+        db.commit()
+        
+        query = db.query(JobCode).filter(JobCode.tenant_id == request.state.tenant_id)
+        if search:
+            query = query.filter(
+                JobCode.name.ilike(f"%{search}%") |
+                JobCode.code.ilike(f"%{search}%")
+            )
+        if category:
+            query = query.filter(JobCode.category.ilike(f"%{category}%"))
+        
+        job_codes = query.all()
     
     return job_codes
 
@@ -498,20 +549,44 @@ def get_employee_rates(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
-    employee_rates = [
-        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "1", "hourly_rate": 90, "role": "Senior Accountant"},
-        {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "2", "hourly_rate": 100, "role": "Senior Accountant"},
-        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "1", "hourly_rate": 85, "role": "Accountant"},
-        {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "3", "hourly_rate": 80, "role": "Accountant"},
-        {"employee_id": "3", "employee_name": "Emma Wilson", "job_code_id": "4", "hourly_rate": 70, "role": "Payroll Specialist"},
-        {"employee_id": "4", "employee_name": "James Smith", "job_code_id": "6", "hourly_rate": 125, "role": "Audit Manager"},
-        {"employee_id": "5", "employee_name": "Lisa Brown", "job_code_id": "7", "hourly_rate": 160, "role": "Senior Consultant"}
-    ]
+    from app.models.practice import EmployeeRate
+    
+    query = db.query(EmployeeRate).filter(EmployeeRate.tenant_id == request.state.tenant_id)
     
     if search:
-        employee_rates = [er for er in employee_rates if search.lower() in er["employee_name"].lower()]
+        query = query.filter(EmployeeRate.employee_name.ilike(f"%{search}%"))
     if employee_id:
-        employee_rates = [er for er in employee_rates if er["employee_id"] == employee_id]
+        query = query.filter(EmployeeRate.employee_id == employee_id)
+    
+    employee_rates = query.all()
+    
+    if not employee_rates:
+        default_rates = [
+            {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "1", "hourly_rate": 90, "role": "Senior Accountant"},
+            {"employee_id": "1", "employee_name": "Sarah Johnson", "job_code_id": "2", "hourly_rate": 100, "role": "Senior Accountant"},
+            {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "1", "hourly_rate": 85, "role": "Accountant"},
+            {"employee_id": "2", "employee_name": "Mike Chen", "job_code_id": "3", "hourly_rate": 80, "role": "Accountant"},
+            {"employee_id": "3", "employee_name": "Emma Wilson", "job_code_id": "4", "hourly_rate": 70, "role": "Payroll Specialist"},
+            {"employee_id": "4", "employee_name": "James Smith", "job_code_id": "6", "hourly_rate": 125, "role": "Audit Manager"},
+            {"employee_id": "5", "employee_name": "Lisa Brown", "job_code_id": "7", "hourly_rate": 160, "role": "Senior Consultant"}
+        ]
+        
+        for rate_data in default_rates:
+            employee_rate = EmployeeRate(
+                tenant_id=request.state.tenant_id,
+                **rate_data
+            )
+            db.add(employee_rate)
+        
+        db.commit()
+        
+        query = db.query(EmployeeRate).filter(EmployeeRate.tenant_id == request.state.tenant_id)
+        if search:
+            query = query.filter(EmployeeRate.employee_name.ilike(f"%{search}%"))
+        if employee_id:
+            query = query.filter(EmployeeRate.employee_id == employee_id)
+        
+        employee_rates = query.all()
     
     return employee_rates
 

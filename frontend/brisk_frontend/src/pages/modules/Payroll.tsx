@@ -23,14 +23,42 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import AIPromptSection from '../../components/AIPromptSection'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
-  const [selectedEmployee, setSelectedEmployee] = useState('')
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedPayPeriod, setSelectedPayPeriod] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+
+  const departmentOptions = [
+    { label: 'All Departments', value: 'all' },
+    { label: 'Development', value: 'development' },
+    { label: 'Marketing', value: 'marketing' },
+    { label: 'Finance', value: 'finance' },
+    { label: 'HR', value: 'hr' }
+  ]
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'On Leave', value: 'on-leave' },
+    { label: 'Terminated', value: 'terminated' }
+  ]
+
+  const payPeriodOptions = [
+    { label: 'All Pay Periods', value: 'all' },
+    { label: 'Weekly', value: 'weekly' },
+    { label: 'Bi-weekly', value: 'bi-weekly' },
+    { label: 'Monthly', value: 'monthly' }
+  ]
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -451,24 +479,45 @@ export default function Payroll() {
                 </div>
               </CardHeader>
               <CardContent>
+                <SearchFilterHeader
+                  searchPlaceholder="Search employees, departments, positions..."
+                  searchValue={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  filters={[
+                    {
+                      label: 'Department',
+                      options: departmentOptions,
+                      value: selectedDepartment,
+                      onChange: setSelectedDepartment
+                    },
+                    {
+                      label: 'Status',
+                      options: statusOptions,
+                      value: selectedStatus,
+                      onChange: setSelectedStatus
+                    },
+                    {
+                      label: 'Pay Period',
+                      options: payPeriodOptions,
+                      value: selectedPayPeriod,
+                      onChange: setSelectedPayPeriod
+                    }
+                  ]}
+                  dateRange={{
+                    from: dateFrom,
+                    to: dateTo,
+                    onFromChange: setDateFrom,
+                    onToChange: setDateTo
+                  }}
+                />
+                
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>
-                      <SelectTrigger className="w-64">
-                        <SelectValue placeholder="Filter by department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Departments</SelectItem>
-                        <SelectItem value="development">Development</SelectItem>
-                        <SelectItem value="marketing">Marketing</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                      </SelectContent>
-                    </Select>
                     <Button variant="outline">
                       <Download className="h-4 w-4 mr-2" />
                       Export
                     </Button>
-                  </div>
+                  </div></div>
 
                   <div className="grid gap-4">
                     {employees.map((employee) => (
@@ -516,10 +565,9 @@ export default function Payroll() {
                       </Card>
                     ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
           <TabsContent value="payruns" className="space-y-6">
             <Card>

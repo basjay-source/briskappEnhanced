@@ -75,6 +75,11 @@ class ApiClient {
     return this.request<{ jobs: Job[] }>(`/practice/jobs?${params}`)
   }
 
+  async getTimeEntries(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/practice/time-entries?${params}`)
+  }
+
   async createJob(data: Record<string, unknown>) {
     return this.request('/practice/jobs', {
       method: 'POST',
@@ -101,8 +106,9 @@ class ApiClient {
     })
   }
 
-  async getClients() {
-    return this.request<Client[]>('/clients')
+  async getClients(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request<Client[]>(`/books/clients?${params}`)
   }
 
   async createClient(data: Record<string, unknown>) {
