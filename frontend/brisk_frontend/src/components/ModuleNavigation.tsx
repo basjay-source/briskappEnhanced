@@ -13,12 +13,6 @@ import {
   Clock,
   Heart
 } from 'lucide-react'
-import { 
-  SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarMenuButton 
-} from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
 
 const modules = [
   {
@@ -99,35 +93,30 @@ export default function ModuleNavigation() {
   const location = useLocation()
 
   return (
-    <SidebarMenu>
+    <div className="p-2">
       {modules.map((module) => {
         const Icon = module.icon
-        const isActive = location.pathname === module.path
+        const isActive = location.pathname === module.path || 
+          (module.path !== '/app' && location.pathname.startsWith(module.path))
         
         return (
-          <SidebarMenuItem key={module.path}>
-            <SidebarMenuButton asChild isActive={isActive}>
-              <Link to={module.path} className="flex items-center gap-3 p-3">
-                <Icon className={cn(
-                  "h-5 w-5",
-                  isActive ? "text-brisk-primary" : "text-muted-foreground"
-                )} />
-                <div className="flex flex-col">
-                  <span className={cn(
-                    "font-medium",
-                    isActive ? "text-brisk-primary" : "text-foreground"
-                  )}>
-                    {module.name}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {module.description}
-                  </span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <Link 
+            key={module.path}
+            to={module.path} 
+            className={`w-full flex items-center gap-3 px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+              isActive 
+                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
+            }`}
+          >
+            <Icon className="h-4 w-4" />
+            <div className="flex flex-col items-start">
+              <span className="font-medium">{module.name}</span>
+              <span className="text-xs opacity-90">{module.description}</span>
+            </div>
+          </Link>
         )
       })}
-    </SidebarMenu>
+    </div>
   )
 }
