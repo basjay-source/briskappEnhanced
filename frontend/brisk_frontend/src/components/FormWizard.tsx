@@ -13,7 +13,7 @@ interface FormWizardProps {
   onSaveDraft?: (data: Record<string, string>) => void
   formData: Record<string, string>
   logoComponent?: React.ReactNode
-  colorScheme?: 'blue' | 'green'
+  colorScheme?: 'blue' | 'green' | 'white-green'
 }
 
 export default function FormWizard({ 
@@ -54,16 +54,17 @@ export default function FormWizard({
     setCurrentPage(pageIndex)
   }
 
-  const headerBgColor = colorScheme === 'green' ? 'bg-[#00703c]' : 'bg-[#003078]'
-  const progressColor = colorScheme === 'green' ? 'bg-green-600' : 'bg-blue-600'
-  const buttonColor = colorScheme === 'green' ? 'bg-[#00703c] hover:bg-[#005a30]' : 'bg-[#003078] hover:bg-[#002060]'
-  const activePageColor = colorScheme === 'green' ? 'bg-green-600' : 'bg-blue-600'
-  const textAccentColor = colorScheme === 'green' ? 'text-green-100' : 'text-blue-100'
+  const headerBgColor = colorScheme === 'green' ? 'bg-[#00703c]' : colorScheme === 'white-green' ? 'bg-white border-2 border-[#00703c]' : 'bg-[#003078]'
+  const progressColor = colorScheme === 'green' || colorScheme === 'white-green' ? 'bg-[#00703c]' : 'bg-blue-600'
+  const buttonColor = colorScheme === 'green' || colorScheme === 'white-green' ? 'bg-[#00703c] hover:bg-[#005a30]' : 'bg-[#003078] hover:bg-[#002060]'
+  const activePageColor = colorScheme === 'green' || colorScheme === 'white-green' ? 'bg-[#00703c]' : 'bg-blue-600'
+  const textAccentColor = colorScheme === 'green' ? 'text-green-100' : colorScheme === 'white-green' ? 'text-[#00703c]' : 'text-blue-100'
+  const headerTextColor = colorScheme === 'white-green' ? 'text-[#00703c]' : 'text-white'
 
   return (
     <div className="space-y-6">
       {logoComponent && (
-        <div className={`${headerBgColor} text-white p-6 rounded-lg`}>
+        <div className={`${headerBgColor} ${headerTextColor} p-6 rounded-lg`}>
           <div className="flex items-center space-x-4">
             {logoComponent}
             <div>
