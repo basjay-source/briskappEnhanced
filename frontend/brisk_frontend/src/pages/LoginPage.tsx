@@ -17,19 +17,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brisk-primary-50 to-white flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <BriskLogo className="h-10 w-10" animated showText={false} />
-            <span className="text-2xl font-bold text-brisk-primary">Brisk Practice</span>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <div className="flex justify-center mb-6">
+            <BriskLogo className="h-16 w-16" animated showText={false} />
           </div>
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
-          <CardDescription>
-            Sign in to your Brisk Practice Suite account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          <h1 className="text-4xl font-bold text-blue-600 mb-2">Brisk Practice Suite</h1>
+          <p className="text-gray-600">Professional Accountancy Practice Management</p>
+        </div>
+        
+        <Card className="w-full shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardDescription>
+              Sign in to your Brisk Practice Suite account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -73,7 +78,8 @@ export default function LoginPage() {
             </Button>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 }
