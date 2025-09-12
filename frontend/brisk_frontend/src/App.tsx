@@ -13,6 +13,7 @@ import CompanySecretarial from '@/pages/modules/CompanySecretarial'
 import Bookkeeping from '@/pages/modules/Bookkeeping'
 import ESignature from '@/pages/modules/ESignature'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
+import VAT from '@/pages/modules/VAT'
 import Reports from '@/pages/modules/Reports'
 import ClientPortal from '@/components/ClientPortal'
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="cosec" element={<CompanySecretarial />} />
             <Route path="books" element={<Bookkeeping />} />
             <Route path="esign" element={<ESignature />} />
+            <Route path="vat" element={<VAT />} />
             <Route path="reports" element={<Reports />} />
             <Route path="portal" element={<ClientPortal />} />
           </Route>
