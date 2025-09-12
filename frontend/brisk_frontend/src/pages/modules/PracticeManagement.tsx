@@ -5,7 +5,6 @@ import {
   AlertTriangle, 
   Plus,
   Filter,
-  Search,
   MoreHorizontal,
   CheckCircle,
   Circle,
@@ -23,7 +22,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -36,11 +34,18 @@ import ClientPortalAdvanced from '../../components/ClientPortalAdvanced'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function PracticeManagement() {
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'jobs' | 'client-portal' | 'workflows' | 'capacity' | 'compliance' | 'analytics' | 'ai-adviser' | 'email' | 'templates' | 'reports' | 'kpis'>('dashboard')
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedPriority, setSelectedPriority] = useState('all')
+  const [selectedAssignee, setSelectedAssignee] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -53,6 +58,28 @@ export default function PracticeManagement() {
       setIsAILoading(false)
     }
   }
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'In Progress', value: 'in-progress' },
+    { label: 'Review', value: 'review' },
+    { label: 'Completed', value: 'completed' }
+  ]
+
+  const priorityOptions = [
+    { label: 'All Priorities', value: 'all' },
+    { label: 'High', value: 'high' },
+    { label: 'Medium', value: 'medium' },
+    { label: 'Low', value: 'low' }
+  ]
+
+  const assigneeOptions = [
+    { label: 'All Assignees', value: 'all' },
+    { label: 'Sarah Johnson', value: 'sarah' },
+    { label: 'Mike Chen', value: 'mike' },
+    { label: 'Emma Davis', value: 'emma' }
+  ]
 
   const kpis = [
     {
@@ -243,7 +270,7 @@ export default function PracticeManagement() {
         </div>
 
         {activeTab === 'dashboard' && (
-          <>
+          <div className="space-y-6">
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}>
             {kpis.map((kpi, index) => {
               const Icon = kpi.icon
@@ -271,14 +298,45 @@ export default function PracticeManagement() {
               <div className="flex items-center justify-between">
                 <CardTitle>Active Jobs</CardTitle>
                 <div className="flex items-center gap-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                    <Input placeholder="Search jobs..." className={`pl-10 ${isMobile ? 'w-full' : 'w-64'}`} />
-                  </div>
+                  <Button size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    New Job
+                  </Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
+              <SearchFilterHeader
+                searchPlaceholder="Search jobs, clients, tasks..."
+                searchValue={searchTerm}
+                onSearchChange={setSearchTerm}
+                filters={[
+                  {
+                    label: 'Status',
+                    options: statusOptions,
+                    value: selectedStatus,
+                    onChange: setSelectedStatus
+                  },
+                  {
+                    label: 'Priority',
+                    options: priorityOptions,
+                    value: selectedPriority,
+                    onChange: setSelectedPriority
+                  },
+                  {
+                    label: 'Assignee',
+                    options: assigneeOptions,
+                    value: selectedAssignee,
+                    onChange: setSelectedAssignee
+                  }
+                ]}
+                dateRange={{
+                  from: dateFrom,
+                  to: dateTo,
+                  onFromChange: setDateFrom,
+                  onToChange: setDateTo
+                }}
+              />
               <div className="space-y-4">
                 {jobs.map((job) => (
                   <div key={job.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
@@ -326,10 +384,14 @@ export default function PracticeManagement() {
                 ))}
               </div>
             </CardContent>
-            </Card>
+          </Card>
+        </div>
+        </div>
           </div>
+        )}
 
-          <div className="space-y-6">
+        {activeTab === 'jobs' && (
+        <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Upcoming Deadlines</CardTitle>
@@ -416,8 +478,6 @@ export default function PracticeManagement() {
             </CardContent>
             </Card>
           </div>
-        </div>
-          </>
         )}
 
         {activeTab === 'client-portal' && (

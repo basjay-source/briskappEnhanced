@@ -626,6 +626,38 @@ export default function TimeAndFeesModuleAdvanced() {
                     <CardDescription>Latest time tracking activity with AI insights</CardDescription>
                   </CardHeader>
                   <CardContent>
+                    <SearchFilterHeader
+                      searchPlaceholder="Search time entries, jobs, clients..."
+                      searchValue={searchTerm}
+                      onSearchChange={setSearchTerm}
+                      filters={[
+                        {
+                          label: 'Project Status',
+                          options: projectStatusOptions,
+                          value: selectedProjectStatus,
+                          onChange: setSelectedProjectStatus
+                        },
+                        {
+                          label: 'Client Type',
+                          options: clientTypeOptions,
+                          value: selectedClientType,
+                          onChange: setSelectedClientType
+                        },
+                        {
+                          label: 'Billing Status',
+                          options: billingStatusOptions,
+                          value: selectedBillingStatus,
+                          onChange: setSelectedBillingStatus
+                        }
+                      ]}
+                      dateRange={{
+                        from: dateFrom,
+                        to: dateTo,
+                        onFromChange: setDateFrom,
+                        onToChange: setDateTo
+                      }}
+                    />
+                    
                     <div className="space-y-4">
                       {timeEntries.slice(0, 5).map((entry) => (
                         <div key={entry.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>

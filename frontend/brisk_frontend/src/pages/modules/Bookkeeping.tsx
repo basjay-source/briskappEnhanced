@@ -479,6 +479,38 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+        
+        <SearchFilterHeader
+          searchPlaceholder="Search invoices, quotes, customers..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedType,
+              onChange: setSelectedType
+            },
+            {
+              label: 'Category',
+              options: categoryOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
           <Card>
@@ -595,6 +627,38 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+        
+        <SearchFilterHeader
+          searchPlaceholder="Search bills, purchase orders, suppliers..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedType,
+              onChange: setSelectedType
+            },
+            {
+              label: 'Category',
+              options: categoryOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
           <Card>
@@ -747,6 +811,38 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+        
+        <SearchFilterHeader
+          searchPlaceholder="Search transactions, bank accounts, reconciliations..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedType,
+              onChange: setSelectedType
+            },
+            {
+              label: 'Category',
+              options: categoryOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <Card>
           <CardHeader>

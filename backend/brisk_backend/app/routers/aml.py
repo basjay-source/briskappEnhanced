@@ -300,7 +300,7 @@ def create_screening(
     
     return {
         "screening": screening,
-        "ai_analysis": generate_screening_analysis(screening_data.entity_name, mock_results),
+        "ai_analysis": generate_screening_analysis(screening_data.entity_name, []),
         "recommendations": get_screening_recommendations(matches_found, screening_data.screening_type)
     }
 
