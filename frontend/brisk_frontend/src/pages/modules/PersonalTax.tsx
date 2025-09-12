@@ -30,11 +30,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function PersonalTax() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedIncomeType, setSelectedIncomeType] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -47,6 +54,31 @@ export default function PersonalTax() {
     }
   }
   const [selectedClient, setSelectedClient] = useState('')
+
+  const taxYearOptions = [
+    { label: 'All Tax Years', value: 'all' },
+    { label: '2024/25', value: '2024' },
+    { label: '2023/24', value: '2023' },
+    { label: '2022/23', value: '2022' },
+    { label: '2021/22', value: '2021' }
+  ]
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'In Progress', value: 'progress' },
+    { label: 'Submitted', value: 'submitted' },
+    { label: 'Approved', value: 'approved' }
+  ]
+
+  const incomeTypeOptions = [
+    { label: 'All Income Types', value: 'all' },
+    { label: 'Employment', value: 'employment' },
+    { label: 'Self Employment', value: 'self-employment' },
+    { label: 'Property', value: 'property' },
+    { label: 'Dividends', value: 'dividends' },
+    { label: 'Capital Gains', value: 'capital-gains' }
+  ]
 
   const kpis = [
     {
@@ -368,6 +400,38 @@ export default function PersonalTax() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  <SearchFilterHeader
+                    searchPlaceholder="Search clients, returns, schedules..."
+                    searchValue={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    filters={[
+                      {
+                        label: 'Tax Year',
+                        options: taxYearOptions,
+                        value: selectedTaxYear,
+                        onChange: setSelectedTaxYear
+                      },
+                      {
+                        label: 'Status',
+                        options: statusOptions,
+                        value: selectedStatus,
+                        onChange: setSelectedStatus
+                      },
+                      {
+                        label: 'Income Type',
+                        options: incomeTypeOptions,
+                        value: selectedIncomeType,
+                        onChange: setSelectedIncomeType
+                      }
+                    ]}
+                    dateRange={{
+                      from: dateFrom,
+                      to: dateTo,
+                      onFromChange: setDateFrom,
+                      onToChange: setDateTo
+                    }}
+                  />
+                  
                   <div className="flex items-center gap-4">
                     <Select value={selectedClient} onValueChange={setSelectedClient}>
                       <SelectTrigger className="w-64">

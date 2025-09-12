@@ -2,8 +2,7 @@ import {
   AlertTriangle, 
   CheckCircle, 
   Users, 
-  Search, 
-  Clock, 
+  Clock,
   TrendingUp,
   Eye,
   Upload,
@@ -28,17 +27,21 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function AMLCompliance() {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('')
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedJurisdiction, setSelectedJurisdiction] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -50,6 +53,32 @@ export default function AMLCompliance() {
       setIsAILoading(false)
     }
   }
+
+  const riskLevelOptions = [
+    { label: 'All Risk Levels', value: 'all' },
+    { label: 'Low Risk', value: 'low' },
+    { label: 'Medium Risk', value: 'medium' },
+    { label: 'High Risk', value: 'high' },
+    { label: 'Critical Risk', value: 'critical' }
+  ]
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Pending Review', value: 'pending' },
+    { label: 'In Progress', value: 'progress' },
+    { label: 'Approved', value: 'approved' },
+    { label: 'Rejected', value: 'rejected' },
+    { label: 'Requires EDD', value: 'edd' }
+  ]
+
+  const jurisdictionOptions = [
+    { label: 'All Jurisdictions', value: 'all' },
+    { label: 'United Kingdom', value: 'uk' },
+    { label: 'European Union', value: 'eu' },
+    { label: 'United States', value: 'us' },
+    { label: 'High Risk Countries', value: 'high-risk' },
+    { label: 'Sanctions List', value: 'sanctions' }
+  ]
 
   const kpis = [
     {
@@ -348,24 +377,37 @@ export default function AMLCompliance() {
                 <CardDescription>Evaluate and monitor client risk profiles</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <Input placeholder="Search clients..." className="flex-1" />
-                  <Select value={selectedRiskLevel} onValueChange={setSelectedRiskLevel}>
-                    <SelectTrigger className="w-full sm:w-48">
-                      <SelectValue placeholder="Risk Level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Levels</SelectItem>
-                      <SelectItem value="high">High Risk</SelectItem>
-                      <SelectItem value="medium">Medium Risk</SelectItem>
-                      <SelectItem value="low">Low Risk</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button>
-                    <Search className="h-4 w-4 mr-2" />
-                    Search
-                  </Button>
-                </div>
+                <SearchFilterHeader
+                  searchPlaceholder="Search clients, cases, risk assessments..."
+                  searchValue={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  filters={[
+                    {
+                      label: 'Risk Level',
+                      options: riskLevelOptions,
+                      value: selectedRiskLevel || 'all',
+                      onChange: setSelectedRiskLevel
+                    },
+                    {
+                      label: 'Status',
+                      options: statusOptions,
+                      value: selectedStatus,
+                      onChange: setSelectedStatus
+                    },
+                    {
+                      label: 'Jurisdiction',
+                      options: jurisdictionOptions,
+                      value: selectedJurisdiction,
+                      onChange: setSelectedJurisdiction
+                    }
+                  ]}
+                  dateRange={{
+                    from: dateFrom,
+                    to: dateTo,
+                    onFromChange: setDateFrom,
+                    onToChange: setDateTo
+                  }}
+                />
 
                 <div className="space-y-4">
                   {riskAssessments.map((assessment) => (
@@ -415,6 +457,38 @@ export default function AMLCompliance() {
                 <CardDescription>Identity verification and document collection</CardDescription>
               </CardHeader>
               <CardContent>
+                <SearchFilterHeader
+                  searchPlaceholder="Search KYC checks, documents, clients..."
+                  searchValue={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  filters={[
+                    {
+                      label: 'Status',
+                      options: statusOptions,
+                      value: selectedStatus,
+                      onChange: setSelectedStatus
+                    },
+                    {
+                      label: 'Document Type',
+                      options: [
+                        { label: 'All Types', value: 'all' },
+                        { label: 'Passport', value: 'passport' },
+                        { label: 'Driving License', value: 'license' },
+                        { label: 'Utility Bill', value: 'utility' },
+                        { label: 'Bank Statement', value: 'bank' }
+                      ],
+                      value: selectedJurisdiction,
+                      onChange: setSelectedJurisdiction
+                    }
+                  ]}
+                  dateRange={{
+                    from: dateFrom,
+                    to: dateTo,
+                    onFromChange: setDateFrom,
+                    onToChange: setDateTo
+                  }}
+                />
+                
                 <div className="space-y-4">
                   {kycChecks.map((check) => (
                     <Card key={check.id} className="border">

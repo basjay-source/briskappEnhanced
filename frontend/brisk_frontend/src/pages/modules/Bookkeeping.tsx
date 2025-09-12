@@ -48,6 +48,7 @@ import { Badge } from '@/components/ui/badge'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 
 export default function Bookkeeping() {
@@ -56,6 +57,12 @@ export default function Bookkeeping() {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
   const isMobile = useIsMobile()
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedType, setSelectedType] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -68,6 +75,33 @@ export default function Bookkeeping() {
       setIsAILoading(false)
     }
   }
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'Approved', value: 'approved' },
+    { label: 'Paid', value: 'paid' },
+    { label: 'Overdue', value: 'overdue' }
+  ]
+
+  const typeOptions = [
+    { label: 'All Types', value: 'all' },
+    { label: 'Invoice', value: 'invoice' },
+    { label: 'Credit Note', value: 'credit' },
+    { label: 'Purchase Order', value: 'po' },
+    { label: 'Bill', value: 'bill' },
+    { label: 'Expense', value: 'expense' }
+  ]
+
+  const categoryOptions = [
+    { label: 'All Categories', value: 'all' },
+    { label: 'Sales', value: 'sales' },
+    { label: 'Purchases', value: 'purchases' },
+    { label: 'Banking', value: 'banking' },
+    { label: 'Expenses', value: 'expenses' },
+    { label: 'Assets', value: 'assets' }
+  ]
 
   type SubTabConfig = {
     label: string
@@ -2679,6 +2713,32 @@ export default function Bookkeeping() {
           </div>
         </div>
 
+        <SearchFilterHeader
+          searchPlaceholder="Search invoices by customer, number, amount..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedType,
+              onChange: setSelectedType
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
+
         <div className="grid gap-6 md:grid-cols-4">
           <Card>
             <CardHeader>
@@ -3138,6 +3198,32 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+
+        <SearchFilterHeader
+          searchPlaceholder="Search bills by supplier, amount, due date..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Category',
+              options: categoryOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <div className="grid gap-6 md:grid-cols-4">
           <Card>

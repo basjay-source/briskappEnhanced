@@ -18,10 +18,17 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import AIPromptSection from '../../components/AIPromptSection'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function CorporationTax() {
   const [activeTab, setActiveTab] = useState('computation')
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedType, setSelectedType] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -33,6 +40,30 @@ export default function CorporationTax() {
       setIsAILoading(false)
     }
   }
+
+  const taxYearOptions = [
+    { label: 'All Tax Years', value: 'all' },
+    { label: '2024', value: '2024' },
+    { label: '2023', value: '2023' },
+    { label: '2022', value: '2022' },
+    { label: '2021', value: '2021' }
+  ]
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'In Progress', value: 'progress' },
+    { label: 'Submitted', value: 'submitted' },
+    { label: 'Approved', value: 'approved' }
+  ]
+
+  const typeOptions = [
+    { label: 'All Types', value: 'all' },
+    { label: 'CT600', value: 'ct600' },
+    { label: 'R&D Claims', value: 'rd' },
+    { label: 'Reliefs', value: 'reliefs' },
+    { label: 'Computations', value: 'computations' }
+  ]
 
   const tabs = [
     { id: 'computation', label: 'CT Computation', icon: Calculator },
@@ -200,7 +231,41 @@ export default function CorporationTax() {
             <CardContent>
               {activeTab === 'computation' && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold">CT600 Computation</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">CT600 Computation</h3>
+                  </div>
+                  
+                  <SearchFilterHeader
+                    searchPlaceholder="Search tax computations, reliefs, R&D claims..."
+                    searchValue={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    filters={[
+                      {
+                        label: 'Tax Year',
+                        options: taxYearOptions,
+                        value: selectedTaxYear,
+                        onChange: setSelectedTaxYear
+                      },
+                      {
+                        label: 'Status',
+                        options: statusOptions,
+                        value: selectedStatus,
+                        onChange: setSelectedStatus
+                      },
+                      {
+                        label: 'Type',
+                        options: typeOptions,
+                        value: selectedType,
+                        onChange: setSelectedType
+                      }
+                    ]}
+                    dateRange={{
+                      from: dateFrom,
+                      to: dateTo,
+                      onFromChange: setDateFrom,
+                      onToChange: setDateTo
+                    }}
+                  />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <h4 className="font-medium">Profit Calculation</h4>

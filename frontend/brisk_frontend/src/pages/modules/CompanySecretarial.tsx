@@ -36,6 +36,7 @@ import ResponsiveLayout from '../../components/ResponsiveLayout'
 import CompaniesHouseLogo from '../../components/CompaniesHouseLogo'
 import HMRCLogo from '../../components/HMRCLogo'
 import AIPromptSection from '../../components/AIPromptSection'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -44,6 +45,12 @@ export default function CompanySecretarial() {
   const [selectedCompany, setSelectedCompany] = useState('all')
   const [isAILoading, setIsAILoading] = useState(false)
   const isMobile = useIsMobile()
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedFilingType, setSelectedFilingType] = useState('all')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedCompanyType, setSelectedCompanyType] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -55,6 +62,33 @@ export default function CompanySecretarial() {
       setIsAILoading(false)
     }
   }
+
+  const filingTypeOptions = [
+    { label: 'All Filing Types', value: 'all' },
+    { label: 'Annual Returns', value: 'annual-returns' },
+    { label: 'Confirmation Statements', value: 'confirmation-statements' },
+    { label: 'Officer Changes', value: 'officer-changes' },
+    { label: 'PSC Updates', value: 'psc-updates' },
+    { label: 'Share Allotments', value: 'share-allotments' }
+  ]
+
+  const statusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'Submitted', value: 'submitted' },
+    { label: 'Accepted', value: 'accepted' },
+    { label: 'Rejected', value: 'rejected' }
+  ]
+
+  const companyTypeOptions = [
+    { label: 'All Company Types', value: 'all' },
+    { label: 'Private Limited', value: 'private-limited' },
+    { label: 'Public Limited', value: 'public-limited' },
+    { label: 'LLP', value: 'llp' },
+    { label: 'Community Interest', value: 'cic' },
+    { label: 'Charity', value: 'charity' }
+  ]
 
   type SubTabConfig = {
     label: string
@@ -413,6 +447,38 @@ export default function CompanySecretarial() {
             <p className="text-gray-600">Companies House forms and submissions</p>
           </div>
         </div>
+        
+        <SearchFilterHeader
+          searchPlaceholder="Search companies, filings, officers..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Filing Type',
+              options: filingTypeOptions,
+              value: selectedFilingType,
+              onChange: setSelectedFilingType
+            },
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Company Type',
+              options: companyTypeOptions,
+              value: selectedCompanyType,
+              onChange: setSelectedCompanyType
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {Object.entries(menuStructure.forms.subTabs || {}).map(([key, subTab]) => (

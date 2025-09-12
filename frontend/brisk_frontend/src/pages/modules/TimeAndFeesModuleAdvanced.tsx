@@ -39,6 +39,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 interface TimeEntry {
   id: string
@@ -96,6 +97,12 @@ export default function TimeAndFeesModuleAdvanced() {
   const [currentTime, setCurrentTime] = useState(0)
   const [selectedJob, setSelectedJob] = useState('')
   const [selectedTask, setSelectedTask] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedProjectStatus, setSelectedProjectStatus] = useState('all')
+  const [selectedClientType, setSelectedClientType] = useState('all')
+  const [selectedBillingStatus, setSelectedBillingStatus] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const kpis = [
     {
@@ -438,6 +445,30 @@ export default function TimeAndFeesModuleAdvanced() {
     }
   }
 
+  const projectStatusOptions = [
+    { label: 'All Project Status', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'On Hold', value: 'on-hold' },
+    { label: 'Completed', value: 'completed' },
+    { label: 'Cancelled', value: 'cancelled' }
+  ]
+
+  const clientTypeOptions = [
+    { label: 'All Client Types', value: 'all' },
+    { label: 'Corporate', value: 'corporate' },
+    { label: 'SME', value: 'sme' },
+    { label: 'Individual', value: 'individual' },
+    { label: 'Non-Profit', value: 'non-profit' }
+  ]
+
+  const billingStatusOptions = [
+    { label: 'All Billing Status', value: 'all' },
+    { label: 'Billable', value: 'billable' },
+    { label: 'Non-Billable', value: 'non-billable' },
+    { label: 'Invoiced', value: 'invoiced' },
+    { label: 'Paid', value: 'paid' }
+  ]
+
   return (
     <ResponsiveLayout>
       <div className="space-y-6">
@@ -529,6 +560,38 @@ export default function TimeAndFeesModuleAdvanced() {
 
         {activeTab === 'dashboard' && (
           <>
+            <SearchFilterHeader
+              searchPlaceholder="Search projects, timesheets, clients..."
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              filters={[
+                {
+                  label: 'Project Status',
+                  options: projectStatusOptions,
+                  value: selectedProjectStatus,
+                  onChange: setSelectedProjectStatus
+                },
+                {
+                  label: 'Client Type',
+                  options: clientTypeOptions,
+                  value: selectedClientType,
+                  onChange: setSelectedClientType
+                },
+                {
+                  label: 'Billing Status',
+                  options: billingStatusOptions,
+                  value: selectedBillingStatus,
+                  onChange: setSelectedBillingStatus
+                }
+              ]}
+              dateRange={{
+                from: dateFrom,
+                to: dateTo,
+                onFromChange: setDateFrom,
+                onToChange: setDateTo
+              }}
+            />
+            
             <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}>
               {kpis.map((kpi, index) => {
                 const Icon = kpi.icon

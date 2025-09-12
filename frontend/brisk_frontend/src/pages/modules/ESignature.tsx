@@ -73,6 +73,7 @@ import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
 export default function DocuSignage() {
   const isMobile = useIsMobile()
@@ -80,6 +81,12 @@ export default function DocuSignage() {
   const [selectedStatus, setSelectedStatus] = useState('')
   const [showEnvelopeBuilder, setShowEnvelopeBuilder] = useState(false)
   const [builderStep, setBuilderStep] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDocumentType, setSelectedDocumentType] = useState('all')
+  const [selectedSignatureStatus, setSelectedSignatureStatus] = useState('all')
+  const [selectedPriority, setSelectedPriority] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
   const [, setSelectedEnvelope] = useState<{
     id: string;
     title: string;
@@ -397,6 +404,33 @@ export default function DocuSignage() {
     }
   }
 
+  const documentTypeOptions = [
+    { label: 'All Document Types', value: 'all' },
+    { label: 'Contracts', value: 'contracts' },
+    { label: 'Agreements', value: 'agreements' },
+    { label: 'Forms', value: 'forms' },
+    { label: 'Invoices', value: 'invoices' },
+    { label: 'Reports', value: 'reports' }
+  ]
+
+  const signatureStatusOptions = [
+    { label: 'All Statuses', value: 'all' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Sent', value: 'sent' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'Completed', value: 'completed' },
+    { label: 'Declined', value: 'declined' },
+    { label: 'Expired', value: 'expired' }
+  ]
+
+  const priorityOptions = [
+    { label: 'All Priorities', value: 'all' },
+    { label: 'Low', value: 'low' },
+    { label: 'Normal', value: 'normal' },
+    { label: 'High', value: 'high' },
+    { label: 'Urgent', value: 'urgent' }
+  ]
+
   return (
     <ResponsiveLayout>
       <div className="space-y-6">
@@ -688,6 +722,38 @@ export default function DocuSignage() {
                 <CardDescription>Comprehensive envelope management with advanced features</CardDescription>
               </CardHeader>
               <CardContent>
+                <SearchFilterHeader
+                  searchPlaceholder="Search documents, envelopes, signers..."
+                  searchValue={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  filters={[
+                    {
+                      label: 'Document Type',
+                      options: documentTypeOptions,
+                      value: selectedDocumentType,
+                      onChange: setSelectedDocumentType
+                    },
+                    {
+                      label: 'Signature Status',
+                      options: signatureStatusOptions,
+                      value: selectedSignatureStatus,
+                      onChange: setSelectedSignatureStatus
+                    },
+                    {
+                      label: 'Priority',
+                      options: priorityOptions,
+                      value: selectedPriority,
+                      onChange: setSelectedPriority
+                    }
+                  ]}
+                  dateRange={{
+                    from: dateFrom,
+                    to: dateTo,
+                    onFromChange: setDateFrom,
+                    onToChange: setDateTo
+                  }}
+                />
+                
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
                   <div className="flex-1 relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
