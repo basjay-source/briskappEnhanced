@@ -1,316 +1,393 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ResponsiveLayout from '@/components/ResponsiveLayout'
-import PayslipTemplateManager from '../../components/PayslipTemplateManager'
-import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
-import AIPromptSection from '../../components/AIPromptSection'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../components/ui/dialog';
+import ResponsiveLayout from '../../components/ResponsiveLayout';
+import InvoiceTemplateManager from '../../components/InvoiceTemplateManager';
+import AIPromptSection from '../../components/AIPromptSection';
+import KPICard from '../../components/KPICard';
+import { SearchFilterHeader } from '../../components/SearchFilterHeader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { useIsMobile } from '../../hooks/use-mobile';
 import {
   BarChart3,
   Users,
-  DollarSign,
-  TrendingUp,
-  AlertTriangle,
-  Settings,
-  Shield,
   CreditCard,
   Target,
   Flag,
   Building,
+  FileText,
+  TrendingUp,
+  Settings,
+  Shield,
   Eye,
   Edit,
   Plus,
-  Search,
-  Filter,
   Play,
-  FileText
+  Download,
+  RefreshCw,
+  Activity,
+  DollarSign,
+  AlertTriangle
 } from 'lucide-react';
 
 const AdminModule = () => {
   const isMobile = useIsMobile();
   const [activeSection, setActiveSection] = useState('overview');
   const [isAILoading, setIsAILoading] = useState(false);
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  
+  const [showApprovalDialog, setShowApprovalDialog] = useState(false);
 
-  const handleAIQuestion = async (question: string) => {
+  const handleAIQuestion = async () => {
     setIsAILoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('AI Question:', question);
-    } catch (error) {
-      console.error('Error:', error);
     } finally {
       setIsAILoading(false);
     }
   };
 
-  const [kpiData] = useState({
-    mrr: 125000,
-    arr: 1500000,
-    nrr: 108,
-    churn: 2.3,
-    trials: 47,
-    dunning: 12
-  });
+  const kpiData = [
+    { title: 'Monthly Recurring Revenue', value: '£847,230', change: '+12.3% vs last month', trend: 'up' },
+    { title: 'Annual Recurring Revenue', value: '£10.2M', change: '+18.7% vs last year', trend: 'up' },
+    { title: 'Net Revenue Retention', value: '118%', change: '+3.2% vs last quarter', trend: 'up' },
+    { title: 'Churn Rate', value: '2.1%', change: '-0.8% vs last month', trend: 'down' },
+    { title: 'Active Trials', value: '247', change: '+15.4% vs last month', trend: 'up' },
+    { title: 'Dunning Queue', value: '23', change: '-12 vs yesterday', trend: 'down' }
+  ];
 
-  const [tenants] = useState([
-    { id: 'tn_abc123', name: 'Brisk Accounting Ltd', plan: 'Professional', status: 'active', mrr: 2400, users: 12, lastActive: '2025-01-10' },
-    { id: 'tn_def456', name: 'Smith & Partners', plan: 'Enterprise', status: 'trial', mrr: 0, users: 3, lastActive: '2025-01-09' },
-    { id: 'tn_ghi789', name: 'Johnson Associates', plan: 'Starter', status: 'past_due', mrr: 290, users: 2, lastActive: '2025-01-08' },
-    { id: 'tn_jkl012', name: 'Williams & Co', plan: 'Professional', status: 'active', mrr: 790, users: 8, lastActive: '2025-01-10' },
-    { id: 'tn_mno345', name: 'Brown Chartered', plan: 'Enterprise', status: 'active', mrr: 1990, users: 25, lastActive: '2025-01-10' }
-  ]);
+  const tenants = [
+    { id: 'tn_001', name: 'Acme Accounting Ltd', plan: 'Enterprise', status: 'active', mrr: 2450, seats: 25, region: 'GB' },
+    { id: 'tn_002', name: 'Smith & Partners', plan: 'Professional', status: 'trial', mrr: 890, seats: 8, region: 'US' },
+    { id: 'tn_003', name: 'Global Finance Corp', plan: 'Enterprise', status: 'past_due', mrr: 4200, seats: 45, region: 'EU' }
+  ];
 
-  const [plans] = useState([
-    {
-      id: 'plan_starter_v1_2',
-      name: 'Starter',
-      version: '1.2',
-      price: 29,
-      features: 8,
-      status: 'active',
-      activeFrom: '2025-01-01'
-    },
-    {
-      id: 'plan_pro_v1_5',
-      name: 'Professional',
-      version: '1.5',
-      price: 79,
-      features: 15,
-      status: 'active',
-      activeFrom: '2025-01-15'
-    },
-    {
-      id: 'plan_ent_v2_0',
-      name: 'Enterprise',
-      version: '2.0',
-      price: 199,
-      features: 25,
-      status: 'scheduled',
-      activeFrom: '2025-02-01'
-    }
-  ]);
+  const plans = [
+    { id: 'plan_starter_v1_2', name: 'Starter', version: '1.2', status: 'active', tenants: 1247, mrr: 124700 },
+    { id: 'plan_pro_v1_5', name: 'Professional', version: '1.5', status: 'active', tenants: 892, mrr: 267600 },
+    { id: 'plan_enterprise_v2_1', name: 'Enterprise', version: '2.1', status: 'active', tenants: 156, mrr: 468000 }
+  ];
 
-  const [promotions] = useState([
-    { id: 'SPRING25', name: 'Spring 2025 Discount', type: 'percent', value: 25, duration: '3 months', status: 'active', used: 127, cap: 500 },
-    { id: 'WELCOME50', name: 'Welcome Offer', type: 'percent', value: 50, duration: '1 month', status: 'active', used: 89, cap: 200 },
-    { id: 'UPGRADE20', name: 'Upgrade Incentive', type: 'percent', value: 20, duration: 'forever', status: 'paused', used: 45, cap: 100 }
-  ]);
+  const promotions = [
+    { id: 'SPRING25', name: 'Spring Promotion', type: 'percent', value: 25, status: 'active', redemptions: 1247 },
+    { id: 'WINBACK60', name: 'Win-back Campaign', type: 'free_months', value: 2, status: 'scheduled', redemptions: 0 }
+  ];
 
-  const [experiments] = useState([
-    {
-      id: 'exp_trial_length',
-      name: 'Trial Length Test',
-      description: 'Testing 14 vs 21 day trial periods',
-      variants: 2,
-      traffic: 50,
-      status: 'running',
-      started: '2025-01-01'
-    }
-  ]);
+  const experiments = [
+    { id: 'exp_trial_14vs21', name: 'Trial Duration Test', status: 'running', variants: 2, exposure: 5420, winner: null },
+    { id: 'exp_pricing_tiers', name: 'Pricing Tier Optimization', status: 'concluded', variants: 3, exposure: 12450, winner: 'variant_b' },
+    { id: 'exp_onboarding_flow', name: 'Onboarding Flow A/B', status: 'draft', variants: 2, exposure: 0, winner: null }
+  ];
+
+  const invoices = [
+    { id: 'inv_001', tenant: 'Acme Accounting Ltd', amount: 2450, status: 'paid', due_date: '2025-01-15' },
+    { id: 'inv_002', tenant: 'Smith & Partners', amount: 890, status: 'open', due_date: '2025-01-20' },
+    { id: 'inv_003', tenant: 'Global Finance Corp', amount: 4200, status: 'past_due', due_date: '2025-01-10' }
+  ];
+
+  const partners = [
+    { id: 'partner_001', name: 'Channel Partner UK', tier: 'Gold', margin: 15, tenants: 45, revenue: 125000 },
+    { id: 'partner_002', name: 'Reseller Network EU', tier: 'Silver', margin: 12, tenants: 28, revenue: 89000 }
+  ];
+
+  const referrals = [
+    { id: 'ref_001', referrer: 'Acme Accounting Ltd', referee: 'New Client Co', status: 'converted', reward: 500 },
+    { id: 'ref_002', referrer: 'Smith & Partners', referee: 'Startup Inc', status: 'pending', reward: 250 }
+  ];
+
+  const growthJourneys = [
+    { id: 'journey_001', name: 'Trial Activation', trigger: 'trial_day_3', actions: 3, active: true, conversions: 156 },
+    { id: 'journey_002', name: 'Feature Adoption', trigger: 'module_not_used', actions: 2, active: true, conversions: 89 }
+  ];
+
+  const approvalRequests = [
+    { id: 'req_001', type: 'refund', amount: 5000, status: 'pending', requester: 'Support Admin' },
+    { id: 'req_002', type: 'plan_change', description: 'Bulk plan migration', status: 'pending', requester: 'RevOps' }
+  ];
+
+  const auditLogs = [
+    { id: 'audit_001', actor: 'admin@brisk.com', action: 'subscription.cancel', entity: 'tn_003', timestamp: '2025-01-15T10:30:00Z' },
+    { id: 'audit_002', actor: 'billing@brisk.com', action: 'invoice.void', entity: 'inv_004', timestamp: '2025-01-15T09:15:00Z' }
+  ];
 
   const adminPersonas = [
-    { id: 'org_owner', name: 'Organization Owner', description: 'Full system access', users: 3 },
-    { id: 'billing_admin', name: 'Billing Administrator', description: 'Subscription and billing management', users: 2 },
-    { id: 'revops', name: 'Revenue Operations', description: 'Analytics and revenue optimization', users: 1 },
-    { id: 'support_admin', name: 'Support Administrator', description: 'Customer support and troubleshooting', users: 5 },
-    { id: 'read_only_auditor', name: 'Read-Only Auditor', description: 'View-only access for compliance', users: 2 }
+    {
+      id: 'org_owner',
+      name: 'Org Owner',
+      permissions: ['*'],
+      scopes: { tenant_id: '*', region: '*', environment: '*', action: '*', sensitivity: 'high' },
+      dual_control: false,
+      description: 'Full system access with all permissions'
+    },
+    {
+      id: 'billing_admin',
+      name: 'Billing Admin',
+      permissions: ['billing.*', 'invoices.*', 'subscriptions.*', 'promotions.*'],
+      scopes: { tenant_id: '*', region: '*', environment: 'prod', action: 'billing.*', sensitivity: 'medium' },
+      dual_control: true,
+      description: 'Billing operations with dual-control for high-value actions'
+    },
+    {
+      id: 'revops',
+      name: 'RevOps',
+      permissions: ['analytics.*', 'experiments.*', 'catalog.*', 'pricing.*'],
+      scopes: { tenant_id: '*', region: '*', environment: '*', action: 'analytics.*', sensitivity: 'medium' },
+      dual_control: true,
+      description: 'Revenue operations and experimentation management'
+    },
+    {
+      id: 'partner_manager',
+      name: 'Partner Manager',
+      permissions: ['partners.*', 'referrals.*', 'commissions.*'],
+      scopes: { tenant_id: 'partner.*', region: '*', environment: 'prod', action: 'partner.*', sensitivity: 'low' },
+      dual_control: false,
+      description: 'Partner and referral program management'
+    },
+    {
+      id: 'support_admin',
+      name: 'Support Admin',
+      permissions: ['tenants.read', 'subscriptions.read', 'invoices.read', 'support.*'],
+      scopes: { tenant_id: '*', region: '*', environment: 'prod', action: 'support.*', sensitivity: 'low' },
+      dual_control: true,
+      description: 'Customer support with limited modification rights'
+    },
+    {
+      id: 'auditor',
+      name: 'Read-only Auditor',
+      permissions: ['audit.*', '*.read'],
+      scopes: { tenant_id: '*', region: '*', environment: '*', action: 'read', sensitivity: 'high' },
+      dual_control: false,
+      description: 'Read-only access for compliance and auditing'
+    },
+    {
+      id: 'feature_flag_operator',
+      name: 'Feature Flag Operator',
+      permissions: ['flags.*', 'experiments.read'],
+      scopes: { tenant_id: '*', region: '*', environment: '*', action: 'flags.*', sensitivity: 'medium' },
+      dual_control: true,
+      description: 'Feature flag and experiment management'
+    },
+    {
+      id: 'data_steward',
+      name: 'Data Steward',
+      permissions: ['data.*', 'exports.*', 'privacy.*'],
+      scopes: { tenant_id: '*', region: '*', environment: '*', action: 'data.*', sensitivity: 'high' },
+      dual_control: true,
+      description: 'Data governance and privacy compliance'
+    }
   ];
 
   const renderLeftRail = () => (
-    <div className="w-64 bg-white border-r border-gray-200 h-full">
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Admin Console</h2>
-        <nav className="space-y-2">
-          {[
-            { id: 'overview', label: 'Overview', icon: BarChart3 },
-            { id: 'catalog', label: 'Catalog and Pricing', icon: CreditCard },
-            { id: 'promotions', label: 'Promotions', icon: Target },
-            { id: 'experiments', label: 'Experiments and Flags', icon: Flag },
-            { id: 'tenants', label: 'Tenants and Subscriptions', icon: Building },
-            { id: 'templates', label: 'Templates', icon: FileText },
-            { id: 'settings', label: 'Settings', icon: Settings }
-          ].map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id)}
-                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                  activeSection === item.id
-                    ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                <Icon className="mr-3 h-5 w-5" />
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
+    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-900">Admin Control</h2>
+        <p className="text-sm text-gray-600">Multi-tenant management</p>
       </div>
+      <nav className="flex-1 p-4 space-y-2">
+        {[
+          { id: 'overview', label: 'Overview', icon: BarChart3 },
+          { id: 'catalog', label: 'Catalog & Pricing', icon: CreditCard },
+          { id: 'promotions', label: 'Promotions', icon: Target },
+          { id: 'experiments', label: 'Experiments & Flags', icon: Flag },
+          { id: 'tenants', label: 'Tenants & Subscriptions', icon: Building },
+          { id: 'invoices', label: 'Invoices & Dunning', icon: FileText },
+          { id: 'partners', label: 'Partners & Referrals', icon: Users },
+          { id: 'growth', label: 'Growth Journeys', icon: TrendingUp },
+          { id: 'templates', label: 'Templates', icon: FileText },
+          { id: 'settings', label: 'Settings', icon: Settings },
+          { id: 'audit', label: 'Audit Log', icon: Shield }
+        ].map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                activeSection === item.id
+                  ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <Icon className="mr-3 h-5 w-5" />
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 
-  const renderOverview = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Overview</h1>
-        <div className="flex space-x-3">
-          <Button variant="outline">
-            <AlertTriangle className="h-4 w-4 mr-2" />
-            Alerts ({kpiData.dunning})
-          </Button>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Quick Action
-          </Button>
+  const renderOverview = () => {
+    const drillDownData = {
+      title: 'Revenue Analytics',
+      description: 'Comprehensive revenue breakdown and analysis',
+      content: (
+        <div className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-semibold mb-2">Revenue Sources</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Subscriptions</span>
+                  <span className="font-semibold">£789,450</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Usage Overages</span>
+                  <span className="font-semibold">£45,230</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Add-ons</span>
+                  <span className="font-semibold">£12,550</span>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-semibold mb-2">Growth Metrics</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>New MRR</span>
+                  <span className="font-semibold text-green-600">+£23,450</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Expansion MRR</span>
+                  <span className="font-semibold text-green-600">+£15,230</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Churn MRR</span>
+                  <span className="font-semibold text-red-600">-£8,920</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )
+    };
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Monthly Recurring Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">£{kpiData.mrr.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+12.5% from last month</p>
-          </CardContent>
-        </Card>
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-900">Admin Overview</h1>
+          <div className="flex space-x-3">
+            <Button variant="outline" onClick={() => setShowApprovalDialog(true)}>
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Pending Approvals ({approvalRequests.length})
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh Data
+            </Button>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Annual Recurring Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">£{(kpiData.arr / 1000000).toFixed(1)}M</div>
-            <p className="text-xs text-muted-foreground">+18.2% year over year</p>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {kpiData.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              change={kpi.change}
+              icon={DollarSign}
+              color="text-blue-600"
+              drillDownData={drillDownData}
+            />
+          ))}
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Revenue Retention</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{kpiData.nrr}%</div>
-            <p className="text-xs text-muted-foreground">Above 100% target</p>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Latest admin actions and system events</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {auditLogs.slice(0, 5).map((log) => (
+                  <div key={log.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{log.action}</p>
+                      <p className="text-sm text-gray-600">{log.actor}</p>
+                    </div>
+                    <Badge variant="outline">{new Date(log.timestamp).toLocaleTimeString()}</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Churn Rate</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{kpiData.churn}%</div>
-            <p className="text-xs text-muted-foreground">-0.3% from last month</p>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>System Health</CardTitle>
+              <CardDescription>Platform performance and status</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span>API Response Time</span>
+                  <Badge variant="secondary">145ms</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Database Performance</span>
+                  <Badge variant="secondary">Optimal</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Active Connections</span>
+                  <Badge variant="secondary">2,847</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Error Rate</span>
+                  <Badge variant="secondary">0.02%</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Trials</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{kpiData.trials}</div>
-            <p className="text-xs text-muted-foreground">+8 new this week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Dunning Queue</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{kpiData.dunning}</div>
-            <p className="text-xs text-muted-foreground">Requires attention</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest admin actions and system events</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Dialog open={showApprovalDialog} onOpenChange={setShowApprovalDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Pending Approval Requests</DialogTitle>
+              <DialogDescription>
+                Review and approve high-risk administrative actions
+              </DialogDescription>
+            </DialogHeader>
             <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Plan version Pro v1.5 activated</p>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
+              {approvalRequests.map((request) => (
+                <div key={request.id} className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">{request.type}</h4>
+                    <Badge variant="secondary">{request.status}</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    {request.type === 'refund' ? `Refund request: £${request.amount}` : request.description}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline">Reject</Button>
+                    <Button size="sm">Approve</Button>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">New tenant onboarded: Smith and Partners</p>
-                  <p className="text-xs text-gray-500">4 hours ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Payment retry failed: Johnson Associates</p>
-                  <p className="text-xs text-gray-500">6 hours ago</p>
-                </div>
-              </div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>System Health</CardTitle>
-            <CardDescription>Current system status and performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">API Response Time</span>
-                <Badge variant="outline" className="text-green-600">142ms</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Database Performance</span>
-                <Badge variant="outline" className="text-green-600">Optimal</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Active Connections</span>
-                <Badge variant="outline">1,247</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Error Rate</span>
-                <Badge variant="outline" className="text-green-600">0.02%</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </DialogContent>
+        </Dialog>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderCatalogPricing = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Catalog and Pricing</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Catalog & Pricing</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
-            <Eye className="h-4 w-4 mr-2" />
-            Preview Changes
+            <Download className="h-4 w-4 mr-2" />
+            Export Catalog
           </Button>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
@@ -319,79 +396,124 @@ const AdminModule = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {plans.map((plan) => (
-          <Card key={plan.id} className="relative">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <h3 className="font-semibold text-gray-900">{plan.name}</h3>
-                  <Badge variant="outline">v{plan.version}</Badge>
-                  <Badge variant={plan.status === 'active' ? 'default' : 'secondary'}>
-                    {plan.status}
-                  </Badge>
-                </div>
-                <Button variant="outline" size="sm">
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="mt-1 text-sm text-gray-600">£{plan.price}/month • {plan.features} features</div>
-              <div className="mt-2 text-sm text-gray-600">
-                Active from {plan.activeFrom}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span>Base Price</span>
-                  <span className="font-medium">£{plan.price}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span>Features</span>
-                  <span className="font-medium">{plan.features}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span>Status</span>
-                  <Badge variant={plan.status === 'active' ? 'default' : 'secondary'} className="text-xs">
-                    {plan.status}
-                  </Badge>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Active Plans"
+          value={plans.filter(p => p.status === 'active').length.toString()}
+          change="+1 this quarter"
+          icon={CreditCard}
+          color="text-blue-600"
+          drillDownData={{
+            title: 'Plan Portfolio',
+            description: 'Plan distribution and performance metrics',
+            content: (
+              <div className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Plan Distribution</h4>
+                    {plans.map(plan => (
+                      <div key={plan.id} className="flex justify-between py-1">
+                        <span>{plan.name}</span>
+                        <span className="font-semibold">{plan.tenants} tenants</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Revenue by Plan</h4>
+                    {plans.map(plan => (
+                      <div key={plan.id} className="flex justify-between py-1">
+                        <span>{plan.name}</span>
+                        <span className="font-semibold">£{plan.mrr.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            )
+          }}
+        />
+        <KPICard
+          title="Total MRR"
+          value={`£${plans.reduce((sum, p) => sum + p.mrr, 0).toLocaleString()}`}
+          change="+15.2% vs last month"
+          icon={DollarSign}
+          color="text-green-600"
+          drillDownData={{
+            title: 'MRR Analysis',
+            description: 'Monthly recurring revenue breakdown',
+            content: <div>MRR drill-down content</div>
+          }}
+        />
+        <KPICard
+          title="Plan Versions"
+          value="12"
+          change="2 scheduled for release"
+          icon={Flag}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Version Management',
+            description: 'Plan version lifecycle and scheduling',
+            content: <div>Version management content</div>
+          }}
+        />
       </div>
+
+      <SearchFilterHeader
+        searchPlaceholder="Search plans..."
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={[
+          {
+            label: 'Status',
+            options: [
+              { value: 'all', label: 'All Status' },
+              { value: 'active', label: 'Active' },
+              { value: 'scheduled', label: 'Scheduled' },
+              { value: 'deprecated', label: 'Deprecated' }
+            ],
+            value: selectedStatus,
+            onChange: setSelectedStatus
+          }
+        ]}
+        dateRange={{
+          from: dateFrom,
+          to: dateTo,
+          onFromChange: setDateFrom,
+          onToChange: setDateTo
+        }}
+      />
 
       <Card>
         <CardHeader>
-          <CardTitle>Regional Pricing</CardTitle>
-          <CardDescription>Manage pricing across different regions and currencies</CardDescription>
+          <CardTitle>Plan Catalog</CardTitle>
+          <CardDescription>Manage pricing plans and versions</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div>
-                  <p className="font-medium">United Kingdom</p>
-                  <p className="text-sm text-gray-600">GBP pricing</p>
+            {plans.map((plan) => (
+              <div key={plan.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{plan.name}</h3>
+                    <Badge variant="outline">v{plan.version}</Badge>
+                    <Badge variant={plan.status === 'active' ? 'default' : 'secondary'}>
+                      {plan.status}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {plan.tenants} tenants • £{plan.mrr.toLocaleString()} MRR
+                  </p>
                 </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div>
-                  <p className="font-medium">European Union</p>
-                  <p className="text-sm text-gray-600">EUR pricing</p>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4" />
+                  </Button>
                 </div>
-                <Badge variant="outline">Active</Badge>
               </div>
-              <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div>
-                  <p className="font-medium">United States</p>
-                  <p className="text-sm text-gray-600">USD pricing</p>
-                </div>
-                <Badge variant="secondary">Planned</Badge>
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -401,11 +523,11 @@ const AdminModule = () => {
   const renderPromotions = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Promotions and Coupons</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Promotions & Coupons</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Analytics
+            <Download className="h-4 w-4 mr-2" />
+            Export Performance
           </Button>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
@@ -414,95 +536,97 @@ const AdminModule = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {promotions.map((promo) => (
-          <Card key={promo.id}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-gray-900">{promo.name}</h3>
-                  <p className="text-sm text-gray-600 mt-1">Code: {promo.id}</p>
-                </div>
-                <Badge variant={promo.status === 'active' ? 'default' : 'secondary'}>
-                  {promo.status}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span>Discount</span>
-                  <span className="font-medium">{promo.value}% off</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span>Duration</span>
-                  <span className="font-medium">{promo.duration}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span>Usage</span>
-                  <span className="font-medium">{promo.used}/{promo.cap}</span>
-                </div>
-                <div className="flex space-x-2 mt-4">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Play className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Active Promotions"
+          value={promotions.filter(p => p.status === 'active').length.toString()}
+          change="+2 this month"
+          icon={Target}
+          color="text-blue-600"
+          drillDownData={{
+            title: 'Promotion Performance',
+            description: 'Active promotion metrics and redemption rates',
+            content: <div>Promotion performance content</div>
+          }}
+        />
+        <KPICard
+          title="Total Redemptions"
+          value={promotions.reduce((sum, p) => sum + p.redemptions, 0).toLocaleString()}
+          change="+23.4% vs last month"
+          icon={Activity}
+          color="text-green-600"
+          drillDownData={{
+            title: 'Redemption Analysis',
+            description: 'Detailed redemption patterns and trends',
+            content: <div>Redemption analysis content</div>
+          }}
+        />
+        <KPICard
+          title="Revenue Impact"
+          value="£45,230"
+          change="Discount given this month"
+          icon={DollarSign}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Revenue Impact',
+            description: 'Promotion impact on revenue and margins',
+            content: <div>Revenue impact content</div>
+          }}
+        />
       </div>
-    </div>
-  );
 
-  const renderExperiments = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Experiments and Feature Flags</h1>
-        <div className="flex space-x-3">
-          <Button variant="outline">
-            <Flag className="h-4 w-4 mr-2" />
-            Manage Flags
-          </Button>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Experiment
-          </Button>
-        </div>
-      </div>
+      <SearchFilterHeader
+        searchPlaceholder="Search promotions..."
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={[
+          {
+            label: 'Status',
+            options: [
+              { value: 'all', label: 'All Status' },
+              { value: 'active', label: 'Active' },
+              { value: 'scheduled', label: 'Scheduled' },
+              { value: 'expired', label: 'Expired' }
+            ],
+            value: selectedStatus,
+            onChange: setSelectedStatus
+          }
+        ]}
+        dateRange={{
+          from: dateFrom,
+          to: dateTo,
+          onFromChange: setDateFrom,
+          onToChange: setDateTo
+        }}
+      />
 
       <Card>
         <CardHeader>
-          <CardTitle>Active Experiments</CardTitle>
-          <CardDescription>A/B tests and feature rollouts currently running</CardDescription>
+          <CardTitle>Promotion Management</CardTitle>
+          <CardDescription>Manage promotional campaigns and coupon codes</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {experiments.map((exp) => (
-              <div key={exp.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            {promotions.map((promo) => (
+              <div key={promo.id} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex-1">
-                  <div className="flex items-center space-x-3">
-                    <h3 className="font-semibold text-gray-900">{exp.name}</h3>
-                    <Badge variant={exp.status === 'running' ? 'default' : 'secondary'}>
-                      {exp.status}
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{promo.name}</h3>
+                    <Badge variant="outline">{promo.id}</Badge>
+                    <Badge variant={promo.status === 'active' ? 'default' : 'secondary'}>
+                      {promo.status}
                     </Badge>
                   </div>
-                  <div className="mt-1 text-sm text-gray-600">{exp.description}</div>
-                  <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
-                    <span>{exp.variants} variants</span>
-                    <span>{exp.traffic}% traffic</span>
-                    <span>Started {exp.started}</span>
-                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {promo.type === 'percent' ? `${promo.value}% discount` : `${promo.value} free months`} • 
+                    {promo.redemptions} redemptions
+                  </p>
                 </div>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Play className="h-4 w-4" />
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button size="sm" variant="outline">
                     <Edit className="h-4 w-4" />
                   </Button>
                 </div>
@@ -511,38 +635,122 @@ const AdminModule = () => {
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+
+  const renderExperiments = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Experiments & Feature Flags</h1>
+        <div className="flex space-x-3">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Results
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Experiment
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Running Experiments"
+          value={experiments.filter(e => e.status === 'running').length.toString()}
+          change="2 concluded this week"
+          icon={Flag}
+          color="text-blue-600"
+          drillDownData={{
+            title: 'Experiment Status',
+            description: 'Current experiment pipeline and results',
+            content: <div>Experiment status content</div>
+          }}
+        />
+        <KPICard
+          title="Total Exposure"
+          value={experiments.reduce((sum, e) => sum + e.exposure, 0).toLocaleString()}
+          change="+1,247 this week"
+          icon={Users}
+          color="text-green-600"
+          drillDownData={{
+            title: 'Exposure Analysis',
+            description: 'User exposure across all experiments',
+            content: <div>Exposure analysis content</div>
+          }}
+        />
+        <KPICard
+          title="Conversion Lift"
+          value="12.3%"
+          change="Average across concluded tests"
+          icon={TrendingUp}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Conversion Impact',
+            description: 'Experiment impact on key metrics',
+            content: <div>Conversion impact content</div>
+          }}
+        />
+      </div>
+
+      <SearchFilterHeader
+        searchPlaceholder="Search experiments..."
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={[
+          {
+            label: 'Status',
+            options: [
+              { value: 'all', label: 'All Status' },
+              { value: 'draft', label: 'Draft' },
+              { value: 'running', label: 'Running' },
+              { value: 'concluded', label: 'Concluded' }
+            ],
+            value: selectedStatus,
+            onChange: setSelectedStatus
+          }
+        ]}
+        dateRange={{
+          from: dateFrom,
+          to: dateTo,
+          onFromChange: setDateFrom,
+          onToChange: setDateTo
+        }}
+      />
 
       <Card>
         <CardHeader>
-          <CardTitle>Feature Flags</CardTitle>
-          <CardDescription>Control feature rollouts and system behavior</CardDescription>
+          <CardTitle>Experiment Management</CardTitle>
+          <CardDescription>A/B tests and feature flag management</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-              <div>
-                <p className="font-medium">Advanced Analytics Dashboard</p>
-                <p className="text-sm text-gray-600">Enhanced reporting features</p>
+            {experiments.map((exp) => (
+              <div key={exp.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{exp.name}</h3>
+                    <Badge variant={exp.status === 'running' ? 'default' : 'secondary'}>
+                      {exp.status}
+                    </Badge>
+                    {exp.winner && <Badge variant="outline">Winner: {exp.winner}</Badge>}
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {exp.variants} variants • {exp.exposure.toLocaleString()} exposed users
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  {exp.status === 'running' && (
+                    <Button size="sm" variant="outline">
+                      <Play className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline">50% rollout</Badge>
-                <Button variant="outline" size="sm">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-              <div>
-                <p className="font-medium">New Onboarding Flow</p>
-                <p className="text-sm text-gray-600">Simplified user registration</p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Badge variant="default">100% rollout</Badge>
-                <Button variant="outline" size="sm">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -552,57 +760,75 @@ const AdminModule = () => {
   const renderTenants = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Tenants and Subscriptions</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Tenants & Subscriptions</h1>
         <div className="flex space-x-3">
-          <div className="flex items-center space-x-2">
-            <Input placeholder="Search tenants..." className="w-64" />
-            <Button variant="outline" size="sm">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
           <Button variant="outline">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
+            <Download className="h-4 w-4 mr-2" />
+            Export Tenants
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Tenant
           </Button>
         </div>
       </div>
 
+      <SearchFilterHeader
+        searchPlaceholder="Search tenants..."
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={[
+          {
+            label: 'Status',
+            options: [
+              { value: 'all', label: 'All Status' },
+              { value: 'active', label: 'Active' },
+              { value: 'trial', label: 'Trial' },
+              { value: 'past_due', label: 'Past Due' },
+              { value: 'suspended', label: 'Suspended' }
+            ],
+            value: selectedStatus,
+            onChange: setSelectedStatus
+          }
+        ]}
+        dateRange={{
+          from: dateFrom,
+          to: dateTo,
+          onFromChange: setDateFrom,
+          onToChange: setDateTo
+        }}
+      />
+
       <Card>
         <CardHeader>
-          <CardTitle>Tenant Overview</CardTitle>
-          <CardDescription>Manage customer accounts and subscriptions</CardDescription>
+          <CardTitle>Tenant Management</CardTitle>
+          <CardDescription>Manage customer subscriptions and entitlements</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {tenants.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Building className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{tenant.name}</h3>
-                    <p className="text-sm text-gray-600">{tenant.id}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-6">
-                  <div className="text-right">
-                    <p className="text-sm font-medium">£{tenant.mrr}/month</p>
-                    <p className="text-xs text-gray-600">{tenant.users} users</p>
-                  </div>
-                  <div className="text-right">
+              <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{tenant.name}</h3>
+                    <Badge variant="outline">{tenant.plan}</Badge>
                     <Badge variant={
-                      tenant.status === 'active' ? 'default' :
-                      tenant.status === 'trial' ? 'secondary' :
-                      tenant.status === 'past_due' ? 'destructive' : 'outline'
+                      tenant.status === 'active' ? 'default' : 
+                      tenant.status === 'trial' ? 'secondary' : 'destructive'
                     }>
                       {tenant.status}
                     </Badge>
-                    <p className="text-xs text-gray-600 mt-1">{tenant.plan}</p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-1" />
-                    Inspect
+                  <p className="text-sm text-gray-600 mt-1">
+                    £{tenant.mrr} MRR • {tenant.seats} seats • {tenant.region}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -618,81 +844,56 @@ const AdminModule = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Admin Settings</h1>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Admin User
+          <Settings className="h-4 w-4 mr-2" />
+          Save Changes
         </Button>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>RBAC Personas</CardTitle>
-          <CardDescription>Manage role-based access control and permissions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {adminPersonas.map((persona) => (
-              <div key={persona.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <Shield className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{persona.name}</h3>
-                    <p className="text-sm text-gray-600">{persona.description}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant="outline">{persona.users} users</Badge>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>System Configuration</CardTitle>
-            <CardDescription>Global system settings and preferences</CardDescription>
+            <CardTitle>RBAC Configuration</CardTitle>
+            <CardDescription>Role-based access control settings</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Maintenance Mode</span>
-                <Badge variant="outline" className="text-green-600">Disabled</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">API Rate Limiting</span>
-                <Badge variant="outline">1000/hour</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Data Retention</span>
-                <Badge variant="outline">7 years</Badge>
-              </div>
+              {adminPersonas.slice(0, 4).map((persona) => (
+                <div key={persona.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <h4 className="font-semibold">{persona.name}</h4>
+                    <p className="text-sm text-gray-600">{persona.description}</p>
+                  </div>
+                  <Badge variant={persona.dual_control ? 'destructive' : 'secondary'}>
+                    {persona.dual_control ? 'Dual Control' : 'Single Control'}
+                  </Badge>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Security Settings</CardTitle>
-            <CardDescription>Authentication and security configuration</CardDescription>
+            <CardTitle>System Configuration</CardTitle>
+            <CardDescription>Platform-wide settings and preferences</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">MFA Required</span>
-                <Badge variant="default">Enabled</Badge>
+                <span>Audit Retention</span>
+                <Badge variant="outline">7 years</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Session Timeout</span>
-                <Badge variant="outline">8 hours</Badge>
+                <span>Data Residency</span>
+                <Badge variant="outline">EU/UK</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Password Policy</span>
-                <Badge variant="outline">Strong</Badge>
+                <span>Encryption</span>
+                <Badge variant="outline">AES-256</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Backup Frequency</span>
+                <Badge variant="outline">Every 6 hours</Badge>
               </div>
             </div>
           </CardContent>
@@ -701,120 +902,521 @@ const AdminModule = () => {
     </div>
   );
 
+  const renderInvoicesDunning = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Invoices & Dunning</h1>
+        <div className="flex space-x-3">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Invoices
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Invoice
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Outstanding Invoices"
+          value={invoices.filter(i => i.status !== 'paid').length.toString()}
+          change="-3 vs yesterday"
+          icon={FileText}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Invoice Status',
+            description: 'Breakdown of invoice statuses and aging',
+            content: <div>Invoice status content</div>
+          }}
+        />
+        <KPICard
+          title="Dunning Queue"
+          value="23"
+          change="12 resolved today"
+          icon={AlertTriangle}
+          color="text-red-600"
+          drillDownData={{
+            title: 'Dunning Analysis',
+            description: 'Failed payment recovery and retry status',
+            content: <div>Dunning analysis content</div>
+          }}
+        />
+        <KPICard
+          title="Collection Rate"
+          value="94.2%"
+          change="+1.3% vs last month"
+          icon={TrendingUp}
+          color="text-green-600"
+          drillDownData={{
+            title: 'Collection Performance',
+            description: 'Payment collection efficiency metrics',
+            content: <div>Collection performance content</div>
+          }}
+        />
+      </div>
+
+      <Tabs defaultValue="invoices" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="invoices">Invoices</TabsTrigger>
+          <TabsTrigger value="dunning">Dunning Queue</TabsTrigger>
+          <TabsTrigger value="templates">Templates</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="invoices">
+          <SearchFilterHeader
+            searchPlaceholder="Search invoices..."
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            filters={[
+              {
+                label: 'Status',
+                options: [
+                  { value: 'all', label: 'All Status' },
+                  { value: 'draft', label: 'Draft' },
+                  { value: 'open', label: 'Open' },
+                  { value: 'paid', label: 'Paid' },
+                  { value: 'past_due', label: 'Past Due' },
+                  { value: 'void', label: 'Void' }
+                ],
+                value: selectedStatus,
+                onChange: setSelectedStatus
+              }
+            ]}
+            dateRange={{
+              from: dateFrom,
+              to: dateTo,
+              onFromChange: setDateFrom,
+              onToChange: setDateTo
+            }}
+          />
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Invoice Management</CardTitle>
+              <CardDescription>Manage customer invoices and billing</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {invoices.map((invoice) => (
+                  <div key={invoice.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <h3 className="font-semibold">{invoice.id}</h3>
+                        <Badge variant={
+                          invoice.status === 'paid' ? 'default' : 
+                          invoice.status === 'past_due' ? 'destructive' : 'secondary'
+                        }>
+                          {invoice.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {invoice.tenant} • £{invoice.amount} • Due: {invoice.due_date}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="templates">
+          <InvoiceTemplateManager />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+
+  const renderPartnersReferrals = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Partners & Referrals</h1>
+        <div className="flex space-x-3">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Data
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Partner
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Active Partners"
+          value={partners.length.toString()}
+          change="+2 this quarter"
+          icon={Users}
+          color="text-blue-600"
+          drillDownData={{
+            title: 'Partner Performance',
+            description: 'Partner tier distribution and performance',
+            content: <div>Partner performance content</div>
+          }}
+        />
+        <KPICard
+          title="Partner Revenue"
+          value={`£${partners.reduce((sum, p) => sum + p.revenue, 0).toLocaleString()}`}
+          change="+18.5% vs last quarter"
+          icon={DollarSign}
+          color="text-green-600"
+          drillDownData={{
+            title: 'Revenue Analysis',
+            description: 'Partner-driven revenue and commissions',
+            content: <div>Revenue analysis content</div>
+          }}
+        />
+        <KPICard
+          title="Referral Conversions"
+          value={referrals.filter(r => r.status === 'converted').length.toString()}
+          change="12.3% conversion rate"
+          icon={TrendingUp}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Referral Pipeline',
+            description: 'Referral conversion funnel and performance',
+            content: <div>Referral pipeline content</div>
+          }}
+        />
+      </div>
+
+      <Tabs defaultValue="partners" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="partners">Partners</TabsTrigger>
+          <TabsTrigger value="referrals">Referrals</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="partners">
+          <Card>
+            <CardHeader>
+              <CardTitle>Partner Management</CardTitle>
+              <CardDescription>Manage channel partners and commission structures</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {partners.map((partner) => (
+                  <div key={partner.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <h3 className="font-semibold">{partner.name}</h3>
+                        <Badge variant="outline">{partner.tier}</Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {partner.margin}% margin • {partner.tenants} tenants • £{partner.revenue.toLocaleString()} revenue
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="referrals">
+          <Card>
+            <CardHeader>
+              <CardTitle>Referral Management</CardTitle>
+              <CardDescription>Track referral program performance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {referrals.map((referral) => (
+                  <div key={referral.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <h3 className="font-semibold">{referral.referee}</h3>
+                        <Badge variant={referral.status === 'converted' ? 'default' : 'secondary'}>
+                          {referral.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Referred by: {referral.referrer} • Reward: £{referral.reward}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+
+  const renderGrowthJourneys = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Growth Journeys</h1>
+        <div className="flex space-x-3">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Analytics
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Journey
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <KPICard
+          title="Active Journeys"
+          value={growthJourneys.filter(j => j.active).length.toString()}
+          change="2 launched this month"
+          icon={TrendingUp}
+          color="text-blue-600"
+          drillDownData={{
+            title: 'Journey Performance',
+            description: 'Growth journey effectiveness and conversion rates',
+            content: <div>Journey performance content</div>
+          }}
+        />
+        <KPICard
+          title="Total Conversions"
+          value={growthJourneys.reduce((sum, j) => sum + j.conversions, 0).toString()}
+          change="+34 this week"
+          icon={Target}
+          color="text-green-600"
+          drillDownData={{
+            title: 'Conversion Analysis',
+            description: 'Journey step conversion and drop-off analysis',
+            content: <div>Conversion analysis content</div>
+          }}
+        />
+        <KPICard
+          title="Engagement Rate"
+          value="67.8%"
+          change="+5.2% vs last month"
+          icon={Activity}
+          color="text-orange-600"
+          drillDownData={{
+            title: 'Engagement Metrics',
+            description: 'User engagement across journey touchpoints',
+            content: <div>Engagement metrics content</div>
+          }}
+        />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Journey Management</CardTitle>
+          <CardDescription>Automated growth and engagement campaigns</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {growthJourneys.map((journey) => (
+              <div key={journey.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{journey.name}</h3>
+                    <Badge variant={journey.active ? 'default' : 'secondary'}>
+                      {journey.active ? 'Active' : 'Paused'}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Trigger: {journey.trigger} • {journey.actions} actions • {journey.conversions} conversions
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Play className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderAuditLog = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Audit Log</h1>
+        <div className="flex space-x-3">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Audit Trail
+          </Button>
+          <Button variant="outline">
+            <Shield className="h-4 w-4 mr-2" />
+            Verify Hash Chain
+          </Button>
+        </div>
+      </div>
+
+      <SearchFilterHeader
+        searchPlaceholder="Search audit logs..."
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={[
+          {
+            label: 'Actions',
+            options: [
+              { value: 'all', label: 'All Actions' },
+              { value: 'create', label: 'Create' },
+              { value: 'update', label: 'Update' },
+              { value: 'delete', label: 'Delete' },
+              { value: 'approve', label: 'Approve' }
+            ],
+            value: selectedStatus,
+            onChange: setSelectedStatus
+          }
+        ]}
+        dateRange={{
+          from: dateFrom,
+          to: dateTo,
+          onFromChange: setDateFrom,
+          onToChange: setDateTo
+        }}
+      />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>System Audit Trail</CardTitle>
+          <CardDescription>Tamper-evident log of all administrative actions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {auditLogs.map((log) => (
+              <div key={log.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold">{log.action}</h3>
+                    <Badge variant="outline">{log.entity}</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Actor: {log.actor} • {new Date(log.timestamp).toLocaleString()}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderTemplates = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Templates & Branding</h1>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Template
+        </Button>
+      </div>
+
+      <InvoiceTemplateManager />
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeSection) {
-      case 'overview':
-        return renderOverview();
-      case 'catalog':
-        return renderCatalogPricing();
-      case 'promotions':
-        return renderPromotions();
-      case 'experiments':
-        return renderExperiments();
-      case 'tenants':
-        return renderTenants();
-      case 'settings':
-        return renderSettings();
-      case 'templates':
-        return renderTemplates();
-      default:
-        return renderOverview();
+      case 'overview': return renderOverview();
+      case 'catalog': return renderCatalogPricing();
+      case 'promotions': return renderPromotions();
+      case 'experiments': return renderExperiments();
+      case 'tenants': return renderTenants();
+      case 'invoices': return renderInvoicesDunning();
+      case 'partners': return renderPartnersReferrals();
+      case 'growth': return renderGrowthJourneys();
+      case 'templates': return renderTemplates();
+      case 'settings': return renderSettings();
+      case 'audit': return renderAuditLog();
+      default: return renderOverview();
     }
   };
-
-  const renderTemplates = () => {
-    return (
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">Template Management</h2>
-            <p className="text-gray-600">Centralized management of all document templates and branding</p>
-          </div>
-        </div>
-
-        <Tabs defaultValue="payslip" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="payslip">Payslip Templates</TabsTrigger>
-            <TabsTrigger value="invoice">Invoice Templates</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="payslip" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Payslip Template Management</CardTitle>
-                <CardDescription>Manage payslip templates and branding across all practices</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <PayslipTemplateManager />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="invoice" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Invoice Template Management</CardTitle>
-                <CardDescription>Manage invoice templates and branding across all practices</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <InvoiceTemplateManager />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    );
-  }
-
-  if (isMobile) {
-    return (
-      <ResponsiveLayout>
-        <div className="p-4">
-          <div className="mb-4">
-            <Select value={activeSection} onValueChange={setActiveSection}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="overview">Overview</SelectItem>
-                <SelectItem value="catalog">Catalog and Pricing</SelectItem>
-                <SelectItem value="promotions">Promotions</SelectItem>
-                <SelectItem value="experiments">Experiments and Flags</SelectItem>
-                <SelectItem value="tenants">Tenants and Subscriptions</SelectItem>
-                <SelectItem value="templates">Templates</SelectItem>
-                <SelectItem value="settings">Settings</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {renderContent()}
-        </div>
-      </ResponsiveLayout>
-    );
-  }
 
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-gray-50">
-        {renderLeftRail()}
-        <div className="flex-1 overflow-auto">
-          <div className="p-8">
+        {!isMobile && renderLeftRail()}
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {isMobile && (
+            <div className="p-4 bg-white border-b border-gray-200">
+              <Select value={activeSection} onValueChange={setActiveSection}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select admin section" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="overview">Overview</SelectItem>
+                  <SelectItem value="catalog">Catalog & Pricing</SelectItem>
+                  <SelectItem value="promotions">Promotions</SelectItem>
+                  <SelectItem value="experiments">Experiments & Flags</SelectItem>
+                  <SelectItem value="tenants">Tenants & Subscriptions</SelectItem>
+                  <SelectItem value="invoices">Invoices & Dunning</SelectItem>
+                  <SelectItem value="partners">Partners & Referrals</SelectItem>
+                  <SelectItem value="growth">Growth Journeys</SelectItem>
+                  <SelectItem value="templates">Templates</SelectItem>
+                  <SelectItem value="settings">Settings</SelectItem>
+                  <SelectItem value="audit">Audit Log</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          
+          <main className="flex-1 overflow-auto p-6">
             {renderContent()}
-            
-            <AIPromptSection
-              title="Ask your Admin Adviser"
-              description="Get expert system administration and management guidance"
-              placeholder="Ask about tenant management, billing, system configuration..."
-              isLoading={isAILoading}
-              onSubmit={handleAIQuestion}
-              recentQuestions={[
-                "How do I manage tenant subscriptions?",
-                "What are the billing configuration options?",
-                "How do I set up user permissions?"
-              ]}
-            />
-          </div>
+          </main>
         </div>
       </div>
+
+      <AIPromptSection
+        title="Admin AI Assistant"
+        description="Get insights about tenant management, billing operations, and system analytics"
+        isLoading={isAILoading}
+        onSubmit={handleAIQuestion}
+        placeholder="Ask about admin operations, tenant management, billing, or system analytics..."
+        recentQuestions={[
+          "Show me tenants with past due invoices",
+          "What's the conversion rate for our current experiments?",
+          "Which promotions are performing best this quarter?",
+          "How many approval requests are pending?"
+        ]}
+      />
     </ResponsiveLayout>
   );
 };
