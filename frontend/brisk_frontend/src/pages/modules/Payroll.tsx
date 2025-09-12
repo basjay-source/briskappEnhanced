@@ -13,7 +13,8 @@ import {
   Play,
   Settings,
   Eye,
-  Edit
+  Edit,
+  Mail
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -892,118 +893,278 @@ export default function Payroll() {
           <TabsContent value="reports" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Advanced Payroll Reports</CardTitle>
-                <CardDescription>Generate comprehensive payroll reports and analytics</CardDescription>
+                <CardTitle>Reports & Downloads</CardTitle>
+                <CardDescription>
+                  Generate P35, P60, P45, P46, payslips, summaries with PDF and CSV downloads
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Payroll Summary</h3>
-                      <p className="text-sm text-gray-600 mb-3">Comprehensive payroll breakdown</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Card className="border-2 border-[#00703c] bg-green-50/30">
+                      <CardHeader className="bg-[#00703c] text-white">
+                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          P35 - End of Year Return
+                        </CardTitle>
+                        <CardDescription className="text-green-100">Annual summary for HMRC</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground">
+                            Generate annual P35 return with employee summaries
+                          </div>
+                          <Button variant="outline" className="w-full">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generate P35
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-[#00703c] bg-green-50/30">
+                      <CardHeader className="bg-[#00703c] text-white">
+                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          P60 - End of Year Certificate
+                        </CardTitle>
+                        <CardDescription className="text-green-100">Employee tax year summary</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground">
+                            Generate P60 certificates for all employees
+                          </div>
+                          <Button variant="outline" className="w-full">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generate P60s
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-[#00703c] bg-green-50/30">
+                      <CardHeader className="bg-[#00703c] text-white">
+                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          P45 - Leaving Certificate
+                        </CardTitle>
+                        <CardDescription className="text-green-100">Employee leaving documentation</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground">
+                            Generate P45 for employees leaving employment
+                          </div>
+                          <Button variant="outline" className="w-full">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generate P45
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-[#00703c] bg-green-50/30">
+                      <CardHeader className="bg-[#00703c] text-white">
+                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          P46 - New Employee
+                        </CardTitle>
+                        <CardDescription className="text-green-100">New starter documentation</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground">
+                            Generate P46 for new employees without P45
+                          </div>
+                          <Button variant="outline" className="w-full">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generate P46
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <FileText className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Payroll Summary</h3>
+                        <p className="text-sm text-gray-600 mb-3">Monthly payroll reports</p>
+                        <Button size="sm" variant="outline">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Generate Summary
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Custom Reports</h3>
+                        <p className="text-sm text-gray-600 mb-3">Bespoke payroll analysis</p>
+                        <Button size="sm" variant="outline">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Create Report
+                        </Button>
+                      </CardContent>
+                    </Card>
 
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Periodic Tax and NI</h3>
-                      <p className="text-sm text-gray-600 mb-3">Monthly/quarterly tax and NI reports</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Periodic Tax and NI</h3>
+                        <p className="text-sm text-gray-600 mb-3">Monthly/quarterly tax and NI reports</p>
+                        <Button size="sm" variant="outline">Generate</Button>
+                      </CardContent>
+                    </Card>
 
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Year To Date Details</h3>
-                      <p className="text-sm text-gray-600 mb-3">Comprehensive YTD employee summaries</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Year To Date Details</h3>
+                        <p className="text-sm text-gray-600 mb-3">Comprehensive YTD employee summaries</p>
+                        <Button size="sm" variant="outline">Generate</Button>
+                      </CardContent>
+                    </Card>
 
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Departmental Reports</h3>
-                      <p className="text-sm text-gray-600 mb-3">Payroll breakdown by department</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <TrendingUp className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Departmental Reports</h3>
+                        <p className="text-sm text-gray-600 mb-3">Payroll breakdown by department</p>
+                        <Button size="sm" variant="outline">Generate</Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <Calculator className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Tax and NI Report</h3>
+                        <p className="text-sm text-gray-600 mb-3">PAYE and NI calculations</p>
+                        <Button size="sm" variant="outline">Generate</Button>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <TrendingUp className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Pension Report</h3>
+                        <p className="text-sm text-gray-600 mb-3">Auto-enrollment status</p>
+                        <Button size="sm" variant="outline">Generate</Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">P11D Benefits</h3>
+                        <p className="text-sm text-gray-600 mb-3">Benefits in kind reporting</p>
+                        <Button size="sm" variant="outline">Generate P11Ds</Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <Calculator className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Statutory Payments</h3>
+                        <p className="text-sm text-gray-600 mb-3">SSP, SMP, SPP, SAP, ShPP</p>
+                        <Button size="sm" variant="outline">Calculate</Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <TrendingUp className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Payroll Analytics</h3>
+                        <p className="text-sm text-gray-600 mb-3">Trends and insights</p>
+                        <Button size="sm" variant="outline">View Analytics</Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <FileText className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">CIS Reports</h3>
+                        <p className="text-sm text-gray-600 mb-3">Construction industry scheme</p>
+                        <Button size="sm" variant="outline">Generate CIS</Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
+                      <CardContent className="p-6 text-center">
+                        <Download className="h-8 w-8 text-gray-500 mx-auto mb-2" />
+                        <h3 className="font-semibold mb-1">Payslip Archive</h3>
+                        <p className="text-sm text-gray-600 mb-3">Historical payslips</p>
+                        <Button size="sm" variant="outline">Access Archive</Button>
+                      </CardContent>
+                    </Card>
+                  </div>
                   
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Calculator className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Tax and NI Report</h3>
-                      <p className="text-sm text-gray-600 mb-3">PAYE and NI calculations</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Pension Report</h3>
-                      <p className="text-sm text-gray-600 mb-3">Auto-enrollment status</p>
-                      <Button size="sm" variant="outline">Generate</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">P60 Certificates</h3>
-                      <p className="text-sm text-gray-600 mb-3">Year-end tax certificates</p>
-                      <Button size="sm" variant="outline">Generate P60s</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">P11D Benefits</h3>
-                      <p className="text-sm text-gray-600 mb-3">Benefits in kind reporting</p>
-                      <Button size="sm" variant="outline">Generate P11Ds</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Calculator className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Statutory Payments</h3>
-                      <p className="text-sm text-gray-600 mb-3">SSP, SMP, SPP, SAP, ShPP</p>
-                      <Button size="sm" variant="outline">Calculate</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Payroll Analytics</h3>
-                      <p className="text-sm text-gray-600 mb-3">Trends and insights</p>
-                      <Button size="sm" variant="outline">View Analytics</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <FileText className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">CIS Reports</h3>
-                      <p className="text-sm text-gray-600 mb-3">Construction industry scheme</p>
-                      <Button size="sm" variant="outline">Generate CIS</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors">
-                    <CardContent className="p-6 text-center">
-                      <Download className="h-8 w-8 text-gray-500 mx-auto mb-2" />
-                      <h3 className="font-semibold mb-1">Payslip Archive</h3>
-                      <p className="text-sm text-gray-600 mb-3">Historical payslips</p>
-                      <Button size="sm" variant="outline">Access Archive</Button>
-                    </CardContent>
-                  </Card>
+                  <div>
+                    <h4 className="font-semibold mb-4">Generated Reports</h4>
+                    <div className="border rounded-lg overflow-hidden">
+                      <table className="w-full">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Report Type</th>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Period</th>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Generated Date</th>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Format</th>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Emailed</th>
+                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-900">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                          <tr>
+                            <td className="px-4 py-3 text-sm font-medium">P60</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">2023-24</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">05/04/2024</td>
+                            <td className="px-4 py-3 text-sm">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">PDF</span>
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Sent
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              <div className="flex space-x-2">
+                                <Button variant="outline" size="sm">
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                                <Button variant="outline" size="sm">
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="px-4 py-3 text-sm font-medium">P45</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">March 2024</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">15/03/2024</td>
+                            <td className="px-4 py-3 text-sm">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">PDF</span>
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                Not Sent
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              <div className="flex space-x-2">
+                                <Button variant="outline" size="sm">
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                                <Button variant="outline" size="sm">
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-8">

@@ -6,33 +6,33 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Download,
   Eye,
   Edit,
   Plus,
-  Search,
   Brain,
-  ExternalLink,
-  Settings,
-  ChevronDown,
-  ChevronRight,
   Database,
   Receipt,
-  CreditCard,
   Shield,
   Calendar,
   TrendingUp,
   Info,
-  AlertCircle,
-  Landmark
+  MapPin,
+  XCircle,
+  RotateCcw,
+  Briefcase,
+  User,
+  Home,
+  Globe,
+  HardHat,
+  Gift
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
 import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
+import { Textarea } from '../../components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
-import { useIsMobile } from '../../hooks/use-mobile'
-import ResponsiveLayout from '../../components/ResponsiveLayout'
 import CompaniesHouseLogo from '../../components/CompaniesHouseLogo'
 import HMRCLogo from '../../components/HMRCLogo'
 import AIPromptSection from '../../components/AIPromptSection'
@@ -41,12 +41,8 @@ import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['forms', 'hmrc'])
-  const [selectedCompany, setSelectedCompany] = useState('all')
   const [isAILoading, setIsAILoading] = useState(false)
-  const isMobile = useIsMobile()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedFilingType, setSelectedFilingType] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedCompanyType, setSelectedCompanyType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
@@ -62,15 +58,6 @@ export default function CompanySecretarial() {
       setIsAILoading(false)
     }
   }
-
-  const filingTypeOptions = [
-    { label: 'All Filing Types', value: 'all' },
-    { label: 'Annual Returns', value: 'annual-returns' },
-    { label: 'Confirmation Statements', value: 'confirmation-statements' },
-    { label: 'Officer Changes', value: 'officer-changes' },
-    { label: 'PSC Updates', value: 'psc-updates' },
-    { label: 'Share Allotments', value: 'share-allotments' }
-  ]
 
   const statusOptions = [
     { label: 'All Statuses', value: 'all' },
@@ -110,33 +97,49 @@ export default function CompanySecretarial() {
       icon: FileText, 
       hasSubTabs: true,
       subTabs: {
-        confirmation: { label: 'Confirmation Statement', icon: CheckCircle },
-        annual: { label: 'Annual Return', icon: FileText },
-        officers: { label: 'Officer Changes', icon: Users },
-        shares: { label: 'Share Allotments', icon: Receipt }
+        incorporation: { label: 'Incorporation (IN01)', icon: FileText },
+        accounts: { label: 'Accounts (AA01-AA06)', icon: Receipt },
+        confirmation: { label: 'Confirmation Statement (CS01)', icon: CheckCircle },
+        annual: { label: 'Annual Return (AR01)', icon: FileText },
+        directors: { label: 'Director Changes (AP01-04)', icon: Users },
+        secretaries: { label: 'Secretary Changes (CH01-04)', icon: Users },
+        namechange: { label: 'Name Change (NM01-06)', icon: Edit },
+        addresschange: { label: 'Address Change (AD01-05)', icon: MapPin },
+        sharecapital: { label: 'Share Capital (SH01-19)', icon: Receipt },
+        psc: { label: 'PSC Forms (PSC01-09)', icon: Users },
+        dissolution: { label: 'Dissolution (DS01-02)', icon: XCircle },
+        restoration: { label: 'Restoration (RT01)', icon: RotateCcw }
       }
     },
     psc: { label: 'PSC Register', icon: Users, hasSubTabs: false },
     hmrc: {
-      label: 'HMRC Registration',
+      label: 'HMRC Forms',
       icon: Shield,
       hasSubTabs: true,
       subTabs: {
-        vat: { label: 'VAT Registration', icon: Receipt },
-        paye: { label: 'PAYE Registration', icon: CreditCard },
-        ct: { label: 'Corporation Tax', icon: Receipt }
+        sa100: { label: 'Self Assessment (SA100)', icon: FileText },
+        sa102: { label: 'SA Employment (SA102)', icon: Briefcase },
+        sa103s: { label: 'SA Self Employment (SA103S)', icon: User },
+        sa103f: { label: 'SA Self Employment Full (SA103F)', icon: User },
+        sa104s: { label: 'SA Partnership Short (SA104S)', icon: Users },
+        sa104f: { label: 'SA Partnership Full (SA104F)', icon: Users },
+        sa105: { label: 'SA Property (SA105)', icon: Home },
+        sa106: { label: 'SA Foreign (SA106)', icon: Globe },
+        sa108: { label: 'SA Capital Gains (SA108)', icon: TrendingUp },
+        sa109: { label: 'SA Residence (SA109)', icon: MapPin },
+        ct600: { label: 'Corporation Tax (CT600)', icon: Receipt },
+        ct41g: { label: 'CT Guidance (CT41G)', icon: FileText },
+        p35: { label: 'End of Year Return (P35)', icon: Calendar },
+        p11d: { label: 'Benefits & Expenses (P11D)', icon: Gift },
+        p46: { label: 'Employee Starter Checklist (P46)', icon: User },
+        cis300: { label: 'CIS Monthly Return (CIS300)', icon: HardHat },
+        vat1: { label: 'VAT Registration (VAT1)', icon: Receipt },
+        vat2: { label: 'VAT Group Registration (VAT2)', icon: Receipt }
       }
     },
     ai: { label: 'AI Company Secretary', icon: Brain, hasSubTabs: false }
   }
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    )
-  }
 
   const handleMainTabClick = (tab: string) => {
     setActiveMainTab(tab)
@@ -244,232 +247,1399 @@ export default function CompanySecretarial() {
     }
   }
 
-  const renderMainContent = () => {
-    if (activeMainTab === 'dashboard') return renderDashboard()
-    if (activeMainTab === 'companies') return renderCompanyManagement()
-    if (activeMainTab === 'forms') {
-      if (activeSubTab === 'confirmation') return renderConfirmationStatementForm()
-      if (activeSubTab === 'annual') return renderAnnualReturnForm()
-      if (activeSubTab === 'officers') return renderOfficerChangesForm()
-      if (activeSubTab === 'shares') return renderShareAllotmentForm()
-      return renderFormsOverview()
-    }
-    if (activeMainTab === 'psc') return renderPSCRegister()
-    if (activeMainTab === 'hmrc') {
-      if (activeSubTab === 'vat') return renderVATRegistrationForm()
-      if (activeSubTab === 'paye') return renderPAYERegistrationForm()
-      if (activeSubTab === 'ct') return renderCorporationTaxRegistration()
-      return renderHMRCOverview()
-    }
-    if (activeMainTab === 'ai') return renderAICompanySecretary()
-    return renderDashboard()
+  // Companies House Forms
+  const renderIN01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Application to register a company (IN01)</h2>
+              <p className="text-blue-100">Register a new company with Companies House</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Details</CardTitle>
+            <CardDescription>Enter the basic information about your new company</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="companyName">Proposed company name</Label>
+                <Input id="companyName" placeholder="Enter company name" />
+              </div>
+              <div>
+                <Label htmlFor="companyType">Company type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select company type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="private-limited">Private company limited by shares</SelectItem>
+                    <SelectItem value="public-limited">Public limited company</SelectItem>
+                    <SelectItem value="guarantee">Company limited by guarantee</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="registeredOffice">Registered office address</Label>
+              <Textarea id="registeredOffice" placeholder="Enter full registered office address" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="shareCapital">Share capital</Label>
+                <Input id="shareCapital" placeholder="£100" />
+              </div>
+              <div>
+                <Label htmlFor="shareClass">Share class</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select share class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ordinary">Ordinary shares</SelectItem>
+                    <SelectItem value="preference">Preference shares</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Application</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
-  const renderDashboard = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Company Secretarial Dashboard</h1>
-          <p className="text-gray-600">Manage company compliance and filings</p>
+  const renderAA01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Annual Accounts (AA01)</h2>
+              <p className="text-blue-100">Submit annual accounts to Companies House</p>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export Report
-          </Button>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            New Filing
-          </Button>
-        </div>
-      </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((kpi, index) => (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                  <p className="text-2xl font-bold">{kpi.value}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kpi.change}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Details</CardTitle>
+            <CardDescription>Upload and submit your annual accounts</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="accountsType">Accounts type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select accounts type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="full">Full accounts</SelectItem>
+                    <SelectItem value="abbreviated">Abbreviated accounts</SelectItem>
+                    <SelectItem value="micro">Micro-entity accounts</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="periodEnd">Period end date</Label>
+                <Input id="periodEnd" type="date" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="turnover">Turnover</Label>
+                <Input id="turnover" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="profit">Profit/Loss</Label>
+                <Input id="profit" placeholder="£0" />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="accountsFile">Upload accounts file</Label>
+              <Input id="accountsFile" type="file" accept=".pdf,.doc,.docx" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Accounts</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderAR01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Annual Return (AR01)</h2>
+              <p className="text-blue-100">Submit your company's annual return</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Annual Return Details</CardTitle>
+            <CardDescription>Confirm your company details for the annual return</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="returnDate">Return date</Label>
+                <Input id="returnDate" type="date" />
+              </div>
+              <div>
+                <Label htmlFor="registeredOfficeChanged">Registered office changed?</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="principalActivity">Principal business activity</Label>
+              <Textarea id="principalActivity" placeholder="Describe your main business activity" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Return</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderTM01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Termination of appointment (TM01)</h2>
+              <p className="text-blue-100">Terminate appointment of director or secretary</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Termination Details</CardTitle>
+            <CardDescription>Enter details of the termination</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="personType">Person type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="director">Director</SelectItem>
+                    <SelectItem value="secretary">Secretary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="terminationDate">Date of termination</Label>
+                <Input id="terminationDate" type="date" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="personName">Full name</Label>
+                <Input id="personName" placeholder="Enter full name" />
+              </div>
+              <div>
+                <Label htmlFor="reasonTermination">Reason for termination</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select reason" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="resignation">Resignation</SelectItem>
+                    <SelectItem value="removal">Removal</SelectItem>
+                    <SelectItem value="death">Death</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Termination</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderCH01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Appointment of secretary (CH01)</h2>
+              <p className="text-blue-100">Appoint a new company secretary</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Secretary Details</CardTitle>
+            <CardDescription>Enter details of the new secretary</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="secretaryType">Secretary type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="individual">Individual</SelectItem>
+                    <SelectItem value="corporate">Corporate</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="appointmentDate">Date of appointment</Label>
+                <Input id="appointmentDate" type="date" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="secretaryName">Full name/Company name</Label>
+                <Input id="secretaryName" placeholder="Enter name" />
+              </div>
+              <div>
+                <Label htmlFor="secretaryTitle">Title (if individual)</Label>
+                <Input id="secretaryTitle" placeholder="Mr/Mrs/Ms/Dr" />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="serviceAddress">Service address</Label>
+              <Textarea id="serviceAddress" placeholder="Enter service address" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Appointment</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderPSC01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">PSC notification (PSC01)</h2>
+              <p className="text-blue-100">Notify of person with significant control</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>PSC Details</CardTitle>
+            <CardDescription>Enter details of the person with significant control</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="pscType">PSC type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="individual">Individual</SelectItem>
+                    <SelectItem value="corporate">Corporate entity</SelectItem>
+                    <SelectItem value="legal">Legal entity</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="notificationDate">Date became PSC</Label>
+                <Input id="notificationDate" type="date" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="pscName">Full name</Label>
+                <Input id="pscName" placeholder="Enter full name" />
+              </div>
+              <div>
+                <Label htmlFor="pscNationality">Nationality</Label>
+                <Input id="pscNationality" placeholder="Enter nationality" />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="natureOfControl">Nature of control</Label>
+              <Textarea id="natureOfControl" placeholder="Describe the nature of control" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="sharesHeld">Shares held (%)</Label>
+                <Input id="sharesHeld" placeholder="25%" />
+              </div>
+              <div>
+                <Label htmlFor="votingRights">Voting rights (%)</Label>
+                <Input id="votingRights" placeholder="25%" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Notification</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderAD01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Change of registered office address (AD01)</h2>
+              <p className="text-blue-100">Change your company's registered office address</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Address Change Details</CardTitle>
+            <CardDescription>Enter the new registered office address</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="currentAddress">Current registered office address</Label>
+              <Textarea id="currentAddress" placeholder="Current address" readOnly />
+            </div>
+
+            <div>
+              <Label htmlFor="newAddress">New registered office address</Label>
+              <Textarea id="newAddress" placeholder="Enter new registered office address" />
+            </div>
+
+            <div>
+              <Label htmlFor="changeDate">Date of change</Label>
+              <Input id="changeDate" type="date" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Change</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderNM01Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#003078] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <CompaniesHouseLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Change of company name (NM01)</h2>
+              <p className="text-blue-100">Change your company's name</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Name Change Details</CardTitle>
+            <CardDescription>Enter the new company name</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="currentName">Current company name</Label>
+              <Input id="currentName" placeholder="Current name" readOnly />
+            </div>
+
+            <div>
+              <Label htmlFor="newName">New company name</Label>
+              <Input id="newName" placeholder="Enter new company name" />
+            </div>
+
+            <div>
+              <Label htmlFor="resolutionDate">Date of resolution</Label>
+              <Input id="resolutionDate" type="date" />
+            </div>
+
+            <div>
+              <Label htmlFor="resolutionType">Type of resolution</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select resolution type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="special">Special resolution</SelectItem>
+                  <SelectItem value="ordinary">Ordinary resolution</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#003078] hover:bg-[#002060]">Save Draft</Button>
+              <Button variant="outline">Submit Change</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA100Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Self Assessment tax return (SA100)</h2>
+              <p className="text-green-100">Complete your annual Self Assessment return</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Details</CardTitle>
+            <CardDescription>Enter your personal information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="utr">Unique Taxpayer Reference (UTR)</Label>
+                <Input id="utr" placeholder="1234567890" />
+              </div>
+              <div>
+                <Label htmlFor="taxYear">Tax year</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tax year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2023-24">2023-24</SelectItem>
+                    <SelectItem value="2022-23">2022-23</SelectItem>
+                    <SelectItem value="2021-22">2021-22</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="totalIncome">Total income</Label>
+                <Input id="totalIncome" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="taxDue">Tax due</Label>
+                <Input id="taxDue" placeholder="£0" readOnly />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Return</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderCT600Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Company Tax Return (CT600)</h2>
+              <p className="text-green-100">Submit your corporation tax return</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Details</CardTitle>
+            <CardDescription>Enter your company tax information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="companyUTR">Company UTR</Label>
+                <Input id="companyUTR" placeholder="1234567890" />
+              </div>
+              <div>
+                <Label htmlFor="accountingPeriod">Accounting period end</Label>
+                <Input id="accountingPeriod" type="date" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="totalProfit">Total profits</Label>
+                <Input id="totalProfit" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="corporationTax">Corporation tax</Label>
+                <Input id="corporationTax" placeholder="£0" readOnly />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="computationFile">Upload tax computation</Label>
+              <Input id="computationFile" type="file" accept=".pdf,.doc,.docx" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Return</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderP11DForm = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Expenses and benefits annual return (P11D)</h2>
+              <p className="text-green-100">Report expenses and benefits provided to employees</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Employee Benefits</CardTitle>
+            <CardDescription>Enter details of benefits provided to employees</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="employeeName">Employee name</Label>
+                <Input id="employeeName" placeholder="Enter employee name" />
+              </div>
+              <div>
+                <Label htmlFor="employeeNI">National Insurance number</Label>
+                <Input id="employeeNI" placeholder="AB123456C" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="carBenefit">Company car benefit</Label>
+                <Input id="carBenefit" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="medicalBenefit">Medical insurance</Label>
+                <Input id="medicalBenefit" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="lunchVouchers">Lunch vouchers</Label>
+                <Input id="lunchVouchers" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="otherBenefits">Other benefits</Label>
+                <Input id="otherBenefits" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Add Another Employee</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA102Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Employment (SA102)</h2>
+              <p className="text-green-100">Report employment income and benefits</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Employment Details</CardTitle>
+            <CardDescription>Enter your employment information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="employerName">Employer name</Label>
+                <Input id="employerName" placeholder="Enter employer name" />
+              </div>
+              <div>
+                <Label htmlFor="payrollNumber">Payroll number</Label>
+                <Input id="payrollNumber" placeholder="Enter payroll number" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="grossPay">Gross pay</Label>
+                <Input id="grossPay" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="taxDeducted">Tax deducted</Label>
+                <Input id="taxDeducted" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA103SForm = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Self-employment (short) (SA103S)</h2>
+              <p className="text-green-100">Report self-employment income - short version</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Business Details</CardTitle>
+            <CardDescription>Enter your self-employment information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="businessName">Business name</Label>
+                <Input id="businessName" placeholder="Enter business name" />
+              </div>
+              <div>
+                <Label htmlFor="businessDescription">Business description</Label>
+                <Input id="businessDescription" placeholder="Describe your business" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="turnover">Turnover</Label>
+                <Input id="turnover" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="expenses">Total expenses</Label>
+                <Input id="expenses" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA104SForm = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Partnership (short) (SA104S)</h2>
+              <p className="text-green-100">Report partnership income - short version</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Partnership Details</CardTitle>
+            <CardDescription>Enter your partnership information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="partnershipName">Partnership name</Label>
+                <Input id="partnershipName" placeholder="Enter partnership name" />
+              </div>
+              <div>
+                <Label htmlFor="partnershipUTR">Partnership UTR</Label>
+                <Input id="partnershipUTR" placeholder="1234567890" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="shareOfProfit">Share of profit</Label>
+                <Input id="shareOfProfit" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="shareOfLoss">Share of loss</Label>
+                <Input id="shareOfLoss" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA105Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">UK property (SA105)</h2>
+              <p className="text-green-100">Report UK property income</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Property Details</CardTitle>
+            <CardDescription>Enter your UK property information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="propertyIncome">Total property income</Label>
+                <Input id="propertyIncome" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="propertyExpenses">Total property expenses</Label>
+                <Input id="propertyExpenses" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="mortgageInterest">Mortgage interest</Label>
+                <Input id="mortgageInterest" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="otherExpenses">Other allowable expenses</Label>
+                <Input id="otherExpenses" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA106Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Foreign (SA106)</h2>
+              <p className="text-green-100">Report foreign income</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Foreign Income Details</CardTitle>
+            <CardDescription>Enter your foreign income information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="foreignIncome">Foreign income</Label>
+                <Input id="foreignIncome" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="foreignTax">Foreign tax paid</Label>
+                <Input id="foreignTax" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="countryCode">Country code</Label>
+                <Input id="countryCode" placeholder="Enter country code" />
+              </div>
+              <div>
+                <Label htmlFor="specialWithholding">Special withholding tax</Label>
+                <Input id="specialWithholding" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA108Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Capital gains (SA108)</h2>
+              <p className="text-green-100">Report capital gains and losses</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Capital Gains Details</CardTitle>
+            <CardDescription>Enter your capital gains information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="totalGains">Total gains</Label>
+                <Input id="totalGains" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="totalLosses">Total losses</Label>
+                <Input id="totalLosses" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="annualExemption">Annual exemption</Label>
+                <Input id="annualExemption" placeholder="£12,300" readOnly />
+              </div>
+              <div>
+                <Label htmlFor="taxableGains">Taxable gains</Label>
+                <Input id="taxableGains" placeholder="£0" readOnly />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderSA109Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Residence, remittance basis etc (SA109)</h2>
+              <p className="text-green-100">Report residence and remittance basis claims</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Residence Details</CardTitle>
+            <CardDescription>Enter your residence information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="residenceStatus">Residence status</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="uk-resident">UK resident</SelectItem>
+                    <SelectItem value="non-uk-resident">Non-UK resident</SelectItem>
+                    <SelectItem value="split-year">Split year treatment</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="remittanceBasis">Claiming remittance basis?</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Form</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderCIS300Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Monthly return for contractors (CIS300)</h2>
+              <p className="text-green-100">Submit monthly CIS return</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>CIS Return Details</CardTitle>
+            <CardDescription>Enter your CIS monthly return information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="returnPeriod">Return period</Label>
+                <Input id="returnPeriod" type="month" />
+              </div>
+              <div>
+                <Label htmlFor="totalPayments">Total payments to subcontractors</Label>
+                <Input id="totalPayments" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="totalDeductions">Total deductions made</Label>
+                <Input id="totalDeductions" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="costOfMaterials">Cost of materials</Label>
+                <Input id="costOfMaterials" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Return</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderP35Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Employer Annual Return (P35)</h2>
+              <p className="text-green-100">Submit end of year employer return</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Annual Return Details</CardTitle>
+            <CardDescription>Enter your end of year return information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="taxYear">Tax year</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tax year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2023-24">2023-24</SelectItem>
+                    <SelectItem value="2022-23">2022-23</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="employeeCount">Number of employees</Label>
+                <Input id="employeeCount" placeholder="0" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="totalPAYE">Total PAYE tax</Label>
+                <Input id="totalPAYE" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="totalNI">Total National Insurance</Label>
+                <Input id="totalNI" placeholder="£0" />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Return</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderVAT1Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Application to register for VAT (VAT1)</h2>
+              <p className="text-green-100">Register your business for VAT</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>VAT Registration Details</CardTitle>
+            <CardDescription>Enter your VAT registration information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="businessName">Business name</Label>
+                <Input id="businessName" placeholder="Enter business name" />
+              </div>
+              <div>
+                <Label htmlFor="tradingName">Trading name</Label>
+                <Input id="tradingName" placeholder="Enter trading name" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="expectedTurnover">Expected annual turnover</Label>
+                <Input id="expectedTurnover" placeholder="£0" />
+              </div>
+              <div>
+                <Label htmlFor="registrationReason">Reason for registration</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select reason" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="liable">Liable to register</SelectItem>
+                    <SelectItem value="voluntary">Voluntary registration</SelectItem>
+                    <SelectItem value="intending">Intending trader</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Application</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderVAT2Form = () => {
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#00703c] text-white p-6 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <HMRCLogo className="h-12 w-12" />
+            <div>
+              <h2 className="text-2xl font-bold">Application for VAT group registration (VAT2)</h2>
+              <p className="text-green-100">Register companies as a VAT group</p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>VAT Group Registration</CardTitle>
+            <CardDescription>Enter VAT group registration details</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="representativeMember">Representative member</Label>
+                <Input id="representativeMember" placeholder="Enter company name" />
+              </div>
+              <div>
+                <Label htmlFor="groupName">Group name</Label>
+                <Input id="groupName" placeholder="Enter group name" />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="memberCompanies">Member companies</Label>
+              <Textarea id="memberCompanies" placeholder="List all companies to be included in the group" />
+            </div>
+
+            <div className="flex space-x-4">
+              <Button className="bg-[#00703c] hover:bg-[#005a32]">Save Draft</Button>
+              <Button variant="outline">Submit Application</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderMainContent = () => {
+    if (activeMainTab === 'forms' && activeSubTab) {
+      switch (activeSubTab) {
+        case 'incorporation': return renderIN01Form()
+        case 'accounts': return renderAA01Form()
+        case 'annual': return renderAR01Form()
+        case 'directors': return renderTM01Form()
+        case 'secretaries': return renderCH01Form()
+        case 'psc': return renderPSC01Form()
+        case 'addresschange': return renderAD01Form()
+        case 'namechange': return renderNM01Form()
+        default: return renderFormsOverview()
+      }
+    }
+
+    if (activeMainTab === 'hmrc' && activeSubTab) {
+      switch (activeSubTab) {
+        case 'sa100': return renderSA100Form()
+        case 'sa102': return renderSA102Form()
+        case 'sa103s': return renderSA103SForm()
+        case 'sa104s': return renderSA104SForm()
+        case 'sa105': return renderSA105Form()
+        case 'sa106': return renderSA106Form()
+        case 'sa108': return renderSA108Form()
+        case 'sa109': return renderSA109Form()
+        case 'ct600': return renderCT600Form()
+        case 'cis300': return renderCIS300Form()
+        case 'p35': return renderP35Form()
+        case 'p11d': return renderP11DForm()
+        case 'vat1': return renderVAT1Form()
+        case 'vat2': return renderVAT2Form()
+        default: return renderHMRCOverview()
+      }
+    }
+
+    switch (activeMainTab) {
+      case 'dashboard': return renderDashboard()
+      case 'companies': return renderCompanyManagement()
+      case 'forms': return renderFormsOverview()
+      case 'psc': return renderPSCRegister()
+      case 'hmrc': return renderHMRCOverview()
+      case 'ai': return renderAICompanySecretary()
+      default: return renderDashboard()
+    }
+  }
+
+  const renderDashboard = () => {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {kpis.map((kpi, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                    <p className="text-2xl font-bold">{kpi.value}</p>
+                    <p className="text-xs text-gray-500">{kpi.change}</p>
+                  </div>
+                  <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
                 </div>
-                <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Filings</CardTitle>
+              <CardDescription>Latest filing activities</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filings.slice(0, 5).map((filing) => (
+                  <div key={filing.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      {getStatusIcon(filing.status)}
+                      <div>
+                        <p className="font-medium">{filing.company}</p>
+                        <p className="text-sm text-gray-500">{filing.type} - Due: {filing.dueDate}</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline">{filing.status}</Badge>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Filings</CardTitle>
-            <CardDescription>Latest company filing activities</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {filings.slice(0, 3).map((filing) => (
-                <div key={filing.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    {getStatusIcon(filing.status)}
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Deadlines</CardTitle>
+              <CardDescription>Important dates to remember</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {companies.slice(0, 5).map((company) => (
+                  <div key={company.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <p className="font-medium">{filing.company}</p>
-                      <p className="text-sm text-gray-600">{filing.type} - {filing.status}</p>
+                      <p className="font-medium">{company.name}</p>
+                      <p className="text-sm text-gray-500">{company.filingType}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{company.nextFiling}</p>
+                      <Badge className={getStatusColor(company.status)}>{company.status}</Badge>
                     </div>
                   </div>
-                  <Badge variant="outline">{filing.dueDate}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Compliance Alerts</CardTitle>
-            <CardDescription>Important deadlines and actions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
-                <div>
-                  <p className="font-medium text-red-900">Overdue Filing</p>
-                  <p className="text-sm text-red-700">Local Trading Ltd CS01 was due 2024-02-28</p>
-                </div>
+                ))}
               </div>
-              <div className="flex items-start gap-3 p-3 bg-brisk-primary-50 border border-brisk-primary-200 rounded-lg">
-                <Clock className="h-5 w-5 text-brisk-primary mt-0.5" />
-                <div>
-                  <p className="font-medium text-brisk-primary">Due Soon</p>
-                  <p className="text-sm text-brisk-primary">TechCorp Ltd CS01 due in 14 days</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <Info className="h-5 w-5 text-blue-500 mt-0.5" />
-                <div>
-                  <p className="font-medium text-blue-900">New Guidance</p>
-                  <p className="text-sm text-blue-700">Companies House updated PSC requirements</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  )
-
-  const renderCompanyManagement = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Company Management</h2>
-          <p className="text-gray-600">Manage company records and compliance status</p>
+            </CardContent>
+          </Card>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Company
-        </Button>
       </div>
+    )
+  }
 
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <Input placeholder="Search companies..." className="flex-1" />
-            <Select value={selectedCompany} onValueChange={setSelectedCompany}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Company Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Companies</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="dormant">Dormant</SelectItem>
-                <SelectItem value="dissolved">Dissolved</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button>
-              <Search className="h-4 w-4 mr-2" />
-              Search
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {companies.map((company) => (
-              <Card key={company.id} className="border-l-4 border-l-brisk-primary">
-                <CardContent className="p-4">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold">{company.name}</h3>
-                        <Badge className={getStatusColor(company.status)}>
-                          {company.status}
-                        </Badge>
-                        <Badge variant="outline">#{company.number}</Badge>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600">
-                        <span>Next Filing: {company.nextFiling}</span>
-                        <span>Type: {company.filingType}</span>
-                        <span>PSCs: {company.pscCount}</span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">Last updated: {company.lastUpdate}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Companies House
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderFormsOverview = () => {
+  const renderCompanyManagement = () => {
     return (
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">Forms & Filing</h2>
-            <p className="text-gray-600">Companies House forms and submissions</p>
-          </div>
-        </div>
-        
         <SearchFilterHeader
-          searchPlaceholder="Search companies, filings, officers..."
+          searchPlaceholder="Search companies..."
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
           filters={[
             {
-              label: 'Filing Type',
-              options: filingTypeOptions,
-              value: selectedFilingType,
-              onChange: setSelectedFilingType
+              label: 'Company Type',
+              value: selectedCompanyType,
+              onChange: setSelectedCompanyType,
+              options: companyTypeOptions
             },
             {
               label: 'Status',
-              options: statusOptions,
               value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Company Type',
-              options: companyTypeOptions,
-              value: selectedCompanyType,
-              onChange: setSelectedCompanyType
+              onChange: setSelectedStatus,
+              options: statusOptions
             }
           ]}
           dateRange={{
@@ -480,1051 +1650,468 @@ export default function CompanySecretarial() {
           }}
         />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Object.entries(menuStructure.forms.subTabs || {}).map(([key, subTab]) => (
-            <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
-              <CardContent className="p-6 text-center">
-                {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
-                  <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                ) : key === 'vat' || key === 'paye' ? (
-                  <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                ) : (
-                  <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                )}
-                <h3 className="font-semibold mb-1">{subTab.label}</h3>
-                <p className="text-sm text-gray-600">Generate and submit form</p>
-              </CardContent>
-            </Card>
-          ))}
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Portfolio</CardTitle>
+            <CardDescription>Manage your company registrations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {companies.map((company) => (
+                <div key={company.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <Building className="h-8 w-8 text-blue-600" />
+                    <div>
+                      <p className="font-medium">{company.name}</p>
+                      <p className="text-sm text-gray-500">Company No: {company.number}</p>
+                      <p className="text-sm text-gray-500">Incorporated: {company.incorporationDate}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <Badge className={getStatusColor(company.status)}>{company.status}</Badge>
+                      <p className="text-sm text-gray-500 mt-1">Next filing: {company.nextFiling}</p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderFormsOverview = () => {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('incorporation')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5" />
+                <span>Incorporation (IN01)</span>
+              </CardTitle>
+              <CardDescription>Register a new company</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('accounts')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Receipt className="h-5 w-5" />
+                <span>Annual Accounts (AA01)</span>
+              </CardTitle>
+              <CardDescription>Submit annual accounts</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('annual')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5" />
+                <span>Annual Return (AR01)</span>
+              </CardTitle>
+              <CardDescription>Submit annual return</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('directors')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span>Director Changes (TM01)</span>
+              </CardTitle>
+              <CardDescription>Manage director appointments</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('secretaries')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span>Secretary Changes (CH01)</span>
+              </CardTitle>
+              <CardDescription>Manage secretary appointments</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('psc')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span>PSC Forms (PSC01)</span>
+              </CardTitle>
+              <CardDescription>Manage PSC notifications</CardDescription>
+            </CardHeader>
+          </Card>
         </div>
       </div>
     )
   }
 
-  const renderConfirmationStatementForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Confirmation Statement (CS01)</h2>
-          <p className="text-gray-600">Annual confirmation of company details</p>
-        </div>
-        <Button>
-          <Download className="h-4 w-4 mr-2" />
-          Download PDF
-        </Button>
-      </div>
 
-      <Card className="border-2 border-[#003078] bg-blue-50/30">
-        <CardHeader className="bg-[#003078] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <CompaniesHouseLogo className="h-6 w-6" />
-            Companies House - Confirmation Statement
-          </CardTitle>
-          <CardDescription className="text-blue-100">
-            This form replicates the official Companies House CS01 form
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-6">
-            <div className="p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-              <h3 className="font-semibold text-blue-900 mb-2">Important Information</h3>
-              <p className="text-sm text-blue-800">
-                You must file a confirmation statement at least once every 12 months. 
-                The information in this statement must be correct as at the confirmation date.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Company Name</label>
-                <Input value="TechCorp Ltd" readOnly className="bg-gray-50 border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Company Number</label>
-                <Input value="12345678" readOnly className="bg-gray-50 border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Confirmation Date</label>
-                <Input type="date" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Made up to Date</label>
-                <Input type="date" className="border-gray-300" />
-              </div>
-            </div>
+  const renderPSCRegister = () => {
+    return (
+      <div className="space-y-6">
+        <SearchFilterHeader
+          searchPlaceholder="Search PSC register..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'PSC Type',
+              value: selectedStatus,
+              onChange: setSelectedStatus,
+              options: [
+                { label: 'All Types', value: 'all' },
+                { label: 'Individual', value: 'individual' },
+                { label: 'Corporate', value: 'corporate' }
+              ]
+            }
+          ]}
+        />
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Registered Office Address</label>
-              <textarea 
-                className="w-full p-3 border border-gray-300 rounded-md bg-gray-50" 
-                rows={3} 
-                readOnly
-                value="123 Business Street, London, EC1A 1BB"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Standard Industrial Classification (SIC) Codes</label>
-              <Input value="62012 - Business and domestic software development" readOnly className="bg-gray-50 border-gray-300" />
-            </div>
-            
+        <Card>
+          <CardHeader>
+            <CardTitle>People with Significant Control</CardTitle>
+            <CardDescription>Manage your PSC register</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Statement of Capital and Shareholdings</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Total Number of Shares</label>
-                  <Input value="1000" className="border-gray-300" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Aggregate Nominal Value</label>
-                  <Input value="£1000" className="border-gray-300" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Currency</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="GBP" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="gbp">GBP</SelectItem>
-                      <SelectItem value="eur">EUR</SelectItem>
-                      <SelectItem value="usd">USD</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Confirmation Checklist</h3>
-              <div className="space-y-3">
-                {[
-                  'The registered office address shown is correct',
-                  'The directors and company secretary details are up to date',
-                  'The PSC (People with Significant Control) register is current',
-                  'The share capital information is accurate',
-                  'The SIC codes reflect the current business activities'
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded border">
-                    <input type="checkbox" id={`check-${index}`} className="mt-1 rounded border-gray-300" />
-                    <label htmlFor={`check-${index}`} className="text-sm text-gray-700 flex-1">{item}</label>
+              {pscRegister.map((psc) => (
+                <div key={psc.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <Users className="h-8 w-8 text-purple-600" />
+                    <div>
+                      <p className="font-medium">{psc.name}</p>
+                      <p className="text-sm text-gray-500">{psc.type} - {psc.company}</p>
+                      <p className="text-sm text-gray-500">Appointed: {psc.appointed}</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-4 bg-brisk-primary-50 border border-brisk-primary-200 rounded">
-              <h4 className="font-semibold text-brisk-primary mb-2">Filing Fee</h4>
-              <p className="text-sm text-brisk-primary">
-                The filing fee for this confirmation statement is £13 if filed online, or £40 if filed by post.
-              </p>
-            </div>
-
-            <div className="flex gap-4 pt-4 border-t">
-              <Button variant="outline" className="flex-1">
-                <Download className="h-4 w-4 mr-2" />
-                Save Draft
-              </Button>
-              <Button className="flex-1 bg-[#003078] hover:bg-[#003078]/90">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Submit to Companies House
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderAnnualReturnForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Annual Return (AR01)</h2>
-          <p className="text-gray-600">Annual return for companies incorporated before 30 June 2016</p>
-        </div>
-        <Badge variant="outline" className="bg-brisk-primary-50 text-brisk-primary">Legacy Form</Badge>
-      </div>
-
-      <Card className="border-2 border-[#003078] bg-blue-50/30">
-        <CardHeader className="bg-[#003078] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <CompaniesHouseLogo className="h-6 w-6" />
-            Annual Return (AR01)
-          </CardTitle>
-          <CardDescription className="text-blue-100">
-            For companies incorporated before 30 June 2016
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-700">
-                <Info className="h-4 w-4 inline mr-2" />
-                Most companies now file a Confirmation Statement (CS01) instead of an Annual Return.
-                This form is only for companies incorporated before 30 June 2016.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Made up to date</label>
-                <Input type="date" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Next due date</label>
-                <Input type="date" className="border-gray-300" />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderOfficerChangesForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Officer Changes</h2>
-          <p className="text-gray-600">Appointment and resignation of directors and secretaries</p>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-2 border-[#003078] hover:border-[#003078]/80 transition-colors cursor-pointer">
-          <CardHeader className="bg-[#003078] text-white">
-            <CardTitle className="flex items-center gap-2">
-              <CompaniesHouseLogo className="h-5 w-5" />
-              Appointment of Director (AP01)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
-                Use this form to appoint a new director or company secretary
-              </p>
-              <div className="space-y-3">
-                <div className="p-3 bg-green-50 rounded border">
-                  <h4 className="font-medium text-green-900">Required Information:</h4>
-                  <ul className="text-sm text-green-800 mt-2 space-y-1">
-                    <li>• Full name and title</li>
-                    <li>• Date of birth</li>
-                    <li>• Nationality</li>
-                    <li>• Usual residential address</li>
-                    <li>• Service address</li>
-                    <li>• Date of appointment</li>
-                  </ul>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <p className="text-sm">Shares: {psc.shares}</p>
+                      <p className="text-sm">Voting: {psc.voting}</p>
+                      <Badge className={getStatusColor(psc.status)}>{psc.status}</Badge>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <Button className="w-full bg-[#003078] hover:bg-[#003078]/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Start AP01 Form
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-2 border-[#003078] hover:border-[#003078]/80 transition-colors cursor-pointer">
-          <CardHeader className="bg-[#003078] text-white">
-            <CardTitle className="flex items-center gap-2">
-              <CompaniesHouseLogo className="h-5 w-5" />
-              Termination of Appointment (TM01)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
-                Use this form to remove a director or company secretary
-              </p>
-              <div className="space-y-3">
-                <div className="p-3 bg-red-50 rounded border">
-                  <h4 className="font-medium text-red-900">Required Information:</h4>
-                  <ul className="text-sm text-red-800 mt-2 space-y-1">
-                    <li>• Full name of person being removed</li>
-                    <li>• Date of cessation</li>
-                    <li>• Reason for cessation</li>
-                    <li>• Signature of remaining directors</li>
-                  </ul>
-                </div>
-              </div>
-              <Button className="w-full bg-[#003078] hover:bg-[#003078]/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Start TM01 Form
-              </Button>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
-  )
+    )
+  }
 
-  const renderShareAllotmentForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Share Allotments (SH01)</h2>
-          <p className="text-gray-600">Return of allotment of shares</p>
+  const renderHMRCOverview = () => {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa100')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5" />
+                <span>Self Assessment (SA100)</span>
+              </CardTitle>
+              <CardDescription>Complete your Self Assessment return</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa102')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Briefcase className="h-5 w-5" />
+                <span>Employment (SA102)</span>
+              </CardTitle>
+              <CardDescription>Report employment income</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa103s')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <User className="h-5 w-5" />
+                <span>Self-employment (SA103S)</span>
+              </CardTitle>
+              <CardDescription>Report self-employment income</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa104s')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span>Partnership (SA104S)</span>
+              </CardTitle>
+              <CardDescription>Report partnership income</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa105')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Home className="h-5 w-5" />
+                <span>UK Property (SA105)</span>
+              </CardTitle>
+              <CardDescription>Report property income</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa106')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Globe className="h-5 w-5" />
+                <span>Foreign (SA106)</span>
+              </CardTitle>
+              <CardDescription>Report foreign income</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa108')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <TrendingUp className="h-5 w-5" />
+                <span>Capital Gains (SA108)</span>
+              </CardTitle>
+              <CardDescription>Report capital gains</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('sa109')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <MapPin className="h-5 w-5" />
+                <span>Residence (SA109)</span>
+              </CardTitle>
+              <CardDescription>Report residence status</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('ct600')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Receipt className="h-5 w-5" />
+                <span>Corporation Tax (CT600)</span>
+              </CardTitle>
+              <CardDescription>Submit corporation tax return</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('cis300')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <HardHat className="h-5 w-5" />
+                <span>CIS Monthly Return (CIS300)</span>
+              </CardTitle>
+              <CardDescription>Submit CIS monthly return</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('p35')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Calendar className="h-5 w-5" />
+                <span>End of Year Return (P35)</span>
+              </CardTitle>
+              <CardDescription>Submit employer annual return</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('p11d')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Gift className="h-5 w-5" />
+                <span>Benefits & Expenses (P11D)</span>
+              </CardTitle>
+              <CardDescription>Report employee benefits</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('vat1')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Receipt className="h-5 w-5" />
+                <span>VAT Registration (VAT1)</span>
+              </CardTitle>
+              <CardDescription>Register for VAT</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleSubTabClick('vat2')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Receipt className="h-5 w-5" />
+                <span>VAT Group Registration (VAT2)</span>
+              </CardTitle>
+              <CardDescription>Register VAT group</CardDescription>
+            </CardHeader>
+          </Card>
         </div>
       </div>
+    )
+  }
 
-      <Card className="border-2 border-[#003078] bg-blue-50/30">
-        <CardHeader className="bg-[#003078] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <CompaniesHouseLogo className="h-6 w-6" />
-            Share Allotment (SH01)
-          </CardTitle>
-          <CardDescription className="text-blue-100">
-            Details of shares being allotted
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Number of shares allotted</label>
-                <Input type="number" placeholder="1000" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Nominal value per share</label>
-                <Input placeholder="£1.00" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Class of shares</label>
-                <Select>
-                  <SelectTrigger className="border-gray-300">
-                    <SelectValue placeholder="Select class" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ordinary">Ordinary</SelectItem>
-                    <SelectItem value="preference">Preference</SelectItem>
-                    <SelectItem value="redeemable">Redeemable</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Date of allotment</label>
-                <Input type="date" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Amount paid per share</label>
-                <Input placeholder="£1.00" className="border-gray-300" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Amount unpaid per share</label>
-                <Input placeholder="£0.00" className="border-gray-300" />
-              </div>
-            </div>
-            
-            <div className="p-4 bg-blue-50 border border-[#003078] rounded">
-              <h4 className="font-semibold text-[#003078] mb-2">Filing Requirements</h4>
-              <p className="text-sm text-blue-800">
-                This return must be delivered to Companies House within one month of the allotment.
-                The filing fee is £15 if filed online, or £40 if filed by post.
-              </p>
-            </div>
-            
-            <div className="flex gap-4 pt-4 border-t">
-              <Button variant="outline" className="flex-1">
-                <Download className="h-4 w-4 mr-2" />
-                Save Draft
+  const renderAICompanySecretary = () => {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Brain className="h-6 w-6" />
+              <span>AI Company Secretary Assistant</span>
+            </CardTitle>
+            <CardDescription>Get intelligent assistance with company secretarial matters</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AIPromptSection
+              title="Company Secretarial AI Assistant"
+              description="Ask questions about company filings, compliance requirements, or get help with form completion."
+              placeholder="Ask about company filings, deadlines, or compliance requirements..."
+              onSubmit={handleAIQuestion}
+              isLoading={isAILoading}
+              recentQuestions={[
+                "What forms do I need to file for a new director appointment?",
+                "When is my next confirmation statement due?",
+                "How do I change my company's registered office address?",
+                "What are the requirements for PSC notifications?",
+                "Help me understand corporation tax filing deadlines"
+              ]}
+            />
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+              <CardDescription>Common company secretarial tasks</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full justify-start">
+                <Plus className="h-4 w-4 mr-2" />
+                Register New Company
               </Button>
-              <Button className="flex-1 bg-[#003078] hover:bg-[#003078]/90">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Submit to Companies House
+              <Button variant="outline" className="w-full justify-start">
+                <Users className="h-4 w-4 mr-2" />
+                Appoint Director
               </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderPSCRegister = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">PSC Register Management</h2>
-          <p className="text-gray-600">Persons with Significant Control register</p>
-        </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add PSC
-        </Button>
-      </div>
-
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            {pscRegister.map((psc) => (
-              <Card key={psc.id} className="border">
-                <CardContent className="p-4">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold">{psc.name}</h3>
-                        <Badge variant="outline">{psc.type}</Badge>
-                        {getStatusIcon(psc.status)}
-                        <span className="text-sm font-medium">{psc.status}</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-gray-600 mb-2">
-                        <span>Shares: {psc.shares}</span>
-                        <span>Voting: {psc.voting}</span>
-                        <span>Appointed: {psc.appointed}</span>
-                      </div>
-                      <p className="text-sm text-gray-600">Company: {psc.company}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Update
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Download className="h-4 w-4 mr-2" />
-                        Export
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderHMRCOverview = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">HMRC Registration</h2>
-          <p className="text-gray-600">VAT, PAYE and Corporation Tax registration</p>
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        {Object.entries(menuStructure.hmrc.subTabs || {}).map(([key, subTab]) => (
-          <Card key={key} className="border-2 border-dashed border-gray-200 hover:border-brisk-primary transition-colors cursor-pointer" onClick={() => handleSubTabClick(key)}>
-            <CardContent className="p-6 text-center">
-              {key === 'cs01' || key === 'ar01' || key === 'ap01' || key === 'sh01' ? (
-                <CompaniesHouseLogo className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              ) : key === 'vat' || key === 'paye' ? (
-                <HMRCLogo className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              ) : (
-                <subTab.icon className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              )}
-              <h3 className="font-semibold mb-1">{subTab.label}</h3>
-              <p className="text-sm text-gray-600">Register with HMRC</p>
+              <Button variant="outline" className="w-full justify-start">
+                <FileText className="h-4 w-4 mr-2" />
+                File Confirmation Statement
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                <MapPin className="h-4 w-4 mr-2" />
+                Change Registered Address
+              </Button>
             </CardContent>
           </Card>
-        ))}
-      </div>
-    </div>
-  )
 
-  const renderVATRegistrationForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">VAT Registration (VAT1)</h2>
-          <p className="text-gray-600">Register for Value Added Tax</p>
+          <Card>
+            <CardHeader>
+              <CardTitle>Compliance Calendar</CardTitle>
+              <CardDescription>Upcoming deadlines and reminders</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                    <span className="text-sm font-medium">Overdue Filing</span>
+                  </div>
+                  <span className="text-xs text-red-600">2 days overdue</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="h-4 w-4 text-orange-500" />
+                    <span className="text-sm font-medium">CS01 Due</span>
+                  </div>
+                  <span className="text-xs text-orange-600">Due in 5 days</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm font-medium">Annual Return</span>
+                  </div>
+                  <span className="text-xs text-blue-600">Due in 2 weeks</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <Badge variant="outline" className="bg-green-100 text-green-800">Estimated time: 30 minutes</Badge>
       </div>
-
-      <Card className="border-2 border-[#00703c] bg-green-50/30">
-        <CardHeader className="bg-[#00703c] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <HMRCLogo className="h-6 w-6" />
-            HM Revenue and Customs - VAT Registration
-          </CardTitle>
-          <CardDescription className="text-green-100">
-            Application to register for Value Added Tax (VAT1)
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-                <h3 className="font-semibold text-blue-900 mb-2">Mandatory Registration</h3>
-                <p className="text-sm text-blue-800">
-                  You must register if your taxable turnover exceeds £85,000 in any 12-month period
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 border-l-4 border-green-400 rounded">
-                <h3 className="font-semibold text-green-900 mb-2">Voluntary Registration</h3>
-                <p className="text-sm text-green-800">
-                  You can register voluntarily if you expect to make taxable supplies
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Business Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Expected annual turnover</label>
-                  <Input placeholder="£0" className="border-gray-300" />
-                  <p className="text-xs text-gray-500">Enter your expected taxable turnover for the next 12 months</p>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Date business started trading</label>
-                  <Input type="date" className="border-gray-300" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Main business activity</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="Select activity" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="retail">Retail</SelectItem>
-                      <SelectItem value="services">Services</SelectItem>
-                      <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                      <SelectItem value="construction">Construction</SelectItem>
-                      <SelectItem value="hospitality">Hospitality</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">VAT scheme</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="Select scheme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="standard">Standard VAT</SelectItem>
-                      <SelectItem value="flat-rate">Flat Rate Scheme</SelectItem>
-                      <SelectItem value="cash">Cash Accounting</SelectItem>
-                      <SelectItem value="annual">Annual Accounting</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Registration Reason</h3>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="mandatory" name="reason" className="border-gray-300" />
-                  <label htmlFor="mandatory" className="text-sm text-gray-700">Mandatory - turnover exceeded threshold</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="voluntary" name="reason" className="border-gray-300" />
-                  <label htmlFor="voluntary" className="text-sm text-gray-700">Voluntary registration</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="distance" name="reason" className="border-gray-300" />
-                  <label htmlFor="distance" className="text-sm text-gray-700">Distance selling</label>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 bg-brisk-primary-50 border border-brisk-primary-200 rounded">
-              <h4 className="font-semibold text-brisk-primary mb-2">Important Notes</h4>
-              <ul className="text-sm text-brisk-primary space-y-1">
-                <li>• You must register within 30 days of exceeding the threshold</li>
-                <li>• Late registration may result in penalties</li>
-                <li>• You'll receive your VAT number within 2-3 weeks</li>
-                <li>• First VAT return is due within 3 months of registration</li>
-              </ul>
-            </div>
-
-            <div className="flex gap-4 pt-4 border-t">
-              <Button variant="outline" className="flex-1">
-                <Download className="h-4 w-4 mr-2" />
-                Save Draft
-              </Button>
-              <Button className="flex-1 bg-[#00703c] hover:bg-[#00703c]/90">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Submit to HMRC
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderPAYERegistrationForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">PAYE Registration</h2>
-          <p className="text-gray-600">Register as an employer for PAYE</p>
-        </div>
-        <Badge variant="outline" className="bg-blue-100 text-blue-800">Estimated time: 20 minutes</Badge>
-      </div>
-
-      <Card className="border-2 border-[#00703c] bg-green-50/30">
-        <CardHeader className="bg-[#00703c] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <HMRCLogo className="h-6 w-6" />
-            HM Revenue and Customs - PAYE Registration
-          </CardTitle>
-          <CardDescription className="text-green-100">
-            Register as an employer for Pay As You Earn (PAYE)
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-6">
-            <div className="p-4 bg-brisk-primary-50 border-l-4 border-brisk-primary rounded">
-              <h3 className="font-semibold text-brisk-primary mb-2">When You Must Register</h3>
-              <p className="text-sm text-brisk-primary">
-                You must register if you pay any employee £123 or more per week, or if you employ someone 
-                who has another job or receives a pension.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Employer Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">First employee start date</label>
-                  <Input type="date" className="border-gray-300" />
-                  <p className="text-xs text-gray-500">Date when your first employee started or will start</p>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Number of employees</label>
-                  <Input type="number" placeholder="1" className="border-gray-300" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Payroll frequency</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="Select frequency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="fortnightly">Fortnightly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="quarterly">Quarterly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Workplace pension scheme</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="Select option" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes, already set up</SelectItem>
-                      <SelectItem value="no">No, will set up later</SelectItem>
-                      <SelectItem value="exempt">Exempt from auto-enrolment</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Employee Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Highest paid employee salary</label>
-                  <Input placeholder="£25,000" className="border-gray-300" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Do any employees have other jobs?</label>
-                  <Select>
-                    <SelectTrigger className="border-gray-300">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes</SelectItem>
-                      <SelectItem value="no">No</SelectItem>
-                      <SelectItem value="unknown">Don't know</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Payroll Software</h3>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="hmrc-software" name="software" className="border-gray-300" />
-                  <label htmlFor="hmrc-software" className="text-sm text-gray-700">HMRC Basic PAYE Tools (free)</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="commercial-software" name="software" className="border-gray-300" />
-                  <label htmlFor="commercial-software" className="text-sm text-gray-700">Commercial payroll software</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input type="radio" id="accountant" name="software" className="border-gray-300" />
-                  <label htmlFor="accountant" className="text-sm text-gray-700">Accountant or payroll agent</label>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded">
-              <h4 className="font-semibold text-blue-900 mb-2">What Happens Next</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• You'll receive your PAYE reference number within 5 working days</li>
-                <li>• Set up payroll software or contact an agent</li>
-                <li>• Register for workplace pension auto-enrolment if required</li>
-                <li>• Submit your first Full Payment Submission (FPS) before paying employees</li>
-              </ul>
-            </div>
-
-            <div className="flex gap-4 pt-4 border-t">
-              <Button variant="outline" className="flex-1">
-                <Download className="h-4 w-4 mr-2" />
-                Save Draft
-              </Button>
-              <Button className="flex-1 bg-[#00703c] hover:bg-[#00703c]/90">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Submit to HMRC
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderCorporationTaxRegistration = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Corporation Tax Registration</h2>
-          <p className="text-gray-600">Register for Corporation Tax</p>
-        </div>
-        <Badge variant="outline" className="bg-green-100 text-green-800">Automatic for new companies</Badge>
-      </div>
-
-      <Card className="border-2 border-[#00703c] bg-green-50/30">
-        <CardHeader className="bg-[#00703c] text-white">
-          <CardTitle className="flex items-center gap-2">
-            <HMRCLogo className="h-6 w-6" />
-            HM Revenue and Customs - Corporation Tax Registration
-          </CardTitle>
-          <CardDescription className="text-green-100">
-            Automatic registration when you incorporate your company
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 bg-white">
-          <div className="space-y-4">
-            <div className="p-4 bg-green-50 border-l-4 border-green-400 rounded">
-              <h3 className="font-semibold text-green-900 mb-2">Automatic Registration</h3>
-              <p className="text-sm text-green-800">
-                When you register a company with Companies House, it's automatically registered for Corporation Tax. 
-                You'll receive a Unique Taxpayer Reference (UTR) within 2-3 weeks of incorporation.
-              </p>
-            </div>
-            <div className="p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-              <h3 className="font-semibold text-blue-900 mb-2">First Return Due</h3>
-              <p className="text-sm text-blue-800">
-                Your first Corporation Tax return is due 12 months after your accounting period ends, 
-                or 3 months after you receive your UTR, whichever is later.
-              </p>
-            </div>
-            <div className="p-4 bg-brisk-primary-50 border-l-4 border-brisk-primary rounded">
-              <h3 className="font-semibold text-brisk-primary mb-2">Important Dates</h3>
-              <ul className="text-sm text-brisk-primary space-y-1">
-                <li>• Corporation Tax return: 12 months after accounting period ends</li>
-                <li>• Corporation Tax payment: 9 months and 1 day after accounting period ends</li>
-                <li>• Late filing penalty: £100 minimum (increases with delay)</li>
-                <li>• Late payment interest: charged from the due date</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderAICompanySecretary = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">AI Company Secretary</h2>
-          <p className="text-gray-600">Intelligent compliance guidance and deadline management</p>
-        </div>
-        <Button variant="outline">
-          <Settings className="h-4 w-4 mr-2" />
-          Configure Alerts
-        </Button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-blue-500" />
-              Compliance Insights
-            </CardTitle>
-            <CardDescription>AI-powered analysis of your compliance status</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <h3 className="font-semibold text-green-900">Overall Compliance: Excellent</h3>
-              </div>
-              <p className="text-sm text-green-700">94% of your companies are fully compliant with current filing requirements.</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-4 w-4 text-orange-500 mt-1" />
-                <div>
-                  <p className="font-medium text-orange-900">Action Required</p>
-                  <p className="text-sm text-orange-700">1 company has an overdue filing that needs immediate attention</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Clock className="h-4 w-4 text-blue-500 mt-1" />
-                <div>
-                  <p className="font-medium text-blue-900">Upcoming Deadlines</p>
-                  <p className="text-sm text-blue-700">3 filings due within the next 30 days</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Info className="h-4 w-4 text-purple-500 mt-1" />
-                <div>
-                  <p className="font-medium text-purple-900">Optimization Opportunity</p>
-                  <p className="text-sm text-purple-700">Consider consolidating filing schedules for better efficiency</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-green-500" />
-              Smart Deadline Management
-            </CardTitle>
-            <CardDescription>Proactive deadline tracking and reminders</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="p-3 border rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">TechCorp Ltd - CS01</span>
-                  <Badge variant="outline">14 days</Badge>
-                </div>
-                <p className="text-sm text-gray-600">Confirmation statement due March 31, 2024</p>
-                <div className="flex gap-2 mt-2">
-                  <Button size="sm" variant="outline">Remind in 7 days</Button>
-                  <Button size="sm">Start Filing</Button>
-                </div>
-              </div>
-              
-              <div className="p-3 border rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Digital Solutions Ltd - AR01</span>
-                  <Badge variant="outline">21 days</Badge>
-                </div>
-                <p className="text-sm text-gray-600">Annual return due April 15, 2024</p>
-                <div className="flex gap-2 mt-2">
-                  <Button size="sm" variant="outline">Set Reminder</Button>
-                  <Button size="sm">Prepare Form</Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Landmark className="h-5 w-5 text-red-500" />
-              Companies House Updates
-            </CardTitle>
-            <CardDescription>Latest regulatory changes and guidance</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
-                  <Info className="h-4 w-4 text-blue-500" />
-                  <span className="font-medium text-blue-900">New Guidance</span>
-                </div>
-                <p className="text-sm text-blue-700">Updated PSC register requirements effective from April 2024</p>
-                <Button size="sm" variant="outline" className="mt-2">Read More</Button>
-              </div>
-              
-              <div className="p-3 bg-brisk-primary-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
-                  <AlertCircle className="h-4 w-4 text-brisk-primary" />
-                  <span className="font-medium text-brisk-primary">Fee Changes</span>
-                </div>
-                <p className="text-sm text-brisk-primary">Companies House filing fees increased by 5% from March 2024</p>
-                <Button size="sm" variant="outline" className="mt-2">View Details</Button>
-              </div>
-              
-              <div className="p-3 bg-green-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="font-medium text-green-900">System Update</span>
-                </div>
-                <p className="text-sm text-green-700">WebFiling service improvements now live</p>
-                <Button size="sm" variant="outline" className="mt-2">Learn More</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-purple-500" />
-              Performance Analytics
-            </CardTitle>
-            <CardDescription>Track your compliance performance over time</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-green-50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">98%</p>
-                <p className="text-sm text-green-700">On-time filings</p>
-              </div>
-              <div className="text-center p-3 bg-blue-50 rounded-lg">
-                <p className="text-2xl font-bold text-blue-600">2.3</p>
-                <p className="text-sm text-blue-700">Avg days early</p>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Filing efficiency</span>
-                <span>94%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-green-500 h-2 rounded-full" style={{ width: '94%' }}></div>
-              </div>
-            </div>
-            
-            <Button variant="outline" className="w-full">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              View Full Analytics
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Ask the AI Company Secretary</CardTitle>
-          <CardDescription>Get instant answers to compliance questions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <Input placeholder="Ask about deadlines, forms, or compliance requirements..." className="flex-1" />
-              <Button>
-                <Brain className="h-4 w-4 mr-2" />
-                Ask AI
-              </Button>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm font-medium mb-1">Recent Questions:</p>
-                <div className="space-y-1">
-                  <button className="text-sm text-blue-600 hover:underline block">When is my next CS01 due?</button>
-                  <button className="text-sm text-blue-600 hover:underline block">How do I update PSC information?</button>
-                  <button className="text-sm text-blue-600 hover:underline block">What are the new filing fee rates?</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+    )
+  }
 
   return (
-    <ResponsiveLayout>
-      <div className="flex h-screen bg-gray-50">
-        <div className={`${isMobile ? 'w-full' : 'w-64'} bg-white border-r border-gray-200 flex flex-col`}>
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="font-semibold text-gray-900">Company Secretarial</h2>
-          </div>
-          
-          <nav className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-2">
+    <div className="min-h-screen bg-background">
+      <div className="flex">
+        {/* Left Sidebar Navigation */}
+        <div className="w-64 bg-white border-r border-gray-200 min-h-screen">
+          <div className="p-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Company Secretarial</h2>
+            <nav className="space-y-2">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>
                   <button
-                    onClick={() => config.hasSubTabs ? toggleCategory(key) : handleMainTabClick(key)}
-                    className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    onClick={() => handleMainTabClick(key)}
+                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                       activeMainTab === key
-                        ? 'bg-brisk-primary text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <config.icon className="h-4 w-4" />
-                      <span>{config.label}</span>
-                    </div>
-                    {config.hasSubTabs && (
-                      expandedCategories.includes(key) ? 
-                        <ChevronDown className="h-4 w-4" /> : 
-                        <ChevronRight className="h-4 w-4" />
-                    )}
+                    <config.icon className="mr-3 h-4 w-4" />
+                    {config.label}
                   </button>
                   
-                  {config.hasSubTabs && expandedCategories.includes(key) && (
+                  {config.hasSubTabs && activeMainTab === key && (
                     <div className="ml-6 mt-2 space-y-1">
                       {Object.entries(config.subTabs || {}).map(([subKey, subConfig]) => (
                         <button
                           key={subKey}
-                          onClick={() => {
-                            handleMainTabClick(key)
-                            handleSubTabClick(subKey)
-                          }}
-                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors ${
-                            activeMainTab === key && activeSubTab === subKey
-                              ? 'bg-brisk-primary/10 text-brisk-primary'
-                              : 'text-gray-600 hover:bg-gray-50'
+                          onClick={() => handleSubTabClick(subKey)}
+                          className={`w-full flex items-center px-3 py-2 text-xs rounded-md transition-colors ${
+                            activeSubTab === subKey
+                              ? 'bg-blue-50 text-blue-600'
+                              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                           }`}
                         >
-                          <subConfig.icon className="h-4 w-4" />
-                          <span>{subConfig.label}</span>
+                          <subConfig.icon className="mr-2 h-3 w-3" />
+                          {subConfig.label}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
               ))}
-            </div>
-          </nav>
-        </div>
-
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-6">
-            {renderMainContent()}
+            </nav>
           </div>
         </div>
-        
-        <AIPromptSection
-          title="Ask your Company Secretary"
-          description="Get instant guidance on company law, filings, and compliance"
-          placeholder="Ask about company formations, annual returns, PSC registers, or compliance deadlines..."
-          recentQuestions={[
-            "What are the deadlines for confirmation statements?",
-            "How do I register a new PSC?",
-            "What forms are needed for a director resignation?",
-            "How do we handle share allotment procedures?",
-            "What are the latest Companies House filing requirements?"
-          ]}
-          onSubmit={handleAIQuestion}
-          isLoading={isAILoading}
-        />
+
+        {/* Main Content */}
+        <div className="flex-1 p-6">
+          {renderMainContent()}
+        </div>
       </div>
-    </ResponsiveLayout>
+    </div>
   )
 }
