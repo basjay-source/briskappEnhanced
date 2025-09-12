@@ -190,6 +190,97 @@ class ApiClient {
     const params = new URLSearchParams(filters || {})
     return this.request(`/vat/audit-trail?${params}`)
   }
+
+  async getInvoices(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/invoices?${params}`)
+  }
+
+  async createInvoice(data: Record<string, unknown>) {
+    return this.request('/bookkeeping/invoices', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateInvoice(invoiceId: string, data: Record<string, unknown>) {
+    return this.request(`/bookkeeping/invoices/${invoiceId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getBills(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/bills?${params}`)
+  }
+
+  async createBill(data: Record<string, unknown>) {
+    return this.request('/bookkeeping/bills', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateBill(billId: string, data: Record<string, unknown>) {
+    return this.request(`/bookkeeping/bills/${billId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getBankTransactions(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/transactions?${params}`)
+  }
+
+  async createBankTransaction(data: Record<string, unknown>) {
+    return this.request('/bookkeeping/transactions', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async reconcileBankTransaction(transactionId: string, data: Record<string, unknown>) {
+    return this.request(`/bookkeeping/transactions/${transactionId}/reconcile`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getQuotes(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/quotes?${params}`)
+  }
+
+  async createQuote(data: Record<string, unknown>) {
+    return this.request('/bookkeeping/quotes', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getPurchaseOrders(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/purchase-orders?${params}`)
+  }
+
+  async createPurchaseOrder(data: Record<string, unknown>) {
+    return this.request('/bookkeeping/purchase-orders', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getCustomers(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/customers?${params}`)
+  }
+
+  async getSuppliers(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/bookkeeping/suppliers?${params}`)
+  }
 }
 
 export const apiClient = new ApiClient()
