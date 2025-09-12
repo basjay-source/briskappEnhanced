@@ -10,6 +10,7 @@ from .documents import Document, SignatureEnvelope, SignatureEvent
 from .integrations import IntegrationAccount, BankConnection, EcommerceConnection
 from .ai import AdviceReport, Evidence, Citation, Scenario
 from .audit import AuditLog
+from .vat import VATReturn, VATScheme, VATTransaction
 
 __all__ = [
     "Tenant", "User", "Role", "Permission", "FeatureFlag", "Subscription",
@@ -23,5 +24,6 @@ __all__ = [
     "Document", "SignatureEnvelope", "SignatureEvent",
     "IntegrationAccount", "BankConnection", "EcommerceConnection",
     "AdviceReport", "Evidence", "Citation", "Scenario",
-    "AuditLog"
+    "AuditLog",
+    "VATReturn", "VATScheme", "VATTransaction"
 ]

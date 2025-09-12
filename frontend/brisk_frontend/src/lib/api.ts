@@ -133,6 +133,63 @@ class ApiClient {
       body: JSON.stringify(data)
     })
   }
+
+  async getVATReturns(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request<Record<string, unknown>[]>(`/vat/returns?${params}`)
+  }
+
+  async createVATReturn(data: Record<string, unknown>) {
+    return this.request('/vat/returns', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateVATReturn(returnId: string, data: Record<string, unknown>) {
+    return this.request(`/vat/returns/${returnId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async submitVATReturn(returnId: string) {
+    return this.request(`/vat/returns/${returnId}/submit`, {
+      method: 'POST'
+    })
+  }
+
+  async getVATSchemes() {
+    return this.request<Record<string, unknown>[]>('/vat/schemes')
+  }
+
+  async createVATScheme(data: Record<string, unknown>) {
+    return this.request('/vat/schemes', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateVATScheme(schemeId: string, data: Record<string, unknown>) {
+    return this.request(`/vat/schemes/${schemeId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getVATAnalytics(type: string, filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/vat/analytics/${type}?${params}`)
+  }
+
+  async getVATCompliance() {
+    return this.request('/vat/compliance')
+  }
+
+  async getVATAuditTrail(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/vat/audit-trail?${params}`)
+  }
 }
 
 export const apiClient = new ApiClient()

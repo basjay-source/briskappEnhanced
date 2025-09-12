@@ -80,6 +80,12 @@ const modules = [
     description: 'Digital signing workflows'
   },
   {
+    name: 'VAT',
+    path: '/app/vat',
+    icon: Calculator,
+    description: 'VAT returns, schemes & compliance'
+  },
+  {
     name: 'Reports',
     path: '/app/reports',
     icon: BarChart3,
