@@ -11,7 +11,8 @@ import {
   Home,
   Briefcase,
   Clock,
-  Heart
+  Heart,
+  Settings
 } from 'lucide-react'
 
 const modules = [
@@ -86,6 +87,12 @@ const modules = [
     path: '/app/time',
     icon: Clock,
     description: 'Advanced time tracking & billing'
+  },
+  {
+    name: 'Admin',
+    path: '/app/admin',
+    icon: Settings,
+    description: 'System administration & settings'
   }
 ]
 

@@ -12,7 +12,9 @@ import {
   ArrowRight,
   TrendingUp,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  Settings,
+  Heart
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -85,12 +87,36 @@ export default function EcosystemHub() {
       color: 'bg-teal-500'
     },
     {
+      name: 'Charity & Academy Accounts',
+      path: '/app/charity',
+      icon: Heart,
+      description: 'SORP compliance, fund accounting',
+      status: 'active',
+      color: 'bg-pink-500'
+    },
+    {
       name: 'DocuSignage',
       path: '/app/esign',
       icon: FileSignature,
       description: 'Digital signing workflows',
       status: 'active',
       color: 'bg-blue-500'
+    },
+    {
+      name: 'Time Management',
+      path: '/app/time',
+      icon: Clock,
+      description: 'Advanced time tracking & billing',
+      status: 'active',
+      color: 'bg-purple-500'
+    },
+    {
+      name: 'Admin',
+      path: '/app/admin',
+      icon: Settings,
+      description: 'System administration & settings',
+      status: 'active',
+      color: 'bg-gray-500'
     }
   ]
 
