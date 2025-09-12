@@ -65,6 +65,15 @@ export default function Bookkeeping() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  
+  const [reportsSearchTerm, setReportsSearchTerm] = useState('')
+  const [reportsSelectedPeriod, setReportsSelectedPeriod] = useState('current')
+  const [reportsSelectedClient, setReportsSelectedClient] = useState('all')
+  const [reportsSelectedDepartment, setReportsSelectedDepartment] = useState('all')
+  const [reportsSelectedAnalysis, setReportsSelectedAnalysis] = useState('ratio')
+  const [reportsSelectedComparison, setReportsSelectedComparison] = useState('industry')
+  const [reportsDateFrom, setReportsDateFrom] = useState('')
+  const [reportsDateTo, setReportsDateTo] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -332,7 +341,10 @@ export default function Bookkeeping() {
       if (activeSubTab === 'compliance') return renderVATCompliance()
       return renderVATContent()
     } else if (activeMainTab === 'reports') {
-      return renderReportsContent()
+      if (activeSubTab === 'financial') return renderFinancialReports()
+      if (activeSubTab === 'management') return renderManagementReports()
+      if (activeSubTab === 'analytics') return renderAnalyticsReports()
+      return renderFinancialReports()
     } else if (activeMainTab === 'projects') {
       if (activeSubTab === 'overview') return renderProjectOverview()
       if (activeSubTab === 'tracking') return renderTimeTracking()
@@ -1070,62 +1082,675 @@ export default function Bookkeeping() {
   }
 
 
-  function renderReportsContent() {
+  function renderFinancialReports() {
+
+    const periodOptions = [
+      { label: 'Current Period', value: 'current' },
+      { label: 'Previous Period', value: 'previous' },
+      { label: 'Year to Date', value: 'ytd' },
+      { label: 'Custom Range', value: 'custom' }
+    ]
+
+    const clientOptions = [
+      { label: 'All Clients', value: 'all' },
+      { label: 'ABC Ltd', value: 'abc' },
+      { label: 'XYZ Corp', value: 'xyz' },
+      { label: 'Smith & Co', value: 'smith' }
+    ]
+
+    const financialReports = [
+      {
+        title: 'Profit & Loss',
+        description: 'Comprehensive P&L with comparatives',
+        icon: BarChart3,
+        color: 'text-blue-500',
+        status: 'Generated',
+        lastGenerated: '2 hours ago'
+      },
+      {
+        title: 'Balance Sheet',
+        description: 'Assets, liabilities & equity',
+        icon: FileText,
+        color: 'text-purple-500',
+        status: 'Scheduled',
+        lastGenerated: '1 day ago'
+      },
+      {
+        title: 'Cash Flow Statement',
+        description: 'Operating, investing & financing',
+        icon: PoundSterling,
+        color: 'text-green-500',
+        status: 'Generated',
+        lastGenerated: '3 hours ago'
+      },
+      {
+        title: 'Trial Balance',
+        description: 'Detailed account balances',
+        icon: Calculator,
+        color: 'text-orange-500',
+        status: 'Generated',
+        lastGenerated: '1 hour ago'
+      },
+      {
+        title: 'Aged Debtors',
+        description: 'Outstanding customer invoices',
+        icon: Users,
+        color: 'text-red-500',
+        status: 'Generated',
+        lastGenerated: '4 hours ago'
+      },
+      {
+        title: 'Aged Creditors',
+        description: 'Outstanding supplier bills',
+        icon: Building,
+        color: 'text-indigo-500',
+        status: 'Scheduled',
+        lastGenerated: '2 days ago'
+      }
+    ]
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold">Financial Reports</h2>
-            <p className="text-gray-600">Comprehensive financial reporting and analysis</p>
+            <p className="text-gray-600">Generate comprehensive financial statements and reports</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
-            </Button>
-            <Button>
               <Download className="h-4 w-4 mr-2" />
               Export All
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Schedule Reports
             </Button>
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <BarChart3 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Profit & Loss</h3>
-              <p className="text-sm text-gray-600 mb-3">Comprehensive P&L with comparatives</p>
-              <div className="flex gap-2 justify-center">
-                <Button size="sm" variant="outline">Generate</Button>
-                <Button size="sm">Schedule</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <SearchFilterHeader
+          searchPlaceholder="Search financial reports..."
+          searchValue={reportsSearchTerm}
+          onSearchChange={setReportsSearchTerm}
+          filters={[
+            {
+              label: 'Period',
+              options: periodOptions,
+              value: reportsSelectedPeriod,
+              onChange: setReportsSelectedPeriod
+            },
+            {
+              label: 'Client',
+              options: clientOptions,
+              value: reportsSelectedClient,
+              onChange: setReportsSelectedClient
+            }
+          ]}
+          dateRange={{
+            from: reportsDateFrom,
+            to: reportsDateTo,
+            onFromChange: setReportsDateFrom,
+            onToChange: setReportsDateTo
+          }}
+        />
 
-          <Card>
-            <CardContent className="p-6 text-center">
-              <FileText className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Balance Sheet</h3>
-              <p className="text-sm text-gray-600 mb-3">Assets, liabilities & equity</p>
-              <div className="flex gap-2 justify-center">
-                <Button size="sm" variant="outline">Generate</Button>
-                <Button size="sm">Schedule</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
+          {financialReports.map((report, index) => {
+            const Icon = report.icon
+            const drillDownData = {
+              title: `${report.title} Analysis`,
+              description: `Detailed financial analysis and breakdown for ${report.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Report Status</h4>
+                      <p className="text-sm text-gray-600">{report.description}</p>
+                      <div className="mt-2">
+                        <Badge variant={report.status === 'Generated' ? 'default' : 'secondary'}>
+                          {report.status}
+                        </Badge>
+                        <p className="text-xs text-gray-500 mt-1">Last generated: {report.lastGenerated}</p>
+                      </div>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Report Metrics</h4>
+                      <p className="text-sm text-gray-600">Financial performance indicators</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Accuracy Score</span>
+                          <span className="text-green-600">98%</span>
+                        </div>
+                        <Progress value={98} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {report.title === 'Profit & Loss' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">P&L Summary</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Total Revenue</span>
+                          <span className="font-semibold">£125,430</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Total Expenses</span>
+                          <span className="font-semibold">£89,250</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded bg-green-50">
+                          <span>Net Profit</span>
+                          <span className="font-semibold text-green-600">£36,180</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Balance Sheet' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Balance Sheet Summary</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Total Assets</span>
+                          <span className="font-semibold">£245,680</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Total Liabilities</span>
+                          <span className="font-semibold">£89,420</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded bg-blue-50">
+                          <span>Net Worth</span>
+                          <span className="font-semibold text-blue-600">£156,260</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Cash Flow Statement' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Cash Flow Summary</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Operating Cash Flow</span>
+                          <span className="font-semibold">£42,350</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Investing Cash Flow</span>
+                          <span className="font-semibold">-£15,200</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Financing Cash Flow</span>
+                          <span className="font-semibold">-£8,500</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Report</Button>
+                    <Button>Generate New</Button>
+                  </div>
+                </div>
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={report.title}
+                value={report.status}
+                change={`Last: ${report.lastGenerated}`}
+                icon={Icon}
+                color={report.color}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
-          <Card>
-            <CardContent className="p-6 text-center">
-              <PoundSterling className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Cash Flow Statement</h3>
-              <p className="text-sm text-gray-600 mb-3">Operating, investing & financing</p>
-              <div className="flex gap-2 justify-center">
-                <Button size="sm" variant="outline">Generate</Button>
-                <Button size="sm">Schedule</Button>
-              </div>
-            </CardContent>
-          </Card>
+  function renderManagementReports() {
+
+    const periodOptions = [
+      { label: 'Monthly', value: 'monthly' },
+      { label: 'Quarterly', value: 'quarterly' },
+      { label: 'Annual', value: 'annual' },
+      { label: 'Custom', value: 'custom' }
+    ]
+
+    const departmentOptions = [
+      { label: 'All Departments', value: 'all' },
+      { label: 'Sales', value: 'sales' },
+      { label: 'Operations', value: 'operations' },
+      { label: 'Administration', value: 'admin' }
+    ]
+
+    const managementReports = [
+      {
+        title: 'Monthly Management Pack',
+        description: 'Executive summary with KPIs',
+        icon: FileText,
+        color: 'text-blue-500',
+        status: 'Current',
+        value: '98% Complete'
+      },
+      {
+        title: 'Budget vs Actual',
+        description: 'Variance analysis and forecasting',
+        icon: BarChart3,
+        color: 'text-green-500',
+        status: 'Updated',
+        value: '5% Variance'
+      },
+      {
+        title: 'Cash Flow Forecast',
+        description: '13-week rolling cash forecast',
+        icon: TrendingUp,
+        color: 'text-purple-500',
+        status: 'Projected',
+        value: '£45K Surplus'
+      },
+      {
+        title: 'Departmental Analysis',
+        description: 'Cost center performance',
+        icon: PieChart,
+        color: 'text-orange-500',
+        status: 'Analyzed',
+        value: '3 Departments'
+      },
+      {
+        title: 'Key Performance Indicators',
+        description: 'Business metrics dashboard',
+        icon: Target,
+        color: 'text-red-500',
+        status: 'Tracking',
+        value: '12 KPIs'
+      },
+      {
+        title: 'Profitability Analysis',
+        description: 'Product and service margins',
+        icon: Calculator,
+        color: 'text-indigo-500',
+        status: 'Reviewed',
+        value: '28% Margin'
+      }
+    ]
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Management Reports</h2>
+            <p className="text-gray-600">Strategic insights and performance analytics for decision making</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Pack
+            </Button>
+            <Button>
+              <Target className="h-4 w-4 mr-2" />
+              Create Dashboard
+            </Button>
+          </div>
+        </div>
+
+        <SearchFilterHeader
+          searchPlaceholder="Search management reports..."
+          searchValue={reportsSearchTerm}
+          onSearchChange={setReportsSearchTerm}
+          filters={[
+            {
+              label: 'Period',
+              options: periodOptions,
+              value: reportsSelectedPeriod,
+              onChange: setReportsSelectedPeriod
+            },
+            {
+              label: 'Department',
+              options: departmentOptions,
+              value: reportsSelectedDepartment,
+              onChange: setReportsSelectedDepartment
+            }
+          ]}
+          dateRange={{
+            from: reportsDateFrom,
+            to: reportsDateTo,
+            onFromChange: setReportsDateFrom,
+            onToChange: setReportsDateTo
+          }}
+        />
+
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
+          {managementReports.map((report, index) => {
+            const Icon = report.icon
+            const drillDownData = {
+              title: `${report.title} Analysis`,
+              description: `Detailed management analysis and insights for ${report.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Status</h4>
+                      <p className="text-2xl font-bold">{report.value}</p>
+                      <p className="text-sm text-gray-600">{report.description}</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Performance Score</h4>
+                      <p className="text-sm text-gray-600">Management effectiveness</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Overall Score</span>
+                          <span className="text-green-600">94%</span>
+                        </div>
+                        <Progress value={94} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {report.title === 'Monthly Management Pack' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Executive Summary</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Revenue Growth</span>
+                          <span className="font-semibold text-green-600">+12.5%</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Cost Control</span>
+                          <span className="font-semibold text-blue-600">-3.2%</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Customer Satisfaction</span>
+                          <span className="font-semibold">96%</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Budget vs Actual' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Variance Analysis</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Revenue Variance</span>
+                          <Badge variant="default">+8.2%</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Expense Variance</span>
+                          <Badge variant="secondary">-2.1%</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Overall Variance</span>
+                          <Badge variant="outline">+5.0%</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Cash Flow Forecast' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">13-Week Forecast</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Week 1-4 Projection</span>
+                          <span className="font-semibold">£125K</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Week 5-8 Projection</span>
+                          <span className="font-semibold">£98K</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Week 9-13 Projection</span>
+                          <span className="font-semibold">£156K</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Analysis</Button>
+                    <Button>Schedule Report</Button>
+                  </div>
+                </div>
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={report.title}
+                value={report.value}
+                change={report.status}
+                icon={Icon}
+                color={report.color}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  function renderAnalyticsReports() {
+
+    const analysisOptions = [
+      { label: 'Ratio Analysis', value: 'ratio' },
+      { label: 'Trend Analysis', value: 'trend' },
+      { label: 'Variance Analysis', value: 'variance' },
+      { label: 'Benchmarking', value: 'benchmark' }
+    ]
+
+    const comparisonOptions = [
+      { label: 'Industry Average', value: 'industry' },
+      { label: 'Previous Period', value: 'previous' },
+      { label: 'Budget Target', value: 'budget' },
+      { label: 'Peer Companies', value: 'peers' }
+    ]
+
+    const analyticsReports = [
+      {
+        title: 'Ratio Analysis',
+        description: 'Financial ratios and performance metrics',
+        icon: Calculator,
+        color: 'text-blue-500',
+        status: 'Excellent',
+        value: '8.5/10'
+      },
+      {
+        title: 'Trend Analysis',
+        description: 'Historical performance trends',
+        icon: TrendingUp,
+        color: 'text-green-500',
+        status: 'Improving',
+        value: '+15% YoY'
+      },
+      {
+        title: 'Benchmarking Report',
+        description: 'Industry comparison analysis',
+        icon: BarChart3,
+        color: 'text-purple-500',
+        status: 'Above Average',
+        value: '75th Percentile'
+      },
+      {
+        title: 'Variance Analysis',
+        description: 'Budget vs actual performance',
+        icon: PieChart,
+        color: 'text-orange-500',
+        status: 'On Target',
+        value: '3% Variance'
+      },
+      {
+        title: 'Profitability Analysis',
+        description: 'Margin and profit analysis',
+        icon: Target,
+        color: 'text-red-500',
+        status: 'Strong',
+        value: '28.5% Margin'
+      },
+      {
+        title: 'Efficiency Metrics',
+        description: 'Operational efficiency indicators',
+        icon: Activity,
+        color: 'text-indigo-500',
+        status: 'Optimized',
+        value: '92% Efficiency'
+      }
+    ]
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Analytics & Insights</h2>
+            <p className="text-gray-600">Advanced analytics and business intelligence for strategic planning</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Analytics
+            </Button>
+            <Button>
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Create Dashboard
+            </Button>
+          </div>
+        </div>
+
+        <SearchFilterHeader
+          searchPlaceholder="Search analytics reports..."
+          searchValue={reportsSearchTerm}
+          onSearchChange={setReportsSearchTerm}
+          filters={[
+            {
+              label: 'Analysis Type',
+              options: analysisOptions,
+              value: reportsSelectedAnalysis,
+              onChange: setReportsSelectedAnalysis
+            },
+            {
+              label: 'Comparison',
+              options: comparisonOptions,
+              value: reportsSelectedComparison,
+              onChange: setReportsSelectedComparison
+            }
+          ]}
+          dateRange={{
+            from: reportsDateFrom,
+            to: reportsDateTo,
+            onFromChange: setReportsDateFrom,
+            onToChange: setReportsDateTo
+          }}
+        />
+
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
+          {analyticsReports.map((report, index) => {
+            const Icon = report.icon
+            const drillDownData = {
+              title: `${report.title} Deep Dive`,
+              description: `Advanced analytics and insights for ${report.title.toLowerCase()}`,
+              content: (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Current Performance</h4>
+                      <p className="text-2xl font-bold">{report.value}</p>
+                      <p className="text-sm text-gray-600">{report.status}</p>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <h4 className="font-semibold mb-2">Analytics Score</h4>
+                      <p className="text-sm text-gray-600">Data quality and insights</p>
+                      <div className="mt-2">
+                        <div className="flex justify-between text-xs">
+                          <span>Overall Score</span>
+                          <span className="text-green-600">96%</span>
+                        </div>
+                        <Progress value={96} className="h-2" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {report.title === 'Ratio Analysis' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Key Financial Ratios</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Current Ratio</span>
+                          <span className="font-semibold">2.4</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Quick Ratio</span>
+                          <span className="font-semibold">1.8</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Debt-to-Equity</span>
+                          <span className="font-semibold">0.35</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Trend Analysis' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Performance Trends</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Revenue Trend</span>
+                          <Badge variant="default">+15% YoY</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Profit Trend</span>
+                          <Badge variant="secondary">+22% YoY</Badge>
+                        </div>
+                        <div className="flex justify-between items-center p-2 border rounded">
+                          <span>Efficiency Trend</span>
+                          <Badge variant="outline">+8% YoY</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {report.title === 'Benchmarking Report' && (
+                    <div>
+                      <h4 className="font-semibold mb-3">Industry Comparison</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Revenue per Employee</span>
+                          <span className="font-semibold">75th percentile</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Profit Margin</span>
+                          <span className="font-semibold">80th percentile</span>
+                        </div>
+                        <div className="flex justify-between p-2 border rounded">
+                          <span>Asset Turnover</span>
+                          <span className="font-semibold">65th percentile</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button variant="outline">Export Analysis</Button>
+                    <Button>Generate Insights</Button>
+                  </div>
+                </div>
+              )
+            }
+            return (
+              <KPICard
+                key={index}
+                title={report.title}
+                value={report.value}
+                change={report.status}
+                icon={Icon}
+                color={report.color}
+                drillDownData={drillDownData}
+              />
+            )
+          })}
         </div>
       </div>
     )
