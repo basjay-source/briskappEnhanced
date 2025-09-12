@@ -2741,10 +2741,10 @@ export default function CompanySecretarial() {
                 <div key={key}>
                   <button
                     onClick={() => handleMainTabClick(key)}
-                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                       activeMainTab === key
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
+                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                     }`}
                   >
                     <config.icon className="mr-3 h-4 w-4" />
@@ -2757,10 +2757,10 @@ export default function CompanySecretarial() {
                         <button
                           key={subKey}
                           onClick={() => handleSubTabClick(subKey)}
-                          className={`w-full flex items-center px-3 py-2 text-xs rounded-md transition-colors ${
+                          className={`w-full flex items-center px-3 py-2 m-0.5 text-xs rounded-lg transition-all duration-200 shadow-sm ${
                             activeSubTab === subKey
-                              ? 'bg-blue-50 text-blue-600'
-                              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
+                              : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                           }`}
                         >
                           <subConfig.icon className="mr-2 h-3 w-3" />
