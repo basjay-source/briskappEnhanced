@@ -1038,6 +1038,7 @@ export default function CompanySecretarial() {
       <FormWizard
         title="Self Assessment (SA100)"
         logoComponent={<HMRCLogo className="h-16 w-16" />}
+        colorScheme="green"
         pages={[
           {
             title: "Personal Details",
@@ -1287,6 +1288,7 @@ export default function CompanySecretarial() {
       <FormWizard
         title="Corporation Tax (CT600)"
         logoComponent={<HMRCLogo className="h-16 w-16" />}
+        colorScheme="green"
         pages={[
           {
             title: "Company Details",

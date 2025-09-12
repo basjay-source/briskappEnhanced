@@ -13,6 +13,7 @@ interface FormWizardProps {
   onSaveDraft?: (data: Record<string, string>) => void
   formData: Record<string, string>
   logoComponent?: React.ReactNode
+  colorScheme?: 'blue' | 'green'
 }
 
 export default function FormWizard({ 
@@ -21,7 +22,8 @@ export default function FormWizard({
   onSubmit, 
   onSaveDraft,
   formData,
-  logoComponent 
+  logoComponent,
+  colorScheme = 'blue'
 }: FormWizardProps) {
   const [currentPage, setCurrentPage] = useState(0)
 
@@ -52,15 +54,21 @@ export default function FormWizard({
     setCurrentPage(pageIndex)
   }
 
+  const headerBgColor = colorScheme === 'green' ? 'bg-[#00703c]' : 'bg-[#003078]'
+  const progressColor = colorScheme === 'green' ? 'bg-green-600' : 'bg-blue-600'
+  const buttonColor = colorScheme === 'green' ? 'bg-[#00703c] hover:bg-[#005a30]' : 'bg-[#003078] hover:bg-[#002060]'
+  const activePageColor = colorScheme === 'green' ? 'bg-green-600' : 'bg-blue-600'
+  const textAccentColor = colorScheme === 'green' ? 'text-green-100' : 'text-blue-100'
+
   return (
     <div className="space-y-6">
       {logoComponent && (
-        <div className="bg-[#003078] text-white p-6 rounded-lg">
+        <div className={`${headerBgColor} text-white p-6 rounded-lg`}>
           <div className="flex items-center space-x-4">
             {logoComponent}
             <div>
               <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="text-blue-100">Complete all sections to submit your application</p>
+              <p className={textAccentColor}>Complete all sections to submit your application</p>
             </div>
           </div>
         </div>
@@ -75,7 +83,7 @@ export default function FormWizard({
       
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div 
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          className={`${progressColor} h-2 rounded-full transition-all duration-300`}
           style={{ width: `${((currentPage + 1) / pages.length) * 100}%` }}
         />
       </div>
@@ -87,7 +95,7 @@ export default function FormWizard({
             onClick={() => handlePageJump(index)}
             className={`px-2 py-1 text-xs rounded ${
               index === currentPage
-                ? 'bg-blue-600 text-white'
+                ? `${activePageColor} text-white`
                 : index < currentPage
                 ? 'bg-green-100 text-green-800'
                 : 'bg-gray-100 text-gray-600'
@@ -126,7 +134,7 @@ export default function FormWizard({
           )}
           
           {currentPage === pages.length - 1 ? (
-            <Button onClick={handleSubmit} className="bg-[#003078] hover:bg-[#002060]">
+            <Button onClick={handleSubmit} className={buttonColor}>
               Submit Form
             </Button>
           ) : (

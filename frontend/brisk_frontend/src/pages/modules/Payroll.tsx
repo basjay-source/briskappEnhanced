@@ -917,6 +917,7 @@ export default function Payroll() {
                   <FormWizard
                     title="P35 - End of Year Return"
                     logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    colorScheme="green"
                     pages={[
                       {
                         title: "Employer Details",
@@ -1059,6 +1060,7 @@ export default function Payroll() {
                   <FormWizard
                     title="P45 - Leaving Certificate"
                     logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    colorScheme="green"
                     pages={[
                       {
                         title: "Employee Details",
@@ -1167,6 +1169,7 @@ export default function Payroll() {
                   <FormWizard
                     title="P46 - New Employee"
                     logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    colorScheme="green"
                     pages={[
                       {
                         title: "New Employee Details",
@@ -1263,6 +1266,7 @@ export default function Payroll() {
                   <FormWizard
                     title="P60 - End of Year Certificate"
                     logoComponent={<HMRCLogo className="h-16 w-16" />}
+                    colorScheme="green"
                     pages={[
                       {
                         title: "Employee Selection",
