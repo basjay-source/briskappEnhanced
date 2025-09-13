@@ -21,19 +21,19 @@ export default {
   			ring: 'hsl(var(--brisk-ring))',
   			brisk: {
   				primary: '#0B5FFF',
-  				accent: '#FF7A00',
+  				accent: '#3B82F6',
   				'primary-50': '#EBF2FF',
   				'primary-100': '#D6E4FF',
   				'primary-500': '#0B5FFF',
   				'primary-600': '#0A54E6',
   				'primary-700': '#0948CC',
   				'primary-900': '#062F80',
-  				'accent-50': '#FFF4EB',
-  				'accent-100': '#FFE9D6',
-  				'accent-500': '#FF7A00',
-  				'accent-600': '#E66D00',
-  				'accent-700': '#CC6100',
-  				'accent-900': '#804000'
+  				'accent-50': '#EBF2FF',
+  				'accent-100': '#D6E4FF',
+  				'accent-500': '#3B82F6',
+  				'accent-600': '#2563EB',
+  				'accent-700': '#1D4ED8',
+  				'accent-900': '#1E40AF'
   			},
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
@@ -75,7 +75,7 @@ export default {
   				'100%': {
   					'stroke-dasharray': '100 100',
   					'stroke-dashoffset': '0',
-  					'fill': '#FF7A00'
+  					'fill': '#3B82F6'
   				}
   			}
   		},

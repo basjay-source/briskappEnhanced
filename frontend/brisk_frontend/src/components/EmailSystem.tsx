@@ -350,7 +350,7 @@ export default function EmailSystem() {
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${
                           account.status === 'connected' ? 'bg-green-500' :
-                          account.status === 'syncing' ? 'bg-yellow-500' :
+                          account.status === 'syncing' ? 'bg-blue-500' :
                           account.status === 'error' ? 'bg-red-500' : 'bg-gray-500'
                         }`} />
                         <div>
@@ -562,7 +562,7 @@ export default function EmailSystem() {
                             <span className="text-xs text-gray-500">
                               {formatTimestamp(email.timestamp)}
                             </span>
-                            {email.isStarred && <Star className="h-4 w-4 text-yellow-500 fill-current" />}
+                            {email.isStarred && <Star className="h-4 w-4 text-blue-500 fill-current" />}
                             {email.hasAttachments && <Paperclip className="h-4 w-4 text-gray-400" />}
                           </div>
                         </div>

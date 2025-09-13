@@ -412,7 +412,7 @@ export default function VAT() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <AlertCircle className="h-5 w-5 text-yellow-500" />
+                    <AlertCircle className="h-5 w-5 text-blue-500" />
                     <div>
                       <p className="font-semibold">Quarterly Submissions</p>
                       <p className="text-sm text-gray-600">1 Overdue</p>

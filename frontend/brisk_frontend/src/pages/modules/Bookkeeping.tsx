@@ -412,7 +412,7 @@ export default function Bookkeeping() {
       case 'pending':
       case 'sent':
       case 'confirmed':
-        return <Clock className="h-4 w-4 text-yellow-600" />
+        return <Clock className="h-4 w-4 text-blue-600" />
       case 'overdue':
       case 'unmatched':
         return <AlertCircle className="h-4 w-4 text-red-600" />
@@ -429,7 +429,7 @@ export default function Bookkeeping() {
       sent: 'bg-blue-100 text-blue-800',
       overdue: 'bg-red-100 text-red-800',
       draft: 'bg-gray-100 text-gray-800',
-      pending: 'bg-yellow-100 text-yellow-800',
+      pending: 'bg-blue-100 text-blue-800',
       approved: 'bg-blue-100 text-blue-800',
       reconciled: 'bg-green-100 text-green-800',
       unmatched: 'bg-red-100 text-red-800',
