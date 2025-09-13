@@ -166,7 +166,7 @@ export default function PracticeManagement() {
       case 'high':
         return 'bg-red-100 text-red-800'
       case 'medium':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-blue-100 text-blue-800'
       default:
         return 'bg-green-100 text-green-800'
     }
@@ -365,7 +365,7 @@ export default function PracticeManagement() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">{deadline.date}</p>
-                    <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-orange-600'}`}>
+                    <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-blue-600'}`}>
                       {deadline.days} days
                     </p>
                   </div>
