@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    
+    /* Brisk Theme Colors */
+    --brisk-primary: 11 95 255;
+    --brisk-accent: 255 122 0;
+    --brisk-background: 255 255 255;
+    --brisk-foreground: 15 23 42;
+    --brisk-muted: 248 250 252;
+    --brisk-muted-foreground: 100 116 139;
+    --brisk-border: 226 232 240;
+    --brisk-input: 226 232 240;
+    --brisk-ring: 11 95 255;
+    
+    /* Sidebar */
+    --sidebar-background: 248 250 252;
+    --sidebar-foreground: 15 23 42;
+    --sidebar-primary: 11 95 255;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 241 245 249;
+    --sidebar-accent-foreground: 15 23 42;
+    --sidebar-border: 226 232 240;
+    --sidebar-ring: 11 95 255;
+  }
+  
+  .dark {
+    --brisk-background: 2 8 23;
+    --brisk-foreground: 248 250 252;
+    --brisk-muted: 15 23 42;
+    --brisk-muted-foreground: 148 163 184;
+    --brisk-border: 30 41 59;
+    --brisk-input: 30 41 59;
+    
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 248 250 252;
+    --sidebar-primary: 11 95 255;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 248 250 252;
+    --sidebar-border: 30 41 59;
+    --sidebar-ring: 11 95 255;
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Tenant branding support */
+  [data-tenant-theme] {
+    --brisk-primary: var(--tenant-primary, 11 95 255);
+    --brisk-accent: var(--tenant-accent, 255 122 0);
+  }
+  
+  /* Numeric tabular for financial data */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+

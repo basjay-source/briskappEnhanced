@@ -1,10 +1,25 @@
-# briskappEnhanced
 Accountancy Practice Suite
 
+Brisk Practice Suite
+
 Overview
+
 Brisk Practice Suite is the next-generation all-in-one software platform built for modern accountancy firms and the businesses they serve.
 
 Unlike fragmented legacy tools, Brisk combines compliance, practice management, client collaboration, and AI-powered advisory into a single, seamless system.
+
+Features
+- Client management
+- Accounts Production
+- Taxation
+- Charity/Academy Accounts
+- AML Checks
+- Payroll
+- Time Management
+- Company Secretarial
+- esignature
+- Bookkeeping
+- Practice Management
 
 🔑 Key Capabilities
 
@@ -39,16 +54,3 @@ Enterprise-grade Security → ISO-ready, GDPR compliant, with full audit trails.
 Accountancy Firms → Multi-client practices looking to replace multiple systems with one unified suite.
 
 Businesses → Single-company use for accounts, payroll, compliance, and advisory insights.
-
-Features
-- Client management
-- Accounts Production
-- Taxation
-- Charity/Academy Accounts
-- AML Checks
-- Payroll
-- Time Management
-- Company Secretarial
-- esignature
-- Bookkeeping
-- Practice Management
