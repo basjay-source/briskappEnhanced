@@ -281,7 +281,7 @@ export default function AccountsProduction() {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold">£850</p>
-                          <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                          <Badge className="bg-blue-100 text-blue-800">Pending</Badge>
                         </div>
                       </div>
                     </div>
@@ -395,7 +395,7 @@ export default function AccountsProduction() {
                             <span className="text-sm">Taxonomy compliance verified</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4 text-yellow-600" />
+                            <AlertCircle className="h-4 w-4 text-blue-600" />
                             <span className="text-sm">3 optional tags missing</span>
                           </div>
                         </div>
@@ -433,12 +433,12 @@ export default function AccountsProduction() {
               <div className="space-y-4">
                 {aiInsights.map((insight, index) => (
                   <div key={index} className={`p-3 rounded-lg ${
-                    insight.type === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
+                    insight.type === 'warning' ? 'bg-blue-50 border border-blue-200' :
                     insight.type === 'success' ? 'bg-green-50 border border-green-200' :
                     'bg-blue-50 border border-blue-200'
                   }`}>
                     <div className="flex items-start gap-2">
-                      {insight.type === 'warning' && <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />}
+                      {insight.type === 'warning' && <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />}
                       {insight.type === 'success' && <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />}
                       {insight.type === 'info' && <FileText className="h-4 w-4 text-blue-600 mt-0.5" />}
                       <div className="flex-1">

@@ -26,7 +26,7 @@ export default function BriskLogo({ className, animated = false }: BriskLogoProp
         cx="20"
         cy="20"
         r="3"
-        fill="#FF7A00"
+        fill="#3B82F6"
         className={animated ? "animate-logo-draw" : ""}
       />
     </svg>

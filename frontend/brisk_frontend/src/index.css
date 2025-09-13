@@ -8,7 +8,7 @@
     
     /* Brisk Theme Colors */
     --brisk-primary: 11 95 255;
-    --brisk-accent: 255 122 0;
+    --brisk-accent: 59 130 246;
     --brisk-background: 255 255 255;
     --brisk-foreground: 15 23 42;
     --brisk-muted: 248 250 252;
@@ -58,7 +58,7 @@
   /* Tenant branding support */
   [data-tenant-theme] {
     --brisk-primary: var(--tenant-primary, 11 95 255);
-    --brisk-accent: var(--tenant-accent, 255 122 0);
+    --brisk-accent: var(--tenant-accent, 59 130 246);
   }
   
   /* Numeric tabular for financial data */

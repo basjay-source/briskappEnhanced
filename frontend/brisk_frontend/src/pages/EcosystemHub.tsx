@@ -90,7 +90,7 @@ export default function EcosystemHub() {
       icon: FileSignature,
       description: 'Digital signing workflows',
       status: 'active',
-      color: 'bg-yellow-500'
+      color: 'bg-blue-500'
     }
   ]
 
