@@ -1,6 +1,10 @@
-from fastapi import Request, HTTPException
+from fastapi import Request, HTTPException, Depends
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
+
+def get_current_user(request: Request):
+    """Get current user from request state set by AuthMiddleware"""
+    return getattr(request.state, 'user_id', 'demo-user')
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):

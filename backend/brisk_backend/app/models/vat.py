@@ -43,7 +43,6 @@ class VATReturn(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     company = relationship("Company")
-    vat_scheme = relationship("VATScheme", back_populates="vat_returns")
 
 class VATScheme(Base):
     __tablename__ = "vat_schemes"
@@ -69,7 +68,6 @@ class VATScheme(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     company = relationship("Company")
-    vat_returns = relationship("VATReturn", back_populates="vat_scheme")
 
 class VATTransaction(Base):
     __tablename__ = "vat_transactions"
