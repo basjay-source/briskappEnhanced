@@ -1,7 +1,5 @@
 Accountancy Practice Suite
 
-Brisk Practice Suite
-
 Overview
 
 Brisk Practice Suite is the next-generation all-in-one software platform built for modern accountancy firms and the businesses they serve.
