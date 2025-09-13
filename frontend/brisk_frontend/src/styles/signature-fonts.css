@@ -1,0 +1,73 @@
+/* DocuSignage Signature Font Library */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Kalam:wght@300;400;700&family=Allura&family=Pacifico&family=Alex+Brush&family=Satisfy&family=Tangerine:wght@400;700&family=Pinyon+Script&family=Caveat:wght@300;400;500;600;700&family=Herr+Von+Muellerhoff&family=Mr+Dafoe&family=Amatic+SC:wght@400;700&family=Courgette&family=Homemade+Apple&family=Patrick+Hand&family=Yellowtail&family=Shadows+Into+Light&family=Indie+Flower&display=swap');
+
+/* Signature font classes for easy application */
+.signature-font-elegant-script { font-family: 'Dancing Script', cursive; }
+.signature-font-classic-signature { font-family: 'Great Vibes', cursive; }
+.signature-font-modern-handwriting { font-family: 'Kalam', handwriting; }
+.signature-font-professional-script { font-family: 'Allura', cursive; }
+.signature-font-bold-signature { font-family: 'Pacifico', display; }
+.signature-font-refined-cursive { font-family: 'Alex Brush', cursive; }
+.signature-font-executive-style { font-family: 'Satisfy', cursive; }
+.signature-font-artistic-flow { font-family: 'Tangerine', cursive; }
+.signature-font-formal-script { font-family: 'Pinyon Script', cursive; }
+.signature-font-casual-handwriting { font-family: 'Caveat', handwriting; }
+.signature-font-luxury-signature { font-family: 'Herr Von Muellerhoff', cursive; }
+.signature-font-vintage-script { font-family: 'Mr Dafoe', cursive; }
+.signature-font-contemporary-flow { font-family: 'Amatic SC', handwriting; }
+.signature-font-distinguished-cursive { font-family: 'Courgette', cursive; }
+.signature-font-sleek-signature { font-family: 'Homemade Apple', handwriting; }
+.signature-font-minimalist-hand { font-family: 'Patrick Hand', handwriting; }
+.signature-font-flowing-cursive { font-family: 'Yellowtail', cursive; }
+.signature-font-business-signature { font-family: 'Shadows Into Light', handwriting; }
+.signature-font-elegant-handwriting { font-family: 'Indie Flower', handwriting; }
+
+/* Signature field styling */
+.signature-field {
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.signature-field:hover {
+  border-color: #0B5FFF;
+  background: #f8faff;
+}
+
+.signature-field.active {
+  border-color: #0B5FFF;
+  border-style: solid;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(11, 95, 255, 0.1);
+}
+
+/* Signature preview styling */
+.signature-preview {
+  font-size: 2rem;
+  line-height: 1.2;
+  color: #1f2937;
+  padding: 20px;
+  border-bottom: 2px solid #374151;
+  display: inline-block;
+  min-width: 200px;
+}
+
+/* Responsive signature fonts */
+@media (max-width: 768px) {
+  .signature-preview {
+    font-size: 1.5rem;
+    padding: 15px;
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .signature-preview {
+    font-size: 1.25rem;
+    padding: 12px;
+    min-width: 120px;
+  }
+}

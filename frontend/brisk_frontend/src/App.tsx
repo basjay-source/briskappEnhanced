@@ -5,6 +5,7 @@ import LandingPage from '@/pages/LandingPage'
 import LoginPage from '@/pages/LoginPage'
 import EcosystemHub from '@/pages/EcosystemHub'
 import AccountsProduction from '@/pages/modules/AccountsProduction'
+import CharityAccounts from '@/pages/modules/CharityAccounts'
 import CorporationTax from '@/pages/modules/CorporationTax'
 import PersonalTax from '@/pages/modules/PersonalTax'
 import Payroll from '@/pages/modules/Payroll'
@@ -12,9 +13,9 @@ import AMLCompliance from '@/pages/modules/AMLCompliance'
 import CompanySecretarial from '@/pages/modules/CompanySecretarial'
 import Bookkeeping from '@/pages/modules/Bookkeeping'
 import ESignature from '@/pages/modules/ESignature'
+import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced'
+import AdminModule from '@/pages/modules/AdminModule'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
-import VAT from '@/pages/modules/VAT'
-import Reports from '@/pages/modules/Reports'
 import ClientPortal from '@/components/ClientPortal'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="hub" element={<EcosystemHub />} />
             <Route path="practice" element={<PracticeManagement />} />
             <Route path="accounts" element={<AccountsProduction />} />
+            <Route path="charity" element={<CharityAccounts />} />
             <Route path="tax/ct" element={<CorporationTax />} />
             <Route path="tax/sa" element={<PersonalTax />} />
             <Route path="payroll" element={<Payroll />} />
@@ -36,8 +38,8 @@ function App() {
             <Route path="cosec" element={<CompanySecretarial />} />
             <Route path="books" element={<Bookkeeping />} />
             <Route path="esign" element={<ESignature />} />
-            <Route path="vat" element={<VAT />} />
-            <Route path="reports" element={<Reports />} />
+            <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
+            <Route path="admin" element={<AdminModule />} />
             <Route path="portal" element={<ClientPortal />} />
           </Route>
         </Routes>

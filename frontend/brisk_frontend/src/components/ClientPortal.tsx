@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export default function ClientPortal() {
-  const { isMobile } = useResponsive()
+  const isMobile = useIsMobile()
 
   const jobs = [
     {
@@ -148,7 +148,7 @@ export default function ClientPortal() {
                       <div className="flex items-center gap-2">
                         <Badge className={
                           doc.status === 'approved' ? 'bg-green-100 text-green-800' :
-                          'bg-blue-100 text-blue-800'
+                          'bg-brisk-primary-50 text-brisk-primary'
                         }>
                           {doc.status}
                         </Badge>

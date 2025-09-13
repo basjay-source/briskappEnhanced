@@ -132,8 +132,7 @@ export default function LandingPage() {
       <footer className="container mx-auto px-6 py-12 border-t">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <BriskLogo className="h-8 w-8" />
-            <span className="font-semibold text-brisk-primary">Brisk Practice Suite</span>
+            <BriskLogo className="h-8 w-8" showText={true} />
           </div>
           <p className="text-gray-600">© 2024 Brisk Accountants Ltd. All rights reserved.</p>
         </div>

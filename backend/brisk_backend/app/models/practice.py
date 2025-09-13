@@ -180,3 +180,29 @@ class FirmKPI(Base):
     revenue = Column(Numeric(15, 2))
     profit_margin = Column(Numeric(5, 2))
     calculated_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class JobCode(Base):
+    __tablename__ = "job_codes"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    code = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    default_rate = Column(Numeric(8, 2), nullable=False)
+    billable = Column(Boolean, default=True)
+    category = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class EmployeeRate(Base):
+    __tablename__ = "employee_rates"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(String, nullable=False)
+    employee_name = Column(String, nullable=False)
+    job_code_id = Column(String, ForeignKey("job_codes.id"), nullable=False)
+    hourly_rate = Column(Numeric(8, 2), nullable=False)
+    role = Column(String)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
