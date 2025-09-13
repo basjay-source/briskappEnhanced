@@ -2,10 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from decimal import Decimal
 
 from app.database import get_db
+from app.models.client import Client
+from app.models.practice import Job
+from app.routers.books import get_management_accounts
 
 router = APIRouter()
 
@@ -213,4 +216,78 @@ def send_email(
         "timestamp": datetime.now().isoformat(),
         "recipients": email_data.to,
         "subject": email_data.subject
+    }
+
+@router.get("/template-data/{client_id}")
+def get_client_template_data(
+    client_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    client = db.query(Client).filter(
+        Client.tenant_id == request.state.tenant_id,
+        Client.id == client_id
+    ).first()
+    
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    
+    try:
+        management_accounts = get_management_accounts(
+            client.companies[0].id if client.companies else client_id,
+            date.today() - timedelta(days=365),
+            date.today(),
+            request,
+            db
+        )
+    except:
+        management_accounts = {
+            "profit_and_loss": {
+                "revenue": 0,
+                "net_profit": 0,
+                "expenses": 0
+            },
+            "balance_sheet": {
+                "total_assets": 0,
+                "total_liabilities": 0,
+                "working_capital": 0
+            }
+        }
+    
+    jobs = db.query(Job).filter(
+        Job.tenant_id == request.state.tenant_id,
+        Job.client_id == client_id
+    ).all()
+    
+    services = list(set([job.job_type for job in jobs]))
+    
+    revenue = management_accounts.get('profit_and_loss', {}).get('revenue', 0)
+    net_profit = management_accounts.get('profit_and_loss', {}).get('net_profit', 0)
+    expenses = management_accounts.get('profit_and_loss', {}).get('expenses', 0)
+    total_assets = management_accounts.get('balance_sheet', {}).get('total_assets', 0)
+    total_liabilities = management_accounts.get('balance_sheet', {}).get('total_liabilities', 0)
+    
+    profit_margin = (net_profit / revenue * 100) if revenue > 0 else 0
+    working_capital = total_assets - total_liabilities
+    
+    return {
+        "client_name": client.name,
+        "company_number": client.company_number or "Not registered",
+        "vat_number": client.vat_number or "Not VAT registered",
+        "industry_sector": client.industry_sector or "General business",
+        "year_end": client.year_end.strftime("%d %B %Y") if client.year_end else "31 March",
+        "incorporation_date": client.incorporation_date.strftime("%d %B %Y") if hasattr(client, 'incorporation_date') and client.incorporation_date else "Not available",
+        "registered_address": getattr(client, 'registered_address', 'Not available'),
+        "turnover": f"£{revenue:,.2f}",
+        "net_profit": f"£{net_profit:,.2f}",
+        "tax_payable": f"£{net_profit * 0.19:,.2f}",
+        "profit_margin": f"{profit_margin:.1f}%",
+        "total_assets": f"£{total_assets:,.2f}",
+        "total_liabilities": f"£{total_liabilities:,.2f}",
+        "working_capital": f"£{working_capital:,.2f}",
+        "cash_flow": f"£{net_profit + expenses * 0.3:,.2f}",
+        "employee_count": str(getattr(client, 'employee_count', 'Not specified')),
+        "services": ", ".join(services) if services else "General accounting services",
+        "practice_name": "Brisk Accountants",
+        "signature": "Best regards,\n\nBrisk Accountants\nChartered Accountants & Business Advisors\nPhone: +44 20 1234 5678\nEmail: info@briskaccountants.com\nWeb: www.briskaccountants.com"
     }

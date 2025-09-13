@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Mail, 
   Send, 
@@ -76,6 +76,8 @@ export default function EmailSystem() {
   const [showFilters, setShowFilters] = useState(false)
   const [showAccountSettings, setShowAccountSettings] = useState(false)
   const [activeRibbonTab, setActiveRibbonTab] = useState('home')
+  const [clientTemplateData, setClientTemplateData] = useState<Record<string, string>>({})
+  const [availableClients, setAvailableClients] = useState<Array<{id: string, name: string}>>([])
   const [connectedAccounts, setConnectedAccounts] = useState<EmailAccount[]>([
     {
       id: '1',
@@ -184,6 +186,46 @@ export default function EmailSystem() {
     setIsComposing(true)
   }
 
+  const fetchClientTemplateData = async (clientId: string) => {
+    try {
+      const response = await fetch(`/api/email/template-data/${clientId}`)
+      const data = await response.json()
+      setClientTemplateData(data)
+    } catch (error) {
+      console.error('Failed to fetch client template data:', error)
+    }
+  }
+
+  const fetchAvailableClients = async () => {
+    try {
+      const response = await fetch('/api/books/customers')
+      const clients = await response.json()
+      setAvailableClients(clients)
+    } catch (error) {
+      console.error('Failed to fetch clients:', error)
+      setAvailableClients([
+        { id: '1', name: 'ABC Manufacturing Ltd' },
+        { id: '2', name: 'XYZ Consulting Services' },
+        { id: '3', name: 'Tech Innovations Ltd' },
+        { id: '4', name: 'Green Energy Solutions' },
+        { id: '5', name: 'Professional Services Group' }
+      ])
+    }
+  }
+
+  const replaceTemplateVariables = (text: string, data: Record<string, string>) => {
+    let result = text
+    Object.keys(data).forEach(key => {
+      const regex = new RegExp(`{{${key}}}`, 'g')
+      result = result.replace(regex, data[key] || `{{${key}}}`)
+    })
+    return result
+  }
+
+  useEffect(() => {
+    fetchAvailableClients()
+  }, [])
+
   const handleFormatAction = (action: string, value?: string) => {
     console.log('Format action:', action, value)
     
@@ -199,22 +241,182 @@ export default function EmailSystem() {
           setComposeData({
             ...composeData,
             subject: 'Professional Inquiry',
-            body: 'Dear [Client Name],\n\nI hope this email finds you well. I am writing to...\n\nBest regards,\n[Your Name]'
+            body: 'Dear {{client_name}},\n\nI hope this email finds you well. I am writing to discuss your {{services}} requirements.\n\nBest regards,\n{{practice_name}}\n{{signature}}'
           })
         } else if (value === 'followup') {
           setComposeData({
             ...composeData,
-            subject: 'Follow-up: [Previous Subject]',
-            body: 'Dear [Client Name],\n\nI wanted to follow up on our previous conversation regarding...\n\nPlease let me know if you have any questions.\n\nBest regards,\n[Your Name]'
+            subject: 'Follow-up: {{client_name}} - {{services}}',
+            body: 'Dear {{client_name}},\n\nI wanted to follow up on our previous conversation regarding your {{services}}.\n\nPlease let me know if you have any questions.\n\nBest regards,\n{{practice_name}}\n{{signature}}'
           })
         } else if (value === 'meeting') {
           setComposeData({
             ...composeData,
-            subject: 'Meeting Request',
-            body: 'Dear [Client Name],\n\nI would like to schedule a meeting to discuss...\n\nPlease let me know your availability.\n\nBest regards,\n[Your Name]'
+            subject: 'Meeting Request - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nI would like to schedule a meeting to discuss your {{services}} and review the following:\n\n- Current turnover: {{turnover}}\n- Tax obligations: {{tax_payable}}\n- Net profit analysis: {{net_profit}}\n\nPlease let me know your availability.\n\nBest regards,\n{{practice_name}}\n{{signature}}'
+          })
+        } else if (value === 'tax_summary') {
+          setComposeData({
+            ...composeData,
+            subject: 'Tax Summary - {{client_name}} ({{tax_year}})',
+            body: 'Dear {{client_name}},\n\nPlease find below your tax summary for the period ending {{tax_year}}:\n\n**Financial Overview:**\n- Annual Turnover: {{turnover}}\n- Net Profit: {{net_profit}}\n- Tax Payable: {{tax_payable}}\n\n**Services Provided:**\n{{services}}\n\nIf you have any questions regarding this summary, please do not hesitate to contact us.\n\nBest regards,\n{{practice_name}}\n{{signature}}'
+          })
+        } else if (value === 'financial_report') {
+          setComposeData({
+            ...composeData,
+            subject: 'Financial Report - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nI am pleased to provide you with your financial report summary:\n\n**Key Financial Metrics:**\n- Turnover: {{turnover}}\n- Net Profit: {{net_profit}}\n- Tax Liability: {{tax_payable}}\n- Industry: {{industry_sector}}\n\n**Services Delivered:**\n{{services}}\n\n**Next Steps:**\nWe recommend scheduling a review meeting to discuss these results and plan for the upcoming period.\n\nPlease contact us to arrange a convenient time.\n\nBest regards,\n{{practice_name}}\n{{signature}}'
+          })
+        } else if (value === 'accounts_preparation') {
+          setComposeData({
+            ...composeData,
+            subject: 'Annual Accounts Preparation - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to confirm our engagement for the preparation of your annual accounts for the year ending {{year_end}}.\n\n**Your Business Overview:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Annual Turnover: {{turnover}}\n- Services: {{services}}\n\n**Our Services Include:**\n- Preparation of statutory accounts\n- Corporation tax computation and filing\n- VAT compliance review\n- Management accounts preparation\n\nWe look forward to working with you.\n\n{{signature}}'
+          })
+        } else if (value === 'tax_compliance') {
+          setComposeData({
+            ...composeData,
+            subject: 'Tax Compliance Update - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nPlease find below your tax compliance summary:\n\n**Tax Summary:**\n- Annual Turnover: {{turnover}}\n- Net Profit: {{net_profit}}\n- Estimated Tax Payable: {{tax_payable}}\n- VAT Registration: {{vat_number}}\n\n**Services Provided:**\n{{services}}\n\n**Next Steps:**\nWe will ensure all tax obligations are met within the required deadlines.\n\n{{signature}}'
+          })
+        } else if (value === 'payroll_services') {
+          setComposeData({
+            ...composeData,
+            subject: 'Payroll Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to provide payroll services for your business.\n\n**Company Details:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Services: {{services}}\n\n**Our Payroll Services Include:**\n- Monthly payroll processing\n- RTI submissions to HMRC\n- P60 and P45 preparation\n- Pension auto-enrolment compliance\n\nPlease contact us to discuss your payroll requirements.\n\n{{signature}}'
+          })
+        } else if (value === 'bookkeeping_services') {
+          setComposeData({
+            ...composeData,
+            subject: 'Bookkeeping Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to provide comprehensive bookkeeping services for your business.\n\n**Company Overview:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Current Turnover: {{turnover}}\n- Services: {{services}}\n\n**Our Bookkeeping Services Include:**\n- Daily transaction recording\n- Bank reconciliation\n- VAT return preparation\n- Management reporting\n- Supplier and customer management\n\nPlease contact us to discuss your bookkeeping requirements.\n\n{{signature}}'
+          })
+        } else if (value === 'vat_services') {
+          setComposeData({
+            ...composeData,
+            subject: 'VAT Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to provide VAT compliance services for your business.\n\n**VAT Registration Details:**\n- Company: {{client_name}} ({{company_number}})\n- VAT Number: {{vat_number}}\n- Annual Turnover: {{turnover}}\n- Services: {{services}}\n\n**Our VAT Services Include:**\n- Quarterly VAT return preparation\n- MTD compliance\n- VAT planning and advice\n- HMRC correspondence handling\n\nPlease contact us for any VAT-related queries.\n\n{{signature}}'
+          })
+        } else if (value === 'company_secretarial') {
+          setComposeData({
+            ...composeData,
+            subject: 'Company Secretarial Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to provide company secretarial services for your business.\n\n**Company Details:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Services: {{services}}\n\n**Our Company Secretarial Services Include:**\n- Annual confirmation statement filing\n- Companies House compliance\n- Statutory register maintenance\n- Director and shareholder changes\n- Corporate governance advice\n\nPlease contact us for any company secretarial requirements.\n\n{{signature}}'
+          })
+        } else if (value === 'management_accounts') {
+          setComposeData({
+            ...composeData,
+            subject: 'Management Accounts - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nPlease find your latest management accounts summary:\n\n**Financial Performance:**\n- Company: {{client_name}} ({{company_number}})\n- Period Ending: {{year_end}}\n- Turnover: {{turnover}}\n- Net Profit: {{net_profit}}\n- Industry: {{industry_sector}}\n\n**Services Provided:**\n{{services}}\n\n**Key Insights:**\nWe have prepared detailed management accounts to help you understand your business performance and make informed decisions.\n\nPlease contact us to discuss these results.\n\n{{signature}}'
+          })
+        } else if (value === 'business_advisory') {
+          setComposeData({
+            ...composeData,
+            subject: 'Business Advisory Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to provide business advisory services to support your growth.\n\n**Business Overview:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Current Turnover: {{turnover}}\n- Net Profit: {{net_profit}}\n- Services: {{services}}\n\n**Our Advisory Services Include:**\n- Strategic business planning\n- Financial forecasting\n- Performance improvement\n- Growth strategy development\n- Risk management advice\n\nLet us help you achieve your business objectives.\n\n{{signature}}'
+          })
+        } else if (value === 'aml_kyc') {
+          setComposeData({
+            ...composeData,
+            subject: 'AML/KYC Compliance - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are writing to confirm your AML/KYC compliance status.\n\n**Client Details:**\n- Company: {{client_name}} ({{company_number}})\n- Industry: {{industry_sector}}\n- Services: {{services}}\n\n**AML/KYC Services Include:**\n- Customer due diligence\n- Enhanced due diligence\n- Ongoing monitoring\n- Suspicious activity reporting\n- Compliance training\n\nPlease contact us for any compliance-related queries.\n\n{{signature}}'
+          })
+        } else if (value === 'self_assessment') {
+          setComposeData({
+            ...composeData,
+            subject: 'Self Assessment Services - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to assist with your Self Assessment tax return.\n\n**Personal Tax Details:**\n- Client: {{client_name}}\n- Tax Year: {{year_end}}\n- Services: {{services}}\n\n**Our Self Assessment Services Include:**\n- Income tax calculation\n- Capital gains tax advice\n- Tax planning strategies\n- HMRC correspondence\n- Payment on account advice\n\nPlease provide your tax documents at your earliest convenience.\n\n{{signature}}'
+          })
+        } else if (value === 'charity_accounts') {
+          setComposeData({
+            ...composeData,
+            subject: 'Charity Accounts Preparation - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nWe are pleased to prepare your charity accounts in accordance with SORP requirements.\n\n**Charity Details:**\n- Charity: {{client_name}} ({{company_number}})\n- Year End: {{year_end}}\n- Services: {{services}}\n\n**Our Charity Services Include:**\n- SORP compliant accounts preparation\n- Charity Commission filing\n- Fund accounting\n- Trustee reporting\n- Regulatory compliance\n\nWe look forward to supporting your charitable objectives.\n\n{{signature}}'
+          })
+        } else if (value === 'time_management') {
+          setComposeData({
+            ...composeData,
+            subject: 'Time Management & Billing - {{client_name}}',
+            body: 'Dear {{client_name}},\n\nPlease find your time and billing summary below:\n\n**Engagement Details:**\n- Client: {{client_name}} ({{company_number}})\n- Services: {{services}}\n- Period: {{year_end}}\n\n**Time Summary:**\nDetailed time tracking and billing information will be provided separately.\n\n**Services Delivered:**\n{{services}}\n\nPlease contact us if you have any questions about your billing.\n\n{{signature}}'
           })
         }
         break
+      case 'insertVariable': {
+        const currentBody = composeData.body
+        let variableText = ''
+        
+        if (value && clientTemplateData[value]) {
+          variableText = clientTemplateData[value]
+        } else {
+          switch (value) {
+            case 'client_name':
+              variableText = '{{client_name}}'
+              break
+            case 'company_number':
+              variableText = '{{company_number}}'
+              break
+            case 'vat_number':
+              variableText = '{{vat_number}}'
+              break
+            case 'turnover':
+              variableText = '{{turnover}}'
+              break
+            case 'tax_payable':
+              variableText = '{{tax_payable}}'
+              break
+            case 'net_profit':
+              variableText = '{{net_profit}}'
+              break
+            case 'services':
+              variableText = '{{services}}'
+              break
+            case 'industry_sector':
+              variableText = '{{industry_sector}}'
+              break
+            case 'year_end':
+              variableText = '{{year_end}}'
+              break
+            case 'practice_name':
+              variableText = '{{practice_name}}'
+              break
+            case 'signature':
+              variableText = '{{signature}}'
+              break
+            case 'profit_margin':
+              variableText = '{{profit_margin}}'
+              break
+            case 'total_assets':
+              variableText = '{{total_assets}}'
+              break
+            case 'total_liabilities':
+              variableText = '{{total_liabilities}}'
+              break
+            case 'working_capital':
+              variableText = '{{working_capital}}'
+              break
+            case 'cash_flow':
+              variableText = '{{cash_flow}}'
+              break
+            case 'employee_count':
+              variableText = '{{employee_count}}'
+              break
+            case 'incorporation_date':
+              variableText = '{{incorporation_date}}'
+              break
+            case 'registered_address':
+              variableText = '{{registered_address}}'
+              break
+            default:
+              variableText = `{{${value}}}`
+          }
+        }
+        
+        setComposeData({
+          ...composeData,
+          body: currentBody + variableText
+        })
+        break
+      }
       default:
         console.log(`Format action ${action} not implemented yet`)
     }
@@ -272,6 +474,10 @@ export default function EmailSystem() {
       ))
     }, 1500)
   }
+
+  useEffect(() => {
+    fetchAvailableClients()
+  }, [])
 
   if (isMobile) {
     return (
@@ -678,10 +884,28 @@ export default function EmailSystem() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium w-12">Client:</span>
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        fetchClientTemplateData(e.target.value)
+                      }
+                    }}
+                    className="flex-1 px-2 py-1 border rounded text-sm h-8"
+                  >
+                    <option value="">Select client for template data...</option>
+                    {availableClients.map(client => (
+                      <option key={client.id} value={client.id}>
+                        {client.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
                   <span className="text-sm font-medium w-12">Subject:</span>
                   <Input
                     placeholder="Enter subject"
-                    value={composeData.subject}
+                    value={replaceTemplateVariables(composeData.subject, clientTemplateData)}
                     onChange={(e) => setComposeData({...composeData, subject: e.target.value})}
                     className="flex-1 h-8"
                   />
@@ -699,7 +923,7 @@ export default function EmailSystem() {
               <div className="flex-1 p-3">
                 <textarea
                   placeholder="Type your message..."
-                  value={composeData.body}
+                  value={replaceTemplateVariables(composeData.body, clientTemplateData)}
                   onChange={(e) => setComposeData({...composeData, body: e.target.value})}
                   className="w-full h-full resize-none border-none outline-none text-sm"
                 />

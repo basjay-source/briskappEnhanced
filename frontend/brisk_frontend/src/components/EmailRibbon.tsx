@@ -195,28 +195,168 @@ export default function EmailRibbon({
   )
 
   const renderTemplatesTab = () => (
-    <div className="flex items-center gap-2 p-3 bg-white border-b">
-      <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'professional')}>
-        <FileText className="h-4 w-4 mr-2" />
-        Professional
-      </Button>
-      
-      <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'followup')}>
-        <FileText className="h-4 w-4 mr-2" />
-        Follow-up
-      </Button>
-      
-      <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'meeting')}>
-        <FileText className="h-4 w-4 mr-2" />
-        Meeting Request
-      </Button>
+    <div className="p-3 bg-white border-b overflow-x-auto">
+      <div className="grid grid-cols-2 gap-6">
+        {/* Left side - Service Templates */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-sm font-medium text-blue-700">Service Templates:</span>
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'professional')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Professional
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'followup')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Follow-up
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'meeting')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Meeting
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'accounts_preparation')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Accounts Prep
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'tax_compliance')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Tax Compliance
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'payroll_services')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Payroll
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'bookkeeping_services')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Bookkeeping
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'vat_services')}>
+              <FileText className="h-4 w-4 mr-2" />
+              VAT Services
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'company_secretarial')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Company Sec
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'management_accounts')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Mgmt Accounts
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'business_advisory')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Advisory
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'aml_kyc')}>
+              <FileText className="h-4 w-4 mr-2" />
+              AML/KYC
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'self_assessment')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Self Assessment
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'charity_accounts')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Charity Accounts
+            </Button>
+            
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'time_management')}>
+              <FileText className="h-4 w-4 mr-2" />
+              Time and Billing
+            </Button>
+          </div>
 
-      <Separator orientation="vertical" className="h-8" />
+          <div className="flex items-center gap-2 pt-2 border-t">
+            <Button variant="ghost" size="sm" onClick={() => onFormatAction('saveTemplate')}>
+              <Archive className="h-4 w-4 mr-2" />
+              Save Template
+            </Button>
+          </div>
+        </div>
 
-      <Button variant="ghost" size="sm" onClick={() => onFormatAction('saveTemplate')}>
-        <Archive className="h-4 w-4 mr-2" />
-        Save Template
-      </Button>
+        {/* Right side - Template Variables */}
+        <div className="space-y-2 border-l pl-6">
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-sm font-medium text-blue-700">Client Data:</span>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'client_name')}>
+              Client Name
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'company_number')}>
+              Company No.
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'vat_number')}>
+              VAT No.
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'industry_sector')}>
+              Industry
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'year_end')}>
+              Year End
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'incorporation_date')}>
+              Inc. Date
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'registered_address')}>
+              Address
+            </Button>
+          </div>
+          
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-sm font-medium text-blue-700">Financial Data:</span>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'turnover')}>
+              Turnover
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'net_profit')}>
+              Net Profit
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'tax_payable')}>
+              Tax Payable
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'profit_margin')}>
+              Profit Margin
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'total_assets')}>
+              Total Assets
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'total_liabilities')}>
+              Liabilities
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'working_capital')}>
+              Working Capital
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'cash_flow')}>
+              Cash Flow
+            </Button>
+          </div>
+          
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-sm font-medium text-blue-700">Services and Other:</span>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'services')}>
+              Services
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'employee_count')}>
+              Employees
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'practice_name')}>
+              Practice Name
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'signature')}>
+              Signature
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 
