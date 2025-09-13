@@ -29,7 +29,7 @@ export default function PayslipTemplateManager() {
     },
     theme_colors: {
       primary: '#0B5FFF',
-      secondary: '#FF7A00',
+      secondary: '#1E40AF',
       accent: '#10B981',
       text: '#1F2937',
       background: '#FFFFFF'
@@ -51,7 +51,7 @@ export default function PayslipTemplateManager() {
       template_type: 'modern',
       branding: {
         primary_color: '#0B5FFF',
-        secondary_color: '#FF7A00',
+        secondary_color: '#1E40AF',
         accent_color: '#10B981',
         text_color: '#1F2937',
         background_color: '#FFFFFF'
@@ -193,7 +193,7 @@ export default function PayslipTemplateManager() {
         template_type: (newTemplate.template_type as PayslipTemplate['template_type']) || 'modern',
         branding: {
           primary_color: '#0B5FFF',
-          secondary_color: '#FF7A00',
+          secondary_color: '#1E40AF',
           accent_color: '#10B981',
           text_color: '#1F2937',
           background_color: '#FFFFFF'
