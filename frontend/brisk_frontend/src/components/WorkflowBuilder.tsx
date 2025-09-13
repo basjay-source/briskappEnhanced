@@ -124,7 +124,7 @@ export default function WorkflowBuilder() {
     })
   }
 
-  const updateStep = (stepId: string, field: keyof WorkflowStep, value: any) => {
+  const updateStep = (stepId: string, field: keyof WorkflowStep, value: string | number | string[] | boolean) => {
     setTemplate({
       ...template,
       steps: template.steps.map(step =>

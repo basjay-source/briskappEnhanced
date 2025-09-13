@@ -1,12 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 from datetime import datetime, date
 from decimal import Decimal
 
 from app.database import get_db
-from app.models import Tenant, User, Subscription, FeatureFlag, AuditLog
+from app.models import (
+    Tenant, User, Subscription, FeatureFlag, AuditLog,
+    PlanVersion, Promotion, UsageMeter, Invoice, Experiment, ApprovalRequest,
+    AdminPersona, SubscriptionStatus, InvoiceStatus, PromotionStatus, ExperimentStatus
+)
 
 router = APIRouter()
 
@@ -298,4 +302,296 @@ def get_system_metrics(
             "environment": "development",
             "uptime": "24h 15m"
         }
+    }
+
+
+class PlanVersionCreate(BaseModel):
+    name: str
+    version: str
+    features: Dict[str, Any] = {}
+    limits: Dict[str, Any] = {}
+    pricing: Dict[str, Any] = {}
+    meters: List[Dict[str, Any]] = []
+    regions: List[Dict[str, Any]] = []
+    active_from: Optional[datetime] = None
+
+class PromotionCreate(BaseModel):
+    code: str
+    name: str
+    type: str
+    value: Decimal
+    duration: Optional[str] = None
+    eligibility: Optional[str] = None
+    stacking: str = "exclusive"
+    caps: Dict[str, Any] = {}
+    expires_at: Optional[datetime] = None
+
+class ExperimentCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    variants: List[Dict[str, Any]] = []
+    audience: Dict[str, Any] = {}
+
+class ApprovalRequestCreate(BaseModel):
+    action_type: str
+    entity_type: str
+    entity_id: Optional[str] = None
+    data: Dict[str, Any] = {}
+    required_approvers: List[str] = []
+
+@router.post("/plan-versions")
+def create_plan_version(
+    plan_data: PlanVersionCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    plan_version = PlanVersion(
+        name=plan_data.name,
+        version=plan_data.version,
+        features=plan_data.features,
+        limits=plan_data.limits,
+        pricing=plan_data.pricing,
+        meters=plan_data.meters,
+        regions=plan_data.regions,
+        active_from=plan_data.active_from,
+        status="draft"
+    )
+    
+    db.add(plan_version)
+    db.commit()
+    db.refresh(plan_version)
+    
+    return {
+        "plan_version": plan_version,
+        "message": "Plan version created successfully"
+    }
+
+@router.get("/plan-versions")
+def get_plan_versions(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    plan_versions = db.query(PlanVersion).all()
+    return {
+        "plan_versions": plan_versions,
+        "total": len(plan_versions)
+    }
+
+@router.post("/promotions")
+def create_promotion(
+    promo_data: PromotionCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    promotion = Promotion(
+        code=promo_data.code,
+        name=promo_data.name,
+        type=promo_data.type,
+        value=promo_data.value,
+        duration=promo_data.duration,
+        eligibility=promo_data.eligibility,
+        stacking=promo_data.stacking,
+        caps=promo_data.caps,
+        expires_at=promo_data.expires_at,
+        status=PromotionStatus.DRAFT
+    )
+    
+    db.add(promotion)
+    db.commit()
+    db.refresh(promotion)
+    
+    return {
+        "promotion": promotion,
+        "message": "Promotion created successfully"
+    }
+
+@router.get("/promotions")
+def get_promotions(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    promotions = db.query(Promotion).all()
+    return {
+        "promotions": promotions,
+        "total": len(promotions)
+    }
+
+@router.post("/experiments")
+def create_experiment(
+    exp_data: ExperimentCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    experiment = Experiment(
+        name=exp_data.name,
+        description=exp_data.description,
+        variants=exp_data.variants,
+        audience=exp_data.audience,
+        status=ExperimentStatus.DRAFT
+    )
+    
+    db.add(experiment)
+    db.commit()
+    db.refresh(experiment)
+    
+    return {
+        "experiment": experiment,
+        "message": "Experiment created successfully"
+    }
+
+@router.get("/experiments")
+def get_experiments(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    experiments = db.query(Experiment).all()
+    return {
+        "experiments": experiments,
+        "total": len(experiments)
+    }
+
+@router.post("/entitlements/resolve")
+def resolve_entitlements(
+    tenant_id: str,
+    feature: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    subscription = db.query(Subscription).filter(
+        Subscription.tenant_id == tenant_id,
+        Subscription.status == SubscriptionStatus.ACTIVE
+    ).first()
+    
+    if not subscription:
+        return {
+            "entitled": False,
+            "reason": "No active subscription",
+            "limits": {}
+        }
+    
+    plan_version = db.query(PlanVersion).filter(
+        PlanVersion.id == subscription.plan_version_id
+    ).first()
+    
+    if not plan_version:
+        return {
+            "entitled": False,
+            "reason": "Plan version not found",
+            "limits": {}
+        }
+    
+    entitled_features = plan_version.features
+    limits = plan_version.limits
+    
+    if feature and feature not in entitled_features:
+        return {
+            "entitled": False,
+            "reason": f"Feature '{feature}' not in plan",
+            "limits": limits
+        }
+    
+    return {
+        "entitled": True,
+        "features": entitled_features,
+        "limits": limits,
+        "usage": subscription.usage,
+        "source": f"{plan_version.name} v{plan_version.version}"
+    }
+
+@router.post("/usage-meters")
+def record_usage(
+    tenant_id: str,
+    meter_key: str,
+    value: int,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    now = datetime.now()
+    period_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    
+    usage_meter = db.query(UsageMeter).filter(
+        UsageMeter.tenant_id == tenant_id,
+        UsageMeter.meter_key == meter_key,
+        UsageMeter.period_start == period_start
+    ).first()
+    
+    if usage_meter:
+        usage_meter.value += value
+    else:
+        usage_meter = UsageMeter(
+            tenant_id=tenant_id,
+            meter_key=meter_key,
+            value=value,
+            period_start=period_start,
+            period_end=period_start.replace(month=period_start.month + 1)
+        )
+        db.add(usage_meter)
+    
+    db.commit()
+    
+    return {
+        "usage_meter": usage_meter,
+        "message": "Usage recorded successfully"
+    }
+
+@router.get("/usage-meters/{tenant_id}")
+def get_tenant_usage(
+    tenant_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    usage_meters = db.query(UsageMeter).filter(
+        UsageMeter.tenant_id == tenant_id
+    ).all()
+    
+    return {
+        "usage_meters": usage_meters,
+        "total": len(usage_meters)
+    }
+
+@router.post("/approval-requests")
+def create_approval_request(
+    approval_data: ApprovalRequestCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    approval_request = ApprovalRequest(
+        requester_id=request.state.user_id,
+        action_type=approval_data.action_type,
+        entity_type=approval_data.entity_type,
+        entity_id=approval_data.entity_id,
+        data=approval_data.data,
+        required_approvers=approval_data.required_approvers,
+        status="pending"
+    )
+    
+    db.add(approval_request)
+    db.commit()
+    db.refresh(approval_request)
+    
+    return {
+        "approval_request": approval_request,
+        "message": "Approval request created successfully"
+    }
+
+@router.get("/approval-requests")
+def get_approval_requests(
+    status: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(ApprovalRequest)
+    
+    if status:
+        query = query.filter(ApprovalRequest.status == status)
+    
+    approval_requests = query.all()
+    
+    return {
+        "approval_requests": approval_requests,
+        "total": len(approval_requests)
     }

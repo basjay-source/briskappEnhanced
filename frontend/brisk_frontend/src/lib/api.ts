@@ -75,6 +75,11 @@ class ApiClient {
     return this.request<{ jobs: Job[] }>(`/practice/jobs?${params}`)
   }
 
+  async getTimeEntries(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/practice/time-entries?${params}`)
+  }
+
   async createJob(data: Record<string, unknown>) {
     return this.request('/practice/jobs', {
       method: 'POST',
@@ -101,8 +106,9 @@ class ApiClient {
     })
   }
 
-  async getClients() {
-    return this.request<Client[]>('/clients')
+  async getClients(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request<Client[]>(`/books/clients?${params}`)
   }
 
   async createClient(data: Record<string, unknown>) {
@@ -193,18 +199,18 @@ class ApiClient {
 
   async getInvoices(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/invoices?${params}`)
+    return this.request(`/books/invoices?${params}`)
   }
 
   async createInvoice(data: Record<string, unknown>) {
-    return this.request('/bookkeeping/invoices', {
+    return this.request('/books/invoices', {
       method: 'POST',
       body: JSON.stringify(data)
     })
   }
 
   async updateInvoice(invoiceId: string, data: Record<string, unknown>) {
-    return this.request(`/bookkeeping/invoices/${invoiceId}`, {
+    return this.request(`/books/invoices/${invoiceId}`, {
       method: 'PUT',
       body: JSON.stringify(data)
     })
@@ -212,18 +218,18 @@ class ApiClient {
 
   async getBills(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/bills?${params}`)
+    return this.request(`/books/bills?${params}`)
   }
 
   async createBill(data: Record<string, unknown>) {
-    return this.request('/bookkeeping/bills', {
+    return this.request('/books/bills', {
       method: 'POST',
       body: JSON.stringify(data)
     })
   }
 
   async updateBill(billId: string, data: Record<string, unknown>) {
-    return this.request(`/bookkeeping/bills/${billId}`, {
+    return this.request(`/books/bills/${billId}`, {
       method: 'PUT',
       body: JSON.stringify(data)
     })
@@ -231,18 +237,18 @@ class ApiClient {
 
   async getBankTransactions(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/transactions?${params}`)
+    return this.request(`/books/transactions?${params}`)
   }
 
   async createBankTransaction(data: Record<string, unknown>) {
-    return this.request('/bookkeeping/transactions', {
+    return this.request('/books/transactions', {
       method: 'POST',
       body: JSON.stringify(data)
     })
   }
 
   async reconcileBankTransaction(transactionId: string, data: Record<string, unknown>) {
-    return this.request(`/bookkeeping/transactions/${transactionId}/reconcile`, {
+    return this.request(`/books/transactions/${transactionId}/reconcile`, {
       method: 'POST',
       body: JSON.stringify(data)
     })
@@ -250,11 +256,11 @@ class ApiClient {
 
   async getQuotes(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/quotes?${params}`)
+    return this.request(`/books/quotes?${params}`)
   }
 
   async createQuote(data: Record<string, unknown>) {
-    return this.request('/bookkeeping/quotes', {
+    return this.request('/books/quotes', {
       method: 'POST',
       body: JSON.stringify(data)
     })
@@ -262,11 +268,11 @@ class ApiClient {
 
   async getPurchaseOrders(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/purchase-orders?${params}`)
+    return this.request(`/books/purchase-orders?${params}`)
   }
 
   async createPurchaseOrder(data: Record<string, unknown>) {
-    return this.request('/bookkeeping/purchase-orders', {
+    return this.request('/books/purchase-orders', {
       method: 'POST',
       body: JSON.stringify(data)
     })
@@ -274,12 +280,22 @@ class ApiClient {
 
   async getCustomers(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/customers?${params}`)
+    return this.request(`/books/customers?${params}`)
   }
 
   async getSuppliers(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request(`/bookkeeping/suppliers?${params}`)
+    return this.request(`/books/suppliers?${params}`)
+  }
+
+  async getJobCodes(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/practice/job-codes?${params}`)
+  }
+
+  async getEmployeeRates(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/practice/employee-rates?${params}`)
   }
 }
 
