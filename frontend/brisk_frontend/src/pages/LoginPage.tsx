@@ -20,8 +20,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-blue-500 flex items-center justify-center p-6">
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <BriskLogo className="h-32 w-auto" showText={false} />
+          <div className="mb-4 max-w-md mx-auto">
+            <BriskLogo className="w-full" showText={false} />
           </div>
           <p className="text-white font-bold">Professional Accountancy Practice Management</p>
         </div>
