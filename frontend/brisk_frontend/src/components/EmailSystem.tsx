@@ -12,13 +12,6 @@ import {
   Search,
   Filter,
   MoreHorizontal,
-  Bold,
-  Italic,
-  Underline,
-  Link,
-  Image,
-  Smile,
-  Calendar,
   Clock,
   Minimize2,
   Maximize2,
@@ -32,6 +25,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useIsMobile } from '@/hooks/use-mobile'
+import EmailRibbon from './EmailRibbon'
 
 interface Email {
   id: string
@@ -81,6 +75,7 @@ export default function EmailSystem() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [showAccountSettings, setShowAccountSettings] = useState(false)
+  const [activeRibbonTab, setActiveRibbonTab] = useState('home')
   const [connectedAccounts, setConnectedAccounts] = useState<EmailAccount[]>([
     {
       id: '1',
@@ -187,6 +182,42 @@ export default function EmailSystem() {
       body: `\n\n--- Original Message ---\nFrom: ${email.from}\nSent: ${email.timestamp}\nSubject: ${email.subject}\n\n${email.body}`
     })
     setIsComposing(true)
+  }
+
+  const handleFormatAction = (action: string, value?: string) => {
+    console.log('Format action:', action, value)
+    
+    switch (action) {
+      case 'send':
+        handleSend()
+        break
+      case 'schedule':
+        console.log('Schedule email')
+        break
+      case 'loadTemplate':
+        if (value === 'professional') {
+          setComposeData({
+            ...composeData,
+            subject: 'Professional Inquiry',
+            body: 'Dear [Client Name],\n\nI hope this email finds you well. I am writing to...\n\nBest regards,\n[Your Name]'
+          })
+        } else if (value === 'followup') {
+          setComposeData({
+            ...composeData,
+            subject: 'Follow-up: [Previous Subject]',
+            body: 'Dear [Client Name],\n\nI wanted to follow up on our previous conversation regarding...\n\nPlease let me know if you have any questions.\n\nBest regards,\n[Your Name]'
+          })
+        } else if (value === 'meeting') {
+          setComposeData({
+            ...composeData,
+            subject: 'Meeting Request',
+            body: 'Dear [Client Name],\n\nI would like to schedule a meeting to discuss...\n\nPlease let me know your availability.\n\nBest regards,\n[Your Name]'
+          })
+        }
+        break
+      default:
+        console.log(`Format action ${action} not implemented yet`)
+    }
   }
 
   const formatTimestamp = (timestamp: string) => {
@@ -613,7 +644,7 @@ export default function EmailSystem() {
       </div>
 
       {isComposing && (
-        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-96 h-96'} bg-white border border-gray-300 rounded-t-lg shadow-lg z-50 flex flex-col`}>
+        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border border-gray-300 rounded-t-lg shadow-lg z-50 flex flex-col`}>
           <div className="flex items-center justify-between p-3 border-b bg-gray-50 rounded-t-lg">
             <h4 className="font-medium text-sm">New Message</h4>
             <div className="flex items-center gap-1">
@@ -657,30 +688,13 @@ export default function EmailSystem() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 p-2 border-b">
-                <Button variant="ghost" size="sm">
-                  <Bold className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Italic className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Underline className="h-4 w-4" />
-                </Button>
-                <div className="w-px h-4 bg-gray-300 mx-1" />
-                <Button variant="ghost" size="sm">
-                  <Link className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Image className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Paperclip className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Smile className="h-4 w-4" />
-                </Button>
-              </div>
+              <EmailRibbon
+                activeTab={activeRibbonTab}
+                onTabChange={setActiveRibbonTab}
+                onFormatAction={handleFormatAction}
+                composeData={composeData}
+                onComposeDataChange={setComposeData}
+              />
 
               <div className="flex-1 p-3">
                 <textarea
@@ -689,30 +703,6 @@ export default function EmailSystem() {
                   onChange={(e) => setComposeData({...composeData, body: e.target.value})}
                   className="w-full h-full resize-none border-none outline-none text-sm"
                 />
-              </div>
-
-              <div className="p-3 border-t flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Button onClick={handleSend} size="sm" className="bg-brisk-primary hover:bg-brisk-primary-600">
-                    <Send className="h-4 w-4 mr-2" />
-                    Send
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule
-                  </Button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <select
-                    value={composeData.priority}
-                    onChange={(e) => setComposeData({...composeData, priority: e.target.value as 'low' | 'normal' | 'high'})}
-                    className="text-xs border rounded px-2 py-1"
-                  >
-                    <option value="low">Low Priority</option>
-                    <option value="normal">Normal</option>
-                    <option value="high">High Priority</option>
-                  </select>
-                </div>
               </div>
             </>
           )}
