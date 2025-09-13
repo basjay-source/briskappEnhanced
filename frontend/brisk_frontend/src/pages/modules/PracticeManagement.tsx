@@ -27,7 +27,7 @@ import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import KPICard from '@/components/KPICard'
-import EmailSystem from '@/components/EmailSystem'
+import NewEmailStudio from '@/components/NewEmailStudio'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 import AIPromptSection from '../../components/AIPromptSection'
@@ -667,7 +667,7 @@ export default function PracticeManagement() {
           </Button>
         </div>
       </div>
-      <EmailSystem />
+      <NewEmailStudio />
     </div>
   )
 
