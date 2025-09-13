@@ -15,7 +15,7 @@ export default function BriskLogo({ className, animated = false, showText = true
           src={briskPracticeLogo}
           alt="Brisk Practice Suite"
           className={cn(
-            "h-8 w-auto object-contain relative z-10",
+            "h-16 w-auto object-contain relative z-10",
             animated && "animate-pulse"
           )}
         />
