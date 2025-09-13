@@ -23,8 +23,8 @@ export default function LoginPage() {
           <div className="flex justify-center mb-4">
             <BriskLogo className="h-20 w-20" animated showText={false} />
           </div>
-          <h1 className="text-4xl font-bold text-blue-600 mb-2">Brisk Practice Suite</h1>
-          <p className="text-gray-600">Professional Accountancy Practice Management</p>
+          <BriskLogo className="h-16 w-auto mb-2" showText={true} />
+          <p className="text-white font-bold">Professional Accountancy Practice Management</p>
         </div>
         
         <Card className="w-full shadow-lg border-0">
