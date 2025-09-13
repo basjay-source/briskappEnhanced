@@ -30,7 +30,7 @@ export default function LoginPage() {
         <Card className="w-full shadow-lg border-0">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-orange-600">
               Sign in to your Brisk Practice Suite account
             </CardDescription>
           </CardHeader>
