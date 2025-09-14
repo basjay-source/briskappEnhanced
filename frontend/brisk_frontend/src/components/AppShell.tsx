@@ -126,7 +126,7 @@ export default function AppShell() {
               />
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-900 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
                     <span className="text-sm font-bold">Search Results</span>
                     <Button 
@@ -139,7 +139,7 @@ export default function AppShell() {
                   </div>
                   
                   {searchLoading ? (
-                    <div className="p-4 text-center text-gray-500">Searching...</div>
+                    <div className="p-4 text-center text-black">Searching...</div>
                   ) : searchResults.length > 0 ? (
                     <div className="max-h-80 overflow-y-auto">
                       {searchResults.map((result, index) => (
@@ -149,10 +149,10 @@ export default function AppShell() {
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-bold text-sm">
+                              <p className="font-bold text-sm text-black">
                                 {result.title || result.name || result.statement_type}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-black">
                                 {result.module} • {result.type}
                               </p>
                             </div>
@@ -161,7 +161,7 @@ export default function AppShell() {
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-gray-500">No results found</div>
+                    <div className="p-4 text-center text-black">No results found</div>
                   )}
                 </div>
               )}
