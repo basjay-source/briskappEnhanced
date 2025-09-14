@@ -264,7 +264,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Details",
+        title: "Step 1: Company Details - Enter proposed company name, type and registered office address",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,7 +304,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Share Capital",
+        title: "Step 2: Share Capital - Enter share capital details, number of shares and nominal value",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -354,7 +354,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Directors Information",
+        title: "Step 2: Directors Information - Enter director personal details and service address",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -410,7 +410,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Company Secretary",
+        title: "Step 4: Company Secretary - Enter company secretary details and service address",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -449,7 +449,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Shareholders",
+        title: "Step 5: Shareholders - Enter shareholder details and share allocation information",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -485,7 +485,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "PSC Information",
+        title: "Step 3: PSC Information - Enter People with Significant Control details and ownership percentages",
         component: (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -530,7 +530,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Articles of Association",
+        title: "Step 7: Articles of Association - Choose standard model articles or upload custom articles of association",
         component: (
           <div className="space-y-4">
             <div>
@@ -558,7 +558,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration & Submission",
+        title: "Step 8: Declaration & Submission - Review all information and submit your application to Companies House",
         component: (
           <div className="space-y-4">
             <div className="bg-blue-50 p-4 rounded-lg">
@@ -3333,14 +3333,27 @@ export default function CompanySecretarial() {
   }
 
   const renderSA100Form = () => {
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
+    const handleSubmit = (data: Record<string, string>) => {
+      console.log('Submitting SA100 form:', data)
+    }
+
+    const handleSaveDraft = (data: Record<string, string>) => {
+      console.log('Saving SA100 draft:', data)
+    }
+
     return (
       <FormWizard
         title="Self Assessment (SA100)"
         logoComponent={<HMRCLogo className="h-16 w-16" />}
         colorScheme="green"
+        formData={formData}
+        onSubmit={handleSubmit}
+        onSaveDraft={handleSaveDraft}
         pages={[
           {
-            title: "Personal Details",
+            title: "Step 1: Personal Details - Enter your tax reference and personal information",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3389,7 +3402,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Employment Income",
+            title: "Step 2: Employment Income - Report your employment earnings and tax deducted",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3434,7 +3447,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Self Employment",
+            title: "Step 3: Self Employment - Declare business income, expenses and profit",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3479,7 +3492,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Other Income",
+            title: "Step 4: Other Income - Report additional income sources and investments",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3524,7 +3537,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Tax Calculation",
+            title: "Step 3: Tax Calculation - Complete final tax calculations and review before submission",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3583,14 +3596,27 @@ export default function CompanySecretarial() {
   }
 
   const renderCT600Form = () => {
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
+    const handleSubmit = (data: Record<string, string>) => {
+      console.log('Submitting CT600 form:', data)
+    }
+
+    const handleSaveDraft = (data: Record<string, string>) => {
+      console.log('Saving CT600 draft:', data)
+    }
+
     return (
       <FormWizard
         title="Corporation Tax (CT600)"
         logoComponent={<HMRCLogo className="h-16 w-16" />}
         colorScheme="green"
+        formData={formData}
+        onSubmit={handleSubmit}
+        onSaveDraft={handleSaveDraft}
         pages={[
           {
-            title: "Company Details",
+            title: "Step 1: Company Details - Enter company information and accounting period",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3635,7 +3661,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Profit and Loss",
+            title: "Step 2: Profit and Loss - Enter profit and loss account information and financial statements",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3680,7 +3706,7 @@ export default function CompanySecretarial() {
             )
           },
           {
-            title: "Tax Calculation",
+            title: "Step 3: Tax Calculation - Complete final tax calculations and review before submission",
             component: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3751,7 +3777,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Employee details",
+        title: "Step 1: Employee Details - Enter employee personal and employment information",
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border border-green-200 p-4 rounded">
@@ -3858,7 +3884,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Cars and car fuel",
+        title: "Step 2: Cars and car fuel - Enter company car and fuel benefit details for employees",
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border border-green-200 p-4 rounded">
@@ -4005,7 +4031,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Medical treatment and insurance",
+        title: "Step 3: Medical treatment and insurance - Enter medical benefits and private health insurance provided to employees",
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border border-green-200 p-4 rounded">
@@ -4099,7 +4125,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Other benefits",
+        title: "Step 4: Other benefits - Enter other taxable benefits and expenses provided to employees",
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border border-green-200 p-4 rounded">
@@ -4275,7 +4301,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Employment Details",
+        title: "Step 1: Employment Details - Enter employer and employment information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4323,7 +4349,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Income & Tax",
+        title: "Step 2: Income & Tax - Enter employment income, tax deducted and National Insurance contributions",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4400,7 +4426,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Expenses & Deductions",
+        title: "Step 3: Expenses & Deductions - Enter allowable employment expenses and tax deductions",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4556,7 +4582,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Income & Expenses",
+        title: "Step 2: Income & Expenses - Enter business income and expense information for self-employment",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4626,7 +4652,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Capital Allowances & Adjustments",
+        title: "Step 3: Capital Allowances & Adjustments - Enter capital allowances and business adjustments for tax calculations",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4725,7 +4751,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Partnership Details",
+        title: "Step 1: Partnership Details - Enter partnership business information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4779,7 +4805,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Partnership Income",
+        title: "Step 2: Partnership Income - Enter partnership profit share and income details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4844,7 +4870,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Adjustments & Additional Information",
+        title: "Step 3: Adjustments & Additional Information - Enter partnership adjustments and additional income details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4944,7 +4970,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Property Details",
+        title: "Step 1: Property Details - Enter UK property income information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5015,7 +5041,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Property Income",
+        title: "Step 2: Property Income - Enter UK property rental income and allowable expenses",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5085,7 +5111,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Property Expenses",
+        title: "Step 3: Property Expenses - Enter property rental expenses and allowable deductions",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5213,7 +5239,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Foreign Income Details",
+        title: "Step 1: Foreign Income Details - Enter foreign income sources and tax credit information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5298,7 +5324,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Foreign Tax & Relief",
+        title: "Step 2: Foreign Tax & Relief - Enter foreign tax credits and relief information for overseas income",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5374,7 +5400,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Additional Information",
+        title: "Step 2: Additional Information - Enter foreign tax credits and additional foreign income details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6598,7 +6624,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "VAT Liability",
+        title: "Step 2: VAT Liability - Enter VAT liability and registration information for your business",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6662,7 +6688,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Business Activities",
+        title: "Step 3: Business Activities - Enter business activities and VAT scheme details for registration",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6727,7 +6753,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Contact Details",
+        title: "Step 2: Contact Details - Enter business contact information and correspondence address",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
