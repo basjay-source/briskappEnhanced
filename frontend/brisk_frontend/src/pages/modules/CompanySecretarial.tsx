@@ -3319,9 +3319,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA100Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA100 form:', data)
     }
@@ -3348,14 +3345,13 @@ export default function CompanySecretarial() {
                     <Label htmlFor="utr">Unique Taxpayer Reference (UTR)</Label>
                     <Input 
                       id="utr" 
-                      value={formData.utr || ''} 
-                      onChange={(e) => setFormData({...formData, utr: e.target.value})}
+                      defaultValue="" 
                       placeholder="1234567890" 
                     />
                   </div>
                   <div>
                     <Label htmlFor="taxYear">Tax year</Label>
-                    <Select value={formData.taxYear || ''} onValueChange={(value) => setFormData({...formData, taxYear: value})}>
+                    <Select>
                       <SelectTrigger>
                         <SelectValue placeholder="Select tax year" />
                       </SelectTrigger>
@@ -3370,8 +3366,7 @@ export default function CompanySecretarial() {
                     <Label htmlFor="niNumber">National Insurance Number</Label>
                     <Input 
                       id="niNumber"
-                      value={formData.niNumber || ''} 
-                      onChange={(e) => setFormData({...formData, niNumber: e.target.value})}
+                      defaultValue="" 
                       placeholder="AB123456C" 
                     />
                   </div>
@@ -3380,8 +3375,7 @@ export default function CompanySecretarial() {
                     <Input 
                       id="dateOfBirth"
                       type="date"
-                      value={formData.dateOfBirth || ''} 
-                      onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
+                      defaultValue="" 
                     />
                   </div>
                 </div>
@@ -3574,9 +3568,6 @@ export default function CompanySecretarial() {
   }
 
   const renderCT600Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting CT600 form:', data)
     }
@@ -3735,9 +3726,6 @@ export default function CompanySecretarial() {
   }
 
   const renderP11DForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P11D form:', data)
     }
@@ -4260,9 +4248,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA102Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA102 form:', data)
     }
@@ -4481,9 +4466,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA103SForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA103S form:', data)
     }
@@ -4712,9 +4694,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA104SForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA104S form:', data)
     }
@@ -4932,9 +4911,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA105Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA105 form:', data)
     }
@@ -5202,9 +5178,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA106Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA106 form:', data)
     }
@@ -5464,9 +5437,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA108Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA108 form:', data)
     }
@@ -5745,9 +5715,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA109Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA109 form:', data)
     }
@@ -6012,9 +5979,6 @@ export default function CompanySecretarial() {
   }
 
   const renderCIS300Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting CIS300 form:', data)
     }
@@ -6259,9 +6223,6 @@ export default function CompanySecretarial() {
   }
 
   const renderP35Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P35 form:', data)
     }
@@ -6536,9 +6497,6 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT1Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT1 form:', data)
     }
@@ -6825,9 +6783,6 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT2Form = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT2 form:', data)
     }
