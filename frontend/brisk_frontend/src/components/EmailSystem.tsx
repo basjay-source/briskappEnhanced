@@ -496,7 +496,7 @@ export default function EmailSystem() {
               placeholder="Search emails..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-blue-600 text-white placeholder:text-blue-200 border-blue-900"
+              className="pl-10 bg-blue-600 text-white placeholder:text-black border-blue-900"
             />
           </div>
         </div>
@@ -707,7 +707,7 @@ export default function EmailSystem() {
               placeholder="Search emails..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-blue-600 text-white placeholder:text-blue-200 border-blue-900"
+              className="pl-10 bg-blue-600 text-white placeholder:text-black border-blue-900"
             />
           </div>
         </div>
