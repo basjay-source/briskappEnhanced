@@ -102,7 +102,7 @@ export default function TemplateBrandingEditor({
                 <Input
                   id="secondary-color"
                   type="color"
-                  value={branding.theme_colors?.secondary || '#FF7A00'}
+                  value={branding.theme_colors?.secondary || '#1E40AF'}
                   onChange={(e) => onBrandingChange({
                     ...branding,
                     theme_colors: {
@@ -113,7 +113,7 @@ export default function TemplateBrandingEditor({
                   className="w-16 h-10"
                 />
                 <Input
-                  value={branding.theme_colors?.secondary || '#FF7A00'}
+                  value={branding.theme_colors?.secondary || '#1E40AF'}
                   onChange={(e) => onBrandingChange({
                     ...branding,
                     theme_colors: {
@@ -121,7 +121,7 @@ export default function TemplateBrandingEditor({
                       secondary: e.target.value
                     }
                   })}
-                  placeholder="#FF7A00"
+                  placeholder="#1E40AF"
                 />
               </div>
             </div>
@@ -242,7 +242,7 @@ export default function TemplateBrandingEditor({
                 <p className="text-sm text-gray-600">Sample {templateType} content</p>
                 <div 
                   className="mt-2 px-3 py-1 rounded text-white text-sm inline-block"
-                  style={{ backgroundColor: branding.theme_colors?.secondary || '#FF7A00' }}
+                  style={{ backgroundColor: branding.theme_colors?.secondary || '#1E40AF' }}
                 >
                   Action Button
                 </div>

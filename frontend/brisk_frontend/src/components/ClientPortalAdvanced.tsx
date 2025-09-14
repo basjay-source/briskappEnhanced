@@ -25,7 +25,7 @@ export default function ClientPortalAdvanced({
   whiteLabel = {
     companyName: "Brisk Accountants",
     primaryColor: "#0B5FFF",
-    secondaryColor: "#FF7A00"
+    secondaryColor: "#1E40AF"
   }
 }: ClientPortalProps) {
   const [activeTab, setActiveTab] = useState('dashboard')

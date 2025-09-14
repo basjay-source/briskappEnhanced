@@ -9,8 +9,8 @@
     /* Brisk Theme Colors */
     --brisk-primary: 11 95 255;
     --brisk-accent: 59 130 246;
-    --brisk-background: 255 255 255;
-    --brisk-foreground: 15 23 42;
+    --brisk-background: 30 64 175;
+    --brisk-foreground: 255 255 255;
     --brisk-muted: 248 250 252;
     --brisk-muted-foreground: 100 116 139;
     --brisk-border: 226 232 240;
@@ -29,8 +29,8 @@
   }
   
   .dark {
-    --brisk-background: 2 8 23;
-    --brisk-foreground: 248 250 252;
+    --brisk-background: 30 64 175;
+    --brisk-foreground: 255 255 255;
     --brisk-muted: 15 23 42;
     --brisk-muted-foreground: 148 163 184;
     --brisk-border: 30 41 59;

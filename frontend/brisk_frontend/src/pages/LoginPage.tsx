@@ -20,17 +20,16 @@ export default function LoginPage() {
     <div className="min-h-screen bg-blue-500 flex items-center justify-center p-6">
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <BriskLogo className="h-20 w-20" animated showText={false} />
+          <div className="mb-4 max-w-md mx-auto">
+            <BriskLogo className="w-full" showText={false} />
           </div>
-          <h1 className="text-4xl font-bold text-blue-600 mb-2">Brisk Practice Suite</h1>
-          <p className="text-gray-600">Professional Accountancy Practice Management</p>
+          <p className="text-white font-bold">Professional Accountancy Practice Management</p>
         </div>
         
         <Card className="w-full shadow-lg border-0">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>
+            <CardDescription style={{color: '#FF6B35'}}>
               Sign in to your Brisk Practice Suite account
             </CardDescription>
           </CardHeader>
@@ -58,7 +57,7 @@ export default function LoginPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+              <Button type="submit" className="w-full" style={{backgroundColor: '#FF6B35'}}>
                 Sign In
               </Button>
             </form>
