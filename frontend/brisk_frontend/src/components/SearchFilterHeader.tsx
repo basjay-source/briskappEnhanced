@@ -117,13 +117,13 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
   return (
     <div className={`flex flex-col sm:flex-row gap-4 mb-6 ${className}`}>
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black h-4 w-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
         <Input
           type="text"
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500 text-black"
+          className="pl-10 h-10 border-blue-900 focus:border-blue-500 focus:ring-blue-500 text-white bg-blue-600 placeholder:text-blue-200"
         />
       </div>
 
@@ -133,7 +133,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
+                className="h-10 px-4 border-blue-900 hover:border-blue-500 text-white bg-blue-600 hover:bg-blue-700 hover:text-white"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 {filter.label}
@@ -160,7 +160,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
+                  className="h-10 px-4 border-blue-900 hover:border-blue-500 text-white bg-blue-600 hover:bg-blue-700 hover:text-white"
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   Date Range

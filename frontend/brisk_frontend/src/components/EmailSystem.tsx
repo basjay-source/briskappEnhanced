@@ -491,12 +491,12 @@ export default function EmailSystem() {
             </Button>
           </div>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white" />
             <Input
               placeholder="Search emails..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-blue-600 text-white placeholder:text-blue-200 border-blue-900"
             />
           </div>
         </div>
@@ -702,12 +702,12 @@ export default function EmailSystem() {
           </div>
           
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white" />
             <Input
               placeholder="Search emails..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-blue-600 text-white placeholder:text-blue-200 border-blue-900"
             />
           </div>
         </div>
