@@ -117,13 +117,13 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
   return (
     <div className={`flex flex-col sm:flex-row gap-4 mb-6 ${className}`}>
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black h-4 w-4" />
         <Input
           type="text"
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+          className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500 text-black"
         />
       </div>
 
@@ -133,7 +133,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-10 px-4 border-gray-200 hover:border-blue-500 hover:text-blue-600"
+                className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 {filter.label}
@@ -145,7 +145,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
                 <DropdownMenuItem
                   key={option.value}
                   onClick={() => filter.onChange(option.value)}
-                  className={filter.value === option.value ? 'bg-blue-50 text-blue-600' : ''}
+                  className={filter.value === option.value ? 'bg-blue-50 text-black' : 'text-black'}
                 >
                   {option.label}
                 </DropdownMenuItem>
@@ -160,7 +160,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-10 px-4 border-gray-200 hover:border-blue-500 hover:text-blue-600"
+                  className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   Date Range
@@ -172,14 +172,14 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
                   <DropdownMenuItem
                     key={index}
                     onClick={() => handlePresetSelect(preset)}
-                    className="hover:bg-blue-50 hover:text-blue-600"
+                    className="text-black hover:bg-blue-50 hover:text-black"
                   >
                     {preset.label}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
                 <div className="p-2">
-                  <div className="text-xs text-gray-500 mb-2">Custom Range</div>
+                  <div className="text-xs text-black mb-2">Custom Range</div>
                   <div className="flex flex-col gap-2">
                     <Input
                       type="date"
