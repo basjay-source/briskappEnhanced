@@ -82,10 +82,10 @@ export default function AppShell() {
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon">
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
@@ -170,20 +170,20 @@ export default function AppShell() {
 
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon">
-              <HelpCircle className="h-4 w-4" />
+              <HelpCircle className="h-4 w-4 text-blue-900" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon">
-              <User className="h-4 w-4" />
+              <User className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
