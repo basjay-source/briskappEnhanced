@@ -484,7 +484,7 @@ export default function EmailSystem() {
       <div className="h-full flex flex-col bg-white">
         <div className="border-b p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Email</h2>
+            <h2 className="text-xl font-bold">Email</h2>
             <Button onClick={handleCompose} size="sm" className="bg-brisk-primary">
               <Mail className="h-4 w-4 mr-2" />
               Compose
@@ -531,7 +531,7 @@ export default function EmailSystem() {
         {isComposing && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="border-b p-4 flex items-center justify-between">
-              <h3 className="font-semibold">New Message</h3>
+              <h3 className="font-bold">New Message</h3>
               <div className="flex items-center gap-2">
                 <Button onClick={handleSend} size="sm" className="bg-brisk-primary">
                   <Send className="h-4 w-4 mr-2" />
@@ -580,7 +580,7 @@ export default function EmailSystem() {
           {showAccountSettings ? (
             <div className="p-4 space-y-4">
               <div className="border-b pb-3">
-                <h3 className="font-medium text-sm mb-2">Connected Accounts</h3>
+                <h3 className="font-bold text-sm mb-2">Connected Accounts</h3>
                 <div className="space-y-2">
                   {connectedAccounts.map((account) => (
                     <div key={account.id} className="flex items-center justify-between p-2 border rounded">
@@ -621,7 +621,7 @@ export default function EmailSystem() {
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Add Account</h3>
+                <h3 className="font-bold text-sm mb-2">Add Account</h3>
                 <div className="space-y-2">
                   <Button 
                     variant="outline" 
@@ -690,7 +690,7 @@ export default function EmailSystem() {
       <div className="flex-1 flex flex-col">
         <div className="border-b p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold capitalize">{selectedFolder}</h2>
+            <h2 className="text-xl font-bold capitalize">{selectedFolder}</h2>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => setShowFilters(!showFilters)}>
                 <Filter className="h-4 w-4" />
@@ -759,7 +759,7 @@ export default function EmailSystem() {
               <>
                 <div className="border-b p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">{selectedThread.subject}</h3>
+                    <h3 className="font-bold">{selectedThread.subject}</h3>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm">
                         <Archive className="h-4 w-4" />
@@ -850,9 +850,9 @@ export default function EmailSystem() {
       </div>
 
       {isComposing && (
-        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border border-gray-300 rounded-t-lg shadow-lg z-50 flex flex-col`}>
+        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border border-blue-900 rounded-t-lg shadow-lg z-50 flex flex-col`}>
           <div className="flex items-center justify-between p-3 border-b bg-gray-50 rounded-t-lg">
-            <h4 className="font-medium text-sm">New Message</h4>
+            <h4 className="font-bold text-sm">New Message</h4>
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
