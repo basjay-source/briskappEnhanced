@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { apiClient } from '@/lib/api'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -184,7 +185,45 @@ const CharityAccounts: React.FC = () => {
     setActiveSubTab(subTab)
   }
 
-  const [charities] = useState<CharityAccount[]>([
+  useEffect(() => {
+    const loadCharityData = async () => {
+      try {
+        const [charitiesData] = await Promise.all([
+          apiClient.getCharities()
+        ])
+        
+        if (charitiesData && charitiesData.length > 0) {
+          setCharities(charitiesData)
+          
+          const firstCharityId = charitiesData[0].id
+          const [fundsData, trusteesData, sofaData] = await Promise.all([
+            apiClient.getCharityFunds(firstCharityId),
+            apiClient.getCharityTrustees(firstCharityId),
+            apiClient.generateCharitySOFA(firstCharityId, new Date().getFullYear())
+          ])
+          
+          setFunds(fundsData || [])
+          setTrustees(trusteesData || [])
+          setSofaData(sofaData ? [sofaData] : [])
+        } else {
+          setCharities([])
+          setFunds([])
+          setTrustees([])
+          setSofaData([])
+        }
+      } catch (error) {
+        console.error('Failed to load charity data:', error)
+        setCharities([])
+        setFunds([])
+        setTrustees([])
+        setSofaData([])
+      }
+    }
+    
+    loadCharityData()
+  }, [])
+
+  const [charities, setCharities] = useState<CharityAccount[]>([
     {
       id: '1',
       name: 'St. Mary\'s Primary Academy',
@@ -227,7 +266,7 @@ const CharityAccounts: React.FC = () => {
     }
   ])
 
-  const [funds] = useState<Fund[]>([
+  const [funds, setFunds] = useState<Fund[]>([
     {
       id: '1',
       name: 'General Fund',
@@ -274,7 +313,7 @@ const CharityAccounts: React.FC = () => {
     }
   ])
 
-  const [trustees] = useState<Trustee[]>([
+  const [trustees, setTrustees] = useState<Trustee[]>([
     {
       id: '1',
       name: 'Sarah Johnson',
@@ -297,7 +336,7 @@ const CharityAccounts: React.FC = () => {
     }
   ])
 
-  const [sofaData] = useState<SofaEntry[]>([
+  const [sofaData, setSofaData] = useState<SofaEntry[]>([
     {
       id: '1',
       category: 'Income',
@@ -485,6 +524,10 @@ const CharityAccounts: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center p-2 border rounded">
                         <span>Trading Activities</span>
+                        <Badge variant="secondary">£0.8M (25%)</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-2 border rounded">
+                        <span>Other Income</span>
                         <Badge variant="secondary">£850K (26%)</Badge>
                       </div>
                       <div className="flex justify-between items-center p-2 border rounded">
@@ -562,8 +605,8 @@ const CharityAccounts: React.FC = () => {
           
           <KPICard
             title="Compliance Score"
-            value={`${Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%`}
-            change="Excellent"
+            value={charities.length > 0 ? `${Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%` : '0%'}
+            change={charities.length > 0 ? "Excellent" : "No data available"}
             icon={Shield}
             color="text-green-500"
             drillDownData={{
@@ -574,8 +617,8 @@ const CharityAccounts: React.FC = () => {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border rounded-lg">
                       <h4 className="font-semibold mb-2">Overall Score</h4>
-                      <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
-                      <p className="text-sm text-green-600">Excellent</p>
+                      <p className="text-2xl font-bold">{charities.length > 0 ? Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length) : 0}%</p>
+                      <p className="text-sm text-green-600">{charities.length > 0 ? "Excellent" : "No data available"}</p>
                     </div>
                     <div className="p-4 border rounded-lg">
                       <h4 className="font-semibold mb-2">Compliance Trend</h4>
@@ -618,7 +661,6 @@ const CharityAccounts: React.FC = () => {
           />
         </div>
 
-        {/* Charity Portfolio and AI Adviser */}
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -1312,7 +1354,11 @@ const CharityAccounts: React.FC = () => {
             <div key={categoryKey}>
               <button
                 onClick={() => toggleCategory(categoryKey)}
-                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+                className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                  activeMainTab === categoryKey
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
+                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
+                }`}
               >
                 <div className="flex items-center gap-2">
                   <category.icon className="h-4 w-4" />
@@ -1333,10 +1379,10 @@ const CharityAccounts: React.FC = () => {
                       onClick={() => {
                         handleSubTabClick(categoryKey, subKey)
                       }}
-                      className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                      className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                         activeMainTab === categoryKey && activeSubTab === subKey
-                          ? 'bg-brisk-primary text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
+                          ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
+                          : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                       }`}
                     >
                       {subTab.label}
@@ -1349,10 +1395,10 @@ const CharityAccounts: React.FC = () => {
                 <div className="ml-6 mt-1">
                   <button
                     onClick={() => handleMainTabClick(categoryKey)}
-                    className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                    className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                       activeMainTab === categoryKey
-                        ? 'bg-brisk-primary text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
+                        : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                     }`}
                   >
                     View {category.label}
