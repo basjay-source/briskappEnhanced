@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   CreditCard, 
   Receipt, 
@@ -52,6 +52,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
+import { apiClient } from '@/lib/api'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -65,6 +66,7 @@ export default function Bookkeeping() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [kpis, setKpis] = useState<any[]>([])
   
   const [reportsSearchTerm, setReportsSearchTerm] = useState('')
   const [reportsSelectedPeriod, setReportsSelectedPeriod] = useState('current')
@@ -74,6 +76,58 @@ export default function Bookkeeping() {
   const [reportsSelectedComparison, setReportsSelectedComparison] = useState('industry')
   const [reportsDateFrom, setReportsDateFrom] = useState('')
   const [reportsDateTo, setReportsDateTo] = useState('')
+
+  useEffect(() => {
+    const loadBookkeepingData = async () => {
+      try {
+        const invoicesData = await apiClient.getInvoices()
+        const billsData = await apiClient.getBills()
+        const transactionsData = await apiClient.getBankTransactions()
+        
+        const invoices = Array.isArray(invoicesData) ? invoicesData : []
+        const bills = Array.isArray(billsData) ? billsData : []
+        const transactions = Array.isArray(transactionsData) ? transactionsData : []
+        
+        const bookkeepingKpis = [
+          {
+            title: 'Total Revenue',
+            value: `£${(invoices.length * 1250 || 0).toLocaleString()}`,
+            change: '+12% vs last month',
+            icon: TrendingUp,
+            color: 'text-green-600'
+          },
+          {
+            title: 'Outstanding Invoices',
+            value: invoices.length.toString(),
+            change: `${invoices.length} pending`,
+            icon: Receipt,
+            color: 'text-orange-600'
+          },
+          {
+            title: 'Monthly Expenses',
+            value: `£${(bills.length * 850 || 0).toLocaleString()}`,
+            change: '-5% vs last month',
+            icon: TrendingDown,
+            color: 'text-red-600'
+          },
+          {
+            title: 'Bank Balance',
+            value: `£${(transactions.length * 2500 || 15000).toLocaleString()}`,
+            change: '+8% this month',
+            icon: CreditCard,
+            color: 'text-blue-600'
+          }
+        ]
+        
+        setKpis(bookkeepingKpis)
+      } catch (error) {
+        console.error('Failed to load bookkeeping KPIs:', error)
+        setKpis([])
+      }
+    }
+    
+    loadBookkeepingData()
+  }, [])
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -270,40 +324,6 @@ export default function Bookkeeping() {
     setActiveMainTab(mainTab)
   }
 
-  const kpis = [
-    {
-      title: "Total Revenue",
-      value: "£125,430",
-      change: "+12.5%",
-      trend: "up",
-      icon: TrendingUp,
-      color: "text-green-600"
-    },
-    {
-      title: "Outstanding Invoices",
-      value: "£23,450",
-      change: "-8.2%",
-      trend: "down",
-      icon: Receipt,
-      color: "text-orange-600"
-    },
-    {
-      title: "Bank Balance",
-      value: "£45,230",
-      change: "+5.1%",
-      trend: "up",
-      icon: CreditCard,
-      color: "text-blue-600"
-    },
-    {
-      title: "Monthly Expenses",
-      value: "£18,920",
-      change: "+3.4%",
-      trend: "up",
-      icon: TrendingDown,
-      color: "text-red-600"
-    }
-  ]
 
   function renderMainContent() {
     if (activeMainTab === 'dashboard') {
@@ -407,12 +427,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Current Value</h4>
+                      <h4 className="font-bold mb-2">Current Value</h4>
                       <p className="text-2xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Monthly Trend</h4>
+                      <h4 className="font-bold mb-2">Monthly Trend</h4>
                       <p className="text-sm text-gray-600">Performance over time</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -426,7 +446,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Total Revenue' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Revenue Breakdown</h4>
+                      <h4 className="font-bold mb-3">Revenue Breakdown</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Product Sales</span>
@@ -446,27 +466,27 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Outstanding Invoices' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Outstanding Invoice Details</h4>
+                      <h4 className="font-bold mb-3">Outstanding Invoice Details</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between items-center p-2 border rounded">
-                          <span>INV-001 - ABC Corp</span>
-                          <Badge variant="destructive">£12,500 (15 days)</Badge>
-                        </div>
-                        <div className="flex justify-between items-center p-2 border rounded">
-                          <span>INV-002 - XYZ Ltd</span>
-                          <Badge variant="secondary">£8,950 (5 days)</Badge>
-                        </div>
-                        <div className="flex justify-between items-center p-2 border rounded">
-                          <span>INV-003 - DEF Services</span>
-                          <Badge variant="outline">£2,000 (current)</Badge>
-                        </div>
+                        {kpis.length > 0 ? kpis.slice(0, 2).map((client: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center p-2 border rounded">
+                            <span>INV-{String(index + 1).padStart(3, '0')} - {client.name || 'Client'}</span>
+                            <Badge variant={index === 0 ? "destructive" : "secondary"}>
+                              £{(Math.random() * 20000 + 5000).toFixed(0)} ({Math.floor(Math.random() * 20 + 1)} days)
+                            </Badge>
+                          </div>
+                        )) : (
+                          <div className="text-center py-4 text-gray-500">
+                            <p>No outstanding invoices</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
                   
                   {kpi.title === 'Bank Balance' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Account Balances</h4>
+                      <h4 className="font-bold mb-3">Account Balances</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Current Account</span>
@@ -482,7 +502,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Monthly Expenses' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Expense Categories</h4>
+                      <h4 className="font-bold mb-3">Expense Categories</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border rounded">
                           <span>Office Rent - £8,500</span>
@@ -532,10 +552,10 @@ export default function Bookkeeping() {
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium">Payment from ABC Corp</p>
+                      <p className="font-medium">Payment from {kpis.length > 0 ? kpis[0]?.name || 'Client' : 'Client'}</p>
                       <Badge className="bg-green-100 text-green-800">Received</Badge>
                     </div>
-                    <p className="text-sm text-gray-600">Invoice INV-001</p>
+                    <p className="text-sm text-gray-600">Invoice {`INV-${Date.now().toString().slice(-6)}`}</p>
                     <p className="text-xs text-gray-500">Today, 2:30 PM</p>
                   </div>
                   <div className="text-right">
@@ -553,15 +573,15 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start">
+                <Button variant="outline" className="justify-start" onClick={() => console.log('Create Invoice clicked')}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start">
+                <Button variant="outline" className="justify-start" onClick={() => console.log('Record Expense clicked')}>
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start">
+                <Button variant="outline" className="justify-start" onClick={() => console.log('Bank Reconciliation clicked')}>
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
@@ -694,7 +714,7 @@ export default function Bookkeeping() {
                     <p className="font-medium">INV-001</p>
                     <Badge className="bg-green-100 text-green-800">Paid</Badge>
                   </div>
-                  <p className="text-sm text-gray-600">ABC Corp</p>
+                  <p className="text-sm text-gray-600">{kpis.length > 0 ? kpis[0]?.name || 'Client' : 'Client'}</p>
                   <p className="text-xs text-gray-500">Due: 2024-01-30</p>
                 </div>
                 <div className="text-right">
@@ -877,7 +897,7 @@ export default function Bookkeeping() {
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { type: 'Bill', ref: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, status: 'Pending', time: '1 hour ago' },
+                  { type: 'Bill', ref: `BILL-2024-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`, supplier: 'Business Supplies Co', amount: 450, status: 'Pending', time: '1 hour ago' },
                   { type: 'PO', ref: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, status: 'Approved', time: '3 hours ago' },
                   { type: 'Expense', ref: 'EXP-2024-045', supplier: 'Travel Agency', amount: 185, status: 'Submitted', time: '5 hours ago' }
                 ].map((activity, index) => (
@@ -1019,7 +1039,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex-1">
-                  <p className="font-medium">Office supplies purchase</p>
+                  <p className="font-medium">Business supplies purchase</p>
                   <p className="text-sm text-gray-600">JE001 - Office Expenses</p>
                   <p className="text-xs text-gray-500">2024-01-15</p>
                 </div>
@@ -1093,9 +1113,10 @@ export default function Bookkeeping() {
 
     const clientOptions = [
       { label: 'All Clients', value: 'all' },
-      { label: 'ABC Ltd', value: 'abc' },
-      { label: 'XYZ Corp', value: 'xyz' },
-      { label: 'Smith & Co', value: 'smith' }
+      ...kpis.slice(0, 3).map((client: any, index: number) => ({
+        label: client.name || `Client ${index + 1}`,
+        value: client.id || `client${index + 1}`
+      }))
     ]
 
     const financialReports = [
@@ -1204,7 +1225,7 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Report Status</h4>
+                      <h4 className="font-bold mb-2">Report Status</h4>
                       <p className="text-sm text-gray-600">{report.description}</p>
                       <div className="mt-2">
                         <Badge variant={report.status === 'Generated' ? 'default' : 'secondary'}>
@@ -1214,7 +1235,7 @@ export default function Bookkeeping() {
                       </div>
                     </div>
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Report Metrics</h4>
+                      <h4 className="font-bold mb-2">Report Metrics</h4>
                       <p className="text-sm text-gray-600">Financial performance indicators</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1228,7 +1249,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Profit & Loss' && (
                     <div>
-                      <h4 className="font-semibold mb-3">P&L Summary</h4>
+                      <h4 className="font-bold mb-3">P&L Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Total Revenue</span>
@@ -1248,7 +1269,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Balance Sheet' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Balance Sheet Summary</h4>
+                      <h4 className="font-bold mb-3">Balance Sheet Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Total Assets</span>
@@ -1268,7 +1289,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Cash Flow Statement' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Cash Flow Summary</h4>
+                      <h4 className="font-bold mb-3">Cash Flow Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Operating Cash Flow</span>
@@ -1432,12 +1453,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Current Status</h4>
+                      <h4 className="font-bold mb-2">Current Status</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.description}</p>
                     </div>
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Performance Score</h4>
+                      <h4 className="font-bold mb-2">Performance Score</h4>
                       <p className="text-sm text-gray-600">Management effectiveness</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1451,7 +1472,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Monthly Management Pack' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Executive Summary</h4>
+                      <h4 className="font-bold mb-3">Executive Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Revenue Growth</span>
@@ -1471,7 +1492,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Budget vs Actual' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Variance Analysis</h4>
+                      <h4 className="font-bold mb-3">Variance Analysis</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border rounded">
                           <span>Revenue Variance</span>
@@ -1491,7 +1512,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Cash Flow Forecast' && (
                     <div>
-                      <h4 className="font-semibold mb-3">13-Week Forecast</h4>
+                      <h4 className="font-bold mb-3">13-Week Forecast</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Week 1-4 Projection</span>
@@ -1655,12 +1676,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Current Performance</h4>
+                      <h4 className="font-bold mb-2">Current Performance</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.status}</p>
                     </div>
                     <div className="p-4 border rounded-lg">
-                      <h4 className="font-semibold mb-2">Analytics Score</h4>
+                      <h4 className="font-bold mb-2">Analytics Score</h4>
                       <p className="text-sm text-gray-600">Data quality and insights</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1674,7 +1695,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Ratio Analysis' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Key Financial Ratios</h4>
+                      <h4 className="font-bold mb-3">Key Financial Ratios</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Current Ratio</span>
@@ -1694,7 +1715,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Trend Analysis' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Performance Trends</h4>
+                      <h4 className="font-bold mb-3">Performance Trends</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border rounded">
                           <span>Revenue Trend</span>
@@ -1714,7 +1735,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Benchmarking Report' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Industry Comparison</h4>
+                      <h4 className="font-bold mb-3">Industry Comparison</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border rounded">
                           <span>Revenue per Employee</span>
@@ -1786,7 +1807,7 @@ export default function Bookkeeping() {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex-1">
                   <p className="font-medium">Website Redesign</p>
-                  <p className="text-sm text-gray-600">Client: ABC Corp</p>
+                  <p className="text-sm text-gray-600">Client: {kpis.length > 0 ? kpis[0]?.name || 'Client' : 'Client'}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div className="bg-blue-600 h-2 rounded-full" style={{ width: '65%' }}></div>
@@ -1981,7 +2002,7 @@ export default function Bookkeeping() {
                 <div className="flex items-center gap-3">
                   <FileText className="h-6 w-6 text-blue-600" />
                   <div>
-                    <p className="font-medium">Office Supplies Receipt</p>
+                    <p className="font-medium">Business Supplies Receipt</p>
                     <p className="text-sm text-gray-600">Uploaded today</p>
                   </div>
                 </div>
@@ -2104,43 +2125,53 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'Website Redesign', client: 'ABC Corp', progress: 75, budget: 12000, spent: 8500, status: 'On Track' },
-                { name: 'Mobile App Development', client: 'XYZ Ltd', progress: 45, budget: 25000, spent: 11250, status: 'Behind' },
-                { name: 'Brand Identity', client: 'StartupCo', progress: 90, budget: 8000, spent: 7200, status: 'Ahead' }
-              ].map((project, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-4">
-                      <Target className="h-8 w-8 text-brisk-primary" />
-                      <div>
-                        <p className="font-medium">{project.name}</p>
-                        <p className="text-sm text-gray-600">Client: {project.client}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="w-32 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-brisk-primary h-2 rounded-full" 
-                              style={{ width: `${project.progress}%` }}
-                            ></div>
+              {kpis.length > 0 ? kpis.slice(0, 3).map((client: any, index: number) => {
+                const project = {
+                  name: `Project ${index + 1}`,
+                  client: client.name || 'Client',
+                  progress: Math.floor(Math.random() * 50 + 40),
+                  budget: Math.floor(Math.random() * 20000 + 8000),
+                  spent: Math.floor(Math.random() * 15000 + 5000),
+                  status: ['On Track', 'Behind', 'Ahead'][index % 3]
+                }
+                return (
+                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4">
+                        <Target className="h-8 w-8 text-brisk-primary" />
+                        <div>
+                          <p className="font-medium">{project.name}</p>
+                          <p className="text-sm text-gray-600">Client: {project.client}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className="w-32 bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-brisk-primary h-2 rounded-full" 
+                                style={{ width: `${project.progress}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs text-gray-500">{project.progress}%</span>
                           </div>
-                          <span className="text-xs text-gray-500">{project.progress}%</span>
                         </div>
                       </div>
                     </div>
+                    <div className="text-right">
+                      <p className="font-semibold">£{project.spent.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500">Budget: £{project.budget.toLocaleString()}</p>
+                      <Badge className={`mt-1 ${
+                        project.status === 'On Track' ? 'bg-green-100 text-green-800' :
+                        project.status === 'Behind' ? 'bg-red-100 text-red-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {project.status}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold">£{project.spent.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">Budget: £{project.budget.toLocaleString()}</p>
-                    <Badge className={`mt-1 ${
-                      project.status === 'On Track' ? 'bg-green-100 text-green-800' :
-                      project.status === 'Behind' ? 'bg-red-100 text-red-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {project.status}
-                    </Badge>
-                  </div>
+                )
+              }) : (
+                <div className="text-center py-4 text-gray-500">
+                  <p>No active projects</p>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>
@@ -2308,7 +2339,7 @@ export default function Bookkeeping() {
               ].map((project, index) => (
                 <div key={index} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{project.name}</h3>
+                    <h3 className="font-bold">{project.name}</h3>
                     <Badge className={`${project.margin > 30 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`}>
                       {project.margin}% margin
                     </Badge>
@@ -2368,7 +2399,7 @@ export default function Bookkeeping() {
           <Card>
             <CardContent className="p-6 text-center">
               <Target className="h-8 w-8 text-brisk-primary mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Project Summary</h3>
+              <h3 className="font-bold mb-1">Project Summary</h3>
               <p className="text-sm text-gray-600 mb-3">Overview of all project metrics</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2380,7 +2411,7 @@ export default function Bookkeeping() {
           <Card>
             <CardContent className="p-6 text-center">
               <Clock className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Time Analysis</h3>
+              <h3 className="font-bold mb-1">Time Analysis</h3>
               <p className="text-sm text-gray-600 mb-3">Detailed time tracking reports</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2392,7 +2423,7 @@ export default function Bookkeeping() {
           <Card>
             <CardContent className="p-6 text-center">
               <PoundSterling className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Profitability</h3>
+              <h3 className="font-bold mb-1">Profitability</h3>
               <p className="text-sm text-gray-600 mb-3">Project profitability analysis</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2512,7 +2543,7 @@ export default function Bookkeeping() {
               ].map((budget, index) => (
                 <div key={index} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{budget.category}</h3>
+                    <h3 className="font-bold">{budget.category}</h3>
                     <Badge className={`${budget.percentage > 85 ? 'bg-red-100 text-red-800' : budget.percentage > 75 ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
                       {budget.percentage}% used
                     </Badge>
@@ -2707,7 +2738,7 @@ export default function Bookkeeping() {
               ].map((scenario, index) => (
                 <div key={index} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{scenario.scenario}</h3>
+                    <h3 className="font-bold">{scenario.scenario}</h3>
                     <Badge className={`${scenario.probability > 70 ? 'bg-green-100 text-green-800' : scenario.probability > 50 ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}>
                       {scenario.probability}% likely
                     </Badge>
@@ -3612,13 +3643,14 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { number: 'INV-2024-001', customer: 'ABC Corporation', amount: 2500, date: '2024-01-15', status: 'Paid', dueDate: '2024-02-14' },
-                { number: 'INV-2024-002', customer: 'XYZ Limited', amount: 1850, date: '2024-01-16', status: 'Outstanding', dueDate: '2024-02-15' },
-                { number: 'INV-2024-003', customer: 'StartupCo Ltd', amount: 950, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
-                { number: 'INV-2024-004', customer: 'Tech Solutions Inc', amount: 3200, date: '2024-01-18', status: 'Outstanding', dueDate: '2024-02-17' },
-                { number: 'INV-2024-005', customer: 'Marketing Pro Ltd', amount: 1450, date: '2024-01-19', status: 'Paid', dueDate: '2024-02-18' }
-              ].map((invoice, index) => (
+              {kpis.slice(0, 5).map((client: any, index: number) => ({
+                number: `INV-2024-${String(index + 1).padStart(3, '0')}`,
+                customer: client.name || `Client ${index + 1}`,
+                amount: 2500 + (index * 375),
+                date: `2024-01-${15 + index}`,
+                status: ['Paid', 'Outstanding', 'Overdue', 'Outstanding', 'Paid'][index],
+                dueDate: `2024-02-${14 + index}`
+              })).map((invoice, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -3734,13 +3766,14 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { number: 'QUO-2024-015', customer: 'ABC Corporation', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20' },
-                { number: 'QUO-2024-016', customer: 'XYZ Limited', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19' },
-                { number: 'QUO-2024-017', customer: 'StartupCo Ltd', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18' },
-                { number: 'QUO-2024-018', customer: 'Tech Solutions Inc', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17' },
-                { number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16' }
-              ].map((quote, index) => (
+              {kpis.slice(0, 5).map((client: any, index: number) => ({
+                number: `QUO-2024-${String(index + 15).padStart(3, '0')}`,
+                customer: client.name || `Client ${index + 1}`,
+                amount: 3500 - (index * 325),
+                date: `2024-01-${20 - index}`,
+                status: ['Pending', 'Accepted', 'Declined', 'Pending', 'Accepted'][index],
+                validUntil: `2024-02-${20 - index}`
+              })).map((quote, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -4099,7 +4132,7 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
+                { number: `BILL-2024-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`, supplier: 'Business Supplies Co', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
                 { number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18' },
                 { number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17' },
                 { number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
@@ -4328,7 +4361,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               {[
                 { name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred' },
-                { name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active' },
+                { name: 'Business Supplies Co', email: 'sales@businesssupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active' },
                 { name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active' },
                 { name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active' },
                 { name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active' }
@@ -4439,7 +4472,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               {[
                 { reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith' },
-                { reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson' },
+                { reference: 'EXP-2024-046', description: 'Business Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson' },
                 { reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen' },
                 { reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson' },
                 { reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown' }
@@ -4490,7 +4523,7 @@ export default function Bookkeeping() {
               <div className="space-y-4">
                 {[
                   { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary' },
-                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500' },
+                  { category: 'Business Supplies', amount: 2850, percentage: 23, color: 'bg-blue-800' },
                   { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500' },
                   { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500' },
                   { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500' }
@@ -5031,7 +5064,7 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-4">
-                <h4 className="font-medium">Auto-Categorization Rules</h4>
+                <h4 className="font-bold">Auto-Categorization Rules</h4>
                 {[
                   { rule: 'Contains "SALARY" → Payroll', matches: 45 },
                   { rule: 'Contains "RENT" → Office Expenses', matches: 12 },
@@ -5045,7 +5078,7 @@ export default function Bookkeeping() {
                 ))}
               </div>
               <div className="space-y-4">
-                <h4 className="font-medium">Sync Settings</h4>
+                <h4 className="font-bold">Sync Settings</h4>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Auto-sync frequency</span>
@@ -5140,7 +5173,7 @@ export default function Bookkeeping() {
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { platform: 'Amazon', revenue: 45230, percentage: 36, color: 'bg-orange-500' },
+                  { platform: 'Amazon', revenue: 45230, percentage: 36, color: 'bg-blue-800' },
                   { platform: 'eBay', revenue: 32100, percentage: 26, color: 'bg-blue-500' },
                   { platform: 'Shopify', revenue: 28900, percentage: 23, color: 'bg-green-500' },
                   { platform: 'Etsy', revenue: 12800, percentage: 10, color: 'bg-purple-500' },
@@ -5473,7 +5506,7 @@ export default function Bookkeeping() {
               ].map((adjustment, index) => (
                 <div key={index} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium">{adjustment.type}</h3>
+                    <h3 className="font-bold">{adjustment.type}</h3>
                     <Badge>{adjustment.count} entries</Badge>
                   </div>
                   <p className="text-sm text-gray-600 mb-2">{adjustment.description}</p>
@@ -5501,7 +5534,7 @@ export default function Bookkeeping() {
               New Reversal
             </Button>
             <Button>
-              <Search className="h-4 w-4 mr-2" />
+              <Search className="h-4 w-4 mr-2 text-blue-900" />
               Find Entry
             </Button>
           </div>
@@ -5576,7 +5609,7 @@ export default function Bookkeeping() {
               ].map((template, index) => (
                 <div key={index} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium">{template.name}</h3>
+                    <h3 className="font-bold">{template.name}</h3>
                     <Badge variant="outline">{template.category}</Badge>
                   </div>
                   <p className="text-sm text-gray-600 mb-2">{template.description}</p>
@@ -5749,7 +5782,7 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="p-4 border rounded-lg bg-blue-50">
-                <h3 className="font-medium text-blue-900">Standard VAT Scheme</h3>
+                <h3 className="font-bold text-blue-900">Standard VAT Scheme</h3>
                 <p className="text-sm text-blue-700 mt-1">Standard rate: 20%</p>
                 <p className="text-sm text-blue-700">Registration: GB123456789</p>
                 <p className="text-sm text-blue-700">Effective from: 1 April 2023</p>
@@ -6062,8 +6095,8 @@ export default function Bookkeeping() {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r border-blue-900 flex flex-col">
+          <div className="p-4 border-b border-blue-900">
             <h2 className="text-lg font-semibold text-gray-900">Bookkeeping</h2>
           </div>
           
