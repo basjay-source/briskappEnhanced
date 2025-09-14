@@ -81,11 +81,11 @@ export default function AppShell() {
             <BriskLogo className="h-6 w-6" showText={false} />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Search className="h-4 w-4 text-blue-900" />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
+              <Search className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4 text-blue-900" />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
+              <Bell className="h-4 w-4" />
             </Button>
           </div>
         </header>
@@ -169,21 +169,22 @@ export default function AppShell() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4 text-blue-900" />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
+              <Bell className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <HelpCircle className="h-4 w-4 text-blue-900" />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
+              <HelpCircle className="h-4 w-4" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon"
+              className="!text-blue-900 hover:!text-blue-900"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              <Settings className="h-4 w-4 text-blue-900" />
+              <Settings className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <User className="h-4 w-4 text-blue-900" />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
+              <User className="h-4 w-4" />
             </Button>
           </div>
         </header>
