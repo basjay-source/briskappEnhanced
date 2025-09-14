@@ -102,7 +102,7 @@ export default function AppShell() {
         <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-2">
-            <BriskLogo className="h-8 w-8" showText={true} />
+            <BriskLogo className="h-8 w-8" showText={false} />
           </div>
         </SidebarHeader>
         
@@ -128,7 +128,7 @@ export default function AppShell() {
               {showSearchResults && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
-                    <span className="text-sm font-medium">Search Results</span>
+                    <span className="text-sm font-bold">Search Results</span>
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -149,7 +149,7 @@ export default function AppShell() {
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium text-sm">
+                              <p className="font-bold text-sm">
                                 {result.title || result.name || result.statement_type}
                               </p>
                               <p className="text-xs text-gray-500">
