@@ -51,7 +51,7 @@ export default function CompanySecretarial() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [in01FormData, setIn01FormData] = useState<Record<string, string>>({})
-  const [formData, setFormData] = useState<Record<string, string>>({})
+  const [formData] = useState<Record<string, string>>({})
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -609,8 +609,6 @@ export default function CompanySecretarial() {
   }
 
   const renderAA01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting AA01 form:', data)
     }
@@ -875,8 +873,6 @@ export default function CompanySecretarial() {
   }
 
   const renderAR01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting AR01 form:', data)
     }
@@ -1191,8 +1187,6 @@ export default function CompanySecretarial() {
   }
 
   const renderTM01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting TM01 form:', data)
     }
@@ -1537,8 +1531,6 @@ export default function CompanySecretarial() {
   }
 
   const renderCH01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting CH01 form:', data)
     }
@@ -1991,8 +1983,6 @@ export default function CompanySecretarial() {
   }
 
   const renderPSC01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting PSC01 form:', data)
     }
@@ -2559,8 +2549,6 @@ export default function CompanySecretarial() {
   }
 
   const renderAD01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting AD01 form:', data)
     }
@@ -2946,8 +2934,6 @@ export default function CompanySecretarial() {
   }
 
   const renderNM01Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting NM01 form:', data)
     }
@@ -3582,15 +3568,6 @@ export default function CompanySecretarial() {
             )
           }
         ]}
-        formData={formData}
-        onSubmit={(data) => {
-          console.log('SA100 submitted:', data)
-          alert('SA100 Self Assessment submitted successfully!')
-        }}
-        onSaveDraft={(data) => {
-          console.log('SA100 draft saved:', data)
-          alert('SA100 draft saved successfully!')
-        }}
       />
     )
   }
@@ -3751,22 +3728,11 @@ export default function CompanySecretarial() {
             )
           }
         ]}
-        formData={formData}
-        onSubmit={(data) => {
-          console.log('CT600 submitted:', data)
-          alert('CT600 Corporation Tax return submitted successfully!')
-        }}
-        onSaveDraft={(data) => {
-          console.log('CT600 draft saved:', data)
-          alert('CT600 draft saved successfully!')
-        }}
       />
     )
   }
 
   const renderP11DForm = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P11D form:', data)
     }
@@ -4289,8 +4255,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA102Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA102 form:', data)
     }
@@ -4509,8 +4473,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA103SForm = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA103S form:', data)
     }
@@ -4521,7 +4483,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Business Details",
+        title: "Step 1: Business Details - Enter your business information and self-employment details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -4739,8 +4701,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA104SForm = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA104S form:', data)
     }
@@ -4958,8 +4918,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA105Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA105 form:', data)
     }
@@ -5227,8 +5185,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA106Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA106 form:', data)
     }
@@ -5488,8 +5444,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA108Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA108 form:', data)
     }
@@ -5768,8 +5722,6 @@ export default function CompanySecretarial() {
   }
 
   const renderSA109Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA109 form:', data)
     }
@@ -6034,8 +5986,6 @@ export default function CompanySecretarial() {
   }
 
   const renderCIS300Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting CIS300 form:', data)
     }
@@ -6280,8 +6230,6 @@ export default function CompanySecretarial() {
   }
 
   const renderP35Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P35 form:', data)
     }
@@ -6556,8 +6504,6 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT1Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT1 form:', data)
     }
@@ -6568,7 +6514,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Business Details",
+        title: "Step 1: Business Details - Enter your business information and VAT registration details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6844,8 +6790,6 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT2Form = () => {
-    const [formData, setFormData] = useState<Record<string, string>>({})
-
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT2 form:', data)
     }
