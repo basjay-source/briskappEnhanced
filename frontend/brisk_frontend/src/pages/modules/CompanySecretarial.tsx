@@ -619,7 +619,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Details - Step 1: Confirm your company information",
+        title: "Step 1: Company Details - Confirm your company information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -701,7 +701,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Accounts Period - Step 2: Specify the accounting period for these accounts",
+        title: "Step 2: Accounts Period - Specify the accounting period for these accounts",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -777,7 +777,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 3: Review and submit your annual accounts",
+        title: "Step 3: Declaration and Submission - Review and submit your annual accounts",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -883,7 +883,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details for the annual return",
+        title: "Step 1: Company Information - Confirm your company details for the annual return",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -942,7 +942,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Registered Office - Step 2: Confirm the registered office address",
+        title: "Step 2: Registered Office - Confirm the registered office address",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1021,7 +1021,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Share Capital - Step 3: Provide details of the company's share capital",
+        title: "Step 3: Share Capital - Provide details of the company's share capital",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1085,7 +1085,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 4: Review and submit your annual return",
+        title: "Step 4: Declaration and Submission - Review and submit your annual return",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1197,7 +1197,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details",
+        title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1261,7 +1261,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Person Details - Step 2: Provide details of the person whose appointment is being terminated",
+        title: "Step 2: Person Details - Provide details of the person whose appointment is being terminated",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1348,7 +1348,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Termination Details - Step 3: Specify the reason and circumstances of termination",
+        title: "Step 3: Termination Details - Specify the reason and circumstances of termination",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1429,7 +1429,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 4: Review and submit the termination form",
+        title: "Step 4: Declaration and Submission - Review and submit the termination form",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1541,7 +1541,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details",
+        title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1605,7 +1605,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Secretary Type - Step 2: Specify whether the secretary is an individual or corporate entity",
+        title: "Step 2: Secretary Type - Specify whether the secretary is an individual or corporate entity",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1683,7 +1683,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Secretary Details - Step 3: Provide complete details of the secretary being appointed",
+        title: "Step 3: Secretary Details - Provide complete details of the secretary being appointed",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1778,7 +1778,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Service Address - Step 4: Provide the service address for correspondence",
+        title: "Step 4: Service Address - Provide the service address for correspondence",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1877,7 +1877,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 5: Review and submit the secretary appointment",
+        title: "Step 5: Declaration and Submission - Review and submit the secretary appointment",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -1993,7 +1993,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details",
+        title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2057,7 +2057,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "PSC Type - Step 2: Specify the type of person with significant control",
+        title: "Step 2: PSC Type - Specify the type of person with significant control",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2143,7 +2143,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "PSC Details - Step 3: Provide complete details of the person with significant control",
+        title: "Step 3: PSC Details - Provide complete details of the person with significant control",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2245,7 +2245,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Control Details - Step 4: Specify the exact nature and extent of control",
+        title: "Step 4: Control Details - Specify the exact nature and extent of control",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2343,7 +2343,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Service Address - Step 5: Provide the service address for correspondence",
+        title: "Step 5: Service Address - Provide the service address for correspondence",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2442,7 +2442,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 6: Review and submit the PSC notification",
+        title: "Step 6: Declaration and Submission - Review and submit the PSC notification",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2559,7 +2559,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details",
+        title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2623,7 +2623,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Change Details - Step 2: Specify the reason and date for the address change",
+        title: "Step 2: Change Details - Specify the reason and date for the address change",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2716,7 +2716,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "New Address - Step 3: Provide the complete new registered office address",
+        title: "Step 3: New Address - Provide the complete new registered office address",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2827,7 +2827,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 4: Review and submit the address change",
+        title: "Step 4: Declaration and Submission - Review and submit the address change",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -2944,7 +2944,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Company Information - Step 1: Confirm your company details",
+        title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -3008,7 +3008,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Name Change Details - Step 2: Specify the new company name and resolution details",
+        title: "Step 2: Name Change Details - Specify the new company name and resolution details",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -3111,7 +3111,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Name Availability - Step 3: Confirm name availability and compliance",
+        title: "Step 3: Name Availability - Confirm name availability and compliance",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -3211,7 +3211,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 4: Review and submit the name change",
+        title: "Step 4: Declaration and Submission - Review and submit the name change",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -3319,6 +3319,7 @@ export default function CompanySecretarial() {
   }
 
   const renderSA100Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [formData, setFormData] = useState<Record<string, string>>({})
 
     const handleSubmit = (data: Record<string, string>) => {
@@ -3573,6 +3574,7 @@ export default function CompanySecretarial() {
   }
 
   const renderCT600Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [formData, setFormData] = useState<Record<string, string>>({})
 
     const handleSubmit = (data: Record<string, string>) => {
@@ -3733,6 +3735,9 @@ export default function CompanySecretarial() {
   }
 
   const renderP11DForm = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P11D form:', data)
     }
@@ -4255,6 +4260,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA102Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA102 form:', data)
     }
@@ -4473,6 +4481,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA103SForm = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA103S form:', data)
     }
@@ -4701,6 +4712,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA104SForm = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA104S form:', data)
     }
@@ -4918,6 +4932,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA105Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA105 form:', data)
     }
@@ -5185,6 +5202,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA106Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA106 form:', data)
     }
@@ -5444,6 +5464,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA108Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA108 form:', data)
     }
@@ -5454,7 +5477,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Asset Disposals - Step 1: Identifying your disposals",
+        title: "Step 1: Asset Disposals - Identifying your disposals",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5541,7 +5564,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Gains and Losses Calculation - Step 2: Working out your gain or loss",
+        title: "Step 2: Gains and Losses Calculation - Working out your gain or loss",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5617,7 +5640,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Summary and Tax Calculation - Step 3: Deducting losses and calculating tax",
+        title: "Step 3: Summary and Tax Calculation - Deducting losses and calculating tax",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5722,6 +5745,9 @@ export default function CompanySecretarial() {
   }
 
   const renderSA109Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting SA109 form:', data)
     }
@@ -5732,7 +5758,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Residence Status - Step 1: Your residence status for tax purposes",
+        title: "Step 1: Residence Status - Your residence status for tax purposes",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5806,7 +5832,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Remittance Basis - Step 2: Claiming the remittance basis",
+        title: "Step 2: Remittance Basis - Claiming the remittance basis",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5880,7 +5906,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Additional Information - Step 3: Other residence and domicile matters",
+        title: "Step 3: Additional Information - Other residence and domicile matters",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -5986,6 +6012,9 @@ export default function CompanySecretarial() {
   }
 
   const renderCIS300Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting CIS300 form:', data)
     }
@@ -5996,7 +6025,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Contractor Details - Step 1: Your business information",
+        title: "Step 1: Contractor Details - Your business information",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6072,7 +6101,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Subcontractor Payments - Step 2: Payments made to subcontractors",
+        title: "Step 2: Subcontractor Payments - Payments made to subcontractors",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6142,7 +6171,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 3: Review and submit your return",
+        title: "Step 3: Declaration and Submission - Review and submit your return",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6230,6 +6259,9 @@ export default function CompanySecretarial() {
   }
 
   const renderP35Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting P35 form:', data)
     }
@@ -6240,7 +6272,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Employer Details - Step 1: Your business information for the tax year",
+        title: "Step 1: Employer Details - Your business information for the tax year",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6325,7 +6357,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Employee Summary - Step 2: Summary of employees and payments",
+        title: "Step 2: Employee Summary - Summary of employees and payments",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6401,7 +6433,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 3: Review and submit your annual return",
+        title: "Step 3: Declaration and Submission - Review and submit your annual return",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6504,6 +6536,9 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT1Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT1 form:', data)
     }
@@ -6790,6 +6825,9 @@ export default function CompanySecretarial() {
   }
 
   const renderVAT2Form = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [formData, setFormData] = useState<Record<string, string>>({})
+
     const handleSubmit = (data: Record<string, string>) => {
       console.log('Submitting VAT2 form:', data)
     }
@@ -6800,7 +6838,7 @@ export default function CompanySecretarial() {
 
     const pages = [
       {
-        title: "Representative Member - Step 1: Details of the representative member company",
+        title: "Step 1: Representative Member - Details of the representative member company",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6887,7 +6925,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Group Members - Step 2: Details of all companies to be included in the VAT group",
+        title: "Step 2: Group Members - Details of all companies to be included in the VAT group",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -6993,7 +7031,7 @@ export default function CompanySecretarial() {
         )
       },
       {
-        title: "Declaration and Submission - Step 3: Review group details and submit application",
+        title: "Step 3: Declaration and Submission - Review group details and submit application",
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
