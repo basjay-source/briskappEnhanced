@@ -57,76 +57,19 @@ export default function VAT() {
       try {
         const returnsData = await apiClient.getVATReturns()
         const schemesData = await apiClient.getVATSchemes()
-        setVatReturns((returnsData as unknown as VATReturn[]) || mockVATReturns)
-        setVatSchemes((schemesData as unknown as VATScheme[]) || mockVATSchemes)
+        
+        setVatReturns(Array.isArray(returnsData) ? returnsData as unknown as VATReturn[] : [])
+        setVatSchemes(Array.isArray(schemesData) ? schemesData as unknown as VATScheme[] : [])
       } catch (error) {
         console.error('Failed to load VAT data:', error)
-        setVatReturns(mockVATReturns)
-        setVatSchemes(mockVATSchemes)
+        setVatReturns([])
+        setVatSchemes([])
       }
     }
     
     loadVATData()
   }, [])
 
-  const mockVATReturns: VATReturn[] = [
-    {
-      id: '1',
-      period: 'Q4 2024',
-      status: 'submitted',
-      dueDate: '2025-02-07',
-      totalVAT: 12500.00,
-      netSales: 62500.00,
-      vatOnSales: 12500.00,
-      vatOnPurchases: 8750.00,
-      submittedDate: '2025-01-28'
-    },
-    {
-      id: '2',
-      period: 'Q1 2025',
-      status: 'draft',
-      dueDate: '2025-05-07',
-      totalVAT: 8900.00,
-      netSales: 44500.00,
-      vatOnSales: 8900.00,
-      vatOnPurchases: 6200.00
-    },
-    {
-      id: '3',
-      period: 'Q3 2024',
-      status: 'overdue',
-      dueDate: '2024-11-07',
-      totalVAT: 15600.00,
-      netSales: 78000.00,
-      vatOnSales: 15600.00,
-      vatOnPurchases: 10800.00
-    }
-  ]
-
-  const mockVATSchemes: VATScheme[] = [
-    {
-      id: '1',
-      name: 'Standard VAT',
-      type: 'standard',
-      description: 'Standard VAT scheme with 20% rate',
-      active: true
-    },
-    {
-      id: '2',
-      name: 'Flat Rate Scheme',
-      type: 'flat_rate',
-      rate: 16.5,
-      description: 'Simplified VAT scheme for small businesses',
-      active: false
-    },
-    {
-      id: '3',
-      name: 'Cash Accounting',
-      type: 'cash_accounting',
-      description: 'VAT paid when money is received/paid',
-      active: false
-    }
-  ]
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -155,7 +98,7 @@ export default function VAT() {
     )
   }
 
-  const filteredReturns = vatReturns.filter(ret => 
+  const filteredReturns = (vatReturns || []).filter(ret => 
     ret.period.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ret.status.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -282,7 +225,7 @@ export default function VAT() {
           </div>
 
           <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
-            {vatSchemes.map((scheme) => (
+            {(vatSchemes || []).map((scheme) => (
               <Card key={scheme.id} className={`hover:shadow-md transition-shadow ${scheme.active ? 'ring-2 ring-brisk-primary' : ''}`}>
                 <CardHeader>
                   <div className="flex items-center justify-between">

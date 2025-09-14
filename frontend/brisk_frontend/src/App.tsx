@@ -16,6 +16,7 @@ import ESignature from '@/pages/modules/ESignature'
 import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced'
 import AdminModule from '@/pages/modules/AdminModule'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
+import VAT from '@/pages/modules/VAT'
 import ClientPortal from '@/components/ClientPortal'
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
             <Route path="aml" element={<AMLCompliance />} />
             <Route path="cosec" element={<CompanySecretarial />} />
             <Route path="books" element={<Bookkeeping />} />
+            <Route path="bookkeeping" element={<Bookkeeping />} />
+            <Route path="vat" element={<VAT />} />
             <Route path="esign" element={<ESignature />} />
             <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
             <Route path="admin" element={<AdminModule />} />
