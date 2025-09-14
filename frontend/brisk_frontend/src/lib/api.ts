@@ -7,6 +7,15 @@ interface TrialBalanceEntry {
   credit: number;
 }
 
+interface TrialBalanceResponse {
+  trial_balance: TrialBalanceEntry[];
+  totals: {
+    debits: number;
+    credits: number;
+    balanced: boolean;
+  };
+}
+
 interface Job {
   id: string;
   title: string;
@@ -48,7 +57,7 @@ class ApiClient {
 
   async getTrialBalance(companyId: string, periodEnd?: string) {
     const params = periodEnd ? `?period_end=${periodEnd}` : ''
-    return this.request<{ trial_balance: TrialBalanceEntry[] }>(`/accounts/trial-balance/${companyId}${params}`)
+    return this.request<TrialBalanceResponse>(`/accounts/trial-balance/${companyId}${params}`)
   }
 
   async createJournalEntry(data: Record<string, unknown>) {
@@ -108,7 +117,7 @@ class ApiClient {
 
   async getClients(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request<Client[]>(`/books/clients?${params}`)
+    return this.request<Client[]>(`/books/customers?${params}`)
   }
 
   async createClient(data: Record<string, unknown>) {
@@ -296,6 +305,114 @@ class ApiClient {
   async getEmployeeRates(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
     return this.request(`/practice/employee-rates?${params}`)
+  }
+
+  async getCorporationTaxReturns(companyId: string = 'default-company') {
+    return this.request(`/tax/ct/returns/${companyId}`)
+  }
+
+  async getPersonalTaxReturns(companyId: string = 'default-company') {
+    return this.request(`/tax/sa/returns/${companyId}`)
+  }
+
+  async getPayrollEmployees(companyId: string = 'default-company', filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    const queryString = params.toString() ? `?${params}` : ''
+    return this.request(`/payroll/employees/${companyId}${queryString}`)
+  }
+
+  async getAMLCases(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/cases?${params}`)
+  }
+
+  async getCompanySecretarialFilings(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/cosec/filings?${params}`)
+  }
+
+  async getPracticeDashboard() {
+    return this.request('/practice/dashboard')
+  }
+
+  async getAvailableReliefs(companyId: string = 'default-company') {
+    return this.request(`/tax/ct/reliefs/available?company_id=${companyId}`)
+  }
+
+  async getCharities(): Promise<any> {
+    return this.request('/charity/charities')
+  }
+
+  async createCharity(data: Record<string, unknown>): Promise<any> {
+    return this.request('/charity/charities', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getCharityFunds(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/funds`)
+  }
+
+  async getCharityTrustees(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/trustees`)
+  }
+
+  async generateCharitySOFA(charityId: string, year: number): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/sofa?year=${year}`)
+  }
+
+  async getCharityAIAdvice(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/ai-advice`)
+  }
+
+  async getCompanyFilings(companyId: string): Promise<any> {
+    return this.request(`/cosec/filings/${companyId}`)
+  }
+
+  async createFiling(data: Record<string, unknown>): Promise<any> {
+    return this.request('/cosec/filings', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getFilingDeadlines(companyId: string): Promise<any> {
+    return this.request(`/cosec/deadlines/${companyId}`)
+  }
+
+  async getCompanyOfficers(companyId: string): Promise<any> {
+    return this.request(`/cosec/officers/${companyId}`)
+  }
+
+  async getCompanyPSCs(companyId: string): Promise<any> {
+    return this.request(`/cosec/pscs/${companyId}`)
+  }
+
+  async getAMLRiskAssessments(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/risk-assessments?${params}`)
+  }
+
+  async createAMLRiskAssessment(data: Record<string, unknown>): Promise<any> {
+    return this.request('/aml/risk-assessments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getAMLAlerts(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/alerts?${params}`)
+  }
+
+  async getAMLComplianceMetrics(): Promise<any> {
+    return this.request('/aml/compliance-metrics')
+  }
+
+  async getAMLTrainingRecords(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/training-records?${params}`)
   }
 }
 

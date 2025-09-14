@@ -19,11 +19,16 @@ import {
   ChevronDown,
   BarChart3
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import KPICard from '@/components/KPICard'
@@ -35,6 +40,7 @@ import ClientPortalAdvanced from '../../components/ClientPortalAdvanced'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
+import { apiClient } from '@/lib/api'
 
 export default function PracticeManagement() {
   const isMobile = useIsMobile()
@@ -45,6 +51,193 @@ export default function PracticeManagement() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedPriority, setSelectedPriority] = useState('all')
+  const [kpis, setKpis] = useState<any[]>([])
+  const [jobs, setJobs] = useState<any[]>([])
+  const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([])
+  const [showNewJobModal, setShowNewJobModal] = useState(false)
+  const [newJobData, setNewJobData] = useState({
+    title: '',
+    description: '',
+    client_id: '',
+    priority: 'medium',
+    status: 'not_started',
+    due_date: '',
+    assigned_to: '',
+    estimated_hours: null,
+    workflow_template_id: null
+  })
+
+  useEffect(() => {
+    const loadPracticeData = async () => {
+      try {
+        const jobsData = await apiClient.getJobs()
+        
+        const jobs = jobsData?.jobs || []
+        setJobs(jobs)
+        
+        const activeJobs = jobs.length
+        const overdueJobs = jobs.filter((job: any) => job.status === 'not_started').length
+        const inProgressJobs = jobs.filter((job: any) => job.status === 'in_progress').length
+        const completedJobs = jobs.filter((job: any) => job.status === 'completed').length
+        
+        setKpis([
+          {
+            title: 'Active Jobs',
+            value: activeJobs.toString(),
+            change: '+5 this week',
+            icon: Users,
+            color: 'text-blue-600',
+            drillDownData: {
+              title: 'Active Jobs Details',
+              description: 'Detailed breakdown of all active jobs in the system',
+              content: (
+                <div className="space-y-4">
+                  {jobs.filter((job: any) => job.status !== 'completed').map((job: any) => (
+                    <div key={job.id} className="p-4 border rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">{job.title}</h4>
+                          <p className="text-sm text-gray-600">Client: {job.client_id}</p>
+                          <p className="text-sm text-gray-600">Status: {job.status}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`px-2 py-1 rounded text-xs ${getPriorityColor(job.priority)}`}>
+                            {job.priority}
+                          </span>
+                          {job.due_date && (
+                            <p className="text-sm text-gray-600 mt-1">Due: {job.due_date}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+          },
+          {
+            title: 'In Progress',
+            value: inProgressJobs.toString(),
+            change: 'Currently active',
+            icon: Clock,
+            color: 'text-orange-600',
+            drillDownData: {
+              title: 'Jobs In Progress',
+              description: 'All jobs currently being worked on',
+              content: (
+                <div className="space-y-4">
+                  {jobs.filter((job: any) => job.status === 'in_progress').map((job: any) => (
+                    <div key={job.id} className="p-4 border rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">{job.title}</h4>
+                          <p className="text-sm text-gray-600">Client: {job.client_id}</p>
+                          <p className="text-sm text-gray-600">Assigned: {job.assigned_to || 'Unassigned'}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`px-2 py-1 rounded text-xs ${getPriorityColor(job.priority)}`}>
+                            {job.priority}
+                          </span>
+                          {job.estimated_hours && (
+                            <p className="text-sm text-gray-600 mt-1">Est: {job.estimated_hours}h</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+          },
+          {
+            title: 'Completed',
+            value: completedJobs.toString(),
+            change: '+12% vs last week',
+            icon: CheckCircle,
+            color: 'text-green-600',
+            drillDownData: {
+              title: 'Completed Jobs',
+              description: 'Recently completed jobs and their details',
+              content: (
+                <div className="space-y-4">
+                  {jobs.filter((job: any) => job.status === 'completed').map((job: any) => (
+                    <div key={job.id} className="p-4 border rounded-lg bg-green-50">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">{job.title}</h4>
+                          <p className="text-sm text-gray-600">Client: {job.client_id}</p>
+                          <p className="text-sm text-green-600">✓ Completed</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`px-2 py-1 rounded text-xs ${getPriorityColor(job.priority)}`}>
+                            {job.priority}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+          },
+          {
+            title: 'Not Started',
+            value: overdueJobs.toString(),
+            change: 'Pending start',
+            icon: Calendar,
+            color: 'text-purple-600',
+            drillDownData: {
+              title: 'Jobs Not Started',
+              description: 'Jobs that are scheduled but not yet started',
+              content: (
+                <div className="space-y-4">
+                  {jobs.filter((job: any) => job.status === 'not_started').map((job: any) => (
+                    <div key={job.id} className="p-4 border rounded-lg bg-purple-50">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">{job.title}</h4>
+                          <p className="text-sm text-gray-600">Client: {job.client_id}</p>
+                          <p className="text-sm text-purple-600">📅 Not Started</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`px-2 py-1 rounded text-xs ${getPriorityColor(job.priority)}`}>
+                            {job.priority}
+                          </span>
+                          {job.due_date && (
+                            <p className="text-sm text-purple-600 mt-1">Due: {job.due_date}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+          }
+        ])
+        
+        const deadlines = jobs
+          .filter((job: any) => job.due_date)
+          .map((job: any) => ({
+            type: job.title,
+            client: job.client_id || 'Unknown Client',
+            date: new Date(job.due_date).toLocaleDateString(),
+            days: Math.ceil((new Date(job.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+          }))
+          .sort((a: any, b: any) => a.days - b.days)
+          .slice(0, 5)
+        
+        setUpcomingDeadlines(deadlines)
+      } catch (error) {
+        console.error('Failed to load practice management data:', error)
+        setKpis([])
+        setJobs([])
+        setUpcomingDeadlines([])
+      }
+    }
+    
+    loadPracticeData()
+  }, [])
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -55,6 +248,39 @@ export default function PracticeManagement() {
       console.error('Error:', error)
     } finally {
       setIsAILoading(false)
+    }
+  }
+
+  const handleCreateJob = async () => {
+    try {
+      const jobData = {
+        title: newJobData.title,
+        description: newJobData.description || null,
+        client_id: newJobData.client_id,
+        priority: newJobData.priority,
+        status: newJobData.status,
+        due_date: newJobData.due_date || null,
+        assigned_to: newJobData.assigned_to || null,
+        estimated_hours: newJobData.estimated_hours,
+        workflow_template_id: newJobData.workflow_template_id
+      }
+      
+      const newJob = await apiClient.createJob(jobData)
+      setJobs(prevJobs => [newJob as any, ...prevJobs])
+      setShowNewJobModal(false)
+      setNewJobData({
+        title: '',
+        description: '',
+        client_id: '',
+        priority: 'medium',
+        status: 'not_started',
+        due_date: '',
+        assigned_to: '',
+        estimated_hours: null,
+        workflow_template_id: null
+      })
+    } catch (error) {
+      console.error('Failed to create job:', error)
     }
   }
 
@@ -73,80 +299,8 @@ export default function PracticeManagement() {
   ]
 
 
-  const kpis = [
-    {
-      title: 'Active Jobs',
-      value: '24',
-      change: '+3 from last week',
-      trend: 'up' as const,
-      icon: Users,
-      color: 'blue'
-    },
-    {
-      title: 'Completed This Month',
-      value: '156',
-      change: '+12% from last month',
-      trend: 'up' as const,
-      icon: CheckCircle,
-      color: 'green'
-    },
-    {
-      title: 'Avg. Completion Time',
-      value: '4.2 days',
-      change: '-0.8 days improvement',
-      trend: 'up' as const,
-      icon: Clock,
-      color: 'orange'
-    },
-    {
-      title: 'Client Satisfaction',
-      value: '94%',
-      change: '+2% from last month',
-      trend: 'up' as const,
-      icon: Award,
-      color: 'purple'
-    }
-  ]
 
-  const jobs = [
-    {
-      id: 1,
-      title: 'Annual Accounts - ABC Ltd',
-      client: 'ABC Ltd',
-      status: 'in_progress',
-      priority: 'high',
-      assignee: 'John Smith',
-      dueDate: '2024-02-15',
-      progress: 75
-    },
-    {
-      id: 2,
-      title: 'VAT Return Q4',
-      client: 'XYZ Corp',
-      status: 'completed',
-      priority: 'medium',
-      assignee: 'Sarah Johnson',
-      dueDate: '2024-02-10',
-      progress: 100
-    },
-    {
-      id: 3,
-      title: 'Payroll Processing',
-      client: 'DEF Ltd',
-      status: 'on_hold',
-      priority: 'low',
-      assignee: 'Mike Wilson',
-      dueDate: '2024-02-20',
-      progress: 30
-    }
-  ]
 
-  const upcomingDeadlines = [
-    { type: 'VAT Return', client: 'ABC Ltd', date: '2024-02-15', days: 5 },
-    { type: 'Corporation Tax', client: 'XYZ Corp', date: '2024-02-18', days: 8 },
-    { type: 'Annual Accounts', client: 'DEF Ltd', date: '2024-02-25', days: 15 },
-    { type: 'Confirmation Statement', client: 'GHI Ltd', date: '2024-02-20', days: 23 }
-  ]
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -276,7 +430,7 @@ export default function PracticeManagement() {
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
+          <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`} onClick={() => setShowNewJobModal(true)}>
             <Plus className="h-4 w-4 mr-2" />
             New Job
           </Button>
@@ -335,14 +489,14 @@ export default function PracticeManagement() {
                     {getStatusIcon(job.status)}
                     <div>
                       <p className="font-medium">{job.title}</p>
-                      <p className="text-sm text-gray-600">{job.client}</p>
+                      <p className="text-sm text-gray-600">{job.client_id || 'Unknown Client'}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <Badge className={getPriorityColor(job.priority)}>
                       {job.priority}
                     </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
+                    <p className="text-sm text-gray-600 mt-1">{job.assigned_to || 'Unassigned'}</p>
                   </div>
                 </div>
               ))}
@@ -375,6 +529,93 @@ export default function PracticeManagement() {
           </CardContent>
         </Card>
       </div>
+
+      {/* New Job Modal */}
+      <Dialog open={showNewJobModal} onOpenChange={setShowNewJobModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New Job</DialogTitle>
+            <DialogDescription>
+              Add a new job to your practice management system.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
+              <Input
+                id="title"
+                value={newJobData.title}
+                onChange={(e) => setNewJobData(prev => ({ ...prev, title: e.target.value }))}
+                className="col-span-3"
+                placeholder="Job title"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="client" className="text-right">
+                Client
+              </Label>
+              <Input
+                id="client"
+                value={newJobData.client_id}
+                onChange={(e) => setNewJobData(prev => ({ ...prev, client_id: e.target.value }))}
+                className="col-span-3"
+                placeholder="Client name or ID"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="priority" className="text-right">
+                Priority
+              </Label>
+              <Select value={newJobData.priority} onValueChange={(value) => setNewJobData(prev => ({ ...prev, priority: value }))}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="due_date" className="text-right">
+                Due Date
+              </Label>
+              <Input
+                id="due_date"
+                type="date"
+                value={newJobData.due_date}
+                onChange={(e) => setNewJobData(prev => ({ ...prev, due_date: e.target.value }))}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                value={newJobData.description}
+                onChange={(e) => setNewJobData(prev => ({ ...prev, description: e.target.value }))}
+                className="col-span-3"
+                placeholder="Job description"
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNewJobModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateJob} disabled={!newJobData.title || !newJobData.client_id}>
+              Create Job
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 
@@ -419,7 +660,7 @@ export default function PracticeManagement() {
                     <Badge className={getPriorityColor(job.priority)}>
                       {job.priority}
                     </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
+                    <p className="text-sm text-gray-600 mt-1">{job.assigned_to || 'Unassigned'}</p>
                     <Progress value={job.progress} className="w-20 mt-2" />
                   </div>
                 </div>
