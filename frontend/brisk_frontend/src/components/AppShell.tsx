@@ -102,7 +102,7 @@ export default function AppShell() {
         <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center justify-center w-full">
-            <BriskLogo className="w-full h-12" showText={false} />
+            <BriskLogo className="w-full h-10" showText={false} />
           </div>
         </SidebarHeader>
         
@@ -116,7 +116,7 @@ export default function AppShell() {
           <div className="flex items-center gap-4">
             <SidebarTrigger />
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900" />
               <Input
                 placeholder="Search across all modules... (⌘K)"
                 className="w-96 pl-10"
