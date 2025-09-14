@@ -56,7 +56,7 @@ export default function AIPromptSection({
               onKeyPress={handleKeyPress}
               className="flex-1" 
             />
-            <Button onClick={handleSubmit} disabled={isLoading || !question.trim()}>
+            <Button variant="outline" onClick={handleSubmit} disabled={isLoading || !question.trim()}>
               <Brain className="h-4 w-4 mr-2" />
               Ask Adviser
             </Button>
