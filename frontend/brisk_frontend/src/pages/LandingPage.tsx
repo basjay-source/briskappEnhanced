@@ -57,7 +57,7 @@ export default function LandingPage() {
 
       <main className="container mx-auto px-6">
         <section className="text-center py-20">
-          <h1 className="text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-6xl font-bold mb-6">
             All-in-one accounting software
             <span className="text-brisk-primary"> with AI assistants</span>
           </h1>
@@ -107,7 +107,7 @@ export default function LandingPage() {
             {modules.map((module, index) => (
               <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border">
                 <CheckCircle className="h-5 w-5 text-brisk-accent" />
-                <span className="font-medium">{module}</span>
+                <span className="font-bold">{module}</span>
               </div>
             ))}
           </div>
