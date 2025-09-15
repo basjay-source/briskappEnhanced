@@ -13,14 +13,17 @@ import {
 import { useTheme } from '@/components/theme-provider'
 import { useState, useEffect } from 'react'
 import { useResponsive } from '@/hooks/use-responsive'
+import { useTranslation } from 'react-i18next'
 import { apiClient } from '@/lib/api'
 import BriskLogo from '@/components/BriskLogo'
 import ModuleNavigation from '@/components/ModuleNavigation'
 import MobileNavigation from '@/components/MobileNavigation'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export default function AppShell() {
   const { theme, setTheme } = useTheme()
   const { isMobile } = useResponsive()
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Array<{
     id: string;
@@ -81,6 +84,7 @@ export default function AppShell() {
             <BriskLogo className="h-6 w-6" showText={false} />
           </div>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <Search className="h-4 w-4" />
             </Button>
@@ -118,7 +122,7 @@ export default function AppShell() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900" />
               <Input
-                placeholder="Search across all modules... (⌘K)"
+                placeholder={t('common.searchPlaceholder', 'Search across all modules... (⌘K)')}
                 className="w-96 pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -128,7 +132,7 @@ export default function AppShell() {
               {showSearchResults && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-900 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
-                    <span className="text-sm font-bold">Search Results</span>
+                    <span className="text-sm font-bold">{t('common.searchResults', 'Search Results')}</span>
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -139,7 +143,7 @@ export default function AppShell() {
                   </div>
                   
                   {searchLoading ? (
-                    <div className="p-4 text-center text-black">Searching...</div>
+                    <div className="p-4 text-center text-black">{t('common.searching', 'Searching...')}</div>
                   ) : searchResults.length > 0 ? (
                     <div className="max-h-80 overflow-y-auto">
                       {searchResults.map((result, index) => (
@@ -161,7 +165,7 @@ export default function AppShell() {
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-black">No results found</div>
+                    <div className="p-4 text-center text-black">{t('common.noResults', 'No results found')}</div>
                   )}
                 </div>
               )}
@@ -169,6 +173,7 @@ export default function AppShell() {
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <Bell className="h-4 w-4" />
             </Button>

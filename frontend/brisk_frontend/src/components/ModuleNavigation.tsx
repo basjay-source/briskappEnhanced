@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { 
   Calculator, 
   Receipt, 
@@ -15,89 +16,90 @@ import {
   Settings
 } from 'lucide-react'
 
-const modules = [
-  {
-    name: 'Ecosystem Hub',
-    path: '/app',
-    icon: Home,
-    description: 'Overview of all modules'
-  },
-  {
-    name: 'Practice Management',
-    path: '/app/practice',
-    icon: Briefcase,
-    description: 'Jobs, workflows, deadlines'
-  },
-  {
-    name: 'Accounts Production',
-    path: '/app/accounts',
-    icon: Calculator,
-    description: 'FRS 102/105, IFRS, iXBRL'
-  },
-  {
-    name: 'Business Tax',
-    path: '/app/tax/ct',
-    icon: Receipt,
-    description: 'CT600, R&D claims, reliefs'
-  },
-  {
-    name: 'Personal Tax',
-    path: '/app/tax/sa',
-    icon: BarChart3,
-    description: 'SA returns, CGT, optimization'
-  },
-  {
-    name: 'Payroll',
-    path: '/app/payroll',
-    icon: Users,
-    description: 'RTI, pensions, CIS, P11D'
-  },
-  {
-    name: 'AML/KYC',
-    path: '/app/aml',
-    icon: Shield,
-    description: 'Risk assessment, compliance'
-  },
-  {
-    name: 'Company Secretarial',
-    path: '/app/cosec',
-    icon: Building,
-    description: 'Companies House filings'
-  },
-  {
-    name: 'Bookkeeping',
-    path: '/app/books',
-    icon: BookOpen,
-    description: 'Bank feeds, VAT MTD'
-  },
-  {
-    name: 'Charity & Academy Accounts',
-    path: '/app/charity',
-    icon: Heart,
-    description: 'SORP compliance, fund accounting'
-  },
-  {
-    name: 'DocuSignage',
-    path: '/app/esign',
-    icon: FileSignature,
-    description: 'Digital signing workflows'
-  },
-  {
-    name: 'Time Management',
-    path: '/app/time',
-    icon: Clock,
-    description: 'Advanced time tracking & billing'
-  },
-  {
-    name: 'Admin',
-    path: '/app/admin',
-    icon: Settings,
-    description: 'System administration & settings'
-  }
-]
-
 export default function ModuleNavigation() {
   const location = useLocation()
+  const { t } = useTranslation()
+
+  const modules = [
+    {
+      name: t('navigation.ecosystemHub'),
+      path: '/app',
+      icon: Home,
+      description: t('modules.ecosystemHub.description', 'Overview of all modules')
+    },
+    {
+      name: t('navigation.practiceManagement'),
+      path: '/app/practice',
+      icon: Briefcase,
+      description: t('modules.practiceManagement.description')
+    },
+    {
+      name: t('navigation.accountsProduction'),
+      path: '/app/accounts',
+      icon: Calculator,
+      description: t('modules.accountsProduction.description', 'FRS 102/105, IFRS, iXBRL')
+    },
+    {
+      name: t('navigation.businessTax'),
+      path: '/app/tax/ct',
+      icon: Receipt,
+      description: t('modules.businessTax.description')
+    },
+    {
+      name: t('navigation.personalTax'),
+      path: '/app/tax/sa',
+      icon: BarChart3,
+      description: t('modules.personalTax.description')
+    },
+    {
+      name: t('navigation.payroll'),
+      path: '/app/payroll',
+      icon: Users,
+      description: t('modules.payroll.description')
+    },
+    {
+      name: t('navigation.amlCompliance'),
+      path: '/app/aml',
+      icon: Shield,
+      description: t('modules.amlCompliance.description')
+    },
+    {
+      name: t('navigation.companySecretarial'),
+      path: '/app/cosec',
+      icon: Building,
+      description: t('modules.companySecretarial.description')
+    },
+    {
+      name: t('navigation.bookkeeping'),
+      path: '/app/books',
+      icon: BookOpen,
+      description: t('modules.bookkeeping.description')
+    },
+    {
+      name: t('navigation.charityAccounts'),
+      path: '/app/charity',
+      icon: Heart,
+      description: t('modules.charityAccounts.description', 'SORP compliance, fund accounting')
+    },
+    {
+      name: t('navigation.docuSignage'),
+      path: '/app/esign',
+      icon: FileSignature,
+      description: t('modules.docuSignage.description', 'Digital signing workflows')
+    },
+    {
+      name: t('navigation.timeManagement'),
+      path: '/app/time',
+      icon: Clock,
+      description: t('modules.timeManagement.description', 'Advanced time tracking & billing')
+    },
+    {
+      name: t('navigation.admin'),
+      path: '/app/admin',
+      icon: Settings,
+      description: t('modules.admin.description', 'System administration & settings')
+    }
+  ]
 
   return (
     <div className="p-2">

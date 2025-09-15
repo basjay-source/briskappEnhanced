@@ -1,0 +1,204 @@
+{
+  "common": {
+    "loading": "載入中...",
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "新增",
+    "search": "搜尋",
+    "filter": "篩選",
+    "export": "匯出",
+    "import": "匯入",
+    "submit": "提交",
+    "close": "關閉",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "yes": "是",
+    "no": "否",
+    "ok": "確定",
+    "error": "錯誤",
+    "success": "成功",
+    "warning": "警告",
+    "info": "資訊",
+    "welcome": "歡迎",
+    "searchPlaceholder": "搜尋所有模組... (⌘K)",
+    "searchResults": "搜尋結果",
+    "searching": "搜尋中...",
+    "noResults": "未找到結果"
+  },
+  "auth": {
+    "login": "登入",
+    "logout": "登出",
+    "email": "電子郵件",
+    "password": "密碼",
+    "forgotPassword": "忘記密碼？",
+    "rememberMe": "記住我",
+    "signInToAccount": "登入您的 Brisk Practice Suite 帳戶",
+    "professionalAccountancy": "專業會計實務管理",
+    "noAccount": "沒有帳戶？",
+    "startFreeTrial": "開始免費試用"
+  },
+  "navigation": {
+    "dashboard": "儀表板",
+    "ecosystemHub": "生態系統中心",
+    "practiceManagement": "實務管理",
+    "accountsProduction": "帳戶製作",
+    "businessTax": "企業稅務",
+    "personalTax": "個人稅務",
+    "payroll": "薪資單",
+    "amlCompliance": "反洗錢/認識客戶合規",
+    "companySecretarial": "公司秘書",
+    "bookkeeping": "記帳",
+    "charityAccounts": "慈善和學院帳戶",
+    "docuSignage": "文件簽名",
+    "timeManagement": "時間管理",
+    "admin": "管理"
+  },
+  "modules": {
+    "ecosystemHub": {
+      "description": "所有模組概覽"
+    },
+    "practiceManagement": {
+      "title": "實務管理",
+      "description": "工作、工作流程、截止日期",
+      "jobs": "工作和任務",
+      "workflows": "工作流程",
+      "clientPortal": "客戶入口網站",
+      "capacityPlanning": "容量規劃",
+      "compliance": "合規",
+      "analytics": "分析",
+      "emailStudio": "電子郵件工作室",
+      "templates": "範本",
+      "reports": "報告"
+    },
+    "businessTax": {
+      "title": "企業稅務",
+      "description": "CT600、研發申請、減免",
+      "dashboard": "企業稅務儀表板",
+      "adviser": "企業稅務顧問",
+      "computation": "公司稅計算",
+      "ctComputation": "CT600計算",
+      "taxAdjustments": "稅務調整",
+      "supportingSchedules": "支援附表",
+      "validation": "驗證",
+      "rdClaims": "研發申請",
+      "reliefs": "減免和抵免",
+      "groupRelief": "集團減免",
+      "quarterlyPayments": "季度付款",
+      "filing": "申報"
+    },
+    "personalTax": {
+      "title": "個人稅務",
+      "description": "SA申報、CGT最佳化",
+      "dashboard": "個人稅務儀表板",
+      "adviser": "個人稅務顧問",
+      "saReturns": "SA申報",
+      "cgtCalculator": "CGT計算器",
+      "taxPlanning": "稅務規劃",
+      "filing": "申報和合規"
+    },
+    "payroll": {
+      "title": "薪資單",
+      "description": "RTI、退休金、CIS、P11D",
+      "dashboard": "薪資單儀表板",
+      "adviser": "人力資源顧問",
+      "processing": "薪資單處理",
+      "runPayroll": "執行薪資單",
+      "payslips": "薪資條",
+      "adjustments": "調整",
+      "approvals": "審批",
+      "employeeManagement": "員工管理",
+      "rtiSubmissions": "RTI提交",
+      "autoEnrolment": "自動註冊",
+      "cisProcessing": "CIS處理"
+    },
+    "amlCompliance": {
+      "title": "反洗錢/認識客戶合規",
+      "description": "風險評估、合規",
+      "dashboard": "反洗錢合規儀表板",
+      "adviser": "反洗錢合規顧問",
+      "riskAssessment": "風險評估",
+      "clientRiskProfiling": "客戶風險分析",
+      "transactionMonitoring": "交易監控",
+      "countryRiskAssessment": "國家風險評估",
+      "riskReports": "風險報告",
+      "kycIdv": "認識客戶和身份驗證",
+      "regulatoryReporting": "監管報告",
+      "trainingAwareness": "培訓和意識"
+    },
+    "companySecretarial": {
+      "title": "公司秘書",
+      "description": "公司註冊處申報",
+      "dashboard": "公司秘書儀表板",
+      "adviser": "公司秘書",
+      "companyManagement": "公司管理",
+      "formsFiling": "表格和申報",
+      "pscRegister": "PSC登記冊",
+      "hmrcForms": "HMRC表格"
+    },
+    "bookkeeping": {
+      "title": "記帳",
+      "description": "銀行資料來源、增值稅MTD",
+      "dashboard": "記帳儀表板",
+      "chartOfAccounts": "會計科目表",
+      "sales": "銷售",
+      "purchases": "採購",
+      "banking": "銀行業務",
+      "journals": "日記帳",
+      "vat": "增值稅",
+      "financialReports": "財務報告",
+      "managementReports": "管理報告",
+      "projects": "專案",
+      "budgets": "預算",
+      "property": "房地產",
+      "ecommerce": "電子商務",
+      "documents": "文件",
+      "integrations": "整合"
+    },
+    "charityAccounts": {
+      "description": "SORP合規、基金會計"
+    },
+    "docuSignage": {
+      "description": "數位簽名工作流程"
+    },
+    "timeManagement": {
+      "description": "進階時間追蹤和計費"
+    },
+    "admin": {
+      "description": "系統管理和設定"
+    }
+  },
+  "aiAdviser": {
+    "askQuestion": "提出問題...",
+    "askAdviser": "諮詢顧問",
+    "businessTaxAdviser": "諮詢您的企業稅務顧問",
+    "personalTaxAdviser": "諮詢您的個人稅務顧問",
+    "hrAdviser": "諮詢您的人力資源顧問",
+    "amlAdviser": "諮詢您的反洗錢合規顧問",
+    "accountant": "諮詢您的會計師",
+    "companySecretary": "諮詢您的公司秘書",
+    "charityAccountant": "諮詢您的慈善會計師"
+  },
+  "dashboard": {
+    "welcome": "歡迎使用您的一體化實務管理套件",
+    "keyMetrics": "關鍵指標",
+    "recentActivity": "最近活動",
+    "aiInsights": "AI洞察",
+    "quickActions": "快速操作"
+  },
+  "forms": {
+    "required": "此欄位為必填項",
+    "invalidEmail": "請輸入有效的電子郵件地址",
+    "passwordTooShort": "密碼至少需要8個字元",
+    "passwordsDoNotMatch": "密碼不符合"
+  },
+  "errors": {
+    "somethingWentWrong": "出現了問題",
+    "networkError": "網路錯誤。請檢查您的連線。",
+    "unauthorized": "您無權執行此操作",
+    "notFound": "未找到請求的資源",
+    "serverError": "內部伺服器錯誤。請稍後重試。"
+  }
+}

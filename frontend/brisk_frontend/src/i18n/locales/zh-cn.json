@@ -1,0 +1,204 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "search": "搜索",
+    "filter": "筛选",
+    "export": "导出",
+    "import": "导入",
+    "submit": "提交",
+    "close": "关闭",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "yes": "是",
+    "no": "否",
+    "ok": "确定",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "welcome": "欢迎",
+    "searchPlaceholder": "搜索所有模块... (⌘K)",
+    "searchResults": "搜索结果",
+    "searching": "搜索中...",
+    "noResults": "未找到结果"
+  },
+  "auth": {
+    "login": "登录",
+    "logout": "退出",
+    "email": "邮箱",
+    "password": "密码",
+    "forgotPassword": "忘记密码？",
+    "rememberMe": "记住我",
+    "signInToAccount": "登录您的 Brisk Practice Suite 账户",
+    "professionalAccountancy": "专业会计实务管理",
+    "noAccount": "没有账户？",
+    "startFreeTrial": "开始免费试用"
+  },
+  "navigation": {
+    "dashboard": "仪表板",
+    "ecosystemHub": "生态系统中心",
+    "practiceManagement": "实务管理",
+    "accountsProduction": "账户制作",
+    "businessTax": "企业税务",
+    "personalTax": "个人税务",
+    "payroll": "工资单",
+    "amlCompliance": "反洗钱/了解客户合规",
+    "companySecretarial": "公司秘书",
+    "bookkeeping": "记账",
+    "charityAccounts": "慈善和学院账户",
+    "docuSignage": "文档签名",
+    "timeManagement": "时间管理",
+    "admin": "管理"
+  },
+  "modules": {
+    "ecosystemHub": {
+      "description": "所有模块概览"
+    },
+    "practiceManagement": {
+      "title": "实务管理",
+      "description": "工作、工作流程、截止日期",
+      "jobs": "工作和任务",
+      "workflows": "工作流程",
+      "clientPortal": "客户门户",
+      "capacityPlanning": "容量规划",
+      "compliance": "合规",
+      "analytics": "分析",
+      "emailStudio": "邮件工作室",
+      "templates": "模板",
+      "reports": "报告"
+    },
+    "businessTax": {
+      "title": "企业税务",
+      "description": "CT600、研发申请、减免",
+      "dashboard": "企业税务仪表板",
+      "adviser": "企业税务顾问",
+      "computation": "公司税计算",
+      "ctComputation": "CT600计算",
+      "taxAdjustments": "税务调整",
+      "supportingSchedules": "支持附表",
+      "validation": "验证",
+      "rdClaims": "研发申请",
+      "reliefs": "减免和抵免",
+      "groupRelief": "集团减免",
+      "quarterlyPayments": "季度付款",
+      "filing": "申报"
+    },
+    "personalTax": {
+      "title": "个人税务",
+      "description": "SA申报、CGT优化",
+      "dashboard": "个人税务仪表板",
+      "adviser": "个人税务顾问",
+      "saReturns": "SA申报",
+      "cgtCalculator": "CGT计算器",
+      "taxPlanning": "税务规划",
+      "filing": "申报和合规"
+    },
+    "payroll": {
+      "title": "工资单",
+      "description": "RTI、养老金、CIS、P11D",
+      "dashboard": "工资单仪表板",
+      "adviser": "人力资源顾问",
+      "processing": "工资单处理",
+      "runPayroll": "运行工资单",
+      "payslips": "工资条",
+      "adjustments": "调整",
+      "approvals": "审批",
+      "employeeManagement": "员工管理",
+      "rtiSubmissions": "RTI提交",
+      "autoEnrolment": "自动注册",
+      "cisProcessing": "CIS处理"
+    },
+    "amlCompliance": {
+      "title": "反洗钱/了解客户合规",
+      "description": "风险评估、合规",
+      "dashboard": "反洗钱合规仪表板",
+      "adviser": "反洗钱合规顾问",
+      "riskAssessment": "风险评估",
+      "clientRiskProfiling": "客户风险分析",
+      "transactionMonitoring": "交易监控",
+      "countryRiskAssessment": "国家风险评估",
+      "riskReports": "风险报告",
+      "kycIdv": "了解客户和身份验证",
+      "regulatoryReporting": "监管报告",
+      "trainingAwareness": "培训和意识"
+    },
+    "companySecretarial": {
+      "title": "公司秘书",
+      "description": "公司注册处申报",
+      "dashboard": "公司秘书仪表板",
+      "adviser": "公司秘书",
+      "companyManagement": "公司管理",
+      "formsFiling": "表格和申报",
+      "pscRegister": "PSC登记册",
+      "hmrcForms": "HMRC表格"
+    },
+    "bookkeeping": {
+      "title": "记账",
+      "description": "银行数据源、增值税MTD",
+      "dashboard": "记账仪表板",
+      "chartOfAccounts": "会计科目表",
+      "sales": "销售",
+      "purchases": "采购",
+      "banking": "银行业务",
+      "journals": "日记账",
+      "vat": "增值税",
+      "financialReports": "财务报告",
+      "managementReports": "管理报告",
+      "projects": "项目",
+      "budgets": "预算",
+      "property": "房地产",
+      "ecommerce": "电子商务",
+      "documents": "文档",
+      "integrations": "集成"
+    },
+    "charityAccounts": {
+      "description": "SORP合规、基金会计"
+    },
+    "docuSignage": {
+      "description": "数字签名工作流程"
+    },
+    "timeManagement": {
+      "description": "高级时间跟踪和计费"
+    },
+    "admin": {
+      "description": "系统管理和设置"
+    }
+  },
+  "aiAdviser": {
+    "askQuestion": "提出问题...",
+    "askAdviser": "咨询顾问",
+    "businessTaxAdviser": "咨询您的企业税务顾问",
+    "personalTaxAdviser": "咨询您的个人税务顾问",
+    "hrAdviser": "咨询您的人力资源顾问",
+    "amlAdviser": "咨询您的反洗钱合规顾问",
+    "accountant": "咨询您的会计师",
+    "companySecretary": "咨询您的公司秘书",
+    "charityAccountant": "咨询您的慈善会计师"
+  },
+  "dashboard": {
+    "welcome": "欢迎使用您的一体化实务管理套件",
+    "keyMetrics": "关键指标",
+    "recentActivity": "最近活动",
+    "aiInsights": "AI洞察",
+    "quickActions": "快速操作"
+  },
+  "forms": {
+    "required": "此字段为必填项",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "passwordTooShort": "密码至少需要8个字符",
+    "passwordsDoNotMatch": "密码不匹配"
+  },
+  "errors": {
+    "somethingWentWrong": "出现了问题",
+    "networkError": "网络错误。请检查您的连接。",
+    "unauthorized": "您无权执行此操作",
+    "notFound": "未找到请求的资源",
+    "serverError": "内部服务器错误。请稍后重试。"
+  }
+}
