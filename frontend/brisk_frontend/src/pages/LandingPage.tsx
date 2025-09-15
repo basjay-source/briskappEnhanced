@@ -29,8 +29,9 @@ export default function LandingPage() {
   ]
 
   const modules = [
-    "Accounts Production", "Business Tax", "Personal Tax", "Payroll",
-    "AML/KYC", "Company Secretarial", "Bookkeeping", "e-Signature"
+    "Practice Management", "Time Management", "Accounts Production", "Business Tax", 
+    "Personal Tax", "Payroll", "Charity/Academy Accounts", "AML/KYC", 
+    "Company Secretarial", "Bookkeeping", "e-Signature"
   ]
 
   return (
