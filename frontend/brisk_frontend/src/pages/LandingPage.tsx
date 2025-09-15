@@ -58,7 +58,7 @@ export default function LandingPage() {
         <section className="text-center py-20">
           <h1 className="text-6xl font-bold mb-6 text-gray-900">
             All-in-one accounting software
-            <span style={{color: '#FF6B35'}}> with AI assistants</span>
+            <span style={{color: '#FF6B35'}}> with Intelligent Assistant</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Cloud-native, multilingual, ultra-fast platform for accounting firms and businesses. 
@@ -104,9 +104,9 @@ export default function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {modules.map((module, index) => (
-              <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border">
-                <CheckCircle className="h-5 w-5" style={{color: '#FF6B35'}} />
-                <span className="font-bold">{module}</span>
+              <div key={index} className="flex items-center gap-3 p-4 bg-blue-600 rounded-lg shadow-sm border">
+                <CheckCircle className="h-5 w-5 text-white" />
+                <span className="font-bold text-white">{module}</span>
               </div>
             ))}
           </div>
