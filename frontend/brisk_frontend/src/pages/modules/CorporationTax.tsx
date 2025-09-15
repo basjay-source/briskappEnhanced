@@ -259,7 +259,7 @@ export default function CorporationTax() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calculator className="h-5 w-5" />
-                Business Tax Computation
+                Corporation Tax Computation
               </CardTitle>
               <CardDescription>
                 Automated CT600 computation with real-time calculations
@@ -456,7 +456,7 @@ export default function CorporationTax() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Business Tax Computation</CardTitle>
+              <CardTitle>Corporation Tax Computation</CardTitle>
               <CardDescription>Automated CT600 computation with real-time calculations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">

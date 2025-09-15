@@ -95,7 +95,7 @@ const Reports: React.FC = () => {
       hasSubTabs: true,
       subTabs: {
         vat: { label: 'VAT Reports', icon: FileText },
-        corporation: { label: 'Corporation Tax', icon: Calculator },
+        corporation: { label: 'Business Tax', icon: Calculator },
         statutory: { label: 'Statutory Accounts', icon: Building2 },
         audit: { label: 'Audit Trail', icon: Eye }
       }
@@ -280,7 +280,7 @@ const Reports: React.FC = () => {
                   <Download className="h-4 w-4 mr-2" />
                   Generate
                 </button>
-                <button className="border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="border border-blue-900 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors">
                   <Eye className="h-4 w-4" />
                 </button>
               </div>
@@ -300,7 +300,7 @@ const Reports: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Report Type</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+              <select className="mt-1 block w-full border border-blue-900 rounded-md px-3 py-2">
                 <option value="">Select report type</option>
                 <option value="financial">Financial Statement</option>
                 <option value="management">Management Report</option>
@@ -310,7 +310,7 @@ const Reports: React.FC = () => {
             </div>
             <div>
               <label className="text-sm font-medium">Data Source</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+              <select className="mt-1 block w-full border border-blue-900 rounded-md px-3 py-2">
                 <option value="">Select data source</option>
                 <option value="trial-balance">Trial Balance</option>
                 <option value="transactions">Transaction Data</option>
@@ -413,8 +413,8 @@ const Reports: React.FC = () => {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r border-blue-900 flex flex-col">
+          <div className="p-4 border-b border-blue-900">
             <h2 className="text-lg font-bold">Reports</h2>
           </div>
           
