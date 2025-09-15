@@ -35,7 +35,7 @@ const modules = [
     description: 'FRS 102/105, IFRS, iXBRL'
   },
   {
-    name: 'Corporation Tax',
+    name: 'Business Tax',
     path: '/app/tax/ct',
     icon: Receipt,
     description: 'CT600, R&D claims, reliefs'
@@ -118,7 +118,7 @@ export default function ModuleNavigation() {
           >
             <Icon className="h-4 w-4" />
             <div className="flex flex-col items-start">
-              <span className="font-medium">{module.name}</span>
+              <span className="font-bold">{module.name}</span>
               <span className="text-xs opacity-90">{module.description}</span>
             </div>
           </Link>

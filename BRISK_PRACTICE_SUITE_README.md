@@ -57,7 +57,7 @@ terraform plan
 ## Modules
 
 1. **Accounts Production** - FRS 102/105, IFRS, iXBRL
-2. **Corporation Tax** - CT600, R&D claims, reliefs
+2. **Business Tax** - CT600, R&D claims, reliefs
 3. **Personal Tax** - SA100/SA returns, CGT, IHT
 4. **Payroll** - RTI, pensions, CIS, P11D
 5. **AML/KYC** - Risk assessment, compliance

@@ -33,7 +33,7 @@ app.add_middleware(TenantMiddleware)
 app.add_middleware(AuthMiddleware)
 
 app.include_router(accounts.router, prefix="/api/v1/accounts", tags=["Accounts Production"])
-app.include_router(tax_ct.router, prefix="/api/v1/tax/ct", tags=["Corporation Tax"])
+app.include_router(tax_ct.router, prefix="/api/v1/tax/ct", tags=["Business Tax"])
 app.include_router(tax_sa.router, prefix="/api/v1/tax/sa", tags=["Personal Tax"])
 app.include_router(payroll.router, prefix="/api/v1/payroll", tags=["Payroll"])
 app.include_router(aml.router, prefix="/api/v1/aml", tags=["AML/KYC"])
@@ -56,7 +56,7 @@ def read_root():
         "version": "1.0.0",
         "modules": [
             "Accounts Production",
-            "Corporation Tax", 
+            "Business Tax", 
             "Personal Tax",
             "Payroll",
             "AML/KYC",

@@ -29,7 +29,7 @@ export default function LandingPage() {
   ]
 
   const modules = [
-    "Accounts Production", "Corporation Tax", "Personal Tax", "Payroll",
+    "Accounts Production", "Business Tax", "Personal Tax", "Payroll",
     "AML/KYC", "Company Secretarial", "Bookkeeping", "e-Signature"
   ]
 

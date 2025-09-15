@@ -22,7 +22,7 @@ graph TB
     
     subgraph "Core Services"
         G[Accounts Production]
-        H[Corporation Tax]
+        H[Business Tax]
         I[Personal Tax]
         J[Payroll]
         K[AML/KYC]
@@ -141,7 +141,7 @@ graph TB
 - **Financial Statements**: P&L, Balance Sheet, Cash Flow with iXBRL tagging
 - **Consolidation**: Group accounts with intercompany eliminations
 
-### 3. Corporation Tax
+### 3. Business Tax
 - **CT600 Computation**: Automated tax calculations with current rates
 - **R&D Claims**: Current regime support with relief calculations
 - **Capital Allowances**: AIA, FYA, and writing down allowances
