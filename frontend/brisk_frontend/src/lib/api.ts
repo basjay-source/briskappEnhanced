@@ -557,6 +557,145 @@ class ApiClient {
     return this.request(`/books/aged-creditors${params}`)
   }
 
+  async getSalesReport(startDate?: string, endDate?: string, customerId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (customerId) params.append('customer_id', customerId)
+    return this.request(`/books/reports/sales?${params}`)
+  }
+
+  async getCustomerReceipts(customerId?: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (customerId) params.append('customer_id', customerId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/customer-receipts?${params}`)
+  }
+
+  async getSalesInvoiceList(startDate?: string, endDate?: string, status?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (status) params.append('status', status)
+    return this.request(`/books/reports/sales-invoice-list?${params}`)
+  }
+
+  async getPurchasesInvoiceList(startDate?: string, endDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/purchases-invoice-list?${params}`)
+  }
+
+  async getTradeDebtorsDetailed(asOfDate?: string, customerId?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    if (customerId) params.append('customer_id', customerId)
+    return this.request(`/books/reports/trade-debtors-detailed?${params}`)
+  }
+
+  async getTradeDebtorsSummary(asOfDate?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    return this.request(`/books/reports/trade-debtors-summary?${params}`)
+  }
+
+  async getTradeCreditorsDetailed(asOfDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/trade-creditors-detailed?${params}`)
+  }
+
+  async getTradeCreditorsSummary(asOfDate?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    return this.request(`/books/reports/trade-creditors-summary?${params}`)
+  }
+
+  async getCustomerStatement(customerId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/customer-statements/${customerId}?${params}`)
+  }
+
+  async getSupplierStatement(supplierId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/supplier-statements/${supplierId}?${params}`)
+  }
+
+  async getPaymentsToSuppliers(startDate?: string, endDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/payments-to-suppliers?${params}`)
+  }
+
+  async getRecurringTransactions() {
+    return this.request('/books/recurring-transactions')
+  }
+
+  async createRecurringTransaction(data: any) {
+    return this.request('/books/recurring-transactions', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async generateRecurringTransactions() {
+    return this.request('/books/recurring-transactions/generate', {
+      method: 'POST'
+    })
+  }
+
+  async updateRecurringTransaction(transactionId: string, data: any) {
+    return this.request(`/books/recurring-transactions/${transactionId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getAccrualsPrepaymentsments(type?: string) {
+    const params = new URLSearchParams()
+    if (type) params.append('type', type)
+    return this.request(`/books/accruals-prepayments?${params}`)
+  }
+
+  async createAccrualPrepayment(data: any) {
+    return this.request('/books/accruals-prepayments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async reverseAccrualPrepayment(accrualId: string) {
+    return this.request(`/books/accruals-prepayments/${accrualId}/reverse`, {
+      method: 'POST'
+    })
+  }
+
+  async processMonthlyAccrualsPrepaymentsments() {
+    return this.request('/books/accruals-prepayments/process-monthly', {
+      method: 'POST'
+    })
+  }
+
+  async sendInvoiceEmail(invoiceData: any) {
+    return this.request('/email/send-invoice', {
+      method: 'POST',
+      body: JSON.stringify(invoiceData)
+    })
+  }
+
+  async getInvoiceTracking(invoiceId: string) {
+    return this.request(`/email/invoice-tracking/${invoiceId}`)
+  }
 }
 
 export const apiClient = new ApiClient()
