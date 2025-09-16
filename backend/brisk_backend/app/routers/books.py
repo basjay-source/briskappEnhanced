@@ -7,11 +7,75 @@ from datetime import date, datetime
 from decimal import Decimal
 
 from app.database import get_db
-from app.models import BankConnection, EcommerceConnection, JournalEntry
+from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking
+from app.models.statements import Invoice
 from app.models.client import Client
 from app.models.products import Product, InventoryMovement
 
 router = APIRouter()
+
+class RecurringTransactionCreate(BaseModel):
+    template_name: str
+    transaction_type: str
+    frequency: str
+    next_date: date
+    end_date: Optional[date] = None
+    amount: Decimal
+    description: str
+    account_id: str
+    customer_id: Optional[str] = None
+    supplier_id: Optional[str] = None
+
+class RecurringTransactionUpdate(BaseModel):
+    template_name: Optional[str] = None
+    frequency: Optional[str] = None
+    next_date: Optional[date] = None
+    end_date: Optional[date] = None
+    amount: Optional[Decimal] = None
+    description: Optional[str] = None
+    is_active: Optional[bool] = None
+
+class AccrualPrepaymentCreate(BaseModel):
+    type: str
+    description: str
+    total_amount: Decimal
+    start_date: date
+    end_date: date
+    frequency: str = "monthly"
+    account_id: str
+
+class InvoiceEmailCreate(BaseModel):
+    invoice_id: str
+    recipient_email: str
+    subject: str
+    message: str
+
+class RecurringTransactionCreate(BaseModel):
+    template_name: str
+    transaction_type: str
+    frequency: str
+    next_date: date
+    end_date: Optional[date] = None
+    amount: float
+    description: str
+    account_id: str
+    customer_id: Optional[str] = None
+    supplier_id: Optional[str] = None
+
+class AccrualPrepaymentCreate(BaseModel):
+    type: str
+    description: str
+    total_amount: float
+    start_date: date
+    end_date: date
+    frequency: str = "monthly"
+    account_id: str
+
+class InvoiceEmailCreate(BaseModel):
+    invoice_id: str
+    recipient_email: str
+    subject: str
+    message: str
 
 class BankConnectionCreate(BaseModel):
     company_id: str
@@ -28,12 +92,13 @@ class TransactionCreate(BaseModel):
     amount: Decimal
     transaction_type: str
 
+
 class InvoiceCreate(BaseModel):
     company_id: str
     customer_id: str
     invoice_number: str
     issue_date: date
-    due_date: date
+
     amount: Decimal
     vat_amount: Decimal
     status: str
@@ -87,6 +152,35 @@ class InventoryMovementCreate(BaseModel):
     quantity: int
     reference: Optional[str] = None
     notes: Optional[str] = None
+class RecurringTransactionCreate(BaseModel):
+    template_name: str
+    transaction_type: str  # sale, purchase
+    frequency: str  # monthly, quarterly, annually
+    next_date: date
+    end_date: Optional[date] = None
+    amount: Decimal
+    description: str
+    account_id: str
+    customer_id: Optional[str] = None
+    supplier_id: Optional[str] = None
+
+class AccrualPrepaymentCreate(BaseModel):
+    type: str  # accrual, prepayment
+    description: str
+    total_amount: Decimal
+    start_date: date
+    end_date: date
+    frequency: str = "monthly"
+    account_id: str
+
+class InvoiceEmailCreate(BaseModel):
+    invoice_id: str
+    recipient_email: str
+    subject: str
+    body: str
+    include_payment_link: bool = True
+
+
     movement_date: date
 
 @router.get("/bank-connections/{company_id}")
@@ -920,4 +1014,1090 @@ def create_inventory_movement(
     return {
         "id": movement.id,
         "status": "created"
+    }
+
+@router.get("/reconciliation/{account_id}")
+def get_bank_reconciliation(
+    account_id: str,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    bank_account = db.query(BankConnection).filter(
+        BankConnection.tenant_id == request.state.tenant_id,
+        BankConnection.id == account_id
+    ).first()
+    
+    if not bank_account:
+        raise HTTPException(status_code=404, detail="Bank account not found")
+    
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id == account_id
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    transactions = query.order_by(JournalEntry.transaction_date.asc()).all()
+    
+    opening_balance = 0
+    if start_date:
+        opening_query = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account_id,
+            JournalEntry.transaction_date < start_date
+        )
+        opening_transactions = opening_query.all()
+        for txn in opening_transactions:
+            opening_balance += float(txn.credit_amount - txn.debit_amount)
+    else:
+        opening_balance = 0
+    
+    running_balance = opening_balance
+    reconciliation_data = []
+    
+    for txn in transactions:
+        transaction_amount = float(txn.credit_amount - txn.debit_amount)
+        running_balance += transaction_amount
+        
+        reconciliation_data.append({
+            "id": txn.id,
+            "date": txn.transaction_date.isoformat(),
+            "description": txn.description,
+            "reference": txn.reference,
+            "debit": float(txn.debit_amount) if txn.debit_amount > 0 else None,
+            "credit": float(txn.credit_amount) if txn.credit_amount > 0 else None,
+            "running_balance": running_balance,
+            "status": "reconciled" if txn.reference else "pending"
+        })
+    
+    return {
+        "account_name": bank_account.bank_name,
+        "account_number": bank_account.account_number,
+        "currency": bank_account.currency,
+        "opening_balance": opening_balance,
+        "closing_balance": running_balance,
+        "transactions": reconciliation_data,
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/reconciliation/summary")
+def get_reconciliation_summary(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    bank_accounts = db.query(BankConnection).filter(
+        BankConnection.tenant_id == request.state.tenant_id,
+        BankConnection.is_active == True
+    ).all()
+    
+    summary_data = []
+    for account in bank_accounts:
+        latest_transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id
+        ).order_by(JournalEntry.transaction_date.desc()).limit(1).first()
+        
+        all_transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id
+        ).all()
+        
+        current_balance = 0
+        for txn in all_transactions:
+            current_balance += float(txn.credit_amount - txn.debit_amount)
+        
+        summary_data.append({
+            "account_id": account.id,
+            "account_name": account.bank_name,
+            "account_number": account.account_number,
+            "current_balance": current_balance,
+            "currency": account.currency,
+            "last_transaction_date": latest_transactions.transaction_date.isoformat() if latest_transactions else None
+        })
+    
+    return summary_data
+
+@router.get("/aged-debtors")
+def get_aged_debtors(
+    as_of_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    invoices = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.description.contains("Invoice"),
+        JournalEntry.transaction_date <= as_of_date
+    ).all()
+    
+    aged_data = []
+    for invoice in invoices:
+        days_outstanding = (as_of_date - invoice.transaction_date).days
+        amount_outstanding = float(invoice.debit_amount - invoice.credit_amount)
+        
+        if amount_outstanding > 0:
+            aged_data.append({
+                "customer_name": invoice.description.split(" - ")[0] if " - " in invoice.description else "Unknown Customer",
+                "invoice_number": invoice.reference,
+                "invoice_date": invoice.transaction_date.isoformat(),
+                "amount": amount_outstanding,
+                "days_outstanding": days_outstanding,
+                "age_bracket": "0-30" if days_outstanding <= 30 else 
+                             "31-60" if days_outstanding <= 60 else
+                             "61-90" if days_outstanding <= 90 else "90+"
+            })
+    
+    return aged_data
+
+
+@router.get("/sales/running-balances")
+def get_sales_running_balances(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.description.contains("Invoice")
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    transactions = query.order_by(JournalEntry.transaction_date.asc()).all()
+    
+    running_balance = 0
+    sales_data = []
+    
+    for txn in transactions:
+        transaction_amount = float(txn.credit_amount - txn.debit_amount)
+        running_balance += transaction_amount
+        
+        sales_data.append({
+            "id": txn.id,
+            "date": txn.transaction_date.isoformat(),
+            "description": txn.description,
+            "reference": txn.reference,
+            "amount": transaction_amount,
+            "running_balance": running_balance,
+            "customer": txn.description.replace("Invoice - ", "") if "Invoice - " in txn.description else "Unknown Customer"
+        })
+    
+    return {
+        "sales_transactions": sales_data,
+        "total_sales": running_balance,
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/purchases/running-balances")
+def get_purchases_running_balances(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.description.contains("Bill")
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    transactions = query.order_by(JournalEntry.transaction_date.asc()).all()
+    
+    running_balance = 0
+    purchases_data = []
+    
+    for txn in transactions:
+        transaction_amount = float(txn.debit_amount - txn.credit_amount)
+        running_balance += transaction_amount
+        
+        purchases_data.append({
+            "id": txn.id,
+            "date": txn.transaction_date.isoformat(),
+            "description": txn.description,
+            "reference": txn.reference,
+            "amount": transaction_amount,
+            "running_balance": running_balance,
+            "supplier": txn.description.replace("Bill - ", "") if "Bill - " in txn.description else "Unknown Supplier"
+        })
+    
+    return {
+        "purchase_transactions": purchases_data,
+        "total_purchases": running_balance,
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/aged-creditors")
+def get_aged_creditors(
+    as_of_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    bills = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.description.contains("Bill"),
+        JournalEntry.transaction_date <= as_of_date
+    ).all()
+    
+    aged_data = []
+    for bill in bills:
+        days_outstanding = (as_of_date - bill.transaction_date).days
+        amount_outstanding = float(bill.credit_amount - bill.debit_amount)
+        
+        if amount_outstanding > 0:
+            aged_data.append({
+                "supplier_name": bill.description.split(" - ")[0] if " - " in bill.description else "Unknown Supplier",
+                "bill_number": bill.reference,
+                "bill_date": bill.transaction_date.isoformat(),
+                "amount": amount_outstanding,
+                "days_outstanding": days_outstanding,
+                "age_bracket": "0-30" if days_outstanding <= 30 else 
+                             "31-60" if days_outstanding <= 60 else
+                             "61-90" if days_outstanding <= 90 else "90+"
+            })
+    
+    return aged_data
+
+@router.get("/reports/sales")
+def get_sales_report(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    customer_id: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get comprehensive sales report with running balances"""
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Revenue"
+            )
+        )
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    entries = query.order_by(JournalEntry.transaction_date).all()
+    
+    running_balance = 0
+    sales_data = []
+    
+    for entry in entries:
+        running_balance += float(entry.credit_amount - entry.debit_amount)
+        sales_data.append({
+            "id": entry.id,
+            "date": entry.transaction_date.isoformat(),
+            "description": entry.description,
+            "amount": float(entry.credit_amount),
+            "running_balance": running_balance,
+            "reference": entry.reference
+        })
+    
+    return {
+        "sales_data": sales_data,
+        "total_sales": sum(float(e.credit_amount) for e in entries),
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/reports/customer-receipts")
+def get_customer_receipts(
+    customer_id: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get customer receipts report"""
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Asset",
+                LedgerAccount.account_name.ilike("%cash%")
+            )
+        ),
+        JournalEntry.debit_amount > 0
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    receipts = query.order_by(JournalEntry.transaction_date.desc()).all()
+    
+    receipts_data = []
+    for receipt in receipts:
+        receipts_data.append({
+            "id": receipt.id,
+            "date": receipt.transaction_date.isoformat(),
+            "description": receipt.description,
+            "amount": float(receipt.debit_amount),
+            "reference": receipt.reference,
+            "customer_name": "Customer Name"
+        })
+    
+    return {
+        "receipts": receipts_data,
+        "total_receipts": sum(float(r.debit_amount) for r in receipts)
+    }
+
+@router.get("/reports/sales-invoice-list")
+def get_sales_invoice_list(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    status: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get sales invoice list"""
+    invoices = []
+    
+    invoice_list = []
+    
+    invoices_data = []
+    running_total = 0
+    
+    for invoice in invoice_list:
+        running_total += float(invoice.amount)
+        invoices_data.append({
+            "id": invoice.id,
+            "date": invoice.created_at.isoformat(),
+            "amount": float(invoice.amount),
+            "tax_amount": float(invoice.tax_amount),
+            "status": invoice.status,
+            "running_total": running_total,
+            "due_date": invoice.due_date.isoformat() if invoice.due_date else None
+        })
+    
+    return {
+        "invoices": invoices_data,
+        "total_amount": running_total,
+        "count": len(invoices_data)
+    }
+
+@router.get("/reports/purchases-invoice-list")
+def get_purchases_invoice_list(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    supplier_id: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get purchases invoice list"""
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Expense"
+            )
+        )
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    purchases = query.order_by(JournalEntry.transaction_date.desc()).all()
+    
+    purchases_data = []
+    running_total = 0
+    
+    for purchase in purchases:
+        running_total += float(purchase.debit_amount)
+        purchases_data.append({
+            "id": purchase.id,
+            "date": purchase.transaction_date.isoformat(),
+            "description": purchase.description,
+            "amount": float(purchase.debit_amount),
+            "running_total": running_total,
+            "reference": purchase.reference
+        })
+    
+    return {
+        "purchases": purchases_data,
+        "total_amount": running_total,
+        "count": len(purchases_data)
+    }
+
+@router.get("/reports/trade-debtors-detailed")
+def get_trade_debtors_detailed(
+    as_of_date: Optional[date] = None,
+    customer_id: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get detailed trade debtors with aging analysis"""
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    invoices = db.query(Invoice).filter(
+        Invoice.tenant_id == request.state.tenant_id,
+        Invoice.status.in_(["open", "overdue"])
+    ).all()
+    
+    debtors_data = []
+    total_outstanding = 0
+    
+    for invoice in invoices:
+        days_outstanding = (as_of_date - invoice.created_at.date()).days
+        aging_bucket = "Current"
+        
+        if days_outstanding > 90:
+            aging_bucket = "90+ days"
+        elif days_outstanding > 60:
+            aging_bucket = "60-90 days"
+        elif days_outstanding > 30:
+            aging_bucket = "30-60 days"
+        
+        amount = float(invoice.amount)
+        total_outstanding += amount
+        
+        debtors_data.append({
+            "invoice_id": invoice.id,
+            "customer_name": "Customer Name",
+            "invoice_date": invoice.created_at.isoformat(),
+            "due_date": invoice.due_date.isoformat() if invoice.due_date else None,
+            "amount": amount,
+            "days_outstanding": days_outstanding,
+            "aging_bucket": aging_bucket,
+            "running_total": total_outstanding
+        })
+    
+    return {
+        "debtors": debtors_data,
+        "total_outstanding": total_outstanding,
+        "as_of_date": as_of_date.isoformat()
+    }
+
+@router.get("/reports/trade-debtors-summary")
+def get_trade_debtors_summary(
+    as_of_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get trade debtors summary by aging buckets"""
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    invoices = db.query(Invoice).filter(
+        Invoice.tenant_id == request.state.tenant_id,
+        Invoice.status.in_(["open", "overdue"])
+    ).all()
+    
+    aging_summary = {
+        "Current": 0,
+        "30-60 days": 0,
+        "60-90 days": 0,
+        "90+ days": 0
+    }
+    
+    for invoice in invoices:
+        days_outstanding = (as_of_date - invoice.created_at.date()).days
+        amount = float(invoice.amount)
+        
+        if days_outstanding > 90:
+            aging_summary["90+ days"] += amount
+        elif days_outstanding > 60:
+            aging_summary["60-90 days"] += amount
+        elif days_outstanding > 30:
+            aging_summary["30-60 days"] += amount
+        else:
+            aging_summary["Current"] += amount
+    
+    return {
+        "aging_summary": aging_summary,
+        "total_outstanding": sum(aging_summary.values()),
+        "as_of_date": as_of_date.isoformat()
+    }
+
+@router.get("/reports/trade-creditors-detailed")
+def get_trade_creditors_detailed(
+    as_of_date: Optional[date] = None,
+    supplier_id: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get detailed trade creditors with aging analysis"""
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Liability",
+                LedgerAccount.account_name.ilike("%creditor%")
+            )
+        )
+    )
+    
+    entries = query.order_by(JournalEntry.transaction_date).all()
+    
+    creditors_data = []
+    running_balance = 0
+    
+    for entry in entries:
+        days_outstanding = (as_of_date - entry.transaction_date).days
+        aging_bucket = "Current"
+        
+        if days_outstanding > 90:
+            aging_bucket = "90+ days"
+        elif days_outstanding > 60:
+            aging_bucket = "60-90 days"
+        elif days_outstanding > 30:
+            aging_bucket = "30-60 days"
+        
+        amount = float(entry.credit_amount - entry.debit_amount)
+        running_balance += amount
+        
+        if amount > 0:
+            creditors_data.append({
+                "entry_id": entry.id,
+                "supplier_name": "Supplier Name",
+                "transaction_date": entry.transaction_date.isoformat(),
+                "description": entry.description,
+                "amount": amount,
+                "days_outstanding": days_outstanding,
+                "aging_bucket": aging_bucket,
+                "running_balance": running_balance
+            })
+    
+    return {
+        "creditors": creditors_data,
+        "total_outstanding": sum(c["amount"] for c in creditors_data),
+        "as_of_date": as_of_date.isoformat()
+    }
+
+@router.get("/reports/trade-creditors-summary")
+def get_trade_creditors_summary(
+    as_of_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get trade creditors summary by aging buckets"""
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Liability",
+                LedgerAccount.account_name.ilike("%creditor%")
+            )
+        )
+    )
+    
+    entries = query.all()
+    
+    aging_summary = {
+        "Current": 0,
+        "30-60 days": 0,
+        "60-90 days": 0,
+        "90+ days": 0
+    }
+    
+    for entry in entries:
+        days_outstanding = (as_of_date - entry.transaction_date).days
+        amount = float(entry.credit_amount - entry.debit_amount)
+        
+        if amount > 0:
+            if days_outstanding > 90:
+                aging_summary["90+ days"] += amount
+            elif days_outstanding > 60:
+                aging_summary["60-90 days"] += amount
+            elif days_outstanding > 30:
+                aging_summary["30-60 days"] += amount
+            else:
+                aging_summary["Current"] += amount
+    
+    return {
+        "aging_summary": aging_summary,
+        "total_outstanding": sum(aging_summary.values()),
+        "as_of_date": as_of_date.isoformat()
+    }
+
+@router.get("/reports/customer-statements/{customer_id}")
+def get_customer_statement(
+    customer_id: str,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get customer statement with transaction history"""
+    customer = db.query(Client).filter(
+        Client.tenant_id == request.state.tenant_id,
+        Client.id == customer_id
+    ).first()
+    
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    invoices = db.query(Invoice).filter(
+        Invoice.tenant_id == request.state.tenant_id
+    )
+    
+    if start_date:
+        invoices = invoices.filter(Invoice.created_at >= start_date)
+    if end_date:
+        invoices = invoices.filter(Invoice.created_at <= end_date)
+    
+    transactions = invoices.order_by(Invoice.created_at).all()
+    
+    statement_data = []
+    running_balance = 0
+    
+    for transaction in transactions:
+        amount = float(transaction.amount)
+        running_balance += amount
+        
+        statement_data.append({
+            "date": transaction.created_at.isoformat(),
+            "description": f"Invoice {transaction.id}",
+            "debit": amount if transaction.status == "open" else 0,
+            "credit": amount if transaction.status == "paid" else 0,
+            "balance": running_balance
+        })
+    
+    return {
+        "customer": {
+            "id": customer.id,
+            "name": customer.name,
+            "company_number": customer.company_number
+        },
+        "transactions": statement_data,
+        "opening_balance": 0,
+        "closing_balance": running_balance,
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/reports/supplier-statements/{supplier_id}")
+def get_supplier_statement(
+    supplier_id: str,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get supplier statement with transaction history"""
+    supplier = db.query(Client).filter(
+        Client.tenant_id == request.state.tenant_id,
+        Client.id == supplier_id
+    ).first()
+    
+    if not supplier:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.description.ilike(f"%{supplier.name}%")
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    transactions = query.order_by(JournalEntry.transaction_date).all()
+    
+    statement_data = []
+    running_balance = 0
+    
+    for transaction in transactions:
+        amount = float(transaction.credit_amount - transaction.debit_amount)
+        running_balance += amount
+        
+        statement_data.append({
+            "date": transaction.transaction_date.isoformat(),
+            "description": transaction.description,
+            "debit": float(transaction.debit_amount),
+            "credit": float(transaction.credit_amount),
+            "balance": running_balance
+        })
+    
+    return {
+        "supplier": {
+            "id": supplier.id,
+            "name": supplier.name,
+            "company_number": supplier.company_number
+        },
+        "transactions": statement_data,
+        "opening_balance": 0,
+        "closing_balance": running_balance,
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.get("/reports/payments-to-suppliers")
+def get_payments_to_suppliers(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    supplier_id: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get payments to suppliers report"""
+    query = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        JournalEntry.account_id.in_(
+            db.query(LedgerAccount.id).filter(
+                LedgerAccount.tenant_id == request.state.tenant_id,
+                LedgerAccount.account_type == "Asset",
+                LedgerAccount.account_name.ilike("%cash%")
+            )
+        ),
+        JournalEntry.credit_amount > 0,
+        JournalEntry.description.ilike("%payment%")
+    )
+    
+    if start_date:
+        query = query.filter(JournalEntry.transaction_date >= start_date)
+    if end_date:
+        query = query.filter(JournalEntry.transaction_date <= end_date)
+    
+    payments = query.order_by(JournalEntry.transaction_date.desc()).all()
+    
+    payments_data = []
+    running_total = 0
+    
+    for payment in payments:
+        amount = float(payment.credit_amount)
+        running_total += amount
+        
+        payments_data.append({
+            "id": payment.id,
+            "date": payment.transaction_date.isoformat(),
+            "description": payment.description,
+            "amount": amount,
+            "running_total": running_total,
+            "reference": payment.reference,
+            "supplier_name": "Supplier Name"
+        })
+    
+    return {
+        "payments": payments_data,
+        "total_payments": running_total,
+        "count": len(payments_data),
+        "period": {
+            "start_date": start_date.isoformat() if start_date else None,
+            "end_date": end_date.isoformat() if end_date else None
+        }
+    }
+
+@router.post("/recurring-transactions")
+def create_recurring_transaction(
+    transaction_data: RecurringTransactionCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Create a new recurring transaction"""
+    recurring_transaction = RecurringTransaction(
+        tenant_id=request.state.tenant_id,
+        company_id=request.state.company_id if hasattr(request.state, 'company_id') else "default",
+        **transaction_data.dict()
+    )
+    
+    db.add(recurring_transaction)
+    db.commit()
+    db.refresh(recurring_transaction)
+    
+    return {
+        "id": recurring_transaction.id,
+        "message": "Recurring transaction created successfully",
+        "next_generation_date": recurring_transaction.next_date.isoformat()
+    }
+
+@router.get("/recurring-transactions")
+def get_recurring_transactions(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get all recurring transactions"""
+    transactions = db.query(RecurringTransaction).filter(
+        RecurringTransaction.tenant_id == request.state.tenant_id,
+        RecurringTransaction.is_active == True
+    ).all()
+    
+    transactions_data = []
+    for transaction in transactions:
+        transactions_data.append({
+            "id": transaction.id,
+            "template_name": transaction.template_name,
+            "transaction_type": transaction.transaction_type,
+            "frequency": transaction.frequency,
+            "next_date": transaction.next_date.isoformat(),
+            "end_date": transaction.end_date.isoformat() if transaction.end_date else None,
+            "amount": float(transaction.amount),
+            "description": transaction.description,
+            "is_active": transaction.is_active
+        })
+    
+    return {
+        "recurring_transactions": transactions_data,
+        "total": len(transactions_data)
+    }
+
+@router.post("/recurring-transactions/generate")
+def generate_recurring_transactions(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Generate due recurring transactions"""
+    today = date.today()
+    
+    due_transactions = db.query(RecurringTransaction).filter(
+        RecurringTransaction.tenant_id == request.state.tenant_id,
+        RecurringTransaction.is_active == True,
+        RecurringTransaction.next_date <= today
+    ).all()
+    
+    generated_count = 0
+    
+    for recurring_transaction in due_transactions:
+        journal_entry = JournalEntry(
+            tenant_id=request.state.tenant_id,
+            account_id=recurring_transaction.account_id,
+            transaction_date=recurring_transaction.next_date,
+            description=f"Recurring: {recurring_transaction.description}",
+            reference=f"REC-{recurring_transaction.id}",
+            debit_amount=recurring_transaction.amount if recurring_transaction.transaction_type == "purchase" else 0,
+            credit_amount=recurring_transaction.amount if recurring_transaction.transaction_type == "sale" else 0
+        )
+        
+        db.add(journal_entry)
+        
+        if recurring_transaction.frequency == "monthly":
+            next_month = recurring_transaction.next_date.replace(month=recurring_transaction.next_date.month + 1)
+            recurring_transaction.next_date = next_month
+        elif recurring_transaction.frequency == "quarterly":
+            next_quarter = recurring_transaction.next_date.replace(month=recurring_transaction.next_date.month + 3)
+            recurring_transaction.next_date = next_quarter
+        elif recurring_transaction.frequency == "annually":
+            next_year = recurring_transaction.next_date.replace(year=recurring_transaction.next_date.year + 1)
+            recurring_transaction.next_date = next_year
+        
+        if recurring_transaction.end_date and recurring_transaction.next_date > recurring_transaction.end_date:
+            recurring_transaction.is_active = False
+        
+        generated_count += 1
+    
+    db.commit()
+    
+    return {
+        "message": f"Generated {generated_count} recurring transactions",
+        "generated_count": generated_count
+    }
+
+@router.put("/recurring-transactions/{transaction_id}")
+def update_recurring_transaction(
+    transaction_id: str,
+    transaction_data: RecurringTransactionCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update a recurring transaction"""
+    transaction = db.query(RecurringTransaction).filter(
+        RecurringTransaction.tenant_id == request.state.tenant_id,
+        RecurringTransaction.id == transaction_id
+    ).first()
+    
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Recurring transaction not found")
+    
+    for field, value in transaction_data.dict().items():
+        setattr(transaction, field, value)
+    
+    db.commit()
+    
+    return {
+        "message": "Recurring transaction updated successfully",
+        "id": transaction_id
+    }
+
+@router.post("/accruals-prepayments")
+def create_accrual_prepayment(
+    accrual_data: AccrualPrepaymentCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Create a new accrual or prepayment"""
+    accrual_prepayment = AccrualPrepayment(
+        tenant_id=request.state.tenant_id,
+        company_id=request.state.company_id if hasattr(request.state, 'company_id') else "default",
+        remaining_amount=accrual_data.total_amount,
+        **accrual_data.dict()
+    )
+    
+    db.add(accrual_prepayment)
+    db.commit()
+    db.refresh(accrual_prepayment)
+    
+    return {
+        "id": accrual_prepayment.id,
+        "message": f"{accrual_data.type.title()} created successfully"
+    }
+
+@router.get("/accruals-prepayments")
+def get_accruals_prepayments(
+    type: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get all accruals and prepayments"""
+    query = db.query(AccrualPrepayment).filter(
+        AccrualPrepayment.tenant_id == request.state.tenant_id,
+        AccrualPrepayment.is_reversed == False
+    )
+    
+    if type:
+        query = query.filter(AccrualPrepayment.type == type)
+    
+    accruals_prepayments = query.all()
+    
+    data = []
+    for item in accruals_prepayments:
+        data.append({
+            "id": item.id,
+            "type": item.type,
+            "description": item.description,
+            "total_amount": float(item.total_amount),
+            "remaining_amount": float(item.remaining_amount),
+            "start_date": item.start_date.isoformat(),
+            "end_date": item.end_date.isoformat(),
+            "frequency": item.frequency,
+            "is_reversed": item.is_reversed
+        })
+    
+    return {
+        "accruals_prepayments": data,
+        "total": len(data)
+    }
+
+@router.post("/accruals-prepayments/{accrual_id}/reverse")
+def reverse_accrual_prepayment(
+    accrual_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Reverse an accrual or prepayment"""
+    accrual_prepayment = db.query(AccrualPrepayment).filter(
+        AccrualPrepayment.tenant_id == request.state.tenant_id,
+        AccrualPrepayment.id == accrual_id
+    ).first()
+    
+    if not accrual_prepayment:
+        raise HTTPException(status_code=404, detail="Accrual/Prepayment not found")
+    
+    if accrual_prepayment.is_reversed:
+        raise HTTPException(status_code=400, detail="Already reversed")
+    
+    reversal_entry = JournalEntry(
+        tenant_id=request.state.tenant_id,
+        account_id=accrual_prepayment.account_id,
+        transaction_date=date.today(),
+        description=f"Reversal: {accrual_prepayment.description}",
+        reference=f"REV-{accrual_prepayment.id}",
+        debit_amount=accrual_prepayment.remaining_amount if accrual_prepayment.type == "prepayment" else 0,
+        credit_amount=accrual_prepayment.remaining_amount if accrual_prepayment.type == "accrual" else 0
+    )
+    
+    db.add(reversal_entry)
+    accrual_prepayment.is_reversed = True
+    accrual_prepayment.remaining_amount = 0
+    
+    db.commit()
+    
+    return {
+        "message": f"{accrual_prepayment.type.title()} reversed successfully",
+        "reversal_entry_id": reversal_entry.id
+    }
+
+@router.post("/accruals-prepayments/process-monthly")
+def process_monthly_accruals_prepayments(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Process monthly accruals and prepayments"""
+    today = date.today()
+    
+    active_items = db.query(AccrualPrepayment).filter(
+        AccrualPrepayment.tenant_id == request.state.tenant_id,
+        AccrualPrepayment.is_reversed == False,
+        AccrualPrepayment.remaining_amount > 0,
+        AccrualPrepayment.start_date <= today,
+        AccrualPrepayment.end_date >= today
+    ).all()
+    
+    processed_count = 0
+    
+    for item in active_items:
+        months_total = (item.end_date.year - item.start_date.year) * 12 + (item.end_date.month - item.start_date.month) + 1
+        monthly_amount = item.total_amount / months_total
+        
+        if item.remaining_amount >= monthly_amount:
+            journal_entry = JournalEntry(
+                tenant_id=request.state.tenant_id,
+                account_id=item.account_id,
+                transaction_date=today,
+                description=f"Monthly {item.type}: {item.description}",
+                reference=f"MONTHLY-{item.id}",
+                debit_amount=monthly_amount if item.type == "accrual" else 0,
+                credit_amount=monthly_amount if item.type == "prepayment" else 0
+            )
+            
+            db.add(journal_entry)
+            item.remaining_amount -= monthly_amount
+            processed_count += 1
+    
+    db.commit()
+    
+    return {
+        "message": f"Processed {processed_count} monthly accruals/prepayments",
+        "processed_count": processed_count
     }

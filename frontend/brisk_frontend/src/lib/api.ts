@@ -696,6 +696,7 @@ class ApiClient {
   async getInvoiceTracking(invoiceId: string) {
     return this.request(`/email/invoice-tracking/${invoiceId}`)
   }
+
 }
 
 export const apiClient = new ApiClient()

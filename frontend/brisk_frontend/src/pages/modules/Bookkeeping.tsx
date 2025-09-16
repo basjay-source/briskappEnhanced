@@ -36,24 +36,29 @@ import {
   Copy,
   RotateCcw,
   AlertCircle,
-  ExternalLink,
   CheckCircle,
   Search,
   Settings,
   Calendar,
-  ArrowLeftRight
+  ArrowLeftRight,
+  ArrowLeft,
+  Mail
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { useIsMobile } from '@/hooks/use-mobile'
-import ResponsiveLayout from '@/components/ResponsiveLayout'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import { Badge } from '../../components/ui/badge'
+import { Progress } from '../../components/ui/progress'
+import { Label } from '../../components/ui/label'
+import { Input } from '../../components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
+import { useIsMobile } from '../../hooks/use-mobile'
+import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
-import { apiClient } from '@/lib/api'
+import { apiClient } from '../../lib/api'
+import { formatCurrency } from '../../lib/currencies'
 
 export default function Bookkeeping() {
   const navigate = useNavigate()
@@ -78,6 +83,16 @@ export default function Bookkeeping() {
   const [reportsSelectedComparison, setReportsSelectedComparison] = useState('industry')
   const [reportsDateFrom, setReportsDateFrom] = useState('')
   const [reportsDateTo, setReportsDateTo] = useState('')
+  
+  const [selectedReport, setSelectedReport] = useState('')
+  const [reportData, setReportData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const [selectedAccount, setSelectedAccount] = useState('')
+  const [reconciliationData, setReconciliationData] = useState<any>(null)
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [reconciliationLoading, setReconciliationLoading] = useState(false)
 
   useEffect(() => {
     const loadBookkeepingData = async () => {
@@ -305,6 +320,9 @@ export default function Bookkeeping() {
         analytics: { label: 'Sales Analytics', icon: BarChart3 }
       }
     },
+    'recurring-transactions': { label: 'Recurring Transactions', icon: RefreshCw, hasSubTabs: false },
+    'accruals-prepayments': { label: 'Accruals & Prepayments', icon: Calculator, hasSubTabs: false },
+    'invoice-tracking': { label: 'Invoice Tracking', icon: Mail, hasSubTabs: false },
     documents: { label: 'Documents', icon: Scan, hasSubTabs: false },
     integrations: { label: 'Integrations', icon: Link, hasSubTabs: false }
   }
@@ -378,7 +396,7 @@ export default function Bookkeeping() {
       if (activeSubTab === 'returns') return renderVATReturns()
       if (activeSubTab === 'schemes') return renderVATSchemes()
       if (activeSubTab === 'reports') return renderVATReports()
-      if (activeSubTab === 'compliance') return renderVATCompliance()
+      if (activeSubTab === 'compliance') return renderVATReports()
       return renderVATContent()
     } else if (activeMainTab === 'reports') {
       if (activeSubTab === 'financial') return renderFinancialReports()
@@ -409,6 +427,12 @@ export default function Bookkeeping() {
       if (activeSubTab === 'settlements') return renderSettlementTracking()
       if (activeSubTab === 'analytics') return renderSalesAnalytics()
       return renderEcommerceContent()
+    } else if (activeMainTab === 'recurring-transactions') {
+      return renderRecurringTransactions()
+    } else if (activeMainTab === 'accruals-prepayments') {
+      return renderAccrualsPrepaymentsments()
+    } else if (activeMainTab === 'invoice-tracking') {
+      return renderInvoiceTracking()
     } else if (activeMainTab === 'documents') {
       return renderDocumentsContent()
     } else if (activeMainTab === 'integrations') {
@@ -1123,6 +1147,376 @@ export default function Bookkeeping() {
 
 
   function renderFinancialReports() {
+    const loadReportData = async (reportType: string) => {
+      setIsLoading(true)
+      try {
+        let data
+        switch (reportType) {
+          case 'sales-report':
+            data = await apiClient.getSalesReport('2024-01-01', '2024-12-31')
+            break
+          case 'customer-receipts':
+            data = await apiClient.getCustomerReceipts()
+            break
+          case 'sales-invoice-list':
+            data = await apiClient.getSalesInvoiceList('2024-01-01', '2024-12-31')
+            break
+          case 'purchases-invoice-list':
+            data = await apiClient.getPurchasesInvoiceList('2024-01-01', '2024-12-31')
+            break
+          case 'trade-debtors-detailed':
+            data = await apiClient.getTradeDebtorsDetailed()
+            break
+          case 'trade-debtors-summary':
+            data = await apiClient.getTradeDebtorsSummary()
+            break
+          case 'trade-creditors-detailed':
+            data = await apiClient.getTradeCreditorsDetailed()
+            break
+          case 'trade-creditors-summary':
+            data = await apiClient.getTradeCreditorsSummary()
+            break
+          case 'customer-statements':
+            data = await apiClient.getCustomerStatement('default-customer-id')
+            break
+          case 'supplier-statements':
+            data = await apiClient.getSupplierStatement('default-supplier-id')
+            break
+          case 'payments-to-suppliers':
+            data = await apiClient.getPaymentsToSuppliers('2024-01-01', '2024-12-31')
+            break
+          case 'trial-balance':
+            data = await apiClient.getTrialBalanceWithRunningBalances()
+            break
+          case 'profit-loss':
+            data = await apiClient.getProfitLossWithRunningBalances('2024-01-01', '2024-12-31')
+            break
+          case 'balance-sheet':
+            data = await apiClient.getBalanceSheetWithRunningBalances('2024-12-31')
+            break
+          case 'aged-debtors':
+            data = await apiClient.getAgedDebtors()
+            break
+          case 'aged-creditors':
+            data = await apiClient.getAgedCreditors()
+            break
+          default:
+            data = null
+        }
+        setReportData(data)
+      } catch (error) {
+        console.error('Failed to load report data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    const renderTrialBalanceReport = () => {
+      if (!reportData) return null
+      
+      return (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold">Trial Balance with Running Balances</h3>
+            <div className="text-sm text-gray-600">
+              As of: {reportData.as_of_date}
+            </div>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-300 p-3 text-left">Account Code</th>
+                  <th className="border border-gray-300 p-3 text-left">Account Name</th>
+                  <th className="border border-gray-300 p-3 text-left">Account Type</th>
+                  <th className="border border-gray-300 p-3 text-right">Debit Balance</th>
+                  <th className="border border-gray-300 p-3 text-right">Credit Balance</th>
+                  <th className="border border-gray-300 p-3 text-right">Running Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportData.trial_balance?.map((account: any, index: number) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 p-3">{account.account_code}</td>
+                    <td className="border border-gray-300 p-3">{account.account_name}</td>
+                    <td className="border border-gray-300 p-3">{account.account_type}</td>
+                    <td className="border border-gray-300 p-3 text-right">
+                      {account.debit_balance > 0 ? formatCurrency(account.debit_balance, 'GBP') : '-'}
+                    </td>
+                    <td className="border border-gray-300 p-3 text-right">
+                      {account.credit_balance > 0 ? formatCurrency(account.credit_balance, 'GBP') : '-'}
+                    </td>
+                    <td className="border border-gray-300 p-3 text-right font-semibold">
+                      {formatCurrency(account.running_balance, 'GBP')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="bg-gray-100 font-bold">
+                  <td colSpan={3} className="border border-gray-300 p-3">Totals</td>
+                  <td className="border border-gray-300 p-3 text-right">
+                    {formatCurrency(reportData.totals?.total_debits || 0, 'GBP')}
+                  </td>
+                  <td className="border border-gray-300 p-3 text-right">
+                    {formatCurrency(reportData.totals?.total_credits || 0, 'GBP')}
+                  </td>
+                  <td className="border border-gray-300 p-3 text-right">
+                    {formatCurrency((reportData.totals?.total_debits || 0) - (reportData.totals?.total_credits || 0), 'GBP')}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      )
+    }
+
+    const renderProfitLossReport = () => {
+      if (!reportData) return null
+      
+      return (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold">Profit & Loss Statement with Running Balances</h3>
+            <div className="text-sm text-gray-600">
+              Period: {reportData.period?.start_date} to {reportData.period?.end_date}
+            </div>
+          </div>
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-green-600">Revenue</h4>
+              <div className="space-y-2">
+                {reportData.revenue?.map((account: any, index: number) => (
+                  <div key={index} className="flex justify-between p-2 border rounded">
+                    <span>{account.account_name}</span>
+                    <span className="font-semibold">{formatCurrency(account.amount, 'GBP')}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between p-3 bg-green-50 rounded font-bold">
+                  <span>Total Revenue</span>
+                  <span>{formatCurrency(reportData.totals?.total_revenue || 0, 'GBP')}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-red-600">Expenses</h4>
+              <div className="space-y-2">
+                {reportData.expenses?.map((account: any, index: number) => (
+                  <div key={index} className="flex justify-between p-2 border rounded">
+                    <span>{account.account_name}</span>
+                    <span className="font-semibold">{formatCurrency(account.amount, 'GBP')}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between p-3 bg-red-50 rounded font-bold">
+                  <span>Total Expenses</span>
+                  <span>{formatCurrency(reportData.totals?.total_expenses || 0, 'GBP')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-between p-4 bg-blue-50 rounded-lg text-lg font-bold">
+            <span>Net Profit</span>
+            <span className={reportData.totals?.net_profit >= 0 ? 'text-green-600' : 'text-red-600'}>
+              {formatCurrency(reportData.totals?.net_profit || 0, 'GBP')}
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    const renderBalanceSheetReport = () => {
+      if (!reportData) return null
+      
+      return (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold">Balance Sheet with Running Balances</h3>
+            <div className="text-sm text-gray-600">
+              As of: {reportData.as_of_date}
+            </div>
+          </div>
+          
+          <div className="grid gap-6 md:grid-cols-3">
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-blue-600">Assets</h4>
+              <div className="space-y-2">
+                {reportData.assets?.map((account: any, index: number) => (
+                  <div key={index} className="flex justify-between p-2 border rounded">
+                    <span>{account.account_name}</span>
+                    <span className="font-semibold">{formatCurrency(account.balance, 'GBP')}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between p-3 bg-blue-50 rounded font-bold">
+                  <span>Total Assets</span>
+                  <span>{formatCurrency(reportData.totals?.total_assets || 0, 'GBP')}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-red-600">Liabilities</h4>
+              <div className="space-y-2">
+                {reportData.liabilities?.map((account: any, index: number) => (
+                  <div key={index} className="flex justify-between p-2 border rounded">
+                    <span>{account.account_name}</span>
+                    <span className="font-semibold">{formatCurrency(account.balance, 'GBP')}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between p-3 bg-red-50 rounded font-bold">
+                  <span>Total Liabilities</span>
+                  <span>{formatCurrency(reportData.totals?.total_liabilities || 0, 'GBP')}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-green-600">Equity</h4>
+              <div className="space-y-2">
+                {reportData.equity?.map((account: any, index: number) => (
+                  <div key={index} className="flex justify-between p-2 border rounded">
+                    <span>{account.account_name}</span>
+                    <span className="font-semibold">{formatCurrency(account.balance, 'GBP')}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between p-3 bg-green-50 rounded font-bold">
+                  <span>Total Equity</span>
+                  <span>{formatCurrency(reportData.totals?.total_equity || 0, 'GBP')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-between p-4 bg-gray-50 rounded-lg text-lg font-bold">
+            <span>Balance Check (Assets - Liabilities - Equity)</span>
+            <span className={Math.abs(reportData.totals?.balance_check || 0) < 0.01 ? 'text-green-600' : 'text-red-600'}>
+              {formatCurrency(reportData.totals?.balance_check || 0, 'GBP')}
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    const renderAgedDebtorsReport = () => {
+      if (!reportData) return null
+      
+      return (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold">Aged Debtors Analysis</h3>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-300 p-3 text-left">Customer</th>
+                  <th className="border border-gray-300 p-3 text-right">Current</th>
+                  <th className="border border-gray-300 p-3 text-right">1-30 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">31-60 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">61-90 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">90+ Days</th>
+                  <th className="border border-gray-300 p-3 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportData.aged_debtors?.map((debtor: any, index: number) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 p-3">{debtor.customer_name}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(debtor.current || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(debtor.days_1_30 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(debtor.days_31_60 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(debtor.days_61_90 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(debtor.days_90_plus || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right font-semibold">{formatCurrency(debtor.total || 0, 'GBP')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )
+    }
+
+    const renderAgedCreditorsReport = () => {
+      if (!reportData) return null
+      
+      return (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold">Aged Creditors Analysis</h3>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-300 p-3 text-left">Supplier</th>
+                  <th className="border border-gray-300 p-3 text-right">Current</th>
+                  <th className="border border-gray-300 p-3 text-right">1-30 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">31-60 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">61-90 Days</th>
+                  <th className="border border-gray-300 p-3 text-right">90+ Days</th>
+                  <th className="border border-gray-300 p-3 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportData.aged_creditors?.map((creditor: any, index: number) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 p-3">{creditor.supplier_name}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(creditor.current || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(creditor.days_1_30 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(creditor.days_31_60 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(creditor.days_61_90 || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right">{formatCurrency(creditor.days_90_plus || 0, 'GBP')}</td>
+                    <td className="border border-gray-300 p-3 text-right font-semibold">{formatCurrency(creditor.total || 0, 'GBP')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )
+    }
+
+    if (selectedReport) {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <h2 className="text-2xl font-bold">Financial Reports</h2>
+          </div>
+          
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg">Loading report data...</div>
+            </div>
+          ) : (
+            <div>
+              {selectedReport === 'trial-balance' && renderTrialBalanceReport()}
+              {selectedReport === 'profit-loss' && renderProfitLossReport()}
+              {selectedReport === 'balance-sheet' && renderBalanceSheetReport()}
+              {selectedReport === 'aged-debtors' && renderAgedDebtorsReport()}
+              {selectedReport === 'aged-creditors' && renderAgedCreditorsReport()}
+            </div>
+          )}
+          
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Report
+            </Button>
+            <Button onClick={() => loadReportData(selectedReport)}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh Data
+            </Button>
+          </div>
+        </div>
+      )
+    }
 
     const periodOptions = [
       { label: 'Current Period', value: 'current' },
@@ -1141,12 +1535,112 @@ export default function Bookkeeping() {
 
     const financialReports = [
       {
+        title: 'Sales Report',
+        description: 'Comprehensive sales analysis with running balances',
+        icon: BarChart3,
+        color: 'text-blue-500',
+        status: 'Generated',
+        lastGenerated: '1 hour ago',
+        reportType: 'sales-report'
+      },
+      {
+        title: 'Customer Receipts',
+        description: 'Customer payment receipts and history',
+        icon: Receipt,
+        color: 'text-green-500',
+        status: 'Generated',
+        lastGenerated: '2 hours ago',
+        reportType: 'customer-receipts'
+      },
+      {
+        title: 'Sales Invoice List',
+        description: 'Complete list of sales invoices',
+        icon: FileText,
+        color: 'text-purple-500',
+        status: 'Generated',
+        lastGenerated: '30 minutes ago',
+        reportType: 'sales-invoice-list'
+      },
+      {
+        title: 'Purchases Invoice List',
+        description: 'Complete list of purchase invoices',
+        icon: ShoppingCart,
+        color: 'text-orange-500',
+        status: 'Generated',
+        lastGenerated: '45 minutes ago',
+        reportType: 'purchases-invoice-list'
+      },
+      {
+        title: 'Trade Debtors Detailed',
+        description: 'Detailed trade debtors with aging analysis',
+        icon: Users,
+        color: 'text-red-500',
+        status: 'Generated',
+        lastGenerated: '1 hour ago',
+        reportType: 'trade-debtors-detailed'
+      },
+      {
+        title: 'Trade Debtors Summary',
+        description: 'Summary of outstanding customer invoices',
+        icon: Users,
+        color: 'text-red-400',
+        status: 'Generated',
+        lastGenerated: '1 hour ago',
+        reportType: 'trade-debtors-summary'
+      },
+      {
+        title: 'Trade Creditors Detailed',
+        description: 'Detailed trade creditors with aging analysis',
+        icon: Building,
+        color: 'text-indigo-500',
+        status: 'Generated',
+        lastGenerated: '2 hours ago',
+        reportType: 'trade-creditors-detailed'
+      },
+      {
+        title: 'Trade Creditors Summary',
+        description: 'Summary of outstanding supplier bills',
+        icon: Building,
+        color: 'text-indigo-400',
+        status: 'Generated',
+        lastGenerated: '2 hours ago',
+        reportType: 'trade-creditors-summary'
+      },
+      {
+        title: 'Customer Statements',
+        description: 'Individual customer account statements',
+        icon: FileText,
+        color: 'text-cyan-500',
+        status: 'Generated',
+        lastGenerated: '3 hours ago',
+        reportType: 'customer-statements'
+      },
+      {
+        title: 'Supplier Statements',
+        description: 'Individual supplier account statements',
+        icon: FileText,
+        color: 'text-teal-500',
+        status: 'Generated',
+        lastGenerated: '3 hours ago',
+        reportType: 'supplier-statements'
+      },
+      {
+        title: 'Payments to Suppliers',
+        description: 'Supplier payment history and analysis',
+        icon: PoundSterling,
+        color: 'text-emerald-500',
+        status: 'Generated',
+        lastGenerated: '4 hours ago',
+        reportType: 'payments-to-suppliers'
+      },
+      {
         title: 'Profit & Loss',
         description: 'Comprehensive P&L with comparatives',
         icon: BarChart3,
         color: 'text-blue-500',
         status: 'Generated',
-        lastGenerated: '2 hours ago'
+        lastGenerated: '2 hours ago',
+        reportType: 'profit-loss'
       },
       {
         title: 'Balance Sheet',
@@ -1154,7 +1648,8 @@ export default function Bookkeeping() {
         icon: FileText,
         color: 'text-purple-500',
         status: 'Scheduled',
-        lastGenerated: '1 day ago'
+        lastGenerated: '1 day ago',
+        reportType: 'balance-sheet'
       },
       {
         title: 'Cash Flow Statement',
@@ -1162,7 +1657,8 @@ export default function Bookkeeping() {
         icon: PoundSterling,
         color: 'text-green-500',
         status: 'Generated',
-        lastGenerated: '3 hours ago'
+        lastGenerated: '3 hours ago',
+        reportType: 'cash-flow'
       },
       {
         title: 'Trial Balance',
@@ -1170,7 +1666,8 @@ export default function Bookkeeping() {
         icon: Calculator,
         color: 'text-orange-500',
         status: 'Generated',
-        lastGenerated: '1 hour ago'
+        lastGenerated: '1 hour ago',
+        reportType: 'trial-balance'
       },
       {
         title: 'Aged Debtors',
@@ -1178,7 +1675,8 @@ export default function Bookkeeping() {
         icon: Users,
         color: 'text-red-500',
         status: 'Generated',
-        lastGenerated: '4 hours ago'
+        lastGenerated: '4 hours ago',
+        reportType: 'aged-debtors'
       },
       {
         title: 'Aged Creditors',
@@ -1186,7 +1684,8 @@ export default function Bookkeeping() {
         icon: Building,
         color: 'text-indigo-500',
         status: 'Scheduled',
-        lastGenerated: '2 days ago'
+        lastGenerated: '2 days ago',
+        reportType: 'aged-creditors'
       }
     ]
 
@@ -1238,112 +1737,27 @@ export default function Bookkeeping() {
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
           {financialReports.map((report, index) => {
             const Icon = report.icon
-            const drillDownData = {
-              title: `${report.title} Analysis`,
-              description: `Detailed financial analysis and breakdown for ${report.title.toLowerCase()}`,
-              content: (
-                <div className="space-y-6">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-bold mb-2">Report Status</h4>
-                      <p className="text-sm text-gray-600">{report.description}</p>
-                      <div className="mt-2">
-                        <Badge variant={report.status === 'Generated' ? 'default' : 'secondary'}>
-                          {report.status}
-                        </Badge>
-                        <p className="text-xs text-gray-500 mt-1">Last generated: {report.lastGenerated}</p>
-                      </div>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-bold mb-2">Report Metrics</h4>
-                      <p className="text-sm text-gray-600">Financial performance indicators</p>
-                      <div className="mt-2">
-                        <div className="flex justify-between text-xs">
-                          <span>Accuracy Score</span>
-                          <span className="text-green-600">98%</span>
-                        </div>
-                        <Progress value={98} className="h-2" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {report.title === 'Profit & Loss' && (
-                    <div>
-                      <h4 className="font-bold mb-3">P&L Summary</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Total Revenue</span>
-                          <span className="font-semibold">£125,430</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Total Expenses</span>
-                          <span className="font-semibold">£89,250</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded bg-green-50">
-                          <span>Net Profit</span>
-                          <span className="font-semibold text-green-600">£36,180</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {report.title === 'Balance Sheet' && (
-                    <div>
-                      <h4 className="font-bold mb-3">Balance Sheet Summary</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Total Assets</span>
-                          <span className="font-semibold">£245,680</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Total Liabilities</span>
-                          <span className="font-semibold">£89,420</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded bg-blue-50">
-                          <span>Net Worth</span>
-                          <span className="font-semibold text-blue-600">£156,260</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {report.title === 'Cash Flow Statement' && (
-                    <div>
-                      <h4 className="font-bold mb-3">Cash Flow Summary</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Operating Cash Flow</span>
-                          <span className="font-semibold">£42,350</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Investing Cash Flow</span>
-                          <span className="font-semibold">-£15,200</span>
-                        </div>
-                        <div className="flex justify-between p-2 border rounded">
-                          <span>Financing Cash Flow</span>
-                          <span className="font-semibold">-£8,500</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="flex gap-2 pt-4">
-                    <Button variant="outline">Export Report</Button>
-                    <Button>Generate New</Button>
-                  </div>
-                </div>
-              )
-            }
             return (
-              <KPICard
-                key={index}
-                title={report.title}
-                value={report.status}
-                change={`Last: ${report.lastGenerated}`}
-                icon={Icon}
-                color={report.color}
-                drillDownData={drillDownData}
-              />
+              <Card 
+                key={index} 
+                className="cursor-pointer hover:shadow-lg transition-shadow" 
+                onClick={() => {
+                  setSelectedReport(report.reportType || report.title.toLowerCase().replace(/\s+/g, '-').replace('&', ''))
+                  loadReportData(report.reportType || report.title.toLowerCase().replace(/\s+/g, '-').replace('&', ''))
+                }}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon className={`h-5 w-5 ${report.color}`} />
+                    {report.title}
+                  </CardTitle>
+                  <CardDescription>{report.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className={`text-2xl font-bold ${report.color}`}>{report.status}</div>
+                  <p className="text-sm text-gray-600">Last updated: {report.lastGenerated}</p>
+                </CardContent>
+              </Card>
             )
           })}
         </div>
@@ -4934,6 +5348,20 @@ export default function Bookkeeping() {
   }
 
   function renderReconciliationManagement() {
+    const loadReconciliation = async () => {
+      if (!selectedAccount) return
+      
+      setReconciliationLoading(true)
+      try {
+        const data = await apiClient.getBankReconciliation(selectedAccount, startDate, endDate)
+        setReconciliationData(data)
+      } catch (error) {
+        console.error('Failed to load reconciliation:', error)
+      } finally {
+        setReconciliationLoading(false)
+      }
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -4952,6 +5380,183 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Reconciliation Parameters</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <Label htmlFor="account">Bank Account</Label>
+                <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="acc1">Business Current Account</SelectItem>
+                    <SelectItem value="acc2">Business Savings Account</SelectItem>
+                    <SelectItem value="acc3">Payroll Account</SelectItem>
+                    <SelectItem value="acc4">Tax Reserve Account</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="start-date">Start Date</Label>
+                <Input
+                  id="start-date"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="end-date">End Date</Label>
+                <Input
+                  id="end-date"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+              <div className="flex items-end">
+                <Button onClick={loadReconciliation} disabled={!selectedAccount || reconciliationLoading}>
+                  {reconciliationLoading ? 'Loading...' : 'Generate Statement'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Bank Reconciliation Statement */}
+        {reconciliationData && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Bank Reconciliation Statement</CardTitle>
+              <CardDescription>
+                {reconciliationData.account_name} - {reconciliationData.account_number}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Opening Balance */}
+                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <span className="font-medium">Opening Balance</span>
+                  <span className="font-bold text-lg">
+                    {formatCurrency(reconciliationData.opening_balance, reconciliationData.currency)}
+                  </span>
+                </div>
+
+                {/* Transactions with Running Balances */}
+                <div className="space-y-2">
+                  <div className="grid grid-cols-6 gap-4 p-3 bg-gray-50 rounded font-medium text-sm">
+                    <div>Date</div>
+                    <div>Description</div>
+                    <div className="text-right">Debit</div>
+                    <div className="text-right">Credit</div>
+                    <div className="text-right">Running Balance</div>
+                    <div>Status</div>
+                  </div>
+                  
+                  {reconciliationData.transactions.map((transaction: any, index: number) => (
+                    <div key={index} className="grid grid-cols-6 gap-4 p-3 border rounded-lg">
+                      <div className="text-sm">{transaction.date}</div>
+                      <div className="text-sm">{transaction.description}</div>
+                      <div className="text-right text-sm text-red-600">
+                        {transaction.debit ? formatCurrency(transaction.debit, reconciliationData.currency) : '-'}
+                      </div>
+                      <div className="text-right text-sm text-green-600">
+                        {transaction.credit ? formatCurrency(transaction.credit, reconciliationData.currency) : '-'}
+                      </div>
+                      <div className="text-right text-sm font-semibold">
+                        {formatCurrency(transaction.running_balance, reconciliationData.currency)}
+                      </div>
+                      <div>
+                        <Badge className={`${
+                          transaction.status === 'reconciled' ? 'bg-green-100 text-green-800' : 
+                          'bg-orange-100 text-orange-800'
+                        }`}>
+                          {transaction.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Closing Balance */}
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                  <span className="font-medium">Closing Balance</span>
+                  <span className="font-bold text-lg">
+                    {formatCurrency(reconciliationData.closing_balance, reconciliationData.currency)}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {reconciliationData && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Bank Reconciliation Statement</CardTitle>
+              <CardDescription>
+                {reconciliationData.account_name} - {reconciliationData.account_number}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <span className="font-medium">Opening Balance</span>
+                  <span className="font-bold text-lg">
+                    {formatCurrency(reconciliationData.opening_balance, reconciliationData.currency)}
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="grid grid-cols-6 gap-4 p-3 bg-gray-50 rounded font-medium text-sm">
+                    <div>Date</div>
+                    <div>Description</div>
+                    <div className="text-right">Debit</div>
+                    <div className="text-right">Credit</div>
+                    <div className="text-right">Running Balance</div>
+                    <div>Status</div>
+                  </div>
+                  
+                  {reconciliationData.transactions.map((transaction: any, index: number) => (
+                    <div key={index} className="grid grid-cols-6 gap-4 p-3 border rounded-lg">
+                      <div className="text-sm">{transaction.date}</div>
+                      <div className="text-sm">{transaction.description}</div>
+                      <div className="text-right text-sm text-red-600">
+                        {transaction.debit ? formatCurrency(transaction.debit, reconciliationData.currency) : '-'}
+                      </div>
+                      <div className="text-right text-sm text-green-600">
+                        {transaction.credit ? formatCurrency(transaction.credit, reconciliationData.currency) : '-'}
+                      </div>
+                      <div className="text-right text-sm font-semibold">
+                        {formatCurrency(transaction.running_balance, reconciliationData.currency)}
+                      </div>
+                      <div>
+                        <Badge className={`${
+                          transaction.status === 'reconciled' ? 'bg-green-100 text-green-800' : 
+                          'bg-orange-100 text-orange-800'
+                        }`}>
+                          {transaction.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                  <span className="font-medium">Closing Balance</span>
+                  <span className="font-bold text-lg">
+                    {formatCurrency(reconciliationData.closing_balance, reconciliationData.currency)}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid gap-6 md:grid-cols-4">
           <Card>
@@ -6364,47 +6969,16 @@ export default function Bookkeeping() {
                 {[
                   { category: 'Services', value: 15750, items: 45, currency: 'GBP' },
                   { category: 'Software', value: 8999, items: 12, currency: 'USD' },
-                  { category: 'Training', value: 12400, items: 18, currency: 'EUR' },
-                  { category: 'Support', value: 2500, items: 8, currency: 'GBP' }
-                ].map((category, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  { category: 'Hardware', value: 5250, items: 8, currency: 'EUR' }
+                ].map((item, index) => (
+                  <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
                     <div>
-                      <p className="font-medium">{category.category}</p>
-                      <p className="text-sm text-gray-600">{category.items} items</p>
+                      <p className="font-medium">{item.category}</p>
+                      <p className="text-sm text-gray-600">{item.items} items</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold">{category.currency} {category.value.toLocaleString()}</p>
+                      <p className="font-bold">{item.currency === 'GBP' ? '£' : item.currency === 'USD' ? '$' : '€'}{item.value.toLocaleString()}</p>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Low Stock Alert</CardTitle>
-              <CardDescription>Items requiring immediate attention</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { product: 'Consultation Services', current: 5, reorder: 15, status: 'Critical' },
-                  { product: 'Software License', current: 0, reorder: 5, status: 'Out of Stock' },
-                  { product: 'Support Package', current: 3, reorder: 10, status: 'Low' }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <p className="font-medium">{item.product}</p>
-                      <p className="text-sm text-gray-600">Current: {item.current} | Reorder: {item.reorder}</p>
-                    </div>
-                    <Badge className={`${
-                      item.status === 'Out of Stock' ? 'bg-red-100 text-red-800' : 
-                      item.status === 'Critical' ? 'bg-orange-100 text-orange-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {item.status}
-                    </Badge>
                   </div>
                 ))}
               </div>
@@ -6415,123 +6989,289 @@ export default function Bookkeeping() {
     )
   }
 
-  function renderVATCompliance() {
+  function renderRecurringTransactions() {
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Compliance</h2>
-            <p className="text-gray-600">Monitor VAT compliance and regulatory requirements</p>
+            <h2 className="text-2xl font-bold">Recurring Transactions</h2>
+            <p className="text-gray-600">Manage recurring sales and purchases</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
-              <AlertCircle className="h-4 w-4 mr-2" />
-              Check Status
+              <Plus className="h-4 w-4 mr-2" />
+              New Recurring Transaction
             </Button>
             <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Compliance Report
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Generate Due Transactions
             </Button>
           </div>
         </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Active Recurring Transactions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold">Monthly Office Rent</h3>
+                        <p className="text-sm text-gray-600">Next: 1st of month</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-lg">£2,500.00</p>
+                        <Badge variant="secondary">Monthly</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold">Software Subscriptions</h3>
+                        <p className="text-sm text-gray-600">Next: 15th of month</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-lg">£450.00</p>
+                        <Badge variant="secondary">Monthly</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold">Quarterly VAT Return</h3>
+                        <p className="text-sm text-gray-600">Next: End of quarter</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-lg">£8,750.00</p>
+                        <Badge variant="outline">Quarterly</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-        <div className="grid gap-6 md:grid-cols-2">
+  function renderAccrualsPrepaymentsments() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Accruals & Prepayments</h2>
+            <p className="text-gray-600">Manage accruals and prepayments with reversals</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Accrual/Prepayment
+            </Button>
+            <Button>
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Process Monthly
+            </Button>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Compliance Checklist</CardTitle>
-              <CardDescription>Essential VAT compliance requirements</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-blue-500" />
+                Accruals
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { item: 'VAT registration up to date', status: 'complete', description: 'Registration details current' },
-                  { item: 'Quarterly returns submitted', status: 'complete', description: 'All returns filed on time' },
-                  { item: 'MTD software compliant', status: 'complete', description: 'Using approved software' },
-                  { item: 'Digital records maintained', status: 'complete', description: 'Records stored digitally' },
-                  { item: 'VAT invoices compliant', status: 'warning', description: 'Some invoices missing details' }
-                ].map((check, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
-                    <div className="mt-1">
-                      {check.status === 'complete' ? (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-orange-600" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{check.item}</p>
-                      <p className="text-sm text-gray-600">{check.description}</p>
-                    </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                  <div>
+                    <p className="font-medium">Audit Fees Accrual</p>
+                    <p className="text-sm text-gray-600">Dec 2024 - Mar 2025</p>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <p className="font-bold">£12,000.00</p>
+                    <Badge variant="secondary">Active</Badge>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                  <div>
+                    <p className="font-medium">Electricity Accrual</p>
+                    <p className="text-sm text-gray-600">Jan 2025 - Mar 2025</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">£850.00</p>
+                    <Badge variant="secondary">Active</Badge>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
-
+          
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Deadlines</CardTitle>
-              <CardDescription>Important VAT dates and deadlines</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingDown className="h-5 w-5 text-green-500" />
+                Prepayments
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { task: 'Q1 2024 VAT Return', date: '7 May 2024', days: 15, type: 'return' },
-                  { task: 'VAT Payment Due', date: '7 May 2024', days: 15, type: 'payment' },
-                  { task: 'Annual VAT Review', date: '31 March 2024', days: -5, type: 'review' }
-                ].map((deadline, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex-1">
-                      <p className="font-medium">{deadline.task}</p>
-                      <p className="text-sm text-gray-600">{deadline.date}</p>
-                    </div>
-                    <div className="text-right">
-                      <Badge className={`${
-                        deadline.days < 0 ? 'bg-red-100 text-red-800' : 
-                        deadline.days <= 7 ? 'bg-orange-100 text-orange-800' : 
-                        'bg-green-100 text-green-800'
-                      }`}>
-                        {deadline.days < 0 ? `${Math.abs(deadline.days)} days overdue` : 
-                         deadline.days === 0 ? 'Due today' : 
-                         `${deadline.days} days`}
-                      </Badge>
-                    </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                  <div>
+                    <p className="font-medium">Insurance Prepayment</p>
+                    <p className="text-sm text-gray-600">Jan 2025 - Dec 2025</p>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <p className="font-bold">£3,600.00</p>
+                    <Badge variant="outline">Active</Badge>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                  <div>
+                    <p className="font-medium">Software License</p>
+                    <p className="text-sm text-gray-600">Jan 2025 - Jun 2025</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">£2,400.00</p>
+                    <Badge variant="outline">Active</Badge>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
+      </div>
+    )
+  }
 
+  function renderInvoiceTracking() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Invoice Tracking</h2>
+            <p className="text-gray-600">Track invoice emails and payment links</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Mail className="h-4 w-4 mr-2" />
+              Send Invoice Email
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh Status
+            </Button>
+          </div>
+        </div>
+        
         <Card>
           <CardHeader>
-            <CardTitle>Compliance Alerts</CardTitle>
-            <CardDescription>Recent compliance notifications and actions required</CardDescription>
+            <CardTitle>Recent Invoice Activity</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { type: 'warning', message: 'VAT invoice missing customer VAT number', date: '2024-01-28', action: 'Update invoice template' },
-                { type: 'info', message: 'New VAT rate changes effective April 2024', date: '2024-01-25', action: 'Review rate settings' },
-                { type: 'success', message: 'Q4 2023 VAT return successfully submitted', date: '2024-01-20', action: 'No action required' }
-              ].map((alert, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
-                  <div className="mt-1">
-                    {alert.type === 'warning' ? (
-                      <AlertCircle className="h-4 w-4 text-orange-600" />
-                    ) : alert.type === 'success' ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="h-4 w-4 text-blue-600" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{alert.message}</p>
-                    <p className="text-sm text-gray-600">{alert.action}</p>
-                    <p className="text-xs text-gray-500">{alert.date}</p>
-                  </div>
-                </div>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold">INV-2025-001</h3>
+                      <Badge className="bg-green-100 text-green-800">Paid</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">Client: ABC Corp Ltd</p>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span>Email Sent:</span>
+                        <span className="text-green-600">✓ 2 days ago</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Email Opened:</span>
+                        <span className="text-green-600">✓ 2 days ago</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment Link:</span>
+                        <span className="text-green-600">✓ Clicked</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment:</span>
+                        <span className="text-green-600">✓ Completed</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold">INV-2025-002</h3>
+                      <Badge className="bg-blue-100 text-blue-800">Viewed</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">Client: XYZ Ltd</p>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span>Email Sent:</span>
+                        <span className="text-green-600">✓ 1 day ago</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Email Opened:</span>
+                        <span className="text-green-600">✓ 1 day ago</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment Link:</span>
+                        <span className="text-gray-400">- Not clicked</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment:</span>
+                        <span className="text-gray-400">- Pending</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold">INV-2025-003</h3>
+                      <Badge className="bg-yellow-100 text-yellow-800">Sent</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">Client: DEF Company</p>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span>Email Sent:</span>
+                        <span className="text-green-600">✓ Today</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Email Opened:</span>
+                        <span className="text-gray-400">- Not opened</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment Link:</span>
+                        <span className="text-gray-400">- Not clicked</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payment:</span>
+                        <span className="text-gray-400">- Pending</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </CardContent>
         </Card>
