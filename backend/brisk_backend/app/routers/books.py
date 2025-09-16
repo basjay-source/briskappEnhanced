@@ -8,7 +8,7 @@ from decimal import Decimal
 import uuid
 
 from app.database import get_db
-from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking
+from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking, TransactionCategorizationRule, TransactionCategorization
 from app.models.client import Client
 from app.models.products import Product, InventoryMovement
 from app.models.tenant import Invoice
@@ -2383,3 +2383,167 @@ def import_opening_trial_balance(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error importing opening trial balance: {str(e)}")
+
+@router.get("/categorization-rules")
+def get_categorization_rules(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    rules = db.query(TransactionCategorizationRule).filter(
+        TransactionCategorizationRule.tenant_id == request.state.tenant_id,
+        TransactionCategorizationRule.is_active == True
+    ).order_by(TransactionCategorizationRule.priority).all()
+    
+    return [
+        {
+            "id": rule.id,
+            "rule_name": rule.rule_name,
+            "rule_type": rule.rule_type,
+            "pattern": rule.pattern,
+            "target_category": rule.target_category,
+            "target_account_id": rule.target_account_id,
+            "priority": rule.priority,
+            "is_active": rule.is_active
+        } for rule in rules
+    ]
+
+@router.post("/categorization-rules")
+def create_categorization_rule(
+    rule_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    rule = TransactionCategorizationRule(
+        tenant_id=request.state.tenant_id,
+        company_id=rule_data["company_id"],
+        rule_name=rule_data["rule_name"],
+        rule_type=rule_data["rule_type"],
+        pattern=rule_data["pattern"],
+        target_category=rule_data["target_category"],
+        target_account_id=rule_data.get("target_account_id"),
+        priority=rule_data.get("priority", 100)
+    )
+    
+    db.add(rule)
+    db.commit()
+    db.refresh(rule)
+    
+    return {"message": "Categorization rule created successfully", "rule": rule}
+
+@router.put("/categorization-rules/{rule_id}")
+def update_categorization_rule(
+    rule_id: str,
+    rule_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    rule = db.query(TransactionCategorizationRule).filter(
+        TransactionCategorizationRule.id == rule_id,
+        TransactionCategorizationRule.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not rule:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    
+    for key, value in rule_data.items():
+        setattr(rule, key, value)
+    
+    db.commit()
+    return {"message": "Rule updated successfully"}
+
+@router.delete("/categorization-rules/{rule_id}")
+def delete_categorization_rule(
+    rule_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    rule = db.query(TransactionCategorizationRule).filter(
+        TransactionCategorizationRule.id == rule_id,
+        TransactionCategorizationRule.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not rule:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    
+    rule.is_active = False
+    db.commit()
+    return {"message": "Rule deleted successfully"}
+
+@router.post("/auto-categorize-transactions")
+def auto_categorize_transactions(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    rules = db.query(TransactionCategorizationRule).filter(
+        TransactionCategorizationRule.tenant_id == request.state.tenant_id,
+        TransactionCategorizationRule.is_active == True
+    ).order_by(TransactionCategorizationRule.priority).all()
+    
+    uncategorized_transactions = db.query(JournalEntry).filter(
+        JournalEntry.tenant_id == request.state.tenant_id,
+        ~JournalEntry.id.in_(
+            db.query(TransactionCategorization.journal_entry_id)
+        )
+    ).all()
+    
+    categorized_count = 0
+    
+    for transaction in uncategorized_transactions:
+        for rule in rules:
+            if apply_categorization_rule(transaction, rule):
+                categorization = TransactionCategorization(
+                    tenant_id=request.state.tenant_id,
+                    journal_entry_id=transaction.id,
+                    category=rule.target_category,
+                    account_id=rule.target_account_id,
+                    rule_id=rule.id,
+                    is_manual_override=False
+                )
+                db.add(categorization)
+                categorized_count += 1
+                break
+    
+    db.commit()
+    return {"message": f"Categorized {categorized_count} transactions"}
+
+def apply_categorization_rule(transaction: JournalEntry, rule: TransactionCategorizationRule) -> bool:
+    import re
+    
+    if rule.rule_type == "contains":
+        return rule.pattern.lower() in transaction.description.lower()
+    elif rule.rule_type == "exact_match":
+        return rule.pattern.lower() == transaction.description.lower()
+    elif rule.rule_type == "regex":
+        return bool(re.search(rule.pattern, transaction.description, re.IGNORECASE))
+    elif rule.rule_type == "amount_range":
+        amount = float(transaction.credit_amount - transaction.debit_amount)
+        if rule.pattern.startswith(">"):
+            return amount > float(rule.pattern[1:])
+        elif rule.pattern.startswith("<"):
+            return amount < float(rule.pattern[1:])
+        elif "-" in rule.pattern:
+            min_amt, max_amt = map(float, rule.pattern.split("-"))
+            return min_amt <= abs(amount) <= max_amt
+    
+    return False
+
+@router.get("/transaction-categorizations")
+def get_transaction_categorizations(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    categorizations = db.query(TransactionCategorization).join(JournalEntry).filter(
+        TransactionCategorization.tenant_id == request.state.tenant_id
+    ).all()
+    
+    return [
+        {
+            "id": cat.id,
+            "journal_entry_id": cat.journal_entry_id,
+            "category": cat.category,
+            "account_id": cat.account_id,
+            "rule_id": cat.rule_id,
+            "is_manual_override": cat.is_manual_override,
+            "categorized_at": cat.categorized_at.isoformat()
+        } for cat in categorizations
+    ]

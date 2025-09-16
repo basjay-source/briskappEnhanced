@@ -722,6 +722,40 @@ class ApiClient {
     return this.request(`/books/reports/general-ledger-summary?${params}`)
   }
 
+  async getCategorizationRules() {
+    return this.request('/books/categorization-rules')
+  }
+
+  async createCategorizationRule(ruleData: any) {
+    return this.request('/books/categorization-rules', {
+      method: 'POST',
+      body: JSON.stringify(ruleData)
+    })
+  }
+
+  async updateCategorizationRule(ruleId: string, ruleData: any) {
+    return this.request(`/books/categorization-rules/${ruleId}`, {
+      method: 'PUT',
+      body: JSON.stringify(ruleData)
+    })
+  }
+
+  async deleteCategorizationRule(ruleId: string) {
+    return this.request(`/books/categorization-rules/${ruleId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async autoCategorizeTransactions() {
+    return this.request('/books/auto-categorize-transactions', {
+      method: 'POST'
+    })
+  }
+
+  async getTransactionCategorizations() {
+    return this.request('/books/transaction-categorizations')
+  }
+
 }
 
 export const apiClient = new ApiClient()

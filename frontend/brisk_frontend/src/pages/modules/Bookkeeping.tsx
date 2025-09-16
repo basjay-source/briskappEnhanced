@@ -5,7 +5,7 @@ import {
   FileText, Calculator, PoundSterling, BarChart3, Building, Users, Plus,
   ShoppingCart, Percent, Package, RefreshCw,
   ChevronDown, BookOpen, Landmark, Clock,
-  RotateCcw, ArrowLeft, Mail, Calendar, Upload
+  RotateCcw, ArrowLeft, Mail, Calendar, Upload, Edit, Trash
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
@@ -28,6 +28,16 @@ export default function Bookkeeping() {
   const [reportsDateTo, setReportsDateTo] = useState('')
   
   const [selectedReport, setSelectedReport] = useState('')
+
+  const [rules, setRules] = useState<any[]>([])
+  const [showRuleForm, setShowRuleForm] = useState(false)
+  const [newRule, setNewRule] = useState({
+    rule_name: '',
+    rule_type: 'contains',
+    pattern: '',
+    target_category: '',
+    priority: 100
+  })
 
   useEffect(() => {
     const loadBookkeepingData = async () => {
@@ -138,7 +148,8 @@ export default function Bookkeeping() {
       subTabs: [
         { id: 'transactions', label: 'Transactions' },
         { id: 'reconciliation', label: 'Reconciliation' },
-        { id: 'accounts', label: 'Accounts' }
+        { id: 'accounts', label: 'Accounts' },
+        { id: 'cash-coding', label: 'Cash Coding' }
       ]
     },
     {
@@ -213,6 +224,9 @@ export default function Bookkeeping() {
       if (activeSubTab === 'financial-reports') return renderFinancialReports()
       if (activeSubTab === 'management-reports') return renderManagementReports()
       if (activeSubTab === 'analytics') return renderAnalyticsReports()
+    }
+    if (activeMainTab === 'banking') {
+      if (activeSubTab === 'cash-coding') return renderCashCoding()
     }
     if (activeMainTab === 'recurring-transactions') return renderRecurringTransactions()
     if (activeMainTab === 'accruals-prepayments') return renderAccrualsPrepaymentsments()
@@ -943,6 +957,177 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  const loadRules = async () => {
+    try {
+      const data: any = await apiClient.getCategorizationRules()
+      setRules(data || [])
+    } catch (error) {
+      console.error('Failed to load categorization rules:', error)
+      setRules([])
+    }
+  }
+
+  const handleCreateRule = async () => {
+    try {
+      await apiClient.createCategorizationRule({
+        ...newRule,
+        company_id: 'default'
+      })
+      setShowRuleForm(false)
+      setNewRule({
+        rule_name: '',
+        rule_type: 'contains',
+        pattern: '',
+        target_category: '',
+        priority: 100
+      })
+      loadRules()
+    } catch (error) {
+      console.error('Failed to create rule:', error)
+    }
+  }
+
+  const handleDeleteRule = async (ruleId: string) => {
+    try {
+      await apiClient.deleteCategorizationRule(ruleId)
+      loadRules()
+    } catch (error) {
+      console.error('Failed to delete rule:', error)
+    }
+  }
+
+  const handleAutoCategorize = async () => {
+    try {
+      const result: any = await apiClient.autoCategorizeTransactions()
+      alert(result.message)
+    } catch (error) {
+      console.error('Failed to auto-categorize:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (activeMainTab === 'banking' && activeSubTab === 'cash-coding') {
+      loadRules()
+    }
+  }, [activeMainTab, activeSubTab])
+
+  function renderCashCoding() {
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Cash Coding & Auto-Categorization</h2>
+            <p className="text-gray-600">Manage rules for automatic transaction categorization</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowRuleForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Rule
+            </Button>
+            <Button onClick={handleAutoCategorize}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Auto-Categorize
+            </Button>
+          </div>
+        </div>
+
+        {showRuleForm && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Create Categorization Rule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Rule Name</label>
+                  <Input
+                    value={newRule.rule_name}
+                    onChange={(e) => setNewRule({...newRule, rule_name: e.target.value})}
+                    placeholder="e.g., Salary Payments"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Rule Type</label>
+                  <select
+                    value={newRule.rule_type}
+                    onChange={(e) => setNewRule({...newRule, rule_type: e.target.value})}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="contains">Contains Text</option>
+                    <option value="exact_match">Exact Match</option>
+                    <option value="regex">Regular Expression</option>
+                    <option value="amount_range">Amount Range</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Pattern</label>
+                  <Input
+                    value={newRule.pattern}
+                    onChange={(e) => setNewRule({...newRule, pattern: e.target.value})}
+                    placeholder="e.g., SALARY, >1000, 100-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Target Category</label>
+                  <Input
+                    value={newRule.target_category}
+                    onChange={(e) => setNewRule({...newRule, target_category: e.target.value})}
+                    placeholder="e.g., Payroll, Office Expenses"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Button onClick={handleCreateRule}>Create Rule</Button>
+                <Button variant="outline" onClick={() => setShowRuleForm(false)}>Cancel</Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Categorization Rules</CardTitle>
+            <CardDescription>Active rules for automatic transaction categorization</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {rules.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No categorization rules created yet.</p>
+                  <p className="text-sm text-gray-400">Click "New Rule" to create your first rule.</p>
+                </div>
+              ) : (
+                rules.map((rule: any) => (
+                  <div key={rule.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-medium">{rule.rule_name}</h4>
+                        <Badge className="bg-blue-100 text-blue-800">{rule.rule_type}</Badge>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Pattern: "{rule.pattern}" → Category: "{rule.target_category}"
+                      </p>
+                      <p className="text-xs text-gray-500">Priority: {rule.priority}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteRule(rule.id)}>
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }

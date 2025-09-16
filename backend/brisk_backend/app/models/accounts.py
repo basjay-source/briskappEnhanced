@@ -123,3 +123,30 @@ class InvoiceTracking(Base):
     tracking_token = Column(String, unique=True)
     payment_link_url = Column(String)
     email_recipient = Column(String)
+
+class TransactionCategorizationRule(Base):
+    __tablename__ = "transaction_categorization_rules"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    rule_name = Column(String, nullable=False)
+    rule_type = Column(String, nullable=False)
+    pattern = Column(String, nullable=False)
+    target_category = Column(String, nullable=False)
+    target_account_id = Column(String, ForeignKey("ledger_accounts.id"))
+    priority = Column(Integer, default=100)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class TransactionCategorization(Base):
+    __tablename__ = "transaction_categorizations"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    journal_entry_id = Column(String, ForeignKey("journal_entries.id"), nullable=False)
+    category = Column(String, nullable=False)
+    account_id = Column(String, ForeignKey("ledger_accounts.id"))
+    rule_id = Column(String, ForeignKey("transaction_categorization_rules.id"))
+    is_manual_override = Column(Boolean, default=False)
+    categorized_at = Column(DateTime(timezone=True), server_default=func.now())
