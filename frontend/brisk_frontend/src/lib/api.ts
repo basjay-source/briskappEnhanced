@@ -414,6 +414,60 @@ class ApiClient {
     const params = new URLSearchParams(filters || {})
     return this.request(`/aml/training-records?${params}`)
   }
+
+  async createCustomer(data: Record<string, unknown>) {
+    return this.request('/books/customers', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createSupplier(data: Record<string, unknown>) {
+    return this.request('/books/suppliers', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createProduct(data: Record<string, unknown>) {
+    return this.request('/books/products', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createExpense(data: Record<string, unknown>) {
+    return this.request('/books/expenses', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createApprovalRequest(data: Record<string, unknown>) {
+    return this.request('/admin/approval-requests', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async approveRequest(requestId: number) {
+    return this.request(`/admin/approval-requests/${requestId}/approve`, {
+      method: 'POST'
+    })
+  }
+
+  async rejectRequest(requestId: number) {
+    return this.request(`/admin/approval-requests/${requestId}/reject`, {
+      method: 'POST'
+    })
+  }
+
+  async createAccount(data: Record<string, unknown>) {
+    return this.request('/books/accounts', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
 }
 
 export const apiClient = new ApiClient()

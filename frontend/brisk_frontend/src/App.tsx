@@ -18,6 +18,18 @@ import AdminModule from '@/pages/modules/AdminModule'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
 import VAT from '@/pages/modules/VAT'
 import ClientPortal from '@/components/ClientPortal'
+import NewJobForm from './pages/forms/NewJobForm'
+import NewInvoiceTemplateForm from './pages/forms/NewInvoiceTemplateForm'
+import NewInvoiceForm from './pages/forms/NewInvoiceForm'
+import NewPayslipTemplateForm from './pages/forms/NewPayslipTemplateForm'
+import NewCustomerForm from './pages/forms/NewCustomerForm'
+import NewSupplierForm from './pages/forms/NewSupplierForm'
+import NewProductForm from './pages/forms/NewProductForm'
+import NewBillForm from './pages/forms/NewBillForm'
+import NewExpenseForm from './pages/forms/NewExpenseForm'
+import NewAccountForm from './pages/forms/NewAccountForm'
+import NewQuoteForm from './pages/forms/NewQuoteForm'
+import NewApprovalRequestForm from './pages/forms/NewApprovalRequestForm'
 
 function App() {
   return (
@@ -44,6 +56,18 @@ function App() {
             <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
             <Route path="admin" element={<AdminModule />} />
             <Route path="portal" element={<ClientPortal />} />
+            <Route path="practice/jobs/new" element={<NewJobForm />} />
+            <Route path="admin/templates/invoice/new" element={<NewInvoiceTemplateForm />} />
+            <Route path="admin/templates/payslip/new" element={<NewPayslipTemplateForm />} />
+            <Route path="books/invoices/new" element={<NewInvoiceForm />} />
+            <Route path="books/customers/new" element={<NewCustomerForm />} />
+            <Route path="books/suppliers/new" element={<NewSupplierForm />} />
+            <Route path="books/products/new" element={<NewProductForm />} />
+            <Route path="books/bills/new" element={<NewBillForm />} />
+            <Route path="books/expenses/new" element={<NewExpenseForm />} />
+            <Route path="books/accounts/new" element={<NewAccountForm />} />
+            <Route path="books/quotes/new" element={<NewQuoteForm />} />
+            <Route path="admin/approvals/new" element={<NewApprovalRequestForm />} />
           </Route>
         </Routes>
       </Router>

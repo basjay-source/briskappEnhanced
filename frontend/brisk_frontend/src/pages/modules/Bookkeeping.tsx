@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { 
   CreditCard, 
   Receipt, 
@@ -55,6 +56,7 @@ import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 import { apiClient } from '@/lib/api'
 
 export default function Bookkeeping() {
+  const navigate = useNavigate()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
@@ -573,15 +575,15 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start" onClick={() => console.log('Create Invoice clicked')}>
+                <Button variant="outline" className="justify-start" onClick={() => navigate('/app/books/invoices/new')}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start" onClick={() => console.log('Record Expense clicked')}>
+                <Button variant="outline" className="justify-start" onClick={() => navigate('/app/books/expenses/new')}>
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start" onClick={() => console.log('Bank Reconciliation clicked')}>
+                <Button variant="outline" className="justify-start" onClick={() => navigate('/app/books/reconciliation')}>
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
@@ -607,11 +609,11 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Invoices, quotes, customers, and sales analytics</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/invoices/new')}>
               <Plus className="h-4 w-4 mr-2" />
               New Invoice
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/app/books/customers/new')}>
               <UserCheck className="h-4 w-4 mr-2" />
               Add Customer
             </Button>
@@ -939,11 +941,11 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Bank feeds, reconciliation, and transaction management</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/accounts/new')}>
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/app/books/sync')}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Sync All
             </Button>
@@ -1629,11 +1631,11 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Advanced analytics and business intelligence for strategic planning</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/analytics/export')}>
               <Download className="h-4 w-4 mr-2" />
               Export Analytics
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/app/books/dashboards/new')}>
               <BarChart3 className="h-4 w-4 mr-2" />
               Create Dashboard
             </Button>
@@ -1836,11 +1838,11 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Budget planning and financial forecasting</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/budgets/new')}>
               <Plus className="h-4 w-4 mr-2" />
               New Budget
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/app/books/forecasts/new')}>
               <Calculator className="h-4 w-4 mr-2" />
               Forecast
             </Button>
@@ -2031,11 +2033,11 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Connect external bookkeeping software and import trial balance data</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/integrations/new')}>
               <Link className="h-4 w-4 mr-2" />
               Add Integration
             </Button>
-            <Button>
+            <Button onClick={() => navigate('/app/books/import')}>
               <Upload className="h-4 w-4 mr-2" />
               Import Data
             </Button>
@@ -3167,7 +3169,7 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Track maintenance, repairs, and property-related costs</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/expenses/new')}>
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
@@ -3936,7 +3938,7 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Manage products, services, pricing, and inventory</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/products/new')}>
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
@@ -4048,7 +4050,7 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Process, approve, and track supplier bills and payments</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/bills/new')}>
               <Plus className="h-4 w-4 mr-2" />
               New Bill
             </Button>
@@ -4302,7 +4304,7 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Manage supplier information, payment terms, and transaction history</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/suppliers/new')}>
               <Plus className="h-4 w-4 mr-2" />
               Add Supplier
             </Button>
@@ -4413,7 +4415,7 @@ export default function Bookkeeping() {
             <p className="text-gray-600">Track, categorize, and manage business expenses</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => navigate('/app/books/expenses/new')}>
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
