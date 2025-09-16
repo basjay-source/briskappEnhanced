@@ -756,6 +756,34 @@ class ApiClient {
     return this.request('/books/transaction-categorizations')
   }
 
+  async getFixedAssets() {
+    return this.request('/books/fixed-assets')
+  }
+
+  async createFixedAsset(assetData: any) {
+    return this.request('/books/fixed-assets', {
+      method: 'POST',
+      body: JSON.stringify(assetData)
+    })
+  }
+
+  async updateFixedAsset(assetId: string, assetData: any) {
+    return this.request(`/books/fixed-assets/${assetId}`, {
+      method: 'PUT',
+      body: JSON.stringify(assetData)
+    })
+  }
+
+  async calculateDepreciation() {
+    return this.request('/books/fixed-assets/calculate-depreciation', {
+      method: 'POST'
+    })
+  }
+
+  async exportFixedAssets() {
+    return this.request('/books/fixed-assets/export')
+  }
+
 }
 
 export const apiClient = new ApiClient()

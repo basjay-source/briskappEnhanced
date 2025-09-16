@@ -8,7 +8,7 @@ from decimal import Decimal
 import uuid
 
 from app.database import get_db
-from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking, TransactionCategorizationRule, TransactionCategorization
+from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking, TransactionCategorizationRule, TransactionCategorization, FixedAsset
 from app.models.client import Client
 from app.models.products import Product, InventoryMovement
 from app.models.tenant import Invoice
@@ -2547,3 +2547,145 @@ def get_transaction_categorizations(
             "categorized_at": cat.categorized_at.isoformat()
         } for cat in categorizations
     ]
+
+@router.get("/fixed-assets")
+def get_fixed_assets(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    assets = db.query(FixedAsset).filter(
+        FixedAsset.tenant_id == request.state.tenant_id,
+        FixedAsset.is_active == True
+    ).all()
+    
+    return [
+        {
+            "id": asset.id,
+            "asset_name": asset.asset_name,
+            "asset_category": asset.asset_category,
+            "acquisition_date": asset.acquisition_date.isoformat(),
+            "acquisition_cost": float(asset.acquisition_cost),
+            "depreciation_method": asset.depreciation_method,
+            "depreciation_rate": float(asset.depreciation_rate),
+            "useful_life_years": asset.useful_life_years,
+            "depreciation_start_basis": asset.depreciation_start_basis,
+            "accumulated_depreciation": float(asset.accumulated_depreciation),
+            "current_book_value": float(asset.current_book_value),
+            "disposal_date": asset.disposal_date.isoformat() if asset.disposal_date else None,
+            "disposal_proceeds": float(asset.disposal_proceeds) if asset.disposal_proceeds else None
+        } for asset in assets
+    ]
+
+@router.post("/fixed-assets")
+def create_fixed_asset(
+    asset_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    acquisition_cost = Decimal(str(asset_data["acquisition_cost"]))
+    current_book_value = acquisition_cost
+    
+    asset = FixedAsset(
+        tenant_id=request.state.tenant_id,
+        company_id=asset_data["company_id"],
+        asset_name=asset_data["asset_name"],
+        asset_category=asset_data["asset_category"],
+        acquisition_date=datetime.strptime(asset_data["acquisition_date"], "%Y-%m-%d").date(),
+        acquisition_cost=acquisition_cost,
+        depreciation_method=asset_data["depreciation_method"],
+        depreciation_rate=Decimal(str(asset_data["depreciation_rate"])),
+        useful_life_years=asset_data["useful_life_years"],
+        depreciation_start_basis=asset_data.get("depreciation_start_basis", "acquisition_date"),
+        current_book_value=current_book_value,
+        account_id=asset_data["account_id"]
+    )
+    
+    db.add(asset)
+    db.commit()
+    db.refresh(asset)
+    
+    return {"message": "Fixed asset created successfully", "asset": asset}
+
+@router.put("/fixed-assets/{asset_id}")
+def update_fixed_asset(
+    asset_id: str,
+    asset_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    asset = db.query(FixedAsset).filter(
+        FixedAsset.id == asset_id,
+        FixedAsset.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not asset:
+        raise HTTPException(status_code=404, detail="Fixed asset not found")
+    
+    for key, value in asset_data.items():
+        if key == "acquisition_date" and isinstance(value, str):
+            value = datetime.strptime(value, "%Y-%m-%d").date()
+        elif key in ["acquisition_cost", "depreciation_rate", "accumulated_depreciation", "current_book_value", "disposal_proceeds"]:
+            value = Decimal(str(value)) if value is not None else None
+        setattr(asset, key, value)
+    
+    db.commit()
+    return {"message": "Fixed asset updated successfully"}
+
+@router.post("/fixed-assets/calculate-depreciation")
+def calculate_depreciation(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    assets = db.query(FixedAsset).filter(
+        FixedAsset.tenant_id == request.state.tenant_id,
+        FixedAsset.is_active == True,
+        FixedAsset.disposal_date.is_(None)
+    ).all()
+    
+    updated_count = 0
+    current_date = date.today()
+    
+    for asset in assets:
+        if asset.depreciation_start_basis == "year_start":
+            start_date = date(current_date.year, 1, 1)
+        elif asset.depreciation_start_basis == "year_end":
+            start_date = date(current_date.year, 12, 31)
+        else:
+            start_date = asset.acquisition_date
+        
+        years_elapsed = (current_date - start_date).days / 365.25
+        
+        if asset.depreciation_method == "straight_line":
+            annual_depreciation = asset.acquisition_cost / asset.useful_life_years
+            total_depreciation = min(annual_depreciation * years_elapsed, asset.acquisition_cost)
+        elif asset.depreciation_method == "reducing_balance":
+            rate = asset.depreciation_rate / 100
+            remaining_value = asset.acquisition_cost
+            for _ in range(int(years_elapsed)):
+                remaining_value *= (1 - rate)
+            total_depreciation = asset.acquisition_cost - remaining_value
+        
+        asset.accumulated_depreciation = total_depreciation
+        asset.current_book_value = asset.acquisition_cost - total_depreciation
+        updated_count += 1
+    
+    db.commit()
+    return {"message": f"Updated depreciation for {updated_count} assets"}
+
+@router.get("/fixed-assets/export")
+def export_fixed_assets(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    assets = db.query(FixedAsset).filter(
+        FixedAsset.tenant_id == request.state.tenant_id,
+        FixedAsset.is_active == True
+    ).all()
+    
+    csv_data = "Asset Name,Category,Acquisition Date,Acquisition Cost,Depreciation Method,Depreciation Rate,Useful Life,Accumulated Depreciation,Current Book Value,Status\n"
+    
+    for asset in assets:
+        status = "Disposed" if asset.disposal_date else "Active"
+        csv_data += f'"{asset.asset_name}","{asset.asset_category}","{asset.acquisition_date}","{asset.acquisition_cost}","{asset.depreciation_method}","{asset.depreciation_rate}%","{asset.useful_life_years} years","{asset.accumulated_depreciation}","{asset.current_book_value}","{status}"\n'
+    
+    return {"csv_data": csv_data, "filename": f"fixed_assets_register_{date.today().isoformat()}.csv"}

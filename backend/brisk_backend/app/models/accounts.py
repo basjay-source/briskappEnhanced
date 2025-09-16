@@ -150,3 +150,25 @@ class TransactionCategorization(Base):
     rule_id = Column(String, ForeignKey("transaction_categorization_rules.id"))
     is_manual_override = Column(Boolean, default=False)
     categorized_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class FixedAsset(Base):
+    __tablename__ = "fixed_assets"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    asset_name = Column(String, nullable=False)
+    asset_category = Column(String, nullable=False)
+    acquisition_date = Column(Date, nullable=False)
+    acquisition_cost = Column(Numeric(15, 2), nullable=False)
+    depreciation_method = Column(String, nullable=False)
+    depreciation_rate = Column(Numeric(5, 2), nullable=False)
+    useful_life_years = Column(Integer, nullable=False)
+    depreciation_start_basis = Column(String, default="acquisition_date")
+    accumulated_depreciation = Column(Numeric(15, 2), default=0)
+    current_book_value = Column(Numeric(15, 2), nullable=False)
+    disposal_date = Column(Date)
+    disposal_proceeds = Column(Numeric(15, 2))
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

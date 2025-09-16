@@ -11,7 +11,7 @@ import PersonalTax from '@/pages/modules/PersonalTax'
 import Payroll from '@/pages/modules/Payroll'
 import AMLCompliance from '@/pages/modules/AMLCompliance'
 import CompanySecretarial from '@/pages/modules/CompanySecretarial'
-import Bookkeeping from '@/pages/modules/Bookkeeping'
+import BookkeepingFixed from '@/pages/modules/BookkeepingFixed'
 import ESignature from '@/pages/modules/ESignature'
 import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced'
 import AdminModule from '@/pages/modules/AdminModule'
@@ -49,8 +49,8 @@ function App() {
             <Route path="payroll" element={<Payroll />} />
             <Route path="aml" element={<AMLCompliance />} />
             <Route path="cosec" element={<CompanySecretarial />} />
-            <Route path="books" element={<Bookkeeping />} />
-            <Route path="bookkeeping" element={<Bookkeeping />} />
+            <Route path="books" element={<BookkeepingFixed />} />
+            <Route path="bookkeeping" element={<BookkeepingFixed />} />
             <Route path="vat" element={<VAT />} />
             <Route path="esign" element={<ESignature />} />
             <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
