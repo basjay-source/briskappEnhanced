@@ -172,6 +172,293 @@ def compile_financial_statements(
         }
     }
 
+@router.get("/trial-balance-running")
+def get_trial_balance_with_running_balances(
+    as_of_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    if not as_of_date:
+        as_of_date = date.today()
+    
+    accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id
+    ).all()
+    
+    trial_balance_data = []
+    total_debits = 0
+    total_credits = 0
+    
+    for account in accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date <= as_of_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.debit_amount - txn.credit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "debit": float(txn.debit_amount) if txn.debit_amount > 0 else None,
+                "credit": float(txn.credit_amount) if txn.credit_amount > 0 else None,
+                "running_balance": running_balance
+            })
+        
+        debit_balance = running_balance if running_balance > 0 else 0
+        credit_balance = abs(running_balance) if running_balance < 0 else 0
+        
+        total_debits += debit_balance
+        total_credits += credit_balance
+        
+        trial_balance_data.append({
+            "account_code": account.account_code,
+            "account_name": account.account_name,
+            "account_type": account.account_type,
+            "debit_balance": debit_balance,
+            "credit_balance": credit_balance,
+            "running_balance": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    return {
+        "trial_balance": trial_balance_data,
+        "totals": {"total_debits": total_debits, "total_credits": total_credits},
+        "as_of_date": as_of_date.isoformat()
+    }
+
+@router.get("/profit-loss-running")
+def get_profit_loss_with_running_balances(
+    start_date: date,
+    end_date: date,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    revenue_accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id,
+        LedgerAccount.account_type.in_(["Revenue", "Income"])
+    ).all()
+    
+    expense_accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id,
+        LedgerAccount.account_type.in_(["Expense", "Cost of Sales"])
+    ).all()
+    
+    revenue_data = []
+    expense_data = []
+    total_revenue = 0
+    total_expenses = 0
+    
+    for account in revenue_accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date >= start_date,
+            JournalEntry.transaction_date <= end_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.credit_amount - txn.debit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "amount": transaction_amount,
+                "running_balance": running_balance
+            })
+        
+        total_revenue += running_balance
+        revenue_data.append({
+            "account_name": account.account_name,
+            "account_code": account.account_code,
+            "amount": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    for account in expense_accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date >= start_date,
+            JournalEntry.transaction_date <= end_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.debit_amount - txn.credit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "amount": transaction_amount,
+                "running_balance": running_balance
+            })
+        
+        total_expenses += running_balance
+        expense_data.append({
+            "account_name": account.account_name,
+            "account_code": account.account_code,
+            "amount": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    net_profit = total_revenue - total_expenses
+    
+    return {
+        "revenue": revenue_data,
+        "expenses": expense_data,
+        "totals": {
+            "total_revenue": total_revenue,
+            "total_expenses": total_expenses,
+            "net_profit": net_profit
+        },
+        "period": {
+            "start_date": start_date.isoformat(),
+            "end_date": end_date.isoformat()
+        }
+    }
+
+@router.get("/balance-sheet-running")
+def get_balance_sheet_with_running_balances(
+    as_of_date: date,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    asset_accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id,
+        LedgerAccount.account_type.in_(["Asset", "Current Asset", "Fixed Asset"])
+    ).all()
+    
+    liability_accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id,
+        LedgerAccount.account_type.in_(["Liability", "Current Liability", "Long Term Liability"])
+    ).all()
+    
+    equity_accounts = db.query(LedgerAccount).filter(
+        LedgerAccount.tenant_id == request.state.tenant_id,
+        LedgerAccount.account_type.in_(["Equity", "Capital"])
+    ).all()
+    
+    assets_data = []
+    liabilities_data = []
+    equity_data = []
+    total_assets = 0
+    total_liabilities = 0
+    total_equity = 0
+    
+    for account in asset_accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date <= as_of_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.debit_amount - txn.credit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "amount": transaction_amount,
+                "running_balance": running_balance
+            })
+        
+        total_assets += running_balance
+        assets_data.append({
+            "account_name": account.account_name,
+            "account_code": account.account_code,
+            "balance": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    for account in liability_accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date <= as_of_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.credit_amount - txn.debit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "amount": transaction_amount,
+                "running_balance": running_balance
+            })
+        
+        total_liabilities += running_balance
+        liabilities_data.append({
+            "account_name": account.account_name,
+            "account_code": account.account_code,
+            "balance": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    for account in equity_accounts:
+        transactions = db.query(JournalEntry).filter(
+            JournalEntry.tenant_id == request.state.tenant_id,
+            JournalEntry.account_id == account.id,
+            JournalEntry.transaction_date <= as_of_date
+        ).order_by(JournalEntry.transaction_date.asc()).all()
+        
+        running_balance = 0
+        transaction_history = []
+        
+        for txn in transactions:
+            transaction_amount = float(txn.credit_amount - txn.debit_amount)
+            running_balance += transaction_amount
+            
+            transaction_history.append({
+                "date": txn.transaction_date.isoformat(),
+                "description": txn.description,
+                "amount": transaction_amount,
+                "running_balance": running_balance
+            })
+        
+        total_equity += running_balance
+        equity_data.append({
+            "account_name": account.account_name,
+            "account_code": account.account_code,
+            "balance": running_balance,
+            "transaction_history": transaction_history
+        })
+    
+    return {
+        "assets": assets_data,
+        "liabilities": liabilities_data,
+        "equity": equity_data,
+        "totals": {
+            "total_assets": total_assets,
+            "total_liabilities": total_liabilities,
+            "total_equity": total_equity,
+            "balance_check": total_assets - (total_liabilities + total_equity)
+        },
+        "as_of_date": as_of_date.isoformat()
+    }
+
 @router.post("/statements/{statement_id}/ixbrl")
 def generate_ixbrl(
     statement_id: str,

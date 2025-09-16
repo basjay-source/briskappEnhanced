@@ -518,6 +518,45 @@ class ApiClient {
       body: JSON.stringify(data)
     })
   }
+
+  async getBankReconciliation(accountId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reconciliation/${accountId}?${params}`)
+  }
+
+  async getReconciliationSummary() {
+    return this.request('/books/reconciliation/summary')
+  }
+
+  async getBankAccountsForReconciliation() {
+    return this.request('/books/bank-connections')
+  }
+
+  async getTrialBalanceWithRunningBalances(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/accounts/trial-balance-running${params}`)
+  }
+
+  async getProfitLossWithRunningBalances(startDate: string, endDate: string) {
+    return this.request(`/accounts/profit-loss-running?start_date=${startDate}&end_date=${endDate}`)
+  }
+
+  async getBalanceSheetWithRunningBalances(asOfDate: string) {
+    return this.request(`/accounts/balance-sheet-running?as_of_date=${asOfDate}`)
+  }
+
+  async getAgedDebtors(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/books/aged-debtors${params}`)
+  }
+
+  async getAgedCreditors(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/books/aged-creditors${params}`)
+  }
+
 }
 
 export const apiClient = new ApiClient()

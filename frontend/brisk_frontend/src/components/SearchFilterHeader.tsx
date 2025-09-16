@@ -1,14 +1,14 @@
 import React from 'react';
 import { Search, Filter, Calendar, ChevronDown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+} from './ui/dropdown-menu';
 
 interface FilterOption {
   label: string;
@@ -117,13 +117,13 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
   return (
     <div className={`flex flex-col sm:flex-row gap-4 mb-6 ${className}`}>
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-900 h-4 w-4" />
         <Input
           type="text"
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 h-10 border-blue-900 focus:border-blue-500 focus:ring-blue-500 text-white bg-blue-600 placeholder:text-blue-200"
+          className="pl-10 h-10 border-blue-900 focus:border-blue-500 focus:ring-blue-500 text-white bg-blue-600 placeholder:text-black"
         />
       </div>
 
