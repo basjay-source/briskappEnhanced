@@ -72,3 +72,54 @@ class ConsolidationRule(Base):
     target_account = Column(String)
     elimination_percentage = Column(Numeric(5, 2), default=100)
     is_active = Column(Boolean, default=True)
+
+class RecurringTransaction(Base):
+    __tablename__ = "recurring_transactions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    template_name = Column(String, nullable=False)
+    transaction_type = Column(String, nullable=False)  # sale, purchase
+    frequency = Column(String, nullable=False)  # monthly, quarterly, annually
+    next_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    amount = Column(Numeric(15, 2), nullable=False)
+    description = Column(Text, nullable=False)
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    customer_id = Column(String, ForeignKey("clients.id"))
+    supplier_id = Column(String, ForeignKey("clients.id"))
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class AccrualPrepayment(Base):
+    __tablename__ = "accrual_prepayments"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    type = Column(String, nullable=False)  # accrual, prepayment
+    description = Column(Text, nullable=False)
+    total_amount = Column(Numeric(15, 2), nullable=False)
+    remaining_amount = Column(Numeric(15, 2), nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    frequency = Column(String, default="monthly")  # monthly, quarterly
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    original_journal_entry_id = Column(String, ForeignKey("journal_entries.id"))
+    is_reversed = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class InvoiceTracking(Base):
+    __tablename__ = "invoice_tracking"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    invoice_id = Column(String, nullable=False)
+    email_sent_at = Column(DateTime(timezone=True))
+    email_opened_at = Column(DateTime(timezone=True))
+    payment_link_clicked_at = Column(DateTime(timezone=True))
+    payment_completed_at = Column(DateTime(timezone=True))
+    tracking_token = Column(String, unique=True)
+    payment_link_url = Column(String)
+    email_recipient = Column(String)

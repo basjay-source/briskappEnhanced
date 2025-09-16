@@ -8,9 +8,9 @@ from decimal import Decimal
 
 from app.database import get_db
 from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking
-from app.models.statements import Invoice
 from app.models.client import Client
 from app.models.products import Product, InventoryMovement
+from app.models.tenant import Invoice
 
 router = APIRouter()
 

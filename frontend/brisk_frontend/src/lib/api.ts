@@ -43,6 +43,7 @@ class ApiClient {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
+        'X-Tenant-ID': 'default-tenant',
         ...options?.headers,
       },
       ...options,
