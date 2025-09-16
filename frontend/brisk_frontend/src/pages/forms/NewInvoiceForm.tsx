@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import { ArrowLeft, FileText, Plus, Trash2 } from 'lucide-react'
 import { apiClient } from '../../lib/api'
+import { WORLD_CURRENCIES, formatCurrency } from '../../lib/currencies'
 
 interface InvoiceItem {
   description: string
@@ -26,6 +27,7 @@ export default function NewInvoiceForm() {
     invoice_number: '',
     issue_date: new Date().toISOString().split('T')[0],
     due_date: '',
+    currency: 'GBP',
     notes: '',
     terms: 'Net 30'
   })
@@ -154,6 +156,25 @@ export default function NewInvoiceForm() {
               </div>
 
               <div className="grid gap-2">
+                <Label htmlFor="currency">{t('bookkeeping.currency')}</Label>
+                <Select 
+                  value={invoiceData.currency} 
+                  onValueChange={(value) => setInvoiceData(prev => ({ ...prev, currency: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WORLD_CURRENCIES.map(currency => (
+                      <SelectItem key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name} ({currency.symbol})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
                 <Label htmlFor="terms">{t('bookkeeping.paymentTerms')}</Label>
                 <Select 
                   value={invoiceData.terms} 
@@ -218,7 +239,7 @@ export default function NewInvoiceForm() {
                     <div className="col-span-2">
                       <Label>{t('bookkeeping.amount')}</Label>
                       <Input
-                        value={`£${item.amount.toFixed(2)}`}
+                        value={formatCurrency(item.amount, invoiceData.currency)}
                         readOnly
                         className="bg-gray-50"
                       />
@@ -242,15 +263,15 @@ export default function NewInvoiceForm() {
                   <div className="w-64 space-y-2">
                     <div className="flex justify-between">
                       <span>{t('bookkeeping.subtotal')}:</span>
-                      <span>£{subtotal.toFixed(2)}</span>
+                      <span>{formatCurrency(subtotal, invoiceData.currency)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t('bookkeeping.vat')} (20%):</span>
-                      <span>£{vatAmount.toFixed(2)}</span>
+                      <span>{formatCurrency(vatAmount, invoiceData.currency)}</span>
                     </div>
                     <div className="flex justify-between font-bold text-lg border-t pt-2">
                       <span>{t('bookkeeping.total')}:</span>
-                      <span>£{total.toFixed(2)}</span>
+                      <span>{formatCurrency(total, invoiceData.currency)}</span>
                     </div>
                   </div>
                 </div>

@@ -207,6 +207,17 @@ export default function Bookkeeping() {
         expenses: { label: 'Expenses', icon: CreditCard }
       }
     },
+    inventory: { 
+      label: 'Inventory', 
+      icon: Package, 
+      hasSubTabs: true,
+      subTabs: {
+        products: { label: 'Products', icon: Package },
+        movements: { label: 'Stock Movements', icon: RefreshCw },
+        adjustments: { label: 'Stock Adjustments', icon: Edit },
+        reports: { label: 'Stock Reports', icon: BarChart3 }
+      }
+    },
     banking: { 
       label: 'Banking', 
       icon: CreditCard, 
@@ -337,6 +348,7 @@ export default function Bookkeeping() {
       if (activeSubTab === 'quotes') return renderQuotesManagement()
       if (activeSubTab === 'customers') return renderCustomersManagement()
       if (activeSubTab === 'products') return renderProductsManagement()
+      if (activeSubTab === 'inventory') return renderInventoryManagement()
       return renderSalesContent()
     } else if (activeMainTab === 'purchases') {
       if (activeSubTab === 'bills') return renderBillsManagement()
@@ -344,6 +356,12 @@ export default function Bookkeeping() {
       if (activeSubTab === 'suppliers') return renderSuppliersManagement()
       if (activeSubTab === 'expenses') return renderExpensesManagement()
       return renderPurchasesContent()
+    } else if (activeMainTab === 'inventory') {
+      if (activeSubTab === 'products') return renderInventoryProducts()
+      if (activeSubTab === 'movements') return renderInventoryMovements()
+      if (activeSubTab === 'adjustments') return renderInventoryAdjustments()
+      if (activeSubTab === 'reports') return renderInventoryReports()
+      return renderInventoryManagement()
     } else if (activeMainTab === 'banking') {
       if (activeSubTab === 'bankaccounts') return renderBankAccountsManagement()
       if (activeSubTab === 'transactions') return renderBankTransactionsManagement()
@@ -4041,6 +4059,118 @@ export default function Bookkeeping() {
     )
   }
 
+  function renderInventoryManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Inventory Management</h2>
+            <p className="text-gray-600">Comprehensive inventory tracking and stock management</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/app/books/products/new')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Stock Report
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Stock Adjustment
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Products</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">156</div>
+              <p className="text-sm text-gray-600">Active products</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Low Stock Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">12</div>
+              <p className="text-sm text-gray-600">Below reorder level</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Stock Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£45,600</div>
+              <p className="text-sm text-gray-600">At cost price</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Stock Movements</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">89</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Stock Overview</CardTitle>
+            <CardDescription>Current inventory levels and alerts</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Professional Services Package', sku: 'PSP-001', stock: 25, reorder: 10, status: 'In Stock' },
+                { name: 'Consultation Services', sku: 'CS-002', stock: 5, reorder: 15, status: 'Low Stock' },
+                { name: 'Software License', sku: 'SL-003', stock: 0, reorder: 5, status: 'Out of Stock' },
+                { name: 'Training Program', sku: 'TP-004', stock: 18, reorder: 8, status: 'In Stock' },
+                { name: 'Support Package', sku: 'SP-005', stock: 3, reorder: 10, status: 'Low Stock' }
+              ].map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{item.name}</p>
+                      <Badge className="bg-gray-100 text-gray-800">{item.sku}</Badge>
+                      <Badge className={`${
+                        item.status === 'In Stock' ? 'bg-green-100 text-green-800' : 
+                        item.status === 'Low Stock' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {item.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">Current: {item.stock} | Reorder Level: {item.reorder}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <RefreshCw className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   function renderBillsManagement() {
     return (
       <div className="space-y-6">
@@ -5966,6 +6096,321 @@ export default function Bookkeeping() {
             </div>
           </CardContent>
         </Card>
+      </div>
+    )
+  }
+
+  function renderInventoryProducts() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Product Management</h2>
+            <p className="text-gray-600">Manage your product catalog and inventory items</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/app/books/products/new')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Products
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Products</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-brisk-primary">156</div>
+              <p className="text-sm text-gray-600">Active products</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Low Stock Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">12</div>
+              <p className="text-sm text-gray-600">Below reorder level</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Stock Value</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£45,600</div>
+              <p className="text-sm text-gray-600">At cost price</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Categories</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">8</div>
+              <p className="text-sm text-gray-600">Product categories</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Catalog</CardTitle>
+            <CardDescription>Manage your inventory products and stock levels</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { name: 'Professional Services Package', sku: 'PSP-001', category: 'Services', stock: 25, price: 150.00, currency: 'GBP', status: 'Active' },
+                { name: 'Consultation Services', sku: 'CS-002', category: 'Services', stock: 5, price: 75.00, currency: 'GBP', status: 'Low Stock' },
+                { name: 'Software License', sku: 'SL-003', category: 'Software', stock: 0, price: 299.99, currency: 'USD', status: 'Out of Stock' },
+                { name: 'Training Program', sku: 'TP-004', category: 'Training', stock: 18, price: 200.00, currency: 'EUR', status: 'Active' },
+                { name: 'Support Package', sku: 'SP-005', category: 'Support', stock: 3, price: 50.00, currency: 'GBP', status: 'Low Stock' }
+              ].map((product, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{product.name}</p>
+                      <Badge className="bg-gray-100 text-gray-800">{product.sku}</Badge>
+                      <Badge className={`${
+                        product.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                        product.status === 'Low Stock' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {product.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Category: {product.category} | Stock: {product.stock} | Price: {product.currency} {product.price}
+                    </p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <RefreshCw className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderInventoryMovements() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Stock Movements</h2>
+            <p className="text-gray-600">Track all inventory movements and transactions</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Record Movement
+            </Button>
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Movements
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Stock Movements</CardTitle>
+            <CardDescription>Latest inventory transactions and adjustments</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { product: 'Professional Services Package', type: 'Stock In', quantity: 10, reference: 'PO-001', date: '2024-01-15', notes: 'Purchase order delivery' },
+                { product: 'Consultation Services', type: 'Stock Out', quantity: -2, reference: 'INV-123', date: '2024-01-14', notes: 'Sale to client' },
+                { product: 'Software License', type: 'Adjustment', quantity: -5, reference: 'ADJ-001', date: '2024-01-13', notes: 'Damaged items written off' },
+                { product: 'Training Program', type: 'Stock In', quantity: 8, reference: 'PO-002', date: '2024-01-12', notes: 'Restocking' },
+                { product: 'Support Package', type: 'Stock Out', quantity: -1, reference: 'INV-124', date: '2024-01-11', notes: 'Customer purchase' }
+              ].map((movement, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{movement.product}</p>
+                      <Badge className={`${
+                        movement.type === 'Stock In' ? 'bg-green-100 text-green-800' : 
+                        movement.type === 'Stock Out' ? 'bg-red-100 text-red-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {movement.type}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Quantity: {movement.quantity > 0 ? '+' : ''}{movement.quantity} | Reference: {movement.reference} | {movement.notes}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium">{movement.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderInventoryAdjustments() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Stock Adjustments</h2>
+            <p className="text-gray-600">Manage stock level adjustments and corrections</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Adjustment
+            </Button>
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Adjustments
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Stock Adjustment History</CardTitle>
+            <CardDescription>Record of all inventory adjustments and corrections</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[
+                { product: 'Software License', reason: 'Damaged Stock', adjustment: -5, date: '2024-01-13', user: 'Admin', notes: 'Water damage to packaging' },
+                { product: 'Training Program', reason: 'Stock Count Correction', adjustment: +2, date: '2024-01-10', user: 'Manager', notes: 'Physical count discrepancy' },
+                { product: 'Support Package', reason: 'Theft/Loss', adjustment: -1, date: '2024-01-08', user: 'Admin', notes: 'Missing from warehouse' },
+                { product: 'Professional Services', reason: 'Revaluation', adjustment: 0, date: '2024-01-05', user: 'Accountant', notes: 'Price adjustment only' }
+              ].map((adjustment, index) => (
+                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{adjustment.product}</p>
+                      <Badge className={`${
+                        adjustment.adjustment > 0 ? 'bg-green-100 text-green-800' : 
+                        adjustment.adjustment < 0 ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {adjustment.adjustment > 0 ? '+' : ''}{adjustment.adjustment}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Reason: {adjustment.reason} | By: {adjustment.user} | {adjustment.notes}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium">{adjustment.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderInventoryReports() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Inventory Reports</h2>
+            <p className="text-gray-600">Comprehensive inventory analytics and reporting</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export All Reports
+            </Button>
+            <Button>
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Generate Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock Valuation Report</CardTitle>
+              <CardDescription>Current inventory value by category</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { category: 'Services', value: 15750, items: 45, currency: 'GBP' },
+                  { category: 'Software', value: 8999, items: 12, currency: 'USD' },
+                  { category: 'Training', value: 12400, items: 18, currency: 'EUR' },
+                  { category: 'Support', value: 2500, items: 8, currency: 'GBP' }
+                ].map((category, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{category.category}</p>
+                      <p className="text-sm text-gray-600">{category.items} items</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{category.currency} {category.value.toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Low Stock Alert</CardTitle>
+              <CardDescription>Items requiring immediate attention</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { product: 'Consultation Services', current: 5, reorder: 15, status: 'Critical' },
+                  { product: 'Software License', current: 0, reorder: 5, status: 'Out of Stock' },
+                  { product: 'Support Package', current: 3, reorder: 10, status: 'Low' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{item.product}</p>
+                      <p className="text-sm text-gray-600">Current: {item.current} | Reorder: {item.reorder}</p>
+                    </div>
+                    <Badge className={`${
+                      item.status === 'Out of Stock' ? 'bg-red-100 text-red-800' : 
+                      item.status === 'Critical' ? 'bg-orange-100 text-orange-800' :
+                      'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {item.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }

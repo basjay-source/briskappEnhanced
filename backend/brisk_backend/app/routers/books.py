@@ -9,6 +9,7 @@ from decimal import Decimal
 from app.database import get_db
 from app.models import BankConnection, EcommerceConnection, JournalEntry
 from app.models.client import Client
+from app.models.products import Product, InventoryMovement
 
 router = APIRouter()
 
@@ -64,6 +65,29 @@ class PurchaseOrderCreate(BaseModel):
     delivery_date: date
     amount: Decimal
     status: str
+
+class ProductCreate(BaseModel):
+    company_id: str
+    name: str
+    description: Optional[str] = None
+    sku: Optional[str] = None
+    category: Optional[str] = None
+    unit_price: Decimal
+    cost_price: Optional[Decimal] = 0
+    currency: str = "GBP"
+    vat_rate: Optional[Decimal] = 20
+    stock_quantity: Optional[int] = 0
+    reorder_level: Optional[int] = 0
+    unit_of_measure: str = "each"
+    notes: Optional[str] = None
+
+class InventoryMovementCreate(BaseModel):
+    product_id: str
+    movement_type: str
+    quantity: int
+    reference: Optional[str] = None
+    notes: Optional[str] = None
+    movement_date: date
 
 @router.get("/bank-connections/{company_id}")
 def get_bank_connections(
@@ -710,3 +734,190 @@ def get_bank_transactions(
             "status": "reconciled" if txn.reference else "pending"
         } for txn in transactions
     ]
+
+@router.get("/products")
+def get_products(
+    search: Optional[str] = None,
+    category: Optional[str] = None,
+    status: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Product).filter(Product.tenant_id == request.state.tenant_id)
+    
+    if search:
+        query = query.filter(Product.name.ilike(f"%{search}%"))
+    if category:
+        query = query.filter(Product.category == category)
+    if status:
+        query = query.filter(Product.status == status)
+    
+    products = query.all()
+    return [
+        {
+            "id": product.id,
+            "name": product.name,
+            "sku": product.sku,
+            "category": product.category,
+            "unit_price": float(product.unit_price),
+            "cost_price": float(product.cost_price),
+            "currency": product.currency,
+            "stock_quantity": product.stock_quantity,
+            "reorder_level": product.reorder_level,
+            "status": product.status
+        } for product in products
+    ]
+
+@router.post("/products")
+def create_product(
+    product_data: ProductCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    product = Product(
+        tenant_id=request.state.tenant_id,
+        **product_data.dict()
+    )
+    
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+    
+    return {
+        "id": product.id,
+        "name": product.name,
+        "status": "created"
+    }
+
+@router.get("/products/{product_id}")
+def get_product(
+    product_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    product = db.query(Product).filter(
+        Product.tenant_id == request.state.tenant_id,
+        Product.id == product_id
+    ).first()
+    
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    return {
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "sku": product.sku,
+        "category": product.category,
+        "unit_price": float(product.unit_price),
+        "cost_price": float(product.cost_price),
+        "currency": product.currency,
+        "vat_rate": float(product.vat_rate),
+        "stock_quantity": product.stock_quantity,
+        "reorder_level": product.reorder_level,
+        "unit_of_measure": product.unit_of_measure,
+        "status": product.status,
+        "notes": product.notes
+    }
+
+@router.put("/products/{product_id}")
+def update_product(
+    product_id: str,
+    product_data: ProductCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    product = db.query(Product).filter(
+        Product.tenant_id == request.state.tenant_id,
+        Product.id == product_id
+    ).first()
+    
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    for key, value in product_data.dict().items():
+        setattr(product, key, value)
+    
+    db.commit()
+    db.refresh(product)
+    
+    return {
+        "id": product.id,
+        "name": product.name,
+        "status": "updated"
+    }
+
+@router.delete("/products/{product_id}")
+def delete_product(
+    product_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    product = db.query(Product).filter(
+        Product.tenant_id == request.state.tenant_id,
+        Product.id == product_id
+    ).first()
+    
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    db.delete(product)
+    db.commit()
+    
+    return {"status": "deleted"}
+
+@router.get("/products/{product_id}/inventory")
+def get_product_inventory(
+    product_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    movements = db.query(InventoryMovement).filter(
+        InventoryMovement.tenant_id == request.state.tenant_id,
+        InventoryMovement.product_id == product_id
+    ).order_by(InventoryMovement.movement_date.desc()).all()
+    
+    return [
+        {
+            "id": movement.id,
+            "movement_type": movement.movement_type,
+            "quantity": movement.quantity,
+            "reference": movement.reference,
+            "movement_date": movement.movement_date.isoformat(),
+            "notes": movement.notes
+        } for movement in movements
+    ]
+
+@router.post("/inventory/movements")
+def create_inventory_movement(
+    movement_data: InventoryMovementCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    movement = InventoryMovement(
+        tenant_id=request.state.tenant_id,
+        **movement_data.dict()
+    )
+    
+    db.add(movement)
+    
+    product = db.query(Product).filter(
+        Product.tenant_id == request.state.tenant_id,
+        Product.id == movement_data.product_id
+    ).first()
+    
+    if product:
+        if movement_data.movement_type == "in":
+            product.stock_quantity += movement_data.quantity
+        elif movement_data.movement_type == "out":
+            product.stock_quantity -= movement_data.quantity
+        elif movement_data.movement_type == "adjustment":
+            product.stock_quantity = movement_data.quantity
+    
+    db.commit()
+    db.refresh(movement)
+    
+    return {
+        "id": movement.id,
+        "status": "created"
+    }

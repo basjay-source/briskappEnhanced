@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { ArrowLeft, Package } from 'lucide-react'
 import { apiClient } from '../../lib/api'
+import { WORLD_CURRENCIES } from '../../lib/currencies'
 
 export default function NewProductForm() {
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ export default function NewProductForm() {
     category: '',
     unit_price: '',
     cost_price: '',
+    currency: 'GBP',
     vat_rate: '20',
     stock_quantity: '',
     reorder_level: '',
@@ -37,6 +39,7 @@ export default function NewProductForm() {
         ...productData,
         unit_price: parseFloat(productData.unit_price),
         cost_price: productData.cost_price ? parseFloat(productData.cost_price) : 0,
+        currency: productData.currency,
         vat_rate: parseFloat(productData.vat_rate),
         stock_quantity: productData.stock_quantity ? parseInt(productData.stock_quantity) : 0,
         reorder_level: productData.reorder_level ? parseInt(productData.reorder_level) : 0,
@@ -167,6 +170,25 @@ export default function NewProductForm() {
                   onChange={(e) => setProductData(prev => ({ ...prev, cost_price: e.target.value }))}
                   placeholder="0.00"
                 />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="currency">{t('bookkeeping.currency')}</Label>
+                <Select 
+                  value={productData.currency} 
+                  onValueChange={(value) => setProductData(prev => ({ ...prev, currency: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WORLD_CURRENCIES.map(currency => (
+                      <SelectItem key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name} ({currency.symbol})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid gap-2">

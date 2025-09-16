@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { ArrowLeft, FileText, Plus, Trash2 } from 'lucide-react'
 import { apiClient } from '../../lib/api'
+import { WORLD_CURRENCIES, formatCurrency } from '../../lib/currencies'
 
 export default function NewQuoteForm() {
   const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function NewQuoteForm() {
     quote_number: '',
     issue_date: '',
     valid_until: '',
+    currency: 'GBP',
     payment_terms: 'Net 30',
     items: [{ description: '', quantity: 1, rate: 0, amount: 0 }],
     notes: ''
@@ -137,6 +139,25 @@ export default function NewQuoteForm() {
               </div>
 
               <div className="grid gap-2">
+                <Label htmlFor="currency">{t('bookkeeping.currency')}</Label>
+                <Select 
+                  value={quoteData.currency} 
+                  onValueChange={(value) => setQuoteData({ ...quoteData, currency: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WORLD_CURRENCIES.map(currency => (
+                      <SelectItem key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name} ({currency.symbol})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
                 <Label htmlFor="payment-terms">{t('bookkeeping.paymentTerms')}</Label>
                 <Select 
                   value={quoteData.payment_terms} 
@@ -204,7 +225,7 @@ export default function NewQuoteForm() {
                     />
                   </div>
                   <div className="col-span-2">
-                    <div className="text-right font-medium">£{item.amount.toFixed(2)}</div>
+                    <div className="text-right font-medium">{formatCurrency(item.amount, quoteData.currency)}</div>
                   </div>
                   <div className="col-span-1">
                     {quoteData.items.length > 1 && (
@@ -224,15 +245,15 @@ export default function NewQuoteForm() {
             <div className="mt-6 space-y-2 text-right">
               <div className="flex justify-between">
                 <span>{t('bookkeeping.subtotal')}:</span>
-                <span className="font-medium">£{subtotal.toFixed(2)}</span>
+                <span className="font-medium">{formatCurrency(subtotal, quoteData.currency)}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('bookkeeping.vat')} (20%):</span>
-                <span className="font-medium">£{vat.toFixed(2)}</span>
+                <span className="font-medium">{formatCurrency(vat, quoteData.currency)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t pt-2">
                 <span>{t('bookkeeping.total')}:</span>
-                <span>£{total.toFixed(2)}</span>
+                <span>{formatCurrency(total, quoteData.currency)}</span>
               </div>
             </div>
           </CardContent>

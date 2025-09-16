@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import { ArrowLeft, FileText, Plus, Trash2 } from 'lucide-react'
 import { apiClient } from '../../lib/api'
+import { WORLD_CURRENCIES, formatCurrency } from '../../lib/currencies'
 
 interface BillItem {
   description: string
@@ -168,9 +169,11 @@ export default function NewBillForm() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="GBP">GBP (£)</SelectItem>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
+                      {WORLD_CURRENCIES.map(currency => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          {currency.code} - {currency.name} ({currency.symbol})
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -249,7 +252,7 @@ export default function NewBillForm() {
                     <div className="col-span-2">
                       <Label>{t('bookkeeping.total')}</Label>
                       <Input
-                        value={`£${item.total.toFixed(2)}`}
+                        value={formatCurrency(item.total, billData.currency)}
                         readOnly
                         className="bg-gray-50"
                       />
@@ -275,15 +278,15 @@ export default function NewBillForm() {
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between">
                     <span>{t('bookkeeping.subtotal')}:</span>
-                    <span>£{calculateSubtotal().toFixed(2)}</span>
+                    <span>{formatCurrency(calculateSubtotal(), billData.currency)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('bookkeeping.vat')} (20%):</span>
-                    <span>£{calculateVAT().toFixed(2)}</span>
+                    <span>{formatCurrency(calculateVAT(), billData.currency)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t pt-2">
                     <span>{t('bookkeeping.total')}:</span>
-                    <span>£{calculateTotal().toFixed(2)}</span>
+                    <span>{formatCurrency(calculateTotal(), billData.currency)}</span>
                   </div>
                 </div>
               </div>

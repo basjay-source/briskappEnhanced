@@ -468,6 +468,56 @@ class ApiClient {
       body: JSON.stringify(data)
     })
   }
+
+  async getProducts(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/products?${params}`)
+  }
+
+  async getProduct(productId: string) {
+    return this.request(`/books/products/${productId}`)
+  }
+
+  async updateProduct(productId: string, data: Record<string, unknown>) {
+    return this.request(`/books/products/${productId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteProduct(productId: string) {
+    return this.request(`/books/products/${productId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async getProductInventory(productId: string) {
+    return this.request(`/books/products/${productId}/inventory`)
+  }
+
+  async createInventoryMovement(data: Record<string, unknown>) {
+    return this.request('/books/inventory/movements', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getInventoryMovements(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/inventory/movements?${params}`)
+  }
+
+  async getStockReport(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/inventory/stock-report?${params}`)
+  }
+
+  async createStockAdjustment(data: Record<string, unknown>) {
+    return this.request('/books/inventory/adjustments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
 }
 
 export const apiClient = new ApiClient()
