@@ -20,17 +20,15 @@ import {
   BarChart3
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
+import { useLocale } from '@/contexts/LocaleContextNew'
 import KPICard from '@/components/KPICard'
 import NewEmailStudio from '@/components/NewEmailStudio'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
@@ -44,6 +42,8 @@ import { apiClient } from '@/lib/api'
 
 export default function PracticeManagement() {
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
+  const { formatDate } = useLocale()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['jobs'])
@@ -54,18 +54,6 @@ export default function PracticeManagement() {
   const [kpis, setKpis] = useState<any[]>([])
   const [jobs, setJobs] = useState<any[]>([])
   const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([])
-  const [showNewJobModal, setShowNewJobModal] = useState(false)
-  const [newJobData, setNewJobData] = useState({
-    title: '',
-    description: '',
-    client_id: '',
-    priority: 'medium',
-    status: 'not_started',
-    due_date: '',
-    assigned_to: '',
-    estimated_hours: null,
-    workflow_template_id: null
-  })
 
   useEffect(() => {
     const loadPracticeData = async () => {
@@ -96,7 +84,7 @@ export default function PracticeManagement() {
                     <div key={job.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold">{job.title}</h4>
+                          <h4 className="font-bold">{job.title}</h4>
                           <p className="text-sm text-gray-600">Client: {job.client_id}</p>
                           <p className="text-sm text-gray-600">Status: {job.status}</p>
                         </div>
@@ -130,7 +118,7 @@ export default function PracticeManagement() {
                     <div key={job.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold">{job.title}</h4>
+                          <h4 className="font-bold">{job.title}</h4>
                           <p className="text-sm text-gray-600">Client: {job.client_id}</p>
                           <p className="text-sm text-gray-600">Assigned: {job.assigned_to || 'Unassigned'}</p>
                         </div>
@@ -164,7 +152,7 @@ export default function PracticeManagement() {
                     <div key={job.id} className="p-4 border rounded-lg bg-green-50">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold">{job.title}</h4>
+                          <h4 className="font-bold">{job.title}</h4>
                           <p className="text-sm text-gray-600">Client: {job.client_id}</p>
                           <p className="text-sm text-green-600">✓ Completed</p>
                         </div>
@@ -195,7 +183,7 @@ export default function PracticeManagement() {
                     <div key={job.id} className="p-4 border rounded-lg bg-purple-50">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold">{job.title}</h4>
+                          <h4 className="font-bold">{job.title}</h4>
                           <p className="text-sm text-gray-600">Client: {job.client_id}</p>
                           <p className="text-sm text-purple-600">📅 Not Started</p>
                         </div>
@@ -221,7 +209,7 @@ export default function PracticeManagement() {
           .map((job: any) => ({
             type: job.title,
             client: job.client_id || 'Unknown Client',
-            date: new Date(job.due_date).toLocaleDateString(),
+            date: formatDate(job.due_date),
             days: Math.ceil((new Date(job.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
           }))
           .sort((a: any, b: any) => a.days - b.days)
@@ -251,38 +239,6 @@ export default function PracticeManagement() {
     }
   }
 
-  const handleCreateJob = async () => {
-    try {
-      const jobData = {
-        title: newJobData.title,
-        description: newJobData.description || null,
-        client_id: newJobData.client_id,
-        priority: newJobData.priority,
-        status: newJobData.status,
-        due_date: newJobData.due_date || null,
-        assigned_to: newJobData.assigned_to || null,
-        estimated_hours: newJobData.estimated_hours,
-        workflow_template_id: newJobData.workflow_template_id
-      }
-      
-      const newJob = await apiClient.createJob(jobData)
-      setJobs(prevJobs => [newJob as any, ...prevJobs])
-      setShowNewJobModal(false)
-      setNewJobData({
-        title: '',
-        description: '',
-        client_id: '',
-        priority: 'medium',
-        status: 'not_started',
-        due_date: '',
-        assigned_to: '',
-        estimated_hours: null,
-        workflow_template_id: null
-      })
-    } catch (error) {
-      console.error('Failed to create job:', error)
-    }
-  }
 
   const statusOptions = [
     { value: 'all', label: 'All Status' },
@@ -430,7 +386,7 @@ export default function PracticeManagement() {
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`} onClick={() => setShowNewJobModal(true)}>
+          <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`} onClick={() => navigate('/app/practice/jobs/new')}>
             <Plus className="h-4 w-4 mr-2" />
             New Job
           </Button>
@@ -454,24 +410,26 @@ export default function PracticeManagement() {
           />
         </div>
         <div className="flex gap-2">
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border rounded-md"
-          >
-            {statusOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          <select
-            value={selectedPriority}
-            onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-2 border rounded-md"
-          >
-            {priorityOptions.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="px-3 py-2">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {statusOptions.map(option => (
+                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+            <SelectTrigger className="px-3 py-2">
+              <SelectValue placeholder="All Priorities" />
+            </SelectTrigger>
+            <SelectContent>
+              {priorityOptions.map(option => (
+                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -488,7 +446,7 @@ export default function PracticeManagement() {
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(job.status)}
                     <div>
-                      <p className="font-medium">{job.title}</p>
+                      <p className="font-bold">{job.title}</p>
                       <p className="text-sm text-gray-600">{job.client_id || 'Unknown Client'}</p>
                     </div>
                   </div>
@@ -514,11 +472,11 @@ export default function PracticeManagement() {
               {upcomingDeadlines.map((deadline, index) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div>
-                    <p className="font-medium">{deadline.type}</p>
+                    <p className="font-bold">{deadline.type}</p>
                     <p className="text-sm text-gray-600">{deadline.client}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium">{deadline.date}</p>
+                    <p className="text-sm font-bold">{formatDate(new Date(deadline.date))}</p>
                     <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-blue-600'}`}>
                       {deadline.days} days
                     </p>
@@ -530,92 +488,6 @@ export default function PracticeManagement() {
         </Card>
       </div>
 
-      {/* New Job Modal */}
-      <Dialog open={showNewJobModal} onOpenChange={setShowNewJobModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create New Job</DialogTitle>
-            <DialogDescription>
-              Add a new job to your practice management system.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                Title
-              </Label>
-              <Input
-                id="title"
-                value={newJobData.title}
-                onChange={(e) => setNewJobData(prev => ({ ...prev, title: e.target.value }))}
-                className="col-span-3"
-                placeholder="Job title"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="client" className="text-right">
-                Client
-              </Label>
-              <Input
-                id="client"
-                value={newJobData.client_id}
-                onChange={(e) => setNewJobData(prev => ({ ...prev, client_id: e.target.value }))}
-                className="col-span-3"
-                placeholder="Client name or ID"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="priority" className="text-right">
-                Priority
-              </Label>
-              <Select value={newJobData.priority} onValueChange={(value) => setNewJobData(prev => ({ ...prev, priority: value }))}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="due_date" className="text-right">
-                Due Date
-              </Label>
-              <Input
-                id="due_date"
-                type="date"
-                value={newJobData.due_date}
-                onChange={(e) => setNewJobData(prev => ({ ...prev, due_date: e.target.value }))}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                value={newJobData.description}
-                onChange={(e) => setNewJobData(prev => ({ ...prev, description: e.target.value }))}
-                className="col-span-3"
-                placeholder="Job description"
-                rows={3}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowNewJobModal(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateJob} disabled={!newJobData.title || !newJobData.client_id}>
-              Create Job
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 
@@ -631,7 +503,7 @@ export default function PracticeManagement() {
             <Filter className="h-4 w-4 mr-2" />
             Filter Jobs
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => navigate('/app/practice/jobs/new')}>
             <Plus className="h-4 w-4 mr-2" />
             New Job
           </Button>
@@ -651,9 +523,9 @@ export default function PracticeManagement() {
                   <div className="flex items-center space-x-4">
                     {getStatusIcon(job.status)}
                     <div>
-                      <p className="font-medium">{job.title}</p>
+                      <p className="font-bold">{job.title}</p>
                       <p className="text-sm text-gray-600">{job.client}</p>
-                      <p className="text-xs text-gray-500">Due: {job.dueDate}</p>
+                      <p className="text-xs text-gray-500">Due: {formatDate(new Date(job.dueDate))}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -724,11 +596,11 @@ export default function PracticeManagement() {
             {upcomingDeadlines.map((deadline, index) => (
               <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
-                  <p className="font-medium">{deadline.type}</p>
+                  <p className="font-bold">{deadline.type}</p>
                   <p className="text-sm text-gray-600">{deadline.client}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium">{deadline.date}</p>
+                  <p className="text-sm font-bold">{formatDate(new Date(deadline.date))}</p>
                   <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-orange-600'}`}>
                     {deadline.days} days remaining
                   </p>
@@ -1097,9 +969,9 @@ export default function PracticeManagement() {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Practice Management</h2>
+        <div className="w-64 bg-white border-r border-blue-900 flex flex-col">
+          <div className="p-4 border-b border-blue-900">
+            <h2 className="text-lg font-bold text-gray-900">Practice Management</h2>
           </div>
           
           <div className="flex-1 overflow-y-auto">

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
+import { LocaleProvider } from '@/contexts/LocaleContextNew'
 import AppShell from '@/components/AppShell'
 import LandingPage from '@/pages/LandingPage'
 import LoginPage from '@/pages/LoginPage'
@@ -34,7 +35,8 @@ import NewApprovalRequestForm from './pages/forms/NewApprovalRequestForm'
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="brisk-ui-theme">
-      <Router>
+      <LocaleProvider>
+        <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -70,7 +72,8 @@ function App() {
             <Route path="admin/approvals/new" element={<NewApprovalRequestForm />} />
           </Route>
         </Routes>
-      </Router>
+        </Router>
+      </LocaleProvider>
     </ThemeProvider>
   )
 }
