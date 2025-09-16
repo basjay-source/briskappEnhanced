@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query, File, UploadFile
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_, func, extract, and_
 from typing import List, Optional
 from pydantic import BaseModel
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal
+import uuid
 
 from app.database import get_db
 from app.models import BankConnection, EcommerceConnection, JournalEntry, LedgerAccount, RecurringTransaction, AccrualPrepayment, InvoiceTracking
@@ -2101,3 +2102,284 @@ def process_monthly_accruals_prepayments(
         "message": f"Processed {processed_count} monthly accruals/prepayments",
         "processed_count": processed_count
     }
+
+@router.get("/reports/multi-year-trial-balance")
+def get_multi_year_trial_balance(
+    company_id: str = "default-company",
+    years: int = 5,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant_id = request.headers.get("X-Tenant-ID", "default-tenant")
+    
+    try:
+        accounts = db.query(LedgerAccount).filter(
+            LedgerAccount.tenant_id == tenant_id,
+            LedgerAccount.company_id == company_id
+        ).all()
+        
+        multi_year_data = []
+        current_year = date.today().year
+        
+        for account in accounts:
+            account_data = {
+                "id": account.id,
+                "name": account.name,
+                "code": account.code,
+                "type": account.account_type
+            }
+            
+            for i in range(years):
+                year = current_year - i
+                year_entries = db.query(JournalEntry).filter(
+                    JournalEntry.tenant_id == tenant_id,
+                    JournalEntry.account_id == account.id,
+                    extract('year', JournalEntry.transaction_date) == year
+                ).all()
+                
+                total_debits = sum(entry.debit_amount or 0 for entry in year_entries)
+                total_credits = sum(entry.credit_amount or 0 for entry in year_entries)
+                balance = total_debits - total_credits
+                
+                account_data[f"balance_{year}"] = float(balance)
+            
+            multi_year_data.append(account_data)
+        
+        return {
+            "accounts": multi_year_data,
+            "years_included": [current_year - i for i in range(years)],
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating multi-year trial balance: {str(e)}")
+
+@router.get("/reports/nominal-ledger")
+def get_nominal_ledger(
+    company_id: str = "default-company",
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant_id = request.headers.get("X-Tenant-ID", "default-tenant")
+    
+    try:
+        accounts = db.query(LedgerAccount).filter(
+            LedgerAccount.tenant_id == tenant_id,
+            LedgerAccount.company_id == company_id
+        ).all()
+        
+        nominal_ledger_data = []
+        
+        for account in accounts:
+            year_start = date(date.today().year, 1, 1)
+            opening_entries = db.query(JournalEntry).filter(
+                JournalEntry.tenant_id == tenant_id,
+                JournalEntry.account_id == account.id,
+                JournalEntry.transaction_date < year_start
+            ).all()
+            
+            opening_debits = sum(entry.debit_amount or 0 for entry in opening_entries)
+            opening_credits = sum(entry.credit_amount or 0 for entry in opening_entries)
+            opening_balance = opening_debits - opening_credits
+            
+            all_entries = db.query(JournalEntry).filter(
+                JournalEntry.tenant_id == tenant_id,
+                JournalEntry.account_id == account.id
+            ).all()
+            
+            total_debits = sum(entry.debit_amount or 0 for entry in all_entries)
+            total_credits = sum(entry.credit_amount or 0 for entry in all_entries)
+            closing_balance = total_debits - total_credits
+            
+            nominal_ledger_data.append({
+                "id": account.id,
+                "code": account.code,
+                "name": account.name,
+                "type": account.account_type,
+                "opening_balance": float(opening_balance),
+                "closing_balance": float(closing_balance)
+            })
+        
+        return {
+            "accounts": nominal_ledger_data,
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating nominal ledger: {str(e)}")
+
+@router.get("/reports/general-ledger-detailed")
+def get_general_ledger_detailed(
+    company_id: str = "default-company",
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant_id = request.headers.get("X-Tenant-ID", "default-tenant")
+    
+    try:
+        query = db.query(JournalEntry, LedgerAccount).join(
+            LedgerAccount, JournalEntry.account_id == LedgerAccount.id
+        ).filter(
+            JournalEntry.tenant_id == tenant_id,
+            JournalEntry.company_id == company_id
+        )
+        
+        if start_date:
+            query = query.filter(JournalEntry.transaction_date >= start_date)
+        if end_date:
+            query = query.filter(JournalEntry.transaction_date <= end_date)
+        
+        entries = query.order_by(JournalEntry.transaction_date.desc()).all()
+        
+        detailed_transactions = []
+        for entry, account in entries:
+            detailed_transactions.append({
+                "id": entry.id,
+                "date": entry.transaction_date.isoformat(),
+                "reference": entry.reference,
+                "description": entry.description,
+                "account_name": account.name,
+                "account_code": account.code,
+                "debit": float(entry.debit_amount or 0),
+                "credit": float(entry.credit_amount or 0)
+            })
+        
+        return {
+            "transactions": detailed_transactions,
+            "period": {
+                "start_date": start_date.isoformat() if start_date else None,
+                "end_date": end_date.isoformat() if end_date else None
+            },
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating detailed general ledger: {str(e)}")
+
+@router.get("/reports/general-ledger-summary")
+def get_general_ledger_summary(
+    company_id: str = "default-company",
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant_id = request.headers.get("X-Tenant-ID", "default-tenant")
+    
+    try:
+        query = db.query(JournalEntry, LedgerAccount).join(
+            LedgerAccount, JournalEntry.account_id == LedgerAccount.id
+        ).filter(
+            JournalEntry.tenant_id == tenant_id,
+            JournalEntry.company_id == company_id
+        )
+        
+        if start_date:
+            query = query.filter(JournalEntry.transaction_date >= start_date)
+        if end_date:
+            query = query.filter(JournalEntry.transaction_date <= end_date)
+        
+        entries = query.all()
+        
+        account_summaries = {}
+        for entry, account in entries:
+            account_key = account.id
+            if account_key not in account_summaries:
+                account_summaries[account_key] = {
+                    "account_id": account.id,
+                    "account_name": account.name,
+                    "account_code": account.code,
+                    "transaction_count": 0,
+                    "total_debits": 0,
+                    "total_credits": 0
+                }
+            
+            account_summaries[account_key]["transaction_count"] += 1
+            account_summaries[account_key]["total_debits"] += float(entry.debit_amount or 0)
+            account_summaries[account_key]["total_credits"] += float(entry.credit_amount or 0)
+        
+        # Calculate net movements
+        summary_data = []
+        for summary in account_summaries.values():
+            summary["net_movement"] = summary["total_debits"] - summary["total_credits"]
+            summary_data.append(summary)
+        
+        return {
+            "summary": summary_data,
+            "period": {
+                "start_date": start_date.isoformat() if start_date else None,
+                "end_date": end_date.isoformat() if end_date else None
+            },
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating general ledger summary: {str(e)}")
+
+@router.post("/import/opening-trial-balance")
+def import_opening_trial_balance(
+    file: UploadFile = File(...),
+    company_id: str = "default-company",
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    tenant_id = request.headers.get("X-Tenant-ID", "default-tenant")
+    
+    try:
+        content = file.file.read()
+        csv_data = content.decode('utf-8')
+        
+        import csv
+        import io
+        
+        reader = csv.DictReader(io.StringIO(csv_data))
+        imported_count = 0
+        
+        for row in reader:
+            account = db.query(LedgerAccount).filter(
+                LedgerAccount.tenant_id == tenant_id,
+                LedgerAccount.company_id == company_id,
+                LedgerAccount.code == row.get('account_code')
+            ).first()
+            
+            if not account:
+                account = LedgerAccount(
+                    tenant_id=tenant_id,
+                    company_id=company_id,
+                    code=row.get('account_code'),
+                    name=row.get('account_name'),
+                    account_type=row.get('account_type', 'Asset'),
+                    balance=Decimal(row.get('opening_balance', '0'))
+                )
+                db.add(account)
+            else:
+                account.balance = Decimal(row.get('opening_balance', '0'))
+            
+            opening_balance = Decimal(row.get('opening_balance', '0'))
+            if opening_balance != 0:
+                journal_entry = JournalEntry(
+                    tenant_id=tenant_id,
+                    company_id=company_id,
+                    reference=f"OPENING-{row.get('account_code')}",
+                    description=f"Opening balance for {row.get('account_name')}",
+                    debit_amount=opening_balance if opening_balance > 0 else 0,
+                    credit_amount=abs(opening_balance) if opening_balance < 0 else 0,
+                    account_id=account.id,
+                    transaction_date=date(date.today().year, 1, 1)
+                )
+                db.add(journal_entry)
+            
+            imported_count += 1
+        
+        db.commit()
+        
+        return {
+            "message": f"Successfully imported {imported_count} opening balances",
+            "imported_count": imported_count
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error importing opening trial balance: {str(e)}")

@@ -698,6 +698,30 @@ class ApiClient {
     return this.request(`/email/invoice-tracking/${invoiceId}`)
   }
 
+  async getMultiYearTrialBalance(companyId: string, years: number = 5) {
+    return this.request(`/books/reports/multi-year-trial-balance?company_id=${companyId}&years=${years}`)
+  }
+
+  async getNominalLedger(companyId: string) {
+    return this.request(`/books/reports/nominal-ledger?company_id=${companyId}`)
+  }
+
+  async getGeneralLedgerDetailed(companyId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    params.append('company_id', companyId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/general-ledger-detailed?${params}`)
+  }
+
+  async getGeneralLedgerSummary(companyId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    params.append('company_id', companyId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/general-ledger-summary?${params}`)
+  }
+
 }
 
 export const apiClient = new ApiClient()

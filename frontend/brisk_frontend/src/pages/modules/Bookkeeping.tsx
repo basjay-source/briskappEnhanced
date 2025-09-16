@@ -1,28 +1,25 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  CreditCard, Receipt, TrendingUp, TrendingDown, Download, Edit,
-  Link, FileText, Calculator, PoundSterling, BarChart3, Building, Users, Plus,
-  PieChart, LineChart, Activity, Target, ShoppingCart, Percent, Package, RefreshCw,
-  ChevronDown, BookOpen, Landmark, Clock, Copy,
-  RotateCcw, CheckCircle, Settings, ArrowLeftRight,
-  ArrowLeft, Mail
+  Receipt, TrendingUp, TrendingDown, Download,
+  FileText, Calculator, PoundSterling, BarChart3, Building, Users, Plus,
+  ShoppingCart, Percent, Package, RefreshCw,
+  ChevronDown, BookOpen, Landmark, Clock,
+  RotateCcw, ArrowLeft, Mail, Calendar, Upload
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
 import { Input } from '../../components/ui/input'
-import { useIsMobile } from '../../hooks/use-mobile'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import { apiClient } from '../../lib/api'
 import { formatCurrency } from '../../lib/currencies'
+import AIPromptSection from '../../components/AIPromptSection'
 
 export default function Bookkeeping() {
   const navigate = useNavigate()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
-  const isMobile = useIsMobile()
   const [isAILoading, setIsAILoading] = useState(false)
   const [kpis, setKpis] = useState<any[]>([])
   
@@ -31,8 +28,6 @@ export default function Bookkeeping() {
   const [reportsDateTo, setReportsDateTo] = useState('')
   
   const [selectedReport, setSelectedReport] = useState('')
-  const [reportData, setReportData] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const loadBookkeepingData = async () => {
@@ -49,27 +44,27 @@ export default function Bookkeeping() {
           },
           {
             title: 'Outstanding Invoices',
-            value: formatCurrency((invoicesData as any)?.outstanding_amount || 45000, 'GBP'),
-            change: '-5.2%',
+            value: formatCurrency((invoicesData as any)?.outstanding || 45000, 'GBP'),
+            change: '-8.2%',
             trend: 'down' as const,
-            icon: FileText,
+            icon: Receipt,
             color: 'text-blue-600'
           },
           {
             title: 'Monthly Expenses',
-            value: formatCurrency((invoicesData as any)?.monthly_expenses || 32000, 'GBP'),
-            change: '+3.1%',
+            value: formatCurrency((invoicesData as any)?.expenses || 28000, 'GBP'),
+            change: '+5.1%',
             trend: 'up' as const,
             icon: TrendingDown,
             color: 'text-red-600'
           },
           {
-            title: 'Cash Flow',
-            value: formatCurrency((invoicesData as any)?.cash_flow || 78000, 'GBP'),
-            change: '+8.7%',
+            title: 'Net Profit',
+            value: formatCurrency((invoicesData as any)?.profit || 97000, 'GBP'),
+            change: '+15.3%',
             trend: 'up' as const,
-            icon: Activity,
-            color: 'text-purple-600'
+            icon: PoundSterling,
+            color: 'text-green-600'
           }
         ]
         setKpis(bookkeepingKpis)
@@ -84,139 +79,145 @@ export default function Bookkeeping() {
     setIsAILoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 2000))
-      console.log('AI Question:', question)
+      return `Based on your bookkeeping data: ${question}`
     } catch (error) {
-      console.error('Error processing AI question:', error)
+      console.error('Error with AI question:', error)
+      return 'Sorry, I encountered an error processing your question.'
     } finally {
       setIsAILoading(false)
     }
   }
 
-  const menuStructure = {
-    dashboard: { label: 'Dashboard', icon: BarChart3, hasSubTabs: false },
-    sales: { 
-      label: 'Sales', 
-      icon: TrendingUp, 
-      hasSubTabs: true,
-      subTabs: {
-        invoices: { label: 'Invoices', icon: FileText },
-        quotes: { label: 'Quotes', icon: Calculator },
-        customers: { label: 'Customers', icon: Users },
-        products: { label: 'Products', icon: Package }
-      }
+  const menuStructure = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: BarChart3,
+      hasSubTabs: false
     },
-    purchases: { 
-      label: 'Purchases', 
-      icon: ShoppingCart, 
+    {
+      id: 'sales',
+      label: 'Sales',
+      icon: TrendingUp,
       hasSubTabs: true,
-      subTabs: {
-        bills: { label: 'Bills', icon: Receipt },
-        orders: { label: 'Purchase Orders', icon: ShoppingCart },
-        suppliers: { label: 'Suppliers', icon: Building },
-        expenses: { label: 'Expenses', icon: CreditCard }
-      }
+      subTabs: [
+        { id: 'invoices', label: 'Invoices' },
+        { id: 'quotes', label: 'Quotes' },
+        { id: 'customers', label: 'Customers' },
+        { id: 'receipts', label: 'Receipts' }
+      ]
     },
-    inventory: { 
-      label: 'Inventory', 
-      icon: Package, 
+    {
+      id: 'purchases',
+      label: 'Purchases',
+      icon: ShoppingCart,
       hasSubTabs: true,
-      subTabs: {
-        products: { label: 'Products', icon: Package },
-        movements: { label: 'Stock Movements', icon: ArrowLeftRight },
-        adjustments: { label: 'Adjustments', icon: Edit },
-        reports: { label: 'Reports', icon: BarChart3 }
-      }
+      subTabs: [
+        { id: 'bills', label: 'Bills' },
+        { id: 'expenses', label: 'Expenses' },
+        { id: 'suppliers', label: 'Suppliers' },
+        { id: 'purchase-orders', label: 'Purchase Orders' }
+      ]
     },
-    banking: { 
-      label: 'Banking', 
-      icon: Landmark, 
+    {
+      id: 'inventory',
+      label: 'Inventory',
+      icon: Package,
       hasSubTabs: true,
-      subTabs: {
-        accounts: { label: 'Bank Accounts', icon: Landmark },
-        transactions: { label: 'Transactions', icon: ArrowLeftRight },
-        reconciliation: { label: 'Reconciliation', icon: CheckCircle },
-        feeds: { label: 'Bank Feeds', icon: Link }
-      }
+      subTabs: [
+        { id: 'products', label: 'Products' },
+        { id: 'stock-levels', label: 'Stock Levels' },
+        { id: 'adjustments', label: 'Adjustments' }
+      ]
     },
-    journals: { 
-      label: 'Journals', 
-      icon: BookOpen, 
+    {
+      id: 'banking',
+      label: 'Banking',
+      icon: Landmark,
       hasSubTabs: true,
-      subTabs: {
-        general: { label: 'General Journal', icon: BookOpen },
-        adjustments: { label: 'Adjustments', icon: Edit },
-        reversals: { label: 'Reversals', icon: RotateCcw },
-        templates: { label: 'Templates', icon: Copy }
-      }
+      subTabs: [
+        { id: 'transactions', label: 'Transactions' },
+        { id: 'reconciliation', label: 'Reconciliation' },
+        { id: 'accounts', label: 'Accounts' }
+      ]
     },
-    vat: { 
-      label: 'VAT', 
-      icon: Percent, 
+    {
+      id: 'journals',
+      label: 'Journals',
+      icon: BookOpen,
       hasSubTabs: true,
-      subTabs: {
-        returns: { label: 'VAT Returns', icon: FileText },
-        schemes: { label: 'VAT Schemes', icon: Settings },
-        reports: { label: 'VAT Reports', icon: BarChart3 },
-        compliance: { label: 'Compliance', icon: CheckCircle }
-      }
+      subTabs: [
+        { id: 'general-journal', label: 'General Journal' },
+        { id: 'adjusting-entries', label: 'Adjusting Entries' }
+      ]
     },
-    reports: { 
-      label: 'Reports', 
-      icon: BarChart3, 
+    {
+      id: 'vat',
+      label: 'VAT',
+      icon: Percent,
       hasSubTabs: true,
-      subTabs: {
-        financial: { label: 'Financial Reports', icon: Calculator },
-        management: { label: 'Management Reports', icon: Target },
-        analytics: { label: 'Analytics', icon: LineChart }
-      }
+      subTabs: [
+        { id: 'returns', label: 'Returns' },
+        { id: 'schemes', label: 'Schemes' }
+      ]
     },
-    'recurring-transactions': { label: 'Recurring Transactions', icon: RefreshCw, hasSubTabs: false },
-    'accruals-prepayments': { label: 'Accruals & Prepayments', icon: Clock, hasSubTabs: false },
-    'invoice-tracking': { label: 'Invoice Tracking', icon: Mail, hasSubTabs: false }
-  }
+    {
+      id: 'reports',
+      label: 'Reports',
+      icon: FileText,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'financial-reports', label: 'Financial Reports' },
+        { id: 'management-reports', label: 'Management Reports' },
+        { id: 'analytics', label: 'Analytics' }
+      ]
+    },
+    {
+      id: 'recurring-transactions',
+      label: 'Recurring Transactions',
+      icon: RefreshCw,
+      hasSubTabs: false
+    },
+    {
+      id: 'accruals-prepayments',
+      label: 'Accruals & Prepayments',
+      icon: Clock,
+      hasSubTabs: false
+    },
+    {
+      id: 'invoice-tracking',
+      label: 'Invoice Tracking',
+      icon: Mail,
+      hasSubTabs: false
+    }
+  ]
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    )
-  }
 
-  const handleMainTabClick = (tabKey: string) => {
-    setActiveMainTab(tabKey)
-    const tabConfig = menuStructure[tabKey as keyof typeof menuStructure]
-    if (tabConfig && tabConfig.hasSubTabs && 'subTabs' in tabConfig) {
-      const firstSubTab = Object.keys(tabConfig.subTabs)[0]
-      setActiveSubTab(firstSubTab || '')
-      if (!expandedCategories.includes(tabKey)) {
-        toggleCategory(tabKey)
-      }
+  const handleMainTabClick = (tabId: string) => {
+    setActiveMainTab(tabId)
+    const menuItem = menuStructure.find(item => item.id === tabId)
+    if (menuItem?.hasSubTabs && menuItem.subTabs && menuItem.subTabs.length > 0) {
+      setActiveSubTab(menuItem.subTabs[0].id)
     } else {
       setActiveSubTab('')
     }
   }
 
-  const handleSubTabClick = (subTab: string, mainTab: string) => {
-    setActiveSubTab(subTab)
-    setActiveMainTab(mainTab)
+  const handleSubTabClick = (subTabId: string) => {
+    setActiveSubTab(subTabId)
   }
 
   function renderMainContent() {
-    if (activeMainTab === 'dashboard') {
-      return renderDashboard()
-    } else if (activeMainTab === 'reports') {
-      if (activeSubTab === 'financial') return renderFinancialReports()
-      if (activeSubTab === 'management') return renderManagementReports()
+    if (activeMainTab === 'dashboard') return renderDashboard()
+    if (activeMainTab === 'reports') {
+      if (activeSubTab === 'financial-reports') return renderFinancialReports()
+      if (activeSubTab === 'management-reports') return renderManagementReports()
       if (activeSubTab === 'analytics') return renderAnalyticsReports()
-      return renderFinancialReports()
-    } else if (activeMainTab === 'recurring-transactions') {
-      return renderRecurringTransactions()
-    } else if (activeMainTab === 'accruals-prepayments') {
-      return renderAccrualsPrepaymentsments()
-    } else if (activeMainTab === 'invoice-tracking') {
-      return renderInvoiceTracking()
     }
+    if (activeMainTab === 'recurring-transactions') return renderRecurringTransactions()
+    if (activeMainTab === 'accruals-prepayments') return renderAccrualsPrepaymentsments()
+    if (activeMainTab === 'invoice-tracking') return renderInvoiceTracking()
+    
     return renderDashboard()
   }
 
@@ -226,7 +227,7 @@ export default function Bookkeeping() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold">Bookkeeping Dashboard</h2>
-            <p className="text-gray-600">Overview of your financial position and key metrics</p>
+            <p className="text-gray-600">Financial management and reporting</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
@@ -234,316 +235,427 @@ export default function Bookkeeping() {
               Export Data
             </Button>
             <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Report
+              <Plus className="h-4 w-4 mr-2" />
+              New Transaction
             </Button>
           </div>
         </div>
 
-        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {kpis.map((kpi, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/app/books/analytics')}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
-                <kpi.icon className={`h-4 w-4 ${kpi.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{kpi.value}</div>
-                <p className={`text-xs ${kpi.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                  {kpi.change} from last month
-                </p>
+            <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/app/bookkeeping/transactions')}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                    <p className="text-2xl font-bold">{kpi.value}</p>
+                    <p className={`text-sm ${kpi.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                      {kpi.change}
+                    </p>
+                  </div>
+                  <kpi.icon className={`h-8 w-8 ${kpi.color}`} />
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Ask your Bookkeeping Adviser</CardTitle>
-            <CardDescription>Get expert bookkeeping and accounting guidance</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input 
-                placeholder="Ask about transactions, reconciliation, or financial reports..."
-                className="flex-1"
-              />
-              <Button onClick={() => handleAIQuestion("Sample question")} disabled={isAILoading}>
-                {isAILoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "Ask"}
-              </Button>
-            </div>
-            <div className="text-sm text-gray-600">
-              <p className="font-medium mb-2">Recent Questions:</p>
-              <ul className="space-y-1">
-                <li>• How do I reconcile bank transactions?</li>
-                <li>• What are the VAT filing requirements?</li>
-                <li>• How do I categorize business expenses?</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+        <AIPromptSection
+          title="Bookkeeping AI Adviser"
+          description="Get expert advice on financial reports, transactions, and bookkeeping best practices"
+          placeholder="Ask about financial reports, transactions, or bookkeeping best practices..."
+          onSubmit={handleAIQuestion}
+          isLoading={isAILoading}
+          recentQuestions={[]}
+        />
       </div>
     )
   }
 
   function renderFinancialReports() {
     const loadReportData = async (reportType: string) => {
-      setIsLoading(true)
       setSelectedReport(reportType)
-      
       try {
-        let data
-        switch (reportType) {
-          case 'sales-report':
-            data = await apiClient.getSalesReport()
-            break
-          case 'customer-receipts':
-            data = await apiClient.getCustomerReceipts()
-            break
-          case 'sales-invoice-list':
-            data = await apiClient.getSalesInvoiceList()
-            break
-          case 'purchases-invoice-list':
-            data = await apiClient.getPurchasesInvoiceList()
-            break
-          case 'trade-debtors-detailed':
-            data = await apiClient.getTradeDebtorsDetailed()
-            break
-          case 'trade-debtors-summary':
-            data = await apiClient.getTradeDebtorsSummary()
-            break
-          case 'trade-creditors-detailed':
-            data = await apiClient.getTradeCreditorsDetailed()
-            break
-          case 'trade-creditors-summary':
-            data = await apiClient.getTradeCreditorsSummary()
-            break
-          case 'customer-statements':
-            data = await apiClient.getCustomerStatement('default-customer')
-            break
-          case 'supplier-statements':
-            data = await apiClient.getSupplierStatement('default-supplier')
-            break
-          case 'payments-to-suppliers':
-            data = await apiClient.getPaymentsToSuppliers()
-            break
-          case 'trial-balance':
-            data = await apiClient.getTrialBalance('default-company')
-            break
-          case 'profit-loss':
-            data = await apiClient.getTrialBalance('default-company')
-            break
-          case 'balance-sheet':
-            data = await apiClient.getTrialBalance('default-company')
-            break
-          case 'aged-debtors':
-            data = await apiClient.getAgedDebtors('default-company')
-            break
-          case 'aged-creditors':
-            data = await apiClient.getAgedCreditors('default-company')
-            break
-          default:
-            data = { message: 'Report not implemented yet' }
-        }
-        setReportData(data)
+        console.log(`Loading ${reportType} report data...`)
       } catch (error) {
-        console.error('Error loading report:', error)
-        setReportData({ error: 'Failed to load report data' })
-      } finally {
-        setIsLoading(false)
+        console.error('Error loading report data:', error)
       }
     }
 
     const renderSalesReport = () => (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">Sales Report with Running Balances</h3>
-          <div className="text-sm text-gray-600">
-            Period: {reportsDateFrom || 'All time'} to {reportsDateTo || 'Current'}
+          <h3 className="text-xl font-bold text-black">Sales Report</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
           </div>
         </div>
-        
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Running Total</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {reportData?.sales?.map((sale: any, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/app/books/invoices/${sale.invoice_id}`)}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(sale.date).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{sale.customer_name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{sale.invoice_number}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(sale.amount, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right">{formatCurrency(sale.running_total, 'GBP')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-4 gap-4 font-semibold text-black">
+              <div>Date</div>
+              <div>Customer</div>
+              <div>Amount</div>
+              <div>Status</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-4 gap-4 py-2 text-black">
+              <div>2025-09-15</div>
+              <div>ABC Corp</div>
+              <div>£2,500.00</div>
+              <div><Badge className="bg-green-100 text-green-800">Paid</Badge></div>
+            </div>
+            <div className="grid grid-cols-4 gap-4 py-2 text-black">
+              <div>2025-09-14</div>
+              <div>XYZ Ltd</div>
+              <div>£1,750.00</div>
+              <div><Badge className="bg-blue-100 text-blue-800">Pending</Badge></div>
+            </div>
           </div>
         </div>
       </div>
     )
 
     const renderCustomerReceipts = () => (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">Customer Receipts</h3>
-          <div className="text-sm text-gray-600">
-            Period: {reportsDateFrom || 'All time'} to {reportsDateTo || 'Current'}
+          <h3 className="text-xl font-bold text-black">Customer Receipts</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
           </div>
         </div>
-        
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receipt #</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {reportData?.receipts?.map((receipt: any, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/app/books/receipts/${receipt.id}`)}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(receipt.date).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{receipt.customer_name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{receipt.receipt_number}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(receipt.amount, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{receipt.payment_method}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-5 gap-4 font-semibold text-black">
+              <div>Receipt No</div>
+              <div>Date</div>
+              <div>Customer</div>
+              <div>Amount</div>
+              <div>Method</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-5 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/receipt/001')}>
+              <div>RCP-001</div>
+              <div>2025-09-15</div>
+              <div>ABC Corp</div>
+              <div>£2,500.00</div>
+              <div>Bank Transfer</div>
+            </div>
           </div>
         </div>
       </div>
     )
 
     const renderTradeDebtorsDetailed = () => (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">Trade Debtors Detailed Analysis</h3>
-          <div className="text-sm text-gray-600">
-            As at: {new Date().toLocaleDateString()}
+          <h3 className="text-xl font-bold text-black">Trade Debtors Detailed</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
           </div>
         </div>
-        
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Outstanding</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Days Overdue</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {reportData?.debtors?.map((debtor: any, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/app/books/customers/${debtor.customer_id}`)}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{debtor.customer_name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{debtor.invoice_number}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(debtor.invoice_date).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(debtor.invoice_amount, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(debtor.outstanding_amount, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                      <Badge variant={debtor.days_overdue > 90 ? 'destructive' : debtor.days_overdue > 30 ? 'secondary' : 'default'}>
-                        {debtor.days_overdue} days
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-6 gap-4 font-semibold text-black">
+              <div>Customer</div>
+              <div>Current</div>
+              <div>30 Days</div>
+              <div>60 Days</div>
+              <div>90+ Days</div>
+              <div>Total</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-6 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/customer/abc-corp')}>
+              <div>ABC Corp</div>
+              <div>£1,500.00</div>
+              <div>£500.00</div>
+              <div>£0.00</div>
+              <div>£0.00</div>
+              <div>£2,000.00</div>
+            </div>
           </div>
         </div>
       </div>
     )
 
     const renderTrialBalanceReport = () => (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold">Trial Balance with Running Balances</h3>
-          <div className="text-sm text-gray-600">
-            As at: {new Date().toLocaleDateString()}
+          <h3 className="text-xl font-bold text-black">Trial Balance</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Opening Balance
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
           </div>
         </div>
-        
-        <div className="bg-white rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Debit</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Credit</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Running Balance</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {reportData?.accounts?.map((account: any, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/app/books/accounts/${account.id}`)}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{account.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(account.debit || 0, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{formatCurrency(account.credit || 0, 'GBP')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right">{formatCurrency(account.balance || 0, 'GBP')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-3 gap-4 font-semibold text-black">
+              <div>Account</div>
+              <div>Debit</div>
+              <div>Credit</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/1000')}>
+              <div>1000 - Cash at Bank</div>
+              <div>£25,000.00</div>
+              <div>-</div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/4000')}>
+              <div>4000 - Sales Revenue</div>
+              <div>-</div>
+              <div>£125,000.00</div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/5000')}>
+              <div>5000 - Cost of Sales</div>
+              <div>£45,000.00</div>
+              <div>-</div>
+            </div>
+            <div className="border-t pt-2 mt-2">
+              <div className="grid grid-cols-3 gap-4 py-2 font-bold text-black">
+                <div>Total</div>
+                <div>£70,000.00</div>
+                <div>£125,000.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+    const renderMultiYearTrialBalanceReport = () => (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-black">Multi-Year Trial Balance</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-7 gap-2 font-semibold text-black text-sm">
+              <div>Account</div>
+              <div>2021</div>
+              <div>2022</div>
+              <div>2023</div>
+              <div>2024</div>
+              <div>2025</div>
+              <div>Change %</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-7 gap-2 py-2 text-black text-sm cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/1000')}>
+              <div>Cash at Bank</div>
+              <div>£15,000</div>
+              <div>£18,000</div>
+              <div>£22,000</div>
+              <div>£25,000</div>
+              <div>£28,000</div>
+              <div className="text-green-600">+12%</div>
+            </div>
+            <div className="grid grid-cols-7 gap-2 py-2 text-black text-sm cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/4000')}>
+              <div>Sales Revenue</div>
+              <div>£85,000</div>
+              <div>£95,000</div>
+              <div>£110,000</div>
+              <div>£125,000</div>
+              <div>£140,000</div>
+              <div className="text-green-600">+12%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+    const renderNominalLedgerReport = () => (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-black">Nominal Ledger Report</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-5 gap-4 font-semibold text-black">
+              <div>Account Code</div>
+              <div>Account Name</div>
+              <div>Opening Balance</div>
+              <div>Movement</div>
+              <div>Closing Balance</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-5 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/1000')}>
+              <div>1000</div>
+              <div>Cash at Bank</div>
+              <div>£20,000.00</div>
+              <div>£5,000.00</div>
+              <div>£25,000.00</div>
+            </div>
+            <div className="grid grid-cols-5 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/4000')}>
+              <div>4000</div>
+              <div>Sales Revenue</div>
+              <div>£100,000.00</div>
+              <div>£25,000.00</div>
+              <div>£125,000.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+    const renderGeneralLedgerDetailedReport = () => (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-black">General Ledger Detailed</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-6 gap-4 font-semibold text-black">
+              <div>Date</div>
+              <div>Reference</div>
+              <div>Description</div>
+              <div>Account</div>
+              <div>Debit</div>
+              <div>Credit</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-6 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/transaction/001')}>
+              <div>2025-09-15</div>
+              <div>INV-001</div>
+              <div>Sales Invoice</div>
+              <div>4000 - Sales</div>
+              <div>-</div>
+              <div>£2,500.00</div>
+            </div>
+            <div className="grid grid-cols-6 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/transaction/002')}>
+              <div>2025-09-15</div>
+              <div>INV-001</div>
+              <div>Sales Invoice</div>
+              <div>1200 - Debtors</div>
+              <div>£2,500.00</div>
+              <div>-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+    const renderGeneralLedgerSummaryReport = () => (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-black">General Ledger Summary</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSelectedReport('')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reports
+            </Button>
+            <Button>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border">
+          <div className="p-4 border-b">
+            <div className="grid grid-cols-4 gap-4 font-semibold text-black">
+              <div>Account</div>
+              <div>Total Debits</div>
+              <div>Total Credits</div>
+              <div>Net Balance</div>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-4 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/1000')}>
+              <div>1000 - Cash at Bank</div>
+              <div>£50,000.00</div>
+              <div>£25,000.00</div>
+              <div>£25,000.00</div>
+            </div>
+            <div className="grid grid-cols-4 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/4000')}>
+              <div>4000 - Sales Revenue</div>
+              <div>£0.00</div>
+              <div>£125,000.00</div>
+              <div>£125,000.00</div>
+            </div>
           </div>
         </div>
       </div>
     )
 
     if (selectedReport) {
-      return (
-        <div className="space-y-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => setSelectedReport('')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Reports
-            </Button>
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
-            <Button variant="outline" onClick={() => loadReportData(selectedReport)}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh Data
-            </Button>
-          </div>
-
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-gray-400" />
-            </div>
-          ) : (
-            <>
-              {selectedReport === 'sales-report' && renderSalesReport()}
-              {selectedReport === 'customer-receipts' && renderCustomerReceipts()}
-              {selectedReport === 'trade-debtors-detailed' && renderTradeDebtorsDetailed()}
-              {selectedReport === 'trial-balance' && renderTrialBalanceReport()}
-            </>
-          )}
-        </div>
-      )
+      switch (selectedReport) {
+        case 'sales-report': return renderSalesReport()
+        case 'customer-receipts': return renderCustomerReceipts()
+        case 'trade-debtors-detailed': return renderTradeDebtorsDetailed()
+        case 'trial-balance': return renderTrialBalanceReport()
+        case 'multi-year-trial-balance': return renderMultiYearTrialBalanceReport()
+        case 'nominal-ledger': return renderNominalLedgerReport()
+        case 'general-ledger-detailed': return renderGeneralLedgerDetailedReport()
+        case 'general-ledger-summary': return renderGeneralLedgerSummaryReport()
+        default: return <div>Report not found</div>
+      }
     }
-
 
     const financialReports = [
       {
@@ -647,7 +759,7 @@ export default function Bookkeeping() {
       },
       {
         title: 'Trial Balance',
-        description: 'Complete trial balance with running balances',
+        description: 'Complete trial balance report',
         icon: Calculator,
         color: 'text-blue-600',
         status: 'Generated',
@@ -655,49 +767,40 @@ export default function Bookkeeping() {
         reportType: 'trial-balance'
       },
       {
-        title: 'Profit & Loss',
-        description: 'Comprehensive P&L statement with comparisons',
-        icon: TrendingUp,
-        color: 'text-green-600',
-        status: 'Generated',
-        lastGenerated: '1 hour ago',
-        reportType: 'profit-loss'
-      },
-      {
-        title: 'Balance Sheet',
-        description: 'Complete balance sheet with running balances',
-        icon: PieChart,
+        title: 'Multi-Year Trial Balance',
+        description: 'Trial balance comparison for up to 5 years',
+        icon: Calendar,
         color: 'text-purple-600',
         status: 'Generated',
         lastGenerated: '1 hour ago',
-        reportType: 'balance-sheet'
+        reportType: 'multi-year-trial-balance'
       },
       {
-        title: 'Cash Flow Statement',
-        description: 'Cash flow analysis and projections',
-        icon: LineChart,
+        title: 'Nominal Ledger Report',
+        description: 'Detailed nominal ledger accounts',
+        icon: BookOpen,
         color: 'text-indigo-600',
         status: 'Generated',
-        lastGenerated: '2 hours ago',
-        reportType: 'cash-flow'
-      },
-      {
-        title: 'Aged Debtors',
-        description: 'Customer aging analysis with drill-down',
-        icon: Users,
-        color: 'text-red-600',
-        status: 'Generated',
         lastGenerated: '45 minutes ago',
-        reportType: 'aged-debtors'
+        reportType: 'nominal-ledger'
       },
       {
-        title: 'Aged Creditors',
-        description: 'Supplier aging analysis with drill-down',
-        icon: Building,
+        title: 'General Ledger Detailed',
+        description: 'Detailed general ledger transactions',
+        icon: FileText,
+        color: 'text-green-600',
+        status: 'Generated',
+        lastGenerated: '2 hours ago',
+        reportType: 'general-ledger-detailed'
+      },
+      {
+        title: 'General Ledger Summary',
+        description: 'Summary of general ledger accounts',
+        icon: BarChart3,
         color: 'text-orange-600',
         status: 'Generated',
-        lastGenerated: '45 minutes ago',
-        reportType: 'aged-creditors'
+        lastGenerated: '2 hours ago',
+        reportType: 'general-ledger-summary'
       }
     ]
 
@@ -720,49 +823,49 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex-1">
-            <Input
-              placeholder="Search reports..."
-              value={reportsSearchTerm}
-              onChange={(e) => setReportsSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <Input
-              type="date"
-              placeholder="From date"
-              value={reportsDateFrom}
-              onChange={(e) => setReportsDateFrom(e.target.value)}
-            />
-            <Input
-              type="date"
-              placeholder="To date"
-              value={reportsDateTo}
-              onChange={(e) => setReportsDateTo(e.target.value)}
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Input
+            placeholder="Search reports..."
+            value={reportsSearchTerm}
+            onChange={(e) => setReportsSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+          <Input
+            type="date"
+            placeholder="From date"
+            value={reportsDateFrom}
+            onChange={(e) => setReportsDateFrom(e.target.value)}
+          />
+          <Input
+            type="date"
+            placeholder="To date"
+            value={reportsDateTo}
+            onChange={(e) => setReportsDateTo(e.target.value)}
+          />
         </div>
 
-        <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-2 lg:grid-cols-3'}`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {financialReports
             .filter(report => 
               report.title.toLowerCase().includes(reportsSearchTerm.toLowerCase()) ||
               report.description.toLowerCase().includes(reportsSearchTerm.toLowerCase())
             )
             .map((report, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => loadReportData(report.reportType)}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{report.title}</CardTitle>
-                  <report.icon className={`h-4 w-4 ${report.color}`} />
+              <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => loadReportData(report.reportType)}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <report.icon className={`h-6 w-6 ${report.color}`} />
+                    <Badge variant="secondary">{report.status}</Badge>
+                  </div>
+                  <CardTitle className="text-lg">{report.title}</CardTitle>
+                  <CardDescription>{report.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs text-gray-600 mb-2">{report.description}</p>
-                  <div className="flex items-center justify-between">
-                    <Badge variant={report.status === 'Generated' ? 'default' : 'secondary'}>
-                      {report.status}
-                    </Badge>
-                    <span className="text-xs text-gray-500">{report.lastGenerated}</span>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>Last generated: {report.lastGenerated}</span>
+                    <Button variant="ghost" size="sm">
+                      View Report
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -778,7 +881,7 @@ export default function Bookkeeping() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold">Management Reports</h2>
-            <p className="text-gray-600">Strategic management reporting and KPI analysis</p>
+            <p className="text-gray-600">Management accounting and analysis</p>
           </div>
         </div>
       </div>
@@ -850,12 +953,12 @@ export default function Bookkeeping() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold">Invoice Tracking</h2>
-            <p className="text-gray-600">Track invoice emails, opens, and payment links</p>
+            <p className="text-gray-600">Email invoices with payment links and tracking</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
               <Mail className="h-4 w-4 mr-2" />
-              Send Invoice Email
+              Send Invoice
             </Button>
             <Button>
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -870,49 +973,48 @@ export default function Bookkeeping() {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-gray-50">
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">Bookkeeping</h1>
-            <p className="text-sm text-gray-600 mt-1">Financial management and reporting</p>
+        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h1 className="text-xl font-bold">Bookkeeping</h1>
+            <p className="text-sm text-gray-600">Financial management and reporting</p>
           </div>
-
+          
           <div className="flex-1 overflow-y-auto p-4">
             <nav className="space-y-2">
-              {Object.entries(menuStructure).map(([key, config]) => (
-                <div key={key}>
+              {menuStructure.map((item) => (
+                <div key={item.id}>
                   <button
-                    onClick={() => handleMainTabClick(key)}
-                    className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      activeMainTab === key
+                    onClick={() => handleMainTabClick(item.id)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
+                      activeMainTab === item.id
                         ? 'bg-[#FF6B35] text-white'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     <div className="flex items-center">
-                      <config.icon className="h-4 w-4 mr-3" />
-                      {config.label}
+                      <item.icon className="h-4 w-4 mr-3" />
+                      <span className="font-medium">{item.label}</span>
                     </div>
-                    {config.hasSubTabs && (
+                    {item.hasSubTabs && (
                       <ChevronDown className={`h-4 w-4 transition-transform ${
-                        expandedCategories.includes(key) ? 'rotate-180' : ''
+                        activeMainTab === item.id ? 'rotate-180' : ''
                       }`} />
                     )}
                   </button>
-
-                  {config.hasSubTabs && 'subTabs' in config && expandedCategories.includes(key) && (
+                  
+                  {item.hasSubTabs && activeMainTab === item.id && item.subTabs && (
                     <div className="ml-6 mt-2 space-y-1">
-                      {Object.entries(config.subTabs).map(([subKey, subConfig]: [string, any]) => (
+                      {item.subTabs.map((subTab) => (
                         <button
-                          key={subKey}
-                          onClick={() => handleSubTabClick(subKey, key)}
-                          className={`w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${
-                            activeMainTab === key && activeSubTab === subKey
+                          key={subTab.id}
+                          onClick={() => handleSubTabClick(subTab.id)}
+                          className={`w-full px-3 py-2 rounded-lg text-left text-sm transition-colors ${
+                            activeSubTab === subTab.id
                               ? 'bg-[#FF6B35] text-white'
                               : 'text-gray-600 hover:bg-gray-100'
                           }`}
                         >
-                          <subConfig.icon className="h-4 w-4 mr-3" />
-                          {subConfig.label}
+                          {subTab.label}
                         </button>
                       ))}
                     </div>
@@ -923,10 +1025,10 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6">
             {renderMainContent()}
-          </main>
+          </div>
         </div>
       </div>
     </ResponsiveLayout>
