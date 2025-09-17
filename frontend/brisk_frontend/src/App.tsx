@@ -18,6 +18,7 @@ import TimeAndFeesModuleAdvanced from '@/pages/modules/TimeAndFeesModuleAdvanced
 import AdminModule from '@/pages/modules/AdminModule'
 import PracticeManagement from '@/pages/modules/PracticeManagement'
 import VAT from '@/pages/modules/VAT'
+import DocusinageEnterpriseFinal from '@/pages/modules/DocusinageEnterpriseFinal'
 import ClientPortal from '@/components/ClientPortal'
 import NewJobForm from './pages/forms/NewJobForm'
 import NewInvoiceTemplateForm from './pages/forms/NewInvoiceTemplateForm'
@@ -55,6 +56,7 @@ function App() {
             <Route path="bookkeeping" element={<BookkeepingVAT />} />
             <Route path="vat" element={<VAT />} />
             <Route path="esign" element={<ESignature />} />
+            <Route path="docusinage" element={<DocusinageEnterpriseFinal />} />
             <Route path="time" element={<TimeAndFeesModuleAdvanced />} />
             <Route path="admin" element={<AdminModule />} />
             <Route path="portal" element={<ClientPortal />} />

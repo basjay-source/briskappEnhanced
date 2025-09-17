@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import create_tables
-from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat
+from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat, vat_enhanced, documents, docusinage, docusinage_enterprise
 from app.middleware.tenant import TenantMiddleware
 from app.middleware.auth import AuthMiddleware
 
@@ -46,8 +46,12 @@ app.include_router(admin.router, prefix="/api/v1/admin", tags=["Administration"]
 app.include_router(practice.router, prefix="/api/v1/practice", tags=["Practice Management"])
 app.include_router(search.router, prefix="/api/v1", tags=["Search"])
 app.include_router(vat.router, prefix="/api/v1/vat", tags=["VAT"])
+app.include_router(vat_enhanced.router, prefix="/api/v1/vat", tags=["VAT Enhanced"])
 app.include_router(charity.router, prefix="/api/v1/charity", tags=["Charity & Academy Accounts"])
 app.include_router(templates.router, prefix="/api/v1/templates", tags=["Templates"])
+app.include_router(documents.router, prefix="/api/v1", tags=["Document Management"])
+app.include_router(docusinage.router, prefix="/api/v1", tags=["Docusinage Enterprise"])
+app.include_router(docusinage_enterprise.router, prefix="/api/v1", tags=["Docusinage Enterprise"])
 
 @app.get("/")
 def read_root():
