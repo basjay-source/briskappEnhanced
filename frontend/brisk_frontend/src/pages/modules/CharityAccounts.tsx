@@ -1013,7 +1013,7 @@ const CharityAccounts: React.FC = () => {
                     <AlertCircle className="h-5 w-5 text-orange-500" />
                     <span>Risk Management Policy</span>
                   </div>
-                  <Badge className="bg-orange-100 text-orange-800">In Progress</Badge>
+                  <Badge className="bg-[#FFF4F0] text-[#C44B1C]">In Progress</Badge>
                 </div>
               </div>
             </CardContent>
@@ -1040,7 +1040,7 @@ const CharityAccounts: React.FC = () => {
                       <p className="font-bold text-orange-900">Accounts Filing</p>
                       <p className="text-sm text-orange-700">Community Trust</p>
                     </div>
-                    <Badge className="bg-orange-100 text-orange-800">45 days</Badge>
+                    <Badge className="bg-[#FFF4F0] text-[#C44B1C]">45 days</Badge>
                   </div>
                 </div>
               </div>
@@ -1356,7 +1356,7 @@ const CharityAccounts: React.FC = () => {
                 onClick={() => toggleCategory(categoryKey)}
                 className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                   activeMainTab === categoryKey
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
+                    ? 'bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-md transform scale-[0.98] font-semibold'
                     : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                 }`}
               >
@@ -1381,7 +1381,7 @@ const CharityAccounts: React.FC = () => {
                       }}
                       className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                         activeMainTab === categoryKey && activeSubTab === subKey
-                          ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
+                          ? 'bg-gradient-to-r from-[#FF8A5B] to-[#FF6B35] text-white border-l-2 border-orange-300 shadow-md font-semibold'
                           : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                       }`}
                     >
@@ -1397,7 +1397,7 @@ const CharityAccounts: React.FC = () => {
                     onClick={() => handleMainTabClick(categoryKey)}
                     className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                       activeMainTab === categoryKey
-                        ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
+                        ? 'bg-gradient-to-r from-[#FF8A5B] to-[#FF6B35] text-white border-l-2 border-orange-300 shadow-md font-semibold'
                         : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                     }`}
                   >

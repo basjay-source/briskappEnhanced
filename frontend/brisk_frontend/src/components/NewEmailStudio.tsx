@@ -83,7 +83,7 @@ export default function NewEmailStudio() {
     { id: 'home', label: 'Home', color: 'bg-blue-600' },
     { id: 'insert', label: 'Insert', color: 'bg-green-600' },
     { id: 'format', label: 'Format', color: 'bg-purple-600' },
-    { id: 'templates', label: 'Templates', color: 'bg-orange-600' },
+    { id: 'templates', label: 'Templates', color: 'bg-[#FF6B35]' },
     { id: 'send', label: 'Send', color: 'bg-red-600' }
   ]
 
@@ -99,7 +99,7 @@ export default function NewEmailStudio() {
     { id: 'business-advisory', name: 'Business Advisory', category: 'Advisory' },
     { id: 'bookkeeping', name: 'Bookkeeping', category: 'Books' },
     { id: 'self-assessment', name: 'Self Assessment', category: 'Tax' },
-    { id: 'corporation-tax', name: 'Corporation Tax', category: 'Tax' },
+    { id: 'corporation-tax', name: 'Business Tax', category: 'Tax' },
     { id: 'audit', name: 'Audit Services', category: 'Audit' },
     { id: 'financial-planning', name: 'Financial Planning', category: 'Advisory' },
     { id: 'compliance', name: 'Compliance Services', category: 'Compliance' }
@@ -125,7 +125,7 @@ export default function NewEmailStudio() {
       variables: [
         { key: 'turnover', label: 'Turnover', description: 'Annual revenue/turnover' },
         { key: 'net_profit', label: 'Net Profit', description: 'Net profit after tax' },
-        { key: 'tax_payable', label: 'Tax Payable', description: 'Corporation tax liability' },
+        { key: 'tax_payable', label: 'Tax Payable', description: 'Business tax liability' },
         { key: 'profit_margin', label: 'Profit Margin', description: 'Net profit margin percentage' },
         { key: 'total_assets', label: 'Total Assets', description: 'Total company assets' },
         { key: 'total_liabilities', label: 'Total Liabilities', description: 'Total company liabilities' },
@@ -395,7 +395,7 @@ export default function NewEmailStudio() {
           {/* Header */}
           <div className="bg-white border-b p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Email Studio</h2>
+              <h2 className="text-xl font-bold text-gray-900">Email Studio</h2>
               <div className="flex gap-2">
                 <Button 
                   onClick={() => setIsComposing(true)}
@@ -516,7 +516,7 @@ export default function NewEmailStudio() {
 
                   {templateData && (
                     <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                      <h4 className="font-medium text-blue-900 mb-2">Preview with Client Data:</h4>
+                      <h4 className="font-bold text-blue-900 mb-2">Preview with Client Data:</h4>
                       <div className="text-sm text-blue-800">
                         <div><strong>Subject:</strong> {replaceTemplateVariables(composeData.subject)}</div>
                         <div className="mt-2"><strong>Body:</strong></div>
@@ -533,7 +533,7 @@ export default function NewEmailStudio() {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <Mail className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Email Studio</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Welcome to Email Studio</h3>
                 <p className="text-gray-600 mb-4">Advanced email management with client data integration</p>
                 <Button 
                   onClick={() => setIsComposing(true)}
@@ -548,16 +548,16 @@ export default function NewEmailStudio() {
         </div>
 
         {/* Right Sidebar - Template Variables */}
-        <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
+        <div className="w-80 bg-white border-l border-blue-900 flex flex-col">
           <div className="p-4 border-b">
-            <h3 className="font-semibold text-gray-900">Template Variables</h3>
+            <h3 className="font-bold text-gray-900">Template Variables</h3>
             <p className="text-sm text-gray-600">Click to insert into email</p>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {/* Service Templates */}
             <div className="p-4 border-b">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+              <h4 className="font-bold text-gray-900 mb-3 flex items-center">
                 <FileText className="h-4 w-4 mr-2" />
                 Service Templates
               </h4>
@@ -566,7 +566,7 @@ export default function NewEmailStudio() {
                   <button
                     key={template.id}
                     onClick={() => loadTemplate(template)}
-                    className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="w-full text-left p-2 rounded-lg border border-blue-900 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <div className="font-medium text-sm">{template.name}</div>
                     <div className="text-xs text-gray-500">{template.category}</div>
@@ -580,7 +580,7 @@ export default function NewEmailStudio() {
               const Icon = category.icon
               return (
                 <div key={category.category} className="p-4 border-b">
-                  <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                  <h4 className="font-bold text-gray-900 mb-3 flex items-center">
                     <Icon className="h-4 w-4 mr-2" />
                     {category.category}
                   </h4>
@@ -589,7 +589,7 @@ export default function NewEmailStudio() {
                       <button
                         key={variable.key}
                         onClick={() => insertVariable(variable.key)}
-                        className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                        className="w-full text-left p-2 rounded-lg border border-blue-900 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       >
                         <div className="font-medium text-sm">{variable.label}</div>
                         <div className="text-xs text-gray-500">{variable.description}</div>

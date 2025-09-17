@@ -108,7 +108,7 @@ export default function PracticeManagement() {
             value: inProgressJobs.toString(),
             change: 'Currently active',
             icon: Clock,
-            color: 'text-orange-600',
+            color: 'text-[#FF6B35]',
             drillDownData: {
               title: 'Jobs In Progress',
               description: 'All jobs currently being worked on',
@@ -601,7 +601,7 @@ export default function PracticeManagement() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold">{formatDate(new Date(deadline.date))}</p>
-                  <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-orange-600'}`}>
+                  <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-[#FF6B35]'}`}>
                     {deadline.days} days remaining
                   </p>
                 </div>
@@ -987,7 +987,7 @@ export default function PracticeManagement() {
                       onClick={() => handleMainTabClick(key)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                         isActive 
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                          ? 'bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                       }`}
                     >
@@ -1014,7 +1014,7 @@ export default function PracticeManagement() {
                               onClick={() => handleSubTabClick(subKey, key)}
                               className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                                 isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  ? 'bg-gradient-to-r from-[#FF8A5B] to-[#FF6B35] text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >

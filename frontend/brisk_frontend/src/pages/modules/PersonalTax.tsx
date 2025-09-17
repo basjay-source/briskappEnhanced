@@ -88,7 +88,7 @@ export default function PersonalTax() {
             value: Math.floor(kpiData.length * 0.3).toString(),
             change: '2 due this week',
             icon: AlertCircle,
-            color: 'text-orange-600'
+            color: 'text-[#FF6B35]'
           },
           {
             title: 'IHT Planning',
@@ -290,7 +290,7 @@ export default function PersonalTax() {
       case 'completed':
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'review':
-        return <AlertCircle className="h-4 w-4 text-orange-600" />
+        return <AlertCircle className="h-4 w-4 text-[#FF6B35]" />
       case 'in_progress':
         return <Clock className="h-4 w-4 text-blue-600" />
       default:
@@ -303,7 +303,7 @@ export default function PersonalTax() {
       case 'completed':
         return 'bg-green-100 text-green-800'
       case 'review':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-[#FFF4F0] text-[#C44B1C]'
       case 'in_progress':
         return 'bg-blue-100 text-blue-800'
       default:
@@ -687,7 +687,7 @@ export default function PersonalTax() {
                           <p className="font-medium text-sm">Payment on Account</p>
                           <p className="text-xs text-gray-600">8 clients affected</p>
                         </div>
-                        <Badge className="bg-orange-100 text-orange-800">14 days</Badge>
+                        <Badge className="bg-[#FFF4F0] text-[#C44B1C]">14 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
@@ -1162,7 +1162,7 @@ export default function PersonalTax() {
                           </Button>
                           <div className="p-3 bg-orange-50 rounded-lg">
                             <p className="text-sm font-medium text-orange-900">HICBC Charge</p>
-                            <p className="text-lg font-bold text-orange-600">£0</p>
+                            <p className="text-lg font-bold text-[#FF6B35]">£0</p>
                           </div>
                         </div>
                       </CardContent>
@@ -1260,7 +1260,7 @@ export default function PersonalTax() {
                     onClick={() => handleMainTabClick(key)}
                     className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                       activeMainTab === key 
-                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                        ? 'bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-md transform scale-[0.98] font-semibold' 
                         : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                     }`}
                   >
@@ -1283,7 +1283,7 @@ export default function PersonalTax() {
                           onClick={() => handleSubTabClick(subKey, key)}
                           className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
                             activeSubTab === subKey 
-                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                              ? 'bg-gradient-to-r from-[#FF8A5B] to-[#FF6B35] text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                               : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                           }`}
                         >

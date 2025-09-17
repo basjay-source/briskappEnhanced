@@ -46,7 +46,7 @@ export default function LandingPage() {
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link to="/app">
-              <Button style={{backgroundColor: '#FF6B35'}} className="hover:bg-orange-600 text-white">
+              <Button style={{backgroundColor: '#FF6B35'}} className="hover:bg-[#E55A2B] text-white">
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -67,7 +67,7 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link to="/app">
-              <Button size="lg" style={{backgroundColor: '#FF6B35'}} className="hover:bg-orange-600 text-white">
+              <Button size="lg" style={{backgroundColor: '#FF6B35'}} className="hover:bg-[#E55A2B] text-white">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

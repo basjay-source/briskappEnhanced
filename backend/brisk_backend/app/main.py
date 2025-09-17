@@ -5,9 +5,10 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import create_tables
-from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat, vat_enhanced, documents, docusinage, docusinage_enterprise
+from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat, vat_enhanced, documents, docusinage, docusinage_enterprise, audit
 from app.middleware.tenant import TenantMiddleware
 from app.middleware.auth import AuthMiddleware
+from app.middleware.audit import AuditMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +32,7 @@ app.add_middleware(
 
 app.add_middleware(TenantMiddleware)
 app.add_middleware(AuthMiddleware)
+app.add_middleware(AuditMiddleware)
 
 app.include_router(accounts.router, prefix="/api/v1/accounts", tags=["Accounts Production"])
 app.include_router(tax_ct.router, prefix="/api/v1/tax/ct", tags=["Business Tax"])
@@ -52,6 +54,7 @@ app.include_router(templates.router, prefix="/api/v1/templates", tags=["Template
 app.include_router(documents.router, prefix="/api/v1", tags=["Document Management"])
 app.include_router(docusinage.router, prefix="/api/v1", tags=["Docusinage Enterprise"])
 app.include_router(docusinage_enterprise.router, prefix="/api/v1", tags=["Docusinage Enterprise"])
+app.include_router(audit.router, prefix="/api/v1", tags=["Enterprise Audit Trail"])
 
 @app.get("/")
 def read_root():
