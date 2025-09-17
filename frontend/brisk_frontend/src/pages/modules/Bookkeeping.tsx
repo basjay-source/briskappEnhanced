@@ -1049,14 +1049,14 @@ export default function Bookkeeping() {
             placeholder="From date"
             value={reportsDateFrom}
             onChange={(e) => setReportsDateFrom(e.target.value)}
-            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700"
+            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-0 [&::-webkit-calendar-picker-indicator]:invert"
           />
           <Input
             type="date"
             placeholder="To date"
             value={reportsDateTo}
             onChange={(e) => setReportsDateTo(e.target.value)}
-            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700"
+            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-0 [&::-webkit-calendar-picker-indicator]:invert"
           />
         </div>
 
