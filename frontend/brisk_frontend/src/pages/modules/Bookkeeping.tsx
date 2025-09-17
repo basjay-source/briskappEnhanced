@@ -1049,12 +1049,14 @@ export default function Bookkeeping() {
             placeholder="From date"
             value={reportsDateFrom}
             onChange={(e) => setReportsDateFrom(e.target.value)}
+            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700"
           />
           <Input
             type="date"
             placeholder="To date"
             value={reportsDateTo}
             onChange={(e) => setReportsDateTo(e.target.value)}
+            className="bg-blue-900 text-white placeholder:text-gray-300 border-blue-800 focus:border-blue-700"
           />
         </div>
 
@@ -2732,10 +2734,10 @@ export default function Bookkeeping() {
                 <div key={item.id}>
                   <button
                     onClick={() => handleMainTabClick(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center justify-between px-3 py-2 m-0.5 rounded-lg text-left transition-all duration-200 shadow-sm ${
                       activeMainTab === item.id
-                        ? 'bg-[#FF6B35] text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-md transform scale-[0.98] font-semibold'
+                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                     }`}
                   >
                     <div className="flex items-center">
@@ -2755,10 +2757,10 @@ export default function Bookkeeping() {
                         <button
                           key={subTab.id}
                           onClick={() => handleSubTabClick(subTab.id)}
-                          className={`w-full px-3 py-2 rounded-lg text-left text-sm transition-colors ${
+                          className={`w-full px-3 py-2 m-0.5 rounded-lg text-left text-sm transition-all duration-200 shadow-sm ${
                             activeSubTab === subTab.id
-                              ? 'bg-[#FF6B35] text-white'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              ? 'bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-md transform scale-[0.98] font-semibold'
+                              : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                           }`}
                         >
                           {subTab.label}
