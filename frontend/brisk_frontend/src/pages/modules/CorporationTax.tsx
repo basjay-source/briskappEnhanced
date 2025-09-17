@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Calculator, 
   TrendingUp, 
@@ -17,6 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import { apiClient } from '@/lib/api'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -29,6 +30,44 @@ export default function CorporationTax() {
   const [selectedType, setSelectedType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [taxData, setTaxData] = useState<any>({})
+  const [rdClaims, setRdClaims] = useState<any[]>([])
+  const [aiRecommendations, setAiRecommendations] = useState<any[]>([])
+
+  useEffect(() => {
+    const loadCorporationTaxData = async () => {
+      try {
+        const taxReturns = await apiClient.getCorporationTaxReturns('default-company')
+        
+        const taxData = Array.isArray(taxReturns) && taxReturns.length > 0 ? {
+          profitBeforeTax: (taxReturns as any)[0]?.profit_before_tax || 0,
+          taxAdjustments: (taxReturns as any)[0]?.tax_adjustments || 0,
+          taxableProfit: (taxReturns as any)[0]?.taxable_profit || 0,
+          corporationTax: (taxReturns as any)[0]?.corporation_tax || 0,
+          rdRelief: (taxReturns as any)[0]?.rd_relief || 0,
+          optimizedTaxLiability: (taxReturns as any)[0]?.optimized_tax_liability || 0
+        } : {
+          profitBeforeTax: 0,
+          taxAdjustments: 0,
+          taxableProfit: 0,
+          corporationTax: 0,
+          rdRelief: 0,
+          optimizedTaxLiability: 0
+        }
+        
+        setTaxData(taxData)
+        setRdClaims([])
+        setAiRecommendations([])
+      } catch (error) {
+        console.error('Failed to load business tax data:', error)
+        setTaxData({})
+        setRdClaims([])
+        setAiRecommendations([])
+      }
+    }
+    
+    loadCorporationTaxData()
+  }, [])
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -65,78 +104,6 @@ export default function CorporationTax() {
     { label: 'Computations', value: 'computations' }
   ]
 
-  const taxData = {
-    profitBeforeTax: 125000,
-    adjustments: 8500,
-    taxableProfit: 133500,
-    corporationTax: 25365,
-    rdRelief: 15000,
-    optimizedTax: 22615
-  }
-
-  const rdClaims = [
-    {
-      project: 'AI Algorithm Development',
-      expenditure: 45000,
-      relief: 13500,
-      status: 'approved'
-    },
-    {
-      project: 'Green Energy Research',
-      expenditure: 32000,
-      relief: 9600,
-      status: 'pending'
-    },
-    {
-      project: 'Software Innovation',
-      expenditure: 28000,
-      relief: 8400,
-      status: 'draft'
-    }
-  ]
-
-  const aiRecommendations = [
-    {
-      type: 'savings',
-      title: 'R and D Relief Opportunity',
-      description: 'Additional £12,000 in qualifying expenditure identified for R and D claims.',
-      impact: '£3,600 tax saving',
-      confidence: 94,
-      action: 'Review software development costs for Q3-Q4'
-    },
-    {
-      type: 'timing',
-      title: 'Capital Allowances Timing',
-      description: 'Consider accelerating equipment purchases to maximize AIA relief.',
-      impact: '£4,200 potential saving',
-      confidence: 87,
-      action: 'Purchase planned equipment before year-end'
-    },
-    {
-      type: 'compliance',
-      title: 'Filing Deadline Alert',
-      description: 'CT600 due in 45 days. All supporting documentation ready.',
-      impact: 'Avoid penalties',
-      confidence: 99,
-      action: 'Schedule final review meeting'
-    },
-    {
-      type: 'optimization',
-      title: 'Group Relief Optimization',
-      description: 'Brisk Services Ltd losses can offset £85,000 of current year profits.',
-      impact: '£20,400 tax saving',
-      confidence: 92,
-      action: 'Submit group relief election'
-    },
-    {
-      type: 'planning',
-      title: 'Patent Box Eligibility',
-      description: 'Recent IP development may qualify for 10% patent box rate.',
-      impact: '£7,650 annual saving',
-      confidence: 78,
-      action: 'Assess patent application timeline'
-    }
-  ]
 
   const menuStructure = [
     {
@@ -272,8 +239,8 @@ export default function CorporationTax() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Corporation Tax Dashboard</h2>
-            <p className="text-gray-600 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
+            <h2 className="text-2xl font-bold text-gray-900">Business Tax Dashboard</h2>
+            <p className="text-gray-600 mt-2">CT600 computations, R&D claims, and business tax planning</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline">
@@ -303,25 +270,25 @@ export default function CorporationTax() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Profit Before Tax</label>
                   <div className="text-2xl font-bold text-green-600">
-                    £{taxData.profitBeforeTax.toLocaleString()}
+                    £{taxData?.profitBeforeTax?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
                   <div className="text-2xl font-bold text-blue-600">
-                    £{taxData.adjustments.toLocaleString()}
+                    £{taxData?.taxAdjustments?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
                   <div className="text-2xl font-bold text-gray-900">
-                    £{taxData.taxableProfit.toLocaleString()}
+                    £{taxData?.taxableProfit?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Corporation Tax</label>
+                  <label className="text-sm font-medium">Business Tax</label>
                   <div className="text-2xl font-bold text-red-600">
-                    £{taxData.corporationTax.toLocaleString()}
+                    £{taxData?.corporationTax?.toLocaleString() || '0'}
                   </div>
                 </div>
               </div>
@@ -330,13 +297,13 @@ export default function CorporationTax() {
                 <div className="flex items-center justify-between">
                   <span className="font-medium">R&D Relief Applied</span>
                   <span className="text-green-600 font-bold">
-                    -£{taxData.rdRelief.toLocaleString()}
+                    -£{taxData?.rdRelief?.toLocaleString() || '0'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2 pt-2 border-t">
                   <span className="font-bold">Optimized Tax Liability</span>
                   <span className="text-2xl font-bold text-brisk-primary">
-                    £{taxData.optimizedTax.toLocaleString()}
+                    £{taxData?.optimizedTaxLiability?.toLocaleString() || '0'}
                   </span>
                 </div>
               </div>
@@ -368,17 +335,17 @@ export default function CorporationTax() {
               {rdClaims.map((claim, index) => (
                 <div key={index} className="p-3 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{claim.project}</span>
+                    <span className="font-medium text-sm">{claim?.project || 'R&D Project'}</span>
                     <Badge variant={
-                      claim.status === 'approved' ? 'default' : 
-                      claim.status === 'pending' ? 'secondary' : 'outline'
+                      claim?.status === 'approved' ? 'default' : 
+                      claim?.status === 'pending' ? 'secondary' : 'outline'
                     }>
-                      {claim.status}
+                      {claim?.status || 'pending'}
                     </Badge>
                   </div>
                   <div className="text-xs text-gray-600 space-y-1">
-                    <div>Expenditure: £{claim.expenditure.toLocaleString()}</div>
-                    <div>Relief: £{claim.relief.toLocaleString()}</div>
+                    <div>Expenditure: £{claim?.expenditure?.toLocaleString() || '0'}</div>
+                    <div>Relief: £{claim?.relief?.toLocaleString() || '0'}</div>
                   </div>
                 </div>
               ))}
@@ -405,20 +372,20 @@ export default function CorporationTax() {
               <div key={index} className="p-4 border rounded-lg">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
-                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-blue-600" />}
-                    {rec.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
-                    {rec.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
-                    {rec.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
-                    <span className="font-medium">{rec.title}</span>
+                    {rec?.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
+                    {rec?.type === 'timing' && <Clock className="h-4 w-4 text-blue-600" />}
+                    {rec?.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
+                    {rec?.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
+                    {rec?.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
+                    <span className="font-medium">{rec?.title || 'Tax Recommendation'}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">{rec.confidence}% confidence</Badge>
-                    <Badge className="bg-green-100 text-green-800">{rec.impact}</Badge>
+                    <Badge variant="outline">{rec?.confidence || '85'}% confidence</Badge>
+                    <Badge className="bg-green-100 text-green-800">{rec?.impact || 'Medium'}</Badge>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{rec.description}</p>
-                <p className="text-xs font-medium text-brisk-primary">{rec.action}</p>
+                <p className="text-sm text-gray-600 mb-2">{rec?.description || 'Tax optimization recommendation'}</p>
+                <p className="text-xs font-medium text-brisk-primary">{rec?.action || 'Review with tax adviser'}</p>
               </div>
             ))}
           </CardContent>
@@ -426,15 +393,15 @@ export default function CorporationTax() {
 
         <div className="bg-white rounded-lg border p-6">
           <AIPromptSection
-            title="Corporation Tax AI Assistant"
-            description="Get expert corporation tax guidance and optimization strategies"
+            title="Business Tax Adviser"
+            description="Get expert business tax guidance and optimization strategies"
             placeholder="Ask about CT600 computations, R&D claims, tax planning strategies..."
             recentQuestions={[
-              "How can we optimize our corporation tax liability?",
+              "How can we optimize our business tax liability?",
               "What R&D expenditure qualifies for relief claims?",
               "When are quarterly instalment payments due?",
               "How can we optimize group relief structures?",
-              "What are the latest corporation tax rates and allowances?",
+              "What are the latest business tax rates and allowances?",
               "When should we consider quarterly instalment payments?",
               "How can we maximize capital allowances claims?"
             ]}
@@ -452,7 +419,7 @@ export default function CorporationTax() {
         <h2 className="text-2xl font-bold">CT600 Computation</h2>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">CT600 Computation</h3>
+            <h3 className="text-lg font-bold">CT600 Computation</h3>
           </div>
           
           <SearchFilterHeader
@@ -497,25 +464,25 @@ export default function CorporationTax() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Profit Before Tax</label>
                   <div className="text-2xl font-bold text-green-600">
-                    £{taxData.profitBeforeTax.toLocaleString()}
+                    £{taxData?.profitBeforeTax?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
                   <div className="text-2xl font-bold text-blue-600">
-                    £{taxData.adjustments.toLocaleString()}
+                    £{taxData?.taxAdjustments?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
                   <div className="text-2xl font-bold text-gray-900">
-                    £{taxData.taxableProfit.toLocaleString()}
+                    £{taxData?.taxableProfit?.toLocaleString() || '0'}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Corporation Tax</label>
+                  <label className="text-sm font-medium">Business Tax</label>
                   <div className="text-2xl font-bold text-red-600">
-                    £{taxData.corporationTax.toLocaleString()}
+                    £{taxData?.corporationTax?.toLocaleString() || '0'}
                   </div>
                 </div>
               </div>
@@ -530,7 +497,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Tax Adjustments</h2>
-        <p className="text-gray-600">Manage corporation tax adjustments and corrections</p>
+        <p className="text-gray-600">Manage business tax adjustments and corrections</p>
       </div>
     )
   }
@@ -559,7 +526,7 @@ export default function CorporationTax() {
         <h2 className="text-2xl font-bold">R&D Claims</h2>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">R&D Claims Management</h3>
+            <h3 className="text-lg font-bold">R&D Claims Management</h3>
           </div>
           
           <SearchFilterHeader
@@ -594,17 +561,17 @@ export default function CorporationTax() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold">{claim.project}</h3>
+                      <h3 className="font-bold">{claim?.project || 'R&D Project'}</h3>
                       <p className="text-sm text-gray-600">
-                        Expenditure: £{claim.expenditure.toLocaleString()} | 
-                        Relief: £{claim.relief.toLocaleString()}
+                        Expenditure: £{claim?.expenditure?.toLocaleString() || '0'} | 
+                        Relief: £{claim?.relief?.toLocaleString() || '0'}
                       </p>
                     </div>
                     <Badge variant={
-                      claim.status === 'approved' ? 'default' : 
-                      claim.status === 'pending' ? 'secondary' : 'outline'
+                      claim?.status === 'approved' ? 'default' : 
+                      claim?.status === 'pending' ? 'secondary' : 'outline'
                     }>
-                      {claim.status}
+                      {claim?.status || 'pending'}
                     </Badge>
                   </div>
                 </CardContent>
@@ -620,7 +587,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Reliefs & Credits</h2>
-        <p className="text-gray-600">Manage corporation tax reliefs and credits</p>
+        <p className="text-gray-600">Manage business tax reliefs and credits</p>
       </div>
     )
   }
@@ -654,9 +621,9 @@ export default function CorporationTax() {
 
   return (
     <div className="flex h-screen bg-blue-50">
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-lg font-semibold text-gray-900">Corporation Tax</h1>
+      <div className="w-64 bg-white border-r border-blue-900 flex flex-col">
+        <div className="p-4 border-b border-blue-900">
+          <h1 className="text-lg font-bold text-gray-900">Business Tax</h1>
           <p className="text-sm text-gray-600">CT600 & R&D Claims</p>
         </div>
         

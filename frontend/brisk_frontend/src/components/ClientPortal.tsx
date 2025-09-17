@@ -74,7 +74,7 @@ export default function ClientPortal() {
         <div className="flex items-center gap-2">
           <User className="h-8 w-8 text-gray-400" />
           <div className="text-right">
-            <p className="font-medium">ABC Manufacturing Ltd</p>
+            <p className="font-bold">ABC Manufacturing Ltd</p>
             <p className="text-sm text-gray-600">Client ID: CLI001</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function ClientPortal() {
                 {jobs.map((job) => (
                   <div key={job.id} className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{job.title}</h4>
+                      <h4 className="font-bold">{job.title}</h4>
                       <Badge className={
                         job.status === 'completed' ? 'bg-green-100 text-green-800' :
                         job.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
@@ -127,7 +127,7 @@ export default function ClientPortal() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="border-2 border-dashed border-blue-900 rounded-lg p-6 text-center">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Drag and drop files here or click to browse</p>
                   <Button variant="outline" className="mt-2">
@@ -141,7 +141,7 @@ export default function ClientPortal() {
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-gray-400" />
                         <div>
-                          <p className="font-medium text-sm">{doc.name}</p>
+                          <p className="font-bold text-sm">{doc.name}</p>
                           <p className="text-xs text-gray-600">{doc.type} • {doc.uploadDate}</p>
                         </div>
                       </div>
@@ -177,7 +177,7 @@ export default function ClientPortal() {
                     msg.type === 'sent' ? 'bg-brisk-primary-50 ml-4' : 'bg-gray-50 mr-4'
                   }`}>
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-sm">{msg.from}</p>
+                      <p className="font-bold text-sm">{msg.from}</p>
                       <p className="text-xs text-gray-500">{msg.timestamp}</p>
                     </div>
                     <p className="text-sm">{msg.message}</p>

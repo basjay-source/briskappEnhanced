@@ -1,0 +1,171 @@
+name: brisk-practice-suite
+region: nyc
+
+services:
+  - name: brisk-api
+    source_dir: /backend/brisk_backend
+    github:
+      repo: basjay-source/briskappEnhanced
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: backend/brisk_backend/Dockerfile
+    build_command: |
+      cd backend/brisk_backend &&
+      poetry config virtualenvs.create false &&
+      poetry install --no-dev --no-interaction --no-ansi
+    run_command: poetry run uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2
+    environment_slug: python
+    instance_count: 2
+    instance_size_slug: basic-s
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: REDIS_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: SECRET_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: OPENAI_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: ENVIRONMENT
+        value: production
+        scope: RUN_AND_BUILD_TIME
+      - key: LOG_LEVEL
+        value: INFO
+        scope: RUN_AND_BUILD_TIME
+      - key: CORS_ORIGINS
+        value: ${brisk-web.PUBLIC_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: ALLOWED_HOSTS
+        value: ${_self.PUBLIC_URL}
+        scope: RUN_AND_BUILD_TIME
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    http_port: 8000
+    routes:
+      - path: /api
+      - path: /docs
+      - path: /health
+
+  - name: brisk-web
+    source_dir: /frontend/brisk_frontend
+    github:
+      repo: basjay-source/briskappEnhanced
+      branch: main
+      deploy_on_push: true
+    build_command: |
+      npm ci &&
+      npm run build
+    run_command: npm run preview -- --host 0.0.0.0 --port $PORT
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: VITE_API_URL
+        value: ${brisk-api.PUBLIC_URL}
+        scope: BUILD_TIME
+      - key: NODE_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+      - key: VITE_APP_NAME
+        value: "Brisk Practice Suite"
+        scope: BUILD_TIME
+      - key: VITE_APP_VERSION
+        value: "1.0.0"
+        scope: BUILD_TIME
+    http_port: 4173
+    routes:
+      - path: /
+    static_sites:
+      - name: assets
+        source_dir: /dist/assets
+        catchall_document: index.html
+
+databases:
+  - name: brisk-postgres
+    engine: PG
+    version: "15"
+    size: basic-xs
+    num_nodes: 1
+    production: false
+
+  - name: brisk-redis
+    engine: REDIS
+    version: "7"
+    size: basic-xxs
+    num_nodes: 1
+
+jobs:
+  - name: db-migrate
+    source_dir: /backend/brisk_backend
+    github:
+      repo: basjay-source/briskappEnhanced
+      branch: main
+    run_command: |
+      poetry config virtualenvs.create false &&
+      poetry install --no-dev --no-interaction --no-ansi &&
+      poetry run alembic upgrade head
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    kind: PRE_DEPLOY
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+      - key: ENVIRONMENT
+        value: production
+        scope: RUN_TIME
+
+  - name: seed-data
+    source_dir: /backend/brisk_backend
+    github:
+      repo: basjay-source/briskappEnhanced
+      branch: main
+    run_command: |
+      poetry config virtualenvs.create false &&
+      poetry install --no-dev --no-interaction --no-ansi &&
+      poetry run python -c "
+      from app.database import engine, Base
+      from app.models import *
+      Base.metadata.create_all(bind=engine)
+      print('Database tables created successfully')
+      "
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    kind: PRE_DEPLOY
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+      - key: ENVIRONMENT
+        value: production
+        scope: RUN_TIME
+
+alerts:
+  - rule: CPU_UTILIZATION
+    disabled: false
+    value: 80
+    operator: GREATER_THAN
+    window: FIVE_MINUTES
+    
+  - rule: MEM_UTILIZATION
+    disabled: false
+    value: 85
+    operator: GREATER_THAN
+    window: FIVE_MINUTES
+
+  - rule: RESTART_COUNT
+    disabled: false
+    value: 5
+    operator: GREATER_THAN
+    window: FIVE_MINUTES

@@ -291,3 +291,118 @@ def get_client_template_data(
         "practice_name": "Brisk Accountants",
         "signature": "Best regards,\n\nBrisk Accountants\nChartered Accountants & Business Advisors\nPhone: +44 20 1234 5678\nEmail: info@briskaccountants.com\nWeb: www.briskaccountants.com"
     }
+
+@router.post("/send-invoice")
+def send_invoice_email(
+    invoice_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Send invoice email with tracking and payment link"""
+    import secrets
+    
+    tracking_token = secrets.token_urlsafe(32)
+    payment_link_url = f"https://payments.briskaccountants.com/pay/{invoice_data['invoice_id']}?token={tracking_token}"
+    
+    from app.models.accounts import InvoiceTracking
+    tracking = InvoiceTracking(
+        tenant_id=request.state.tenant_id,
+        invoice_id=invoice_data['invoice_id'],
+        email_sent_at=datetime.now(),
+        tracking_token=tracking_token,
+        payment_link_url=payment_link_url,
+        email_recipient=invoice_data['recipient_email']
+    )
+    
+    db.add(tracking)
+    db.commit()
+    
+    return {
+        "message": "Invoice email sent successfully",
+        "tracking_token": tracking_token,
+        "payment_link": payment_link_url,
+        "email_sent_at": tracking.email_sent_at.isoformat()
+    }
+
+@router.get("/track/{tracking_token}")
+def track_email_open(
+    tracking_token: str,
+    db: Session = Depends(get_db)
+):
+    """Track email open with 1x1 pixel"""
+    from app.models.accounts import InvoiceTracking
+    
+    tracking = db.query(InvoiceTracking).filter(
+        InvoiceTracking.tracking_token == tracking_token
+    ).first()
+    
+    if tracking and not tracking.email_opened_at:
+        tracking.email_opened_at = datetime.now()
+        db.commit()
+    
+    from fastapi.responses import Response
+    pixel_data = b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x21\xF9\x04\x01\x00\x00\x00\x00\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x04\x01\x00\x3B'
+    return Response(content=pixel_data, media_type="image/gif")
+
+@router.post("/payment-link-clicked/{tracking_token}")
+def track_payment_link_click(
+    tracking_token: str,
+    db: Session = Depends(get_db)
+):
+    """Track payment link click"""
+    from app.models.accounts import InvoiceTracking
+    
+    tracking = db.query(InvoiceTracking).filter(
+        InvoiceTracking.tracking_token == tracking_token
+    ).first()
+    
+    if tracking and not tracking.payment_link_clicked_at:
+        tracking.payment_link_clicked_at = datetime.now()
+        db.commit()
+    
+    return {
+        "message": "Payment link click tracked",
+        "redirect_url": tracking.payment_link_url if tracking else None
+    }
+
+@router.get("/invoice-tracking/{invoice_id}")
+def get_invoice_tracking(
+    invoice_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get tracking status for invoice"""
+    from app.models.accounts import InvoiceTracking
+    
+    tracking = db.query(InvoiceTracking).filter(
+        InvoiceTracking.tenant_id == request.state.tenant_id,
+        InvoiceTracking.invoice_id == invoice_id
+    ).first()
+    
+    if not tracking:
+        return {
+            "invoice_id": invoice_id,
+            "status": "not_sent",
+            "tracking_data": None
+        }
+    
+    status = "sent"
+    if tracking.payment_completed_at:
+        status = "paid"
+    elif tracking.payment_link_clicked_at:
+        status = "payment_link_clicked"
+    elif tracking.email_opened_at:
+        status = "opened"
+    
+    return {
+        "invoice_id": invoice_id,
+        "status": status,
+        "tracking_data": {
+            "email_sent_at": tracking.email_sent_at.isoformat() if tracking.email_sent_at else None,
+            "email_opened_at": tracking.email_opened_at.isoformat() if tracking.email_opened_at else None,
+            "payment_link_clicked_at": tracking.payment_link_clicked_at.isoformat() if tracking.payment_link_clicked_at else None,
+            "payment_completed_at": tracking.payment_completed_at.isoformat() if tracking.payment_completed_at else None,
+            "email_recipient": tracking.email_recipient,
+            "payment_link_url": tracking.payment_link_url
+        }
+    }

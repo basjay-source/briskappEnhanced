@@ -374,3 +374,252 @@ def get_vat_audit_trail(
     ).order_by(AuditLog.created_at.desc()).offset(offset).limit(limit).all()
     
     return {"audit_trail": audit_logs}
+
+international_vat_rates = [
+    {
+        "country": "United Kingdom",
+        "countryCode": "GB",
+        "standardRate": 20,
+        "reducedRates": [5],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Postal services"],
+        "currency": "GBP",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "1973-04-01"
+    },
+    {
+        "country": "Germany",
+        "countryCode": "DE", 
+        "standardRate": 19,
+        "reducedRates": [7],
+        "zeroRate": False,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Cultural services"],
+        "currency": "EUR",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2007-01-01"
+    },
+    {
+        "country": "France",
+        "countryCode": "FR",
+        "standardRate": 20,
+        "reducedRates": [5.5, 10],
+        "zeroRate": False,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Cultural activities"],
+        "currency": "EUR",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2014-01-01"
+    },
+    {
+        "country": "Spain",
+        "countryCode": "ES",
+        "standardRate": 21,
+        "reducedRates": [4, 10],
+        "zeroRate": False,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Cultural services"],
+        "currency": "EUR",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2012-09-01"
+    },
+    {
+        "country": "Italy",
+        "countryCode": "IT",
+        "standardRate": 22,
+        "reducedRates": [4, 5, 10],
+        "zeroRate": False,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Cultural activities"],
+        "currency": "EUR",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2013-10-01"
+    },
+    {
+        "country": "Netherlands",
+        "countryCode": "NL",
+        "standardRate": 21,
+        "reducedRates": [9],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Books"],
+        "currency": "EUR",
+        "region": "Europe",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2012-10-01"
+    },
+    {
+        "country": "United States",
+        "countryCode": "US",
+        "standardRate": 0,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["No federal VAT/GST - state sales taxes apply"],
+        "currency": "USD",
+        "region": "North America",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "N/A"
+    },
+    {
+        "country": "Canada",
+        "countryCode": "CA",
+        "standardRate": 5,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic groceries"],
+        "currency": "CAD",
+        "region": "North America",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "1991-01-01"
+    },
+    {
+        "country": "Australia",
+        "countryCode": "AU",
+        "standardRate": 10,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic food"],
+        "currency": "AUD",
+        "region": "Asia Pacific",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2000-07-01"
+    },
+    {
+        "country": "Japan",
+        "countryCode": "JP",
+        "standardRate": 10,
+        "reducedRates": [8],
+        "zeroRate": False,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Social welfare"],
+        "currency": "JPY",
+        "region": "Asia Pacific",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2019-10-01"
+    },
+    {
+        "country": "Singapore",
+        "countryCode": "SG",
+        "standardRate": 9,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic food"],
+        "currency": "SGD",
+        "region": "Asia Pacific",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2023-01-01"
+    },
+    {
+        "country": "China",
+        "countryCode": "CN",
+        "standardRate": 13,
+        "reducedRates": [6, 9],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Agricultural products"],
+        "currency": "CNY",
+        "region": "Asia Pacific",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2019-04-01"
+    },
+    {
+        "country": "India",
+        "countryCode": "IN",
+        "standardRate": 18,
+        "reducedRates": [5, 12],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic food"],
+        "currency": "INR",
+        "region": "Asia Pacific",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2017-07-01"
+    },
+    {
+        "country": "Brazil",
+        "countryCode": "BR",
+        "standardRate": 17,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic food"],
+        "currency": "BRL",
+        "region": "South America",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "2008-01-01"
+    },
+    {
+        "country": "South Africa",
+        "countryCode": "ZA",
+        "standardRate": 15,
+        "reducedRates": [],
+        "zeroRate": True,
+        "exemptions": ["Financial services", "Insurance", "Education", "Healthcare", "Basic food"],
+        "currency": "ZAR",
+        "region": "Africa",
+        "lastUpdated": "2024-01-01",
+        "effectiveDate": "1991-09-30"
+    }
+]
+
+@router.get("/international-rates")
+def get_international_vat_rates(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get all international VAT rates"""
+    return international_vat_rates
+
+@router.get("/international-rates/{country_code}")
+def get_vat_rate_by_country(
+    country_code: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get VAT rate for specific country"""
+    rate = next((r for r in international_vat_rates if r["countryCode"] == country_code.upper()), None)
+    if not rate:
+        raise HTTPException(status_code=404, detail="VAT rate not found for country")
+    return rate
+
+@router.put("/international-rates/{country_code}")
+def update_vat_rate(
+    country_code: str,
+    rate_data: dict,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update VAT rate for specific country"""
+    for i, rate in enumerate(international_vat_rates):
+        if rate["countryCode"] == country_code.upper():
+            international_vat_rates[i].update(rate_data)
+            international_vat_rates[i]["lastUpdated"] = "2024-12-16"
+            return international_vat_rates[i]
+    
+    raise HTTPException(status_code=404, detail="VAT rate not found for country")
+
+@router.get("/international-rates/export")
+def export_vat_rates(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Export international VAT rates as CSV"""
+    import csv
+    import io
+    from fastapi.responses import StreamingResponse
+    
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=[
+        'country', 'countryCode', 'standardRate', 'reducedRates', 
+        'zeroRate', 'currency', 'region', 'lastUpdated', 'effectiveDate'
+    ])
+    
+    writer.writeheader()
+    for rate in international_vat_rates:
+        row = rate.copy()
+        row['reducedRates'] = ', '.join(map(str, rate['reducedRates']))
+        row['exemptions'] = '; '.join(rate['exemptions'])
+        writer.writerow(row)
+    
+    output.seek(0)
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode()),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=international_vat_rates.csv"}
+    )

@@ -62,8 +62,8 @@ export default function ClientPortalAdvanced({
     },
     {
       id: "job-3",
-      title: "Corporation Tax Return 2024", 
-      type: "Corporation Tax",
+      title: "Business Tax Return 2024", 
+      type: "Business Tax",
       status: "pending",
       progress: 25,
       dueDate: "2024-04-30",
@@ -79,7 +79,7 @@ export default function ClientPortalAdvanced({
     switch (status) {
       case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'in_progress': return <Clock className="h-4 w-4 text-blue-600" />
-      case 'pending': return <AlertTriangle className="h-4 w-4 text-orange-600" />
+      case 'pending': return <AlertTriangle className="h-4 w-4 text-[#FF6B35]" />
       default: return <Clock className="h-4 w-4 text-gray-600" />
     }
   }
@@ -88,7 +88,7 @@ export default function ClientPortalAdvanced({
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800'
       case 'in_progress': return 'bg-blue-100 text-blue-800'
-      case 'pending': return 'bg-orange-100 text-orange-800'
+      case 'pending': return 'bg-[#FFF4F0] text-[#C44B1C]'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -113,7 +113,7 @@ export default function ClientPortalAdvanced({
                   {whiteLabel.companyName.charAt(0)}
                 </div>
               )}
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900">
                 {whiteLabel.companyName} Client Portal
               </h1>
             </div>
@@ -146,7 +146,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Active Jobs</p>
+                      <p className="text-sm font-bold text-gray-600">Active Jobs</p>
                       <p className="text-2xl font-bold">2</p>
                       <p className="text-xs text-blue-600">1 due this month</p>
                     </div>
@@ -159,7 +159,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Completed</p>
+                      <p className="text-sm font-bold text-gray-600">Completed</p>
                       <p className="text-2xl font-bold">1</p>
                       <p className="text-xs text-green-600">This quarter</p>
                     </div>
@@ -172,7 +172,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Documents</p>
+                      <p className="text-sm font-bold text-gray-600">Documents</p>
                       <p className="text-2xl font-bold">3</p>
                       <p className="text-xs text-gray-600">Ready for review</p>
                     </div>
@@ -185,11 +185,11 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Messages</p>
+                      <p className="text-sm font-bold text-gray-600">Messages</p>
                       <p className="text-2xl font-bold">2</p>
-                      <p className="text-xs text-orange-600">Unread</p>
+                      <p className="text-xs text-[#FF6B35]">Unread</p>
                     </div>
-                    <MessageSquare className="h-8 w-8 text-orange-600" />
+                    <MessageSquare className="h-8 w-8 text-[#FF6B35]" />
                   </div>
                 </CardContent>
               </Card>
@@ -208,7 +208,7 @@ export default function ClientPortalAdvanced({
                         <div key={job.id} className="flex items-center gap-4 p-4 border rounded-lg">
                           {getStatusIcon(job.status)}
                           <div className="flex-1">
-                            <h4 className="font-medium">{job.title}</h4>
+                            <h4 className="font-bold">{job.title}</h4>
                             <p className="text-sm text-gray-600">{job.type}</p>
                             <div className="flex items-center gap-2 mt-2">
                               <Progress value={job.progress} className="flex-1 h-2" />
@@ -270,7 +270,7 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-center gap-3">
                           {getStatusIcon(job.status)}
                           <div>
-                            <h3 className="font-semibold">{job.title}</h3>
+                            <h3 className="font-bold">{job.title}</h3>
                             <p className="text-sm text-gray-600">{job.type}</p>
                           </div>
                         </div>
@@ -281,21 +281,21 @@ export default function ClientPortalAdvanced({
 
                       <div className="grid gap-4 md:grid-cols-2 mb-4">
                         <div>
-                          <p className="text-sm font-medium text-gray-600">Progress</p>
+                          <p className="text-sm font-bold text-gray-600">Progress</p>
                           <div className="flex items-center gap-2 mt-1">
                             <Progress value={job.progress} className="flex-1" />
                             <span className="text-sm text-gray-600">{job.progress}%</span>
                           </div>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-600">Due Date</p>
+                          <p className="text-sm font-bold text-gray-600">Due Date</p>
                           <p className="text-sm mt-1">{job.dueDate}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <p className="text-sm text-gray-600">
-                          Assigned to: <span className="font-medium">{job.assignedTo}</span>
+                          Assigned to: <span className="font-bold">{job.assignedTo}</span>
                         </p>
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline">
@@ -329,7 +329,7 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-center gap-3">
                           <FileText className="h-8 w-8 text-blue-600" />
                           <div>
-                            <h4 className="font-medium">{doc.name}</h4>
+                            <h4 className="font-bold">{doc.name}</h4>
                             <p className="text-sm text-gray-600">
                               {job.title} • {doc.size} • {doc.uploaded}
                             </p>
@@ -367,7 +367,7 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4 text-gray-600" />
-                            <span className="font-medium">{message.from}</span>
+                            <span className="font-bold">{message.from}</span>
                           </div>
                           <span className="text-xs text-gray-500">{message.time}</span>
                         </div>

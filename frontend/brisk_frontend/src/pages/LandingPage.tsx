@@ -29,24 +29,24 @@ export default function LandingPage() {
   ]
 
   const modules = [
-    "Accounts Production", "Corporation Tax", "Personal Tax", "Payroll",
-    "AML/KYC", "Company Secretarial", "Bookkeeping", "e-Signature"
+    "Practice Management", "Time Management", "Accounts Production", "Business Tax", 
+    "Personal Tax", "Payroll", "Charity/Academy Accounts", "AML/KYC", 
+    "Company Secretarial", "Bookkeeping", "e-Signature"
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brisk-primary-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <header className="container mx-auto px-6 py-8">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <BriskLogo className="h-10 w-10" animated />
-            <span className="text-2xl font-bold text-brisk-primary">Brisk Practice Suite</span>
+            <BriskLogo className="h-12 w-12" animated showText={false} />
           </div>
           <div className="flex items-center gap-4">
             <Link to="/login">
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link to="/app">
-              <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+              <Button style={{backgroundColor: '#FF6B35'}} className="hover:bg-[#E55A2B] text-white">
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -57,9 +57,9 @@ export default function LandingPage() {
 
       <main className="container mx-auto px-6">
         <section className="text-center py-20">
-          <h1 className="text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-6xl font-bold mb-6 text-gray-900">
             All-in-one accounting software
-            <span className="text-brisk-primary"> with AI assistants</span>
+            <span style={{color: '#FF6B35'}}> with Intelligent Assistant</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Cloud-native, multilingual, ultra-fast platform for accounting firms and businesses. 
@@ -67,7 +67,7 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link to="/app">
-              <Button size="lg" className="bg-brisk-primary hover:bg-brisk-primary-600">
+              <Button size="lg" style={{backgroundColor: '#FF6B35'}} className="hover:bg-[#E55A2B] text-white">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -86,7 +86,7 @@ export default function LandingPage() {
               return (
                 <Card key={index} className="text-center">
                   <CardHeader>
-                    <Icon className="h-12 w-12 text-brisk-primary mx-auto mb-4" />
+                    <Icon className="h-12 w-12 mx-auto mb-4" style={{color: '#FF6B35'}} />
                     <CardTitle>{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -105,22 +105,22 @@ export default function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {modules.map((module, index) => (
-              <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border">
-                <CheckCircle className="h-5 w-5 text-brisk-accent" />
-                <span className="font-medium">{module}</span>
+              <div key={index} className="flex items-center gap-3 p-4 bg-blue-600 rounded-lg shadow-sm border">
+                <CheckCircle className="h-5 w-5 text-white" />
+                <span className="font-bold text-white">{module}</span>
               </div>
             ))}
           </div>
         </section>
 
         <section className="py-20 text-center">
-          <div className="bg-brisk-primary rounded-2xl p-12 text-white">
+          <div className="rounded-2xl p-12 text-white" style={{backgroundColor: '#FF6B35'}}>
             <h2 className="text-4xl font-bold mb-4">Ready to transform your practice?</h2>
             <p className="text-xl mb-8 opacity-90">
               Join thousands of accounting professionals using Brisk Practice Suite
             </p>
             <Link to="/app">
-              <Button size="lg" variant="secondary" className="bg-white text-brisk-primary hover:bg-gray-100">
+              <Button size="lg" variant="secondary" className="bg-white hover:bg-gray-100" style={{color: '#FF6B35'}}>
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -132,7 +132,7 @@ export default function LandingPage() {
       <footer className="container mx-auto px-6 py-12 border-t">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <BriskLogo className="h-8 w-8" showText={true} />
+            <BriskLogo className="h-8 w-8" showText={false} />
           </div>
           <p className="text-gray-600">© 2024 Brisk Accountants Ltd. All rights reserved.</p>
         </div>

@@ -13,14 +13,17 @@ import {
 import { useTheme } from '@/components/theme-provider'
 import { useState, useEffect } from 'react'
 import { useResponsive } from '@/hooks/use-responsive'
+import { useTranslation } from 'react-i18next'
 import { apiClient } from '@/lib/api'
 import BriskLogo from '@/components/BriskLogo'
 import ModuleNavigation from '@/components/ModuleNavigation'
 import MobileNavigation from '@/components/MobileNavigation'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export default function AppShell() {
   const { theme, setTheme } = useTheme()
   const { isMobile } = useResponsive()
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Array<{
     id: string;
@@ -81,10 +84,11 @@ export default function AppShell() {
             <BriskLogo className="h-6 w-6" showText={false} />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
+            <LanguageSwitcher />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <Search className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <Bell className="h-4 w-4" />
             </Button>
           </div>
@@ -101,8 +105,8 @@ export default function AppShell() {
       <div className="flex h-screen bg-background">
         <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border p-4">
-          <div className="flex items-center gap-2">
-            <BriskLogo className="h-8 w-8" showText={true} />
+          <div className="flex items-center justify-center w-full mt-2.5">
+            <BriskLogo className="w-full h-7" showText={false} />
           </div>
         </SidebarHeader>
         
@@ -116,9 +120,9 @@ export default function AppShell() {
           <div className="flex items-center gap-4">
             <SidebarTrigger />
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900" />
               <Input
-                placeholder="Search across all modules... (⌘K)"
+                placeholder={t('common.searchPlaceholder', 'Search across all modules... (⌘K)')}
                 className="w-96 pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -126,9 +130,9 @@ export default function AppShell() {
               />
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-blue-900 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
-                    <span className="text-sm font-medium">Search Results</span>
+                    <span className="text-sm font-bold">{t('common.searchResults', 'Search Results')}</span>
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -139,7 +143,7 @@ export default function AppShell() {
                   </div>
                   
                   {searchLoading ? (
-                    <div className="p-4 text-center text-gray-500">Searching...</div>
+                    <div className="p-4 text-center text-black">{t('common.searching', 'Searching...')}</div>
                   ) : searchResults.length > 0 ? (
                     <div className="max-h-80 overflow-y-auto">
                       {searchResults.map((result, index) => (
@@ -149,10 +153,10 @@ export default function AppShell() {
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium text-sm">
+                              <p className="font-bold text-sm text-black">
                                 {result.title || result.name || result.statement_type}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-black">
                                 {result.module} • {result.type}
                               </p>
                             </div>
@@ -161,7 +165,7 @@ export default function AppShell() {
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-gray-500">No results found</div>
+                    <div className="p-4 text-center text-black">{t('common.noResults', 'No results found')}</div>
                   )}
                 </div>
               )}
@@ -169,20 +173,22 @@ export default function AppShell() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
+            <LanguageSwitcher />
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <Bell className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <HelpCircle className="h-4 w-4" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon"
+              className="!text-blue-900 hover:!text-blue-900"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
               <Settings className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="!text-blue-900 hover:!text-blue-900">
               <User className="h-4 w-4" />
             </Button>
           </div>

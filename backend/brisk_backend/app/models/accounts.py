@@ -72,3 +72,103 @@ class ConsolidationRule(Base):
     target_account = Column(String)
     elimination_percentage = Column(Numeric(5, 2), default=100)
     is_active = Column(Boolean, default=True)
+
+class RecurringTransaction(Base):
+    __tablename__ = "recurring_transactions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    template_name = Column(String, nullable=False)
+    transaction_type = Column(String, nullable=False)  # sale, purchase
+    frequency = Column(String, nullable=False)  # monthly, quarterly, annually
+    next_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    amount = Column(Numeric(15, 2), nullable=False)
+    description = Column(Text, nullable=False)
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    customer_id = Column(String, ForeignKey("clients.id"))
+    supplier_id = Column(String, ForeignKey("clients.id"))
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class AccrualPrepayment(Base):
+    __tablename__ = "accrual_prepayments"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    type = Column(String, nullable=False)  # accrual, prepayment
+    description = Column(Text, nullable=False)
+    total_amount = Column(Numeric(15, 2), nullable=False)
+    remaining_amount = Column(Numeric(15, 2), nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    frequency = Column(String, default="monthly")  # monthly, quarterly
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    original_journal_entry_id = Column(String, ForeignKey("journal_entries.id"))
+    is_reversed = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class InvoiceTracking(Base):
+    __tablename__ = "invoice_tracking"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    invoice_id = Column(String, nullable=False)
+    email_sent_at = Column(DateTime(timezone=True))
+    email_opened_at = Column(DateTime(timezone=True))
+    payment_link_clicked_at = Column(DateTime(timezone=True))
+    payment_completed_at = Column(DateTime(timezone=True))
+    tracking_token = Column(String, unique=True)
+    payment_link_url = Column(String)
+    email_recipient = Column(String)
+
+class TransactionCategorizationRule(Base):
+    __tablename__ = "transaction_categorization_rules"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    rule_name = Column(String, nullable=False)
+    rule_type = Column(String, nullable=False)
+    pattern = Column(String, nullable=False)
+    target_category = Column(String, nullable=False)
+    target_account_id = Column(String, ForeignKey("ledger_accounts.id"))
+    priority = Column(Integer, default=100)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class TransactionCategorization(Base):
+    __tablename__ = "transaction_categorizations"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    journal_entry_id = Column(String, ForeignKey("journal_entries.id"), nullable=False)
+    category = Column(String, nullable=False)
+    account_id = Column(String, ForeignKey("ledger_accounts.id"))
+    rule_id = Column(String, ForeignKey("transaction_categorization_rules.id"))
+    is_manual_override = Column(Boolean, default=False)
+    categorized_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class FixedAsset(Base):
+    __tablename__ = "fixed_assets"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    asset_name = Column(String, nullable=False)
+    asset_category = Column(String, nullable=False)
+    acquisition_date = Column(Date, nullable=False)
+    acquisition_cost = Column(Numeric(15, 2), nullable=False)
+    depreciation_method = Column(String, nullable=False)
+    depreciation_rate = Column(Numeric(5, 2), nullable=False)
+    useful_life_years = Column(Integer, nullable=False)
+    depreciation_start_basis = Column(String, default="acquisition_date")
+    accumulated_depreciation = Column(Numeric(15, 2), default=0)
+    current_book_value = Column(Numeric(15, 2), nullable=False)
+    disposal_date = Column(Date)
+    disposal_proceeds = Column(Numeric(15, 2))
+    account_id = Column(String, ForeignKey("ledger_accounts.id"), nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

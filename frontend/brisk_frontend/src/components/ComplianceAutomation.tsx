@@ -65,7 +65,7 @@ export default function ComplianceAutomation() {
     status: 'active',
     services: [
       { name: 'VAT Returns', enabled: true, lastUpdate: '2024-02-10' },
-      { name: 'Corporation Tax', enabled: true, lastUpdate: '2024-02-09' },
+      { name: 'Business Tax', enabled: true, lastUpdate: '2024-02-09' },
       { name: 'PAYE/RTI', enabled: true, lastUpdate: '2024-02-10' },
       { name: 'Self Assessment', enabled: false, lastUpdate: '2024-01-31' }
     ]
@@ -95,7 +95,7 @@ export default function ComplianceAutomation() {
     },
     {
       id: 'deadline-2',
-      type: 'Corporation Tax',
+      type: 'Business Tax',
       client: 'XYZ Services Ltd',
       description: 'CT600 return for year ending 31/03/2023',
       dueDate: '2024-02-15',
@@ -147,7 +147,7 @@ export default function ComplianceAutomation() {
     },
     {
       id: 'rule-2',
-      name: 'Corporation Tax Alerts',
+      name: 'Business Tax Alerts',
       description: 'Escalating alerts for CT600 submissions',
       trigger: '30, 14, 7 days before due date',
       action: 'Email + SMS + calendar reminder',
@@ -181,7 +181,7 @@ export default function ComplianceAutomation() {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800'
       case 'upcoming': return 'bg-blue-100 text-blue-800'
-      case 'due_soon': return 'bg-orange-100 text-orange-800'
+      case 'due_soon': return 'bg-[#FFF4F0] text-[#C44B1C]'
       case 'overdue': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
@@ -190,7 +190,7 @@ export default function ComplianceAutomation() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical': return 'bg-red-100 text-red-800'
-      case 'high': return 'bg-orange-100 text-orange-800'
+      case 'high': return 'bg-[#FFF4F0] text-[#C44B1C]'
       case 'medium': return 'bg-blue-100 text-blue-800'
       case 'low': return 'bg-gray-100 text-gray-800'
       default: return 'bg-gray-100 text-gray-800'
@@ -201,7 +201,7 @@ export default function ComplianceAutomation() {
     switch (status) {
       case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'upcoming': return <Clock className="h-4 w-4 text-blue-600" />
-      case 'due_soon': return <AlertTriangle className="h-4 w-4 text-orange-600" />
+      case 'due_soon': return <AlertTriangle className="h-4 w-4 text-[#FF6B35]" />
       case 'overdue': return <AlertTriangle className="h-4 w-4 text-red-600" />
       default: return <Clock className="h-4 w-4 text-gray-600" />
     }
@@ -233,7 +233,7 @@ export default function ComplianceAutomation() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Active Deadlines</p>
                 <p className="text-2xl font-bold">12</p>
-                <p className="text-xs text-orange-600">3 due this week</p>
+                <p className="text-xs text-[#FF6B35]">3 due this week</p>
               </div>
               <Calendar className="h-8 w-8 text-blue-600" />
             </div>
@@ -302,7 +302,7 @@ export default function ComplianceAutomation() {
                       <div className="flex items-center gap-3">
                         {getStatusIcon(deadline.status)}
                         <div>
-                          <h4 className="font-medium">{deadline.type}</h4>
+                          <h4 className="font-bold">{deadline.type}</h4>
                           <p className="text-sm text-gray-600">{deadline.client}</p>
                           <p className="text-xs text-gray-500">{deadline.description}</p>
                         </div>
@@ -326,7 +326,7 @@ export default function ComplianceAutomation() {
                         <p className="text-sm font-medium text-gray-600">Days Remaining</p>
                         <p className={`text-sm font-medium ${
                           deadline.daysRemaining < 0 ? 'text-red-600' :
-                          deadline.daysRemaining < 7 ? 'text-orange-600' :
+                          deadline.daysRemaining < 7 ? 'text-[#FF6B35]' :
                           'text-green-600'
                         }`}>
                           {deadline.daysRemaining < 0 ? `${Math.abs(deadline.daysRemaining)} overdue` : deadline.daysRemaining}
@@ -386,7 +386,7 @@ export default function ComplianceAutomation() {
                   <div key={rule.id} className="p-4 border rounded-lg">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className="font-medium">{rule.name}</h4>
+                        <h4 className="font-bold">{rule.name}</h4>
                         <p className="text-sm text-gray-600 mb-2">{rule.description}</p>
                         <div className="grid gap-2 md:grid-cols-2 text-xs text-gray-500">
                           <div>
@@ -415,7 +415,7 @@ export default function ComplianceAutomation() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-600">Time Saved</p>
-                        <p className="text-sm font-semibold text-blue-600">{rule.timeSaved}</p>
+                        <p className="text-sm font-bold text-blue-600">{rule.timeSaved}</p>
                       </div>
                       <div className="flex justify-end">
                         <Button size="sm" variant="outline">
@@ -463,7 +463,7 @@ export default function ComplianceAutomation() {
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="font-medium">Services</h4>
+                    <h4 className="font-bold">Services</h4>
                     {hmrcIntegration.services.map((service) => (
                       <div key={service.name} className="flex items-center justify-between p-2 border rounded">
                         <div>
@@ -512,7 +512,7 @@ export default function ComplianceAutomation() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Filing Alerts:</span>
-                      <Badge className="bg-orange-100 text-orange-800">
+                      <Badge className="bg-[#FFF4F0] text-[#C44B1C]">
                         {companiesHouseIntegration.filingAlerts} pending
                       </Badge>
                     </div>
@@ -558,7 +558,7 @@ export default function ComplianceAutomation() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Corporation Tax</span>
+                    <span className="text-sm font-medium">Business Tax</span>
                     <div className="flex items-center gap-2">
                       <Progress value={94} className="w-20" />
                       <span className="text-sm font-medium text-green-600">94%</span>

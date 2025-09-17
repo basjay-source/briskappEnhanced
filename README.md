@@ -21,7 +21,7 @@ Features
 
 🔑 Key Capabilities
 
-Accounts Production & Tax → Statutory accounts, group consolidations, corporation tax, and personal tax with built-in AI advisers that highlight risks, suggest reliefs, and generate client-ready reports.
+Accounts Production & Tax → Statutory accounts, group consolidations, business tax, and personal tax with built-in AI advisers that highlight risks, suggest reliefs, and generate client-ready reports.
 
 Payroll & HR → PAYE, pensions, forms, and AI HR guidance for compliance and employee matters.
 

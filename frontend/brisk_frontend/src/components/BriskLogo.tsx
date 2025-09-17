@@ -15,15 +15,17 @@ export default function BriskLogo({ className, animated = false, showText = true
           src={briskPracticeLogo}
           alt="Brisk Practice Suite"
           className={cn(
-            "w-full h-auto object-contain relative z-10 drop-shadow-lg",
+            "w-full h-auto object-contain relative z-10",
             animated && "animate-pulse"
           )}
-          style={{filter: 'drop-shadow(0 4px 8px rgba(255, 107, 53, 0.4)) drop-shadow(0 2px 4px rgba(255, 107, 53, 0.6))'}}
+          style={{
+            filter: 'sepia(1) saturate(2) hue-rotate(200deg) brightness(0.9) contrast(1.2)'
+          }}
         />
         <div className="absolute inset-0 bg-brisk-primary rounded-md -z-10" />
       </div>
       {showText && (
-        <span className="text-lg font-semibold text-brisk-primary hidden sm:inline">
+        <span className="text-lg font-bold text-brisk-primary hidden sm:inline">
           Brisk Practice
         </span>
       )}

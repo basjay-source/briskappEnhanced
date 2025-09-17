@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Building, 
   FileText, 
@@ -40,6 +40,7 @@ import HMRCLogo from '../../components/HMRCLogo'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import FormWizard from '../../components/FormWizard'
+import { apiClient } from '@/lib/api'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -51,7 +52,69 @@ export default function CompanySecretarial() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [in01FormData, setIn01FormData] = useState<Record<string, string>>({})
-  const [formData] = useState<Record<string, string>>({})
+  const [formData, setFormData] = useState<Record<string, string>>({})
+  const [kpis, setKpis] = useState<any[]>([])
+  const [companies, setCompanies] = useState<any[]>([])
+  const [filings, setFilings] = useState<any[]>([])
+  const [pscRegister, setPscRegister] = useState<any[]>([])
+
+  useEffect(() => {
+    const loadCompanySecretarialData = async () => {
+      try {
+        const defaultCompanyId = 'default-company'
+        const [companiesData, filingsData, officersData, pscData] = await Promise.all([
+          apiClient.getClients(),
+          apiClient.getCompanyFilings(defaultCompanyId),
+          apiClient.getCompanyOfficers(defaultCompanyId),
+          apiClient.getCompanyPSCs(defaultCompanyId)
+        ])
+        
+        setCompanies(companiesData || [])
+        setFilings(filingsData || [])
+        setPscRegister(pscData || [])
+        
+        const kpiData = [
+          { 
+            title: 'Active Companies', 
+            value: (companiesData?.length || 0).toString(),
+            change: '+2 this month',
+            icon: Briefcase,
+            color: 'text-blue-600'
+          },
+          { 
+            title: 'Pending Filings', 
+            value: (filingsData?.length || 0).toString(),
+            change: '3 due this week',
+            icon: FileText,
+            color: 'text-orange-600'
+          },
+          { 
+            title: 'Officers Registered', 
+            value: (officersData?.length || 0).toString(),
+            change: 'All current',
+            icon: Users,
+            color: 'text-green-600'
+          },
+          { 
+            title: 'PSCs Registered', 
+            value: (pscData?.length || 0).toString(),
+            change: 'Compliant',
+            icon: Shield,
+            color: 'text-purple-600'
+          }
+        ]
+        setKpis(kpiData)
+      } catch (error) {
+        console.error('Failed to load Company Secretarial data:', error)
+        setKpis([])
+        setCompanies([])
+        setFilings([])
+        setPscRegister([])
+      }
+    }
+    
+    loadCompanySecretarialData()
+  }, [])
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -162,64 +225,9 @@ export default function CompanySecretarial() {
     setActiveSubTab(subTab)
   }
 
-  const kpis = [
-    {
-      title: 'Active Companies',
-      value: '24',
-      change: '+2 this month',
-      trend: 'up',
-      icon: Building,
-      color: 'text-blue-600'
-    },
-    {
-      title: 'Pending Filings',
-      value: '8',
-      change: '3 due this week',
-      trend: 'neutral',
-      icon: FileText,
-      color: 'text-orange-600'
-    },
-    {
-      title: 'Compliance Score',
-      value: '94%',
-      change: '+2% this quarter',
-      trend: 'up',
-      icon: Shield,
-      color: 'text-green-600'
-    },
-    {
-      title: 'PSC Updates',
-      value: '12',
-      change: '5 require action',
-      trend: 'down',
-      icon: Users,
-      color: 'text-purple-600'
-    }
-  ]
 
-  const companies = [
-    { id: '1', name: 'TechCorp Ltd', number: '12345678', status: 'Active', incorporationDate: '2020-01-15', nextFiling: '2024-03-31', filingType: 'Confirmation Statement', pscCount: 2, lastUpdate: '2024-01-15' },
-    { id: '2', name: 'Digital Solutions Ltd', number: '87654321', status: 'Active', incorporationDate: '2019-06-20', nextFiling: '2024-04-15', filingType: 'Annual Return', pscCount: 1, lastUpdate: '2024-01-10' },
-    { id: '3', name: 'Innovation Hub Ltd', number: '11223344', status: 'Dormant', incorporationDate: '2021-03-10', nextFiling: '2024-05-01', filingType: 'Dormant Filing', pscCount: 1, lastUpdate: '2024-01-05' },
-    { id: '4', name: 'StartUp Ventures Ltd', number: '44332211', status: 'Active', incorporationDate: '2022-09-05', nextFiling: '2024-03-20', filingType: 'Confirmation Statement', pscCount: 3, lastUpdate: '2024-01-20' },
-    { id: '5', name: 'Local Trading Ltd', number: '55667788', status: 'Active', incorporationDate: '2018-11-30', nextFiling: '2024-02-28', filingType: 'Overdue Filing', pscCount: 1, lastUpdate: '2023-12-15' }
-  ]
 
-  const filings = [
-    { id: '1', company: 'TechCorp Ltd', type: 'CS01', status: 'In Progress', progress: 75, dueDate: '2024-03-31', assignee: 'Sarah Johnson' },
-    { id: '2', company: 'Digital Solutions Ltd', type: 'AR01', status: 'Review', progress: 90, dueDate: '2024-04-15', assignee: 'Mike Chen' },
-    { id: '3', company: 'Innovation Hub Ltd', type: 'DS01', status: 'Draft', progress: 25, dueDate: '2024-05-01', assignee: 'Emma Wilson' },
-    { id: '4', company: 'StartUp Ventures Ltd', type: 'CS01', status: 'Submitted', progress: 100, dueDate: '2024-03-20', assignee: 'David Brown' },
-    { id: '5', company: 'Local Trading Ltd', type: 'CS01', status: 'Overdue', progress: 60, dueDate: '2024-02-28', assignee: 'Lisa Garcia' }
-  ]
 
-  const pscRegister = [
-    { id: '1', name: 'John Smith', type: 'Individual', status: 'Active', shares: '75%', voting: '75%', appointed: '2020-01-15', company: 'TechCorp Ltd' },
-    { id: '2', name: 'Sarah Johnson', type: 'Individual', status: 'Active', shares: '60%', voting: '60%', appointed: '2019-06-20', company: 'Digital Solutions Ltd' },
-    { id: '3', name: 'Innovation Holdings Ltd', type: 'Corporate', status: 'Active', shares: '100%', voting: '100%', appointed: '2021-03-10', company: 'Innovation Hub Ltd' },
-    { id: '4', name: 'Mike Chen', type: 'Individual', status: 'Active', shares: '45%', voting: '45%', appointed: '2022-09-05', company: 'StartUp Ventures Ltd' },
-    { id: '5', name: 'Emma Wilson', type: 'Individual', status: 'Ceased', shares: '0%', voting: '0%', appointed: '2018-11-30', company: 'Local Trading Ltd' }
-  ]
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -783,9 +791,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Annual accounts must be filed within 9 months of the accounting period end date</li>
                   <li>• Late filing penalties apply for overdue accounts</li>
                   <li>• Accounts must be approved by the board of directors before filing</li>
@@ -1091,9 +1099,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Annual returns must be filed within 28 days of the made up to date</li>
                   <li>• Late filing penalties apply for overdue returns</li>
                   <li>• The information provided must be accurate as of the made up to date</li>
@@ -1435,9 +1443,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Termination forms must be filed within 14 days of the termination date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -1883,9 +1891,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Secretary appointments must be filed within 14 days of the appointment date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2448,9 +2456,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• PSC notifications must be filed within 14 days of the relevant date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2833,9 +2841,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Address changes must be filed within 14 days of the change</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -3217,9 +3225,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Name changes must be filed within 15 days of the resolution</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -6141,9 +6149,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• You must submit your CIS300 return by the 19th of the month following the return period</li>
                   <li>• Late returns may result in penalties</li>
                   <li>• You must keep records of all payments and deductions for at least 3 years</li>
@@ -6400,9 +6408,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• You must submit your P35 return by 19 May following the end of the tax year</li>
                   <li>• You must also provide P60s to all employees by 31 May</li>
                   <li>• Late returns may result in penalties</li>
@@ -6992,9 +7000,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
                   <li>• VAT group registration takes effect from the date specified in your application</li>
                   <li>• All group members become jointly and severally liable for VAT</li>
                   <li>• Supplies between group members are disregarded for VAT purposes</li>

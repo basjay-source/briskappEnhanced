@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   FileText, 
   TrendingUp, 
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { SearchFilterHeader } from '@/components/SearchFilterHeader'
 import ResponsiveLayout from '@/components/ResponsiveLayout'
+import { apiClient } from '@/lib/api'
 
 const Reports: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('financial')
@@ -24,6 +25,22 @@ const Reports: React.FC = () => {
   const [selectedClient, setSelectedClient] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [clients, setClients] = useState<any[]>([])
+
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        const jobsData = await apiClient.getJobs()
+        const jobs = jobsData?.jobs || []
+        setClients(jobs)
+      } catch (error) {
+        console.error('Failed to load clients:', error)
+        setClients([])
+      }
+    }
+    
+    loadClients()
+  }, [])
 
   type SubTabConfig = {
     label: string
@@ -78,7 +95,7 @@ const Reports: React.FC = () => {
       hasSubTabs: true,
       subTabs: {
         vat: { label: 'VAT Reports', icon: FileText },
-        corporation: { label: 'Corporation Tax', icon: Calculator },
+        corporation: { label: 'Business Tax', icon: Calculator },
         statutory: { label: 'Statutory Accounts', icon: Building2 },
         audit: { label: 'Audit Trail', icon: Eye }
       }
@@ -252,7 +269,7 @@ const Reports: React.FC = () => {
                 {report.status}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{report.name}</h3>
+            <h3 className="text-lg font-bold mb-2">{report.name}</h3>
             <p className="text-sm text-gray-600 mb-4">{report.description}</p>
             <div className="space-y-4">
               <div className="text-sm text-gray-500">
@@ -263,7 +280,7 @@ const Reports: React.FC = () => {
                   <Download className="h-4 w-4 mr-2" />
                   Generate
                 </button>
-                <button className="border border-gray-300 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="border border-blue-900 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors">
                   <Eye className="h-4 w-4" />
                 </button>
               </div>
@@ -278,12 +295,12 @@ const Reports: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-white rounded-lg border shadow-sm">
         <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Report Builder</h3>
+          <h3 className="text-lg font-bold mb-2">Report Builder</h3>
           <p className="text-sm text-gray-600 mb-4">Create custom reports with your preferred data and formatting</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Report Type</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+              <select className="mt-1 block w-full border border-blue-900 rounded-md px-3 py-2">
                 <option value="">Select report type</option>
                 <option value="financial">Financial Statement</option>
                 <option value="management">Management Report</option>
@@ -293,7 +310,7 @@ const Reports: React.FC = () => {
             </div>
             <div>
               <label className="text-sm font-medium">Data Source</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+              <select className="mt-1 block w-full border border-blue-900 rounded-md px-3 py-2">
                 <option value="">Select data source</option>
                 <option value="trial-balance">Trial Balance</option>
                 <option value="transactions">Transaction Data</option>
@@ -314,7 +331,7 @@ const Reports: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Saved Templates</h3>
+            <h3 className="text-lg font-bold mb-4">Saved Templates</h3>
             <div className="space-y-2">
               <div className="p-2 border rounded hover:bg-gray-50 cursor-pointer">
                 Monthly Board Pack
@@ -331,7 +348,7 @@ const Reports: React.FC = () => {
 
         <div className="bg-white rounded-lg border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Reports</h3>
+            <h3 className="text-lg font-bold mb-4">Recent Reports</h3>
             <div className="space-y-2">
               <div className="p-2 border rounded hover:bg-gray-50 cursor-pointer">
                 <div className="font-medium">Q4 Analysis</div>
@@ -347,7 +364,7 @@ const Reports: React.FC = () => {
 
         <div className="bg-white rounded-lg border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Scheduled Reports</h3>
+            <h3 className="text-lg font-bold mb-4">Scheduled Reports</h3>
             <div className="space-y-2">
               <div className="p-2 border rounded">
                 <div className="font-medium">Monthly P&L</div>
@@ -385,7 +402,7 @@ const Reports: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Reports Dashboard</h2>
+          <h2 className="text-2xl font-bold mb-2">Reports Dashboard</h2>
           <p className="text-gray-600">Generate comprehensive financial and management reports</p>
         </div>
         {renderReportGrid(financialReports)}
@@ -396,9 +413,9 @@ const Reports: React.FC = () => {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Reports</h2>
+        <div className="w-64 bg-white border-r border-blue-900 flex flex-col">
+          <div className="p-4 border-b border-blue-900">
+            <h2 className="text-lg font-bold">Reports</h2>
           </div>
           
           <div className="flex-1 overflow-y-auto">
@@ -482,9 +499,10 @@ const Reports: React.FC = () => {
                   label: 'Client',
                   options: [
                     { label: 'All Clients', value: '' },
-                    { label: 'ABC Corporation', value: 'abc-corp' },
-                    { label: 'XYZ Ltd', value: 'xyz-ltd' },
-                    { label: 'Tech Solutions Inc', value: 'tech-solutions' }
+                    ...clients.map(client => ({
+                      label: client.name || 'Unknown Client',
+                      value: client.id || client.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown'
+                    }))
                   ],
                   value: selectedClient,
                   onChange: setSelectedClient

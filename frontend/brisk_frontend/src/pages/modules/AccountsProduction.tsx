@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   FileText, 
   Calculator, 
@@ -17,12 +17,16 @@ import KPICard from '@/components/KPICard'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
+import { apiClient } from '@/lib/api'
 
 const AccountsProduction: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['dashboard'])
   const [isAILoading, setIsAILoading] = useState(false)
+  const [kpis, setKpis] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const menuStructure = [
     {
@@ -83,6 +87,61 @@ const AccountsProduction: React.FC = () => {
     setActiveSubTab(subTabId)
   }
 
+  useEffect(() => {
+    const loadAccountsData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const [trialBalanceData, statementsData] = await Promise.all([
+          apiClient.getTrialBalance('default-company'),
+          apiClient.getFinancialStatements('default-company')
+        ])
+        
+        const accountsKpis = [
+          {
+            title: 'Trial Balance Entries',
+            value: trialBalanceData?.trial_balance?.length?.toString() || '0',
+            change: trialBalanceData?.totals?.balanced ? 'Balanced' : 'Unbalanced',
+            icon: Calculator,
+            color: trialBalanceData?.totals?.balanced ? 'text-green-600' : 'text-red-600'
+          },
+          {
+            title: 'Financial Statements',
+            value: statementsData?.length?.toString() || '0',
+            change: 'Current period',
+            icon: FileText,
+            color: 'text-blue-600'
+          },
+          {
+            title: 'Total Debits',
+            value: `£${trialBalanceData?.totals?.debits?.toLocaleString() || '0'}`,
+            change: 'Trial balance',
+            icon: TrendingUp,
+            color: 'text-green-600'
+          },
+          {
+            title: 'Total Credits',
+            value: `£${trialBalanceData?.totals?.credits?.toLocaleString() || '0'}`,
+            change: 'Trial balance',
+            icon: TrendingUp,
+            color: 'text-blue-600'
+          }
+        ]
+        
+        setKpis(accountsKpis)
+      } catch (error) {
+        console.error('Failed to load accounts production data:', error)
+        setError('Failed to load accounts data')
+        setKpis([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadAccountsData()
+  }, [])
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -92,13 +151,6 @@ const AccountsProduction: React.FC = () => {
       setIsAILoading(false)
     }
   }
-
-  const kpis = [
-    { label: 'Total Assets', value: '£208,500', change: '+12.5%', positive: true },
-    { label: 'Total Liabilities', value: '£84,500', change: '-3.2%', positive: true },
-    { label: 'Net Equity', value: '£124,000', change: '+18.7%', positive: true },
-    { label: 'Working Capital', value: '£56,000', change: '+8.9%', positive: true }
-  ]
 
   const renderTabContent = (tabId: string) => {
     switch (tabId) {
@@ -125,23 +177,37 @@ const AccountsProduction: React.FC = () => {
 
   const renderDashboardContent = () => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {kpis.map((kpi, index) => (
-          <KPICard
-            key={index}
-            title={kpi.label}
-            value={kpi.value}
-            change={kpi.change}
-            icon={Calculator}
-            color={kpi.positive ? 'text-green-600' : 'text-red-600'}
-            drillDownData={{
-              title: `${kpi.label} Analysis`,
-              description: `Detailed financial analysis for ${kpi.label.toLowerCase()}`,
-              content: <div>Detailed analysis content for {kpi.label}</div>
-            }}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Loading accounts data...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-8">
+          <p className="text-red-500">{error}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {kpis.length > 0 ? kpis.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.label}
+              value={kpi.value}
+              change={kpi.change}
+              icon={Calculator}
+              color={kpi.positive ? 'text-green-600' : 'text-red-600'}
+              drillDownData={{
+                title: `${kpi.title || 'KPI'} Analysis`,
+                description: `Detailed financial analysis for ${(kpi.title || 'KPI').toLowerCase()}`,
+                content: <div>Detailed analysis content for {kpi.title || 'KPI'}</div>
+              }}
+            />
+          )) : (
+            <div className="col-span-4 text-center py-8">
+              <p className="text-gray-500">No accounts data available</p>
+            </div>
+          )}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
@@ -153,14 +219,14 @@ const AccountsProduction: React.FC = () => {
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
                 <h3 className="font-semibold">Trial Balance Updated</h3>
-                <p className="text-sm text-gray-600">Client: ABC Ltd - Period: Dec 2024</p>
+                <p className="text-sm text-gray-600">Client: {kpis.length > 0 ? kpis[0]?.name || 'Client' : 'Client'} - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
                 <h3 className="font-semibold">Financial Statements Generated</h3>
-                <p className="text-sm text-gray-600">Client: XYZ Corp - Period: Q4 2024</p>
+                <p className="text-sm text-gray-600">Client: {kpis.length > 1 ? kpis[1]?.name || 'Client' : 'Client'} - Period: Q4 2024</p>
               </div>
               <Badge variant="secondary">In Progress</Badge>
             </div>

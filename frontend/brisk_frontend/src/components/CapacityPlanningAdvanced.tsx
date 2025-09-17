@@ -59,7 +59,7 @@ export default function CapacityPlanningAdvanced() {
       id: 'sarah-johnson',
       name: 'Sarah Johnson',
       role: 'Senior Accountant',
-      skills: ['Accounts Preparation', 'Corporation Tax', 'VAT Returns', 'Audit'],
+      skills: ['Accounts Preparation', 'Business Tax', 'VAT Returns', 'Audit'],
       currentUtilization: 120,
       capacity: 40,
       assignedJobs: 8,
@@ -71,7 +71,7 @@ export default function CapacityPlanningAdvanced() {
       id: 'mike-chen',
       name: 'Mike Chen',
       role: 'Tax Specialist',
-      skills: ['Corporation Tax', 'Personal Tax', 'R&D Claims', 'Tax Planning'],
+      skills: ['Business Tax', 'Personal Tax', 'R&D Claims', 'Tax Planning'],
       currentUtilization: 75,
       capacity: 40,
       assignedJobs: 5,
@@ -113,7 +113,7 @@ export default function CapacityPlanningAdvanced() {
       type: 'Accounts Preparation',
       priority: 'high',
       estimatedHours: 12,
-      requiredSkills: ['Accounts Preparation', 'Corporation Tax'],
+      requiredSkills: ['Accounts Preparation', 'Business Tax'],
       dueDate: '2024-03-15',
       status: 'unassigned'
     },
@@ -155,7 +155,7 @@ export default function CapacityPlanningAdvanced() {
       type: 'optimize',
       priority: 'medium',
       title: 'Skill Development Opportunity',
-      description: 'Train James in Corporation Tax to increase team flexibility and reduce bottlenecks.',
+      description: 'Train James in Business Tax to increase team flexibility and reduce bottlenecks.',
       impact: '15% capacity increase',
       effort: 'Medium - 2 weeks training',
       savings: '£2,400 monthly efficiency'
@@ -173,14 +173,14 @@ export default function CapacityPlanningAdvanced() {
 
   const getUtilizationColor = (utilization: number) => {
     if (utilization > 100) return 'text-red-600'
-    if (utilization > 85) return 'text-orange-600'
+    if (utilization > 85) return 'text-[#FF6B35]'
     if (utilization > 70) return 'text-green-600'
     return 'text-blue-600'
   }
 
   const getUtilizationBg = (utilization: number) => {
     if (utilization > 100) return 'bg-red-500'
-    if (utilization > 85) return 'bg-orange-500'
+    if (utilization > 85) return 'bg-[#FF6B35]'
     if (utilization > 70) return 'bg-green-500'
     return 'bg-blue-500'
   }
@@ -188,7 +188,7 @@ export default function CapacityPlanningAdvanced() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent': return 'bg-red-100 text-red-800'
-      case 'high': return 'bg-orange-100 text-orange-800'
+      case 'high': return 'bg-[#FFF4F0] text-[#C44B1C]'
       case 'medium': return 'bg-blue-100 text-blue-800'
       case 'low': return 'bg-gray-100 text-gray-800'
       default: return 'bg-gray-100 text-gray-800'
@@ -282,9 +282,9 @@ export default function CapacityPlanningAdvanced() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Unassigned Jobs</p>
                 <p className="text-2xl font-bold">{unassignedJobs.length}</p>
-                <p className="text-xs text-orange-600">Require assignment</p>
+                <p className="text-xs text-[#FF6B35]">Require assignment</p>
               </div>
-              <Briefcase className="h-8 w-8 text-orange-600" />
+              <Briefcase className="h-8 w-8 text-[#FF6B35]" />
             </div>
           </CardContent>
         </Card>
@@ -327,7 +327,7 @@ export default function CapacityPlanningAdvanced() {
                           <User className="h-5 w-5 text-brisk-primary" />
                         </div>
                         <div>
-                          <h4 className="font-medium">{member.name}</h4>
+                          <h4 className="font-bold">{member.name}</h4>
                           <p className="text-sm text-gray-600">{member.role}</p>
                         </div>
                       </div>
@@ -357,11 +357,11 @@ export default function CapacityPlanningAdvanced() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-600 mb-1">Active Jobs</p>
-                        <p className="text-lg font-semibold">{member.assignedJobs}</p>
+                        <p className="text-lg font-bold">{member.assignedJobs}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-600 mb-1">Available This Week</p>
-                        <p className="text-lg font-semibold">{member.availability.thisWeek}h</p>
+                        <p className="text-lg font-bold">{member.availability.thisWeek}h</p>
                       </div>
                     </div>
 
@@ -411,7 +411,7 @@ export default function CapacityPlanningAdvanced() {
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h4 className="font-medium text-sm">{job.title}</h4>
+                          <h4 className="font-bold text-sm">{job.title}</h4>
                           <p className="text-xs text-gray-600">{job.client}</p>
                         </div>
                         <Badge className={getPriorityColor(job.priority)}>
@@ -446,7 +446,7 @@ export default function CapacityPlanningAdvanced() {
                     {teamMembers.map((member) => (
                       <div
                         key={member.id}
-                        className="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-brisk-primary transition-colors"
+                        className="p-4 border-2 border-dashed border-blue-900 rounded-lg hover:border-brisk-primary transition-colors"
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, member.id)}
                       >
@@ -455,7 +455,7 @@ export default function CapacityPlanningAdvanced() {
                             <User className="h-4 w-4 text-brisk-primary" />
                           </div>
                           <div>
-                            <h4 className="font-medium">{member.name}</h4>
+                            <h4 className="font-bold">{member.name}</h4>
                             <p className="text-sm text-gray-600">{member.role}</p>
                           </div>
                         </div>
@@ -483,7 +483,7 @@ export default function CapacityPlanningAdvanced() {
                             </>
                           ) : member.currentUtilization < 100 ? (
                             <>
-                              <AlertTriangle className="h-4 w-4 text-orange-600 mx-auto mb-1" />
+                              <AlertTriangle className="h-4 w-4 text-[#FF6B35] mx-auto mb-1" />
                               Near capacity
                             </>
                           ) : (
@@ -556,7 +556,7 @@ export default function CapacityPlanningAdvanced() {
                   </div>
                   <div className="p-3 bg-orange-50 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="h-4 w-4 text-orange-600" />
+                      <AlertTriangle className="h-4 w-4 text-[#FF6B35]" />
                       <span className="font-medium text-orange-900">Capacity Risk</span>
                     </div>
                     <p className="text-sm text-orange-700">
@@ -586,7 +586,7 @@ export default function CapacityPlanningAdvanced() {
                       <div className="flex items-center gap-2">
                         <Badge className={
                           rec.priority === 'high' ? 'bg-red-100 text-red-800' :
-                          rec.priority === 'medium' ? 'bg-orange-100 text-orange-800' :
+                          rec.priority === 'medium' ? 'bg-[#FFF4F0] text-[#C44B1C]' :
                           'bg-blue-100 text-blue-800'
                         }>
                           {rec.priority} priority
@@ -598,7 +598,7 @@ export default function CapacityPlanningAdvanced() {
                         Apply
                       </Button>
                     </div>
-                    <h4 className="font-medium mb-2">{rec.title}</h4>
+                    <h4 className="font-bold mb-2">{rec.title}</h4>
                     <p className="text-sm text-gray-600 mb-3">{rec.description}</p>
                     <div className="grid gap-2 md:grid-cols-3 text-xs">
                       <div>

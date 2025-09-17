@@ -52,7 +52,7 @@ export default function EcosystemHub() {
       icon: BarChart3,
       description: 'SA returns, CGT optimization',
       status: 'active',
-      color: 'bg-orange-500'
+      color: 'bg-blue-800'
     },
     {
       name: 'Payroll',
@@ -162,7 +162,7 @@ export default function EcosystemHub() {
     <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ecosystem Hub</h1>
+          <h1 className="text-3xl font-bold">Ecosystem Hub</h1>
           <p className="text-gray-600 mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
@@ -181,7 +181,7 @@ export default function EcosystemHub() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                    <p className="text-sm font-bold text-gray-600">{kpi.title}</p>
                     <p className="text-2xl font-bold">{kpi.value}</p>
                     <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
                   </div>
@@ -232,7 +232,7 @@ export default function EcosystemHub() {
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
                     <div className="flex-1">
-                      <p className="font-medium">{activity.action}</p>
+                      <p className="font-bold">{activity.action}</p>
                       <p className="text-sm text-gray-600">{activity.client}</p>
                       <p className="text-xs text-gray-500">{activity.time}</p>
                     </div>
@@ -249,11 +249,11 @@ export default function EcosystemHub() {
             <CardContent>
               <div className="space-y-3">
                 <div className="p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm font-medium text-blue-900">3 clients at risk of missing SA deadline</p>
+                  <p className="text-sm font-bold text-blue-900">3 clients at risk of missing SA deadline</p>
                   <p className="text-xs text-blue-700">Consider sending reminder emails</p>
                 </div>
                 <div className="p-3 bg-green-50 rounded-lg">
-                  <p className="text-sm font-medium text-green-900">R&D claims available for 2 clients</p>
+                  <p className="text-sm font-bold text-green-900">R&D claims available for 2 clients</p>
                   <p className="text-xs text-green-700">Potential tax savings: £15,000</p>
                 </div>
               </div>

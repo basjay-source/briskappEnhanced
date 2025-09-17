@@ -4,7 +4,7 @@ from .tenant import (
     AdminPersona, SubscriptionStatus, InvoiceStatus, PromotionStatus, ExperimentStatus
 )
 from .client import Client, Company, EntityGroup
-from .accounts import LedgerAccount, JournalEntry, TrialBalance, FXRate, ConsolidationRule
+from .accounts import LedgerAccount, JournalEntry, TrialBalance, FXRate, ConsolidationRule, RecurringTransaction, AccrualPrepayment, InvoiceTracking, TransactionCategorizationRule, TransactionCategorization, FixedAsset
 from .statements import FinancialStatement, NoteDisclosure
 from .tax import TaxReturnCT, TaxReturnSA, RnDClaim
 from .payroll import PayrollEmployee, PayRun, Payslip, PensionScheme, CISStatement
@@ -21,6 +21,7 @@ from .audit import AuditLog
 from .vat import VATReturn, VATScheme, VATTransaction
 from .practice import Job
 from .charity import CharityAccount, CharityFund, FundMovement, Trustee
+from .products import Product, InventoryMovement
 
 __all__ = [
     "Tenant", "User", "Role", "Permission", "FeatureFlag", "Subscription",
@@ -41,5 +42,7 @@ __all__ = [
     "AuditLog",
     "VATReturn", "VATScheme", "VATTransaction",
     "Job",
-    "CharityAccount", "CharityFund", "FundMovement", "Trustee"
+    "CharityAccount", "CharityFund", "FundMovement", "Trustee",
+    "Product", "InventoryMovement",
+    "RecurringTransaction", "AccrualPrepayment", "InvoiceTracking", "TransactionCategorizationRule", "TransactionCategorization", "FixedAsset"
 ]

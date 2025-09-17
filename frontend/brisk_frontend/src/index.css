@@ -65,5 +65,11 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+  
+  /* Global heading styles - ensure all headings are bold and black */
+  h1, h2, h3, h4 {
+    font-weight: 700 !important;
+    color: #000000 !important;
+  }
 }
 

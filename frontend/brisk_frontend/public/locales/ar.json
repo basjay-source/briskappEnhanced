@@ -1,0 +1,204 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "submit": "إرسال",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "yes": "نعم",
+    "no": "لا",
+    "ok": "موافق",
+    "error": "خطأ",
+    "success": "نجح",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "welcome": "مرحباً بك",
+    "searchPlaceholder": "البحث في جميع الوحدات... (⌘K)",
+    "searchResults": "نتائج البحث",
+    "searching": "جاري البحث...",
+    "noResults": "لم يتم العثور على نتائج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "rememberMe": "تذكرني",
+    "signInToAccount": "تسجيل الدخول إلى حساب Brisk Practice Suite",
+    "professionalAccountancy": "إدارة ممارسة المحاسبة المهنية",
+    "noAccount": "ليس لديك حساب؟",
+    "startFreeTrial": "ابدأ تجربة مجانية"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "ecosystemHub": "مركز النظام البيئي",
+    "practiceManagement": "إدارة الممارسة",
+    "accountsProduction": "إنتاج الحسابات",
+    "businessTax": "ضريبة الأعمال",
+    "personalTax": "الضريبة الشخصية",
+    "payroll": "كشوف المرتبات",
+    "amlCompliance": "امتثال مكافحة غسل الأموال/اعرف عميلك",
+    "companySecretarial": "سكرتارية الشركة",
+    "bookkeeping": "مسك الدفاتر",
+    "charityAccounts": "حسابات الجمعيات الخيرية والأكاديمية",
+    "docuSignage": "التوقيع الرقمي",
+    "timeManagement": "إدارة الوقت",
+    "admin": "الإدارة"
+  },
+  "modules": {
+    "ecosystemHub": {
+      "description": "نظرة عامة على جميع الوحدات"
+    },
+    "practiceManagement": {
+      "title": "إدارة الممارسة",
+      "description": "المهام وسير العمل والمواعيد النهائية",
+      "jobs": "المهام والوظائف",
+      "workflows": "سير العمل",
+      "clientPortal": "بوابة العميل",
+      "capacityPlanning": "تخطيط السعة",
+      "compliance": "الامتثال",
+      "analytics": "التحليلات",
+      "emailStudio": "استوديو البريد الإلكتروني",
+      "templates": "القوالب",
+      "reports": "التقارير"
+    },
+    "businessTax": {
+      "title": "ضريبة الأعمال",
+      "description": "CT600، مطالبات البحث والتطوير، الإعفاءات",
+      "dashboard": "لوحة تحكم ضريبة الأعمال",
+      "adviser": "مستشار ضريبة الأعمال",
+      "computation": "حساب ضريبة الشركات",
+      "ctComputation": "حساب CT600",
+      "taxAdjustments": "تعديلات الضريبة",
+      "supportingSchedules": "الجداول الداعمة",
+      "validation": "التحقق",
+      "rdClaims": "مطالبات البحث والتطوير",
+      "reliefs": "الإعفاءات والائتمانات",
+      "groupRelief": "إعفاء المجموعة",
+      "quarterlyPayments": "المدفوعات الفصلية",
+      "filing": "التقديم"
+    },
+    "personalTax": {
+      "title": "الضريبة الشخصية",
+      "description": "إقرارات SA، تحسين CGT",
+      "dashboard": "لوحة تحكم الضريبة الشخصية",
+      "adviser": "مستشار الضريبة الشخصية",
+      "saReturns": "إقرارات SA",
+      "cgtCalculator": "حاسبة CGT",
+      "taxPlanning": "التخطيط الضريبي",
+      "filing": "التقديم والامتثال"
+    },
+    "payroll": {
+      "title": "كشوف المرتبات",
+      "description": "RTI، المعاشات، CIS، P11D",
+      "dashboard": "لوحة تحكم كشوف المرتبات",
+      "adviser": "مستشار الموارد البشرية",
+      "processing": "معالجة كشوف المرتبات",
+      "runPayroll": "تشغيل كشوف المرتبات",
+      "payslips": "قسائم الراتب",
+      "adjustments": "التعديلات",
+      "approvals": "الموافقات",
+      "employeeManagement": "إدارة الموظفين",
+      "rtiSubmissions": "مقدمات RTI",
+      "autoEnrolment": "التسجيل التلقائي",
+      "cisProcessing": "معالجة CIS"
+    },
+    "amlCompliance": {
+      "title": "امتثال مكافحة غسل الأموال/اعرف عميلك",
+      "description": "تقييم المخاطر، الامتثال",
+      "dashboard": "لوحة تحكم امتثال مكافحة غسل الأموال",
+      "adviser": "مستشار امتثال مكافحة غسل الأموال",
+      "riskAssessment": "تقييم المخاطر",
+      "clientRiskProfiling": "تحليل مخاطر العميل",
+      "transactionMonitoring": "مراقبة المعاملات",
+      "countryRiskAssessment": "تقييم مخاطر البلد",
+      "riskReports": "تقارير المخاطر",
+      "kycIdv": "اعرف عميلك والتحقق من الهوية",
+      "regulatoryReporting": "التقارير التنظيمية",
+      "trainingAwareness": "التدريب والتوعية"
+    },
+    "companySecretarial": {
+      "title": "سكرتارية الشركة",
+      "description": "ملفات دار الشركات",
+      "dashboard": "لوحة تحكم سكرتارية الشركة",
+      "adviser": "سكرتير الشركة",
+      "companyManagement": "إدارة الشركة",
+      "formsFiling": "النماذج والتقديم",
+      "pscRegister": "سجل PSC",
+      "hmrcForms": "نماذج HMRC"
+    },
+    "bookkeeping": {
+      "title": "مسك الدفاتر",
+      "description": "تغذية البنك، ضريبة القيمة المضافة MTD",
+      "dashboard": "لوحة تحكم مسك الدفاتر",
+      "chartOfAccounts": "دليل الحسابات",
+      "sales": "المبيعات",
+      "purchases": "المشتريات",
+      "banking": "الخدمات المصرفية",
+      "journals": "اليوميات",
+      "vat": "ضريبة القيمة المضافة",
+      "financialReports": "التقارير المالية",
+      "managementReports": "تقارير الإدارة",
+      "projects": "المشاريع",
+      "budgets": "الميزانيات",
+      "property": "العقارات",
+      "ecommerce": "التجارة الإلكترونية",
+      "documents": "المستندات",
+      "integrations": "التكاملات"
+    },
+    "charityAccounts": {
+      "description": "امتثال SORP، محاسبة الصناديق"
+    },
+    "docuSignage": {
+      "description": "سير عمل التوقيع الرقمي"
+    },
+    "timeManagement": {
+      "description": "تتبع الوقت والفوترة المتقدمة"
+    },
+    "admin": {
+      "description": "إدارة النظام والإعدادات"
+    }
+  },
+  "aiAdviser": {
+    "askQuestion": "اطرح سؤالاً...",
+    "askAdviser": "اسأل المستشار",
+    "businessTaxAdviser": "اسأل مستشار ضريبة الأعمال",
+    "personalTaxAdviser": "اسأل مستشار الضريبة الشخصية",
+    "hrAdviser": "اسأل مستشار الموارد البشرية",
+    "amlAdviser": "اسأل مستشار امتثال مكافحة غسل الأموال",
+    "accountant": "اسأل المحاسب",
+    "companySecretary": "اسأل سكرتير الشركة",
+    "charityAccountant": "اسأل محاسب الجمعيات الخيرية"
+  },
+  "dashboard": {
+    "welcome": "مرحباً بك في مجموعة إدارة الممارسة الشاملة",
+    "keyMetrics": "المقاييس الرئيسية",
+    "recentActivity": "النشاط الأخير",
+    "aiInsights": "رؤى الذكاء الاصطناعي",
+    "quickActions": "الإجراءات السريعة"
+  },
+  "forms": {
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة"
+  },
+  "errors": {
+    "somethingWentWrong": "حدث خطأ ما",
+    "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+    "unauthorized": "غير مخول لك لتنفيذ هذا الإجراء",
+    "notFound": "المورد المطلوب غير موجود",
+    "serverError": "خطأ داخلي في الخادم. يرجى المحاولة مرة أخرى لاحقاً."
+  }
+}

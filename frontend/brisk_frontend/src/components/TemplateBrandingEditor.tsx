@@ -155,7 +155,7 @@ export default function TemplateBrandingEditor({
               <Label>Company Logo</Label>
               <div 
                 className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-                  dragActive ? 'border-brisk-primary bg-blue-50' : 'border-gray-300 hover:border-brisk-primary'
+                  dragActive ? 'border-brisk-primary bg-blue-50' : 'border-blue-900 hover:border-brisk-primary'
                 }`}
                 onDragOver={(e) => {
                   e.preventDefault()
@@ -209,7 +209,7 @@ export default function TemplateBrandingEditor({
                   <div className="space-y-3">
                     <Image className="h-12 w-12 text-gray-400 mx-auto" />
                     <div>
-                      <p className="text-sm font-medium">Drop logo here or click to upload</p>
+                      <p className="text-sm font-bold">Drop logo here or click to upload</p>
                       <p className="text-xs text-gray-500">PNG, JPG, SVG up to 2MB</p>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ export default function TemplateBrandingEditor({
             </div>
 
             <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-medium mb-2">Branding Preview</h4>
+              <h4 className="font-bold mb-2">Branding Preview</h4>
               <div 
                 className="p-4 bg-white rounded border"
                 style={{ 
@@ -234,7 +234,7 @@ export default function TemplateBrandingEditor({
                   />
                 )}
                 <h5 
-                  className="font-semibold"
+                  className="font-bold"
                   style={{ color: branding.theme_colors?.primary || '#0B5FFF' }}
                 >
                   {branding.custom_branding?.company_name || 'Your Company Name'}

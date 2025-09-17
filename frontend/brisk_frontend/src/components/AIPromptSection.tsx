@@ -56,13 +56,13 @@ export default function AIPromptSection({
               onKeyPress={handleKeyPress}
               className="flex-1" 
             />
-            <Button onClick={handleSubmit} disabled={isLoading || !question.trim()}>
+            <Button variant="outline" onClick={handleSubmit} disabled={isLoading || !question.trim()}>
               <Brain className="h-4 w-4 mr-2" />
               Ask Adviser
             </Button>
           </div>
           
-          {recentQuestions.length > 0 && (
+          {recentQuestions && recentQuestions.length > 0 && (
             <div className="space-y-3">
               <div className="p-3 bg-gray-50 rounded-lg">
                 <p className="text-sm font-medium mb-1">Recent Questions:</p>

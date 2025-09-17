@@ -7,6 +7,15 @@ interface TrialBalanceEntry {
   credit: number;
 }
 
+interface TrialBalanceResponse {
+  trial_balance: TrialBalanceEntry[];
+  totals: {
+    debits: number;
+    credits: number;
+    balanced: boolean;
+  };
+}
+
 interface Job {
   id: string;
   title: string;
@@ -34,6 +43,7 @@ class ApiClient {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
+        'X-Tenant-ID': 'default-tenant',
         ...options?.headers,
       },
       ...options,
@@ -48,7 +58,7 @@ class ApiClient {
 
   async getTrialBalance(companyId: string, periodEnd?: string) {
     const params = periodEnd ? `?period_end=${periodEnd}` : ''
-    return this.request<{ trial_balance: TrialBalanceEntry[] }>(`/accounts/trial-balance/${companyId}${params}`)
+    return this.request<TrialBalanceResponse>(`/accounts/trial-balance/${companyId}${params}`)
   }
 
   async createJournalEntry(data: Record<string, unknown>) {
@@ -108,7 +118,11 @@ class ApiClient {
 
   async getClients(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
-    return this.request<Client[]>(`/books/clients?${params}`)
+    return this.request<Client[]>(`/books/customers?${params}`)
+  }
+
+  async getClientById(clientId: string) {
+    return this.request(`/clients/${clientId}`)
   }
 
   async createClient(data: Record<string, unknown>) {
@@ -169,6 +183,43 @@ class ApiClient {
     return this.request<Record<string, unknown>[]>('/vat/schemes')
   }
 
+  async getInternationalVATRates(params?: { region?: string; country_code?: string; search?: string }) {
+    const queryParams = new URLSearchParams()
+    if (params?.region) queryParams.append('region', params.region)
+    if (params?.country_code) queryParams.append('country_code', params.country_code)
+    if (params?.search) queryParams.append('search', params.search)
+    
+    const url = `/international-vat/rates${queryParams.toString() ? '?' + queryParams.toString() : ''}`
+    return this.request(url)
+  }
+
+  async getVATRegions() {
+    return this.request('/international-vat/regions')
+  }
+
+  async getCountriesByRegion(region: string) {
+    return this.request(`/international-vat/countries/${region}`)
+  }
+
+  async getVATRateByCountry(countryCode: string) {
+    return this.request(`/international-vat/rate/${countryCode}`)
+  }
+
+  async calculateVAT(amount: number, countryCode: string, rateType: string = 'standard') {
+    return this.request('/international-vat/calculate', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount,
+        country_code: countryCode,
+        rate_type: rateType
+      })
+    })
+  }
+
+  async exportVATRates(format: string = 'csv') {
+    return this.request(`/international-vat/export?format=${format}`)
+  }
+
   async createVATScheme(data: Record<string, unknown>) {
     return this.request('/vat/schemes', {
       method: 'POST',
@@ -196,6 +247,55 @@ class ApiClient {
     const params = new URLSearchParams(filters || {})
     return this.request(`/vat/audit-trail?${params}`)
   }
+
+  async getEnhancedVATReturns(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/vat/enhanced/returns?${params}`)
+  }
+
+  async createEnhancedVATReturn(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/returns', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async calculateVATReturn(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/calculate', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getVATBridges() {
+    return this.request('/vat/enhanced/bridges')
+  }
+
+  async createVATBridge(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/bridges', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async syncVATBridge(bridgeId: string) {
+    return this.request(`/vat/enhanced/bridges/${bridgeId}/sync`, {
+      method: 'POST'
+    })
+  }
+
+  async generateVATReport(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/reports', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getVATReports() {
+    return this.request('/vat/enhanced/reports')
+  }
+
+
 
   async getInvoices(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
@@ -296,6 +396,551 @@ class ApiClient {
   async getEmployeeRates(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
     return this.request(`/practice/employee-rates?${params}`)
+  }
+
+  async getCorporationTaxReturns(companyId: string = 'default-company') {
+    return this.request(`/tax/ct/returns/${companyId}`)
+  }
+
+  async getPersonalTaxReturns(companyId: string = 'default-company') {
+    return this.request(`/tax/sa/returns/${companyId}`)
+  }
+
+  async getPayrollEmployees(companyId: string = 'default-company', filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    const queryString = params.toString() ? `?${params}` : ''
+    return this.request(`/payroll/employees/${companyId}${queryString}`)
+  }
+
+  async getAMLCases(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/cases?${params}`)
+  }
+
+  async getCompanySecretarialFilings(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/cosec/filings?${params}`)
+  }
+
+  async getPracticeDashboard() {
+    return this.request('/practice/dashboard')
+  }
+
+  async getAvailableReliefs(companyId: string = 'default-company') {
+    return this.request(`/tax/ct/reliefs/available?company_id=${companyId}`)
+  }
+
+  async getCharities(): Promise<any> {
+    return this.request('/charity/charities')
+  }
+
+  async createCharity(data: Record<string, unknown>): Promise<any> {
+    return this.request('/charity/charities', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getCharityFunds(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/funds`)
+  }
+
+  async getCharityTrustees(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/trustees`)
+  }
+
+  async generateCharitySOFA(charityId: string, year: number): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/sofa?year=${year}`)
+  }
+
+  async getCharityAIAdvice(charityId: string): Promise<any> {
+    return this.request(`/charity/charities/${charityId}/ai-advice`)
+  }
+
+  async getCompanyFilings(companyId: string): Promise<any> {
+    return this.request(`/cosec/filings/${companyId}`)
+  }
+
+  async createFiling(data: Record<string, unknown>): Promise<any> {
+    return this.request('/cosec/filings', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getFilingDeadlines(companyId: string): Promise<any> {
+    return this.request(`/cosec/deadlines/${companyId}`)
+  }
+
+  async getCompanyOfficers(companyId: string): Promise<any> {
+    return this.request(`/cosec/officers/${companyId}`)
+  }
+
+  async getCompanyPSCs(companyId: string): Promise<any> {
+    return this.request(`/cosec/pscs/${companyId}`)
+  }
+
+  async getAMLRiskAssessments(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/risk-assessments?${params}`)
+  }
+
+  async createAMLRiskAssessment(data: Record<string, unknown>): Promise<any> {
+    return this.request('/aml/risk-assessments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getAMLAlerts(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/alerts?${params}`)
+  }
+
+  async getAMLComplianceMetrics(): Promise<any> {
+    return this.request('/aml/compliance-metrics')
+  }
+
+  async getAMLTrainingRecords(filters?: Record<string, string>): Promise<any> {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/aml/training-records?${params}`)
+  }
+
+  async createCustomer(data: Record<string, unknown>) {
+    return this.request('/books/customers', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createSupplier(data: Record<string, unknown>) {
+    return this.request('/books/suppliers', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createProduct(data: Record<string, unknown>) {
+    return this.request('/books/products', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createExpense(data: Record<string, unknown>) {
+    return this.request('/books/expenses', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async createApprovalRequest(data: Record<string, unknown>) {
+    return this.request('/admin/approval-requests', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async approveRequest(requestId: number) {
+    return this.request(`/admin/approval-requests/${requestId}/approve`, {
+      method: 'POST'
+    })
+  }
+
+  async rejectRequest(requestId: number) {
+    return this.request(`/admin/approval-requests/${requestId}/reject`, {
+      method: 'POST'
+    })
+  }
+
+  async createAccount(data: Record<string, unknown>) {
+    return this.request('/books/accounts', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getProducts(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/products?${params}`)
+  }
+
+  async getProduct(productId: string) {
+    return this.request(`/books/products/${productId}`)
+  }
+
+  async updateProduct(productId: string, data: Record<string, unknown>) {
+    return this.request(`/books/products/${productId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteProduct(productId: string) {
+    return this.request(`/books/products/${productId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async getProductInventory(productId: string) {
+    return this.request(`/books/products/${productId}/inventory`)
+  }
+
+  async createInventoryMovement(data: Record<string, unknown>) {
+    return this.request('/books/inventory/movements', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getInventoryMovements(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/inventory/movements?${params}`)
+  }
+
+  async getStockReport(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/books/inventory/stock-report?${params}`)
+  }
+
+  async createStockAdjustment(data: Record<string, unknown>) {
+    return this.request('/books/inventory/adjustments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getBankReconciliation(accountId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reconciliation/${accountId}?${params}`)
+  }
+
+  async getReconciliationSummary() {
+    return this.request('/books/reconciliation/summary')
+  }
+
+  async getBankAccountsForReconciliation() {
+    return this.request('/books/bank-connections')
+  }
+
+  async getTrialBalanceWithRunningBalances(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/accounts/trial-balance-running${params}`)
+  }
+
+  async getProfitLossWithRunningBalances(startDate: string, endDate: string) {
+    return this.request(`/accounts/profit-loss-running?start_date=${startDate}&end_date=${endDate}`)
+  }
+
+  async getBalanceSheetWithRunningBalances(asOfDate: string) {
+    return this.request(`/accounts/balance-sheet-running?as_of_date=${asOfDate}`)
+  }
+
+  async getAgedDebtors(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/books/aged-debtors${params}`)
+  }
+
+  async getAgedCreditors(asOfDate?: string) {
+    const params = asOfDate ? `?as_of_date=${asOfDate}` : ''
+    return this.request(`/books/aged-creditors${params}`)
+  }
+
+  async getSalesReport(startDate?: string, endDate?: string, customerId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (customerId) params.append('customer_id', customerId)
+    return this.request(`/books/reports/sales?${params}`)
+  }
+
+  async getCustomerReceipts(customerId?: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (customerId) params.append('customer_id', customerId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/customer-receipts?${params}`)
+  }
+
+  async getSalesInvoiceList(startDate?: string, endDate?: string, status?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (status) params.append('status', status)
+    return this.request(`/books/reports/sales-invoice-list?${params}`)
+  }
+
+  async getPurchasesInvoiceList(startDate?: string, endDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/purchases-invoice-list?${params}`)
+  }
+
+  async getTradeDebtorsDetailed(asOfDate?: string, customerId?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    if (customerId) params.append('customer_id', customerId)
+    return this.request(`/books/reports/trade-debtors-detailed?${params}`)
+  }
+
+  async getTradeDebtorsSummary(asOfDate?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    return this.request(`/books/reports/trade-debtors-summary?${params}`)
+  }
+
+  async getTradeCreditorsDetailed(asOfDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/trade-creditors-detailed?${params}`)
+  }
+
+  async getTradeCreditorsSummary(asOfDate?: string) {
+    const params = new URLSearchParams()
+    if (asOfDate) params.append('as_of_date', asOfDate)
+    return this.request(`/books/reports/trade-creditors-summary?${params}`)
+  }
+
+  async getCustomerStatement(customerId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/customer-statements/${customerId}?${params}`)
+  }
+
+  async getSupplierStatement(supplierId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/supplier-statements/${supplierId}?${params}`)
+  }
+
+  async getPaymentsToSuppliers(startDate?: string, endDate?: string, supplierId?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    if (supplierId) params.append('supplier_id', supplierId)
+    return this.request(`/books/reports/payments-to-suppliers?${params}`)
+  }
+
+  async getRecurringTransactions() {
+    return this.request('/books/recurring-transactions')
+  }
+
+  async createRecurringTransaction(data: any) {
+    return this.request('/books/recurring-transactions', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async generateRecurringTransactions() {
+    return this.request('/books/recurring-transactions/generate', {
+      method: 'POST'
+    })
+  }
+
+  async updateRecurringTransaction(transactionId: string, data: any) {
+    return this.request(`/books/recurring-transactions/${transactionId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getAccrualsPrepaymentsments(type?: string) {
+    const params = new URLSearchParams()
+    if (type) params.append('type', type)
+    return this.request(`/books/accruals-prepayments?${params}`)
+  }
+
+  async createAccrualPrepayment(data: any) {
+    return this.request('/books/accruals-prepayments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async reverseAccrualPrepayment(accrualId: string) {
+    return this.request(`/books/accruals-prepayments/${accrualId}/reverse`, {
+      method: 'POST'
+    })
+  }
+
+  async processMonthlyAccrualsPrepaymentsments() {
+    return this.request('/books/accruals-prepayments/process-monthly', {
+      method: 'POST'
+    })
+  }
+
+  async sendInvoiceEmail(invoiceData: any) {
+    return this.request('/email/send-invoice', {
+      method: 'POST',
+      body: JSON.stringify(invoiceData)
+    })
+  }
+
+  async getInvoiceTracking(invoiceId: string) {
+    return this.request(`/email/invoice-tracking/${invoiceId}`)
+  }
+
+  async getMultiYearTrialBalance(companyId: string, years: number = 5) {
+    return this.request(`/books/reports/multi-year-trial-balance?company_id=${companyId}&years=${years}`)
+  }
+
+  async getNominalLedger(companyId: string) {
+    return this.request(`/books/reports/nominal-ledger?company_id=${companyId}`)
+  }
+
+  async getGeneralLedgerDetailed(companyId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    params.append('company_id', companyId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/general-ledger-detailed?${params}`)
+  }
+
+  async getGeneralLedgerSummary(companyId: string, startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    params.append('company_id', companyId)
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/books/reports/general-ledger-summary?${params}`)
+  }
+
+  async getCategorizationRules() {
+    return this.request('/books/categorization-rules')
+  }
+
+  async createCategorizationRule(ruleData: any) {
+    return this.request('/books/categorization-rules', {
+      method: 'POST',
+      body: JSON.stringify(ruleData)
+    })
+  }
+
+  async updateCategorizationRule(ruleId: string, ruleData: any) {
+    return this.request(`/books/categorization-rules/${ruleId}`, {
+      method: 'PUT',
+      body: JSON.stringify(ruleData)
+    })
+  }
+
+  async deleteCategorizationRule(ruleId: string) {
+    return this.request(`/books/categorization-rules/${ruleId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async autoCategorizeTransactions() {
+    return this.request('/books/auto-categorize-transactions', {
+      method: 'POST'
+    })
+  }
+
+  async getTransactionCategorizations() {
+    return this.request('/books/transaction-categorizations')
+  }
+
+  async getFixedAssets() {
+    return this.request('/books/fixed-assets')
+  }
+
+  async createFixedAsset(assetData: any) {
+    return this.request('/books/fixed-assets', {
+      method: 'POST',
+      body: JSON.stringify(assetData)
+    })
+  }
+
+  async updateFixedAsset(assetId: string, assetData: any) {
+    return this.request(`/books/fixed-assets/${assetId}`, {
+      method: 'PUT',
+      body: JSON.stringify(assetData)
+    })
+  }
+
+  async calculateDepreciation() {
+    return this.request('/books/fixed-assets/calculate-depreciation', {
+      method: 'POST'
+    })
+  }
+
+  async exportFixedAssets() {
+    return this.request('/books/fixed-assets/export')
+  }
+
+  async getDocuments() {
+    return this.request<any>('/documents/')
+  }
+
+  async uploadDocument(formData: FormData) {
+    return this.request<any>('/documents/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Tenant-ID': 'default-tenant',
+      }
+    })
+  }
+
+  async getDocumentProcessingStatus(documentId: string) {
+    return this.request<any>(`/documents/${documentId}/processing-status`)
+  }
+
+  async getDocumentDetails(documentId: string) {
+    return this.request<any>(`/documents/${documentId}`)
+  }
+
+  async convertDocument(documentId: string, targetFormat: string) {
+    return this.request<any>(`/documents/${documentId}/convert`, {
+      method: 'POST',
+      body: JSON.stringify({ target_format: targetFormat })
+    })
+  }
+
+  async convertReverseDocument(formData: FormData) {
+    return this.request<any>('/documents/convert-reverse', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Tenant-ID': 'default-tenant',
+      }
+    })
+  }
+
+  async downloadConversion(conversionId: string) {
+    return this.request<any>(`/documents/conversions/${conversionId}/download`)
+  }
+
+  async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET', ...options })
+  }
+
+  async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: isFormData ? data : JSON.stringify(data),
+      headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+      ...options
+    })
+  }
+
+  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      ...options
+    })
+  }
+
+  async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE', ...options })
   }
 }
 
