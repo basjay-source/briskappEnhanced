@@ -121,6 +121,10 @@ class ApiClient {
     return this.request<Client[]>(`/books/customers?${params}`)
   }
 
+  async getClientById(clientId: string) {
+    return this.request(`/clients/${clientId}`)
+  }
+
   async createClient(data: Record<string, unknown>) {
     return this.request('/clients', {
       method: 'POST',
@@ -177,6 +181,43 @@ class ApiClient {
 
   async getVATSchemes() {
     return this.request<Record<string, unknown>[]>('/vat/schemes')
+  }
+
+  async getInternationalVATRates(params?: { region?: string; country_code?: string; search?: string }) {
+    const queryParams = new URLSearchParams()
+    if (params?.region) queryParams.append('region', params.region)
+    if (params?.country_code) queryParams.append('country_code', params.country_code)
+    if (params?.search) queryParams.append('search', params.search)
+    
+    const url = `/international-vat/rates${queryParams.toString() ? '?' + queryParams.toString() : ''}`
+    return this.request(url)
+  }
+
+  async getVATRegions() {
+    return this.request('/international-vat/regions')
+  }
+
+  async getCountriesByRegion(region: string) {
+    return this.request(`/international-vat/countries/${region}`)
+  }
+
+  async getVATRateByCountry(countryCode: string) {
+    return this.request(`/international-vat/rate/${countryCode}`)
+  }
+
+  async calculateVAT(amount: number, countryCode: string, rateType: string = 'standard') {
+    return this.request('/international-vat/calculate', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount,
+        country_code: countryCode,
+        rate_type: rateType
+      })
+    })
+  }
+
+  async exportVATRates(format: string = 'csv') {
+    return this.request(`/international-vat/export?format=${format}`)
   }
 
   async createVATScheme(data: Record<string, unknown>) {
@@ -254,9 +295,6 @@ class ApiClient {
     return this.request('/vat/enhanced/reports')
   }
 
-  async getInternationalVATRates() {
-    return this.request('/vat/international-rates')
-  }
 
 
   async getInvoices(filters?: Record<string, string>) {
@@ -836,6 +874,74 @@ class ApiClient {
     return this.request('/books/fixed-assets/export')
   }
 
+  async getDocuments() {
+    return this.request<any>('/documents/')
+  }
+
+  async uploadDocument(formData: FormData) {
+    return this.request<any>('/documents/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Tenant-ID': 'default-tenant',
+      }
+    })
+  }
+
+  async getDocumentProcessingStatus(documentId: string) {
+    return this.request<any>(`/documents/${documentId}/processing-status`)
+  }
+
+  async getDocumentDetails(documentId: string) {
+    return this.request<any>(`/documents/${documentId}`)
+  }
+
+  async convertDocument(documentId: string, targetFormat: string) {
+    return this.request<any>(`/documents/${documentId}/convert`, {
+      method: 'POST',
+      body: JSON.stringify({ target_format: targetFormat })
+    })
+  }
+
+  async convertReverseDocument(formData: FormData) {
+    return this.request<any>('/documents/convert-reverse', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Tenant-ID': 'default-tenant',
+      }
+    })
+  }
+
+  async downloadConversion(conversionId: string) {
+    return this.request<any>(`/documents/conversions/${conversionId}/download`)
+  }
+
+  async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET', ...options })
+  }
+
+  async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: isFormData ? data : JSON.stringify(data),
+      headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+      ...options
+    })
+  }
+
+  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      ...options
+    })
+  }
+
+  async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE', ...options })
+  }
 }
 
 export const apiClient = new ApiClient()

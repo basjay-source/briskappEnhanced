@@ -2,39 +2,39 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
+import { Badge } from '../../components/ui/badge'
 import { useLocale } from '../../contexts/LocaleContextNew'
 import { apiClient } from '../../lib/api'
 import { 
   Download, Globe,
   FileText, Calculator, BarChart3, Plus,
-  Package, ChevronDown,
+  Package,
   Shield, CheckCircle, Eye, Settings,
-  TrendingUp, Zap, Database, ArrowRight
+  TrendingUp, Zap, Database, ArrowRight, ChevronDown
 } from 'lucide-react'
 
 export default function BookkeepingVAT() {
   const { formatDate } = useLocale()
-  const [activeMainTab, setActiveMainTab] = useState('dashboard')
+  const [activeMainTab, setActiveMainTab] = useState('vat-mtd')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [assets, setAssets] = useState<any[]>([])
   const [showAssetForm, setShowAssetForm] = useState(false)
+  const [internationalVATRates, setInternationalVATRates] = useState<any[]>([])
+  const [vatRegions] = useState<string[]>(['Europe', 'North America', 'Asia Pacific', 'Middle East', 'Africa', 'South America'])
+  const [selectedRegion, setSelectedRegion] = useState('all')
+  const [vatRateSearch, setVatRateSearch] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
   const [vatReturns, setVatReturns] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const loading = false
   const [complianceFilter, setComplianceFilter] = useState('all')
-  const [internationalVATRates, setInternationalVATRates] = useState<any[]>([])
-  const [selectedCountry, setSelectedCountry] = useState('GB')
-  const [vatRateSearch, setVatRateSearch] = useState('')
-  const [selectedRegion, setSelectedRegion] = useState('all')
   const [newAsset, setNewAsset] = useState({
-    asset_name: '',
-    asset_category: 'Equipment',
-    acquisition_date: '',
-    acquisition_cost: '',
-    depreciation_method: 'straight_line',
-    depreciation_rate: '20',
-    useful_life_years: '5',
-    depreciation_start_basis: 'acquisition_date',
-    account_id: ''
+    name: '',
+    category: '',
+    purchaseDate: '',
+    cost: 0,
+    depreciationMethod: 'straight-line',
+    usefulLife: 5
   })
 
   const menuStructure = [
@@ -69,6 +69,13 @@ export default function BookkeepingVAT() {
     }
   }
 
+  useEffect(() => {
+    const initialMenu = menuStructure.find(m => m.id === activeMainTab)
+    if (initialMenu?.hasSubTabs && initialMenu.subTabs && initialMenu.subTabs.length > 0) {
+      setActiveSubTab(initialMenu.subTabs[0])
+    }
+  }, [])
+
   const handleSubTabClick = (subTab: string) => {
     setActiveSubTab(subTab)
   }
@@ -93,8 +100,25 @@ export default function BookkeepingVAT() {
       const returns = (returnsResponse as any)?.returns || []
       const rates = Array.isArray(ratesResponse) ? ratesResponse : []
       
+      const transformedRates = rates.map((rate: any) => ({
+        country: rate.country_name,
+        countryCode: rate.country_code,
+        region: rate.region,
+        standardRate: rate.standard_rate,
+        reducedRates: [rate.reduced_rate_1, rate.reduced_rate_2, rate.super_reduced_rate].filter(r => r != null),
+        zeroRate: rate.zero_rate,
+        currency: rate.currency_code,
+        vatSystemName: rate.vat_system_name,
+        registrationThreshold: rate.registration_threshold,
+        filingFrequency: rate.filing_frequency,
+        digitalReporting: rate.digital_reporting_required,
+        exemptions: rate.exemptions || [],
+        effectiveDate: rate.effective_date || 'Current',
+        lastUpdated: new Date().toISOString()
+      }))
+      
       setVatReturns(Array.isArray(returns) ? returns : [])
-      setInternationalVATRates(rates)
+      setInternationalVATRates(transformedRates)
 
     } catch (error) {
       console.error('Error loading VAT data:', error)
@@ -113,15 +137,12 @@ export default function BookkeepingVAT() {
       await apiClient.createFixedAsset(newAsset)
       setShowAssetForm(false)
       setNewAsset({
-        asset_name: '',
-        asset_category: 'Equipment',
-        acquisition_date: '',
-        acquisition_cost: '',
-        depreciation_method: 'straight_line',
-        depreciation_rate: '20',
-        useful_life_years: '5',
-        depreciation_start_basis: 'acquisition_date',
-        account_id: ''
+        name: '',
+        category: '',
+        purchaseDate: '',
+        cost: 0,
+        depreciationMethod: 'straight-line',
+        usefulLife: 5
       })
       loadAssets()
     } catch (error) {
@@ -135,7 +156,7 @@ export default function BookkeepingVAT() {
       ...assets.map(asset => [
         asset.asset_name,
         asset.asset_category,
-        formatDate(asset.acquisition_date),
+        asset.acquisition_date ? formatDate(asset.acquisition_date) : 'N/A',
         asset.acquisition_cost,
         asset.depreciation_method,
         asset.current_value || 'N/A'
@@ -265,7 +286,7 @@ export default function BookkeepingVAT() {
                     {vatReturn.status}
                   </span>
                 </CardTitle>
-                <CardDescription>Due: {formatDate(vatReturn.due_date)}</CardDescription>
+                <CardDescription>Due: {vatReturn.due_date ? formatDate(vatReturn.due_date) : 'N/A'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -283,27 +304,21 @@ export default function BookkeepingVAT() {
           ))}
         </div>
 
-        {filteredReturns.length === 0 && (
-          <div className="text-center py-8">
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">No VAT returns found matching your criteria.</p>
-          </div>
-        )}
       </div>
     )
   }
 
   function renderInternationalVATRates() {
-    const regions = ['Europe', 'North America', 'Asia Pacific', 'Middle East', 'Africa', 'South America']
-    const filteredRates = internationalVATRates.filter(rate => 
-      rate.country?.toLowerCase().includes(vatRateSearch.toLowerCase()) ||
-      rate.countryCode?.toLowerCase().includes(vatRateSearch.toLowerCase()) ||
-      rate.currency?.toLowerCase().includes(vatRateSearch.toLowerCase())
-    )
-
     const regionFilteredRates = selectedRegion === 'all' 
-      ? filteredRates 
-      : filteredRates.filter(rate => rate.region === selectedRegion)
+      ? internationalVATRates 
+      : internationalVATRates.filter(rate => rate.region === selectedRegion)
+
+    const searchFilteredRates = vatRateSearch 
+      ? regionFilteredRates.filter(rate => 
+          rate.country?.toLowerCase().includes(vatRateSearch.toLowerCase()) ||
+          rate.countryCode?.toLowerCase().includes(vatRateSearch.toLowerCase())
+        )
+      : regionFilteredRates
 
     return (
       <div className="space-y-6">
@@ -336,62 +351,75 @@ export default function BookkeepingVAT() {
           <select
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
+            className="px-3 py-2 bg-blue-900 text-white border border-blue-900 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
           >
-            <option value="all">All Regions</option>
-            {regions.map(region => (
-              <option key={region} value={region}>{region}</option>
+            <option value="all" className="bg-blue-900 text-white">All regions</option>
+            {vatRegions.map(region => (
+              <option key={region} value={region} className="bg-blue-900 text-white">{region}</option>
             ))}
           </select>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {regionFilteredRates.map((rate) => (
-            <Card 
-              key={rate.countryCode} 
-              className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-[#FF6B35]"
-              onClick={() => setSelectedCountry(rate.countryCode)}
-            >
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center">
-                    <Globe className="h-5 w-5 mr-2 text-[#FF6B35]" />
-                    {rate.country}
-                  </span>
-                  <span className="text-sm font-normal text-gray-500">{rate.countryCode}</span>
-                </CardTitle>
-                <CardDescription>{rate.currency}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+          {loading ? (
+            <div className="col-span-full text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF6B35] mx-auto"></div>
+              <p className="text-gray-500 mt-2">Loading VAT rates...</p>
+            </div>
+          ) : searchFilteredRates.length === 0 ? (
+            <div className="col-span-full text-center py-8">
+              <Globe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500">No VAT rates found matching your criteria.</p>
+            </div>
+          ) : (
+            searchFilteredRates.map((rate: any) => (
+              <Card 
+                key={rate.countryCode} 
+                className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-[#FF6B35]"
+                onClick={() => setSelectedCountry(rate.countryCode)}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-semibold">{rate.country}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">{rate.countryCode}</Badge>
+                      <Badge variant="secondary" className="text-xs">{rate.currency}</Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Standard Rate:</span>
+                    <span className="text-sm font-medium text-gray-600">Standard Rate:</span>
                     <span className="text-lg font-bold text-[#FF6B35]">{rate.standardRate}%</span>
                   </div>
+                  
                   {rate.reducedRates && rate.reducedRates.length > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Reduced Rates:</span>
-                      <span className="text-sm">{rate.reducedRates.join(', ')}%</span>
+                      <span className="text-sm font-medium text-gray-600">Reduced Rates:</span>
+                      <span className="text-sm font-semibold">{rate.reducedRates.join(', ')}%</span>
                     </div>
                   )}
+                  
                   {rate.zeroRate && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Zero Rate:</span>
-                      <span className="text-sm text-green-600">Available</span>
+                      <span className="text-sm font-medium text-gray-600">Zero Rate:</span>
+                      <CheckCircle className="h-4 w-4 text-green-500" />
                     </div>
                   )}
-                  <div className="pt-2 border-t">
-                    <span className="text-xs text-gray-500">
-                      Updated: {formatDate(rate.lastUpdated)}
-                    </span>
+                  
+                  <div className="pt-2 border-t border-gray-100">
+                    <div className="flex justify-between items-center text-xs text-gray-500">
+                      <span>System: {rate.vatSystemName || 'VAT'}</span>
+                      <span>Updated: {rate.lastUpdated ? formatDate(rate.lastUpdated) : 'N/A'}</span>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
 
-        {regionFilteredRates.length === 0 && (
+        {searchFilteredRates.length === 0 && (
           <div className="text-center py-8">
             <Globe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500">No VAT rates found matching your search criteria.</p>
@@ -401,11 +429,11 @@ export default function BookkeepingVAT() {
         {selectedCountry && (
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle>VAT Rate Details - {internationalVATRates.find(r => r.countryCode === selectedCountry)?.country}</CardTitle>
+              <CardTitle>VAT Rate Details - {searchFilteredRates.find(r => r.countryCode === selectedCountry)?.country}</CardTitle>
             </CardHeader>
             <CardContent>
               {(() => {
-                const rate = internationalVATRates.find(r => r.countryCode === selectedCountry);
+                const rate = searchFilteredRates.find(r => r.countryCode === selectedCountry);
                 if (!rate) return null;
                 
                 return (
@@ -743,16 +771,16 @@ export default function BookkeepingVAT() {
                 <div>
                   <label className="block text-sm font-medium mb-1">Asset Name</label>
                   <Input
-                    value={newAsset.asset_name}
-                    onChange={(e) => setNewAsset({...newAsset, asset_name: e.target.value})}
+                    value={newAsset.name}
+                    onChange={(e) => setNewAsset({...newAsset, name: e.target.value})}
                     placeholder="Enter asset name"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Category</label>
                   <select
-                    value={newAsset.asset_category}
-                    onChange={(e) => setNewAsset({...newAsset, asset_category: e.target.value})}
+                    value={newAsset.category}
+                    onChange={(e) => setNewAsset({...newAsset, category: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                   >
                     <option value="Equipment">Equipment</option>
@@ -766,24 +794,24 @@ export default function BookkeepingVAT() {
                   <label className="block text-sm font-medium mb-1">Acquisition Date</label>
                   <Input
                     type="date"
-                    value={newAsset.acquisition_date}
-                    onChange={(e) => setNewAsset({...newAsset, acquisition_date: e.target.value})}
+                    value={newAsset.purchaseDate}
+                    onChange={(e) => setNewAsset({...newAsset, purchaseDate: e.target.value})}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Acquisition Cost</label>
                   <Input
                     type="number"
-                    value={newAsset.acquisition_cost}
-                    onChange={(e) => setNewAsset({...newAsset, acquisition_cost: e.target.value})}
+                    value={newAsset.cost}
+                    onChange={(e) => setNewAsset({...newAsset, cost: parseFloat(e.target.value) || 0})}
                     placeholder="0.00"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Depreciation Method</label>
                   <select
-                    value={newAsset.depreciation_method}
-                    onChange={(e) => setNewAsset({...newAsset, depreciation_method: e.target.value})}
+                    value={newAsset.depreciationMethod}
+                    onChange={(e) => setNewAsset({...newAsset, depreciationMethod: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                   >
                     <option value="straight_line">Straight Line</option>
@@ -791,15 +819,16 @@ export default function BookkeepingVAT() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Depreciation Start Basis</label>
+                  <label className="block text-sm font-medium mb-1">Useful Life</label>
                   <select
-                    value={newAsset.depreciation_start_basis}
-                    onChange={(e) => setNewAsset({...newAsset, depreciation_start_basis: e.target.value})}
+                    value={newAsset.usefulLife}
+                    onChange={(e) => setNewAsset({...newAsset, usefulLife: parseInt(e.target.value) || 5})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
                   >
-                    <option value="acquisition_date">Acquisition Date</option>
-                    <option value="start_of_year">Start of Year</option>
-                    <option value="end_of_year">End of Year</option>
+                    <option value="5">5 Years</option>
+                    <option value="10">10 Years</option>
+                    <option value="15">15 Years</option>
+                    <option value="20">20 Years</option>
                   </select>
                 </div>
               </div>
@@ -820,24 +849,24 @@ export default function BookkeepingVAT() {
             <Card key={asset.id} className="cursor-pointer hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span>{asset.asset_name}</span>
+                  <span>{asset.name}</span>
                   <Package className="h-5 w-5 text-[#FF6B35]" />
                 </CardTitle>
-                <CardDescription>{asset.asset_category}</CardDescription>
+                <CardDescription>{asset.category}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm">Acquisition Date:</span>
-                    <span className="font-medium">{formatDate(asset.acquisition_date)}</span>
+                    <span className="text-sm">Purchase Date:</span>
+                    <span className="font-medium">{asset.purchaseDate ? formatDate(asset.purchaseDate) : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Original Cost:</span>
-                    <span className="font-medium">£{asset.acquisition_cost?.toLocaleString()}</span>
+                    <span className="font-medium">£{asset.cost?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Current Value:</span>
-                    <span className="font-medium">£{asset.current_value?.toLocaleString() || 'N/A'}</span>
+                    <span className="font-medium">£{asset.currentValue?.toLocaleString() || 'N/A'}</span>
                   </div>
                 </div>
               </CardContent>

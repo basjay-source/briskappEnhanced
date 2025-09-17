@@ -5,24 +5,27 @@ import {
   FileText, Calculator, PoundSterling, BarChart3, Building, Users, Plus,
   ShoppingCart, Percent, Package, RefreshCw,
   ChevronDown, BookOpen, Landmark, Clock,
-  RotateCcw, ArrowLeft, Mail, Calendar, Upload, Edit, Trash
+  RotateCcw, ArrowLeft, Mail, Calendar, Upload, Edit, Trash, PieChart,
+  Target, LineChart, Link, CreditCard
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
 import { Input } from '../../components/ui/input'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
+import { useLocale } from '../../contexts/LocaleContextNew'
 import { apiClient } from '../../lib/api'
 import { formatCurrency } from '../../lib/currencies'
 import AIPromptSection from '../../components/AIPromptSection'
+import BookkeepingVAT from './BookkeepingVAT'
 
 export default function Bookkeeping() {
   const navigate = useNavigate()
+  const { formatDate } = useLocale()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [isAILoading, setIsAILoading] = useState(false)
   const [kpis, setKpis] = useState<any[]>([])
-  
   const [reportsSearchTerm, setReportsSearchTerm] = useState('')
   const [reportsDateFrom, setReportsDateFrom] = useState('')
   const [reportsDateTo, setReportsDateTo] = useState('')
@@ -39,14 +42,44 @@ export default function Bookkeeping() {
     priority: 100
   })
 
+  const [assets, setAssets] = useState<any[]>([])
+  const [showAssetForm, setShowAssetForm] = useState(false)
+  const [newAsset, setNewAsset] = useState({
+    asset_name: '',
+    asset_category: 'Equipment',
+    acquisition_date: '',
+    acquisition_cost: '',
+    depreciation_method: 'straight_line',
+    depreciation_rate: '20',
+    useful_life_years: '5',
+    depreciation_start_basis: 'acquisition_date',
+    account_id: ''
+  })
+
+  useEffect(() => {
+    loadRules()
+  }, [])
+
   useEffect(() => {
     const loadBookkeepingData = async () => {
       try {
-        const invoicesData = await apiClient.getInvoices()
+        const [invoicesData, expensesData, profitData] = await Promise.all([
+          apiClient.getInvoices(),
+          apiClient.getBills().then(bills => ({ total: (bills as any[])?.reduce((sum, bill) => sum + (bill.amount || 0), 0) || 28000 })),
+          Promise.resolve({ net_profit: 97000 })
+        ])
+        
+        const totalRevenue = (invoicesData as any)?.total_revenue || 
+                           (Array.isArray(invoicesData) ? invoicesData.reduce((sum, inv) => sum + (inv.amount || 0), 0) : 125000)
+        const outstanding = (invoicesData as any)?.outstanding || 
+                          (Array.isArray(invoicesData) ? invoicesData.filter(inv => inv.status === 'pending').reduce((sum, inv) => sum + (inv.amount || 0), 0) : 45000)
+        const expenses = (expensesData as any)?.total || 28000
+        const profit = (profitData as any)?.net_profit || 97000
+        
         const bookkeepingKpis = [
           {
             title: 'Total Revenue',
-            value: formatCurrency((invoicesData as any)?.total_revenue || 125000, 'GBP'),
+            value: formatCurrency(totalRevenue, 'GBP'),
             change: '+12.5%',
             trend: 'up' as const,
             icon: TrendingUp,
@@ -54,7 +87,7 @@ export default function Bookkeeping() {
           },
           {
             title: 'Outstanding Invoices',
-            value: formatCurrency((invoicesData as any)?.outstanding || 45000, 'GBP'),
+            value: formatCurrency(outstanding, 'GBP'),
             change: '-8.2%',
             trend: 'down' as const,
             icon: Receipt,
@@ -62,7 +95,7 @@ export default function Bookkeeping() {
           },
           {
             title: 'Monthly Expenses',
-            value: formatCurrency((invoicesData as any)?.expenses || 28000, 'GBP'),
+            value: formatCurrency(expenses, 'GBP'),
             change: '+5.1%',
             trend: 'up' as const,
             icon: TrendingDown,
@@ -70,7 +103,7 @@ export default function Bookkeeping() {
           },
           {
             title: 'Net Profit',
-            value: formatCurrency((invoicesData as any)?.profit || 97000, 'GBP'),
+            value: formatCurrency(profit, 'GBP'),
             change: '+15.3%',
             trend: 'up' as const,
             icon: PoundSterling,
@@ -80,6 +113,41 @@ export default function Bookkeeping() {
         setKpis(bookkeepingKpis)
       } catch (error) {
         console.error('Error loading bookkeeping data:', error)
+        const fallbackKpis = [
+          {
+            title: 'Total Revenue',
+            value: formatCurrency(125000, 'GBP'),
+            change: '+12.5%',
+            trend: 'up' as const,
+            icon: TrendingUp,
+            color: 'text-green-600'
+          },
+          {
+            title: 'Outstanding Invoices',
+            value: formatCurrency(45000, 'GBP'),
+            change: '-8.2%',
+            trend: 'down' as const,
+            icon: Receipt,
+            color: 'text-blue-600'
+          },
+          {
+            title: 'Monthly Expenses',
+            value: formatCurrency(28000, 'GBP'),
+            change: '+5.1%',
+            trend: 'up' as const,
+            icon: TrendingDown,
+            color: 'text-red-600'
+          },
+          {
+            title: 'Net Profit',
+            value: formatCurrency(97000, 'GBP'),
+            change: '+15.3%',
+            trend: 'up' as const,
+            icon: PoundSterling,
+            color: 'text-green-600'
+          }
+        ]
+        setKpis(fallbackKpis)
       }
     }
     loadBookkeepingData()
@@ -172,15 +240,63 @@ export default function Bookkeeping() {
         { id: 'schemes', label: 'Schemes' }
       ]
     },
-    {
-      id: 'reports',
-      label: 'Reports',
-      icon: FileText,
+    { 
+      id: 'reports', 
+      label: 'Reports', 
+      icon: FileText, 
       hasSubTabs: true,
       subTabs: [
         { id: 'financial-reports', label: 'Financial Reports' },
         { id: 'management-reports', label: 'Management Reports' },
         { id: 'analytics', label: 'Analytics' }
+      ]
+    },
+    { 
+      id: 'projects', 
+      label: 'Projects', 
+      icon: Target, 
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'overview', label: 'Overview' },
+        { id: 'tracking', label: 'Time Tracking' },
+        { id: 'costing', label: 'Project Costing' },
+        { id: 'reports', label: 'Reports' }
+      ]
+    },
+    { 
+      id: 'budgets', 
+      label: 'Budgets', 
+      icon: PieChart, 
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'planning', label: 'Budget Planning' },
+        { id: 'monitoring', label: 'Budget Monitoring' },
+        { id: 'forecasting', label: 'Forecasting' },
+        { id: 'variance', label: 'Variance Analysis' }
+      ]
+    },
+    { 
+      id: 'property', 
+      label: 'Property', 
+      icon: Building, 
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'portfolio', label: 'Property Portfolio' },
+        { id: 'tenants', label: 'Tenant Management' },
+        { id: 'income', label: 'Rental Income' },
+        { id: 'expenses', label: 'Property Expenses' }
+      ]
+    },
+    { 
+      id: 'ecommerce', 
+      label: 'eCommerce', 
+      icon: ShoppingCart, 
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'platforms', label: 'Connected Platforms' },
+        { id: 'orders', label: 'Order Management' },
+        { id: 'settlements', label: 'Settlement Tracking' },
+        { id: 'analytics', label: 'Sales Analytics' }
       ]
     },
     {
@@ -196,11 +312,17 @@ export default function Bookkeeping() {
       hasSubTabs: false
     },
     {
+      id: 'fixed-assets',
+      label: 'Fixed Assets',
+      icon: Building,
+      hasSubTabs: false
+    },
+    {
       id: 'invoice-tracking',
       label: 'Invoice Tracking',
       icon: Mail,
       hasSubTabs: false
-    }
+    },
   ]
 
 
@@ -219,20 +341,92 @@ export default function Bookkeeping() {
   }
 
   function renderMainContent() {
-    if (activeMainTab === 'dashboard') return renderDashboard()
-    if (activeMainTab === 'reports') {
-      if (activeSubTab === 'financial-reports') return renderFinancialReports()
-      if (activeSubTab === 'management-reports') return renderManagementReports()
-      if (activeSubTab === 'analytics') return renderAnalyticsReports()
+    switch (activeMainTab) {
+      case 'dashboard':
+        return renderDashboard()
+      case 'vat':
+        return <BookkeepingVAT />
+      case 'reports':
+        switch (activeSubTab) {
+          case 'financial-reports':
+            return renderFinancialReports()
+          case 'management-reports':
+            return renderManagementReports()
+          case 'analytics':
+            return renderAnalyticsReports()
+          default:
+            return renderFinancialReports()
+        }
+      case 'projects':
+        switch (activeSubTab) {
+          case 'overview':
+            return renderProjectOverview()
+          case 'tracking':
+            return renderTimeTracking()
+          case 'costing':
+            return renderProjectCosting()
+          case 'reports':
+            return renderProjectReports()
+          default:
+            return renderProjectsContent()
+        }
+      case 'budgets':
+        switch (activeSubTab) {
+          case 'planning':
+            return renderBudgetPlanning()
+          case 'monitoring':
+            return renderBudgetMonitoring()
+          case 'forecasting':
+            return renderForecasting()
+          case 'variance':
+            return renderVarianceAnalysis()
+          default:
+            return renderBudgetsContent()
+        }
+      case 'property':
+        switch (activeSubTab) {
+          case 'portfolio':
+            return renderPropertyPortfolio()
+          case 'tenants':
+            return renderTenantManagement()
+          case 'income':
+            return renderRentalIncome()
+          case 'expenses':
+            return renderPropertyExpenses()
+          default:
+            return renderPropertyContent()
+        }
+      case 'ecommerce':
+        switch (activeSubTab) {
+          case 'platforms':
+            return renderConnectedPlatforms()
+          case 'orders':
+            return renderOrderManagement()
+          case 'settlements':
+            return renderSettlementTracking()
+          case 'analytics':
+            return renderSalesAnalytics()
+          default:
+            return renderEcommerceContent()
+        }
+      case 'banking':
+        switch (activeSubTab) {
+          case 'cash-coding':
+            return renderCashCoding()
+          default:
+            return renderCashCoding()
+        }
+      case 'recurring-transactions':
+        return renderRecurringTransactions()
+      case 'accruals-prepayments':
+        return renderAccrualsPrepaymentsments()
+      case 'fixed-assets':
+        return renderFixedAssets()
+      case 'invoice-tracking':
+        return renderInvoiceTracking()
+      default:
+        return renderDashboard()
     }
-    if (activeMainTab === 'banking') {
-      if (activeSubTab === 'cash-coding') return renderCashCoding()
-    }
-    if (activeMainTab === 'recurring-transactions') return renderRecurringTransactions()
-    if (activeMainTab === 'accruals-prepayments') return renderAccrualsPrepaymentsments()
-    if (activeMainTab === 'invoice-tracking') return renderInvoiceTracking()
-    
-    return renderDashboard()
   }
 
   function renderDashboard() {
@@ -257,7 +451,13 @@ export default function Bookkeeping() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {kpis.map((kpi, index) => (
-            <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/app/bookkeeping/transactions')}>
+            <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+              if (kpi.title === 'Total Revenue') navigate('/app/books/sales/invoices')
+              else if (kpi.title === 'Outstanding Invoices') navigate('/app/books/sales/invoices')
+              else if (kpi.title === 'Monthly Expenses') navigate('/app/books/purchases/expenses')
+              else if (kpi.title === 'Net Profit') navigate('/app/books/reports/financial-reports')
+              else navigate('/app/books/banking/transactions')
+            }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -275,7 +475,7 @@ export default function Bookkeeping() {
         </div>
 
         <AIPromptSection
-          title="Bookkeeping AI Adviser"
+          title="Ask your Bookkeeping Adviser"
           description="Get expert advice on financial reports, transactions, and bookkeeping best practices"
           placeholder="Ask about financial reports, transactions, or bookkeeping best practices..."
           onSubmit={handleAIQuestion}
@@ -444,12 +644,12 @@ export default function Bookkeeping() {
             </div>
           </div>
           <div className="p-4">
-            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/1000')}>
+            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/app/books/banking/bank-accounts/1000')}>
               <div>1000 - Cash at Bank</div>
               <div>£25,000.00</div>
               <div>-</div>
             </div>
-            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50" onClick={() => navigate('/app/bookkeeping/account/4000')}>
+            <div className="grid grid-cols-3 gap-4 py-2 text-black cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/app/books/sales/invoices')}>
               <div>4000 - Sales Revenue</div>
               <div>-</div>
               <div>£125,000.00</div>
@@ -811,7 +1011,7 @@ export default function Bookkeeping() {
         title: 'General Ledger Summary',
         description: 'Summary of general ledger accounts',
         icon: BarChart3,
-        color: 'text-orange-600',
+        color: 'text-[#FF6B35]',
         status: 'Generated',
         lastGenerated: '2 hours ago',
         reportType: 'general-ledger-summary'
@@ -858,7 +1058,7 @@ export default function Bookkeeping() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {financialReports
             .filter(report => 
               report.title.toLowerCase().includes(reportsSearchTerm.toLowerCase()) ||
@@ -890,6 +1090,37 @@ export default function Bookkeeping() {
   }
 
   function renderManagementReports() {
+    const managementReports = [
+      {
+        name: 'Monthly Management Pack',
+        description: 'KPIs, variance analysis, and commentary',
+        icon: TrendingUp,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Budget vs Actual',
+        description: 'Performance against budget with variances',
+        icon: BarChart3,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Cash Flow Forecast',
+        description: '13-week rolling cash flow projection',
+        icon: Calculator,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Departmental Analysis',
+        description: 'Cost center performance analysis',
+        icon: PieChart,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      }
+    ]
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -897,12 +1128,76 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Management Reports</h2>
             <p className="text-gray-600">Management accounting and analysis</p>
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export All
+            </Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Custom Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {managementReports.map((report, index) => (
+            <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <report.icon className="h-6 w-6 text-[#FF6B35]" />
+                  <Badge variant="secondary">{report.status}</Badge>
+                </div>
+                <CardTitle className="text-lg">{report.name}</CardTitle>
+                <CardDescription>{report.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>Last generated: {report.lastGenerated}</span>
+                  <Button variant="ghost" size="sm">
+                    View Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     )
   }
 
   function renderAnalyticsReports() {
+    const analysisReports = [
+      {
+        name: 'Ratio Analysis',
+        description: 'Liquidity, profitability, and efficiency ratios',
+        icon: BarChart3,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Trend Analysis',
+        description: 'Multi-period trend identification',
+        icon: TrendingUp,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Benchmarking Report',
+        description: 'Industry comparison and benchmarks',
+        icon: PieChart,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      },
+      {
+        name: 'Variance Analysis',
+        description: 'Detailed variance explanations',
+        icon: Calculator,
+        status: 'ready',
+        lastGenerated: '2024-01-15'
+      }
+    ]
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -910,6 +1205,39 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Analytics & Insights</h2>
             <p className="text-gray-600">Advanced analytics and business intelligence</p>
           </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Download className="h-4 w-4 mr-2" />
+              Export Analytics
+            </Button>
+            <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90 w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              Custom Analysis
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {analysisReports.map((report, index) => (
+            <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <report.icon className="h-6 w-6 text-[#FF6B35]" />
+                  <Badge variant="secondary">{report.status}</Badge>
+                </div>
+                <CardTitle className="text-lg">{report.name}</CardTitle>
+                <CardDescription>{report.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>Last generated: {report.lastGenerated}</span>
+                  <Button variant="ghost" size="sm">
+                    View Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     )
@@ -946,12 +1274,16 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Accruals & Prepayments</h2>
             <p className="text-gray-600">Manage accruals and prepayments with reversals</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Download className="h-4 w-4 mr-2" />
+              Export Accruals
+            </Button>
+            <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90 w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               New Accrual/Prepayment
             </Button>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <RotateCcw className="h-4 w-4 mr-2" />
               Process Monthly
             </Button>
@@ -1024,12 +1356,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold">Cash Coding & Auto-Categorization</h2>
             <p className="text-gray-600">Manage rules for automatic transaction categorization</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowRuleForm(true)}>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => setShowRuleForm(true)} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
-              New Rule
+              Add Rule
             </Button>
-            <Button onClick={handleAutoCategorize}>
+            <Button onClick={handleAutoCategorize} className="w-full sm:w-auto">
               <RefreshCw className="h-4 w-4 mr-2" />
               Auto-Categorize
             </Button>
@@ -1132,6 +1464,235 @@ export default function Bookkeeping() {
     )
   }
 
+  function renderFixedAssets() {
+
+    const loadAssets = async () => {
+      try {
+        const data = await apiClient.getFixedAssets() as any
+        setAssets(data)
+      } catch (error) {
+        console.error('Failed to load fixed assets:', error)
+      }
+    }
+
+    const handleCreateAsset = async () => {
+      try {
+        await apiClient.createFixedAsset({
+          ...newAsset,
+          company_id: 'default'
+        })
+        setShowAssetForm(false)
+        setNewAsset({
+          asset_name: '',
+          asset_category: 'Equipment',
+          acquisition_date: '',
+          acquisition_cost: '',
+          depreciation_method: 'straight_line',
+          depreciation_rate: '20',
+          useful_life_years: '5',
+          depreciation_start_basis: 'acquisition_date',
+          account_id: ''
+        })
+        loadAssets()
+      } catch (error) {
+        console.error('Failed to create asset:', error)
+      }
+    }
+
+    const handleCalculateDepreciation = async () => {
+      try {
+        const result = await apiClient.calculateDepreciation() as any
+        alert(result.message)
+        loadAssets()
+      } catch (error) {
+        console.error('Failed to calculate depreciation:', error)
+      }
+    }
+
+    const handleExportAssets = async () => {
+      try {
+        const result = await apiClient.exportFixedAssets() as any
+        const blob = new Blob([result.csv_data], { type: 'text/csv' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = result.filename
+        a.click()
+        window.URL.revokeObjectURL(url)
+      } catch (error) {
+        console.error('Failed to export assets:', error)
+      }
+    }
+
+    useEffect(() => {
+      loadAssets()
+    }, [])
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Fixed Assets Register</h2>
+            <p className="text-gray-600">Manage fixed assets with flexible depreciation calculations</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowAssetForm(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Asset
+            </Button>
+            <Button variant="outline" onClick={handleCalculateDepreciation}>
+              <Calculator className="h-4 w-4 mr-2" />
+              Calculate Depreciation
+            </Button>
+            <Button onClick={handleExportAssets}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Register
+            </Button>
+          </div>
+        </div>
+
+        {showAssetForm && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add Fixed Asset</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Asset Name</label>
+                  <Input
+                    value={newAsset.asset_name}
+                    onChange={(e) => setNewAsset({...newAsset, asset_name: e.target.value})}
+                    placeholder="e.g., Office Computer"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <select
+                    value={newAsset.asset_category}
+                    onChange={(e) => setNewAsset({...newAsset, asset_category: e.target.value})}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="Equipment">Equipment</option>
+                    <option value="Vehicles">Vehicles</option>
+                    <option value="Buildings">Buildings</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="IT Hardware">IT Hardware</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Acquisition Date</label>
+                  <Input
+                    type="date"
+                    value={newAsset.acquisition_date}
+                    onChange={(e) => setNewAsset({...newAsset, acquisition_date: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Acquisition Cost (£)</label>
+                  <Input
+                    type="number"
+                    value={newAsset.acquisition_cost}
+                    onChange={(e) => setNewAsset({...newAsset, acquisition_cost: e.target.value})}
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Depreciation Method</label>
+                  <select
+                    value={newAsset.depreciation_method}
+                    onChange={(e) => setNewAsset({...newAsset, depreciation_method: e.target.value})}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="straight_line">Straight Line</option>
+                    <option value="reducing_balance">Reducing Balance</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Depreciation Rate (%)</label>
+                  <Input
+                    type="number"
+                    value={newAsset.depreciation_rate}
+                    onChange={(e) => setNewAsset({...newAsset, depreciation_rate: e.target.value})}
+                    placeholder="20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Useful Life (Years)</label>
+                  <Input
+                    type="number"
+                    value={newAsset.useful_life_years}
+                    onChange={(e) => setNewAsset({...newAsset, useful_life_years: e.target.value})}
+                    placeholder="5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Depreciation Start Basis</label>
+                  <select
+                    value={newAsset.depreciation_start_basis}
+                    onChange={(e) => setNewAsset({...newAsset, depreciation_start_basis: e.target.value})}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="acquisition_date">Actual Acquisition Date</option>
+                    <option value="year_start">Start of Year</option>
+                    <option value="year_end">End of Year</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Button onClick={handleCreateAsset}>Add Asset</Button>
+                <Button variant="outline" onClick={() => setShowAssetForm(false)}>Cancel</Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Fixed Assets Register</CardTitle>
+            <CardDescription>Complete register of all fixed assets with depreciation calculations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 p-2 text-left font-medium text-black">Asset Name</th>
+                    <th className="border border-gray-300 p-2 text-left font-medium text-black">Category</th>
+                    <th className="border border-gray-300 p-2 text-left font-medium text-black">Acquisition Date</th>
+                    <th className="border border-gray-300 p-2 text-right font-medium text-black">Cost</th>
+                    <th className="border border-gray-300 p-2 text-left font-medium text-black">Method</th>
+                    <th className="border border-gray-300 p-2 text-right font-medium text-black">Accumulated Depreciation</th>
+                    <th className="border border-gray-300 p-2 text-right font-medium text-black">Book Value</th>
+                    <th className="border border-gray-300 p-2 text-center font-medium text-black">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {assets.map((asset) => (
+                    <tr key={asset.id} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 p-2 text-black">{asset.asset_name}</td>
+                      <td className="border border-gray-300 p-2 text-black">{asset.asset_category}</td>
+                      <td className="border border-gray-300 p-2 text-black">{formatDate(asset.acquisition_date)}</td>
+                      <td className="border border-gray-300 p-2 text-right text-black">£{asset.acquisition_cost.toLocaleString()}</td>
+                      <td className="border border-gray-300 p-2 text-black">{asset.depreciation_method.replace('_', ' ')}</td>
+                      <td className="border border-gray-300 p-2 text-right text-black">£{asset.accumulated_depreciation.toLocaleString()}</td>
+                      <td className="border border-gray-300 p-2 text-right text-black">£{asset.current_book_value.toLocaleString()}</td>
+                      <td className="border border-gray-300 p-2 text-center">
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   function renderInvoiceTracking() {
     return (
       <div className="space-y-6">
@@ -1154,6 +1715,1007 @@ export default function Bookkeeping() {
       </div>
     )
   }
+
+  function renderProjectsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Project Management</h2>
+            <p className="text-gray-600">Track project costs, time, and profitability</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Reports
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Active Projects</CardTitle>
+            <CardDescription>Current projects and their status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Website Redesign</p>
+                  <p className="text-sm text-gray-600">Client: ABC Company Ltd</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="bg-[#FF6B35] h-2 rounded-full" style={{ width: '65%' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-500">65%</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£8,500</p>
+                  <p className="text-xs text-gray-500">Budget: £12,000</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderProjectOverview() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Project Overview</h2>
+            <p className="text-gray-600">Comprehensive view of all projects</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Active Projects</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-[#FF6B35]">12</div>
+              <p className="text-sm text-gray-600">Currently in progress</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Revenue</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£45,230</div>
+              <p className="text-sm text-gray-600">This quarter</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Profit Margin</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">32%</div>
+              <p className="text-sm text-gray-600">Average across projects</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderTimeTracking() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Time Tracking</h2>
+            <p className="text-gray-600">Track time spent on projects and tasks</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Clock className="h-4 w-4 mr-2" />
+              Start Timer
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Timesheet Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Today's Time Entries</CardTitle>
+            <CardDescription>Track your time across different projects</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Website Development</p>
+                  <p className="text-sm text-gray-600">ABC Company Ltd</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">3h 45m</p>
+                  <p className="text-xs text-gray-500">£187.50</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderProjectCosting() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Project Costing</h2>
+            <p className="text-gray-600">Analyze project costs and profitability</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Calculator className="h-4 w-4 mr-2" />
+              Cost Analysis
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Profitability Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Project Cost Breakdown</CardTitle>
+            <CardDescription>Detailed cost analysis by project</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Labor Costs</p>
+                  <p className="text-sm text-gray-600">Direct and indirect labor</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£12,450</p>
+                  <p className="text-xs text-gray-500">65% of total</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderProjectReports() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Project Reports</h2>
+            <p className="text-gray-600">Comprehensive project reporting and analytics</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export Reports
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Custom Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Project Performance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>On Time Delivery</span>
+                  <span className="font-semibold">85%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Budget Adherence</span>
+                  <span className="font-semibold">92%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Client Satisfaction</span>
+                  <span className="font-semibold">4.8/5</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Revenue Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>Total Revenue</span>
+                  <span className="font-semibold">£45,230</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Average Project Value</span>
+                  <span className="font-semibold">£3,769</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Profit Margin</span>
+                  <span className="font-semibold">32%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderBudgetsContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Budgets & Forecasting</h2>
+            <p className="text-gray-600">Budget planning and financial forecasting</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Download className="h-4 w-4 mr-2" />
+              Export Budget
+            </Button>
+            <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90 w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              New Budget
+            </Button>
+            <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90 w-full sm:w-auto">
+              <Calculator className="h-4 w-4 mr-2" />
+              Forecast
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Budget vs Actual</CardTitle>
+            <CardDescription>Current year budget performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Revenue</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-500">85%</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£125,430</p>
+                  <p className="text-xs text-gray-500">Budget: £150,000</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderBudgetPlanning() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Budget Planning</h2>
+            <p className="text-gray-600">Create and manage financial budgets</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              New Budget
+            </Button>
+            <Button className="w-full sm:w-auto">
+              <Calculator className="h-4 w-4 mr-2" />
+              Budget Template
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Budget Categories</CardTitle>
+            <CardDescription>Plan your budget across different categories</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Revenue</p>
+                  <p className="text-sm text-gray-600">Expected income</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£150,000</p>
+                  <p className="text-xs text-gray-500">Annual target</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderBudgetMonitoring() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Budget Monitoring</h2>
+            <p className="text-gray-600">Monitor budget performance and variances</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View Charts
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Variance Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Budget vs Actual</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-[#FF6B35]">85%</div>
+              <p className="text-sm text-gray-600">Of budget achieved</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Variance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">+£5,430</div>
+              <p className="text-sm text-gray-600">Above budget</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Forecast</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">£148,200</div>
+              <p className="text-sm text-gray-600">Year-end projection</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderForecasting() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Financial Forecasting</h2>
+            <p className="text-gray-600">Predict future financial performance</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <LineChart className="h-4 w-4 mr-2" />
+              Generate Forecast
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Forecast Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>12-Month Forecast</CardTitle>
+            <CardDescription>Projected financial performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Revenue Forecast</p>
+                  <p className="text-sm text-gray-600">Based on historical trends</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£180,000</p>
+                  <p className="text-xs text-green-600">+20% growth</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderVarianceAnalysis() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Variance Analysis</h2>
+            <p className="text-gray-600">Analyze budget vs actual performance</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Detailed Analysis
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Variance Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Variance Summary</CardTitle>
+            <CardDescription>Key variances from budget</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Revenue Variance</p>
+                  <p className="text-sm text-gray-600">Actual vs budgeted revenue</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-green-600">+£5,430</p>
+                  <p className="text-xs text-gray-500">3.6% favorable</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderPropertyContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Property Management</h2>
+            <p className="text-gray-600">Rental properties, tenants, and property income</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+            <Button>
+              <Users className="h-4 w-4 mr-2" />
+              Manage Tenants
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Property Portfolio</CardTitle>
+            <CardDescription>Overview of rental properties</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-4">
+                  <Building className="h-8 w-8 text-[#FF6B35]" />
+                  <div>
+                    <p className="font-medium">123 Main Street</p>
+                    <p className="text-sm text-gray-600">2 bed apartment</p>
+                    <p className="text-xs text-gray-500">Tenant: John Smith</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-semibold">£1,200/month</p>
+                  <Badge className="bg-green-100 text-green-800">Occupied</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderPropertyPortfolio() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Property Portfolio</h2>
+            <p className="text-gray-600">Manage your rental property portfolio</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Portfolio Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Properties</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-[#FF6B35]">8</div>
+              <p className="text-sm text-gray-600">Rental properties</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Monthly Income</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">£9,600</div>
+              <p className="text-sm text-gray-600">Total rental income</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Occupancy Rate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">95%</div>
+              <p className="text-sm text-gray-600">Currently occupied</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderTenantManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Tenant Management</h2>
+            <p className="text-gray-600">Manage tenant information and communications</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Tenant
+            </Button>
+            <Button>
+              <Mail className="h-4 w-4 mr-2" />
+              Send Notice
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Active Tenants</CardTitle>
+            <CardDescription>Current tenant information</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">John Smith</p>
+                  <p className="text-sm text-gray-600">123 Main Street, Apt 2B</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£1,200/month</p>
+                  <Badge className="bg-green-100 text-green-800">Current</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderRentalIncome() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Rental Income</h2>
+            <p className="text-gray-600">Track rental income and payments</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Receipt className="h-4 w-4 mr-2" />
+              Record Payment
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Income Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Monthly Income Summary</CardTitle>
+            <CardDescription>Rental income by property</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">123 Main Street</p>
+                  <p className="text-sm text-gray-600">2 bed apartment</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£1,200</p>
+                  <Badge className="bg-green-100 text-green-800">Paid</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderPropertyExpenses() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Property Expenses</h2>
+            <p className="text-gray-600">Track property-related expenses</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Expense
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Expense Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Expenses</CardTitle>
+            <CardDescription>Property maintenance and expenses</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Plumbing Repair</p>
+                  <p className="text-sm text-gray-600">123 Main Street</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£150</p>
+                  <p className="text-xs text-gray-500">Maintenance</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderEcommerceContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">eCommerce Integration</h2>
+            <p className="text-gray-600">Connect and sync with online sales platforms</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Link className="h-4 w-4 mr-2" />
+              Connect Platform
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Sync All
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Connected Platforms</CardTitle>
+            <CardDescription>Your eCommerce integrations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-4">
+                  <ShoppingCart className="h-8 w-8 text-[#FF6B35]" />
+                  <div>
+                    <p className="font-medium">Amazon Seller Central</p>
+                    <p className="text-sm text-gray-600">Last sync: 1 hour ago</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-semibold">£15,430</p>
+                  <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderConnectedPlatforms() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Connected Platforms</h2>
+            <p className="text-gray-600">Manage eCommerce platform integrations</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Link className="h-4 w-4 mr-2" />
+              Add Platform
+            </Button>
+            <Button>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Sync All
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Platform Integrations</CardTitle>
+            <CardDescription>Your connected eCommerce platforms</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Amazon Seller Central</p>
+                  <p className="text-sm text-gray-600">Last sync: 1 hour ago</p>
+                </div>
+                <div className="text-right">
+                  <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderOrderManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Order Management</h2>
+            <p className="text-gray-600">Manage eCommerce orders and fulfillment</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Package className="h-4 w-4 mr-2" />
+              Process Orders
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Order Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Orders</CardTitle>
+            <CardDescription>Latest eCommerce orders</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Order #12345</p>
+                  <p className="text-sm text-gray-600">Amazon - 2 items</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£89.99</p>
+                  <Badge className="bg-blue-100 text-blue-800">Processing</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderSettlementTracking() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Settlement Tracking</h2>
+            <p className="text-gray-600">Track platform settlements and payments</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <CreditCard className="h-4 w-4 mr-2" />
+              View Settlements
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Settlement Report
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Settlements</CardTitle>
+            <CardDescription>Platform payment settlements</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex-1">
+                  <p className="font-medium">Amazon Settlement</p>
+                  <p className="text-sm text-gray-600">Period: 01-15 Sep 2024</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">£2,450.30</p>
+                  <Badge className="bg-green-100 text-green-800">Received</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderSalesAnalytics() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">Sales Analytics</h2>
+            <p className="text-gray-600">Analyze eCommerce sales performance</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View Charts
+            </Button>
+            <Button>
+              <FileText className="h-4 w-4 mr-2" />
+              Analytics Report
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Total Sales</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-[#FF6B35]">£45,230</div>
+              <p className="text-sm text-gray-600">This month</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600">1,234</div>
+              <p className="text-sm text-gray-600">Total orders</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Conversion Rate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-600">3.2%</div>
+              <p className="text-sm text-gray-600">Average conversion</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
 
   return (
     <ResponsiveLayout>
