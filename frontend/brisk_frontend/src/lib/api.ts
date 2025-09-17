@@ -207,6 +207,58 @@ class ApiClient {
     return this.request(`/vat/audit-trail?${params}`)
   }
 
+  async getEnhancedVATReturns(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/vat/enhanced/returns?${params}`)
+  }
+
+  async createEnhancedVATReturn(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/returns', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async calculateVATReturn(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/calculate', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getVATBridges() {
+    return this.request('/vat/enhanced/bridges')
+  }
+
+  async createVATBridge(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/bridges', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async syncVATBridge(bridgeId: string) {
+    return this.request(`/vat/enhanced/bridges/${bridgeId}/sync`, {
+      method: 'POST'
+    })
+  }
+
+  async generateVATReport(data: Record<string, unknown>) {
+    return this.request('/vat/enhanced/reports', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getVATReports() {
+    return this.request('/vat/enhanced/reports')
+  }
+
+  async getInternationalVATRates() {
+    return this.request('/vat/international-rates')
+  }
+
+
   async getInvoices(filters?: Record<string, string>) {
     const params = new URLSearchParams(filters || {})
     return this.request(`/books/invoices?${params}`)
