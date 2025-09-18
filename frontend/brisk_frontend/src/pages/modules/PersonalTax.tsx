@@ -167,6 +167,39 @@ export default function PersonalTax() {
     setActiveMainTab(mainTab)
   }
 
+  function renderHorizontalSubmenus() {
+    const currentTabConfig = menuStructure[activeMainTab]
+    if (!currentTabConfig || !currentTabConfig.hasSubTabs || !currentTabConfig.subTabs) {
+      return null
+    }
+    
+    return (
+      <div className="mb-6 border-b border-gray-200 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(currentTabConfig.subTabs).map(([subKey, subConfig]) => {
+            const SubIcon = subConfig.icon
+            const isSubActive = activeSubTab === subKey && activeMainTab === activeMainTab
+            
+            return (
+              <button
+                key={subKey}
+                onClick={() => handleSubTabClick(subKey, activeMainTab)}
+                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                  isSubActive 
+                    ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md font-semibold' 
+                    : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                }`}
+              >
+                <SubIcon className="h-4 w-4 mr-2" />
+                <span>{subConfig.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   const kpis = [
     {
       title: 'Active SA Returns',
@@ -1256,24 +1289,6 @@ export default function PersonalTax() {
                     )}
                   </button>
                   
-                  {config.hasSubTabs && expandedCategories.includes(key) && config.subTabs && (
-                    <div className="ml-6 mt-1 space-y-1">
-                      {Object.entries(config.subTabs).map(([subKey, subConfig]) => (
-                        <button
-                          key={subKey}
-                          onClick={() => handleSubTabClick(subKey, key)}
-                          className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
-                            activeSubTab === subKey 
-                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
-                              : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                          }`}
-                        >
-                          <subConfig.icon className="h-3 w-3 mr-2" />
-                          {subConfig.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </nav>
@@ -1283,6 +1298,7 @@ export default function PersonalTax() {
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
           <div className="p-6">
+            {renderHorizontalSubmenus()}
             {renderMainContent()}
           </div>
         </div>

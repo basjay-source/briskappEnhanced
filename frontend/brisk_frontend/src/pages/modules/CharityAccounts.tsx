@@ -184,6 +184,37 @@ const CharityAccounts: React.FC = () => {
     setActiveSubTab(subTab)
   }
 
+  function renderHorizontalSubmenus() {
+    const currentTabConfig = menuStructure[activeMainTab as keyof typeof menuStructure]
+    if (!currentTabConfig || !currentTabConfig.subTabs) {
+      return null
+    }
+    
+    return (
+      <div className="mb-6 border-b border-gray-200 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(currentTabConfig.subTabs).map(([subKey, subTab]: [string, any]) => {
+            const isSubActive = activeMainTab === activeMainTab && activeSubTab === subKey
+            
+            return (
+              <button
+                key={subKey}
+                onClick={() => handleSubTabClick(activeMainTab, subKey)}
+                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                  isSubActive 
+                    ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md font-semibold' 
+                    : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                }`}
+              >
+                <span>{subTab.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   const [charities] = useState<CharityAccount[]>([
     {
       id: '1',
@@ -1325,25 +1356,6 @@ const CharityAccounts: React.FC = () => {
                 )}
               </button>
               
-              {expandedCategories.includes(categoryKey) && category.subTabs && (
-                <div className="ml-6 mt-1 space-y-1">
-                  {Object.entries(category.subTabs).map(([subKey, subTab]) => (
-                    <button
-                      key={subKey}
-                      onClick={() => {
-                        handleSubTabClick(categoryKey, subKey)
-                      }}
-                      className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
-                        activeMainTab === categoryKey && activeSubTab === subKey
-                          ? 'bg-brisk-primary text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      {subTab.label}
-                    </button>
-                  ))}
-                </div>
-              )}
               
               {!category.subTabs && (
                 <div className="ml-6 mt-1">
@@ -1367,6 +1379,7 @@ const CharityAccounts: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         <div className="p-6">
+          {renderHorizontalSubmenus()}
           {renderMainContent()}
         </div>
         

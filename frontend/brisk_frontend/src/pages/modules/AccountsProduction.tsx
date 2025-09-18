@@ -83,6 +83,37 @@ const AccountsProduction: React.FC = () => {
     setActiveSubTab(subTabId)
   }
 
+  function renderHorizontalSubmenus() {
+    const currentTabConfig = menuStructure.find(item => item.id === activeMainTab)
+    if (!currentTabConfig || !currentTabConfig.hasSubTabs || !currentTabConfig.subTabs) {
+      return null
+    }
+    
+    return (
+      <div className="mb-6 border-b border-gray-200 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {currentTabConfig.subTabs.map((subTab) => {
+            const isSubActive = activeSubTab === subTab.id
+            
+            return (
+              <button
+                key={subTab.id}
+                onClick={() => handleSubTabClick(subTab.id)}
+                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                  isSubActive 
+                    ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md font-semibold' 
+                    : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                }`}
+              >
+                <span>{subTab.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -414,26 +445,6 @@ const AccountsProduction: React.FC = () => {
                       )}
                     </button>
                     
-                    {item.hasSubTabs && isExpanded && (
-                      <div className="ml-6 mt-1 space-y-1">
-                        {item.subTabs?.map((subTab) => {
-                          const isSubActive = activeSubTab === subTab.id
-                          return (
-                            <button
-                              key={subTab.id}
-                              onClick={() => handleSubTabClick(subTab.id)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
-                                isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
-                                  : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                              }`}
-                            >
-                              <span>{subTab.label}</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    )}
                   </div>
                 )
               })}
@@ -444,6 +455,7 @@ const AccountsProduction: React.FC = () => {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           <div className="flex-1 overflow-y-auto p-6">
+            {renderHorizontalSubmenus()}
             {renderTabContent(activeSubTab || activeMainTab)}
           </div>
         </div>
