@@ -21,6 +21,7 @@ import KPICard from '../../components/KPICard'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import { HorizontalSubmenu } from '../../components/HorizontalSubmenu'
 
 export default function AMLCompliance() {
   const isMobile = useIsMobile()
@@ -142,27 +143,11 @@ export default function AMLCompliance() {
     }
     
     return (
-      <div className="mb-6 border-b border-gray-200 pb-4">
-        <div className="flex flex-wrap gap-2">
-          {currentTabConfig.subTabs.map((subTab) => {
-            const isSubActive = activeSubTab === subTab.id
-            
-            return (
-              <button
-                key={subTab.id}
-                onClick={() => handleSubTabClick(subTab.id)}
-                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 shadow-sm ${
-                  isSubActive 
-                    ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md font-semibold' 
-                    : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                }`}
-              >
-                <span>{subTab.label}</span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
+      <HorizontalSubmenu
+        subTabs={currentTabConfig.subTabs}
+        activeSubTab={activeSubTab}
+        onSubTabClick={(subTabId) => handleSubTabClick(subTabId)}
+      />
     )
   }
 

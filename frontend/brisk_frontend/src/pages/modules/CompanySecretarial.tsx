@@ -40,6 +40,7 @@ import HMRCLogo from '../../components/HMRCLogo'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import FormWizard from '../../components/FormWizard'
+import { HorizontalSubmenu } from '../../components/HorizontalSubmenu'
 
 export default function CompanySecretarial() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -160,6 +161,21 @@ export default function CompanySecretarial() {
 
   const handleSubTabClick = (subTab: string) => {
     setActiveSubTab(subTab)
+  }
+
+  function renderHorizontalSubmenus() {
+    const currentTabConfig = menuStructure[activeMainTab as keyof typeof menuStructure]
+    if (!currentTabConfig || !currentTabConfig.hasSubTabs || !currentTabConfig.subTabs) {
+      return null
+    }
+    
+    return (
+      <HorizontalSubmenu
+        subTabs={currentTabConfig.subTabs}
+        activeSubTab={activeSubTab}
+        onSubTabClick={(subTabId) => handleSubTabClick(subTabId)}
+      />
+    )
   }
 
   const kpis = [
@@ -7768,24 +7784,6 @@ export default function CompanySecretarial() {
                     {config.label}
                   </button>
                   
-                  {config.hasSubTabs && activeMainTab === key && (
-                    <div className="ml-6 mt-2 space-y-1">
-                      {Object.entries(config.subTabs || {}).map(([subKey, subConfig]) => (
-                        <button
-                          key={subKey}
-                          onClick={() => handleSubTabClick(subKey)}
-                          className={`w-full flex items-center px-3 py-2 m-0.5 text-xs rounded-lg transition-all duration-200 shadow-sm ${
-                            activeSubTab === subKey
-                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold'
-                              : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                          }`}
-                        >
-                          <subConfig.icon className="mr-2 h-3 w-3" />
-                          {subConfig.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </nav>
@@ -7794,6 +7792,7 @@ export default function CompanySecretarial() {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
+          {renderHorizontalSubmenus()}
           {renderMainContent()}
         </div>
       </div>

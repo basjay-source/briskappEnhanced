@@ -29,6 +29,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import { HorizontalSubmenu } from '../../components/HorizontalSubmenu'
 import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
 
@@ -119,29 +120,11 @@ export default function TimeAndFeesModuleAdvanced() {
     }
     
     return (
-      <div className="mb-6 border-b border-gray-200 pb-4">
-        <div className="flex flex-wrap gap-2">
-          {currentTabConfig.subTabs.map((subTab) => {
-            const SubIcon = subTab.icon
-            const isSubActive = activeSubTab === subTab.id
-            
-            return (
-              <button
-                key={subTab.id}
-                onClick={() => handleSubTabClick(subTab.id)}
-                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 shadow-sm ${
-                  isSubActive 
-                    ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md font-semibold' 
-                    : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                }`}
-              >
-                <SubIcon className="h-4 w-4 mr-2" />
-                <span>{subTab.label}</span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
+      <HorizontalSubmenu
+        subTabs={currentTabConfig.subTabs}
+        activeSubTab={activeSubTab}
+        onSubTabClick={(subTabId: string) => handleSubTabClick(subTabId)}
+      />
     )
   }
 
