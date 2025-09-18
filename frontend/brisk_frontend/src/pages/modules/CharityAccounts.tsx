@@ -194,7 +194,7 @@ const CharityAccounts: React.FC = () => {
       <div className="mb-6 border-b border-gray-200 pb-4">
         <div className="flex flex-wrap gap-2">
           {Object.entries(currentTabConfig.subTabs).map(([subKey, subTab]: [string, any]) => {
-            const isSubActive = activeMainTab === activeMainTab && activeSubTab === subKey
+            const isSubActive = activeSubTab === subKey
             
             return (
               <button
