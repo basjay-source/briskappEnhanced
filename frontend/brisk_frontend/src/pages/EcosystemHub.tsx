@@ -16,9 +16,9 @@ import {
   Settings,
   Heart
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
 
 export default function EcosystemHub() {
   const modules = [
@@ -162,13 +162,13 @@ export default function EcosystemHub() {
     <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ecosystem Hub</h1>
-          <p className="text-gray-600 mt-2">Welcome to your all-in-one practice management suite</p>
+          <h1 className="text-3xl font-bold text-black">Ecosystem Hub</h1>
+          <p className="text-black mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
           <Link to="/app/practice" className="flex items-center gap-2">
             View Practice Dashboard
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 text-white" />
           </Link>
         </Button>
       </div>
@@ -181,7 +181,7 @@ export default function EcosystemHub() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                    <p className="text-sm font-medium text-black">{kpi.title}</p>
                     <p className="text-2xl font-bold">{kpi.value}</p>
                     <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
                   </div>
@@ -195,7 +195,7 @@ export default function EcosystemHub() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold mb-6">Modules</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{color: '#000000'}}>Modules</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {modules.map((module, index) => {
               const Icon = module.icon
@@ -205,7 +205,7 @@ export default function EcosystemHub() {
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <div className={`p-2 rounded-lg ${module.color} text-white`}>
-                          <Icon className="h-6 w-6" />
+                          <Icon className="h-6 w-6 text-white" />
                         </div>
                         <Badge variant={module.status === 'active' ? 'default' : 'secondary'}>
                           {module.status}
@@ -224,7 +224,7 @@ export default function EcosystemHub() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{color: '#000000'}}>Recent Activity</h2>
           <Card>
             <CardContent className="p-6">
               <div className="space-y-4">
@@ -233,8 +233,8 @@ export default function EcosystemHub() {
                     <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
                     <div className="flex-1">
                       <p className="font-medium">{activity.action}</p>
-                      <p className="text-sm text-gray-600">{activity.client}</p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
+                      <p className="text-sm text-black">{activity.client}</p>
+                      <p className="text-xs text-black">{activity.time}</p>
                     </div>
                   </div>
                 ))}

@@ -23,6 +23,10 @@ const AccountsProduction: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['dashboard'])
   const [isAILoading, setIsAILoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('')
+  const [dateFrom, setDateFrom] = useState<Date | undefined>()
+  const [dateTo, setDateTo] = useState<Date | undefined>()
 
   const menuStructure = [
     {
@@ -150,17 +154,17 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border-brisk-navy-blue border rounded-lg">
               <div>
                 <h3 className="font-semibold">Trial Balance Updated</h3>
-                <p className="text-sm text-gray-600">Client: ABC Ltd - Period: Dec 2024</p>
+                <p className="text-sm text-black">Client: ABC Ltd - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border-brisk-navy-blue border rounded-lg">
               <div>
                 <h3 className="font-semibold">Financial Statements Generated</h3>
-                <p className="text-sm text-gray-600">Client: XYZ Corp - Period: Q4 2024</p>
+                <p className="text-sm text-black">Client: XYZ Corp - Period: Q4 2024</p>
               </div>
               <Badge variant="secondary">In Progress</Badge>
             </div>
@@ -176,11 +180,11 @@ const AccountsProduction: React.FC = () => {
         <h2 className="text-xl font-semibold">Trial Balance</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
-            <Upload className="h-4 w-4 mr-2" />
+            <Upload className="h-4 w-4 mr-2 text-white" />
             Import
           </Button>
           <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="h-4 w-4 mr-2 text-white" />
             Export
           </Button>
         </div>
@@ -194,17 +198,17 @@ const AccountsProduction: React.FC = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-brisk-navy-blue border rounded-lg">
                 <h3 className="font-semibold">Total Debits</h3>
                 <p className="text-2xl font-bold text-blue-600">£208,500</p>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-brisk-navy-blue border rounded-lg">
                 <h3 className="font-semibold">Total Credits</h3>
                 <p className="text-2xl font-bold text-green-600">£208,500</p>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-brisk-navy-blue border rounded-lg">
                 <h3 className="font-semibold">Balance</h3>
-                <p className="text-2xl font-bold text-gray-600">£0.00</p>
+                <p className="text-2xl font-bold text-black">£0.00</p>
               </div>
             </div>
           </div>
@@ -218,7 +222,7 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Adjustments</h2>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 text-white" />
           New Adjustment
         </Button>
       </div>
@@ -230,7 +234,7 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-gray-500">No adjustments recorded for this period</p>
+            <p className="text-black">No adjustments recorded for this period</p>
           </div>
         </CardContent>
       </Card>
@@ -242,7 +246,7 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Financial Statements</h2>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 text-white" />
           Generate Statements
         </Button>
       </div>
@@ -255,7 +259,7 @@ const AccountsProduction: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-4 w-4 mr-2 text-white" />
               View Balance Sheet
             </Button>
           </CardContent>
@@ -268,7 +272,7 @@ const AccountsProduction: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-4 w-4 mr-2 text-white" />
               View P&L
             </Button>
           </CardContent>
@@ -282,7 +286,7 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Consolidation</h2>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 text-white" />
           New Consolidation
         </Button>
       </div>
@@ -294,7 +298,7 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-gray-500">No consolidation entities configured</p>
+            <p className="text-black">No consolidation entities configured</p>
           </div>
         </CardContent>
       </Card>
@@ -306,7 +310,7 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Financial Reports</h2>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 text-white" />
           Generate Report
         </Button>
       </div>
@@ -319,7 +323,7 @@ const AccountsProduction: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-4 w-4 mr-2 text-white" />
               View Reports
             </Button>
           </CardContent>
@@ -332,7 +336,7 @@ const AccountsProduction: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-4 w-4 mr-2 text-white" />
               View Analysis
             </Button>
           </CardContent>
@@ -345,7 +349,7 @@ const AccountsProduction: React.FC = () => {
           </CardHeader>
           <CardContent>
             <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-4 w-4 mr-2 text-white" />
               View Variances
             </Button>
           </CardContent>
@@ -359,7 +363,7 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">iXBRL Generation</h2>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 text-white" />
           Generate iXBRL
         </Button>
       </div>
@@ -371,7 +375,7 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-gray-500">No iXBRL documents generated</p>
+            <p className="text-black">No iXBRL documents generated</p>
           </div>
         </CardContent>
       </Card>
@@ -382,10 +386,10 @@ const AccountsProduction: React.FC = () => {
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-900">Accounts Production</h1>
-            <p className="text-sm text-gray-600 mt-1">Financial Statement Preparation</p>
+        <div className="w-64 bg-white border-r border-brisk-navy-blue flex flex-col">
+          <div className="p-4 border-b border-brisk-navy-blue">
+            <h1 className="text-xl font-bold text-black">Accounts Production</h1>
+            <p className="text-sm text-black mt-1">Financial Statement Preparation</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
@@ -406,11 +410,11 @@ const AccountsProduction: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center">
-                        <Icon className="h-4 w-4 mr-2" />
+                        <Icon className="h-4 w-4 mr-2 text-white" />
                         <span>{item.label}</span>
                       </div>
                       {item.hasSubTabs && (
-                        <ChevronLeft className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                        <ChevronLeft className={`h-4 w-4 text-white transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                       )}
                     </button>
                     

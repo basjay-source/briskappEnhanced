@@ -151,13 +151,13 @@ export default function PracticeManagement() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="h-4 w-4 text-white" />
       case 'in_progress':
-        return <Circle className="h-4 w-4 text-blue-600" />
+        return <Circle className="h-4 w-4 text-white" />
       case 'on_hold':
-        return <Pause className="h-4 w-4 text-brisk-primary" />
+        return <Pause className="h-4 w-4 text-white" />
       default:
-        return <Circle className="h-4 w-4 text-gray-400" />
+        return <Circle className="h-4 w-4 text-white" />
     }
   }
 
@@ -268,16 +268,16 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
         <div>
-          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
-          <p className="text-gray-600 mt-2">Workflow automation, job tracking, compliance management & communications</p>
+          <h1 className={`font-bold text-black ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
+          <p className="text-black mt-2">Workflow automation, job tracking, compliance management & communications</p>
         </div>
         <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
           <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
+            <Filter className="h-4 w-4 mr-2 text-white" />
+            Filter Jobs
           </Button>
           <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4 mr-2 text-white" />
             New Job
           </Button>
         </div>
@@ -289,21 +289,21 @@ export default function PracticeManagement() {
         ))}
       </ResponsiveGrid>
 
-      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-lg border">
+      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-lg border-brisk-navy-blue border">
         <div className="flex-1">
           <input
             type="text"
             placeholder="Search jobs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 border-brisk-navy-blue border rounded-md"
           />
         </div>
         <div className="flex gap-2">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border-brisk-navy-blue border rounded-md"
           >
             {statusOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -312,7 +312,7 @@ export default function PracticeManagement() {
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border-brisk-navy-blue border rounded-md"
           >
             {priorityOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -330,19 +330,19 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.slice(0, 5).map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-3 border-brisk-navy-blue border rounded-lg">
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(job.status)}
                     <div>
                       <p className="font-medium">{job.title}</p>
-                      <p className="text-sm text-gray-600">{job.client}</p>
+                      <p className="text-sm text-black">{job.client}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <Badge className={getPriorityColor(job.priority)}>
                       {job.priority}
                     </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
+                    <p className="text-sm text-black mt-1">{job.assignee}</p>
                   </div>
                 </div>
               ))}
@@ -358,10 +358,10 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {upcomingDeadlines.map((deadline, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border-brisk-navy-blue border rounded-lg">
                   <div>
                     <p className="font-medium">{deadline.type}</p>
-                    <p className="text-sm text-gray-600">{deadline.client}</p>
+                    <p className="text-sm text-black">{deadline.client}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">{deadline.date}</p>
@@ -383,15 +383,15 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Job Overview</h2>
-          <p className="text-gray-600">Complete job management and tracking</p>
+          <p className="text-black">Complete job management and tracking</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Filter className="h-4 w-4 mr-2" />
+            <Filter className="h-4 w-4 mr-2 text-white" />
             Filter Jobs
           </Button>
           <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4 mr-2 text-white" />
             New Job
           </Button>
         </div>
@@ -406,20 +406,20 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-4 border-brisk-navy-blue border rounded-lg">
                   <div className="flex items-center space-x-4">
                     {getStatusIcon(job.status)}
                     <div>
                       <p className="font-medium">{job.title}</p>
-                      <p className="text-sm text-gray-600">{job.client}</p>
-                      <p className="text-xs text-gray-500">Due: {job.dueDate}</p>
+                      <p className="text-sm text-black">{job.client}</p>
+                      <p className="text-xs text-black">Due: {job.dueDate}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <Badge className={getPriorityColor(job.priority)}>
                       {job.priority}
                     </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
+                    <p className="text-sm text-black mt-1">{job.assignee}</p>
                     <Progress value={job.progress} className="w-20 mt-2" />
                   </div>
                 </div>
@@ -436,11 +436,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Time Tracking</h2>
-          <p className="text-gray-600">Track time spent on jobs and tasks</p>
+          <p className="text-black">Track time spent on jobs and tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Clock className="h-4 w-4 mr-2" />
+            <Clock className="h-4 w-4 mr-2 text-white" />
             Start Timer
           </Button>
         </div>
@@ -452,7 +452,7 @@ export default function PracticeManagement() {
           <CardDescription>Track time spent on jobs and tasks</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Time tracking functionality will be implemented here.</p>
+          <p className="text-black">Time tracking functionality will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -463,11 +463,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Deadlines Management</h2>
-          <p className="text-gray-600">Monitor and manage upcoming deadlines</p>
+          <p className="text-black">Monitor and manage upcoming deadlines</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <AlertTriangle className="h-4 w-4 mr-2" />
+            <AlertTriangle className="h-4 w-4 mr-2 text-white" />
             Add Deadline
           </Button>
         </div>
@@ -481,7 +481,7 @@ export default function PracticeManagement() {
         <CardContent>
           <div className="space-y-4">
             {upcomingDeadlines.map((deadline, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={index} className="flex items-center justify-between p-4 border-brisk-navy-blue border rounded-lg">
                 <div>
                   <p className="font-medium">{deadline.type}</p>
                   <p className="text-sm text-gray-600">{deadline.client}</p>
@@ -505,11 +505,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Client Portal</h2>
-          <p className="text-gray-600">Advanced client portal management and configuration</p>
+          <p className="text-black">Advanced client portal management and configuration</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Globe className="h-4 w-4 mr-2" />
+            <Globe className="h-4 w-4 mr-2 text-white" />
             Portal Settings
           </Button>
         </div>
@@ -523,11 +523,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Workflow Builder</h2>
-          <p className="text-gray-600">Design and configure automated workflows</p>
+          <p className="text-black">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Workflow className="h-4 w-4 mr-2" />
+            <Workflow className="h-4 w-4 mr-2 text-white" />
             New Workflow
           </Button>
         </div>
@@ -541,11 +541,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Workflow Automation</h2>
-          <p className="text-gray-600">Configure automated workflow triggers and actions</p>
+          <p className="text-black">Configure automated workflow triggers and actions</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Target className="h-4 w-4 mr-2" />
+            <Target className="h-4 w-4 mr-2 text-white" />
             Automation Rules
           </Button>
         </div>
@@ -557,7 +557,7 @@ export default function PracticeManagement() {
           <CardDescription>Configure automated workflow triggers and actions</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Workflow automation configuration will be implemented here.</p>
+          <p className="text-black">Workflow automation configuration will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -568,11 +568,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Capacity Planning</h2>
-          <p className="text-gray-600">Advanced capacity planning and resource allocation</p>
+          <p className="text-black">Advanced capacity planning and resource allocation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Target className="h-4 w-4 mr-2" />
+            <Target className="h-4 w-4 mr-2 text-white" />
             Plan Capacity
           </Button>
         </div>
@@ -586,11 +586,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Compliance Management</h2>
-          <p className="text-gray-600">Automated compliance monitoring and management</p>
+          <p className="text-black">Automated compliance monitoring and management</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Shield className="h-4 w-4 mr-2" />
+            <Shield className="h-4 w-4 mr-2 text-white" />
             Compliance Check
           </Button>
         </div>
@@ -604,11 +604,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Practice Analytics</h2>
-          <p className="text-gray-600">Analyze practice performance and efficiency</p>
+          <p className="text-black">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <TrendingUp className="h-4 w-4 mr-2" />
+            <TrendingUp className="h-4 w-4 mr-2 text-white" />
             Generate Report
           </Button>
         </div>
@@ -620,7 +620,7 @@ export default function PracticeManagement() {
           <CardDescription>Analyze practice performance and efficiency</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Analytics dashboard will be implemented here.</p>
+          <p className="text-black">Analytics dashboard will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -631,11 +631,11 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">AI Practice Adviser</h2>
-          <p className="text-gray-600">Get intelligent insights for practice optimization</p>
+          <p className="text-black">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Award className="h-4 w-4 mr-2" />
+            <Award className="h-4 w-4 mr-2 text-white" />
             AI Insights
           </Button>
         </div>
@@ -662,7 +662,7 @@ export default function PracticeManagement() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Mail className="h-4 w-4 mr-2" />
+            <Mail className="h-4 w-4 mr-2 text-white" />
             Compose Email
           </Button>
         </div>
@@ -680,7 +680,7 @@ export default function PracticeManagement() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <FileText className="h-4 w-4 mr-2" />
+            <FileText className="h-4 w-4 mr-2 text-white" />
             New Template
           </Button>
         </div>
@@ -707,7 +707,7 @@ export default function PracticeManagement() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <FileText className="h-4 w-4 mr-2" />
+            <FileText className="h-4 w-4 mr-2 text-white" />
             New Template
           </Button>
         </div>
@@ -734,7 +734,7 @@ export default function PracticeManagement() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <BarChart3 className="h-4 w-4 mr-2" />
+            <BarChart3 className="h-4 w-4 mr-2 text-white" />
             View Analytics
           </Button>
         </div>
@@ -789,7 +789,7 @@ export default function PracticeManagement() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <BarChart3 className="h-4 w-4 mr-2" />
+            <BarChart3 className="h-4 w-4 mr-2 text-white" />
             Generate Report
           </Button>
         </div>
@@ -856,8 +856,8 @@ export default function PracticeManagement() {
   return (
     <ResponsiveLayout>
       <div className="flex h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r border-brisk-navy-blue flex flex-col">
+          <div className="p-4 border-b border-brisk-navy-blue">
             <h2 className="text-lg font-semibold text-gray-900">Practice Management</h2>
           </div>
           
@@ -879,7 +879,7 @@ export default function PracticeManagement() {
                       }`}
                     >
                       <div className="flex items-center">
-                        <Icon className="h-4 w-4 mr-3" />
+                        <Icon className="h-4 w-4 mr-3 text-white" />
                         <span>{config.label}</span>
                       </div>
                       {config.hasSubTabs && (
@@ -905,7 +905,7 @@ export default function PracticeManagement() {
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >
-                              <SubIcon className="h-4 w-4 mr-3" />
+                              <SubIcon className="h-4 w-4 mr-3 text-white" />
                               <span>{subConfig.label}</span>
                             </button>
                           )

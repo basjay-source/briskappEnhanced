@@ -272,16 +272,16 @@ export default function CorporationTax() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Corporation Tax Dashboard</h2>
-            <p className="text-gray-600 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
+            <h2 className="text-2xl font-bold text-black">Corporation Tax Dashboard</h2>
+            <p className="text-black mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline">
-              <FileText className="h-4 w-4 mr-2" />
+              <FileText className="h-4 w-4 mr-2 text-white" />
               Export CT600
             </Button>
             <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
-              <Calculator className="h-4 w-4 mr-2" />
+              <Calculator className="h-4 w-4 mr-2 text-white" />
               New Computation
             </Button>
           </div>
@@ -291,7 +291,7 @@ export default function CorporationTax() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5" />
+                <Calculator className="h-5 w-5 text-white" />
                 Corporation Tax Computation
               </CardTitle>
               <CardDescription>
@@ -314,7 +314,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-black">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -326,14 +326,14 @@ export default function CorporationTax() {
                 </div>
               </div>
 
-              <div className="border-t pt-4">
+              <div className="border-t border-brisk-navy-blue pt-4">
                 <div className="flex items-center justify-between">
                   <span className="font-medium">R&D Relief Applied</span>
                   <span className="text-green-600 font-bold">
                     -£{taxData.rdRelief.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex items-center justify-between mt-2 pt-2 border-t">
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-brisk-navy-blue">
                   <span className="font-bold">Optimized Tax Liability</span>
                   <span className="text-2xl font-bold text-brisk-primary">
                     £{taxData.optimizedTax.toLocaleString()}
@@ -343,11 +343,11 @@ export default function CorporationTax() {
 
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1">
-                  <FileText className="h-4 w-4 mr-2" />
+                  <FileText className="h-4 w-4 mr-2 text-white" />
                   View CT600
                 </Button>
                 <Button className="flex-1 bg-brisk-primary hover:bg-brisk-primary-600">
-                  <Calculator className="h-4 w-4 mr-2" />
+                  <Calculator className="h-4 w-4 mr-2 text-white" />
                   Recalculate
                 </Button>
               </div>
@@ -357,7 +357,7 @@ export default function CorporationTax() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
+                <TrendingUp className="h-5 w-5 text-white" />
                 R&D Claims
               </CardTitle>
               <CardDescription>
@@ -366,7 +366,7 @@ export default function CorporationTax() {
             </CardHeader>
             <CardContent className="space-y-4">
               {rdClaims.map((claim, index) => (
-                <div key={index} className="p-3 border rounded-lg">
+                <div key={index} className="p-3 border border-brisk-navy-blue rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-sm">{claim.project}</span>
                     <Badge variant={
@@ -376,14 +376,14 @@ export default function CorporationTax() {
                       {claim.status}
                     </Badge>
                   </div>
-                  <div className="text-xs text-gray-600 space-y-1">
+                  <div className="text-xs text-black space-y-1">
                     <div>Expenditure: £{claim.expenditure.toLocaleString()}</div>
                     <div>Relief: £{claim.relief.toLocaleString()}</div>
                   </div>
                 </div>
               ))}
               <Button variant="outline" className="w-full">
-                <TrendingUp className="h-4 w-4 mr-2" />
+                <TrendingUp className="h-4 w-4 mr-2 text-white" />
                 New R&D Claim
               </Button>
             </CardContent>
@@ -393,7 +393,7 @@ export default function CorporationTax() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
+              <Brain className="h-5 w-5 text-white" />
               AI Tax Recommendations
             </CardTitle>
             <CardDescription>
@@ -402,14 +402,14 @@ export default function CorporationTax() {
           </CardHeader>
           <CardContent className="space-y-4">
             {aiRecommendations.map((rec, index) => (
-              <div key={index} className="p-4 border rounded-lg">
+              <div key={index} className="p-4 border border-brisk-navy-blue rounded-lg">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
-                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-blue-600" />}
-                    {rec.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
-                    {rec.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
-                    {rec.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
+                    {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-white" />}
+                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-white" />}
+                    {rec.type === 'compliance' && <Shield className="h-4 w-4 text-white" />}
+                    {rec.type === 'optimization' && <Zap className="h-4 w-4 text-white" />}
+                    {rec.type === 'planning' && <Target className="h-4 w-4 text-white" />}
                     <span className="font-medium">{rec.title}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -417,16 +417,16 @@ export default function CorporationTax() {
                     <Badge className="bg-green-100 text-green-800">{rec.impact}</Badge>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{rec.description}</p>
+                <p className="text-sm text-black mb-2">{rec.description}</p>
                 <p className="text-xs font-medium text-brisk-primary">{rec.action}</p>
               </div>
             ))}
           </CardContent>
         </Card>
 
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border border-brisk-navy-blue p-6">
           <AIPromptSection
-            title="Corporation Tax AI Assistant"
+            title="Ask your Business Tax Adviser"
             description="Get expert corporation tax guidance and optimization strategies"
             placeholder="Ask about CT600 computations, R&D claims, tax planning strategies..."
             recentQuestions={[
@@ -508,7 +508,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-black">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -530,7 +530,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Tax Adjustments</h2>
-        <p className="text-gray-600">Manage corporation tax adjustments and corrections</p>
+        <p className="text-black">Manage corporation tax adjustments and corrections</p>
       </div>
     )
   }
@@ -539,7 +539,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Supporting Schedules</h2>
-        <p className="text-gray-600">CT600 supporting schedules and computations</p>
+        <p className="text-black">CT600 supporting schedules and computations</p>
       </div>
     )
   }
@@ -548,7 +548,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Validation</h2>
-        <p className="text-gray-600">Validate CT600 computation and check for errors</p>
+        <p className="text-black">Validate CT600 computation and check for errors</p>
       </div>
     )
   }
@@ -595,7 +595,7 @@ export default function CorporationTax() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold">{claim.project}</h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-black">
                         Expenditure: £{claim.expenditure.toLocaleString()} | 
                         Relief: £{claim.relief.toLocaleString()}
                       </p>
@@ -620,7 +620,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Reliefs & Credits</h2>
-        <p className="text-gray-600">Manage corporation tax reliefs and credits</p>
+        <p className="text-black">Manage corporation tax reliefs and credits</p>
       </div>
     )
   }
@@ -629,7 +629,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Group Relief</h2>
-        <p className="text-gray-600">Group relief elections and surrenders</p>
+        <p className="text-black">Group relief elections and surrenders</p>
       </div>
     )
   }
@@ -638,7 +638,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Quarterly Payments</h2>
-        <p className="text-gray-600">Quarterly instalment payments and planning</p>
+        <p className="text-black">Quarterly instalment payments and planning</p>
       </div>
     )
   }
@@ -647,17 +647,17 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Filing</h2>
-        <p className="text-gray-600">CT600 filing and HMRC submissions</p>
+        <p className="text-black">CT600 filing and HMRC submissions</p>
       </div>
     )
   }
 
   return (
     <div className="flex h-screen bg-blue-50">
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-lg font-semibold text-gray-900">Corporation Tax</h1>
-          <p className="text-sm text-gray-600">CT600 & R&D Claims</p>
+      <div className="w-64 bg-white border-r border-brisk-navy-blue flex flex-col">
+        <div className="p-4 border-b border-brisk-navy-blue">
+          <h1 className="text-lg font-semibold text-black">Corporation Tax</h1>
+          <p className="text-sm text-black">CT600 & R&D Claims</p>
         </div>
         
         <div className="flex-1 overflow-y-auto p-2">
@@ -678,7 +678,7 @@ export default function CorporationTax() {
                     }`}
                   >
                     <div className="flex items-center">
-                      <Icon className="h-4 w-4 mr-2" />
+                      <Icon className="h-4 w-4 mr-2 text-white" />
                       {item.label}
                     </div>
                     {item.hasSubTabs && (
