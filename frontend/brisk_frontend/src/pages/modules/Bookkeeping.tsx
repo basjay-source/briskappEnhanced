@@ -56,7 +56,7 @@ import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(['sales', 'purchases', 'banking', 'journals', 'vat', 'reports', 'projects', 'budgets', 'property', 'ecommerce'])
   const isMobile = useIsMobile()
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
