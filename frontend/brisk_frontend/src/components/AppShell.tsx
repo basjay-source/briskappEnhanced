@@ -97,9 +97,9 @@ export default function AppShell() {
   }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen bg-background">
-        <Sidebar>
+        <Sidebar variant="inset">
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-2">
             <BriskLogo className="h-8 w-8" showText={true} />
