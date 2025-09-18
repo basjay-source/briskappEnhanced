@@ -11,7 +11,7 @@ export default function ResponsiveLayout({ children, className }: ResponsiveLayo
 
   return (
     <div className={cn(
-      "min-h-screen bg-background",
+      "min-h-screen w-full bg-background",
       isMobile ? "px-4 py-2" : "px-6 py-4",
       className
     )}>

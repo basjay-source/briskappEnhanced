@@ -338,7 +338,7 @@ export default function AMLCompliance() {
 
   return (
     <ResponsiveLayout>
-      <div className="flex h-screen bg-blue-50">
+      <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
         <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-4 border-b border-gray-200">
