@@ -578,7 +578,7 @@ export default function TimeAndFeesModuleAdvanced() {
               </button>
               
               {tab.hasSubTabs && activeMainTab === tab.id && tab.subTabs && (
-                <div className="ml-4 mt-1 space-y-1">
+                <div className="ml-6 mt-1 space-y-1">
                   {tab.subTabs.map((subTab) => (
                     <button
                       key={subTab.id}
