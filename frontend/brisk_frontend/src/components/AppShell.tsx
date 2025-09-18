@@ -74,7 +74,7 @@ export default function AppShell() {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
           <div className="flex items-center gap-3">
             <MobileNavigation />
@@ -98,7 +98,7 @@ export default function AppShell() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background">
+      <div className="flex min-h-screen bg-background">
         <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-2">

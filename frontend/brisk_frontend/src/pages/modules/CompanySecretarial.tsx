@@ -51,7 +51,7 @@ export default function CompanySecretarial() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [in01FormData, setIn01FormData] = useState<Record<string, string>>({})
-  const [formData] = useState<Record<string, string>>({})
+  const [formData, setFormData] = useState<Record<string, string>>({})
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
