@@ -8,6 +8,7 @@ import AMLKYCDashboard from './pages/AMLKYCDashboard'
 import TimeManagementDashboard from './pages/TimeManagementDashboard'
 import BookkeepingDashboard from './pages/BookkeepingDashboard'
 import PayrollDashboard from './pages/PayrollDashboard'
+import CompanySecretarialDashboard from './pages/CompanySecretarialDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
@@ -51,6 +52,11 @@ function App() {
             <Route path="/payroll/*" element={
               <ProtectedRoute>
                 <PayrollDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/company-secretarial/*" element={
+              <ProtectedRoute>
+                <CompanySecretarialDashboard />
               </ProtectedRoute>
             } />
             <Route path="/" element={
