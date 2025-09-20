@@ -1365,3 +1365,258 @@ class SARReport(Base):
     
     case = relationship("AMLCase")
     filer = relationship("User")
+
+class Currency(Base):
+    __tablename__ = "currencies"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    code = Column(String(3), nullable=False)  # USD, EUR, GBP, etc.
+    name = Column(String, nullable=False)
+    symbol = Column(String(5))
+    exchange_rate = Column(Float, default=1.0)
+    is_base_currency = Column(Boolean, default=False)
+    last_updated = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class VATCode(Base):
+    __tablename__ = "vat_codes"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    code = Column(String(10), nullable=False)  # STD, ZER, EXE, REV, OS
+    description = Column(String, nullable=False)
+    rate = Column(Float, nullable=False)
+    country = Column(String(2))  # UK, EU, US, etc.
+    service_place = Column(String)
+    applicable_services = Column(Text)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class ChartOfAccounts(Base):
+    __tablename__ = "chart_of_accounts"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    account_code = Column(String(20), nullable=False)
+    account_name = Column(String, nullable=False)
+    account_type = Column(String, nullable=False)  # Asset, Liability, Equity, Income, Expense
+    parent_account_id = Column(Integer, ForeignKey("chart_of_accounts.id"))
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class BankAccount(Base):
+    __tablename__ = "bank_accounts"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    account_name = Column(String, nullable=False)
+    bank_name = Column(String)
+    account_number = Column(String)
+    sort_code = Column(String)
+    iban = Column(String)
+    swift_code = Column(String)
+    currency_id = Column(Integer, ForeignKey("currencies.id"))
+    opening_balance = Column(Numeric(15, 2), default=0)
+    current_balance = Column(Numeric(15, 2), default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    currency = relationship("Currency")
+
+class Customer(Base):
+    __tablename__ = "customers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    customer_code = Column(String(20))
+    company_name = Column(String, nullable=False)
+    contact_name = Column(String)
+    email = Column(String)
+    phone = Column(String)
+    address = Column(Text)
+    vat_number = Column(String)
+    default_vat_code_id = Column(Integer, ForeignKey("vat_codes.id"))
+    default_currency_id = Column(Integer, ForeignKey("currencies.id"))
+    payment_terms = Column(String)
+    credit_limit = Column(Numeric(15, 2))
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    default_vat_code = relationship("VATCode")
+    default_currency = relationship("Currency")
+
+class Supplier(Base):
+    __tablename__ = "suppliers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    supplier_code = Column(String(20))
+    company_name = Column(String, nullable=False)
+    contact_name = Column(String)
+    email = Column(String)
+    phone = Column(String)
+    address = Column(Text)
+    vat_number = Column(String)
+    default_vat_code_id = Column(Integer, ForeignKey("vat_codes.id"))
+    default_currency_id = Column(Integer, ForeignKey("currencies.id"))
+    payment_terms = Column(String)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    default_vat_code = relationship("VATCode")
+    default_currency = relationship("Currency")
+
+class SalesInvoice(Base):
+    __tablename__ = "sales_invoices"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    invoice_number = Column(String(50), nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    invoice_date = Column(Date, nullable=False)
+    due_date = Column(Date)
+    currency_id = Column(Integer, ForeignKey("currencies.id"))
+    exchange_rate = Column(Float, default=1.0)
+    subtotal = Column(Numeric(15, 2), default=0)
+    vat_amount = Column(Numeric(15, 2), default=0)
+    total_amount = Column(Numeric(15, 2), default=0)
+    status = Column(String, default="draft")  # draft, sent, paid, overdue, cancelled
+    notes = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    customer = relationship("Customer")
+    currency = relationship("Currency")
+
+class PurchaseBill(Base):
+    __tablename__ = "purchase_bills"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    bill_number = Column(String(50), nullable=False)
+    supplier_id = Column(Integer, ForeignKey("suppliers.id"))
+    bill_date = Column(Date, nullable=False)
+    due_date = Column(Date)
+    currency_id = Column(Integer, ForeignKey("currencies.id"))
+    exchange_rate = Column(Float, default=1.0)
+    subtotal = Column(Numeric(15, 2), default=0)
+    vat_amount = Column(Numeric(15, 2), default=0)
+    total_amount = Column(Numeric(15, 2), default=0)
+    status = Column(String, default="draft")  # draft, approved, paid, cancelled
+    notes = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    supplier = relationship("Supplier")
+    currency = relationship("Currency")
+
+class JournalEntry(Base):
+    __tablename__ = "journal_entries"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    journal_number = Column(String(50), nullable=False)
+    entry_date = Column(Date, nullable=False)
+    description = Column(Text)
+    reference = Column(String)
+    total_debit = Column(Numeric(15, 2), default=0)
+    total_credit = Column(Numeric(15, 2), default=0)
+    status = Column(String, default="draft")  # draft, posted, reversed
+    created_by = Column(Integer, ForeignKey("users.id"))
+    posted_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    creator = relationship("User")
+
+class JournalLine(Base):
+    __tablename__ = "journal_lines"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    journal_entry_id = Column(Integer, ForeignKey("journal_entries.id"))
+    account_id = Column(Integer, ForeignKey("chart_of_accounts.id"))
+    description = Column(Text)
+    debit_amount = Column(Numeric(15, 2), default=0)
+    credit_amount = Column(Numeric(15, 2), default=0)
+    vat_code_id = Column(Integer, ForeignKey("vat_codes.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    journal_entry = relationship("JournalEntry")
+    account = relationship("ChartOfAccounts")
+    vat_code = relationship("VATCode")
+
+class FixedAsset(Base):
+    __tablename__ = "fixed_assets"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    asset_code = Column(String(20))
+    asset_name = Column(String, nullable=False)
+    category = Column(String)
+    purchase_date = Column(Date)
+    purchase_cost = Column(Numeric(15, 2))
+    accumulated_depreciation = Column(Numeric(15, 2), default=0)
+    net_book_value = Column(Numeric(15, 2))
+    depreciation_method = Column(String)  # straight_line, reducing_balance
+    useful_life_years = Column(Integer)
+    depreciation_rate = Column(Float)
+    disposal_date = Column(Date)
+    disposal_proceeds = Column(Numeric(15, 2))
+    status = Column(String, default="active")  # active, disposed, written_off
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class VATReturn(Base):
+    __tablename__ = "vat_returns"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    period_start = Column(Date, nullable=False)
+    period_end = Column(Date, nullable=False)
+    box1_vat_due_sales = Column(Numeric(15, 2), default=0)
+    box2_vat_due_acquisitions = Column(Numeric(15, 2), default=0)
+    box3_total_vat_due = Column(Numeric(15, 2), default=0)
+    box4_vat_reclaimed = Column(Numeric(15, 2), default=0)
+    box5_net_vat_due = Column(Numeric(15, 2), default=0)
+    box6_total_value_sales = Column(Numeric(15, 2), default=0)
+    box7_total_value_purchases = Column(Numeric(15, 2), default=0)
+    box8_total_value_goods_supplied = Column(Numeric(15, 2), default=0)
+    box9_total_value_goods_acquired = Column(Numeric(15, 2), default=0)
+    status = Column(String, default="draft")  # draft, submitted, accepted
+    submitted_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class BankTransaction(Base):
+    __tablename__ = "bank_transactions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    bank_account_id = Column(Integer, ForeignKey("bank_accounts.id"))
+    transaction_date = Column(Date, nullable=False)
+    description = Column(Text)
+    reference = Column(String)
+    amount = Column(Numeric(15, 2), nullable=False)
+    balance = Column(Numeric(15, 2))
+    transaction_type = Column(String)  # debit, credit
+    is_reconciled = Column(Boolean, default=False)
+    reconciled_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    bank_account = relationship("BankAccount")
+
+class ExpenseClaim(Base):
+    __tablename__ = "expense_claims"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    employee_id = Column(Integer, ForeignKey("users.id"))
+    claim_number = Column(String(50))
+    claim_date = Column(Date, nullable=False)
+    description = Column(Text)
+    amount = Column(Numeric(15, 2), nullable=False)
+    vat_amount = Column(Numeric(15, 2), default=0)
+    category = Column(String)
+    status = Column(String, default="submitted")  # submitted, approved, paid, rejected
+    approved_by = Column(Integer, ForeignKey("users.id"))
+    approved_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    employee = relationship("User", foreign_keys=[employee_id])
+    approver = relationship("User", foreign_keys=[approved_by])

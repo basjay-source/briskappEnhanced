@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import create_tables
-from .routers import auth, admin, document_hub, practice_management, aml_kyc, time_fees
+from .routers import auth, admin, document_hub, practice_management, aml_kyc, time_fees, bookkeeping
 from .models import (
     Tenant, OrgUnit, User, Subscription, UserRole, 
     Environment, Region, SubscriptionStatus
@@ -26,6 +26,7 @@ app.include_router(document_hub.router)
 app.include_router(practice_management.router)
 app.include_router(aml_kyc.router)
 app.include_router(time_fees.router)
+app.include_router(bookkeeping.router)
 
 @app.on_event("startup")
 async def startup_event():

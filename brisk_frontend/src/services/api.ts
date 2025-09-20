@@ -885,4 +885,29 @@ export const timeFeesApi = {
     api.get('/time-fees/reports/realization', { params }).then(res => res.data)
 }
 
+export const bookkeepingApi = {
+  getDashboardStats: () => api.get('/bookkeeping/dashboard-stats'),
+  getChartOfAccounts: () => api.get('/bookkeeping/chart-of-accounts'),
+  getBankAccounts: () => api.get('/bookkeeping/bank-accounts'),
+  getCustomers: () => api.get('/bookkeeping/customers'),
+  getSuppliers: () => api.get('/bookkeeping/suppliers'),
+  getSalesInvoices: () => api.get('/bookkeeping/sales-invoices'),
+  getPurchaseBills: () => api.get('/bookkeeping/purchase-bills'),
+  getJournalEntries: () => api.get('/bookkeeping/journal-entries'),
+  getFixedAssets: () => api.get('/bookkeeping/fixed-assets'),
+  getVATCodes: () => api.get('/bookkeeping/vat-codes'),
+  getCurrencies: () => api.get('/bookkeeping/currencies'),
+  getVATReturns: () => api.get('/bookkeeping/vat-returns'),
+  getBankTransactions: () => api.get('/bookkeeping/bank-transactions'),
+  getExpenseClaims: () => api.get('/bookkeeping/expense-claims'),
+  getTrialBalance: () => api.get('/bookkeeping/reports/trial-balance'),
+  getAgedReceivables: () => api.get('/bookkeeping/reports/aged-receivables'),
+  getAgedPayables: () => api.get('/bookkeeping/reports/aged-payables'),
+  createCustomer: (data: any) => api.post('/bookkeeping/customers', data),
+  createSupplier: (data: any) => api.post('/bookkeeping/suppliers', data),
+  createSalesInvoice: (data: any) => api.post('/bookkeeping/sales-invoices', data),
+  createPurchaseBill: (data: any) => api.post('/bookkeeping/purchase-bills', data),
+  createJournalEntry: (data: any) => api.post('/bookkeeping/journal-entries', data)
+}
+
 export default api

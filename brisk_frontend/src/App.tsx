@@ -6,6 +6,7 @@ import DocumentHubDashboard from './pages/DocumentHubDashboard'
 import PracticeManagementDashboard from './pages/PracticeManagementDashboard'
 import AMLKYCDashboard from './pages/AMLKYCDashboard'
 import TimeManagementDashboard from './pages/TimeManagementDashboard'
+import BookkeepingDashboard from './pages/BookkeepingDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
@@ -39,6 +40,11 @@ function App() {
             <Route path="/time-management/*" element={
               <ProtectedRoute>
                 <TimeManagementDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/bookkeeping/*" element={
+              <ProtectedRoute>
+                <BookkeepingDashboard />
               </ProtectedRoute>
             } />
             <Route path="/" element={
