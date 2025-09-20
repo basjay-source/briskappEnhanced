@@ -115,7 +115,7 @@ const ESignApprovals: React.FC = () => {
     <div className="w-full max-w-full space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">E-Sign & Approvals</h1>
+          <h1 className="text-3xl font-bold text-gray-900">E-Sign &amp; Approvals</h1>
           <p className="text-gray-600 mt-2">Manage electronic signatures and approval workflows</p>
         </div>
         <Button>
@@ -355,7 +355,35 @@ const ESignApprovals: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex space-x-2">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-medium text-gray-700 uppercase mb-2">Signature Font</p>
+                    <select className="w-full text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" style={{fontFamily: 'var(--selected-font, inherit)'}}>
+                      <option value="Allura" style={{fontFamily: 'Allura, cursive'}}>Allura</option>
+                      <option value="Dancing Script" style={{fontFamily: 'Dancing Script, cursive'}}>Dancing Script</option>
+                      <option value="Great Vibes" style={{fontFamily: 'Great Vibes, cursive'}}>Great Vibes</option>
+                      <option value="Pacifico" style={{fontFamily: 'Pacifico, cursive'}}>Pacifico</option>
+                      <option value="Satisfy" style={{fontFamily: 'Satisfy, cursive'}}>Satisfy</option>
+                      <option value="Kaushan Script" style={{fontFamily: 'Kaushan Script, cursive'}}>Kaushan Script</option>
+                      <option value="Amatic SC" style={{fontFamily: 'Amatic SC, cursive'}}>Amatic SC</option>
+                      <option value="Caveat" style={{fontFamily: 'Caveat, cursive'}}>Caveat</option>
+                      <option value="Courgette" style={{fontFamily: 'Courgette, cursive'}}>Courgette</option>
+                      <option value="Handlee" style={{fontFamily: 'Handlee, cursive'}}>Handlee</option>
+                      <option value="Indie Flower" style={{fontFamily: 'Indie Flower, cursive'}}>Indie Flower</option>
+                      <option value="Kalam" style={{fontFamily: 'Kalam, cursive'}}>Kalam</option>
+                      <option value="Leckerli One" style={{fontFamily: 'Leckerli One, cursive'}}>Leckerli One</option>
+                      <option value="Lobster" style={{fontFamily: 'Lobster, cursive'}}>Lobster</option>
+                      <option value="Marck Script" style={{fontFamily: 'Marck Script, cursive'}}>Marck Script</option>
+                      <option value="Permanent Marker" style={{fontFamily: 'Permanent Marker, cursive'}}>Permanent Marker</option>
+                      <option value="Shadows Into Light" style={{fontFamily: 'Shadows Into Light, cursive'}}>Shadows Into Light</option>
+                      <option value="Tangerine" style={{fontFamily: 'Tangerine, cursive'}}>Tangerine</option>
+                      <option value="Yellowtail" style={{fontFamily: 'Yellowtail, cursive'}}>Yellowtail</option>
+                      <option value="Zeyada" style={{fontFamily: 'Zeyada, cursive'}}>Zeyada</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex space-x-2 mt-4">
                   <Button variant="outline" size="sm">Use</Button>
                   <Button variant="outline" size="sm">Edit</Button>
                 </div>

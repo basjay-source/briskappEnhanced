@@ -99,7 +99,7 @@ const LeadSchedules: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Lead Schedules & Working Papers</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Lead Schedules &amp; Working Papers</h1>
         <div className="flex space-x-2">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
             Generate All Schedules
@@ -114,7 +114,7 @@ const LeadSchedules: React.FC = () => {
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'sofp', label: 'Statement of Financial Position' },
-            { id: 'pl', label: 'P&L' },
+            { id: 'pl', label: 'P&amp;L' },
             { id: 'subledgers', label: 'Subledgers' },
             { id: 'tick-marks', label: 'Tick-marks & Cross-refs' }
           ].map((tab) => (
@@ -269,7 +269,7 @@ const LeadSchedules: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Status & References</h3>
+                <h3 className="text-lg font-semibold">Status &amp; References</h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="space-y-3">
                     <div>
@@ -292,7 +292,7 @@ const LeadSchedules: React.FC = () => {
             </div>
 
             <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-3">Tick Marks & Procedures</h3>
+              <h3 className="text-lg font-semibold mb-3">Tick Marks &amp; Procedures</h3>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="space-y-2">
                   {selectedSchedule.tickMarks.map((tick, index) => (

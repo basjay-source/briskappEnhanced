@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -159,4 +159,107 @@ async def get_financial_ratios(db: Session = Depends(get_db)):
         "debtor_days": 36,
         "roe": 20.8,
         "debt_to_equity": 0.21
+    }
+
+@router.get("/audit-trail")
+async def get_audit_trail(db: Session = Depends(get_db)):
+    """Get audit trail data"""
+    return {
+        "changes": [
+            {
+                "id": "1",
+                "timestamp": "2024-01-20T14:30:15Z",
+                "user": "Sarah Wilson",
+                "action": "Updated",
+                "section": "Notes & Disclosures",
+                "details": "Modified related party transactions note",
+                "type": "Data Change"
+            },
+            {
+                "id": "2",
+                "timestamp": "2024-01-20T11:45:22Z",
+                "user": "John Smith",
+                "action": "Approved",
+                "section": "Cash Flow Statement",
+                "details": "Approved working capital adjustments",
+                "type": "Status Change"
+            }
+        ],
+        "review_points": [
+            {
+                "id": "1",
+                "section": "Notes & Disclosures",
+                "point": "Related party transactions disclosure incomplete",
+                "author": "Sarah Wilson",
+                "date": "2024-01-19",
+                "status": "Open",
+                "priority": "High"
+            }
+        ]
+    }
+
+@router.get("/signoff-workflow")
+async def get_signoff_workflow(db: Session = Depends(get_db)):
+    """Get sign-off workflow status"""
+    return {
+        "workflow_steps": [
+            {"step": "Preparer Review", "user": "Jane Doe", "status": "Complete", "date": "2024-01-18"},
+            {"step": "Manager Review", "user": "John Smith", "status": "Complete", "date": "2024-01-19"},
+            {"step": "Partner Review", "user": "Sarah Wilson", "status": "In Progress", "date": None},
+            {"step": "Client Approval", "user": "Client Director", "status": "Pending", "date": None}
+        ],
+        "signatures": [
+            {"role": "Director", "name": "John Smith", "status": "Signed", "date": "2024-01-19"},
+            {"role": "Company Secretary", "name": "Sarah Wilson", "status": "Pending", "date": None}
+        ],
+        "versions": [
+            {"version": "v1.0", "date": "2024-01-15", "user": "Jane Doe", "status": "Draft", "locked": False},
+            {"version": "v2.0", "date": "2024-01-20", "user": "Sarah Wilson", "status": "Final", "locked": True}
+        ]
+    }
+
+@router.get("/report-templates")
+async def get_report_templates(db: Session = Depends(get_db)):
+    """Get report templates and styling options"""
+    return {
+        "cover_templates": [
+            {"id": "1", "name": "Professional", "description": "Clean professional layout"},
+            {"id": "2", "name": "Corporate", "description": "Corporate branding focused"},
+            {"id": "3", "name": "Minimal", "description": "Minimal design approach"}
+        ],
+        "styles": {
+            "colors": {
+                "primary": "#0B5FFF",
+                "secondary": "#FF7A00",
+                "accent": "#10B981"
+            },
+            "fonts": {
+                "heading": "Arial",
+                "body": "Arial",
+                "size": "12pt"
+            },
+            "layout": {
+                "orientation": "Portrait",
+                "size": "A4",
+                "margins": "Normal (2.5cm)"
+            }
+        }
+    }
+
+@router.post("/review-points")
+async def create_review_point(review_point: Dict[str, Any], db: Session = Depends(get_db)):
+    """Create a new review point"""
+    return {
+        "id": "new_id",
+        "message": "Review point created successfully",
+        "review_point": review_point
+    }
+
+@router.post("/signoff/{step}")
+async def complete_signoff(step: str, db: Session = Depends(get_db)):
+    """Complete a sign-off step"""
+    return {
+        "message": f"Sign-off completed for {step}",
+        "timestamp": datetime.now().isoformat(),
+        "status": "Complete"
     }

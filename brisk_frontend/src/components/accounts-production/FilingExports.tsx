@@ -27,7 +27,7 @@ const FilingExports: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Filing & Exports</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Filing &amp; Exports</h1>
         <div className="flex space-x-2">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
             File to Companies House

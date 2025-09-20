@@ -4,6 +4,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import Dashboard from '../components/accounts-production/Dashboard'
 import EngagementSetup from '../components/accounts-production/EngagementSetup'
 import ImportMapping from '../components/accounts-production/ImportMapping'
+import ChartOfAccounts from '../components/accounts-production/ChartOfAccounts'
 import Adjustments from '../components/accounts-production/Adjustments'
 import LeadSchedules from '../components/accounts-production/LeadSchedules'
 import NotesDisclosures from '../components/accounts-production/NotesDisclosures'
@@ -33,6 +34,7 @@ const AccountsProductionDashboard: React.FC = () => {
     { id: 'dashboard', label: 'Dashboard', path: '/accounts-production/dashboard', icon: '📊' },
     { id: 'engagement-setup', label: 'Engagement Setup', path: '/accounts-production/engagement-setup', icon: '⚙️' },
     { id: 'import-mapping', label: 'Import & Mapping', path: '/accounts-production/import-mapping', icon: '📥' },
+    { id: 'chart-of-accounts', label: 'Chart of Accounts', path: '/accounts-production/chart-of-accounts', icon: '📋' },
     { id: 'adjustments', label: 'Adjustments', path: '/accounts-production/adjustments', icon: '📝' },
     { id: 'lead-schedules', label: 'Lead Schedules & Working Papers', path: '/accounts-production/lead-schedules', icon: '📋' },
     { id: 'notes-disclosures', label: 'Notes & Disclosures', path: '/accounts-production/notes-disclosures', icon: '📄' },
@@ -168,6 +170,7 @@ const AccountsProductionDashboard: React.FC = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/engagement-setup" element={<EngagementSetup />} />
                 <Route path="/import-mapping" element={<ImportMapping />} />
+                <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
                 <Route path="/adjustments" element={<Adjustments />} />
                 <Route path="/lead-schedules" element={<LeadSchedules />} />
                 <Route path="/notes-disclosures" element={<NotesDisclosures />} />

@@ -204,10 +204,10 @@ const EngagementSetup: React.FC = () => {
 
       {activeTab === 'materiality' && (
         <div className="bg-white rounded-lg shadow p-6 space-y-6">
-          <h2 className="text-lg font-semibold">Materiality & Rounding</h2>
+          <h2 className="text-lg font-semibold">Materiality &amp; Rounding</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Materiality Threshold (£)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Materiality Threshold (&pound;)</label>
               <input
                 type="number"
                 value={materialitySettings.threshold}
@@ -216,16 +216,16 @@ const EngagementSetup: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Rounding Base (£)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Rounding Base (&pound;)</label>
               <select
                 value={materialitySettings.roundingBase}
                 onChange={(e) => handleMaterialityChange('roundingBase', parseInt(e.target.value))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value={1}>£1 - Exact</option>
-                <option value={10}>£10 - Nearest ten</option>
-                <option value={100}>£100 - Nearest hundred</option>
-                <option value={1000}>£1,000 - Nearest thousand</option>
+                <option value={1}>&pound;1 - Exact</option>
+                <option value={10}>&pound;10 - Nearest ten</option>
+                <option value={100}>&pound;100 - Nearest hundred</option>
+                <option value={1000}>&pound;1,000 - Nearest thousand</option>
               </select>
             </div>
           </div>
