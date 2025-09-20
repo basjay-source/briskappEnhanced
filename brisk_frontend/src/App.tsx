@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import LoginPage from './pages/LoginPage'
+import EcosystemHub from './pages/EcosystemHub'
 import AdminDashboard from './pages/AdminDashboard'
 import DocumentHubDashboard from './pages/DocumentHubDashboard'
 import PracticeManagementDashboard from './pages/PracticeManagementDashboard'
@@ -73,7 +74,7 @@ function App() {
             } />
             <Route path="/" element={
               <ProtectedRoute>
-                <AdminDashboard />
+                <EcosystemHub />
               </ProtectedRoute>
             } />
           </Routes>
