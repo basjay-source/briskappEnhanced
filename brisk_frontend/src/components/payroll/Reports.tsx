@@ -199,16 +199,306 @@ const Reports: React.FC = () => {
     </div>
   )
 
+  const renderCostByDept = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">Cost by Department/Project</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Export Analysis
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Department Breakdown</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">Finance</span>
+              <span className="text-gray-900">£125,750 (25.9%)</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">Operations</span>
+              <span className="text-gray-900">£189,200 (38.9%)</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">Sales &amp; Marketing</span>
+              <span className="text-gray-900">£98,450 (20.3%)</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">IT &amp; Development</span>
+              <span className="text-gray-900">£72,350 (14.9%)</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Project Allocation</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">Project Alpha</span>
+              <span className="text-gray-900">£156,200</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">Project Beta</span>
+              <span className="text-gray-900">£98,750</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span className="font-medium">BAU Operations</span>
+              <span className="text-gray-900">£230,800</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderHMRCReports = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">HMRC Reports</h3>
+        <div className="flex space-x-3">
+          <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+            Submit RTI
+          </button>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            Download P60s
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">FPS Submissions</h4>
+          <div className="text-2xl font-bold text-green-600 mb-2">12</div>
+          <div className="text-sm text-gray-500">This tax year</div>
+          <button className="mt-3 text-blue-600 hover:text-blue-900 text-sm">View Details</button>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">EPS Submissions</h4>
+          <div className="text-2xl font-bold text-blue-600 mb-2">4</div>
+          <div className="text-sm text-gray-500">This tax year</div>
+          <button className="mt-3 text-blue-600 hover:text-blue-900 text-sm">View Details</button>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">P60 Forms</h4>
+          <div className="text-2xl font-bold text-orange-600 mb-2">156</div>
+          <div className="text-sm text-gray-500">Generated</div>
+          <button className="mt-3 text-blue-600 hover:text-blue-900 text-sm">Download All</button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submission</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">FPS-2024-01</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Full Payment Submission</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">31/01/2024</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Accepted
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderPensionReports = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">Pension Reports</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Generate AE Report
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Auto-Enrolled</h4>
+          <div className="text-2xl font-bold text-green-600 mb-2">142</div>
+          <div className="text-sm text-gray-500">Employees</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Opted Out</h4>
+          <div className="text-2xl font-bold text-red-600 mb-2">8</div>
+          <div className="text-sm text-gray-500">Employees</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Contributions</h4>
+          <div className="text-2xl font-bold text-blue-600 mb-2">£11,500</div>
+          <div className="text-sm text-gray-500">This month</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Next Assessment</h4>
+          <div className="text-2xl font-bold text-orange-600 mb-2">15</div>
+          <div className="text-sm text-gray-500">Days</div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Contribution Breakdown</h4>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span className="font-medium">Employee Contributions (5%)</span>
+            <span className="text-gray-900">£5,750</span>
+          </div>
+          <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span className="font-medium">Employer Contributions (3%)</span>
+            <span className="text-gray-900">£3,450</span>
+          </div>
+          <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span className="font-medium">Tax Relief (2%)</span>
+            <span className="text-gray-900">£2,300</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderAuditTrail = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">Audit Trail</h3>
+        <div className="flex space-x-3">
+          <input
+            type="text"
+            placeholder="Search audit logs..."
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            Export Logs
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entity</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-31 14:30:25</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sarah Johnson</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Pay Run Approved</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">PR-2024-01</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">January 2024 Monthly</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-31 12:15:10</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Mike Chen</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Employee Updated</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">EMP001</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Salary adjustment</td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-30 16:45:33</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Admin System</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">RTI Submitted</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">FPS-2024-01</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">HMRC Accepted</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderCustomReports = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">Custom Report Builder</h3>
+        <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+          Create New Report
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Saved Reports</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <div className="font-medium">Monthly Department Summary</div>
+                <div className="text-sm text-gray-500">Created: 15/01/2024</div>
+              </div>
+              <div className="flex space-x-2">
+                <button className="text-blue-600 hover:text-blue-900 text-sm">Run</button>
+                <button className="text-green-600 hover:text-green-900 text-sm">Edit</button>
+              </div>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <div className="font-medium">Overtime Analysis</div>
+                <div className="text-sm text-gray-500">Created: 08/01/2024</div>
+              </div>
+              <div className="flex space-x-2">
+                <button className="text-blue-600 hover:text-blue-900 text-sm">Run</button>
+                <button className="text-green-600 hover:text-green-900 text-sm">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Builder</h4>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
+              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>Employee Summary</option>
+                <option>Department Analysis</option>
+                <option>Pay Period Comparison</option>
+                <option>Deduction Breakdown</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+              <div className="grid grid-cols-2 gap-2">
+                <input type="date" className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="date" className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+            <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+              Generate Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'payslip-summary': return renderPayslipSummary()
       case 'gross-to-net': return renderGrossToNet()
       case 'variance': return renderVarianceReport()
-      case 'cost-by-dept': return <div className="p-6 text-center text-gray-500">Cost by Department/Project reports will be displayed here</div>
-      case 'hmrc-reports': return <div className="p-6 text-center text-gray-500">HMRC reports will be displayed here</div>
-      case 'pension-reports': return <div className="p-6 text-center text-gray-500">Pension reports will be displayed here</div>
-      case 'audit-trail': return <div className="p-6 text-center text-gray-500">Audit trail reports will be displayed here</div>
-      case 'custom': return <div className="p-6 text-center text-gray-500">Custom report builder will be displayed here</div>
+      case 'cost-by-dept': return renderCostByDept()
+      case 'hmrc-reports': return renderHMRCReports()
+      case 'pension-reports': return renderPensionReports()
+      case 'audit-trail': return renderAuditTrail()
+      case 'custom': return renderCustomReports()
       default: return renderPayslipSummary()
     }
   }
