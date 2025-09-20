@@ -1620,3 +1620,343 @@ class ExpenseClaim(Base):
     
     employee = relationship("User", foreign_keys=[employee_id])
     approver = relationship("User", foreign_keys=[approved_by])
+
+class Employee(Base):
+    __tablename__ = "employees"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_number = Column(String(50), nullable=False, unique=True)
+    
+    title = Column(String(10))
+    first_name = Column(String(100), nullable=False)
+    middle_name = Column(String(100))
+    last_name = Column(String(100), nullable=False)
+    full_name = Column(String(255), nullable=False)
+    date_of_birth = Column(Date)
+    gender = Column(String(10))
+    
+    email = Column(String(255))
+    phone = Column(String(50))
+    address_line_1 = Column(String(255))
+    address_line_2 = Column(String(255))
+    city = Column(String(100))
+    county = Column(String(100))
+    postcode = Column(String(20))
+    country = Column(String(100), default="United Kingdom")
+    
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    status = Column(String(50), default="active")  # active, inactive, terminated
+    department = Column(String(100))
+    job_title = Column(String(100))
+    manager_id = Column(Integer, ForeignKey("employees.id"))
+    
+    ni_number = Column(String(20))
+    tax_code = Column(String(20))
+    ni_category = Column(String(5), default="A")
+    
+    bank_name = Column(String(100))
+    account_name = Column(String(100))
+    account_number = Column(String(20))
+    sort_code = Column(String(10))
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    manager = relationship("Employee", remote_side=[id])
+    contracts = relationship("Contract", back_populates="employee")
+    timesheets = relationship("Timesheet", back_populates="employee")
+    leave_requests = relationship("LeaveRequest", back_populates="employee")
+    benefits = relationship("Benefit", back_populates="employee")
+    deductions = relationship("Deduction", back_populates="employee")
+
+class Contract(Base):
+    __tablename__ = "contracts"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+    
+    contract_type = Column(String(50), nullable=False)  # permanent, fixed_term, casual
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    
+    salary_annual = Column(Numeric(10, 2))
+    hourly_rate = Column(Numeric(10, 2))
+    pay_frequency = Column(String(20), default="monthly")  # weekly, monthly, annual
+    pay_calendar = Column(String(50))
+    
+    contracted_hours = Column(Numeric(5, 2))
+    working_pattern = Column(String(100))
+    
+    holiday_entitlement = Column(Numeric(5, 2), default=28.0)
+    holiday_year_start = Column(String(10), default="01-01")
+    
+    status = Column(String(50), default="active")
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    employee = relationship("Employee", back_populates="contracts")
+
+class PayElement(Base):
+    __tablename__ = "pay_elements"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    
+    code = Column(String(20), nullable=False, unique=True)
+    name = Column(String(100), nullable=False)
+    element_type = Column(String(50), nullable=False)  # earning, deduction, benefit
+    
+    is_taxable = Column(Boolean, default=True)
+    is_ni_able = Column(Boolean, default=True)
+    is_pensionable = Column(Boolean, default=True)
+    
+    calculation_method = Column(String(50))  # fixed, percentage, hours_based
+    default_value = Column(Numeric(10, 2))
+    
+    gl_account = Column(String(20))
+    department_dimension = Column(String(50))
+    
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+
+class PayRun(Base):
+    __tablename__ = "pay_runs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    
+    pay_period_start = Column(Date, nullable=False)
+    pay_period_end = Column(Date, nullable=False)
+    pay_date = Column(Date, nullable=False)
+    
+    description = Column(String(255))
+    pay_calendar = Column(String(50))
+    
+    status = Column(String(50), default="draft")  # draft, approved, committed, paid
+    created_by = Column(Integer, ForeignKey("users.id"))
+    approved_by = Column(Integer, ForeignKey("users.id"))
+    approved_at = Column(DateTime)
+    committed_by = Column(Integer, ForeignKey("users.id"))
+    committed_at = Column(DateTime)
+    
+    total_gross = Column(Numeric(12, 2), default=0)
+    total_tax = Column(Numeric(12, 2), default=0)
+    total_ni = Column(Numeric(12, 2), default=0)
+    total_pension = Column(Numeric(12, 2), default=0)
+    total_net = Column(Numeric(12, 2), default=0)
+    employee_count = Column(Integer, default=0)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    creator = relationship("User", foreign_keys=[created_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+    committer = relationship("User", foreign_keys=[committed_by])
+
+class Timesheet(Base):
+    __tablename__ = "timesheets"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+    
+    period_start = Column(Date, nullable=False)
+    period_end = Column(Date, nullable=False)
+    
+    regular_hours = Column(Numeric(5, 2), default=0)
+    overtime_hours = Column(Numeric(5, 2), default=0)
+    sick_hours = Column(Numeric(5, 2), default=0)
+    holiday_hours = Column(Numeric(5, 2), default=0)
+    
+    status = Column(String(50), default="draft")  # draft, submitted, approved, rejected
+    submitted_at = Column(DateTime)
+    approved_by = Column(Integer, ForeignKey("users.id"))
+    approved_at = Column(DateTime)
+    
+    notes = Column(Text)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    employee = relationship("Employee", back_populates="timesheets")
+    approver = relationship("User", foreign_keys=[approved_by])
+
+class LeaveRequest(Base):
+    __tablename__ = "leave_requests"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+    
+    leave_type = Column(String(50), nullable=False)  # annual, sick, maternity, paternity, unpaid
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    days_requested = Column(Numeric(3, 1), nullable=False)
+    
+    status = Column(String(50), default="pending")  # pending, approved, rejected, cancelled
+    approved_by = Column(Integer, ForeignKey("users.id"))
+    approved_at = Column(DateTime)
+    
+    reason = Column(Text)
+    manager_notes = Column(Text)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    employee = relationship("Employee", back_populates="leave_requests")
+    approver = relationship("User", foreign_keys=[approved_by])
+
+class PensionScheme(Base):
+    __tablename__ = "pension_schemes"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    
+    scheme_name = Column(String(100), nullable=False)
+    provider_name = Column(String(100), nullable=False)
+    scheme_reference = Column(String(50))
+    
+    employer_rate = Column(Numeric(5, 2), default=3.0)
+    employee_rate = Column(Numeric(5, 2), default=5.0)
+    
+    lower_earnings_limit = Column(Numeric(10, 2))
+    upper_earnings_limit = Column(Numeric(10, 2))
+    
+    is_qualifying_scheme = Column(Boolean, default=True)
+    auto_enrolment_date = Column(Date)
+    re_enrolment_date = Column(Date)
+    
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+
+class Benefit(Base):
+    __tablename__ = "benefits"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+    
+    benefit_type = Column(String(50), nullable=False)  # company_car, medical, life_insurance
+    description = Column(String(255))
+    
+    annual_value = Column(Numeric(10, 2))
+    cash_equivalent = Column(Numeric(10, 2))
+    
+    is_payroll_taxed = Column(Boolean, default=False)
+    is_p11d_reportable = Column(Boolean, default=True)
+    
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    employee = relationship("Employee", back_populates="benefits")
+
+class Deduction(Base):
+    __tablename__ = "deductions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+    
+    deduction_type = Column(String(50), nullable=False)  # aeo, student_loan, postgrad_loan
+    reference = Column(String(100))
+    
+    calculation_method = Column(String(50))  # fixed, percentage, table_based
+    rate = Column(Numeric(5, 2))
+    threshold = Column(Numeric(10, 2))
+    
+    maximum_amount = Column(Numeric(10, 2))
+    outstanding_balance = Column(Numeric(10, 2))
+    
+    priority = Column(Integer, default=1)
+    
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date)
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    employee = relationship("Employee", back_populates="deductions")
+
+class CompanyCar(Base):
+    __tablename__ = "company_cars"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    
+    registration = Column(String(20), nullable=False, unique=True)
+    make = Column(String(50), nullable=False)
+    model = Column(String(50), nullable=False)
+    
+    co2_emissions = Column(Integer)
+    fuel_type = Column(String(20))  # petrol, diesel, electric, hybrid
+    
+    list_price = Column(Numeric(10, 2))
+    date_first_registered = Column(Date)
+    
+    assigned_employee_id = Column(Integer, ForeignKey("employees.id"))
+    assignment_start = Column(Date)
+    assignment_end = Column(Date)
+    
+    fuel_provided = Column(Boolean, default=False)
+    
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    assigned_employee = relationship("Employee", foreign_keys=[assigned_employee_id])
+
+class CISSubcontractor(Base):
+    __tablename__ = "cis_subcontractors"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    
+    name = Column(String(255), nullable=False)
+    trading_name = Column(String(255))
+    utr = Column(String(20))
+    ni_number = Column(String(20))
+    company_registration = Column(String(20))
+    
+    verification_status = Column(String(50))  # verified, not_verified, pending
+    verification_date = Column(Date)
+    verification_reference = Column(String(100))
+    
+    deduction_rate = Column(Numeric(5, 2), default=20.0)  # 20% or 30%
+    
+    address_line_1 = Column(String(255))
+    address_line_2 = Column(String(255))
+    city = Column(String(100))
+    county = Column(String(100))
+    postcode = Column(String(20))
+    
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
