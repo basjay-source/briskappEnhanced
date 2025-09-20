@@ -288,28 +288,243 @@ const Sales: React.FC = () => {
       {activeTab === 'customers' && renderCustomers()}
       {activeTab === 'sales-invoices' && renderSalesInvoices()}
       {activeTab === 'quotes' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Quotes management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active Quotes</h3>
+              <p className="text-2xl font-bold text-blue-600">24</p>
+              <p className="text-sm text-blue-700">Awaiting response</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Accepted</h3>
+              <p className="text-2xl font-bold text-green-600">18</p>
+              <p className="text-sm text-green-700">This month</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Pending</h3>
+              <p className="text-2xl font-bold text-yellow-600">6</p>
+              <p className="text-sm text-yellow-700">Need follow-up</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Win Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">75%</p>
+              <p className="text-sm text-purple-700">Success rate</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Sales Quotes</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search quotes..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Quote
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Create and manage sales quotes with automated follow-up, conversion tracking, and seamless invoice generation upon acceptance.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'credit-notes' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Credit notes management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Total Credit Notes</h3>
+              <p className="text-2xl font-bold text-blue-600">12</p>
+              <p className="text-sm text-blue-700">This month</p>
+            </div>
+            <div className="bg-red-50 rounded-lg p-4">
+              <h3 className="font-medium text-red-900">Total Value</h3>
+              <p className="text-2xl font-bold text-red-600">£8,450</p>
+              <p className="text-sm text-red-700">Credits issued</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Applied</h3>
+              <p className="text-2xl font-bold text-green-600">9</p>
+              <p className="text-sm text-green-700">Against invoices</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Outstanding</h3>
+              <p className="text-2xl font-bold text-yellow-600">3</p>
+              <p className="text-sm text-yellow-700">Unapplied credits</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Credit Notes Management</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search credit notes..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Credit Note
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Issue credit notes for returns, adjustments, and corrections with automatic VAT handling and customer account allocation.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'recurring' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Recurring invoices coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active Templates</h3>
+              <p className="text-2xl font-bold text-blue-600">15</p>
+              <p className="text-sm text-blue-700">Recurring invoices</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Monthly Revenue</h3>
+              <p className="text-2xl font-bold text-green-600">£45K</p>
+              <p className="text-sm text-green-700">Recurring income</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Next Run</h3>
+              <p className="text-2xl font-bold text-yellow-600">8</p>
+              <p className="text-sm text-yellow-700">Due tomorrow</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Success Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">98%</p>
+              <p className="text-sm text-purple-700">Auto-generation</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Recurring Invoice Templates</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search templates..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Template
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Set up automated recurring invoices with flexible scheduling, escalation rules, and automatic payment collection integration.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'receipts' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Receipt allocation coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Unallocated</h3>
+              <p className="text-2xl font-bold text-blue-600">£12,500</p>
+              <p className="text-sm text-blue-700">Pending allocation</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Allocated Today</h3>
+              <p className="text-2xl font-bold text-green-600">£25,000</p>
+              <p className="text-sm text-green-700">Payments matched</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Partial Payments</h3>
+              <p className="text-2xl font-bold text-yellow-600">8</p>
+              <p className="text-sm text-yellow-700">Need completion</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Auto-Match Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">85%</p>
+              <p className="text-sm text-purple-700">Success rate</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Receipt Allocation</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search receipts..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  Auto-Allocate
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Allocate customer payments to outstanding invoices with intelligent matching, partial payment handling, and automated reconciliation.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'price-lists' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Price lists management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active Price Lists</h3>
+              <p className="text-2xl font-bold text-blue-600">6</p>
+              <p className="text-sm text-blue-700">Current lists</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Products/Services</h3>
+              <p className="text-2xl font-bold text-green-600">156</p>
+              <p className="text-sm text-green-700">Total items</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Customer Groups</h3>
+              <p className="text-2xl font-bold text-yellow-600">12</p>
+              <p className="text-sm text-yellow-700">Pricing tiers</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Avg Margin</h3>
+              <p className="text-2xl font-bold text-purple-600">35%</p>
+              <p className="text-sm text-purple-700">Gross margin</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Price Lists Management</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search price lists..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Price List
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Manage product and service pricing with customer-specific rates, volume discounts, and automated price updates across all sales channels.</p>
+            </div>
+          </div>
         </div>
       )}
     </div>

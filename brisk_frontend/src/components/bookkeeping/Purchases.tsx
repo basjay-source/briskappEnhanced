@@ -287,23 +287,195 @@ const Purchases: React.FC = () => {
       {activeTab === 'suppliers' && renderSuppliers()}
       {activeTab === 'bills' && renderBills()}
       {activeTab === 'purchase-orders' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Purchase orders management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active POs</h3>
+              <p className="text-2xl font-bold text-blue-600">24</p>
+              <p className="text-sm text-blue-700">Pending delivery</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Completed</h3>
+              <p className="text-2xl font-bold text-green-600">156</p>
+              <p className="text-sm text-green-700">This month</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Total Value</h3>
+              <p className="text-2xl font-bold text-yellow-600">£89,450</p>
+              <p className="text-sm text-yellow-700">Outstanding orders</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Overdue</h3>
+              <p className="text-2xl font-bold text-purple-600">3</p>
+              <p className="text-sm text-purple-700">Need follow-up</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Purchase Orders Management</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search purchase orders..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New PO
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Create and manage purchase orders with approval workflows, delivery tracking, and automatic conversion to bills upon receipt.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'credit-notes' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Credit notes management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Credit Notes</h3>
+              <p className="text-2xl font-bold text-blue-600">8</p>
+              <p className="text-sm text-blue-700">This month</p>
+            </div>
+            <div className="bg-red-50 rounded-lg p-4">
+              <h3 className="font-medium text-red-900">Total Value</h3>
+              <p className="text-2xl font-bold text-red-600">£3,450</p>
+              <p className="text-sm text-red-700">Credits received</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Applied</h3>
+              <p className="text-2xl font-bold text-green-600">6</p>
+              <p className="text-sm text-green-700">Against bills</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Outstanding</h3>
+              <p className="text-2xl font-bold text-yellow-600">2</p>
+              <p className="text-sm text-yellow-700">Unapplied credits</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Supplier Credit Notes</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search credit notes..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Credit Note
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Manage supplier credit notes for returns, adjustments, and corrections with automatic VAT handling and bill allocation.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'recurring-bills' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Recurring bills coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active Templates</h3>
+              <p className="text-2xl font-bold text-blue-600">12</p>
+              <p className="text-sm text-blue-700">Recurring bills</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Monthly Cost</h3>
+              <p className="text-2xl font-bold text-green-600">£15,680</p>
+              <p className="text-sm text-green-700">Recurring expenses</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Next Run</h3>
+              <p className="text-2xl font-bold text-yellow-600">5</p>
+              <p className="text-sm text-yellow-700">Due tomorrow</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Success Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">96%</p>
+              <p className="text-sm text-purple-700">Auto-generation</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Recurring Bill Templates</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search templates..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New Template
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Set up automated recurring bills for utilities, rent, subscriptions, and other regular expenses with flexible scheduling and approval workflows.</p>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'receipts' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Goods received notes coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">GRNs Created</h3>
+              <p className="text-2xl font-bold text-blue-600">45</p>
+              <p className="text-sm text-blue-700">This month</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Matched to POs</h3>
+              <p className="text-2xl font-bold text-green-600">42</p>
+              <p className="text-sm text-green-700">Auto-matched</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Pending Bills</h3>
+              <p className="text-2xl font-bold text-yellow-600">8</p>
+              <p className="text-sm text-yellow-700">Awaiting invoices</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Discrepancies</h3>
+              <p className="text-2xl font-bold text-purple-600">2</p>
+              <p className="text-sm text-purple-700">Need review</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Goods Received Notes (GRNs)</h3>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search GRNs..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+                  New GRN
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600">Track goods received against purchase orders with automatic matching, quality control, and seamless conversion to purchase bills.</p>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -252,13 +252,137 @@ const InvoiceTracking: React.FC = () => {
       {activeTab === 'overdue' && renderInvoiceList('Overdue')}
       {activeTab === 'paid' && renderInvoiceList('Paid')}
       {activeTab === 'analytics' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Invoice analytics coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Total Invoiced</h3>
+              <p className="text-2xl font-bold text-blue-600">£245,680</p>
+              <p className="text-sm text-blue-700">This quarter</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Collection Rate</h3>
+              <p className="text-2xl font-bold text-green-600">92%</p>
+              <p className="text-sm text-green-700">YTD average</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">DSO</h3>
+              <p className="text-2xl font-bold text-yellow-600">22</p>
+              <p className="text-sm text-yellow-700">Days sales outstanding</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Bad Debt</h3>
+              <p className="text-2xl font-bold text-purple-600">1.2%</p>
+              <p className="text-sm text-purple-700">Of total sales</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Invoice Analytics & Insights</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Top Customers by Value</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Acme Corp Ltd</span>
+                      <span className="text-sm font-medium">£45,200</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Tech Solutions Inc</span>
+                      <span className="text-sm font-medium">£32,800</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Global Industries</span>
+                      <span className="text-sm font-medium">£28,500</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Payment Performance</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Fastest Payer</span>
+                      <span className="text-sm font-medium text-green-600">5 days avg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Slowest Payer</span>
+                      <span className="text-sm font-medium text-red-600">45 days avg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Industry Average</span>
+                      <span className="text-sm font-medium">30 days</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'automation' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Invoice automation coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Auto-Generated</h3>
+              <p className="text-2xl font-bold text-blue-600">156</p>
+              <p className="text-sm text-blue-700">Invoices this month</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Auto-Sent</h3>
+              <p className="text-2xl font-bold text-green-600">142</p>
+              <p className="text-sm text-green-700">Delivered automatically</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Follow-ups</h3>
+              <p className="text-2xl font-bold text-yellow-600">89</p>
+              <p className="text-sm text-yellow-700">Auto reminders sent</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Success Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">94%</p>
+              <p className="text-sm text-purple-700">Automation accuracy</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Invoice Automation Workflows</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Recurring Invoice Generation</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically generate and send recurring invoices based on subscription schedules</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Time & Expense Invoicing</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Auto-generate invoices from approved time entries and expense claims</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Payment Reminder Sequences</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automated reminder emails sent at 3, 7, and 14 days after due date</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Late Fee Application</h4>
+                    <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Pending</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically apply late fees to overdue invoices after 30 days</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

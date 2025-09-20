@@ -306,28 +306,329 @@ const EcommerceIntegration: React.FC = () => {
       {activeTab === 'platforms' && renderPlatforms()}
       {activeTab === 'orders' && renderOrders()}
       {activeTab === 'inventory' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Inventory management coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Total Products</h3>
+              <p className="text-2xl font-bold text-blue-600">2,456</p>
+              <p className="text-sm text-blue-700">Across all platforms</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">In Stock</h3>
+              <p className="text-2xl font-bold text-green-600">1,892</p>
+              <p className="text-sm text-green-700">Available items</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Low Stock</h3>
+              <p className="text-2xl font-bold text-yellow-600">124</p>
+              <p className="text-sm text-yellow-700">Need reordering</p>
+            </div>
+            <div className="bg-red-50 rounded-lg p-4">
+              <h3 className="font-medium text-red-900">Out of Stock</h3>
+              <p className="text-2xl font-bold text-red-600">45</p>
+              <p className="text-sm text-red-700">Urgent attention</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Inventory Management</h3>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">Centralized inventory management across all ecommerce platforms with real-time stock level synchronization and automated reorder alerts.</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Multi-Platform Sync</h4>
+                  <p className="text-sm text-gray-600">Synchronize inventory levels across Shopify, Amazon, eBay, Etsy, and other platforms</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Stock Alerts</h4>
+                  <p className="text-sm text-gray-600">Automated low stock alerts and reorder point management</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Cost Tracking</h4>
+                  <p className="text-sm text-gray-600">Track product costs, margins, and profitability across channels</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'payments' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Payment gateway integration coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Payment Methods</h3>
+              <p className="text-2xl font-bold text-blue-600">12</p>
+              <p className="text-sm text-blue-700">Connected gateways</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Success Rate</h3>
+              <p className="text-2xl font-bold text-green-600">98.5%</p>
+              <p className="text-sm text-green-700">Payment success</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Processing Fees</h3>
+              <p className="text-2xl font-bold text-yellow-600">£2,340</p>
+              <p className="text-sm text-yellow-700">This month</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Disputes</h3>
+              <p className="text-2xl font-bold text-purple-600">3</p>
+              <p className="text-sm text-purple-700">Active cases</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Payment Gateway Integration</h3>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">Comprehensive payment gateway management with automated reconciliation, fee tracking, and dispute resolution workflows.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Gateway Management</h4>
+                  <p className="text-sm text-gray-600">Connect and manage Stripe, PayPal, Square, and other payment processors</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Automated Reconciliation</h4>
+                  <p className="text-sm text-gray-600">Automatic matching of payments with orders and invoice generation</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Fee Analysis</h4>
+                  <p className="text-sm text-gray-600">Detailed breakdown of processing fees and cost optimization recommendations</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Dispute Management</h4>
+                  <p className="text-sm text-gray-600">Automated dispute tracking and resolution workflow management</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'analytics' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Sales analytics coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Total Revenue</h3>
+              <p className="text-2xl font-bold text-blue-600">£345,680</p>
+              <p className="text-sm text-blue-700">All platforms YTD</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Growth Rate</h3>
+              <p className="text-2xl font-bold text-green-600">+24%</p>
+              <p className="text-sm text-green-700">vs last year</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Avg Order Value</h3>
+              <p className="text-2xl font-bold text-yellow-600">£67.50</p>
+              <p className="text-sm text-yellow-700">Across all channels</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Conversion Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">3.2%</p>
+              <p className="text-sm text-purple-700">Platform average</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Sales Analytics & Insights</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Top Performing Platforms</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Amazon</span>
+                      <span className="text-sm font-medium">£156,780 (45%)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Shopify</span>
+                      <span className="text-sm font-medium">£89,650 (26%)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">WooCommerce</span>
+                      <span className="text-sm font-medium">£45,320 (13%)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">eBay</span>
+                      <span className="text-sm font-medium">£28,940 (8%)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Etsy</span>
+                      <span className="text-sm font-medium">£18,750 (5%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Monthly Trends</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">January</span>
+                      <span className="text-sm font-medium text-green-600">+18%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">February</span>
+                      <span className="text-sm font-medium text-green-600">+22%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">March</span>
+                      <span className="text-sm font-medium text-green-600">+15%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">April</span>
+                      <span className="text-sm font-medium text-green-600">+28%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'automation' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Automation rules coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Active Rules</h3>
+              <p className="text-2xl font-bold text-blue-600">15</p>
+              <p className="text-sm text-blue-700">Automation workflows</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Orders Processed</h3>
+              <p className="text-2xl font-bold text-green-600">2,847</p>
+              <p className="text-sm text-green-700">Auto-processed</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Time Saved</h3>
+              <p className="text-2xl font-bold text-yellow-600">45hrs</p>
+              <p className="text-sm text-yellow-700">This month</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">Success Rate</h3>
+              <p className="text-2xl font-bold text-purple-600">97%</p>
+              <p className="text-sm text-purple-700">Automation accuracy</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Automation Rules & Workflows</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Order Processing Automation</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically create invoices and update inventory when orders are received</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">VAT Calculation</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically calculate and apply correct VAT rates based on customer location</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Customer Categorization</h4>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically categorize customers based on purchase history and location</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-900">Expense Allocation</h4>
+                    <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">Pending</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically allocate platform fees and shipping costs to appropriate expense accounts</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'settings' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Integration settings coming soon...</p>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h3 className="font-medium text-blue-900">Connected Platforms</h3>
+              <p className="text-2xl font-bold text-blue-600">8</p>
+              <p className="text-sm text-blue-700">Active integrations</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="font-medium text-green-900">Sync Frequency</h3>
+              <p className="text-2xl font-bold text-green-600">15min</p>
+              <p className="text-sm text-green-700">Update interval</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h3 className="font-medium text-yellow-900">Data Retention</h3>
+              <p className="text-2xl font-bold text-yellow-600">2 years</p>
+              <p className="text-sm text-yellow-700">Historical data</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h3 className="font-medium text-purple-900">API Calls</h3>
+              <p className="text-2xl font-bold text-purple-600">45,678</p>
+              <p className="text-sm text-purple-700">This month</p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Integration Settings & Configuration</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Sync Settings</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Order Sync</span>
+                      <span className="text-sm font-medium text-green-600">Real-time</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Inventory Sync</span>
+                      <span className="text-sm font-medium text-blue-600">Every 15 min</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Customer Sync</span>
+                      <span className="text-sm font-medium text-blue-600">Hourly</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Product Sync</span>
+                      <span className="text-sm font-medium text-blue-600">Daily</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Data Mapping</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Default Tax Code</span>
+                      <span className="text-sm font-medium">T1 - Standard Rate</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Sales Account</span>
+                      <span className="text-sm font-medium">4000 - Sales</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Shipping Account</span>
+                      <span className="text-sm font-medium">4010 - Shipping</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Fees Account</span>
+                      <span className="text-sm font-medium">7200 - Platform Fees</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

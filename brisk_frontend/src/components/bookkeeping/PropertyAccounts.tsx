@@ -218,33 +218,171 @@ const PropertyAccounts: React.FC = () => {
       {activeTab === 'properties' && renderProperties()}
       {activeTab === 'tenants' && renderTenants()}
       {activeTab === 'rent-roll' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Rent roll management coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Rent Roll Management</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Total Rent</h4>
+              <p className="text-2xl font-bold text-blue-600">£20,900</p>
+              <p className="text-sm text-blue-700">Monthly income</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">Collected</h4>
+              <p className="text-2xl font-bold text-green-600">£19,650</p>
+              <p className="text-sm text-green-700">94% collection rate</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Outstanding</h4>
+              <p className="text-2xl font-bold text-yellow-600">£1,250</p>
+              <p className="text-sm text-yellow-700">Arrears</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">Void Rate</h4>
+              <p className="text-2xl font-bold text-purple-600">8%</p>
+              <p className="text-sm text-purple-700">Vacant units</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Track rental income, manage rent reviews, monitor collection rates, and analyze void periods with comprehensive rent roll reporting.</p>
         </div>
       )}
       {activeTab === 'maintenance' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Maintenance & repairs tracking coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Maintenance & Repairs</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Open Tickets</h4>
+              <p className="text-2xl font-bold text-blue-600">12</p>
+              <p className="text-sm text-blue-700">Active requests</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">Completed</h4>
+              <p className="text-2xl font-bold text-green-600">89</p>
+              <p className="text-sm text-green-700">This month</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Urgent</h4>
+              <p className="text-2xl font-bold text-yellow-600">3</p>
+              <p className="text-sm text-yellow-700">High priority</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">Spend</h4>
+              <p className="text-2xl font-bold text-purple-600">£8,450</p>
+              <p className="text-sm text-purple-700">This month</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Manage maintenance requests, track repair costs, schedule preventive maintenance, and monitor contractor performance with integrated ticketing system.</p>
         </div>
       )}
       {activeTab === 'expenses' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Property expenses management coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Property Expenses</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Total Expenses</h4>
+              <p className="text-2xl font-bold text-blue-600">£12,340</p>
+              <p className="text-sm text-blue-700">This month</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">Maintenance</h4>
+              <p className="text-2xl font-bold text-green-600">£4,560</p>
+              <p className="text-sm text-green-700">37% of expenses</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Utilities</h4>
+              <p className="text-2xl font-bold text-yellow-600">£3,280</p>
+              <p className="text-sm text-yellow-700">27% of expenses</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">Insurance</h4>
+              <p className="text-2xl font-bold text-purple-600">£2,150</p>
+              <p className="text-sm text-purple-700">17% of expenses</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Track property operating expenses, categorize costs, manage vendor payments, and analyze expense trends with detailed cost reporting.</p>
         </div>
       )}
       {activeTab === 'valuations' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Property valuations coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Property Valuations</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Portfolio Value</h4>
+              <p className="text-2xl font-bold text-blue-600">£4.8M</p>
+              <p className="text-sm text-blue-700">Current valuation</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">YoY Growth</h4>
+              <p className="text-2xl font-bold text-green-600">+8.5%</p>
+              <p className="text-sm text-green-700">Value appreciation</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Yield</h4>
+              <p className="text-2xl font-bold text-yellow-600">5.2%</p>
+              <p className="text-sm text-yellow-700">Gross rental yield</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">Last Valuation</h4>
+              <p className="text-2xl font-bold text-purple-600">6</p>
+              <p className="text-sm text-purple-700">Months ago</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Track property valuations, monitor market trends, calculate yields and returns, and schedule professional valuations with automated reporting.</p>
         </div>
       )}
       {activeTab === 'reports' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Property reports coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Property Reports & Analytics</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Reports Generated</h4>
+              <p className="text-2xl font-bold text-blue-600">45</p>
+              <p className="text-sm text-blue-700">This month</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">Net Income</h4>
+              <p className="text-2xl font-bold text-green-600">£8,560</p>
+              <p className="text-sm text-green-700">Monthly profit</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Occupancy</h4>
+              <p className="text-2xl font-bold text-yellow-600">92%</p>
+              <p className="text-sm text-yellow-700">Average rate</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">ROI</h4>
+              <p className="text-2xl font-bold text-purple-600">12.3%</p>
+              <p className="text-sm text-purple-700">Annual return</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Generate comprehensive property reports, analyze financial performance, track KPIs, and create investor presentations with advanced analytics.</p>
         </div>
       )}
       {activeTab === 'locations' && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Location mapping coming soon...</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Locations & Mapping</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900">Properties</h4>
+              <p className="text-2xl font-bold text-blue-600">24</p>
+              <p className="text-sm text-blue-700">Total locations</p>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-900">Regions</h4>
+              <p className="text-2xl font-bold text-green-600">5</p>
+              <p className="text-sm text-green-700">Geographic areas</p>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-900">Avg Distance</h4>
+              <p className="text-2xl font-bold text-yellow-600">12.5</p>
+              <p className="text-sm text-yellow-700">Miles from office</p>
+            </div>
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-medium text-purple-900">Transport Links</h4>
+              <p className="text-2xl font-bold text-purple-600">18</p>
+              <p className="text-sm text-purple-700">Near public transport</p>
+            </div>
+          </div>
+          <p className="text-gray-600">Visualize property locations on interactive maps, analyze geographic distribution, track local market trends, and optimize portfolio positioning.</p>
         </div>
       )}
     </div>
