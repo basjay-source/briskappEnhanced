@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import React, { useState, Suspense } from 'react'
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom'
+import ErrorBoundary from '../components/ErrorBoundary'
 import Dashboard from '../components/payroll/Dashboard'
 import Employees from '../components/payroll/Employees'
 import ContractsPayProfiles from '../components/payroll/ContractsPayProfiles'
@@ -147,29 +148,38 @@ const PayrollDashboard: React.FC = () => {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/contracts-pay-profiles" element={<ContractsPayProfiles />} />
-            <Route path="/pay-elements" element={<PayElements />} />
-            <Route path="/timesheets" element={<Timesheets />} />
-            <Route path="/leave-absence" element={<LeaveAbsence />} />
-            <Route path="/pay-runs" element={<PayRuns />} />
-            <Route path="/auto-enrolment-pensions" element={<AutoEnrolmentPensions />} />
-            <Route path="/benefits-expenses" element={<BenefitsExpenses />} />
-            <Route path="/deductions" element={<Deductions />} />
-            <Route path="/company-cars" element={<CompanyCars />} />
-            <Route path="/cis" element={<CIS />} />
-            <Route path="/approvals-payments" element={<ApprovalsPayments />} />
-            <Route path="/journals-exports" element={<JournalsExports />} />
-            <Route path="/rti-hmrc" element={<RTIHMRC />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/year-end" element={<YearEnd />} />
-            <Route path="/document-hub" element={<DocumentHub />} />
-            <Route path="/integrations" element={<Integrations />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
+          <ErrorBoundary>
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-64">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span className="ml-2 text-gray-600">Loading...</span>
+              </div>
+            }>
+              <Routes>
+                <Route path="/" element={<Navigate to="/payroll/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/employees" element={<Employees />} />
+                <Route path="/contracts-pay-profiles" element={<ContractsPayProfiles />} />
+                <Route path="/pay-elements" element={<PayElements />} />
+                <Route path="/timesheets" element={<Timesheets />} />
+                <Route path="/leave-absence" element={<LeaveAbsence />} />
+                <Route path="/pay-runs" element={<PayRuns />} />
+                <Route path="/auto-enrolment-pensions" element={<AutoEnrolmentPensions />} />
+                <Route path="/benefits-expenses" element={<BenefitsExpenses />} />
+                <Route path="/deductions" element={<Deductions />} />
+                <Route path="/company-cars" element={<CompanyCars />} />
+                <Route path="/cis" element={<CIS />} />
+                <Route path="/approvals-payments" element={<ApprovalsPayments />} />
+                <Route path="/journals-exports" element={<JournalsExports />} />
+                <Route path="/rti-hmrc" element={<RTIHMRC />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/year-end" element={<YearEnd />} />
+                <Route path="/document-hub" element={<DocumentHub />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
     </div>
