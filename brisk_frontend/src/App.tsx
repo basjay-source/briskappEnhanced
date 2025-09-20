@@ -10,6 +10,7 @@ import BookkeepingDashboard from './pages/BookkeepingDashboard'
 import PayrollDashboard from './pages/PayrollDashboard'
 import CompanySecretarialDashboard from './pages/CompanySecretarialDashboard'
 import AccountsProductionDashboard from './pages/AccountsProductionDashboard'
+import BusinessTaxDashboard from './pages/BusinessTaxDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
@@ -63,6 +64,11 @@ function App() {
             <Route path="/accounts-production/*" element={
               <ProtectedRoute>
                 <AccountsProductionDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/business-tax/*" element={
+              <ProtectedRoute>
+                <BusinessTaxDashboard />
               </ProtectedRoute>
             } />
             <Route path="/" element={
