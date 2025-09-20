@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import api from '../../services/api'
 
 interface KPICardProps {
   title: string
@@ -121,7 +122,17 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setTimeout(() => {
+    fetchDashboardData()
+  }, [])
+
+  const fetchDashboardData = async () => {
+    setLoading(true)
+    try {
+      const response = await api.get('/api/payroll/dashboard-kpis')
+      setDashboardData(response.data)
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
       setDashboardData({
         kpis: {
           totalEmployees: 156,
@@ -170,8 +181,8 @@ const Dashboard: React.FC = () => {
         ]
       })
       setLoading(false)
-    }, 1000)
-  }, [])
+    }
+  }
 
   const handleExceptionAction = (action: string) => {
     console.log(`Handling action: ${action}`)
