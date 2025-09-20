@@ -167,7 +167,7 @@ const DeductionsEnhanced: React.FC = () => {
   const renderStudentLoansTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">Student & Postgraduate Loans</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Student &amp; Postgraduate Loans</h3>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
           Add Loan
         </button>
@@ -235,7 +235,7 @@ const DeductionsEnhanced: React.FC = () => {
   const renderAttachmentRulesTab = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Attachment Rules & Priorities</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Attachment Rules &amp; Priorities</h3>
         <div className="space-y-4">
           <div className="border border-gray-200 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-2">Priority Order</h4>

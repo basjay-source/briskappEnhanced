@@ -30,7 +30,7 @@ const Employees: React.FC = () => {
     { id: 'people', label: 'People', icon: '👥' },
     { id: 'starters', label: 'Starters', icon: '🆕' },
     { id: 'leavers', label: 'Leavers', icon: '👋' },
-    { id: 'rtw-docs', label: 'Right-to-Work & Docs', icon: '📄' },
+    { id: 'rtw-docs', label: 'Right-to-Work &amp; Docs', icon: '📄' },
     { id: 'bank-contact', label: 'Bank/Contact', icon: '🏦' }
   ]
 
@@ -344,7 +344,7 @@ const Employees: React.FC = () => {
   const renderBankContactTab = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Bank Details & Contact Information</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Bank Details &amp; Contact Information</h3>
         <div className="space-y-4">
           {employees.filter(emp => !emp.bankDetails).map(employee => (
             <div key={employee.id} className="border border-orange-200 rounded-lg p-4 bg-orange-50">

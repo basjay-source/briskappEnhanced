@@ -190,7 +190,7 @@ const RTIHMRC: React.FC = () => {
                 Gross Pay
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tax & NI
+                Tax &amp; NI
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
@@ -246,7 +246,7 @@ const RTIHMRC: React.FC = () => {
   const renderLiabilitiesTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">PAYE & NI Liabilities</h3>
+        <h3 className="text-lg font-semibold text-gray-900">PAYE &amp; NI Liabilities</h3>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
           Calculate Liabilities
         </button>
@@ -345,7 +345,7 @@ const RTIHMRC: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">RTI & HMRC</h1>
+          <h1 className="text-2xl font-bold text-gray-900">RTI &amp; HMRC</h1>
           <p className="text-gray-600">Real Time Information submissions and HMRC compliance</p>
         </div>
         <div className="flex space-x-3">

@@ -358,7 +358,7 @@ const Dashboard: React.FC = () => {
           <button className="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
             <span className="text-2xl mb-2">⏰</span>
             <span className="text-sm font-medium">Approve Timesheets</span>
-            <span className="text-xs text-gray-500">Review & approve</span>
+            <span className="text-xs text-gray-500">Review &amp; approve</span>
           </button>
           
           <button className="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">

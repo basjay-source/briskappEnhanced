@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-interface Integration {
-  id: string
-  name: string
-  type: 'HMRC' | 'Pension' | 'Banking' | 'HRIS' | 'ERP' | 'CoSec'
-  status: 'Connected' | 'Disconnected' | 'Error' | 'Pending'
-  lastSync: string
-  description: string
-  version?: string
-}
-
 interface APIKey {
   id: string
   name: string
@@ -22,7 +12,6 @@ interface APIKey {
 
 const Integrations: React.FC = () => {
   const [activeTab, setActiveTab] = useState('hmrc-rti')
-  const [integrations, setIntegrations] = useState<Integration[]>([])
   const [apiKeys, setApiKeys] = useState<APIKey[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -30,7 +19,7 @@ const Integrations: React.FC = () => {
     { id: 'hmrc-rti', label: 'HMRC RTI', icon: '🏛️' },
     { id: 'pension-providers', label: 'Pension Providers', icon: '🏦' },
     { id: 'banking', label: 'Banking (BACS/SEPA)', icon: '💳' },
-    { id: 'hris', label: 'HRIS/Time & Attendance', icon: '⏰' },
+    { id: 'hris', label: 'HRIS/Time &amp; Attendance', icon: '⏰' },
     { id: 'bookkeeping-erp', label: 'Bookkeeping/ERP', icon: '📊' },
     { id: 'cosec-sync', label: 'CoSec Sync', icon: '🔄' },
     { id: 'api-keys', label: 'API Keys', icon: '🔑' }
@@ -38,59 +27,6 @@ const Integrations: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setIntegrations([
-        {
-          id: '1',
-          name: 'HMRC Gateway',
-          type: 'HMRC',
-          status: 'Connected',
-          lastSync: '2024-02-29 14:30',
-          description: 'Real Time Information submissions to HMRC',
-          version: 'v2.1'
-        },
-        {
-          id: '2',
-          name: 'Aviva Pension Scheme',
-          type: 'Pension',
-          status: 'Connected',
-          lastSync: '2024-02-28 09:15',
-          description: 'Auto-enrolment and contribution management',
-          version: 'v1.8'
-        },
-        {
-          id: '3',
-          name: 'HSBC Business Banking',
-          type: 'Banking',
-          status: 'Connected',
-          lastSync: '2024-02-29 16:45',
-          description: 'BACS payment processing and reconciliation'
-        },
-        {
-          id: '4',
-          name: 'BambooHR',
-          type: 'HRIS',
-          status: 'Disconnected',
-          lastSync: '2024-02-15 11:20',
-          description: 'Employee data and time tracking integration'
-        },
-        {
-          id: '5',
-          name: 'Sage Intacct',
-          type: 'ERP',
-          status: 'Connected',
-          lastSync: '2024-02-29 17:00',
-          description: 'Financial data and journal posting integration'
-        },
-        {
-          id: '6',
-          name: 'Companies House API',
-          type: 'CoSec',
-          status: 'Connected',
-          lastSync: '2024-02-28 12:30',
-          description: 'Director and company information synchronization'
-        }
-      ])
-
       setApiKeys([
         {
           id: '1',
@@ -137,17 +73,6 @@ const Integrations: React.FC = () => {
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
-  const getTypeBadge = (type: string) => {
-    const colors = {
-      'HMRC': 'bg-green-100 text-green-800',
-      'Pension': 'bg-blue-100 text-blue-800',
-      'Banking': 'bg-purple-100 text-purple-800',
-      'HRIS': 'bg-orange-100 text-orange-800',
-      'ERP': 'bg-indigo-100 text-indigo-800',
-      'CoSec': 'bg-pink-100 text-pink-800'
-    }
-    return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-800'
-  }
 
   const renderHMRCTab = () => (
     <div className="space-y-6">
@@ -198,12 +123,82 @@ const Integrations: React.FC = () => {
     </div>
   )
 
-  const renderIntegrationsTab = () => (
+  const renderPensionProvidersTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">System Integrations</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Pension Provider Integrations</h3>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-          Add Integration
+          Add Provider
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900">Aviva Pension Scheme</h4>
+            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+              Connected
+            </span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Scheme Reference:</span>
+              <span className="text-sm font-medium">AV123456789</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Active Members:</span>
+              <span className="text-sm font-medium">142</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Last Contribution:</span>
+              <span className="text-sm font-medium">28/02/2024</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Next Assessment:</span>
+              <span className="text-sm font-medium text-blue-600">15/03/2024</span>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2">
+            <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Configure</button>
+            <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">Sync</button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900">NEST Workplace Pension</h4>
+            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+              Pending Setup
+            </span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Employer ID:</span>
+              <span className="text-sm font-medium">NEST987654</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Setup Progress:</span>
+              <span className="text-sm font-medium">75%</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Expected Go-Live:</span>
+              <span className="text-sm font-medium text-orange-600">01/04/2024</span>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2">
+            <button className="px-3 py-1 bg-orange-600 text-white text-sm rounded hover:bg-orange-700">Complete Setup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderBankingTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">Banking &amp; Payment Integrations</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Add Bank Account
         </button>
       </div>
 
@@ -212,7 +207,7 @@ const Integrations: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Integration
+                Bank &amp; Account
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Type
@@ -221,10 +216,7 @@ const Integrations: React.FC = () => {
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Last Sync
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Version
+                Last Payment
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -232,39 +224,305 @@ const Integrations: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {integrations.map((integration) => (
-              <tr key={integration.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">{integration.name}</div>
-                    <div className="text-sm text-gray-500">{integration.description}</div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeBadge(integration.type)}`}>
-                    {integration.type}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadge(integration.status)}`}>
-                    {integration.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{integration.lastSync}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{integration.version || 'N/A'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-blue-600 hover:text-blue-900 mr-3">Configure</button>
-                  <button className="text-green-600 hover:text-green-900 mr-3">Sync</button>
-                  <button className="text-gray-600 hover:text-gray-900">Logs</button>
-                </td>
-              </tr>
-            ))}
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div className="text-sm font-medium text-gray-900">HSBC Business Account</div>
+                  <div className="text-sm text-gray-500">****1234 - Payroll Account</div>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                  BACS
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">29/02/2024</div>
+                <div className="text-sm text-gray-500">£45,678.90</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900 mr-3">Configure</button>
+                <button className="text-green-600 hover:text-green-900 mr-3">Test</button>
+                <button className="text-gray-600 hover:text-gray-900">History</button>
+              </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div className="text-sm font-medium text-gray-900">Barclays Corporate</div>
+                  <div className="text-sm text-gray-500">****5678 - HMRC Payments</div>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Faster Payments
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">25/02/2024</div>
+                <div className="text-sm text-gray-500">£12,345.67</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900 mr-3">Configure</button>
+                <button className="text-green-600 hover:text-green-900 mr-3">Test</button>
+                <button className="text-gray-600 hover:text-gray-900">History</button>
+              </td>
+            </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  )
+
+  const renderHRISTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">HRIS &amp; Time Tracking Integrations</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Add HRIS System
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900">BambooHR Integration</h4>
+            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+              Disconnected
+            </span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">API Endpoint:</span>
+              <span className="text-sm font-medium">api.bamboohr.com</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Last Sync:</span>
+              <span className="text-sm font-medium text-red-600">15/02/2024 (Failed)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Sync Frequency:</span>
+              <span className="text-sm font-medium">Daily at 06:00</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Data Types:</span>
+              <span className="text-sm font-medium">Employee, Time, Leave</span>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2">
+            <button className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">Reconnect</button>
+            <button className="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">View Logs</button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900">Clockwise Time Tracking</h4>
+            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+              Connected
+            </span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Workspace ID:</span>
+              <span className="text-sm font-medium">CW-789123</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Last Sync:</span>
+              <span className="text-sm font-medium text-green-600">29/02/2024 17:30</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Active Users:</span>
+              <span className="text-sm font-medium">142</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Hours This Month:</span>
+              <span className="text-sm font-medium">5,328</span>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2">
+            <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Configure</button>
+            <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">Sync Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderERPTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">ERP &amp; Bookkeeping Integrations</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Add ERP System
+        </button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                System
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Integration Type
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Journal Post
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div className="text-sm font-medium text-gray-900">Sage Intacct</div>
+                  <div className="text-sm text-gray-500">Financial Management</div>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                  Journal Posting
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Connected
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">29/02/2024 17:00</div>
+                <div className="text-sm text-gray-500">Payroll Run #2024-02</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900 mr-3">Configure</button>
+                <button className="text-green-600 hover:text-green-900 mr-3">Test Post</button>
+                <button className="text-gray-600 hover:text-gray-900">Mapping</button>
+              </td>
+            </tr>
+            <tr className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div className="text-sm font-medium text-gray-900">Xero</div>
+                  <div className="text-sm text-gray-500">Cloud Accounting</div>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Real-time Sync
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Connected
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">29/02/2024 16:45</div>
+                <div className="text-sm text-gray-500">Auto-sync enabled</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900 mr-3">Configure</button>
+                <button className="text-green-600 hover:text-green-900 mr-3">Sync Now</button>
+                <button className="text-gray-600 hover:text-gray-900">History</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+
+  const renderCoSecTab = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">Company Secretarial Sync</h3>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Configure Sync
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Companies House API</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Connection Status:</span>
+              <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                Connected
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">API Key Status:</span>
+              <span className="text-sm font-medium text-green-600">Valid</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Last Sync:</span>
+              <span className="text-sm font-medium">28/02/2024 12:30</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Companies Monitored:</span>
+              <span className="text-sm font-medium">47</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Directors Synced:</span>
+              <span className="text-sm font-medium">156</span>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2">
+            <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Test Connection</button>
+            <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">Sync Now</button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h4 className="text-lg font-semibold text-gray-900 mb-4">Director Payroll Sync</h4>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Auto-sync Directors:</span>
+              <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                Enabled
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">NIC Category Override:</span>
+              <span className="text-sm font-medium">Category A (Directors)</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Dividend Tracking:</span>
+              <span className="text-sm font-medium text-green-600">Active</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">P11D Auto-populate:</span>
+              <span className="text-sm font-medium text-green-600">Enabled</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <h5 className="text-sm font-medium text-gray-900 mb-2">Recent Director Changes</h5>
+            <div className="text-xs text-gray-600 space-y-1">
+              <div>• John Smith appointed as Director (25/02/2024)</div>
+              <div>• Sarah Jones resigned as Director (20/02/2024)</div>
+              <div>• Michael Brown address updated (18/02/2024)</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -350,12 +608,11 @@ const Integrations: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'hmrc-rti': return renderHMRCTab()
-      case 'pension-providers':
-      case 'banking':
-      case 'hris':
-      case 'bookkeeping-erp':
-      case 'cosec-sync':
-        return renderIntegrationsTab()
+      case 'pension-providers': return renderPensionProvidersTab()
+      case 'banking': return renderBankingTab()
+      case 'hris': return renderHRISTab()
+      case 'bookkeeping-erp': return renderERPTab()
+      case 'cosec-sync': return renderCoSecTab()
       case 'api-keys': return renderAPIKeysTab()
       default:
         return (

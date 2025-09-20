@@ -324,7 +324,7 @@ const ApprovalsPayments: React.FC = () => {
   const renderRemittancesTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">Tax & Pension Remittances</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Tax &amp; Pension Remittances</h3>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
           Send All Pending
         </button>
@@ -479,7 +479,7 @@ const ApprovalsPayments: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Approvals & Payments</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Approvals &amp; Payments</h1>
         </div>
         <div className="flex space-x-3">
           <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">

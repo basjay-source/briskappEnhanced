@@ -31,7 +31,7 @@ const ContractsPayProfiles: React.FC = () => {
   const tabs = [
     { id: 'contracts', label: 'Contracts', icon: '📋' },
     { id: 'pay-calendars', label: 'Pay Calendars', icon: '📅' },
-    { id: 'rates-grades', label: 'Rates & Grades', icon: '💰' },
+    { id: 'rates-grades', label: 'Rates &amp; Grades', icon: '💰' },
     { id: 'work-locations', label: 'Work Locations', icon: '📍' }
   ]
 
@@ -98,10 +98,10 @@ const ContractsPayProfiles: React.FC = () => {
                     Contract
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type & Calendar
+                    Type &amp; Calendar
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Pay & Hours
+                    Pay &amp; Hours
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Employees
@@ -209,7 +209,7 @@ const ContractsPayProfiles: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Contracts & Pay Profiles</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Contracts &amp; Pay Profiles</h1>
           <p className="text-gray-600">Manage employment contracts, pay structures, and work arrangements</p>
         </div>
         <div className="flex space-x-3">
