@@ -114,6 +114,7 @@ const ProofsReports: React.FC = () => {
               { name: 'Trial Balance', description: 'Current period trial balance in standard format', status: 'Available', type: 'Current Period' },
               { name: 'Multi Year Trial Balance', description: 'Trial balance comparison up to 5 years', status: 'Available', type: 'Up to 5 Years' },
               { name: 'Nominal Ledger', description: 'Detailed nominal ledger transactions', status: 'Available', type: 'Detailed' },
+              { name: 'Lead Schedules', description: 'Lead schedules and working papers', status: 'Available', type: 'Lead Schedules' },
               { name: 'Schedules', description: 'Working paper schedules and analysis', status: 'Available', type: 'Working Papers' },
               { name: 'Journal Entries', description: 'All journal entries for the period', status: 'Available', type: 'All Periods' },
               { name: 'Abbreviated Accounts', description: 'Small company abbreviated accounts', status: 'Available', type: 'Small Company' },
@@ -206,6 +207,104 @@ const ProofsReports: React.FC = () => {
         </div>
       )}
 
+      {activeTab === 'management-pack' && (
+        <div className="space-y-6">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <h3 className="text-lg font-medium text-green-900 mb-2">Management Pack Reports</h3>
+            <p className="text-green-700">
+              Comprehensive management reporting suite for internal analysis and decision making.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { name: 'Management Accounts', description: 'Monthly management accounts with variance analysis', status: 'Available', type: 'Monthly' },
+              { name: 'KPI Dashboard', description: 'Key performance indicators and metrics', status: 'Available', type: 'Real-time' },
+              { name: 'Budget vs Actual', description: 'Budget comparison and variance analysis', status: 'Available', type: 'Comparative' },
+              { name: 'Cash Flow Forecast', description: 'Forward-looking cash flow projections', status: 'Available', type: 'Forecast' },
+              { name: 'Departmental Reports', description: 'Department-wise performance analysis', status: 'Available', type: 'Departmental' },
+              { name: 'Profitability Analysis', description: 'Product and service profitability breakdown', status: 'Available', type: 'Analysis' },
+              { name: 'Executive Summary', description: 'High-level executive dashboard', status: 'Available', type: 'Summary' },
+              { name: 'Trend Analysis', description: 'Historical trends and patterns', status: 'Available', type: 'Trends' },
+              { name: 'Ratio Analysis', description: 'Financial ratios and benchmarking', status: 'Available', type: 'Ratios' }
+            ].map((report, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <h3 className="font-medium text-gray-900 mb-2">{report.name}</h3>
+                <p className="text-sm text-gray-600 mb-2">{report.description}</p>
+                <p className="text-xs text-gray-500 mb-3">Type: {report.type}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">{report.status}</span>
+                </div>
+                <div className="flex space-x-2">
+                  <button className="px-3 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-700">
+                    Generate
+                  </button>
+                  <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                    Export
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Management Pack Configuration</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reporting Period
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <option>Current Month</option>
+                  <option>Current Quarter</option>
+                  <option>Year to Date</option>
+                  <option>Rolling 12 Months</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Comparison Period
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <option>Prior Month</option>
+                  <option>Prior Year</option>
+                  <option>Budget</option>
+                  <option>Forecast</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Detail Level
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <option>Summary</option>
+                  <option>Detailed</option>
+                  <option>Full Detail</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Include Departments
+                </label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <option>All Departments</option>
+                  <option>Selected Departments</option>
+                  <option>Exclude Departments</option>
+                </select>
+              </div>
+            </div>
+            <div className="mt-6 flex space-x-4">
+              <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Generate Management Pack
+              </button>
+              <button className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Schedule Delivery
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
           <h3 className="text-sm font-medium text-gray-500">Total Reports</h3>
@@ -221,7 +320,7 @@ const ProofsReports: React.FC = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <h3 className="text-sm font-medium text-gray-500">Standard Reports</h3>
-          <p className="text-2xl font-bold text-orange-600">10</p>
+          <p className="text-2xl font-bold text-orange-600">11</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <h3 className="text-sm font-medium text-gray-500">Ready for Filing</h3>
