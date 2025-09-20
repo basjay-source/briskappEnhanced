@@ -397,7 +397,7 @@ const JournalsExports: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Journals & Exports</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Journals &amp; Exports</h1>
           <p className="text-gray-600">Manage payroll journal entries and data exports to bookkeeping</p>
         </div>
         <div className="flex space-x-3">
