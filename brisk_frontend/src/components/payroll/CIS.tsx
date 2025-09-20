@@ -32,7 +32,7 @@ const CIS: React.FC = () => {
   const tabs = [
     { id: 'subcontractors', label: 'Subcontractors', icon: '👷' },
     { id: 'verification', label: 'Verification', icon: '✅' },
-    { id: 'payments-deductions', label: 'Payments &amp; Deductions', icon: '💰' },
+    { id: 'payments-deductions', label: 'Payments & Deductions', icon: '💰' },
     { id: 'monthly-return', label: 'Monthly Return', icon: '📄' },
     { id: 'statements', label: 'Statements', icon: '📋' }
   ]
@@ -199,7 +199,7 @@ const CIS: React.FC = () => {
   const renderPaymentsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">CIS Payments &amp; Deductions</h3>
+        <h3 className="text-lg font-semibold text-gray-900">CIS Payments & Deductions</h3>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
           Record Payment
         </button>

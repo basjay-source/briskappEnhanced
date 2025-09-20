@@ -344,7 +344,7 @@ const Settings: React.FC = () => {
   const renderStatutorySettingsTab = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Statutory Rates &amp; Thresholds</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Statutory Rates & Thresholds</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h4 className="font-medium text-gray-900">Tax Rates (2024-25)</h4>

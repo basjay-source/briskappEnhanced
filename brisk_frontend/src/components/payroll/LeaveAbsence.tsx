@@ -155,7 +155,7 @@ const LeaveAbsence: React.FC = () => {
       case 'sickness':
         return (
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Sickness &amp; SSP Management</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Sickness & SSP Management</h3>
             <div className="space-y-4">
               {leaveRequests.filter(req => req.type === 'Sickness').map(request => (
                 <div key={request.id} className="border border-red-200 rounded-lg p-4 bg-red-50">
@@ -212,7 +212,7 @@ const LeaveAbsence: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leave &amp; Absence</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Leave & Absence</h1>
           <p className="text-gray-600">Manage holiday, sickness, and statutory leave entitlements</p>
         </div>
         <div className="flex space-x-3">
