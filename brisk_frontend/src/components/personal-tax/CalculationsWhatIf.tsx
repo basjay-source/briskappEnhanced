@@ -4,7 +4,7 @@ import { Calculator, TrendingUp, BarChart3, DollarSign } from 'lucide-react';
 const CalculationsWhatIf: React.FC = () => {
   const [activeTab, setActiveTab] = useState('sa302');
   const [taxCalculation, setTaxCalculation] = useState<any>(null);
-  const [taxYear, setTaxYear] = useState('2024-25');
+  const [taxYear] = useState('2024-25');
 
   const tabs = [
     { id: 'sa302', label: 'SA302 Summary', icon: Calculator },
@@ -19,7 +19,8 @@ const CalculationsWhatIf: React.FC = () => {
 
   const fetchTaxCalculation = async () => {
     try {
-      const response = await fetch(`/api/personal-tax/calculations?tax_year=${taxYear}`);
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/calculations?tax_year=${taxYear}`);
       const data = await response.json();
       setTaxCalculation(data);
     } catch (error) {
@@ -144,37 +145,34 @@ const CalculationsWhatIf: React.FC = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Employment Income: £45,000
+                      Employment Income: £{taxCalculation?.employment_income?.toLocaleString() || '0'}
                     </label>
                     <input
                       type="range"
                       min="0"
                       max="100000"
-                      defaultValue="45000"
                       className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Dividend Income: £2,500
+                      Dividend Income: £{taxCalculation?.dividend_income?.toLocaleString() || '0'}
                     </label>
                     <input
                       type="range"
                       min="0"
                       max="50000"
-                      defaultValue="2500"
                       className="w-full"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Pension Contributions: £6,000
+                      Pension Contributions: £{taxCalculation?.pension_contributions?.toLocaleString() || '0'}
                     </label>
                     <input
                       type="range"
                       min="0"
                       max="40000"
-                      defaultValue="6000"
                       className="w-full"
                     />
                   </div>
@@ -188,7 +186,7 @@ const CalculationsWhatIf: React.FC = () => {
                     <div className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span>Total Tax</span>
-                        <span>£12,450</span>
+                        <span>£{taxCalculation?.total_tax?.toLocaleString() || '0'}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Effective Rate</span>
@@ -205,7 +203,7 @@ const CalculationsWhatIf: React.FC = () => {
                     <div className="space-y-1">
                       <div className="flex justify-between text-sm text-blue-800">
                         <span>Total Tax</span>
-                        <span>£11,250</span>
+                        <span>£{taxCalculation?.optimized_tax?.toLocaleString() || '0'}</span>
                       </div>
                       <div className="flex justify-between text-sm text-blue-800">
                         <span>Effective Rate</span>
@@ -213,7 +211,7 @@ const CalculationsWhatIf: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-sm text-green-600 font-medium">
                         <span>Tax Saving</span>
-                        <span>£1,200</span>
+                        <span>£{taxCalculation?.tax_saving?.toLocaleString() || '0'}</span>
                       </div>
                     </div>
                   </div>
@@ -243,17 +241,17 @@ const CalculationsWhatIf: React.FC = () => {
               </div>
               <div className="border border-gray-200 rounded-lg p-4 text-center">
                 <h4 className="font-medium text-gray-900">Next Threshold</h4>
-                <p className="text-2xl font-bold text-gray-900">£50,270</p>
+                <p className="text-2xl font-bold text-gray-900">£{taxCalculation?.higher_rate_threshold?.toLocaleString() || '50,270'}</p>
                 <p className="text-sm text-gray-600">Higher Rate</p>
               </div>
               <div className="border border-gray-200 rounded-lg p-4 text-center">
                 <h4 className="font-medium text-gray-900">PA Taper</h4>
-                <p className="text-2xl font-bold text-gray-900">£100,000</p>
+                <p className="text-2xl font-bold text-gray-900">£{taxCalculation?.pa_taper_threshold?.toLocaleString() || '100,000'}</p>
                 <p className="text-sm text-gray-600">60% Rate</p>
               </div>
               <div className="border border-gray-200 rounded-lg p-4 text-center">
                 <h4 className="font-medium text-gray-900">Additional Rate</h4>
-                <p className="text-2xl font-bold text-gray-900">£125,140</p>
+                <p className="text-2xl font-bold text-gray-900">£{taxCalculation?.additional_rate_threshold?.toLocaleString() || '125,140'}</p>
                 <p className="text-sm text-gray-600">45% Rate</p>
               </div>
             </div>
@@ -266,9 +264,9 @@ const CalculationsWhatIf: React.FC = () => {
             <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
               <h4 className="font-medium text-yellow-900 mb-2">HICBC Thresholds 2024-25</h4>
               <ul className="list-disc list-inside text-sm text-yellow-800 space-y-1">
-                <li>Charge starts at £60,000 adjusted net income</li>
-                <li>1% charge for every £100 over £60,000</li>
-                <li>Full charge (100%) at £80,000 and above</li>
+                <li>Charge starts at £{taxCalculation?.hicbc_threshold?.toLocaleString() || 'Loading...'} adjusted net income</li>
+                <li>1% charge for every £{taxCalculation?.hicbc_increment?.toLocaleString() || '100'} over £{taxCalculation?.hicbc_threshold?.toLocaleString() || 'Loading...'}</li>
+                <li>Full charge (100%) at £{taxCalculation?.hicbc_full_threshold?.toLocaleString() || 'Loading...'} and above</li>
               </ul>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -280,7 +278,6 @@ const CalculationsWhatIf: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="2"
                     />
                   </div>
                   <div>
@@ -288,7 +285,7 @@ const CalculationsWhatIf: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1884"
+                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -296,7 +293,7 @@ const CalculationsWhatIf: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="65000"
+                      placeholder="0.00"
                     />
                   </div>
                 </div>
@@ -306,19 +303,19 @@ const CalculationsWhatIf: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Child Benefit Received</span>
-                    <span className="font-medium">£1,884</span>
+                    <span className="font-medium">£{taxCalculation?.child_benefit_received?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Income over £60,000</span>
-                    <span className="font-medium">£5,000</span>
+                    <span className="text-gray-600">Income over threshold</span>
+                    <span className="font-medium">£{taxCalculation?.income_over_threshold?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Charge Rate</span>
-                    <span className="font-medium">50%</span>
+                    <span className="font-medium">{taxCalculation?.hicbc_rate || '0'}%</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>HICBC Due</span>
-                    <span className="text-red-600">£942</span>
+                    <span className="text-red-600">£{taxCalculation?.hicbc_due?.toLocaleString() || '0'}</span>
                   </div>
                 </div>
               </div>

@@ -1,8 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, Plus, Calculator, TrendingUp, Minus } from 'lucide-react';
 
 const UKProperty: React.FC = () => {
   const [activeTab, setActiveTab] = useState('properties');
+  const [loading, setLoading] = useState(true);
+  const [propertyData, setPropertyData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchPropertyData();
+  }, []);
+
+  const fetchPropertyData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/uk-property?tax_year=2024-25`);
+      const data = await response.json();
+      setPropertyData(data);
+    } catch (error) {
+      console.error('Error fetching property data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddProperty = () => {
+    console.log('Add property functionality');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!propertyData) {
+    return <div className="text-center text-gray-500">Failed to load property data</div>;
+  }
 
   const tabs = [
     { id: 'properties', label: 'Property List', icon: Home },
@@ -20,7 +55,10 @@ const UKProperty: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={handleAddProperty}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          >
             <Plus className="h-4 w-4" />
             <span>Add Property</span>
           </button>
@@ -55,36 +93,38 @@ const UKProperty: React.FC = () => {
         {activeTab === 'properties' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Property Portfolio</h3>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h4 className="font-medium text-gray-900">123 Rental Street, London</h4>
-                  <p className="text-sm text-gray-600">Buy-to-Let Property</p>
+            {propertyData.properties.map((property: any) => (
+              <div key={property.id} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="font-medium text-gray-900">{property.address}</h4>
+                    <p className="text-sm text-gray-600">{property.type}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold text-green-600">£{property.net_profit.toLocaleString()}</p>
+                    <p className="text-sm text-gray-600">Annual Profit</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-semibold text-green-600">£8,400</p>
-                  <p className="text-sm text-gray-600">Annual Profit</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Rental Income</label>
+                    <p className="text-lg font-semibold text-gray-900">£{property.rental_income.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Expenses</label>
+                    <p className="text-lg font-semibold text-gray-900">£{property.expenses.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Mortgage Interest</label>
+                    <p className="text-lg font-semibold text-gray-900">£{property.mortgage_interest.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Net Profit</label>
+                    <p className="text-lg font-semibold text-green-600">£{property.net_profit.toLocaleString()}</p>
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Rental Income</label>
-                  <p className="text-lg font-semibold text-gray-900">£12,000</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Expenses</label>
-                  <p className="text-lg font-semibold text-gray-900">£3,600</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Mortgage Interest</label>
-                  <p className="text-lg font-semibold text-gray-900">£2,400</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Net Profit</label>
-                  <p className="text-lg font-semibold text-green-600">£8,400</p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         )}
 
@@ -105,7 +145,7 @@ const UKProperty: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="210"
+                  placeholder={propertyData.fhl_tests.days_available_required.toString()}
                 />
               </div>
               <div>
@@ -113,7 +153,7 @@ const UKProperty: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="105"
+                  placeholder={propertyData.fhl_tests.days_let_required.toString()}
                 />
               </div>
               <div>
@@ -121,7 +161,6 @@ const UKProperty: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0"
                 />
               </div>
             </div>
@@ -139,17 +178,13 @@ const UKProperty: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Rental Income</label>
                     <input
                       type="number"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="12000"
-                    />
+                        />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Premiums</label>
                     <input
                       type="number"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
-                    />
+                        />
                   </div>
                 </div>
               </div>
@@ -160,25 +195,19 @@ const UKProperty: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Repairs & Maintenance</label>
                     <input
                       type="number"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1200"
-                    />
+                        />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Management Fees</label>
                     <input
                       type="number"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1200"
-                    />
+                        />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Insurance</label>
                     <input
                       type="number"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="600"
-                    />
+                        />
                   </div>
                 </div>
               </div>
@@ -200,7 +229,7 @@ const UKProperty: React.FC = () => {
                       className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     />
                     <label htmlFor="property-allowance" className="ml-2 text-sm text-gray-700">
-                      Claim Property Allowance (£1,000)
+                      Claim Property Allowance (£{propertyData.allowances.property_allowance.toLocaleString()})
                     </label>
                   </div>
                   <p className="text-xs text-gray-500">
@@ -218,7 +247,7 @@ const UKProperty: React.FC = () => {
                       className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     />
                     <label htmlFor="rent-a-room" className="ml-2 text-sm text-gray-700">
-                      Claim Rent-a-Room Relief (£7,500)
+                      Claim Rent-a-Room Relief (£{propertyData.allowances.rent_a_room_relief.toLocaleString()})
                     </label>
                   </div>
                   <p className="text-xs text-gray-500">
@@ -239,7 +268,6 @@ const UKProperty: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -247,7 +275,6 @@ const UKProperty: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>

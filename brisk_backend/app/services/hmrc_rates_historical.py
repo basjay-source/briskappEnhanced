@@ -31,12 +31,42 @@ class HMRCHistoricalRates:
                 "capital_gains_higher_rate": 0.20,
                 "pension_annual_allowance": 60000,
                 "pension_lifetime_allowance": 1073100,
+                "pension_tapered_threshold": 260000,
+                "pension_minimum_threshold": 200000,
                 "trading_allowance": 1000,
                 "property_allowance": 1000,
+                "rent_a_room_relief": 7500,
                 "marriage_allowance": 1260,
+                "marriage_allowance_transfer": 1260,
+                "marriage_allowance_income_limit": 50270,
                 "blind_persons_allowance": 3070,
                 "high_income_child_benefit_threshold": 50000,
-                "high_income_child_benefit_rate": 0.01
+                "hicbc_threshold": 50000,
+                "high_income_child_benefit_rate": 0.01,
+                "eis_relief_rate": 0.30,
+                "seis_relief_rate": 0.50,
+                "vct_relief_rate": 0.30,
+                "eis_annual_limit": 1000000,
+                "seis_annual_limit": 200000,
+                "vct_annual_limit": 200000,
+                "remittance_basis_charge_7_years": 30000,
+                "remittance_basis_charge_12_years": 60000,
+                "cis_rate_registered": 0.20,
+                "cis_rate_unregistered": 0.30,
+                "cgt_annual_exemption": 3000,
+                "cgt_basic_rate": 0.10,
+                "cgt_higher_rate": 0.20,
+                "cgt_residential_basic_rate": 0.18,
+                "cgt_residential_higher_rate": 0.28,
+                "badr_lifetime_limit": 1000000,
+                "badr_rate": 0.10,
+                "gift_aid_basic_rate_relief": 0.25,
+                "gift_aid_higher_rate_relief": 0.25,
+                "poa_percentage": 0.50,
+                "class2_ni_rate": 0.03,
+                "class4_ni_rate": 0.09,
+                "class4_ni_threshold": 12570,
+                "aia_limit": 1000000
             },
             "2023-24": {
                 "personal_allowance": 12570,
@@ -60,12 +90,42 @@ class HMRCHistoricalRates:
                 "capital_gains_higher_rate": 0.20,
                 "pension_annual_allowance": 60000,
                 "pension_lifetime_allowance": 1073100,
+                "pension_tapered_threshold": 260000,
+                "pension_minimum_threshold": 200000,
                 "trading_allowance": 1000,
                 "property_allowance": 1000,
+                "rent_a_room_relief": 7500,
                 "marriage_allowance": 1260,
+                "marriage_allowance_transfer": 1260,
+                "marriage_allowance_income_limit": 50270,
                 "blind_persons_allowance": 2870,
                 "high_income_child_benefit_threshold": 50000,
-                "high_income_child_benefit_rate": 0.01
+                "hicbc_threshold": 50000,
+                "high_income_child_benefit_rate": 0.01,
+                "eis_relief_rate": 0.30,
+                "seis_relief_rate": 0.50,
+                "vct_relief_rate": 0.30,
+                "eis_annual_limit": 1000000,
+                "seis_annual_limit": 200000,
+                "vct_annual_limit": 200000,
+                "remittance_basis_charge_7_years": 30000,
+                "remittance_basis_charge_12_years": 60000,
+                "cis_rate_registered": 0.20,
+                "cis_rate_unregistered": 0.30,
+                "cgt_annual_exemption": 6000,
+                "cgt_basic_rate": 0.10,
+                "cgt_higher_rate": 0.20,
+                "cgt_residential_basic_rate": 0.18,
+                "cgt_residential_higher_rate": 0.28,
+                "badr_lifetime_limit": 1000000,
+                "badr_rate": 0.10,
+                "gift_aid_basic_rate_relief": 0.25,
+                "gift_aid_higher_rate_relief": 0.25,
+                "poa_percentage": 0.50,
+                "class2_ni_rate": 0.03,
+                "class4_ni_rate": 0.09,
+                "class4_ni_threshold": 12570,
+                "aia_limit": 1000000
             },
             "2022-23": {
                 "personal_allowance": 12570,
@@ -87,14 +147,44 @@ class HMRCHistoricalRates:
                 "capital_gains_allowance": 12300,
                 "capital_gains_basic_rate": 0.10,
                 "capital_gains_higher_rate": 0.20,
+                "cgt_residential_basic_rate": 0.18,
+                "cgt_residential_higher_rate": 0.28,
+                "badr_lifetime_limit": 1000000,
+                "badr_rate": 0.10,
                 "pension_annual_allowance": 60000,
                 "pension_lifetime_allowance": 1073100,
+                "pension_tapered_threshold": 260000,
+                "pension_minimum_threshold": 200000,
                 "trading_allowance": 1000,
                 "property_allowance": 1000,
+                "rent_a_room_relief": 7500,
                 "marriage_allowance": 1260,
+                "marriage_allowance_transfer": 1260,
+                "marriage_allowance_income_limit": 50270,
                 "blind_persons_allowance": 2600,
                 "high_income_child_benefit_threshold": 50000,
-                "high_income_child_benefit_rate": 0.01
+                "hicbc_threshold": 50000,
+                "high_income_child_benefit_rate": 0.01,
+                "eis_relief_rate": 0.30,
+                "seis_relief_rate": 0.50,
+                "vct_relief_rate": 0.30,
+                "eis_annual_limit": 1000000,
+                "seis_annual_limit": 200000,
+                "vct_annual_limit": 200000,
+                "remittance_basis_charge_7_years": 30000,
+                "remittance_basis_charge_12_years": 60000,
+                "cis_rate_registered": 0.20,
+                "cis_rate_unregistered": 0.30,
+                "cgt_annual_exemption": 12300,
+                "cgt_basic_rate": 0.10,
+                "cgt_higher_rate": 0.20,
+                "gift_aid_basic_rate_relief": 0.25,
+                "gift_aid_higher_rate_relief": 0.25,
+                "poa_percentage": 0.50,
+                "class2_ni_rate": 0.03,
+                "class4_ni_rate": 0.09,
+                "class4_ni_threshold": 12570,
+                "aia_limit": 1000000
             },
             "2021-22": {
                 "personal_allowance": 12570,
@@ -236,6 +326,43 @@ class HMRCHistoricalRates:
             "employee_ni": employee_ni,
             "employer_ni": employer_ni,
             "total_ni": employee_ni + employer_ni
+        }
+    
+    def get_cgt_rates(self, tax_year: str) -> Dict[str, float]:
+        """Get capital gains tax rates for tax year"""
+        rates = self.get_rates_for_tax_year(tax_year)
+        return {
+            "annual_exemption": rates["cgt_annual_exemption"],
+            "basic_rate": rates["cgt_basic_rate"],
+            "higher_rate": rates["cgt_higher_rate"],
+            "residential_basic_rate": rates["cgt_residential_basic_rate"],
+            "residential_higher_rate": rates["cgt_residential_higher_rate"],
+            "badr_rate": rates["badr_rate"],
+            "badr_lifetime_limit": rates["badr_lifetime_limit"]
+        }
+    
+    def get_relief_rates(self, tax_year: str) -> Dict[str, float]:
+        """Get investment relief rates for tax year"""
+        rates = self.get_rates_for_tax_year(tax_year)
+        return {
+            "eis_relief_rate": rates["eis_relief_rate"],
+            "seis_relief_rate": rates["seis_relief_rate"],
+            "vct_relief_rate": rates["vct_relief_rate"],
+            "eis_annual_limit": rates["eis_annual_limit"],
+            "seis_annual_limit": rates["seis_annual_limit"],
+            "vct_annual_limit": rates["vct_annual_limit"]
+        }
+    
+    def get_allowances(self, tax_year: str) -> Dict[str, float]:
+        """Get various allowances for tax year"""
+        rates = self.get_rates_for_tax_year(tax_year)
+        return {
+            "trading_allowance": rates["trading_allowance"],
+            "property_allowance": rates["property_allowance"],
+            "rent_a_room_relief": rates["rent_a_room_relief"],
+            "marriage_allowance": rates["marriage_allowance"],
+            "marriage_allowance_transfer": rates["marriage_allowance_transfer"],
+            "blind_persons_allowance": rates["blind_persons_allowance"]
         }
     
     def get_available_tax_years(self) -> list:

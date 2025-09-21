@@ -1,8 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wifi, Send, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
 
 const Filing: React.FC = () => {
   const [activeTab, setActiveTab] = useState('connection');
+  const [loading, setLoading] = useState(true);
+  const [filingData, setFilingData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchFilingData();
+  }, []);
+
+  const fetchFilingData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/filing-status`);
+      const data = await response.json();
+      setFilingData(data);
+    } catch (error) {
+      console.error('Error fetching filing data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitReturn = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/submit-return`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        fetchFilingData(); // Refresh data
+      } else {
+        throw new Error('Failed to submit return');
+      }
+    } catch (error) {
+      console.error('Error submitting return:', error);
+      alert('Error submitting return');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!filingData) {
+    return <div className="text-center text-gray-500">Failed to load filing data</div>;
+  }
 
   const tabs = [
     { id: 'connection', label: 'HMRC Connection', icon: Wifi },
@@ -20,7 +70,10 @@ const Filing: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={handleSubmitReturn}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
+          >
             <Send className="h-4 w-4" />
             <span>Submit Return</span>
           </button>
@@ -70,7 +123,7 @@ const Filing: React.FC = () => {
                   <CheckCircle className="h-6 w-6 text-green-600" />
                   <div>
                     <h4 className="font-medium text-green-900">Agent Authorisation</h4>
-                    <p className="text-sm text-green-800">Valid until 31/12/2025</p>
+                    <p className="text-sm text-green-800">Valid until {filingData.agent_auth.expiry_date}</p>
                   </div>
                 </div>
               </div>
@@ -78,9 +131,9 @@ const Filing: React.FC = () => {
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
               <h4 className="font-medium text-blue-900 mb-2">Connection Details</h4>
               <div className="space-y-1 text-sm text-blue-800">
-                <p><strong>User ID:</strong> AGENT123456</p>
-                <p><strong>Last Connected:</strong> 20 Sep 2025 09:30</p>
-                <p><strong>Service:</strong> Self Assessment Online</p>
+                <p><strong>User ID:</strong> {filingData.hmrc_connection.user_id}</p>
+                <p><strong>Last Connected:</strong> {new Date(filingData.hmrc_connection.last_connected).toLocaleString()}</p>
+                <p><strong>Service:</strong> {filingData.hmrc_connection.service}</p>
               </div>
             </div>
           </div>
@@ -93,22 +146,18 @@ const Filing: React.FC = () => {
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Forms to be Filed</h4>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">SA100 - Main Return</span>
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">SA102 - Employment</span>
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">SA103 - Self-Employment</span>
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">SA108 - Capital Gains</span>
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  </div>
+                  {filingData.forms_to_file.map((form: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">{form.form} - {form.form === 'SA100' ? 'Main Return' : 
+                        form.form === 'SA102' ? 'Employment' :
+                        form.form === 'SA103' ? 'Self-Employment' :
+                        form.form === 'SA108' ? 'Capital Gains' : form.form}</span>
+                      {form.status === 'ready' ? 
+                        <CheckCircle className="h-4 w-4 text-green-600" /> :
+                        <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                      }
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="border border-gray-200 rounded-lg p-4">
@@ -166,19 +215,19 @@ const Filing: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Taxpayer</span>
-                  <span className="font-medium">John Smith (1234567890)</span>
+                  <span className="font-medium">{filingData.submission.taxpayer}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax Year</span>
-                  <span className="font-medium">2024-25</span>
+                  <span className="font-medium">{filingData.submission.tax_year}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Tax Due</span>
-                  <span className="font-medium">£1,950</span>
+                  <span className="font-medium">£{filingData.submission.total_tax_due.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Filing Deadline</span>
-                  <span className="font-medium">31 January 2026</span>
+                  <span className="font-medium">{new Date(filingData.submission.filing_deadline).toLocaleDateString('en-GB')}</span>
                 </div>
               </div>
               <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
@@ -193,7 +242,10 @@ const Filing: React.FC = () => {
                 </div>
               </div>
               <div className="mt-6">
-                <button className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 font-medium">
+                <button 
+                  onClick={handleSubmitReturn}
+                  className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 font-medium"
+                >
                   Submit to HMRC
                 </button>
               </div>
@@ -213,15 +265,15 @@ const Filing: React.FC = () => {
                   <div className="mt-4 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-green-700">Submission Reference:</span>
-                      <span className="font-medium text-green-900">SA123456789012345</span>
+                      <span className="font-medium text-green-900">{filingData?.submission_reference || 'Not submitted'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-green-700">Submission Date:</span>
-                      <span className="font-medium text-green-900">20 Sep 2025 09:45</span>
+                      <span className="font-medium text-green-900">{filingData?.submission_date || 'Not submitted'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-green-700">Acknowledgement:</span>
-                      <span className="font-medium text-green-900">ACK987654321</span>
+                      <span className="font-medium text-green-900">{filingData?.acknowledgement || 'Not available'}</span>
                     </div>
                   </div>
                 </div>

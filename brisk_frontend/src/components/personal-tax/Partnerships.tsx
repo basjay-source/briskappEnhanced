@@ -67,7 +67,7 @@ const Partnerships: React.FC = () => {
                 <input
                   type="text"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="1234567890"
+                  placeholder=""
                 />
               </div>
               <div>
@@ -75,7 +75,7 @@ const Partnerships: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="50"
+                  placeholder=""
                   max="100"
                 />
               </div>
@@ -113,7 +113,7 @@ const Partnerships: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
+                  placeholder=""
                 />
               </div>
               <div>
@@ -121,7 +121,7 @@ const Partnerships: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
+                  placeholder=""
                 />
               </div>
             </div>

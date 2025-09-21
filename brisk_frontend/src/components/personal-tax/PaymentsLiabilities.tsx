@@ -1,8 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CreditCard, Plus, Calculator, Clock } from 'lucide-react';
 
 const PaymentsLiabilities: React.FC = () => {
   const [activeTab, setActiveTab] = useState('poa');
+  const [loading, setLoading] = useState(true);
+  const [paymentsData, setPaymentsData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchPaymentsData();
+  }, []);
+
+  const fetchPaymentsData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/payments-liabilities?tax_year=2024-25`);
+      const data = await response.json();
+      setPaymentsData(data);
+    } catch (error) {
+      console.error('Error fetching payments data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCalculatePayments = () => {
+    console.log('Calculate payments functionality');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!paymentsData) {
+    return <div className="text-center text-gray-500">Failed to load payments data</div>;
+  }
 
   const tabs = [
     { id: 'poa', label: 'Payments on Account', icon: CreditCard },
@@ -19,7 +54,10 @@ const PaymentsLiabilities: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+          <button 
+            onClick={handleCalculatePayments}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
             Calculate Payments
           </button>
         </div>
@@ -62,7 +100,11 @@ const PaymentsLiabilities: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1000"
+                      value={paymentsData.poa.poa_1}
+                      onChange={(e) => setPaymentsData({
+                        ...paymentsData,
+                        poa: { ...paymentsData.poa, poa_1: parseFloat(e.target.value) || 0 }
+                      })}
                     />
                   </div>
                   <div>
@@ -70,7 +112,11 @@ const PaymentsLiabilities: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1000"
+                      value={paymentsData.poa.poa_2}
+                      onChange={(e) => setPaymentsData({
+                        ...paymentsData,
+                        poa: { ...paymentsData.poa, poa_2: parseFloat(e.target.value) || 0 }
+                      })}
                     />
                   </div>
                 </div>
@@ -93,7 +139,6 @@ const PaymentsLiabilities: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -118,19 +163,19 @@ const PaymentsLiabilities: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Tax Due</span>
-                  <span className="font-medium">£12,450</span>
+                  <span className="font-medium">£{paymentsData.balancing_payment.total_tax_due.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax Deducted (PAYE/CIS)</span>
-                  <span className="font-medium">£8,500</span>
+                  <span className="font-medium">£{paymentsData.balancing_payment.tax_deducted.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Payments on Account</span>
-                  <span className="font-medium">£2,000</span>
+                  <span className="font-medium">£{paymentsData.balancing_payment.payments_on_account.toLocaleString()}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between font-semibold">
                   <span>Balancing Payment Due</span>
-                  <span className="text-red-600">£1,950</span>
+                  <span className="text-red-600">£{paymentsData.balancing_payment.balancing_payment.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -140,7 +185,7 @@ const PaymentsLiabilities: React.FC = () => {
                 <input
                   type="text"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="12345678"
+                  placeholder="Enter account number"
                 />
               </div>
               <div>
@@ -148,7 +193,7 @@ const PaymentsLiabilities: React.FC = () => {
                 <input
                   type="text"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="12-34-56"
+                  placeholder="12-34-56"
                 />
               </div>
             </div>
@@ -159,32 +204,34 @@ const PaymentsLiabilities: React.FC = () => {
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">CIS Tax Suffered</h3>
             <div className="space-y-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h4 className="font-medium text-gray-900">ABC Construction Ltd</h4>
-                    <p className="text-sm text-gray-600">UTR: 1234567890</p>
+              {paymentsData.cis.contractors.map((contractor: any, index: number) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 className="font-medium text-gray-900">{contractor.name}</h4>
+                      <p className="text-sm text-gray-600">UTR: {contractor.utr}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-gray-900">£{contractor.tax_deducted.toLocaleString()}</p>
+                      <p className="text-sm text-gray-600">Tax Deducted</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold text-gray-900">£1,500</p>
-                    <p className="text-sm text-gray-600">Tax Deducted</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Gross Payment</label>
+                      <p className="text-lg font-semibold text-gray-900">£{contractor.gross_payment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">CIS Rate</label>
+                      <p className="text-lg font-semibold text-gray-900">{(contractor.cis_rate * 100).toFixed(0)}%</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Net Payment</label>
+                      <p className="text-lg font-semibold text-gray-900">£{contractor.net_payment.toLocaleString()}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Gross Payment</label>
-                    <p className="text-lg font-semibold text-gray-900">£7,500</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">CIS Rate</label>
-                    <p className="text-lg font-semibold text-gray-900">20%</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Net Payment</label>
-                    <p className="text-lg font-semibold text-gray-900">£6,000</p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         )}
@@ -198,7 +245,6 @@ const PaymentsLiabilities: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="1950"
                 />
               </div>
               <div>
@@ -206,7 +252,6 @@ const PaymentsLiabilities: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>

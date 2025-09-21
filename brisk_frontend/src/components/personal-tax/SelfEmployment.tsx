@@ -188,7 +188,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="25000"
                     />
                   </div>
                   <div>
@@ -196,7 +195,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                 </div>
@@ -209,7 +207,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="5000"
                     />
                   </div>
                   <div>
@@ -217,7 +214,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1500"
                     />
                   </div>
                   <div>
@@ -225,7 +221,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="2000"
                     />
                   </div>
                 </div>
@@ -241,17 +236,26 @@ const SelfEmployment: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Annual Investment Allowance</h4>
-                  <p className="text-2xl font-bold text-gray-900">£1,000</p>
+                  <input
+                    type="number"
+                    className="text-2xl font-bold text-gray-900 border-none bg-transparent w-full"
+                  />
                   <p className="text-sm text-gray-600">100% allowance</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Writing Down Allowance</h4>
-                  <p className="text-2xl font-bold text-gray-900">£900</p>
+                  <input
+                    type="number"
+                    className="text-2xl font-bold text-gray-900 border-none bg-transparent w-full"
+                  />
                   <p className="text-sm text-gray-600">18% rate</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">First Year Allowance</h4>
-                  <p className="text-2xl font-bold text-gray-900">£100</p>
+                  <input
+                    type="number"
+                    className="text-2xl font-bold text-gray-900 border-none bg-transparent w-full"
+                  />
                   <p className="text-sm text-gray-600">100% allowance</p>
                 </div>
               </div>
@@ -271,7 +275,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -279,7 +282,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                 </div>
@@ -292,7 +294,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="1500"
                     />
                   </div>
                   <div>
@@ -300,7 +301,6 @@ const SelfEmployment: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="7500"
                     />
                   </div>
                 </div>

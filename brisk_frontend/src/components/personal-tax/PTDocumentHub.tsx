@@ -1,8 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Upload, Send } from 'lucide-react';
 
 const PTDocumentHub: React.FC = () => {
   const [activeTab, setActiveTab] = useState('source');
+  const [loading, setLoading] = useState(true);
+  const [documentsData, setDocumentsData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchDocumentsData();
+  }, []);
+
+  const fetchDocumentsData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/documents`);
+      const data = await response.json();
+      setDocumentsData(data);
+    } catch (error) {
+      console.error('Error fetching documents data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadDocuments = () => {
+    console.log('Upload documents functionality');
+  };
+
+  const handleUploadCategory = (category: string) => {
+    console.log(`Upload ${category} functionality`);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!documentsData) {
+    return <div className="text-center text-gray-500">Failed to load documents data</div>;
+  }
 
   const tabs = [
     { id: 'source', label: 'Source Docs', icon: FileText },
@@ -18,7 +57,10 @@ const PTDocumentHub: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={handleUploadDocuments}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          >
             <Upload className="h-4 w-4" />
             <span>Upload Documents</span>
           </button>
@@ -54,27 +96,19 @@ const PTDocumentHub: React.FC = () => {
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Source Documents</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">P60/P45/P11D</h4>
-                <p className="text-sm text-gray-600 mb-3">Employment documents</p>
-                <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                  Upload
-                </button>
-              </div>
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Bank Statements</h4>
-                <p className="text-sm text-gray-600 mb-3">Interest certificates</p>
-                <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                  Upload
-                </button>
-              </div>
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Investment Statements</h4>
-                <p className="text-sm text-gray-600 mb-3">Dividend vouchers</p>
-                <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                  Upload
-                </button>
-              </div>
+              {documentsData.source_documents.map((category: any, index: number) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">{category.category}</h4>
+                  <p className="text-sm text-gray-600 mb-3">{category.description}</p>
+                  <p className="text-xs text-gray-500 mb-3">Documents: {category.count}</p>
+                  <button 
+                    onClick={() => handleUploadCategory(category.category)}
+                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+                  >
+                    Upload
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -83,24 +117,23 @@ const PTDocumentHub: React.FC = () => {
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Statements & Certificates</h3>
             <div className="space-y-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">P60 - ABC Company Ltd</h4>
-                    <p className="text-sm text-gray-600">Uploaded: 15 May 2024</p>
+              {documentsData.uploaded_documents.map((document: any, index: number) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-gray-900">{document.name}</h4>
+                      <p className="text-sm text-gray-600">Uploaded: {new Date(document.upload_date).toLocaleDateString('en-GB')}</p>
+                      <p className="text-xs text-gray-500">Type: {document.type}</p>
+                    </div>
+                    <button 
+                      onClick={() => console.log(`View document: ${document.name}`)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      View
+                    </button>
                   </div>
-                  <button className="text-blue-600 hover:text-blue-800">View</button>
                 </div>
-              </div>
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">Bank Interest Certificate</h4>
-                    <p className="text-sm text-gray-600">Uploaded: 10 May 2024</p>
-                  </div>
-                  <button className="text-blue-600 hover:text-blue-800">View</button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         )}
@@ -109,13 +142,20 @@ const PTDocumentHub: React.FC = () => {
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Client Communications</h3>
             <div className="space-y-4">
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Representation Letter</h4>
-                <p className="text-sm text-gray-600 mb-3">Status: Signed</p>
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-                  View Signed Document
-                </button>
-              </div>
+              {documentsData.client_communications.map((comm: any, index: number) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">{comm.name}</h4>
+                  <p className="text-sm text-gray-600 mb-3">Status: {comm.status}</p>
+                  <button 
+                    onClick={() => console.log(`View ${comm.type}: ${comm.name}`)}
+                    className={`px-4 py-2 rounded-md text-white ${
+                      comm.status === 'Signed' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+                  >
+                    {comm.status === 'Signed' ? 'View Signed Document' : 'View Document'}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}

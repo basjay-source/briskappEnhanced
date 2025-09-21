@@ -3,9 +3,12 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 from datetime import datetime, date
 from pydantic import BaseModel
+import logging
 from ..database import get_db
 from ..services.hmrc_rates import hmrc_rates_service
 from ..services.hmrc_rates_historical import hmrc_historical_rates
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/personal-tax", tags=["personal-tax"])
 
@@ -67,50 +70,60 @@ class TaxCalculation(BaseModel):
     balance_due: float
 
 @router.get("/dashboard/kpis")
-async def get_dashboard_kpis(db: Session = Depends(get_db), tax_year: Optional[str] = None):
+async def get_dashboard_kpis(db: Session = Depends(get_db), tax_year: Optional[str] = "2024-25"):
     """Get KPI data for Personal Tax dashboard"""
-    personal_rates = await hmrc_rates_service.get_personal_tax_rates(db, tax_year)
-    ni_rates = await hmrc_rates_service.get_national_insurance_rates(db, tax_year)
+    if not tax_year:
+        tax_year = "2024-25"
+    
+    rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+    income_tax_rates = hmrc_historical_rates.get_income_tax_rates(tax_year)
+    
+    sample_income = 63950
+    tax_calc = hmrc_historical_rates.calculate_income_tax(sample_income, tax_year)
+    ni_calc = hmrc_historical_rates.calculate_ni_contributions(sample_income, tax_year)
+    
+    total_tax = tax_calc["total_tax"] + ni_calc["employee_ni"]
+    effective_rate = (total_tax / sample_income) * 100 if sample_income > 0 else 0
     
     return {
         "total_tax_liability": {
-            "value": 12450,
+            "value": round(total_tax),
             "change": 8.5,
             "trend": "up",
             "drill_down": [
-                {"component": "Income Tax", "amount": 8750, "rate": 20, "liability": 8750},
-                {"component": "National Insurance", "amount": 3700, "rate": 12, "liability": 3700},
-                {"component": "Dividend Tax", "amount": 0, "rate": 8.75, "liability": 0}
+                {"component": "Income Tax", "amount": round(tax_calc["total_tax"]), "rate": income_tax_rates["basic_rate"] * 100, "liability": round(tax_calc["total_tax"])},
+                {"component": "National Insurance", "amount": round(ni_calc["employee_ni"]), "rate": rates["ni_rate_employee"] * 100, "liability": round(ni_calc["employee_ni"])},
+                {"component": "Dividend Tax", "amount": 0, "rate": rates["dividend_basic_rate"] * 100, "liability": 0}
             ]
         },
         "effective_rate": {
-            "value": 19.5,
+            "value": round(effective_rate, 1),
             "change": -1.2,
             "trend": "down",
             "drill_down": [
-                {"year": "2024-25", "total_income": 63950, "tax": 12450, "rate": 19.5},
+                {"year": tax_year, "total_income": sample_income, "tax": round(total_tax), "rate": round(effective_rate, 1)},
                 {"year": "2023-24", "total_income": 58000, "tax": 12040, "rate": 20.7},
                 {"year": "2022-23", "total_income": 55000, "tax": 10500, "rate": 19.1}
             ]
         },
         "reliefs_claimed": {
-            "value": 8500,
+            "value": round(rates["marriage_allowance"] + 6000 + 2000),
             "change": 15.0,
             "trend": "up",
             "drill_down": [
-                {"relief": "Pension Contributions", "amount": 6000, "tax_relief": 1200},
-                {"relief": "Gift Aid", "amount": 2000, "tax_relief": 500},
-                {"relief": "Marriage Allowance", "amount": 1260, "tax_relief": 252}
+                {"relief": "Pension Contributions", "amount": 6000, "tax_relief": round(6000 * income_tax_rates["basic_rate"])},
+                {"relief": "Gift Aid", "amount": 2000, "tax_relief": round(2000 * rates.get("gift_aid_basic_rate_relief", 0.25))},
+                {"relief": "Marriage Allowance", "amount": rates["marriage_allowance"], "tax_relief": round(rates["marriage_allowance"] * income_tax_rates["basic_rate"])}
             ]
         },
         "payments_due": {
-            "value": 2850,
+            "value": round(total_tax * 0.5),
             "change": "New",
             "trend": "neutral",
             "drill_down": [
-                {"payment": "Balancing Payment", "due_date": "2025-01-31", "amount": 1850},
-                {"payment": "Payment on Account 1", "due_date": "2025-01-31", "amount": 1000},
-                {"payment": "Payment on Account 2", "due_date": "2025-07-31", "amount": 1000}
+                {"payment": "Balancing Payment", "due_date": "2025-01-31", "amount": round(total_tax * 0.3)},
+                {"payment": "Payment on Account 1", "due_date": "2025-01-31", "amount": round(total_tax * 0.25)},
+                {"payment": "Payment on Account 2", "due_date": "2025-07-31", "amount": round(total_tax * 0.25)}
             ]
         }
     }
@@ -172,25 +185,25 @@ async def get_compliance_timeline():
     ]
 
 @router.get("/taxpayer/profile")
-async def get_taxpayer_profile():
+async def get_taxpayer_profile(db: Session = Depends(get_db)):
     """Get taxpayer profile information"""
     return {
-        "utr": "1234567890",
-        "nino": "AB123456C",
-        "first_name": "John",
-        "last_name": "Smith",
-        "date_of_birth": "1985-06-15",
-        "address": "123 Main Street, London, SW1A 1AA",
-        "email": "john.smith@email.com",
-        "phone": "07700 900123",
-        "bank_account": "12345678",
-        "sort_code": "12-34-56",
-        "marital_status": "married",
-        "spouse_name": "Jane Smith",
-        "student_loan_plan": "Plan 2",
+        "utr": None,
+        "nino": None,
+        "first_name": "",
+        "last_name": "",
+        "date_of_birth": None,
+        "address": "",
+        "email": "",
+        "phone": "",
+        "bank_account": None,
+        "sort_code": None,
+        "marital_status": "single",
+        "spouse_name": None,
+        "student_loan_plan": None,
         "blind_person_allowance": False,
-        "agent_auth_status": "active",
-        "agent_auth_expiry": "2025-12-31"
+        "agent_auth_status": "inactive",
+        "agent_auth_expiry": None
     }
 
 @router.post("/taxpayer/profile")
@@ -712,12 +725,277 @@ async def get_trusts_estates_data(tax_year: str = "2024-25"):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching trusts estates data: {str(e)}")
 
+@router.get("/dashboard-data")
+async def get_dashboard_data(tax_year: str = "2024-25"):
+    """Get dashboard KPIs, exceptions, tasks, and compliance timeline"""
+    try:
+        rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+        
+        total_income = 85000
+        tax_calculation = hmrc_historical_rates.calculate_income_tax(total_income, tax_year)
+        
+        return {
+            "kpis": {
+                "total_income": total_income,
+                "total_tax_due": tax_calculation["total_tax"],
+                "refund_due": 0,
+                "filing_deadline": "2026-01-31",
+                "payment_deadline": "2026-01-31",
+                "personal_allowance": rates["personal_allowance"],
+                "basic_rate_threshold": rates["basic_rate_threshold"]
+            },
+            "exceptions": [
+                {
+                    "id": 1,
+                    "type": "warning",
+                    "title": "P60 Missing",
+                    "description": "P60 for main employment not uploaded",
+                    "action": "Upload P60"
+                },
+                {
+                    "id": 2,
+                    "type": "info",
+                    "title": "High Income Child Benefit Charge",
+                    "description": f"Income exceeds £{rates['hicbc_threshold']:,} - HICBC may apply",
+                    "action": "Review HICBC"
+                }
+            ],
+            "tasks": [
+                {
+                    "id": 1,
+                    "title": "Complete Employment Section",
+                    "status": "pending",
+                    "due_date": "2025-12-31",
+                    "priority": "high"
+                },
+                {
+                    "id": 2,
+                    "title": "Upload Bank Statements",
+                    "status": "completed",
+                    "due_date": "2025-11-30",
+                    "priority": "medium"
+                }
+            ],
+            "compliance_timeline": [
+                {
+                    "date": "2025-10-31",
+                    "event": "Paper filing deadline",
+                    "status": "upcoming"
+                },
+                {
+                    "date": "2026-01-31",
+                    "event": "Online filing deadline",
+                    "status": "upcoming"
+                },
+                {
+                    "date": "2026-01-31",
+                    "event": "Payment deadline",
+                    "status": "upcoming"
+                }
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error getting dashboard data: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get dashboard data")
+
+@router.get("/reliefs-deductions")
+async def get_reliefs_deductions_data(tax_year: str = "2024-25"):
+    """Get reliefs and deductions data with dynamic rates"""
+    rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+    relief_rates = hmrc_historical_rates.get_relief_rates(tax_year)
+    allowances = hmrc_historical_rates.get_allowances(tax_year)
+    
+    return {
+        "gift_aid": {
+            "total_donations": 0,
+            "carry_back_previous_year": 0,
+            "basic_rate_relief": relief_rates.get("gift_aid_basic_rate_relief", 0.25),
+            "higher_rate_relief": relief_rates.get("gift_aid_higher_rate_relief", 0.25)
+        },
+        "pension_contributions": {
+            "personal_contributions": 0,
+            "employer_contributions": 0,
+            "annual_allowance": rates["pension_annual_allowance"],
+            "lifetime_allowance": rates["pension_lifetime_allowance"],
+            "tapered_threshold": rates["pension_tapered_threshold"]
+        },
+        "investment_reliefs": {
+            "eis_relief_rate": relief_rates["eis_relief_rate"],
+            "seis_relief_rate": relief_rates["seis_relief_rate"],
+            "vct_relief_rate": relief_rates["vct_relief_rate"],
+            "eis_annual_limit": relief_rates["eis_annual_limit"],
+            "seis_annual_limit": relief_rates["seis_annual_limit"],
+            "vct_annual_limit": relief_rates["vct_annual_limit"]
+        },
+        "marriage_allowance": {
+            "transfer_amount": allowances["marriage_allowance_transfer"],
+            "income_limit": rates["marriage_allowance_income_limit"],
+            "eligible": True
+        },
+        "other_allowances": {
+            "trading_allowance": allowances["trading_allowance"],
+            "property_allowance": allowances["property_allowance"],
+            "blind_persons_allowance": allowances["blind_persons_allowance"]
+        }
+    }
+
+@router.get("/residence-domicile")
+async def get_residence_domicile_data(tax_year: str = "2024-25"):
+    """Get residence and domicile data with dynamic rates"""
+    rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+    
+    return {
+        "srt_calculation": {
+            "uk_days": 0,
+            "overseas_days": 0,
+            "ties": [],
+            "residence_status": "UK Resident",
+            "automatic_tests": {
+                "uk_resident": False,
+                "overseas_resident": False,
+                "sufficient_ties": False
+            }
+        },
+        "remittance_basis": {
+            "charge_7_years": rates["remittance_basis_charge_7_years"],
+            "charge_12_years": rates["remittance_basis_charge_12_years"],
+            "eligible": False,
+            "claim_remittance_basis": False
+        },
+        "double_taxation_relief": {
+            "foreign_tax_paid": 0,
+            "uk_tax_on_foreign_income": 0,
+            "relief_claimed": 0,
+            "treaties": []
+        }
+    }
+
+@router.get("/payments-liabilities")
+async def get_payments_liabilities_data(tax_year: str = "2024-25"):
+    """Get payments and liabilities data with dynamic calculations"""
+    rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+    
+    sample_income = 65000
+    tax_calc = hmrc_historical_rates.calculate_income_tax(sample_income, tax_year)
+    ni_calc = hmrc_historical_rates.calculate_ni_contributions(sample_income, tax_year)
+    
+    total_liability = tax_calc["total_tax"] + ni_calc["employee_ni"]
+    poa_amount = total_liability * rates.get("poa_percentage", 0.50)
+    
+    return {
+        "current_year_liability": {
+            "income_tax": round(tax_calc["total_tax"]),
+            "national_insurance": round(ni_calc["employee_ni"]),
+            "total": round(total_liability)
+        },
+        "payments_on_account": {
+            "poa1_amount": round(poa_amount / 2),
+            "poa1_due_date": "2025-01-31",
+            "poa2_amount": round(poa_amount / 2),
+            "poa2_due_date": "2025-07-31",
+            "total_poa": round(poa_amount)
+        },
+        "balancing_payment": {
+            "amount": round(total_liability - poa_amount),
+            "due_date": "2025-01-31"
+        },
+        "cis_deductions": {
+            "total_deducted": 0,
+            "rate_registered": rates["cis_rate_registered"],
+            "rate_unregistered": rates["cis_rate_unregistered"]
+        }
+    }
+
+@router.get("/filing-status")
+async def get_filing_status_data():
+    """Get filing status and HMRC connection data"""
+    return {
+        "hmrc_connection": {
+            "status": "Connected",
+            "user_id": None,
+            "last_connected": None,
+            "service": "Self Assessment Online"
+        },
+        "agent_authorization": {
+            "status": "inactive",
+            "expiry_date": None
+        },
+        "submission_status": {
+            "return_submitted": False,
+            "submission_reference": None,
+            "acknowledgement": None,
+            "submission_date": None
+        }
+    }
+
+@router.get("/post-filing")
+async def get_post_filing_data():
+    """Get post-filing data including statement of account"""
+    return {
+        "statement_of_account": {
+            "balance": 0,
+            "payments_received": 0,
+            "charges_raised": 0,
+            "last_updated": None
+        },
+        "amendments": {
+            "amendment_submitted": False,
+            "amendment_reference": None,
+            "amendment_date": None
+        },
+        "enquiries": {
+            "enquiry_opened": False,
+            "enquiry_reference": None,
+            "enquiry_date": None,
+            "status": "None"
+        }
+    }
+
+@router.get("/document-hub")
+async def get_document_hub_data():
+    """Get document hub data and upload status"""
+    return {
+        "source_documents": {
+            "p60_p45": {"uploaded": False, "count": 0},
+            "bank_statements": {"uploaded": False, "count": 0},
+            "investment_statements": {"uploaded": False, "count": 0}
+        },
+        "supporting_documents": {
+            "receipts": {"uploaded": False, "count": 0},
+            "invoices": {"uploaded": False, "count": 0},
+            "contracts": {"uploaded": False, "count": 0}
+        },
+        "generated_documents": {
+            "sa302": {"generated": False, "date": None},
+            "tax_overview": {"generated": False, "date": None}
+        }
+    }
+
+@router.get("/uk-property")
+async def get_uk_property_data(tax_year: str = "2024-25"):
+    """Get UK property data with dynamic allowances"""
+    rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
+    allowances = hmrc_historical_rates.get_allowances(tax_year)
+    
+    return {
+        "properties": [],
+        "allowances": {
+            "property_allowance": allowances["property_allowance"],
+            "rent_a_room_relief": allowances["rent_a_room_relief"]
+        },
+        "totals": {
+            "rental_income": 0,
+            "allowable_expenses": 0,
+            "profit_loss": 0
+        }
+    }
+
 @router.post("/filing/submit")
 async def submit_sa_return():
     """Submit SA return to HMRC"""
     return {
         "message": "SA return submitted successfully",
-        "submission_id": "SA123456789",
+        "submission_id": None,
         "timestamp": datetime.now().isoformat(),
-        "acknowledgement": "ACK987654321"
+        "acknowledgement": None
     }

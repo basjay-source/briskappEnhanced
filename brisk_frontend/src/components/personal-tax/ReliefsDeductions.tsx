@@ -1,8 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, Plus, Heart, GraduationCap, TrendingUp } from 'lucide-react';
 
 const ReliefsDeductions: React.FC = () => {
   const [activeTab, setActiveTab] = useState('giftaid');
+  const [loading, setLoading] = useState(true);
+  const [reliefsData, setReliefsData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchReliefsData();
+  }, []);
+
+  const fetchReliefsData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/reliefs-deductions?tax_year=2024-25`);
+      const data = await response.json();
+      setReliefsData(data);
+    } catch (error) {
+      console.error('Error fetching reliefs data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddRelief = () => {
+    console.log('Add relief functionality');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!reliefsData) {
+    return <div className="text-center text-gray-500">Failed to load reliefs data</div>;
+  }
 
   const tabs = [
     { id: 'giftaid', label: 'Gift Aid', icon: Heart },
@@ -21,7 +56,10 @@ const ReliefsDeductions: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={handleAddRelief}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          >
             <Plus className="h-4 w-4" />
             <span>Add Relief</span>
           </button>
@@ -62,7 +100,6 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="2000"
                 />
               </div>
               <div>
@@ -70,7 +107,6 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -79,15 +115,15 @@ const ReliefsDeductions: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-green-800">Donations Made</span>
-                  <span className="font-medium">£2,000</span>
+                  <span className="font-medium">£{reliefsData.gift_aid.total_donations.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-green-800">Basic Rate Relief (25%)</span>
-                  <span className="font-medium">£500</span>
+                  <span className="text-green-800">Basic Rate Relief ({(reliefsData.gift_aid.basic_rate_relief * 100).toFixed(0)}%)</span>
+                  <span className="font-medium">£{(reliefsData.gift_aid.total_donations * reliefsData.gift_aid.basic_rate_relief).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-green-800">Higher Rate Relief</span>
-                  <span className="font-medium">£500</span>
+                  <span className="font-medium">£{(reliefsData.gift_aid.total_donations * reliefsData.gift_aid.higher_rate_relief).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -103,7 +139,6 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="6000"
                 />
               </div>
               <div>
@@ -111,7 +146,6 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="3000"
                 />
               </div>
               <div>
@@ -135,15 +169,15 @@ const ReliefsDeductions: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-800">Annual Allowance 2024-25</span>
-                  <span className="font-medium">£60,000</span>
+                  <span className="font-medium">£{reliefsData.pensions.annual_allowance.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-800">Total Contributions</span>
-                  <span className="font-medium">£9,000</span>
+                  <span className="font-medium">£{(reliefsData.pensions.personal_contributions + reliefsData.pensions.employer_contributions).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-800">Remaining Allowance</span>
-                  <span className="font-medium text-green-600">£51,000</span>
+                  <span className="font-medium text-green-600">£{(reliefsData.pensions.annual_allowance - reliefsData.pensions.personal_contributions - reliefsData.pensions.employer_contributions).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -162,7 +196,6 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -170,7 +203,7 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      value="30%"
+                      value={`${(reliefsData.investment_reliefs.eis_relief_rate * 100).toFixed(0)}%`}
                       readOnly
                     />
                   </div>
@@ -184,7 +217,6 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -192,7 +224,7 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      value="50%"
+                      value={`${(reliefsData.investment_reliefs.seis_relief_rate * 100).toFixed(0)}%`}
                       readOnly
                     />
                   </div>
@@ -206,7 +238,6 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="0.00"
                     />
                   </div>
                   <div>
@@ -214,7 +245,7 @@ const ReliefsDeductions: React.FC = () => {
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      value="30%"
+                      value={`${(reliefsData.investment_reliefs.vct_relief_rate * 100).toFixed(0)}%`}
                       readOnly
                     />
                   </div>
@@ -233,7 +264,6 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  defaultValue="1260"
                 />
               </div>
               <div>
@@ -241,14 +271,13 @@ const ReliefsDeductions: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>
             <div className="bg-pink-50 border border-pink-200 rounded-md p-4">
               <h4 className="font-medium text-pink-900 mb-2">Marriage Allowance 2024-25</h4>
               <p className="text-sm text-pink-800">
-                Transfer up to £1,260 of personal allowance to your spouse if they earn less than £50,270
+                Transfer up to £{reliefsData.marriage_allowance.transfer_amount.toLocaleString()} of personal allowance to your spouse if they earn less than £{reliefsData.marriage_allowance.income_limit.toLocaleString()}
               </p>
             </div>
           </div>
@@ -268,7 +297,7 @@ const ReliefsDeductions: React.FC = () => {
                       className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     />
                     <label htmlFor="trading-allowance" className="ml-2 text-sm text-gray-700">
-                      Claim Trading Allowance (£1,000)
+                      Claim Trading Allowance (£{reliefsData.allowances.trading_allowance.toLocaleString()})
                     </label>
                   </div>
                   <p className="text-xs text-gray-500">
@@ -286,7 +315,7 @@ const ReliefsDeductions: React.FC = () => {
                       className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     />
                     <label htmlFor="property-allowance" className="ml-2 text-sm text-gray-700">
-                      Claim Property Allowance (£1,000)
+                      Claim Property Allowance (£{reliefsData.allowances.property_allowance.toLocaleString()})
                     </label>
                   </div>
                   <p className="text-xs text-gray-500">

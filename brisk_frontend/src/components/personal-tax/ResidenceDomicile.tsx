@@ -1,8 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Calculator, Globe, DollarSign } from 'lucide-react';
 
 const ResidenceDomicile: React.FC = () => {
   const [activeTab, setActiveTab] = useState('srt');
+  const [loading, setLoading] = useState(true);
+  const [residenceData, setResidenceData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchResidenceData();
+  }, []);
+
+  const fetchResidenceData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/residence-domicile?tax_year=2024-25`);
+      const data = await response.json();
+      setResidenceData(data);
+    } catch (error) {
+      console.error('Error fetching residence data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCalculateSRT = () => {
+    console.log('Calculate SRT functionality');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!residenceData) {
+    return <div className="text-center text-gray-500">Failed to load residence data</div>;
+  }
 
   const tabs = [
     { id: 'srt', label: 'SRT Days & Ties', icon: MapPin },
@@ -19,7 +54,10 @@ const ResidenceDomicile: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+          <button 
+            onClick={handleCalculateSRT}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
             Calculate SRT
           </button>
         </div>
@@ -62,8 +100,18 @@ const ResidenceDomicile: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="120"
+                      value={residenceData.srt_data.days_in_uk.current_year}
                       max="365"
+                      onChange={(e) => setResidenceData({
+                        ...residenceData,
+                        srt_data: {
+                          ...residenceData.srt_data,
+                          days_in_uk: {
+                            ...residenceData.srt_data.days_in_uk,
+                            current_year: parseInt(e.target.value) || 0
+                          }
+                        }
+                      })}
                     />
                   </div>
                   <div>
@@ -71,8 +119,18 @@ const ResidenceDomicile: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="90"
+                      value={residenceData.srt_data.days_in_uk.previous_year_1}
                       max="365"
+                      onChange={(e) => setResidenceData({
+                        ...residenceData,
+                        srt_data: {
+                          ...residenceData.srt_data,
+                          days_in_uk: {
+                            ...residenceData.srt_data.days_in_uk,
+                            previous_year_1: parseInt(e.target.value) || 0
+                          }
+                        }
+                      })}
                     />
                   </div>
                   <div>
@@ -80,8 +138,18 @@ const ResidenceDomicile: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="60"
+                      value={residenceData.srt_data.days_in_uk.previous_year_2}
                       max="365"
+                      onChange={(e) => setResidenceData({
+                        ...residenceData,
+                        srt_data: {
+                          ...residenceData.srt_data,
+                          days_in_uk: {
+                            ...residenceData.srt_data.days_in_uk,
+                            previous_year_2: parseInt(e.target.value) || 0
+                          }
+                        }
+                      })}
                     />
                   </div>
                   <div>
@@ -89,8 +157,18 @@ const ResidenceDomicile: React.FC = () => {
                     <input
                       type="number"
                       className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      defaultValue="30"
+                      value={residenceData.srt_data.days_in_uk.previous_year_3}
                       max="365"
+                      onChange={(e) => setResidenceData({
+                        ...residenceData,
+                        srt_data: {
+                          ...residenceData.srt_data,
+                          days_in_uk: {
+                            ...residenceData.srt_data.days_in_uk,
+                            previous_year_3: parseInt(e.target.value) || 0
+                          }
+                        }
+                      })}
                     />
                   </div>
                 </div>
@@ -155,9 +233,9 @@ const ResidenceDomicile: React.FC = () => {
             </div>
             <div className="bg-green-50 border border-green-200 rounded-md p-4">
               <h4 className="font-medium text-green-900 mb-2">SRT Result</h4>
-              <p className="text-lg font-semibold text-green-800">UK Resident</p>
+              <p className="text-lg font-semibold text-green-800">{residenceData.srt_data.result}</p>
               <p className="text-sm text-green-700 mt-1">
-                Based on 120 days in UK with 2 ties - meets sufficient ties test
+                Based on {residenceData.srt_data.days_in_uk.current_year} days in UK
               </p>
             </div>
           </div>
@@ -207,7 +285,7 @@ const ResidenceDomicile: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Claim Remittance Basis</label>
                 <select className="w-full border border-gray-300 rounded-md px-3 py-2">
                   <option>No</option>
-                  <option>Yes - Automatic (under £2,000)</option>
+                  <option>Yes - Automatic (under threshold)</option>
                   <option>Yes - With Charge</option>
                 </select>
               </div>
@@ -216,7 +294,6 @@ const ResidenceDomicile: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0"
                   max="20"
                 />
               </div>
@@ -225,7 +302,6 @@ const ResidenceDomicile: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -233,7 +309,6 @@ const ResidenceDomicile: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -242,11 +317,11 @@ const ResidenceDomicile: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-yellow-800">7-11 years resident</span>
-                  <span className="font-medium">£30,000</span>
+                  <span className="font-medium">£{residenceData.remittance_basis.charge_7_years.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-yellow-800">12+ years resident</span>
-                  <span className="font-medium">£60,000</span>
+                  <span className="font-medium">£{residenceData.remittance_basis.charge_12_years.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -262,15 +337,15 @@ const ResidenceDomicile: React.FC = () => {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <span className="text-sm text-gray-600">Foreign Tax</span>
-                    <p className="font-medium">£1,500</p>
+                    <p className="font-medium">£{residenceData.dtr_summary.employment_income.foreign_tax.toLocaleString()}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">UK Tax</span>
-                    <p className="font-medium">£2,000</p>
+                    <p className="font-medium">£{residenceData.dtr_summary.employment_income.uk_tax.toLocaleString()}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Relief</span>
-                    <p className="font-medium text-green-600">£1,500</p>
+                    <p className="font-medium text-green-600">£{residenceData.dtr_summary.employment_income.relief.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -279,15 +354,15 @@ const ResidenceDomicile: React.FC = () => {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <span className="text-sm text-gray-600">Foreign Tax</span>
-                    <p className="font-medium">£500</p>
+                    <p className="font-medium">£{residenceData.dtr_summary.investment_income.foreign_tax.toLocaleString()}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">UK Tax</span>
-                    <p className="font-medium">£600</p>
+                    <p className="font-medium">£{residenceData.dtr_summary.investment_income.uk_tax.toLocaleString()}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Relief</span>
-                    <p className="font-medium text-green-600">£500</p>
+                    <p className="font-medium text-green-600">£{residenceData.dtr_summary.investment_income.relief.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -297,15 +372,15 @@ const ResidenceDomicile: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Foreign Tax Paid</span>
-                  <span className="font-medium">£2,000</span>
+                  <span className="font-medium">£{(residenceData.dtr_summary.employment_income.foreign_tax + residenceData.dtr_summary.investment_income.foreign_tax).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Relief Claimed</span>
-                  <span className="font-medium">£2,000</span>
+                  <span className="font-medium">£{(residenceData.dtr_summary.employment_income.relief + residenceData.dtr_summary.investment_income.relief).toLocaleString()}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between font-semibold">
                   <span>Net UK Tax Due</span>
-                  <span>£600</span>
+                  <span>£{((residenceData.dtr_summary.employment_income.uk_tax + residenceData.dtr_summary.investment_income.uk_tax) - (residenceData.dtr_summary.employment_income.relief + residenceData.dtr_summary.investment_income.relief)).toLocaleString()}</span>
                 </div>
               </div>
             </div>

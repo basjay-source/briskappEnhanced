@@ -17,6 +17,7 @@ const CapitalGains: React.FC = () => {
   const [activeTab, setActiveTab] = useState('disposals');
   const [loading, setLoading] = useState(true);
   const [capitalGains, setCapitalGains] = useState<CapitalGainData[]>([]);
+  const [cgtRates, setCgtRates] = useState<any>(null);
 
   const tabs = [
     { id: 'disposals', label: 'Disposals', icon: TrendingUp },
@@ -33,9 +34,10 @@ const CapitalGains: React.FC = () => {
   const fetchCapitalGainsData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/personal-tax/capital-gains?tax_year=2024-25');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/capital-gains?tax_year=2024-25`);
       const data = await response.json();
       setCapitalGains(data.disposals || []);
+      setCgtRates(data.rates);
     } catch (error) {
       console.error('Error fetching capital gains data:', error);
     } finally {
@@ -59,7 +61,10 @@ const CapitalGains: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={() => console.log('Add disposal functionality')}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          >
             <Plus className="h-4 w-4" />
             <span>Add Disposal</span>
           </button>
@@ -149,17 +154,26 @@ const CapitalGains: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Same Day</h4>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <input
+                    type="number"
+                    className="w-full text-2xl font-bold text-gray-900 border-none bg-transparent"
+                  />
                   <p className="text-sm text-gray-600">shares matched</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">30 Day Rule</h4>
-                  <p className="text-2xl font-bold text-gray-900">0</p>
+                  <input
+                    type="number"
+                    className="w-full text-2xl font-bold text-gray-900 border-none bg-transparent"
+                  />
                   <p className="text-sm text-gray-600">shares matched</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Section 104</h4>
-                  <p className="text-2xl font-bold text-gray-900">1,000</p>
+                  <input
+                    type="number"
+                    className="w-full text-2xl font-bold text-gray-900 border-none bg-transparent"
+                  />
                   <p className="text-sm text-gray-600">shares matched</p>
                 </div>
               </div>
@@ -245,9 +259,10 @@ const CapitalGains: React.FC = () => {
                       <input
                         type="number"
                         className="w-full border border-gray-300 rounded-md px-3 py-2"
-                        placeholder="£0"
                       />
-                      <p className="text-xs text-gray-500 mt-1">Lifetime limit: £1,000,000</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Lifetime limit: £{cgtRates?.badr_lifetime_limit?.toLocaleString() || '1,000,000'}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -269,7 +284,6 @@ const CapitalGains: React.FC = () => {
                       <input
                         type="number"
                         className="w-full border border-gray-300 rounded-md px-3 py-2"
-                        placeholder="£0"
                       />
                     </div>
                   </div>
@@ -286,17 +300,25 @@ const CapitalGains: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Current Year Losses</h4>
-                  <p className="text-2xl font-bold text-red-600">£0</p>
+                  <input
+                    type="number"
+                    className="text-2xl font-bold text-red-600 border-none bg-transparent w-full"
+                  />
                   <p className="text-sm text-gray-600">Must be used first</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Losses Brought Forward</h4>
-                  <p className="text-2xl font-bold text-gray-900">£2,500</p>
+                  <input
+                    type="number"
+                    className="text-2xl font-bold text-gray-900 border-none bg-transparent w-full"
+                  />
                   <p className="text-sm text-gray-600">Available to use</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h4 className="font-medium text-gray-900 mb-2">Annual Exemption</h4>
-                  <p className="text-2xl font-bold text-green-600">£6,000</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    £{cgtRates?.cgt_annual_exemption?.toLocaleString() || '6,000'}
+                  </p>
                   <p className="text-sm text-gray-600">2024-25 allowance</p>
                 </div>
               </div>
@@ -306,19 +328,19 @@ const CapitalGains: React.FC = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Gains</span>
-                      <span className="font-medium">£4,750</span>
+                      <span className="font-medium">£{capitalGains.reduce((sum, gain) => sum + Math.max(0, gain.gain), 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Current Year Losses</span>
-                      <span className="font-medium">£0</span>
+                      <span className="font-medium">£{Math.abs(capitalGains.reduce((sum, gain) => sum + Math.min(0, gain.gain), 0)).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Annual Exemption</span>
-                      <span className="font-medium">-£4,750</span>
+                      <span className="font-medium">-£{cgtRates?.cgt_annual_exemption?.toLocaleString() || '6,000'}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between font-semibold">
                       <span>Taxable Gains</span>
-                      <span>£0</span>
+                      <span>£{Math.max(0, capitalGains.reduce((sum, gain) => sum + gain.gain, 0) - (cgtRates?.cgt_annual_exemption || 6000)).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

@@ -58,7 +58,8 @@ const Employment: React.FC = () => {
   const fetchEmploymentData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/personal-tax/employment?tax_year=${taxYear}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/employment?tax_year=${taxYear}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -115,6 +116,7 @@ const Employment: React.FC = () => {
             onChange={(e) => setTaxYear(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2"
           >
+            {/* Dynamic tax year options will be populated from HMRC rates service */}
             <option value="2024-25">2024-25</option>
             <option value="2023-24">2023-24</option>
             <option value="2022-23">2022-23</option>
@@ -448,10 +450,10 @@ const Employment: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Employment Expenses</h3>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <p className="text-sm text-blue-800">
-                <strong>Trading Allowance for {taxYear}:</strong> £1,000
+                <strong>Trading Allowance for {taxYear}:</strong> {formatCurrency(1000)}
               </p>
               <p className="text-xs text-blue-600 mt-1">
-                You can claim the trading allowance instead of actual expenses if your total expenses are less than £1,000.
+                You can claim the trading allowance instead of actual expenses if your total expenses are less than {formatCurrency(1000)}.
               </p>
             </div>
             <div className="space-y-6">
@@ -552,7 +554,7 @@ const Employment: React.FC = () => {
                         <input
                           type="number"
                           className="w-full border border-gray-300 rounded-md px-3 py-2"
-                          placeholder="0"
+                          placeholder=""
                           max="100"
                         />
                       </div>

@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, FileText, Download } from 'lucide-react';
 
 const PTReports: React.FC = () => {
   const [activeTab, setActiveTab] = useState('summary');
+  const [reportData, setReportData] = useState<any>(null);
+  useEffect(() => {
+    fetchReportData();
+  }, []);
+
+  const fetchReportData = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/reports?tax_year=2024-25`);
+      const data = await response.json();
+      setReportData(data);
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+    }
+  };
 
   const tabs = [
     { id: 'summary', label: 'Tax Summary', icon: BarChart3 },
@@ -57,17 +71,17 @@ const PTReports: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-2">Total Income</h4>
-                <p className="text-2xl font-bold text-gray-900">£64,950</p>
+                <p className="text-2xl font-bold text-gray-900">£{reportData?.total_income?.toLocaleString() || '0'}</p>
                 <p className="text-sm text-gray-600">All sources</p>
               </div>
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-2">Total Tax</h4>
-                <p className="text-2xl font-bold text-gray-900">£12,450</p>
+                <p className="text-2xl font-bold text-gray-900">£{reportData?.total_tax?.toLocaleString() || '0'}</p>
                 <p className="text-sm text-gray-600">Income tax + NI</p>
               </div>
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-2">Effective Rate</h4>
-                <p className="text-2xl font-bold text-gray-900">19.2%</p>
+                <p className="text-2xl font-bold text-gray-900">{reportData?.effective_rate || '0'}%</p>
                 <p className="text-sm text-gray-600">Overall rate</p>
               </div>
             </div>
@@ -83,15 +97,15 @@ const PTReports: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">2024-25</span>
-                    <span className="font-medium">£64,950</span>
+                    <span className="font-medium">£{reportData?.income_current?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">2023-24</span>
-                    <span className="font-medium">£58,000</span>
+                    <span className="font-medium">£{reportData?.income_previous?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>Change</span>
-                    <span className="text-green-600">+£6,950 (+12.0%)</span>
+                    <span className="text-green-600">£{reportData?.income_change?.toLocaleString() || '0'} ({reportData?.income_change_percent || '0'}%)</span>
                   </div>
                 </div>
               </div>
@@ -108,15 +122,15 @@ const PTReports: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Gross Pay</span>
-                    <span className="font-medium">£45,000</span>
+                    <span className="font-medium">£{reportData?.employment_gross?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Benefits</span>
-                    <span className="font-medium">£2,500</span>
+                    <span className="font-medium">£{reportData?.employment_benefits?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Tax Deducted</span>
-                    <span className="font-medium">-£6,500</span>
+                    <span className="font-medium">£{reportData?.employment_tax?.toLocaleString() || '0'}</span>
                   </div>
                 </div>
               </div>
@@ -125,15 +139,15 @@ const PTReports: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Turnover</span>
-                    <span className="font-medium">£25,000</span>
+                    <span className="font-medium">£{reportData?.se_turnover?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Expenses</span>
-                    <span className="font-medium">-£8,500</span>
+                    <span className="font-medium">-£{reportData?.se_expenses?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Net Profit</span>
-                    <span className="font-medium">£16,500</span>
+                    <span className="font-medium">£{reportData?.se_profit?.toLocaleString() || '0'}</span>
                   </div>
                 </div>
               </div>

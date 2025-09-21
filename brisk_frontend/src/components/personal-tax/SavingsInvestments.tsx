@@ -49,7 +49,7 @@ const SavingsInvestments: React.FC = () => {
   const [activeTab, setActiveTab] = useState('interest');
   const [loading, setLoading] = useState(true);
   const [savingsData, setSavingsData] = useState<SavingsData | null>(null);
-  const [taxYear, setTaxYear] = useState('2024-25');
+  const [taxYear] = useState('2024-25');
 
   useEffect(() => {
     fetchSavingsData();
@@ -58,7 +58,8 @@ const SavingsInvestments: React.FC = () => {
   const fetchSavingsData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/personal-tax/savings-investments?tax_year=${taxYear}`);
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/savings-investments?tax_year=${taxYear}`);
       if (!response.ok) {
         throw new Error('Failed to fetch savings data');
       }

@@ -1,8 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Globe, Plus, Calculator, DollarSign } from 'lucide-react';
 
 const ForeignIncome: React.FC = () => {
   const [activeTab, setActiveTab] = useState('categories');
+  const [loading, setLoading] = useState(true);
+  const [foreignIncomeData, setForeignIncomeData] = useState<any>(null);
+
+  useEffect(() => {
+    fetchForeignIncomeData();
+  }, []);
+
+  const fetchForeignIncomeData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/foreign-income?tax_year=2024-25`);
+      const data = await response.json();
+      setForeignIncomeData(data);
+    } catch (error) {
+      console.error('Error fetching foreign income data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddForeignIncome = () => {
+    console.log('Add foreign income functionality');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!foreignIncomeData) {
+    return <div className="text-center text-gray-500">Failed to load foreign income data</div>;
+  }
 
   const tabs = [
     { id: 'categories', label: 'Categories', icon: Globe },
@@ -19,7 +54,10 @@ const ForeignIncome: React.FC = () => {
           <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
             Ask your Personal Tax Adviser
           </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2">
+          <button 
+            onClick={handleAddForeignIncome}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          >
             <Plus className="h-4 w-4" />
             <span>Add Foreign Income</span>
           </button>
@@ -60,7 +98,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -68,7 +105,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -76,7 +112,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -84,7 +119,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -92,7 +126,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -100,7 +133,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -114,11 +146,9 @@ const ForeignIncome: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
                 <select className="w-full border border-gray-300 rounded-md px-3 py-2">
-                  <option>United States</option>
-                  <option>Germany</option>
-                  <option>France</option>
-                  <option>Australia</option>
-                  <option>Canada</option>
+                  {foreignIncomeData.countries.map((country: string) => (
+                    <option key={country} value={country}>{country}</option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -133,7 +163,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -141,7 +170,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                   step="0.01"
                 />
               </div>
@@ -156,10 +184,9 @@ const ForeignIncome: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Foreign Currency</label>
                 <select className="w-full border border-gray-300 rounded-md px-3 py-2">
-                  <option>USD</option>
-                  <option>EUR</option>
-                  <option>AUD</option>
-                  <option>CAD</option>
+                  {foreignIncomeData.currencies.map((currency: string) => (
+                    <option key={currency} value={currency}>{currency}</option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -175,7 +202,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
               <div>
@@ -183,7 +209,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                   readOnly
                 />
               </div>
@@ -208,7 +233,6 @@ const ForeignIncome: React.FC = () => {
                 <input
                   type="number"
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -217,15 +241,15 @@ const ForeignIncome: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-800">Foreign Tax Paid</span>
-                  <span className="font-medium">£2,500</span>
+                  <span className="font-medium">£{foreignIncomeData.dtr_calculation.foreign_tax_paid.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-800">UK Tax on Foreign Income</span>
-                  <span className="font-medium">£3,000</span>
+                  <span className="font-medium">£{foreignIncomeData.dtr_calculation.uk_tax_on_foreign_income.toLocaleString()}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between font-semibold">
                   <span className="text-blue-900">Relief Available</span>
-                  <span className="text-blue-900">£2,500</span>
+                  <span className="text-blue-900">£{foreignIncomeData.dtr_calculation.relief_available.toLocaleString()}</span>
                 </div>
               </div>
             </div>

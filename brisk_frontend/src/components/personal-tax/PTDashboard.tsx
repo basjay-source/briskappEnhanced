@@ -44,37 +44,40 @@ const PTDashboard: React.FC = () => {
     try {
       setLoading(true);
       
-      const mockKPIData: KPIData[] = [
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/dashboard-data?tax_year=2024-25`);
+      const dashboardData = await response.json();
+      
+      const dynamicKPIData: KPIData[] = [
         {
-          label: 'Total Tax Liability',
-          value: '£12,450',
+          label: 'Total Income',
+          value: `£${dashboardData.kpis.total_income.toLocaleString()}`,
           change: '+5.2%',
           trend: 'up',
           drillDownData: [
-            { source: 'Employment Income', amount: 8500 },
-            { source: 'Self Employment', amount: 2800 },
-            { source: 'Dividends', amount: 950 },
-            { source: 'Capital Gains', amount: 200 }
+            { source: 'Employment Income', amount: dashboardData.kpis.total_income * 0.68 },
+            { source: 'Self Employment', amount: dashboardData.kpis.total_income * 0.22 },
+            { source: 'Dividends', amount: dashboardData.kpis.total_income * 0.08 },
+            { source: 'Capital Gains', amount: dashboardData.kpis.total_income * 0.02 }
           ]
         },
         {
           label: 'Payments on Account',
-          value: '£6,225',
+          value: `£${(dashboardData.kpis.total_tax_due / 2).toLocaleString()}`,
           change: 'Due 31 Jan',
           trend: 'neutral',
           drillDownData: [
-            { payment: 'First POA', amount: 6225, due: '31 Jan 2025' },
-            { payment: 'Second POA', amount: 6225, due: '31 Jul 2025' }
+            { payment: 'First POA', amount: dashboardData.kpis.total_tax_due / 2, due: '31 Jan 2025' },
+            { payment: 'Second POA', amount: dashboardData.kpis.total_tax_due / 2, due: '31 Jul 2025' }
           ]
         },
         {
           label: 'Refund Due',
-          value: '£850',
+          value: `£${dashboardData.kpis.refund_due.toLocaleString()}`,
           change: 'Processing',
           trend: 'up',
           drillDownData: [
-            { reason: 'Overpaid PAYE', amount: 650 },
-            { reason: 'Pension Relief', amount: 200 }
+            { reason: 'Overpaid PAYE', amount: dashboardData.kpis.refund_due * 0.76 },
+            { reason: 'Pension Relief', amount: dashboardData.kpis.refund_due * 0.24 }
           ]
         },
         {
@@ -90,74 +93,35 @@ const PTDashboard: React.FC = () => {
         }
       ];
 
-      const mockExceptions: ExceptionItem[] = [
-        {
-          id: '1',
-          type: 'error',
-          title: 'P60 Missing',
-          description: 'Employment income cannot be completed without P60 from ABC Ltd',
-          section: 'Employment',
-          priority: 'high'
-        },
-        {
-          id: '2',
-          type: 'warning',
-          title: 'High Income Child Benefit Charge',
-          description: 'Income exceeds £50,000 - HICBC may apply',
-          section: 'Calculations',
-          priority: 'medium'
-        },
-        {
-          id: '3',
-          type: 'info',
-          title: 'Marriage Allowance Available',
-          description: 'Spouse may be eligible for Marriage Allowance transfer',
-          section: 'Reliefs & Deductions',
-          priority: 'low'
-        }
-      ];
+      const dynamicExceptions: ExceptionItem[] = dashboardData.exceptions.map((exception: any) => ({
+        id: exception.id.toString(),
+        type: exception.type,
+        title: exception.title,
+        description: exception.description,
+        section: exception.section || 'General',
+        priority: exception.priority || 'medium'
+      }));
 
-      const mockTasks: TaskItem[] = [
-        {
-          id: '1',
-          title: 'Request P60 from ABC Ltd',
-          description: 'Contact employer for missing P60 document',
-          dueDate: '2024-12-15',
-          priority: 'high',
-          status: 'pending',
-          assignee: 'John Smith'
-        },
-        {
-          id: '2',
-          title: 'Review Capital Gains calculations',
-          description: 'Verify share disposal calculations and reliefs',
-          dueDate: '2024-12-20',
-          priority: 'medium',
-          status: 'in_progress',
-          assignee: 'Sarah Johnson'
-        },
-        {
-          id: '3',
-          title: 'Complete SA100 review',
-          description: 'Final review before filing deadline',
-          dueDate: '2025-01-25',
-          priority: 'high',
-          status: 'pending',
-          assignee: 'Mike Wilson'
-        }
-      ];
+      const dynamicTasks: TaskItem[] = dashboardData.tasks.map((task: any) => ({
+        id: task.id.toString(),
+        title: task.title,
+        description: task.description || task.title,
+        dueDate: task.due_date,
+        priority: task.priority,
+        status: task.status,
+        assignee: 'John Smith'
+      }));
 
-      const mockComplianceTimeline = [
-        { date: '31 Oct 2024', event: 'Paper SA100 deadline', status: 'passed', type: 'deadline' },
-        { date: '31 Jan 2025', event: 'Online SA100 deadline', status: 'upcoming', type: 'deadline' },
-        { date: '31 Jan 2025', event: 'First POA payment due', status: 'upcoming', type: 'payment' },
-        { date: '31 Jul 2025', event: 'Second POA payment due', status: 'future', type: 'payment' }
-      ];
+      const dynamicComplianceTimeline = dashboardData.compliance_timeline.map((item: any) => ({
+        date: item.date,
+        event: item.event,
+        status: item.status
+      }));
 
-      setKpiData(mockKPIData);
-      setExceptions(mockExceptions);
-      setTasks(mockTasks);
-      setComplianceTimeline(mockComplianceTimeline);
+      setKpiData(dynamicKPIData);
+      setExceptions(dynamicExceptions);
+      setTasks(dynamicTasks);
+      setComplianceTimeline(dynamicComplianceTimeline);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -267,23 +231,23 @@ const PTDashboard: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Employment Income</span>
-                    <span className="font-medium">£45,000</span>
+                    <span className="font-medium">£{kpiData[0]?.drillDownData?.[0]?.amount?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Self Employment</span>
-                    <span className="font-medium">£15,000</span>
+                    <span className="font-medium">£{kpiData[0]?.drillDownData?.[1]?.amount?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Dividends</span>
-                    <span className="font-medium">£3,500</span>
+                    <span className="font-medium">£{kpiData[0]?.drillDownData?.[2]?.amount?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Bank Interest</span>
-                    <span className="font-medium">£450</span>
+                    <span className="font-medium">£{kpiData[0]?.drillDownData?.[3]?.amount?.toLocaleString() || '0'}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>Total Income</span>
-                    <span>£63,950</span>
+                    <span>{kpiData[0]?.value || 'Loading...'}</span>
                   </div>
                 </div>
               </div>
@@ -292,27 +256,27 @@ const PTDashboard: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Income</span>
-                    <span className="font-medium">£63,950</span>
+                    <span className="font-medium">{kpiData[0]?.value || 'Loading...'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Personal Allowance</span>
-                    <span className="font-medium">-£12,570</span>
+                    <span className="font-medium">-£{kpiData[1]?.value?.replace('£', '').replace(',', '') || 'Loading...'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Taxable Income</span>
-                    <span className="font-medium">£51,380</span>
+                    <span className="font-medium">£{(parseInt(kpiData[0]?.value?.replace(/[£,]/g, '') || '0') - parseInt(kpiData[1]?.value?.replace(/[£,]/g, '') || '0')).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Income Tax</span>
-                    <span className="font-medium">£10,276</span>
+                    <span className="font-medium">{kpiData[1]?.value || 'Loading...'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Tax Deducted</span>
-                    <span className="font-medium">-£8,500</span>
+                    <span className="font-medium">-£{kpiData[2]?.value?.replace('£', '') || '0'}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>Tax Due</span>
-                    <span>£1,776</span>
+                    <span>{kpiData[1]?.value || 'Loading...'}</span>
                   </div>
                 </div>
               </div>

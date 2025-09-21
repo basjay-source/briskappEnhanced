@@ -48,6 +48,7 @@ const TaxpayerProfile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [taxpayerData, setTaxpayerData] = useState<TaxpayerData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTaxpayerData();
@@ -56,52 +57,16 @@ const TaxpayerProfile: React.FC = () => {
   const fetchTaxpayerData = async () => {
     try {
       setLoading(true);
-      
-      const mockData: TaxpayerData = {
-        utr: '1234567890',
-        nino: 'AB123456C',
-        firstName: 'John',
-        lastName: 'Smith',
-        dateOfBirth: '1985-06-15',
-        address: {
-          line1: '123 High Street',
-          line2: 'Apartment 4B',
-          city: 'London',
-          postcode: 'SW1A 1AA',
-          country: 'United Kingdom'
-        },
-        contact: {
-          email: 'john.smith@email.com',
-          phone: '020 7123 4567',
-          mobile: '07700 123456'
-        },
-        bankDetails: {
-          accountName: 'John Smith',
-          sortCode: '12-34-56',
-          accountNumber: '12345678',
-          bankName: 'Barclays Bank'
-        },
-        maritalStatus: 'Married',
-        spouseDetails: {
-          name: 'Jane Smith',
-          nino: 'CD789012E',
-          utr: '0987654321'
-        },
-        studentLoan: {
-          plan: 'Plan 2',
-          outstanding: true
-        },
-        blindPersonAllowance: false,
-        agentAuth: {
-          status: 'Active',
-          expiryDate: '2025-12-31',
-          reference: 'AG123456789'
-        }
-      };
-
-      setTaxpayerData(mockData);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/taxpayer/profile`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch taxpayer data');
+      }
+      const data = await response.json();
+      setTaxpayerData(data);
+      setError(null);
     } catch (error) {
       console.error('Error fetching taxpayer data:', error);
+      setError('Failed to load taxpayer data');
     } finally {
       setLoading(false);
     }
@@ -109,9 +74,20 @@ const TaxpayerProfile: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      console.log('Saving taxpayer data:', taxpayerData);
-      setIsEditing(false);
-      alert('Taxpayer profile updated successfully');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/taxpayer-profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taxpayerData),
+      });
+      
+      if (response.ok) {
+        setIsEditing(false);
+        alert('Taxpayer profile updated successfully');
+      } else {
+        throw new Error('Failed to save taxpayer profile');
+      }
     } catch (error) {
       console.error('Error saving taxpayer data:', error);
       alert('Error saving taxpayer profile');
@@ -120,8 +96,24 @@ const TaxpayerProfile: React.FC = () => {
 
   const handleRefreshAuth = async () => {
     try {
-      console.log('Refreshing HMRC agent authorisation...');
-      alert('Agent authorisation refreshed successfully');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/refresh-agent-auth`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setTaxpayerData({
+          ...taxpayerData!,
+          agentAuth: {
+            status: data.status,
+            expiryDate: data.expiryDate,
+            reference: data.reference
+          }
+        });
+        alert(data.message);
+      } else {
+        throw new Error('Failed to refresh agent authorization');
+      }
     } catch (error) {
       console.error('Error refreshing agent auth:', error);
       alert('Error refreshing agent authorisation');
@@ -145,6 +137,10 @@ const TaxpayerProfile: React.FC = () => {
     );
   }
 
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
+  }
+
   if (!taxpayerData) {
     return <div className="text-center text-gray-500">No taxpayer data found</div>;
   }
@@ -154,6 +150,9 @@ const TaxpayerProfile: React.FC = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Taxpayer Profile & Authorisations</h1>
         <div className="flex space-x-3">
+          <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors">
+            Ask your Personal Tax Adviser
+          </button>
           {isEditing ? (
             <>
               <button 
@@ -172,7 +171,7 @@ const TaxpayerProfile: React.FC = () => {
           ) : (
             <button 
               onClick={() => setIsEditing(true)}
-              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
             >
               Edit Profile
             </button>
@@ -205,7 +204,7 @@ const TaxpayerProfile: React.FC = () => {
 
       {/* Tab Content */}
       <div className="bg-white rounded-lg shadow p-6">
-        {activeTab === 'identity' && (
+        {taxpayerData && activeTab === 'identity' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Identity & UTR Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -213,50 +212,50 @@ const TaxpayerProfile: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">UTR</label>
                 <input
                   type="text"
-                  value={taxpayerData.utr}
+                  value={taxpayerData?.utr || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, utr: e.target.value})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, utr: e.target.value})}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">NINO</label>
                 <input
                   type="text"
-                  value={taxpayerData.nino}
+                  value={taxpayerData?.nino || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, nino: e.target.value})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, nino: e.target.value})}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                 <input
                   type="text"
-                  value={taxpayerData.firstName}
+                  value={taxpayerData?.firstName || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, firstName: e.target.value})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, firstName: e.target.value})}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                 <input
                   type="text"
-                  value={taxpayerData.lastName}
+                  value={taxpayerData?.lastName || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, lastName: e.target.value})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, lastName: e.target.value})}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
                 <input
                   type="date"
-                  value={taxpayerData.dateOfBirth}
+                  value={taxpayerData?.dateOfBirth || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, dateOfBirth: e.target.value})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, dateOfBirth: e.target.value})}
                 />
               </div>
             </div>
@@ -268,7 +267,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Address Line 1</label>
                   <input
                     type="text"
-                    value={taxpayerData.address.line1}
+                    value={taxpayerData?.address?.line1 || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -281,7 +280,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Address Line 2</label>
                   <input
                     type="text"
-                    value={taxpayerData.address.line2}
+                    value={taxpayerData?.address?.line2 || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -294,7 +293,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
                   <input
                     type="text"
-                    value={taxpayerData.address.city}
+                    value={taxpayerData?.address?.city || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -307,7 +306,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Postcode</label>
                   <input
                     type="text"
-                    value={taxpayerData.address.postcode}
+                    value={taxpayerData?.address?.postcode || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -321,7 +320,7 @@ const TaxpayerProfile: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'contact' && (
+        {taxpayerData && activeTab === 'contact' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Contact & Bank Details</h3>
             
@@ -332,7 +331,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
-                    value={taxpayerData.contact.email}
+                    value={taxpayerData?.contact?.email || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -345,7 +344,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <input
                     type="tel"
-                    value={taxpayerData.contact.phone}
+                    value={taxpayerData?.contact?.phone || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -358,7 +357,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mobile</label>
                   <input
                     type="tel"
-                    value={taxpayerData.contact.mobile}
+                    value={taxpayerData?.contact?.mobile || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -377,7 +376,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Account Name</label>
                   <input
                     type="text"
-                    value={taxpayerData.bankDetails.accountName}
+                    value={taxpayerData?.bankDetails?.accountName || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -390,7 +389,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
                   <input
                     type="text"
-                    value={taxpayerData.bankDetails.bankName}
+                    value={taxpayerData?.bankDetails?.bankName || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -403,7 +402,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Sort Code</label>
                   <input
                     type="text"
-                    value={taxpayerData.bankDetails.sortCode}
+                    value={taxpayerData?.bankDetails?.sortCode || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -416,7 +415,7 @@ const TaxpayerProfile: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
                   <input
                     type="text"
-                    value={taxpayerData.bankDetails.accountNumber}
+                    value={taxpayerData?.bankDetails?.accountNumber || ''}
                     disabled={!isEditing}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                     onChange={(e) => setTaxpayerData({
@@ -430,17 +429,17 @@ const TaxpayerProfile: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'family' && (
+        {taxpayerData && activeTab === 'family' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Family & Marriage Details</h3>
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Marital Status</label>
               <select
-                value={taxpayerData.maritalStatus}
+                value={taxpayerData?.maritalStatus || ''}
                 disabled={!isEditing}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
-                onChange={(e) => setTaxpayerData({...taxpayerData, maritalStatus: e.target.value})}
+                onChange={(e) => setTaxpayerData({...taxpayerData!, maritalStatus: e.target.value})}
               >
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
@@ -450,7 +449,7 @@ const TaxpayerProfile: React.FC = () => {
               </select>
             </div>
 
-            {(taxpayerData.maritalStatus === 'Married' || taxpayerData.maritalStatus === 'Civil Partnership') && (
+            {(taxpayerData?.maritalStatus === 'Married' || taxpayerData?.maritalStatus === 'Civil Partnership') && (
               <div className="space-y-4">
                 <h4 className="font-medium text-gray-900">Spouse/Partner Details</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -458,12 +457,12 @@ const TaxpayerProfile: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                     <input
                       type="text"
-                      value={taxpayerData.spouseDetails?.name || ''}
+                      value={taxpayerData?.spouseDetails?.name || ''}
                       disabled={!isEditing}
                       className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                       onChange={(e) => setTaxpayerData({
                         ...taxpayerData, 
-                        spouseDetails: {...taxpayerData.spouseDetails!, name: e.target.value}
+                        spouseDetails: {...taxpayerData?.spouseDetails!, name: e.target.value}
                       })}
                     />
                   </div>
@@ -471,12 +470,12 @@ const TaxpayerProfile: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">NINO</label>
                     <input
                       type="text"
-                      value={taxpayerData.spouseDetails?.nino || ''}
+                      value={taxpayerData?.spouseDetails?.nino || ''}
                       disabled={!isEditing}
                       className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                       onChange={(e) => setTaxpayerData({
                         ...taxpayerData, 
-                        spouseDetails: {...taxpayerData.spouseDetails!, nino: e.target.value}
+                        spouseDetails: {...taxpayerData?.spouseDetails!, nino: e.target.value}
                       })}
                     />
                   </div>
@@ -484,12 +483,12 @@ const TaxpayerProfile: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">UTR</label>
                     <input
                       type="text"
-                      value={taxpayerData.spouseDetails?.utr || ''}
+                      value={taxpayerData?.spouseDetails?.utr || ''}
                       disabled={!isEditing}
                       className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                       onChange={(e) => setTaxpayerData({
                         ...taxpayerData, 
-                        spouseDetails: {...taxpayerData.spouseDetails!, utr: e.target.value}
+                        spouseDetails: {...taxpayerData?.spouseDetails!, utr: e.target.value}
                       })}
                     />
                   </div>
@@ -498,8 +497,8 @@ const TaxpayerProfile: React.FC = () => {
                 <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
                   <h5 className="font-medium text-blue-900 mb-2">Marriage Allowance</h5>
                   <p className="text-sm text-blue-800">
-                    If your spouse's income is below £12,570, you may be able to transfer £1,260 of your personal allowance to them, 
-                    reducing their tax by up to £252 per year.
+                    If your spouse's income is below the personal allowance threshold, you may be able to transfer part of your personal allowance to them, 
+                    reducing their tax liability.
                   </p>
                   <button className="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                     Check Eligibility
@@ -510,7 +509,7 @@ const TaxpayerProfile: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'student' && (
+        {taxpayerData && activeTab === 'student' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Student Loan Details</h3>
             
@@ -518,7 +517,7 @@ const TaxpayerProfile: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Student Loan Plan</label>
                 <select
-                  value={taxpayerData.studentLoan.plan}
+                  value={taxpayerData?.studentLoan?.plan || ''}
                   disabled={!isEditing}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 disabled:bg-gray-50"
                   onChange={(e) => setTaxpayerData({
@@ -540,12 +539,12 @@ const TaxpayerProfile: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
-                    checked={taxpayerData.studentLoan.outstanding}
+                    checked={taxpayerData?.studentLoan?.outstanding || false}
                     disabled={!isEditing}
                     className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     onChange={(e) => setTaxpayerData({
                       ...taxpayerData, 
-                      studentLoan: {...taxpayerData.studentLoan, outstanding: e.target.checked}
+                      studentLoan: {...taxpayerData?.studentLoan!, outstanding: e.target.checked}
                     })}
                   />
                   <span className="text-sm text-gray-700">Outstanding balance exists</span>
@@ -553,22 +552,22 @@ const TaxpayerProfile: React.FC = () => {
               </div>
             </div>
 
-            {taxpayerData.studentLoan.plan && (
+            {taxpayerData?.studentLoan?.plan && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
                 <h5 className="font-medium text-yellow-900 mb-2">Student Loan Repayment Thresholds</h5>
                 <div className="text-sm text-yellow-800 space-y-1">
-                  <p><strong>Plan 1:</strong> £22,015 per year (£1,834 per month)</p>
-                  <p><strong>Plan 2:</strong> £27,295 per year (£2,274 per month)</p>
-                  <p><strong>Plan 4:</strong> £27,660 per year (£2,305 per month)</p>
-                  <p><strong>Plan 5:</strong> £25,000 per year (£2,083 per month)</p>
-                  <p><strong>Postgraduate:</strong> £21,000 per year (£1,750 per month)</p>
+                  <p><strong>Plan 1:</strong> Check current HMRC rates</p>
+                  <p><strong>Plan 2:</strong> Check current HMRC rates</p>
+                  <p><strong>Plan 4:</strong> Check current HMRC rates</p>
+                  <p><strong>Plan 5:</strong> Check current HMRC rates</p>
+                  <p><strong>Postgraduate:</strong> Check current HMRC rates</p>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'allowances' && (
+        {taxpayerData && activeTab === 'allowances' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Blind Person's Allowance</h3>
             
@@ -576,19 +575,19 @@ const TaxpayerProfile: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <input
                   type="checkbox"
-                  checked={taxpayerData.blindPersonAllowance}
+                  checked={taxpayerData?.blindPersonAllowance || false}
                   disabled={!isEditing}
                   className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                  onChange={(e) => setTaxpayerData({...taxpayerData, blindPersonAllowance: e.target.checked})}
+                  onChange={(e) => setTaxpayerData({...taxpayerData!, blindPersonAllowance: e.target.checked})}
                 />
                 <span className="text-sm font-medium text-gray-700">Eligible for Blind Person's Allowance</span>
               </div>
 
-              {taxpayerData.blindPersonAllowance && (
+              {taxpayerData?.blindPersonAllowance && (
                 <div className="bg-green-50 border border-green-200 rounded-md p-4">
-                  <h5 className="font-medium text-green-900 mb-2">Blind Person's Allowance - £2,870</h5>
+                  <h5 className="font-medium text-green-900 mb-2">Blind Person's Allowance</h5>
                   <p className="text-sm text-green-800">
-                    You're eligible for an additional allowance of £2,870 for the 2024-25 tax year. 
+                    You're eligible for an additional allowance for the current tax year. 
                     This allowance can be transferred to your spouse or civil partner if you don't use it all.
                   </p>
                 </div>
@@ -609,7 +608,7 @@ const TaxpayerProfile: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'agent' && (
+        {taxpayerData && activeTab === 'agent' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Agent Authorisation</h3>
             
@@ -617,11 +616,11 @@ const TaxpayerProfile: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                 <div className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  taxpayerData.agentAuth.status === 'Active' 
+                  taxpayerData?.agentAuth?.status === 'Active' 
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
                 }`}>
-                  {taxpayerData.agentAuth.status}
+                  {taxpayerData?.agentAuth?.status}
                 </div>
               </div>
               
@@ -629,7 +628,7 @@ const TaxpayerProfile: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
                 <input
                   type="date"
-                  value={taxpayerData.agentAuth.expiryDate}
+                  value={taxpayerData?.agentAuth?.expiryDate || ''}
                   disabled
                   className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
                 />
@@ -639,7 +638,7 @@ const TaxpayerProfile: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Reference</label>
                 <input
                   type="text"
-                  value={taxpayerData.agentAuth.reference}
+                  value={taxpayerData?.agentAuth?.reference || ''}
                   disabled
                   className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
                 />
