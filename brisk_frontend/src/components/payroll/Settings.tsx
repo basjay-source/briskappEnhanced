@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react'
 
+interface HMRCRates {
+  personal_allowance: number
+  basic_rate_threshold: number
+  higher_rate_threshold: number
+  ni_primary_threshold: number
+  ni_upper_earnings_limit: number
+  ni_employee_rate: number
+  ni_employer_rate: number
+  corporation_tax_main_rate: number
+  corporation_tax_small_rate: number
+  corporation_tax_threshold: number
+  ssp_weekly_rate: number
+  smp_weekly_rate: number
+}
+
 interface PayCalendar {
   id: string
   name: string
@@ -32,6 +47,7 @@ const Settings: React.FC = () => {
   const [payCalendars, setPayCalendars] = useState<PayCalendar[]>([])
   const [taxYears, setTaxYears] = useState<TaxYear[]>([])
   const [coaMappings, setCoaMappings] = useState<COAMapping[]>([])
+  const [hmrcRates, setHmrcRates] = useState<HMRCRates | null>(null)
   const [loading, setLoading] = useState(true)
 
   const tabs = [
@@ -45,6 +61,20 @@ const Settings: React.FC = () => {
   ]
 
   useEffect(() => {
+    const fetchHMRCRates = async () => {
+      try {
+        const response = await fetch('/api/business-tax/hmrc-rates')
+        if (response.ok) {
+          const data = await response.json()
+          setHmrcRates(data.rates)
+        }
+      } catch (error) {
+        console.error('Error fetching HMRC rates:', error)
+      }
+    }
+
+    fetchHMRCRates()
+
     setTimeout(() => {
       setPayCalendars([
         {
@@ -351,19 +381,19 @@ const Settings: React.FC = () => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Personal Allowance:</span>
-                <span className="font-medium">£12,570</span>
+                <span className="font-medium">£{hmrcRates ? hmrcRates.personal_allowance.toLocaleString() : '12,570'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Basic Rate (20%):</span>
-                <span className="font-medium">£12,571 - £50,270</span>
+                <span className="font-medium">£{hmrcRates ? (hmrcRates.personal_allowance + 1).toLocaleString() : '12,571'} - £{hmrcRates ? hmrcRates.basic_rate_threshold.toLocaleString() : '50,270'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Higher Rate (40%):</span>
-                <span className="font-medium">£50,271 - £125,140</span>
+                <span className="font-medium">£{hmrcRates ? (hmrcRates.basic_rate_threshold + 1).toLocaleString() : '50,271'} - £{hmrcRates ? hmrcRates.higher_rate_threshold.toLocaleString() : '125,140'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Additional Rate (45%):</span>
-                <span className="font-medium">Over £125,140</span>
+                <span className="font-medium">Over £{hmrcRates ? hmrcRates.higher_rate_threshold.toLocaleString() : '125,140'}</span>
               </div>
             </div>
           </div>
@@ -377,15 +407,15 @@ const Settings: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Primary Threshold:</span>
-                <span className="font-medium">£12,570</span>
+                <span className="font-medium">£{hmrcRates ? hmrcRates.ni_primary_threshold.toLocaleString() : '12,570'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Upper Earnings Limit:</span>
-                <span className="font-medium">£50,270</span>
+                <span className="font-medium">£{hmrcRates ? hmrcRates.ni_upper_earnings_limit.toLocaleString() : '50,270'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Employee Rate:</span>
-                <span className="font-medium">12% / 2%</span>
+                <span className="font-medium">{hmrcRates ? `${(hmrcRates.ni_employee_rate * 100).toFixed(0)}% / 2%` : '12% / 2%'}</span>
               </div>
             </div>
           </div>

@@ -37,6 +37,18 @@ class SubscriptionStatus(enum.Enum):
     CANCELED = "canceled"
     PAUSED = "paused"
 
+class HMRCRate(Base):
+    __tablename__ = "hmrc_rates"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    rate_type = Column(String, index=True)
+    rate_value = Column(Float)
+    tax_year = Column(String, index=True)
+    effective_date = Column(Date)
+    last_updated = Column(DateTime, default=datetime.utcnow)
+    source = Column(String)
+    description = Column(Text)
+
 class Tenant(Base):
     __tablename__ = "tenants"
     
@@ -864,26 +876,6 @@ class StaffSkill(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User")
-
-class LeaveRequest(Base):
-    __tablename__ = "leave_requests"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
-    leave_type = Column(String)  # annual, sick, maternity, study
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=False)
-    days_requested = Column(Numeric(3, 1))
-    reason = Column(Text)
-    status = Column(String, default="pending")  # pending, approved, rejected, cancelled
-    approved_by = Column(Integer, ForeignKey("users.id"))
-    approved_at = Column(DateTime)
-    rejection_reason = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    user = relationship("User", foreign_keys=[user_id])
-    approver = relationship("User", foreign_keys=[approved_by])
 
 class WorkflowTemplate(Base):
     __tablename__ = "workflow_templates"

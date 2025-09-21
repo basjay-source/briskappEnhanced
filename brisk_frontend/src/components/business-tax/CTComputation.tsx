@@ -7,34 +7,74 @@ const CTComputation: React.FC = () => {
   const [computationData, setComputationData] = useState<any>(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-      setComputationData({
-        summary: {
-          tradingProfits: 180000,
-          nonTradingProfits: 5000,
-          chargeableGains: 8000,
-          totalProfits: 193000,
-          reliefs: 15000,
-          taxableProfits: 178000,
-          ctRate: 25,
-          ctLiability: 44500,
-          marginalRelief: 1200,
-          finalLiability: 43300
-        },
-        rates: {
-          smallProfitsRate: 19,
-          mainRate: 25,
-          marginalReliefThreshold: 250000,
-          smallProfitsThreshold: 50000
-        },
-        straddling: {
-          isStraddling: false,
-          periods: []
+    const fetchData = async () => {
+      try {
+        const [ratesResponse, computationResponse] = await Promise.all([
+          fetch('/api/business-tax/hmrc-rates'),
+          fetch('/api/business-tax/computation/summary')
+        ])
+        
+        if (ratesResponse.ok && computationResponse.ok) {
+          const ratesData = await ratesResponse.json()
+          const computationData = await computationResponse.json()
+          
+          setComputationData({
+            summary: {
+              tradingProfits: computationData.trading_profit || 180000,
+              nonTradingProfits: computationData.non_trading_income || 5000,
+              chargeableGains: computationData.chargeable_gains || 8000,
+              totalProfits: computationData.total_profits || 193000,
+              reliefs: computationData.reliefs || 15000,
+              taxableProfits: computationData.taxable_profits || 178000,
+              ctRate: Math.round((ratesData.rates.corporation_tax_main_rate || 0.25) * 100),
+              ctLiability: computationData.ct_liability || 44500,
+              marginalRelief: computationData.marginal_relief || 1200,
+              finalLiability: computationData.final_liability || 43300
+            },
+            rates: {
+              smallProfitsRate: Math.round((ratesData.rates.corporation_tax_small_rate || 0.19) * 100),
+              mainRate: Math.round((ratesData.rates.corporation_tax_main_rate || 0.25) * 100),
+              marginalReliefThreshold: ratesData.rates.corporation_tax_threshold || 250000,
+              smallProfitsThreshold: 50000
+            },
+            straddling: {
+              isStraddling: false,
+              periods: []
+            }
+          })
         }
-      })
-    }, 1000)
-    return () => clearTimeout(timer)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        setComputationData({
+          summary: {
+            tradingProfits: 180000,
+            nonTradingProfits: 5000,
+            chargeableGains: 8000,
+            totalProfits: 193000,
+            reliefs: 15000,
+            taxableProfits: 178000,
+            ctRate: 25,
+            ctLiability: 44500,
+            marginalRelief: 1200,
+            finalLiability: 43300
+          },
+          rates: {
+            smallProfitsRate: 19,
+            mainRate: 25,
+            marginalReliefThreshold: 250000,
+            smallProfitsThreshold: 50000
+          },
+          straddling: {
+            isStraddling: false,
+            periods: []
+          }
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
   }, [])
 
   if (loading) {

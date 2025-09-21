@@ -1,14 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import { FileText, Save } from 'lucide-react'
+import { FileText, Save, RefreshCw } from 'lucide-react'
 
 const BTSettings: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('rates')
   const [settingsData, setSettingsData] = useState<any>(null)
+  const [hmrcRates, setHmrcRates] = useState<any>(null)
+  const [ratesLoading, setRatesLoading] = useState(false)
+
+  const fetchHMRCRates = async () => {
+    setRatesLoading(true)
+    try {
+      const response = await fetch('/api/business-tax/hmrc-rates')
+      const rates = await response.json()
+      setHmrcRates(rates)
+      setSettingsData((prev: any) => ({
+        ...prev,
+        rates: {
+          smallProfitsRate: rates.corporation_tax_small_rate,
+          mainRate: rates.corporation_tax_main_rate,
+          marginalReliefThreshold: rates.marginal_relief_threshold,
+          smallProfitsThreshold: rates.small_profits_threshold
+        }
+      }))
+    } catch (error) {
+      console.error('Failed to fetch HMRC rates:', error)
+    } finally {
+      setRatesLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
+    const initializeData = async () => {
+      await fetchHMRCRates()
       setSettingsData({
         rates: {
           smallProfitsRate: 19,
@@ -32,8 +56,9 @@ const BTSettings: React.FC = () => {
           capitalAllowances: '6310'
         }
       })
-    }, 1000)
-    return () => clearTimeout(timer)
+      setLoading(false)
+    }
+    initializeData()
   }, [])
 
   if (loading) {
@@ -55,10 +80,20 @@ const BTSettings: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2">
-          <Save className="w-4 h-4" />
-          <span>Save Changes</span>
-        </button>
+        <div className="flex space-x-3">
+          <button 
+            onClick={fetchHMRCRates}
+            disabled={ratesLoading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
+            <span>Update HMRC Rates</span>
+          </button>
+          <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2">
+            <Save className="w-4 h-4" />
+            <span>Save Changes</span>
+          </button>
+        </div>
       </div>
 
       <div className="border-b border-gray-200">
@@ -88,7 +123,14 @@ const BTSettings: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Corporation Tax Rates</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium text-gray-900">Corporation Tax Rates</h3>
+                {hmrcRates && (
+                  <div className="text-sm text-gray-600">
+                    Tax Year: {hmrcRates.tax_year} | Last Updated: {new Date(hmrcRates.effective_date).toLocaleDateString()}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,34 +139,65 @@ const BTSettings: React.FC = () => {
                   <input
                     type="number"
                     value={settingsData.rates.smallProfitsRate}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                    readOnly
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Automatically updated from HMRC</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Main Rate (%)</label>
                   <input
                     type="number"
                     value={settingsData.rates.mainRate}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                    readOnly
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Automatically updated from HMRC</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Small Profits Threshold (£)</label>
                   <input
                     type="number"
                     value={settingsData.rates.smallProfitsThreshold}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                    readOnly
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Automatically updated from HMRC</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Marginal Relief Threshold (£)</label>
                   <input
                     type="number"
                     value={settingsData.rates.marginalReliefThreshold}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                    readOnly
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Automatically updated from HMRC</p>
                 </div>
               </div>
+              
+              {hmrcRates && (
+                <div className="mt-6 bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-green-900 mb-2">Dynamic Rate Information</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-green-800">
+                    <div>
+                      <span className="font-medium">Tax Year:</span> {hmrcRates.tax_year}
+                    </div>
+                    <div>
+                      <span className="font-medium">Effective Date:</span> {new Date(hmrcRates.effective_date).toLocaleDateString()}
+                    </div>
+                    <div>
+                      <span className="font-medium">AIA Allowance:</span> £{hmrcRates.aia_allowance?.toLocaleString()}
+                    </div>
+                    <div>
+                      <span className="font-medium">WDA Main Rate:</span> {hmrcRates.writing_down_allowance_main}%
+                    </div>
+                  </div>
+                  <p className="mt-2 text-xs text-green-700">
+                    Rates are automatically updated based on the latest HMRC announcements and Finance Act changes.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

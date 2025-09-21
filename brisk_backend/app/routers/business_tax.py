@@ -1,7 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 from datetime import datetime, date
 from pydantic import BaseModel
+from ..database import get_db
+from ..services.hmrc_rates import hmrc_rates_service
 
 router = APIRouter(prefix="/business-tax", tags=["business-tax"])
 
@@ -53,16 +56,20 @@ class CTComputation(BaseModel):
     effective_rate: float
 
 @router.get("/dashboard/kpis")
-async def get_dashboard_kpis():
+async def get_dashboard_kpis(db: Session = Depends(get_db)):
     """Get KPI data for Business Tax dashboard"""
+    ct_rates = await hmrc_rates_service.get_corporation_tax_rates(db)
+    main_rate_pct = ct_rates["main_rate"] * 100
+    small_rate_pct = ct_rates["small_rate"] * 100
+    
     return {
         "ct_liability": {
             "value": 45250,
             "change": 12.5,
             "trend": "up",
             "drill_down": [
-                {"component": "Trading Profits", "amount": 180000, "rate": 25, "liability": 45000},
-                {"component": "Chargeable Gains", "amount": 5000, "rate": 25, "liability": 1250},
+                {"component": "Trading Profits", "amount": 180000, "rate": main_rate_pct, "liability": 45000},
+                {"component": "Chargeable Gains", "amount": 5000, "rate": main_rate_pct, "liability": 1250},
                 {"component": "Marginal Relief", "amount": -1000, "rate": 0, "liability": -1000}
             ]
         },
@@ -71,9 +78,9 @@ async def get_dashboard_kpis():
             "change": -0.9,
             "trend": "down",
             "drill_down": [
-                {"year": "2023", "rate": 25.0, "profits": 180000, "liability": 45000},
-                {"year": "2022", "rate": 19.0, "profits": 165000, "liability": 31350},
-                {"year": "2021", "rate": 19.0, "profits": 145000, "liability": 27550}
+                {"year": "2023", "rate": main_rate_pct, "profits": 180000, "liability": 45000},
+                {"year": "2022", "rate": small_rate_pct, "profits": 165000, "liability": 31350},
+                {"year": "2021", "rate": small_rate_pct, "profits": 145000, "liability": 27550}
             ]
         },
         "capital_allowances": {
@@ -171,7 +178,7 @@ async def update_company_profile(profile: CompanyProfile):
     return {"message": "Company profile updated successfully", "profile": profile}
 
 @router.get("/engagement/accounting-periods")
-async def get_accounting_periods():
+async def get_accounting_periods(db: Session = Depends(get_db)):
     """Get accounting periods and CT rate year"""
     return {
         "current_period": {
@@ -180,13 +187,7 @@ async def get_accounting_periods():
             "ct_rate_year": "2023/24",
             "straddling": False
         },
-        "rate_info": {
-            "main_rate": 25,
-            "small_profits_rate": 19,
-            "marginal_relief_available": True,
-            "lower_threshold": 50000,
-            "upper_threshold": 250000
-        }
+        "rate_info": await hmrc_rates_service.get_corporation_tax_rates(db)
     }
 
 @router.get("/prelims/trial-balance")
@@ -275,23 +276,47 @@ async def compute_capital_allowances():
     }
 
 @router.get("/computation/summary")
-async def get_ct_computation():
-    """Get CT computation summary"""
+async def get_ct_computation(db: Session = Depends(get_db), tax_year: Optional[str] = None):
+    """Get CT computation summary with dynamic rates"""
+    ct_rates = await hmrc_rates_service.get_corporation_tax_rates(db, tax_year)
+    
+    trading_profit = 75000
+    adjustments = 15000
+    adjusted_trading_profit = trading_profit + adjustments
+    capital_allowances = -28500
+    net_trading_profit = adjusted_trading_profit + capital_allowances
+    non_trading_income = 2500
+    chargeable_gains = 5000
+    total_profits = net_trading_profit + non_trading_income + chargeable_gains
+    losses_utilized = -12000
+    taxable_profits = total_profits + losses_utilized
+    
+    if taxable_profits <= ct_rates["threshold"]:
+        ct_liability = taxable_profits * ct_rates["small_rate"]
+        marginal_relief = 0
+    else:
+        small_rate_profit = ct_rates["threshold"]
+        main_rate_profit = taxable_profits - ct_rates["threshold"]
+        ct_liability = (small_rate_profit * ct_rates["small_rate"]) + (main_rate_profit * ct_rates["main_rate"])
+        marginal_relief = 0
+    
     return {
-        "trading_profit": 75000,
-        "adjustments": 15000,
-        "adjusted_trading_profit": 90000,
-        "capital_allowances": -28500,
-        "net_trading_profit": 61500,
-        "non_trading_income": 2500,
-        "chargeable_gains": 5000,
-        "total_profits": 69000,
-        "losses_utilized": -12000,
-        "taxable_profits": 57000,
-        "ct_rate": 19,
-        "ct_liability": 10830,
-        "marginal_relief": 0,
-        "final_liability": 10830
+        "trading_profit": trading_profit,
+        "adjustments": adjustments,
+        "adjusted_trading_profit": adjusted_trading_profit,
+        "capital_allowances": capital_allowances,
+        "net_trading_profit": net_trading_profit,
+        "non_trading_income": non_trading_income,
+        "chargeable_gains": chargeable_gains,
+        "total_profits": total_profits,
+        "losses_utilized": losses_utilized,
+        "taxable_profits": taxable_profits,
+        "ct_rate": ct_rates["small_rate"] if taxable_profits <= ct_rates["threshold"] else ct_rates["main_rate"],
+        "ct_liability": round(ct_liability, 2),
+        "marginal_relief": marginal_relief,
+        "final_liability": round(ct_liability, 2),
+        "tax_year": tax_year or hmrc_rates_service.get_current_tax_year(),
+        "rates_used": ct_rates
     }
 
 @router.post("/computation/generate")
@@ -364,3 +389,12 @@ async def get_payments_forecast():
             "status": "forecast"
         }
     ]
+
+@router.get("/hmrc-rates")
+async def get_hmrc_rates(db: Session = Depends(get_db), tax_year: Optional[str] = None):
+    """Get current HMRC rates for specified tax year"""
+    rates = await hmrc_rates_service.get_rates_for_tax_year(db, tax_year)
+    return {
+        "tax_year": tax_year or hmrc_rates_service.get_current_tax_year(),
+        "rates": rates
+    }

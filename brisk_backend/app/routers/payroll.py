@@ -8,6 +8,7 @@ from ..models import (
     PensionScheme, Benefit, Deduction, CompanyCar, CISSubcontractor
 )
 from ..auth import get_current_user
+from ..services.hmrc_rates import hmrc_rates_service
 
 router = APIRouter(prefix="/api/payroll", tags=["payroll"])
 
@@ -432,6 +433,31 @@ async def get_dashboard_kpis(
         "pending_timesheets": pending_timesheets,
         "draft_pay_runs": draft_pay_runs,
         "pending_leave_requests": pending_leave_requests
+    }
+
+@router.get("/hmrc-rates")
+async def get_payroll_hmrc_rates(db: Session = Depends(get_db), tax_year: Optional[str] = None):
+    """Get current HMRC rates for payroll calculations with dynamic updates"""
+    personal_tax_rates = await hmrc_rates_service.get_personal_tax_rates(db, tax_year)
+    ni_rates = await hmrc_rates_service.get_national_insurance_rates(db, tax_year)
+    statutory_rates = await hmrc_rates_service.get_statutory_payment_rates(db, tax_year)
+    ct_rates = await hmrc_rates_service.get_corporation_tax_rates(db, tax_year)
+    
+    return {
+        "tax_year": tax_year or hmrc_rates_service.get_current_tax_year(),
+        "personal_allowance": personal_tax_rates["personal_allowance"],
+        "basic_rate_threshold": personal_tax_rates["basic_rate_threshold"],
+        "higher_rate_threshold": personal_tax_rates["higher_rate_threshold"],
+        "ni_primary_threshold": ni_rates["primary_threshold"],
+        "ni_upper_earnings_limit": ni_rates["upper_earnings_limit"],
+        "ni_employee_rate": ni_rates["employee_rate"],
+        "ni_employer_rate": ni_rates["employer_rate"],
+        "corporation_tax_main_rate": ct_rates["main_rate"],
+        "corporation_tax_small_rate": ct_rates["small_rate"],
+        "corporation_tax_threshold": ct_rates["threshold"],
+        "ssp_weekly_rate": statutory_rates["statutory_sick_pay"],
+        "smp_weekly_rate": statutory_rates["statutory_maternity_pay"],
+        "rates": await hmrc_rates_service.get_rates_for_tax_year(db, tax_year)
     }
 
 @router.post("/journals/export")
