@@ -37,8 +37,8 @@ const BTDashboard: React.FC = () => {
       change: '+12.5%',
       trend: 'up',
       drillDownData: [
-        { component: 'Trading Profits', amount: 180000, rate: '25%', liability: 45000 },
-        { component: 'Chargeable Gains', amount: 5000, rate: '25%', liability: 1250 },
+        { component: 'Trading Profits', amount: 180000, rate: 'Dynamic', liability: 45000 },
+        { component: 'Chargeable Gains', amount: 5000, rate: 'Dynamic', liability: 1250 },
         { component: 'Marginal Relief', amount: -1000, rate: 'N/A', liability: -1000 }
       ]
     },
@@ -48,9 +48,9 @@ const BTDashboard: React.FC = () => {
       change: '-0.9%',
       trend: 'down',
       drillDownData: [
-        { year: '2023', rate: '25.0%', profits: 180000, liability: 45000 },
-        { year: '2022', rate: '19.0%', profits: 165000, liability: 31350 },
-        { year: '2021', rate: '19.0%', profits: 145000, liability: 27550 }
+        { year: '2023', rate: 'Dynamic', profits: 180000, liability: 45000 },
+        { year: '2022', rate: 'Dynamic', profits: 165000, liability: 31350 },
+        { year: '2021', rate: 'Dynamic', profits: 145000, liability: 27550 }
       ]
     },
     {
