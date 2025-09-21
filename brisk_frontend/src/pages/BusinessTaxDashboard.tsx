@@ -13,19 +13,19 @@ import GroupConsortia from '../components/business-tax/GroupConsortia'
 import RDCreativeReliefs from '../components/business-tax/RDCreativeReliefs'
 import InterestRestriction from '../components/business-tax/InterestRestriction'
 import TransferPricing from '../components/business-tax/TransferPricing'
-import CTComputation from '../components/business-tax/CTComputation'
+import CTComputationRates from '../components/business-tax/CTComputationRates'
 import QIPs from '../components/business-tax/QIPs'
 import PaymentsLiabilities from '../components/business-tax/PaymentsLiabilities'
 import CT600Schedules from '../components/business-tax/CT600Schedules'
-import AttachmentsiXBRL from '../components/business-tax/AttachmentsiXBRL'
+import AttachmentsIXBRL from '../components/business-tax/AttachmentsIXBRL'
 import ReviewChecklists from '../components/business-tax/ReviewChecklists'
 import Filing from '../components/business-tax/Filing'
 import PostFilingEnquiries from '../components/business-tax/PostFilingEnquiries'
 import JournalsPostBack from '../components/business-tax/JournalsPostBack'
-import DocumentHub from '../components/business-tax/DocumentHub'
+import DocumentHubBT from '../components/business-tax/DocumentHubBT'
 import Integrations from '../components/business-tax/Integrations'
 import BTSettings from '../components/business-tax/BTSettings'
-import Reports from '../components/business-tax/Reports'
+import ReportsBT from '../components/business-tax/ReportsBT'
 
 const BusinessTaxDashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -180,19 +180,19 @@ const BusinessTaxDashboard: React.FC = () => {
                 <Route path="/rd-creative-reliefs" element={<RDCreativeReliefs />} />
                 <Route path="/interest-restriction" element={<InterestRestriction />} />
                 <Route path="/transfer-pricing" element={<TransferPricing />} />
-                <Route path="/ct-computation" element={<CTComputation />} />
+                <Route path="/ct-computation" element={<CTComputationRates />} />
                 <Route path="/qips" element={<QIPs />} />
                 <Route path="/payments-liabilities" element={<PaymentsLiabilities />} />
                 <Route path="/ct600-schedules" element={<CT600Schedules />} />
-                <Route path="/attachments-ixbrl" element={<AttachmentsiXBRL />} />
+                <Route path="/attachments-ixbrl" element={<AttachmentsIXBRL />} />
                 <Route path="/review-checklists" element={<ReviewChecklists />} />
                 <Route path="/filing" element={<Filing />} />
                 <Route path="/post-filing-enquiries" element={<PostFilingEnquiries />} />
                 <Route path="/journals-postback" element={<JournalsPostBack />} />
-                <Route path="/document-hub" element={<DocumentHub />} />
+                <Route path="/document-hub" element={<DocumentHubBT />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/settings" element={<BTSettings />} />
-                <Route path="/reports" element={<Reports />} />
+                <Route path="/reports" element={<ReportsBT />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>
