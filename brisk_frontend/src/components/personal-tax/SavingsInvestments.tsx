@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PiggyBank, Plus, TrendingUp, Shield, FileText } from 'lucide-react';
+import { PiggyBank, Plus, TrendingUp, Shield, FileText, BarChart3 } from 'lucide-react';
 
 interface SavingsData {
   bankAccounts: Array<{
@@ -49,10 +49,15 @@ const SavingsInvestments: React.FC = () => {
   const [activeTab, setActiveTab] = useState('interest');
   const [loading, setLoading] = useState(true);
   const [savingsData, setSavingsData] = useState<SavingsData | null>(null);
+  const [exchanges, setExchanges] = useState<any[]>([]);
+  const [dividendPortfolio, setDividendPortfolio] = useState<any>(null);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [taxYear] = useState('2024-25');
 
   useEffect(() => {
     fetchSavingsData();
+    fetchExchanges();
+    fetchDividendPortfolio();
   }, [taxYear]);
 
   const fetchSavingsData = async () => {
@@ -120,6 +125,47 @@ const SavingsInvestments: React.FC = () => {
     }
   };
 
+  const fetchExchanges = async () => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/dividends/exchanges`);
+      const data = await response.json();
+      setExchanges(data.exchanges || []);
+    } catch (error) {
+      console.error('Error fetching exchanges:', error);
+    }
+  };
+
+  const fetchDividendPortfolio = async () => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/dividends/portfolio`);
+      const data = await response.json();
+      setDividendPortfolio(data);
+    } catch (error) {
+      console.error('Error fetching dividend portfolio:', error);
+    }
+  };
+
+  const handleImportDividends = async (importData: any) => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/personal-tax/dividends/import`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(importData)
+      });
+      const result = await response.json();
+      if (response.ok) {
+        alert(`Successfully imported ${result.imported_count} dividend records`);
+        fetchDividendPortfolio();
+        setShowImportModal(false);
+      }
+    } catch (error) {
+      console.error('Error importing dividends:', error);
+    }
+  };
+
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('en-GB', {
       style: 'currency',
@@ -132,6 +178,7 @@ const SavingsInvestments: React.FC = () => {
   const tabs = [
     { id: 'interest', label: 'Interest', icon: PiggyBank },
     { id: 'dividends', label: 'Dividends', icon: TrendingUp },
+    { id: 'portfolio', label: 'Portfolio Management', icon: BarChart3 },
     { id: 'isas', label: 'ISAs', icon: Shield },
     { id: 'statements', label: 'Investment Statements', icon: FileText }
   ];
@@ -234,7 +281,96 @@ const SavingsInvestments: React.FC = () => {
 
         {activeTab === 'dividends' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900">Dividend Income</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-gray-900">Dividend Income</h3>
+              <button 
+                onClick={() => setShowImportModal(true)}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+              >
+                Import from Exchange
+              </button>
+            </div>
+
+            {showImportModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                  <h4 className="text-lg font-semibold mb-4">Import Dividend Data</h4>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const importData = {
+                      exchange: formData.get('exchange'),
+                      portfolio_id: formData.get('portfolio_id'),
+                      date_from: formData.get('date_from'),
+                      date_to: formData.get('date_to')
+                    };
+                    handleImportDividends(importData);
+                  }}>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Exchange</label>
+                        <select 
+                          name="exchange"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                          required
+                        >
+                          <option value="">Select Exchange</option>
+                          {exchanges.map((exchange) => (
+                            <option key={exchange.id} value={exchange.id}>
+                              {exchange.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Portfolio ID</label>
+                        <input 
+                          type="text" 
+                          name="portfolio_id"
+                          placeholder="Enter your portfolio/account ID"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">From Date</label>
+                        <input 
+                          type="date" 
+                          name="date_from"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">To Date</label>
+                        <input 
+                          type="date" 
+                          name="date_to"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                          required 
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-3 mt-6">
+                      <button 
+                        type="button"
+                        onClick={() => setShowImportModal(false)}
+                        className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        type="submit"
+                        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                      >
+                        Import Data
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-4">
               {savingsData.dividends.map((dividend) => (
                 <div key={dividend.id} className="border border-gray-200 rounded-lg p-4">
@@ -271,6 +407,69 @@ const SavingsInvestments: React.FC = () => {
                 Annual dividend allowance: {formatCurrency(savingsData.allowances.dividendAllowance)} - First {formatCurrency(savingsData.allowances.dividendAllowance)} of dividends are tax-free
               </p>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'portfolio' && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900">Portfolio Management</h3>
+            
+            {dividendPortfolio && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-900">Total Holdings</h4>
+                    <p className="text-2xl font-bold text-blue-600">{dividendPortfolio.portfolio?.total_holdings}</p>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-green-900">Portfolio Value</h4>
+                    <p className="text-2xl font-bold text-green-600">£{dividendPortfolio.portfolio?.total_value?.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-purple-900">Dividend Yield</h4>
+                    <p className="text-2xl font-bold text-purple-600">{dividendPortfolio.portfolio?.dividend_yield}%</p>
+                  </div>
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-orange-900">Annual Dividends</h4>
+                    <p className="text-2xl font-bold text-orange-600">£{dividendPortfolio.portfolio?.annual_dividends?.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <h4 className="font-medium text-gray-900">Holdings</h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Shares</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Market Value</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Yield</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Annual Dividend</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {dividendPortfolio.holdings?.map((holding: any, index: number) => (
+                          <tr key={index}>
+                            <td className="px-4 py-3 text-sm font-medium text-gray-900">{holding.symbol}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{holding.company}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{holding.shares}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">${holding.current_price}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">£{holding.market_value?.toLocaleString()}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{holding.dividend_yield}%</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">£{holding.annual_dividend?.toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, User, Briefcase, Users, Home, PiggyBank, 
@@ -32,12 +32,34 @@ import PTReports from '../components/personal-tax/PTReports';
 const PersonalTaxDashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [taxpayerSwitcher, setTaxpayerSwitcher] = useState('John Smith');
+  const [taxpayerSwitcher, setTaxpayerSwitcher] = useState('');
+  const [taxpayers, setTaxpayers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [taxYear, setTaxYear] = useState('2024-25');
   const [returnStatus] = useState('In progress');
   const [scenario, setScenario] = useState('Current');
   const [hmrcConnection] = useState('Connected');
   const [agentAuth] = useState('Valid');
+
+  useEffect(() => {
+    fetchTaxpayers();
+  }, []);
+
+  const fetchTaxpayers = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/taxpayers`);
+      const data = await response.json();
+      setTaxpayers(data.taxpayers);
+      if (data.taxpayers.length > 0) {
+        setTaxpayerSwitcher(data.taxpayers[0].name);
+      }
+    } catch (error) {
+      console.error('Error fetching taxpayers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/personal-tax' },
@@ -81,10 +103,17 @@ const PersonalTaxDashboard: React.FC = () => {
               value={taxpayerSwitcher} 
               onChange={(e) => setTaxpayerSwitcher(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+              disabled={loading}
             >
-              <option value="John Smith">John Smith</option>
-              <option value="Jane Doe">Jane Doe</option>
-              <option value="Robert Johnson">Robert Johnson</option>
+              {loading ? (
+                <option value="">Loading taxpayers...</option>
+              ) : (
+                taxpayers.map((taxpayer) => (
+                  <option key={taxpayer.id} value={taxpayer.name}>
+                    {taxpayer.name} ({taxpayer.utr})
+                  </option>
+                ))
+              )}
             </select>
             
             <select 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Heart, GraduationCap, TrendingUp } from 'lucide-react';
+import { Shield, Plus, Heart, TrendingUp, TrendingDown, Users, Calculator } from 'lucide-react';
 
 const ReliefsDeductions: React.FC = () => {
   const [activeTab, setActiveTab] = useState('giftaid');
@@ -23,8 +23,19 @@ const ReliefsDeductions: React.FC = () => {
     }
   };
 
-  const handleAddRelief = () => {
-    console.log('Add relief functionality');
+  const handleAddRelief = async (reliefType: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/reliefs-deductions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: reliefType, taxpayer_id: 1 })
+      });
+      if (response.ok) {
+        fetchReliefsData();
+      }
+    } catch (error) {
+      console.error('Error adding relief:', error);
+    }
   };
 
   if (loading) {
@@ -43,9 +54,9 @@ const ReliefsDeductions: React.FC = () => {
     { id: 'giftaid', label: 'Gift Aid', icon: Heart },
     { id: 'pensions', label: 'Pension Contributions', icon: Shield },
     { id: 'investments', label: 'EIS/SEIS/VCT', icon: TrendingUp },
-    { id: 'losses', label: 'Trade/Property Losses', icon: Plus },
-    { id: 'marriage', label: 'Marriage Allowance', icon: Heart },
-    { id: 'allowances', label: 'Allowances', icon: GraduationCap }
+    { id: 'losses', label: 'Trade/Property Losses', icon: TrendingDown },
+    { id: 'marriage', label: 'Marriage Allowance', icon: Users },
+    { id: 'allowances', label: 'Allowances', icon: Calculator }
   ];
 
   return (
@@ -57,7 +68,7 @@ const ReliefsDeductions: React.FC = () => {
             Ask your Personal Tax Adviser
           </button>
           <button 
-            onClick={handleAddRelief}
+            onClick={() => handleAddRelief('general')}
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
             <Plus className="h-4 w-4" />
@@ -290,36 +301,118 @@ const ReliefsDeductions: React.FC = () => {
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Trading Allowance</h4>
                 <div className="space-y-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="trading-allowance"
-                      className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="trading-allowance" className="ml-2 text-sm text-gray-700">
-                      Claim Trading Allowance (£{reliefsData.allowances.trading_allowance.toLocaleString()})
-                    </label>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Annual Limit</span>
+                    <span className="font-medium">£{reliefsData?.other_allowances?.trading_allowance?.toLocaleString() || '1,000'}</span>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Cannot claim expenses if using trading allowance
-                  </p>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Claimed</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <button 
+                    onClick={() => handleAddRelief('trading_allowance')}
+                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
+                    Claim Trading Allowance
+                  </button>
                 </div>
               </div>
               <div className="border border-gray-200 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Property Allowance</h4>
                 <div className="space-y-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="property-allowance"
-                      className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="property-allowance" className="ml-2 text-sm text-gray-700">
-                      Claim Property Allowance (£{reliefsData.allowances.property_allowance.toLocaleString()})
-                    </label>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Annual Limit</span>
+                    <span className="font-medium">£{reliefsData?.other_allowances?.property_allowance?.toLocaleString() || '1,000'}</span>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Cannot claim expenses if using property allowance
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Claimed</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <button 
+                    onClick={() => handleAddRelief('property_allowance')}
+                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
+                    Claim Property Allowance
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'losses' && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900">Trade & Property Losses</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-3">Trading Losses</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Current Year Loss</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Brought Forward</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Carried Back</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <button 
+                    onClick={() => handleAddRelief('trading_loss')}
+                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
+                    Add Trading Loss
+                  </button>
+                </div>
+              </div>
+              
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-3">Property Losses</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Current Year Loss</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Brought Forward</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Available Relief</span>
+                    <span className="font-medium">£0</span>
+                  </div>
+                  <button 
+                    onClick={() => handleAddRelief('property_loss')}
+                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
+                    Add Property Loss
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-medium text-blue-900 mb-2">Loss Relief Options</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <h5 className="font-medium text-blue-800">Carry Forward</h5>
+                  <p className="text-blue-700">
+                    Use losses against future profits from the same trade
+                  </p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-blue-800">Carry Back</h5>
+                  <p className="text-blue-700">
+                    Use losses against profits from previous 3 years
+                  </p>
+                </div>
+                <div>
+                  <h5 className="font-medium text-blue-800">Sideways Relief</h5>
+                  <p className="text-blue-700">
+                    Use losses against other income in same or previous year
                   </p>
                 </div>
               </div>

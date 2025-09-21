@@ -109,7 +109,7 @@ const PTDashboard: React.FC = () => {
         dueDate: task.due_date,
         priority: task.priority,
         status: task.status,
-        assignee: 'John Smith'
+        assignee: task.assignee || 'Tax Team'
       }));
 
       const dynamicComplianceTimeline = dashboardData.compliance_timeline.map((item: any) => ({
@@ -329,6 +329,114 @@ const PTDashboard: React.FC = () => {
               {exceptions.map((exception) => (
                 <div 
                   key={exception.id}
+                  className={`p-4 rounded-lg border-l-4 ${
+                    exception.priority === 'high' 
+                      ? 'border-red-500 bg-red-50' 
+                      : exception.priority === 'medium'
+                      ? 'border-yellow-500 bg-yellow-50'
+                      : 'border-blue-500 bg-blue-50'
+                  }`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium text-gray-900">{exception.title}</h4>
+                      <p className="text-sm text-gray-600 mt-1">{exception.description}</p>
+                      {exception.section && (
+                        <span className="inline-block mt-2 px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded">
+                          {exception.section}
+                        </span>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => handleExceptionClick(exception)}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      Resolve
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'tasks' && (
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Tasks & Actions</h3>
+            <div className="space-y-4">
+              {tasks.map((task) => (
+                <div 
+                  key={task.id}
+                  className="p-4 border border-gray-200 rounded-lg"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{task.title}</h4>
+                      <p className="text-sm text-gray-600 mt-1">{task.description}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                        <span>Due: {task.dueDate}</span>
+                        <span>Assigned: {task.assignee}</span>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          task.priority === 'high' 
+                            ? 'bg-red-100 text-red-800'
+                            : task.priority === 'medium'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-green-100 text-green-800'
+                        }`}>
+                          {task.priority}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className={`px-2 py-1 rounded text-xs ${
+                        task.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : task.status === 'in_progress'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {task.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'timeline' && (
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Compliance Timeline</h3>
+            <div className="space-y-4">
+              {complianceTimeline.map((item, index) => (
+                <div key={index} className="flex items-center space-x-4">
+                  <div className={`w-3 h-3 rounded-full ${
+                    item.status === 'completed' 
+                      ? 'bg-green-500'
+                      : item.status === 'upcoming'
+                      ? 'bg-blue-500'
+                      : 'bg-gray-300'
+                  }`}></div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-900">{item.event}</span>
+                      <span className="text-sm text-gray-500">{item.date}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'exceptions' && (
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Exceptions & Alerts</h3>
+            <div className="space-y-4">
+              {exceptions.map((exception) => (
+                <div 
+                  key={exception.id}
                   onClick={() => handleExceptionClick(exception)}
                   className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50"
                 >
@@ -390,6 +498,36 @@ const PTDashboard: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'documents' && (
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Upload</h3>
+            <p className="text-gray-600 mb-6">
+              Upload supporting documents for tax returns. Supports historical documents for returns going back 30 years.
+            </p>
+            <DocumentUpload 
+              taxpayerId="current_taxpayer"
+              onUploadComplete={(files: any) => {
+                console.log('Files uploaded:', files);
+              }}
+            />
+          </div>
+        )}
+
+        {activeTab === 'documents' && (
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Upload</h3>
+            <p className="text-gray-600 mb-6">
+              Upload supporting documents for tax returns. Supports historical documents for returns going back 30 years.
+            </p>
+            <DocumentUpload 
+              taxpayerId="current_taxpayer"
+              onUploadComplete={(files) => {
+                console.log('Files uploaded:', files);
+              }}
+            />
           </div>
         )}
       </div>
