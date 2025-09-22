@@ -100,10 +100,10 @@ const AdminDashboard: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveSection(item.id)}
-                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`w-full flex items-center px-3 py-2 my-0.5 text-sm font-medium rounded-sm transition-all duration-200 shadow-md border border-gray-200 ${
                   activeSection === item.id
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
-                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105 border-orange-400 font-semibold text-shadow-sm'
+                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:shadow-lg hover:transform hover:scale-105 border-blue-400 font-medium text-shadow-sm hover:from-blue-600 hover:to-blue-700'
                 }`}
               >
                 <item.icon className={`mr-3 h-4 w-4 ${activeSection === item.id ? 'text-white' : 'text-gray-400'}`} />
