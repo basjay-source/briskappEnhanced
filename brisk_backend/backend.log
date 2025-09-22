@@ -1,0 +1,128 @@
+INFO:     Will watch for changes in these directories: ['/home/ubuntu/brisk-admin-suite/brisk_backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [32225] using WatchFiles
+INFO:     Started server process [32440]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:44974 - "GET /docs HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/services/hmrc_rates_historical.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [32440]
+INFO:     Started server process [71330]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [71330]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [74115]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [74146]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74146]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [74223]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [74231]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/hmrc_rates_historical.py', 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74231]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [80551]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80559]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/hmrc_rates_historical.py', 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [80559]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [80717]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80723]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/services/hmrc_rates_historical.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [80723]
+WARNING:  WatchFiles detected changes in 'app/services/hmrc_rates_historical.py'. Reloading...
+INFO:     Started server process [80847]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [80857]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [80857]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [88006]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [88014]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88014]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [88497]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [88502]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88502]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [88764]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [88766]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88766]
+WARNING:  WatchFiles detected changes in 'app/routers/personal_tax.py'. Reloading...
+INFO:     Started server process [109708]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [109710]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [109710]
+INFO:     Stopping reloader process [32225]
