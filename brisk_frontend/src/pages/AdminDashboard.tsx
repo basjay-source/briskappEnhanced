@@ -40,6 +40,7 @@ const AdminDashboard: React.FC = () => {
   const [selectedTenant] = useState('Brisk Accountants')
   const [selectedEnvironment] = useState('Production')
   const [selectedRegion] = useState('UK')
+  const [activeSection, setActiveSection] = useState('dashboard')
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
@@ -96,14 +97,18 @@ const AdminDashboard: React.FC = () => {
         <nav className="flex-1 overflow-y-auto py-4">
           <div className="px-3 space-y-1">
             {navigationItems.map((item) => (
-              <a
+              <button
                 key={item.id}
-                href={item.path}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-gray-900 group"
+                onClick={() => setActiveSection(item.id)}
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                  activeSection === item.id
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
+                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
+                }`}
               >
-                <item.icon className="mr-3 h-4 w-4 text-gray-400 group-hover:text-gray-500" />
+                <item.icon className={`mr-3 h-4 w-4 ${activeSection === item.id ? 'text-white' : 'text-gray-400'}`} />
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
         </nav>

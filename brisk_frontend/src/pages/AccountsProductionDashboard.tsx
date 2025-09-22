@@ -90,10 +90,10 @@ const AccountsProductionDashboard: React.FC = () => {
             <button
               key={item.id}
               onClick={() => handleNavigation(item.path)}
-              className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+              className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                 isActive(item.path)
-                  ? 'bg-orange-500 text-white shadow-md'
-                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
+                  : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
               }`}
             >
               <span className="mr-3 text-lg">{item.icon}</span>

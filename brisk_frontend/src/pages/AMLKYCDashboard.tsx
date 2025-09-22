@@ -103,8 +103,8 @@ const AMLKYCDashboard: React.FC = () => {
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                   (item.id === 'dashboard' && location.pathname === '/aml-kyc') || 
                   (item.id !== 'dashboard' && location.pathname === `/aml-kyc/${item.id}`)
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
+                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
                 }`}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />

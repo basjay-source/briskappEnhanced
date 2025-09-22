@@ -118,10 +118,10 @@ const BookkeepingDashboard: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.id)}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-all duration-200 ${
                       isActive
-                        ? 'bg-orange-500 text-white'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
+                        : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
                     }`}
                   >
                     <Icon className="w-5 h-5" />

@@ -199,10 +199,10 @@ const PersonalTaxDashboard: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
                       isActive
-                        ? 'bg-orange-500 text-white'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg transform scale-105'
+                        : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white hover:shadow-md hover:transform hover:scale-105'
                     }`}
                   >
                     <Icon className="mr-3 h-4 w-4" />
