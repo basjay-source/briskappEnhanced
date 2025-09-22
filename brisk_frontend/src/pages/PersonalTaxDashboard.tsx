@@ -10,10 +10,10 @@ import {
 import PTDashboard from '../components/personal-tax/PTDashboard';
 import TaxpayerProfile from '../components/personal-tax/TaxpayerProfile';
 import Employment from '../components/personal-tax/Employment';
-import SelfEmployment from '../components/personal-tax/SelfEmployment';
+import SelfEmploymentCleanFixed from '../components/personal-tax/SelfEmploymentCleanFixed';
 import Partnerships from '../components/personal-tax/Partnerships';
 import UKProperty from '../components/personal-tax/UKProperty';
-import SavingsInvestments from '../components/personal-tax/SavingsInvestments';
+import SavingsInvestmentsClean from '../components/personal-tax/SavingsInvestmentsClean';
 import CapitalGains from '../components/personal-tax/CapitalGains';
 import ForeignIncome from '../components/personal-tax/ForeignIncome';
 import TrustsEstates from '../components/personal-tax/TrustsEstates';
@@ -24,10 +24,10 @@ import PaymentsLiabilities from '../components/personal-tax/PaymentsLiabilities'
 import ReviewChecklists from '../components/personal-tax/ReviewChecklists';
 import Filing from '../components/personal-tax/Filing';
 import PostFiling from '../components/personal-tax/PostFiling';
-import PTDocumentHub from '../components/personal-tax/PTDocumentHub';
+import PTDocumentHubClean from '../components/personal-tax/PTDocumentHubClean';
 import PTIntegrations from '../components/personal-tax/PTIntegrations';
 import PTSettings from '../components/personal-tax/PTSettings';
-import PTReports from '../components/personal-tax/PTReports';
+import PTReportsClean from '../components/personal-tax/PTReportsClean';
 
 const PersonalTaxDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -107,12 +107,14 @@ const PersonalTaxDashboard: React.FC = () => {
             >
               {loading ? (
                 <option value="">Loading taxpayers...</option>
-              ) : (
+              ) : taxpayers.length > 0 ? (
                 taxpayers.map((taxpayer) => (
                   <option key={taxpayer.id} value={taxpayer.name}>
-                    {taxpayer.name} ({taxpayer.utr})
+                    {taxpayer.name} - UTR: {taxpayer.utr}
                   </option>
                 ))
+              ) : (
+                <option value="">No taxpayers found</option>
               )}
             </select>
             
@@ -121,9 +123,16 @@ const PersonalTaxDashboard: React.FC = () => {
               onChange={(e) => setTaxYear(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
             >
-              <option value="2024-25">2024-25</option>
-              <option value="2023-24">2023-24</option>
-              <option value="2022-23">2022-23</option>
+              {Array.from({ length: 30 }, (_, i) => {
+                const year = 2024 - i;
+                const nextYear = year + 1;
+                const taxYearLabel = `${year}-${nextYear.toString().slice(-2)}`;
+                return (
+                  <option key={taxYearLabel} value={taxYearLabel}>
+                    {taxYearLabel}
+                  </option>
+                );
+              })}
             </select>
             
             <div className="flex items-center space-x-2">
@@ -209,10 +218,10 @@ const PersonalTaxDashboard: React.FC = () => {
             <Route path="/" element={<PTDashboard />} />
             <Route path="/taxpayer-profile" element={<TaxpayerProfile />} />
             <Route path="/employment" element={<Employment />} />
-            <Route path="/self-employment" element={<SelfEmployment />} />
+            <Route path="/self-employment" element={<SelfEmploymentCleanFixed />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/uk-property" element={<UKProperty />} />
-            <Route path="/savings-investments" element={<SavingsInvestments />} />
+            <Route path="/savings-investments" element={<SavingsInvestmentsClean />} />
             <Route path="/capital-gains" element={<CapitalGains />} />
             <Route path="/foreign-income" element={<ForeignIncome />} />
             <Route path="/trusts-estates" element={<TrustsEstates />} />
@@ -223,10 +232,10 @@ const PersonalTaxDashboard: React.FC = () => {
             <Route path="/review-checklists" element={<ReviewChecklists />} />
             <Route path="/filing" element={<Filing />} />
             <Route path="/post-filing" element={<PostFiling />} />
-            <Route path="/document-hub" element={<PTDocumentHub />} />
+            <Route path="/document-hub" element={<PTDocumentHubClean />} />
             <Route path="/integrations" element={<PTIntegrations />} />
             <Route path="/settings" element={<PTSettings />} />
-            <Route path="/reports" element={<PTReports />} />
+            <Route path="/reports" element={<PTReportsClean />} />
           </Routes>
         </div>
       </div>

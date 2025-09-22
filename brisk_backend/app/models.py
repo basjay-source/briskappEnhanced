@@ -1952,3 +1952,129 @@ class CISSubcontractor(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     tenant = relationship("Tenant")
+
+class TaxpayerProfileDB(Base):
+    __tablename__ = "taxpayer_profiles"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
+    utr = Column(String(20), unique=True, index=True)
+    nino = Column(String(20), unique=True, index=True)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False)
+    date_of_birth = Column(Date)
+    address = Column(Text)
+    email = Column(String(255))
+    phone = Column(String(50))
+    bank_account = Column(String(50))
+    sort_code = Column(String(10))
+    marital_status = Column(String(20), default="single")
+    spouse_name = Column(String(200))
+    student_loan_plan = Column(String(10))
+    blind_person_allowance = Column(Boolean, default=False)
+    agent_auth_status = Column(String(20), default="inactive")
+    agent_auth_expiry = Column(Date)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    tenant = relationship("Tenant")
+    tax_returns = relationship("TaxReturnSA", back_populates="taxpayer")
+    self_employment_assets = relationship("SelfEmploymentAsset", back_populates="taxpayer")
+    capital_gains = relationship("CapitalGainDB", back_populates="taxpayer")
+
+class TaxReturnSA(Base):
+    __tablename__ = "tax_returns_sa"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    taxpayer_id = Column(Integer, ForeignKey("taxpayer_profiles.id"), nullable=False)
+    tax_year = Column(String(10), nullable=False)
+    status = Column(String(20), default="draft")
+    total_income = Column(Numeric(12, 2), default=0)
+    total_tax = Column(Numeric(12, 2), default=0)
+    balance_due = Column(Numeric(12, 2), default=0)
+    filing_date = Column(DateTime)
+    hmrc_reference = Column(String(50))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    taxpayer = relationship("TaxpayerProfileDB", back_populates="tax_returns")
+
+class SelfEmploymentAsset(Base):
+    __tablename__ = "self_employment_assets"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    taxpayer_id = Column(Integer, ForeignKey("taxpayer_profiles.id"), nullable=False)
+    name = Column(String(255), nullable=False)
+    category = Column(String(100), nullable=False)
+    cost = Column(Numeric(12, 2), nullable=False)
+    date_acquired = Column(Date, nullable=False)
+    description = Column(Text)
+    tax_year = Column(String(10), nullable=False)
+    cis_deducted = Column(Numeric(12, 2), default=0)
+    aip = Column(Integer, default=0)
+    wda = Column(Integer, default=18)
+    pool = Column(String(50), default="Main Pool")
+    allowance_claimed = Column(Numeric(12, 2), default=0)
+    written_down_value = Column(Numeric(12, 2), default=0)
+    disposal_date = Column(Date)
+    disposal_proceeds = Column(Numeric(12, 2))
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    taxpayer = relationship("TaxpayerProfileDB", back_populates="self_employment_assets")
+
+class CapitalGainDB(Base):
+    __tablename__ = "capital_gains"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    taxpayer_id = Column(Integer, ForeignKey("taxpayer_profiles.id"), nullable=False)
+    asset_type = Column(String(100), nullable=False)
+    asset_description = Column(String(500))
+    disposal_date = Column(Date, nullable=False)
+    acquisition_date = Column(Date)
+    proceeds = Column(Numeric(12, 2), nullable=False)
+    cost = Column(Numeric(12, 2), nullable=False)
+    enhancement_costs = Column(Numeric(12, 2), default=0)
+    incidental_costs = Column(Numeric(12, 2), default=0)
+    gain_loss = Column(Numeric(12, 2), default=0)
+    relief_claimed = Column(String(100), default="None")
+    relief_amount = Column(Numeric(12, 2), default=0)
+    chargeable_gain = Column(Numeric(12, 2), default=0)
+    tax_year = Column(String(10), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    taxpayer = relationship("TaxpayerProfileDB", back_populates="capital_gains")
+
+class DividendImport(Base):
+    __tablename__ = "dividend_imports"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    taxpayer_id = Column(Integer, ForeignKey("taxpayer_profiles.id"), nullable=False)
+    exchange_name = Column(String(100), nullable=False)
+    portfolio_id = Column(String(100), nullable=False)
+    import_date_from = Column(Date, nullable=False)
+    import_date_to = Column(Date, nullable=False)
+    total_dividends = Column(Numeric(12, 2), default=0)
+    total_tax_credits = Column(Numeric(12, 2), default=0)
+    status = Column(String(20), default="pending")
+    imported_at = Column(DateTime, default=datetime.utcnow)
+    
+    taxpayer = relationship("TaxpayerProfileDB")
+
+class PersonalTaxDocument(Base):
+    __tablename__ = "personal_tax_documents"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    taxpayer_id = Column(Integer, ForeignKey("taxpayer_profiles.id"), nullable=False)
+    document_type = Column(String(100), nullable=False)
+    filename = Column(String(255), nullable=False)
+    file_path = Column(String(500), nullable=False)
+    file_size = Column(Integer)
+    mime_type = Column(String(100))
+    tax_year = Column(String(10))
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+    
+    taxpayer = relationship("TaxpayerProfileDB")
