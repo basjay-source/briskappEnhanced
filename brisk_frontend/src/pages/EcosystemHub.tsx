@@ -12,7 +12,8 @@ import {
   Calculator, 
   TrendingUp,
   PieChart,
-  FileSignature
+  FileSignature,
+  Heart
 } from 'lucide-react'
 
 const EcosystemHub: React.FC = () => {
@@ -119,6 +120,15 @@ const EcosystemHub: React.FC = () => {
       features: ['Self Assessment', 'Tax Planning', 'HMRC Integration', 'Capital Gains', 'Dividends']
     },
     {
+      id: 'charity-accounts',
+      title: 'Charity Accounts',
+      description: 'UK Charities SORP (FRS 102) and Academy Accounts Direction (ESFA) with fund accounting',
+      icon: Heart,
+      color: 'from-blue-500 to-blue-600',
+      path: '/charity-accounts',
+      features: ['Fund Accounting', 'SoFA Builder', 'SORP Compliance', 'Academy Returns', 'Grant Management']
+    },
+    {
       id: 'e-signature',
       title: 'e-Signature',
       description: 'Digital signature workflows with audit trails and compliance tracking',
@@ -141,7 +151,7 @@ const EcosystemHub: React.FC = () => {
             Brisk Accountancy Practice Suite
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Integrated practice management ecosystem with 12 comprehensive modules for modern accounting firms
+            Integrated practice management ecosystem with 13 comprehensive modules for modern accounting firms
           </p>
         </div>
 
@@ -212,7 +222,7 @@ const EcosystemHub: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div className="p-4">
-                <div className="text-2xl font-bold text-orange-600">12</div>
+                <div className="text-2xl font-bold text-orange-600">13</div>
                 <div className="text-sm text-gray-600">Modules</div>
               </div>
               <div className="p-4">
