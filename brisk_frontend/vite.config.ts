@@ -10,6 +10,13 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: true,
+    allowedHosts: ['accountancy-practice-app-tunnel-u1zef5nq.devinapps.com', 'localhost', '127.0.0.1'],
+    hmr: {
+      clientPort: 5173,
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

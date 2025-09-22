@@ -13,7 +13,10 @@ import {
   TrendingUp,
   PieChart,
   FileSignature,
-  Heart
+  Heart,
+  ArrowRight,
+  AlertTriangle,
+  TrendingUp as TrendingUpIcon
 } from 'lucide-react'
 
 const EcosystemHub: React.FC = () => {
@@ -21,122 +24,101 @@ const EcosystemHub: React.FC = () => {
 
   const modules = [
     {
-      id: 'admin',
-      title: 'Admin',
-      description: 'Advanced SaaS administration with multi-tenant, region-aware, and policy-driven controls',
-      icon: Settings,
-      color: 'from-blue-500 to-blue-600',
-      path: '/admin',
-      features: ['Multi-tenant', 'RBAC/ABAC', 'SSO/SCIM', 'Billing', 'Security']
-    },
-    {
-      id: 'document-hub',
-      title: 'Document Hub',
-      description: 'Centralized document management with OCR, AI assist, and client portal integration',
-      icon: FileText,
-      color: 'from-orange-500 to-orange-600',
-      path: '/document-hub',
-      features: ['OCR Processing', 'AI Assist', 'Client Portal', 'E-Sign', 'Retention']
-    },
-    {
       id: 'practice-management',
       title: 'Practice Management',
-      description: 'Complete practice workflow management from client onboarding to billing',
+      description: 'Jobs, workflows, compliance deadlines',
       icon: Users,
-      color: 'from-blue-500 to-blue-600',
+      color: 'bg-purple-500',
       path: '/practice-management',
-      features: ['CRM', 'Workflows', 'Billing', 'Quality Review', 'Analytics']
-    },
-    {
-      id: 'aml-kyc',
-      title: 'AML & KYC',
-      description: 'Anti-money laundering and know your customer compliance management',
-      icon: Shield,
-      color: 'from-orange-500 to-orange-600',
-      path: '/aml-kyc',
-      features: ['Identity Verification', 'Risk Assessment', 'Screening', 'SAR Reports', 'Monitoring']
-    },
-    {
-      id: 'time-management',
-      title: 'Time Management',
-      description: 'Time tracking, billing, and revenue recognition with advanced analytics',
-      icon: Clock,
-      color: 'from-blue-500 to-blue-600',
-      path: '/time-management',
-      features: ['Time Tracking', 'Billing', 'WIP Management', 'Revenue Recognition', 'Analytics']
-    },
-    {
-      id: 'bookkeeping',
-      title: 'Bookkeeping',
-      description: 'Complete bookkeeping solution with bank feeds, OCR, and MTD integration',
-      icon: BookOpen,
-      color: 'from-orange-500 to-orange-600',
-      path: '/bookkeeping',
-      features: ['Bank Feeds', 'OCR Processing', 'MTD Integration', 'Reporting', 'Multi-currency']
-    },
-    {
-      id: 'payroll',
-      title: 'Payroll',
-      description: 'Full payroll processing with RTI, auto-enrolment, and HMRC integration',
-      icon: DollarSign,
-      color: 'from-blue-500 to-blue-600',
-      path: '/payroll',
-      features: ['RTI Filing', 'Auto-enrolment', 'CIS', 'Benefits', 'Year-end']
-    },
-    {
-      id: 'company-secretarial',
-      title: 'Company Secretarial',
-      description: 'Companies House filings, registers, and corporate governance management',
-      icon: Building,
-      color: 'from-orange-500 to-orange-600',
-      path: '/company-secretarial',
-      features: ['CH Filings', 'Registers', 'Dividends', 'Share Capital', 'Governance']
+      status: 'active'
     },
     {
       id: 'accounts-production',
       title: 'Accounts Production',
-      description: 'Statutory accounts preparation with iXBRL tagging and filing integration',
+      description: 'FRS 102/105, FRS, iXBRL generation',
       icon: PieChart,
-      color: 'from-blue-500 to-blue-600',
+      color: 'bg-blue-500',
       path: '/accounts-production',
-      features: ['iXBRL Tagging', 'Lead Schedules', 'Consolidation', 'Filing', 'Analytics']
+      status: 'active'
     },
     {
       id: 'business-tax',
-      title: 'Business Tax',
-      description: 'Corporation Tax computations, filing, and compliance management',
+      title: 'Corporation Tax',
+      description: 'CT600, R&D claims, reliefs',
       icon: Calculator,
-      color: 'from-orange-500 to-orange-600',
+      color: 'bg-green-500',
       path: '/business-tax',
-      features: ['CT Computations', 'Capital Allowances', 'Group Relief', 'R&D Claims', 'Filing']
+      status: 'active'
     },
     {
       id: 'personal-tax',
       title: 'Personal Tax',
-      description: 'Self Assessment and personal tax planning with HMRC integration',
+      description: 'SA returns, CGT optimization',
       icon: TrendingUp,
-      color: 'from-blue-500 to-blue-600',
+      color: 'bg-orange-500',
       path: '/personal-tax',
-      features: ['Self Assessment', 'Tax Planning', 'HMRC Integration', 'Capital Gains', 'Dividends']
+      status: 'active'
     },
     {
-      id: 'charity-accounts',
-      title: 'Charity Accounts',
-      description: 'UK Charities SORP (FRS 102) and Academy Accounts Direction (ESFA) with fund accounting',
-      icon: Heart,
-      color: 'from-blue-500 to-blue-600',
-      path: '/charity-accounts',
-      features: ['Fund Accounting', 'SoFA Builder', 'SORP Compliance', 'Academy Returns', 'Grant Management']
+      id: 'payroll',
+      title: 'Payroll',
+      description: 'RTI, pensions, CIS, P11D',
+      icon: DollarSign,
+      color: 'bg-pink-500',
+      path: '/payroll',
+      status: 'active'
     },
     {
-      id: 'e-signature',
-      title: 'e-Signature',
-      description: 'Digital signature workflows with audit trails and compliance tracking',
+      id: 'aml-kyc',
+      title: 'AML/KYC',
+      description: 'Risk assessment, compliance',
+      icon: Shield,
+      color: 'bg-red-500',
+      path: '/aml-kyc',
+      status: 'active'
+    },
+    {
+      id: 'company-secretarial',
+      title: 'Company Secretarial',
+      description: 'Companies House filings',
+      icon: Building,
+      color: 'bg-blue-600',
+      path: '/company-secretarial',
+      status: 'active'
+    },
+    {
+      id: 'bookkeeping',
+      title: 'Bookkeeping',
+      description: 'Bank feeds, VAT MTD, management accounts',
+      icon: BookOpen,
+      color: 'bg-teal-500',
+      path: '/bookkeeping',
+      status: 'active'
+    },
+    {
+      id: 'document-hub',
+      title: 'DocuSignage',
+      description: 'Digital signing workflows',
       icon: FileSignature,
-      color: 'from-orange-500 to-orange-600',
-      path: '/e-signature',
-      features: ['Digital Signing', 'Audit Trails', 'Workflows', 'Templates', 'Compliance']
+      color: 'bg-blue-500',
+      path: '/document-hub',
+      status: 'active'
     }
+  ]
+
+  const sidebarModules = [
+    { icon: Settings, title: 'Ecosystem Hub', subtitle: 'Overview of all modules', active: true },
+    { icon: Users, title: 'Practice Management', subtitle: 'Jobs, workflows, deadlines', active: false },
+    { icon: PieChart, title: 'Accounts Production', subtitle: 'FRS 102/105, FRS, iXBRL', active: false },
+    { icon: Calculator, title: 'Corporation Tax', subtitle: 'CT600, R&D claims, reliefs', active: false },
+    { icon: TrendingUp, title: 'Personal Tax', subtitle: 'SA returns, CGT, optimization', active: false },
+    { icon: DollarSign, title: 'Payroll', subtitle: 'RTI, pensions, CIS, P11D', active: false },
+    { icon: Shield, title: 'AML/KYC', subtitle: 'Risk assessment, compliance', active: false },
+    { icon: Building, title: 'Company Secretarial', subtitle: 'Companies House filings', active: false },
+    { icon: BookOpen, title: 'Bookkeeping', subtitle: 'Bank feeds, VAT MTD', active: false },
+    { icon: Heart, title: 'Charity & Academy Accounts', subtitle: 'SORP compliance, fund accounting', active: false },
+    { icon: FileText, title: 'Document/Hub', subtitle: 'Centralized document workflows', active: false },
+    { icon: Clock, title: 'Time Management', subtitle: 'Advanced time tracking & analytics', active: false }
   ]
 
   const handleModuleClick = (path: string) => {
@@ -144,98 +126,207 @@ const EcosystemHub: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-6 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Brisk Accountancy Practice Suite
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Integrated practice management ecosystem with 13 comprehensive modules for modern accounting firms
-          </p>
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar */}
+      <div className="w-80 bg-blue-600 text-white flex flex-col">
+        <div className="p-6 border-b border-blue-500">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
+              <Settings className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="font-semibold">Ecosystem Hub</h1>
+              <p className="text-blue-200 text-sm">Overview of all modules</p>
+            </div>
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {modules.map((module) => {
+        
+        <div className="flex-1 overflow-y-auto">
+          {sidebarModules.map((module, index) => {
             const IconComponent = module.icon
             return (
               <div
-                key={module.id}
-                onClick={() => handleModuleClick(module.path)}
-                className="group cursor-pointer transform transition-all duration-300 hover:scale-105"
+                key={index}
+                className={`p-4 border-b border-blue-500 cursor-pointer hover:bg-blue-500 transition-colors ${
+                  module.active ? 'bg-blue-500' : ''
+                }`}
+                onClick={() => module.title !== 'Ecosystem Hub' && handleModuleClick(`/${module.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`)}
               >
-                <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200">
-                  <div className={`h-32 bg-gradient-to-r ${module.color} flex items-center justify-center relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                    <IconComponent className="w-12 h-12 text-white relative z-10" />
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
-                      {module.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {module.description}
-                    </p>
-                    
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                        Key Features
-                      </h4>
-                      <div className="flex flex-wrap gap-1">
-                        {module.features.slice(0, 3).map((feature, index) => (
-                          <span
-                            key={index}
-                            className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                        {module.features.length > 3 && (
-                          <span className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">
-                            +{module.features.length - 3} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="px-6 pb-6">
-                    <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-2 px-4 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-300 transform group-hover:scale-105">
-                      Launch Module
-                    </button>
+                <div className="flex items-center space-x-3">
+                  <IconComponent className="w-5 h-5" />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">{module.title}</div>
+                    <div className="text-blue-200 text-xs">{module.subtitle}</div>
                   </div>
                 </div>
               </div>
             )
           })}
         </div>
+      </div>
 
-        <div className="mt-16 text-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Unified Practice Management
-            </h2>
-            <p className="text-gray-600 mb-6">
-              All modules are fully integrated with cross-module data sharing, unified client records, 
-              and seamless workflow automation. Experience the power of a truly connected practice management ecosystem.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div className="p-4">
-                <div className="text-2xl font-bold text-orange-600">13</div>
-                <div className="text-sm text-gray-600">Modules</div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Ecosystem Hub</h1>
+              <p className="text-gray-600">Welcome to your all-in-one practice management suite</p>
+            </div>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+              <span>View Practice Dashboard</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 flex overflow-hidden">
+          {/* Main Content Area */}
+          <div className="flex-1 p-6 overflow-y-auto">
+            {/* KPI Cards */}
+            <div className="grid grid-cols-4 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-sm">Active Jobs</p>
+                    <p className="text-2xl font-bold text-gray-900">24</p>
+                    <p className="text-green-600 text-sm">+12% from last week</p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
               </div>
-              <div className="p-4">
-                <div className="text-2xl font-bold text-blue-600">100%</div>
-                <div className="text-sm text-gray-600">Integrated</div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-sm">Overdue Tasks</p>
+                    <p className="text-2xl font-bold text-gray-900">3</p>
+                    <p className="text-red-600 text-sm">-50% from last week</p>
+                  </div>
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                  </div>
+                </div>
               </div>
-              <div className="p-4">
-                <div className="text-2xl font-bold text-orange-600">Real-time</div>
-                <div className="text-sm text-gray-600">Data Sync</div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-sm">This Week Hours</p>
+                    <p className="text-2xl font-bold text-gray-900">156</p>
+                    <p className="text-green-600 text-sm">+8% from last week</p>
+                  </div>
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
               </div>
-              <div className="p-4">
-                <div className="text-2xl font-bold text-blue-600">Cloud</div>
-                <div className="text-sm text-gray-600">Native</div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-sm">Revenue MTD</p>
+                    <p className="text-2xl font-bold text-gray-900">£45,200</p>
+                    <p className="text-green-600 text-sm">+15% from last week</p>
+                  </div>
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <TrendingUpIcon className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modules Section */}
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Modules</h2>
+              <div className="grid grid-cols-3 gap-6">
+                {modules.map((module) => {
+                  const IconComponent = module.icon
+                  return (
+                    <div
+                      key={module.id}
+                      onClick={() => handleModuleClick(module.path)}
+                      className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow relative"
+                    >
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-black text-white text-xs px-2 py-1 rounded">active</span>
+                      </div>
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-12 h-12 ${module.color} rounded-lg flex items-center justify-center`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{module.title}</h3>
+                          <p className="text-gray-600 text-sm">{module.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="w-80 bg-white border-l border-gray-200 p-6">
+            {/* Recent Activity */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">VAT return completed</p>
+                    <p className="text-xs text-gray-600">ABC Ltd</p>
+                    <p className="text-xs text-gray-500">2 hours ago</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Payroll run processed</p>
+                    <p className="text-xs text-gray-600">XYZ Corp</p>
+                    <p className="text-xs text-gray-500">4 hours ago</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Annual accounts filed</p>
+                    <p className="text-xs text-gray-600">DEF Ltd</p>
+                    <p className="text-xs text-gray-500">1 day ago</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">R&D claim submitted</p>
+                    <p className="text-xs text-gray-600">GHI Tech</p>
+                    <p className="text-xs text-gray-500">2 days ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Insights */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Insights</h3>
+              <div className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-sm font-medium text-blue-900">3 clients at risk of missing SA deadline</p>
+                  <p className="text-xs text-blue-700 mt-1">Consider sending reminder emails</p>
+                </div>
+
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <p className="text-sm font-medium text-green-900">R&D claims available for 2 clients</p>
+                  <p className="text-xs text-green-700 mt-1">Potential tax savings: £15,000</p>
+                </div>
               </div>
             </div>
           </div>
