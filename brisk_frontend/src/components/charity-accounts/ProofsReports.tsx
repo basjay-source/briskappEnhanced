@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Send, Eye, Palette, Settings } from 'lucide-react';
+import { FileText, Download, Send, Eye, Palette } from 'lucide-react';
 
 interface ProofsReportsProps {
   selectedEntity: string;

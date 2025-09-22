@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import { 
   Settings, 
   FileText, 
@@ -126,9 +127,9 @@ const EcosystemHub: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Left Sidebar */}
-      <div className="w-80 bg-blue-600 text-white flex flex-col">
+      <div className="w-80 bg-blue-600 dark:bg-blue-800 text-white flex flex-col">
         <div className="p-6 border-b border-blue-500">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
@@ -171,13 +172,16 @@ const EcosystemHub: React.FC = () => {
         <div className="bg-white border-b border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Ecosystem Hub</h1>
-              <p className="text-gray-600">Welcome to your all-in-one practice management suite</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Ecosystem Hub</h1>
+              <p className="text-gray-600 dark:text-gray-400">Welcome to your all-in-one practice management suite</p>
             </div>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-              <span>View Practice Dashboard</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex items-center space-x-4">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                <span>View Practice Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <TopNavigation />
+            </div>
           </div>
         </div>
 

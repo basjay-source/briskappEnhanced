@@ -19,7 +19,6 @@ const RelatedParties: React.FC<RelatedPartiesProps> = ({
   const [trustees, setTrustees] = useState<any[]>([]);
   const [rptRegister, setRptRegister] = useState<any[]>([]);
   const [expenses, setExpenses] = useState<any[]>([]);
-  const [regularity, setRegularity] = useState<any>({});
 
   const tabs = [
     { id: 'trustees', label: 'Trustees/Governors', icon: Users },
@@ -41,7 +40,6 @@ const RelatedParties: React.FC<RelatedPartiesProps> = ({
       setTrustees(data.trustees || []);
       setRptRegister(data.rptRegister || []);
       setExpenses(data.expenses || []);
-      setRegularity(data.regularity || {});
     } catch (error) {
       console.error('Error fetching related parties data:', error);
     } finally {

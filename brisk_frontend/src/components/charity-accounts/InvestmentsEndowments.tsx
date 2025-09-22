@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, Plus, Eye } from 'lucide-react';
+import { DollarSign, TrendingUp, Plus } from 'lucide-react';
 
 interface InvestmentsEndowmentsProps {
   selectedEntity: string;

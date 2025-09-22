@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, Users, Lock, Send } from 'lucide-react';
+import { CheckCircle, Users, Lock } from 'lucide-react';
 
 interface SignoffPublishingProps {
   selectedEntity: string;
