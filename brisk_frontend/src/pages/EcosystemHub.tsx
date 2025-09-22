@@ -190,7 +190,7 @@ const EcosystemHub: React.FC = () => {
           <div className="flex-1 p-6 overflow-y-auto">
             {/* KPI Cards */}
             <div className="grid grid-cols-4 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-blue-900">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">Active Jobs</p>
@@ -203,7 +203,7 @@ const EcosystemHub: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-blue-900">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">Overdue Tasks</p>
@@ -216,7 +216,7 @@ const EcosystemHub: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-blue-900">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">This Week Hours</p>
@@ -229,7 +229,7 @@ const EcosystemHub: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-blue-900">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">Revenue MTD</p>
@@ -253,7 +253,7 @@ const EcosystemHub: React.FC = () => {
                     <div
                       key={module.id}
                       onClick={() => handleModuleClick(module.path)}
-                      className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow relative"
+                      className="bg-white p-6 rounded-lg shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-md transition-shadow relative"
                     >
                       <div className="absolute top-4 right-4">
                         <span className="bg-black text-white text-xs px-2 py-1 rounded">active</span>

@@ -83,7 +83,7 @@ const PMDashboard: React.FC = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Active Jobs</CardTitle>
             <Briefcase className="h-4 w-4 text-blue-600" />
@@ -97,7 +97,7 @@ const PMDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Overdue Deadlines</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-600" />
@@ -111,7 +111,7 @@ const PMDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">WIP Over Budget</CardTitle>
             <XCircle className="h-4 w-4 text-orange-600" />
@@ -125,7 +125,7 @@ const PMDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Unbilled WIP</CardTitle>
             <DollarSign className="h-4 w-4 text-green-600" />
@@ -141,7 +141,7 @@ const PMDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Team Utilization</CardTitle>
             <Users className="h-4 w-4 text-blue-600" />
@@ -155,7 +155,7 @@ const PMDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <Card className="cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-900">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Completed Today</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-600" />
@@ -173,7 +173,7 @@ const PMDashboard: React.FC = () => {
       {/* Recent Activity and Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
             <CardDescription>Latest updates across your practice</CardDescription>
@@ -202,7 +202,7 @@ const PMDashboard: React.FC = () => {
         </Card>
 
         {/* Quick Actions */}
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
             <CardDescription>Common tasks and shortcuts</CardDescription>
@@ -241,7 +241,7 @@ const PMDashboard: React.FC = () => {
       </div>
 
       {/* Alerts and Exceptions */}
-      <Card>
+      <Card className="border-2 border-blue-900">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">Alerts & Exceptions</CardTitle>
           <CardDescription>Items requiring immediate attention</CardDescription>

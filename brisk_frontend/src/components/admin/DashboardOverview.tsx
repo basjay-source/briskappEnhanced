@@ -136,7 +136,7 @@ const DashboardOverview: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpiCards.map((card, index) => (
-          <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card key={index} className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -162,7 +162,7 @@ const DashboardOverview: React.FC = () => {
 
       {/* System Health */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="flex items-center">
               <Activity className="h-5 w-5 mr-2 text-green-600" />
@@ -193,7 +193,7 @@ const DashboardOverview: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
@@ -224,7 +224,7 @@ const DashboardOverview: React.FC = () => {
       </div>
 
       {/* System Tiles */}
-      <Card>
+      <Card className="border-2 border-blue-900">
         <CardHeader>
           <CardTitle>System Alerts & Notifications</CardTitle>
           <CardDescription>Important items requiring your attention</CardDescription>

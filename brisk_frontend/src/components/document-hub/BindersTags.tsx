@@ -152,7 +152,7 @@ const BindersTags: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -166,7 +166,7 @@ const BindersTags: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -182,7 +182,7 @@ const BindersTags: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -198,7 +198,7 @@ const BindersTags: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -216,7 +216,7 @@ const BindersTags: React.FC = () => {
       </div>
 
       {/* Search and Filter */}
-      <Card>
+      <Card className="border-2 border-blue-900">
         <CardContent className="p-6">
           <div className="flex items-center space-x-4">
             <div className="flex-1">
@@ -243,7 +243,7 @@ const BindersTags: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {binders.map((binder) => (
-              <Card key={binder.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+              <Card key={binder.id} className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-blue-900">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
