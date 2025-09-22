@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, CheckCircle, TrendingUp, TrendingDown, DollarSign, Calendar, FileText, Users } from 'lucide-react';
+import { AlertTriangle, CheckCircle, TrendingUp, DollarSign, Calendar, FileText } from 'lucide-react';
 
 const PTDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -16,7 +16,6 @@ const PTDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:8000';
       
       const dynamicKPIData = {
         totalReturns: 156,

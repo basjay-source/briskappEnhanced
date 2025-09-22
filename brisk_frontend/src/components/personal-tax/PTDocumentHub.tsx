@@ -126,7 +126,21 @@ const PTDocumentHub: React.FC = () => {
                       <p className="text-xs text-gray-500">Type: {document.type}</p>
                     </div>
                     <button 
-                      onClick={() => console.log(`View document: ${document.name}`)}
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/documents/${document.id}/view`);
+                          if (response.ok) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            window.open(url, '_blank');
+                          } else {
+                            alert('Failed to open document');
+                          }
+                        } catch (error) {
+                          console.error('Error viewing document:', error);
+                          alert('Error opening document');
+                        }
+                      }}
                       className="text-blue-600 hover:text-blue-800"
                     >
                       View
@@ -147,7 +161,21 @@ const PTDocumentHub: React.FC = () => {
                   <h4 className="font-medium text-gray-900 mb-2">{comm.name}</h4>
                   <p className="text-sm text-gray-600 mb-3">Status: {comm.status}</p>
                   <button 
-                    onClick={() => console.log(`View ${comm.type}: ${comm.name}`)}
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/communications/${comm.id}/view`);
+                        if (response.ok) {
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                        } else {
+                          alert('Failed to open communication');
+                        }
+                      } catch (error) {
+                        console.error('Error viewing communication:', error);
+                        alert('Error opening communication');
+                      }
+                    }}
                     className={`px-4 py-2 rounded-md text-white ${
                       comm.status === 'Signed' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
                     }`}

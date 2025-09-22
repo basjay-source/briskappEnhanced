@@ -62,7 +62,37 @@ const CapitalGains: React.FC = () => {
             Ask your Personal Tax Adviser
           </button>
           <button 
-            onClick={() => console.log('Add disposal functionality')}
+            onClick={async () => {
+              try {
+                const newDisposal = {
+                  asset_type: 'New Asset',
+                  disposal_date: new Date().toISOString().split('T')[0],
+                  proceeds: 0,
+                  cost: 0,
+                  enhancement_costs: 0,
+                  incidental_costs: 0,
+                  gain: 0,
+                  relief_claimed: 'None'
+                };
+                
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/capital-gains/disposal`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(newDisposal),
+                });
+                
+                if (response.ok) {
+                  const result = await response.json();
+                  setCapitalGains(prev => [...prev, result]);
+                } else {
+                  console.error('Failed to add disposal');
+                }
+              } catch (error) {
+                console.error('Error adding disposal:', error);
+              }
+            }}
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
             <Plus className="h-4 w-4" />

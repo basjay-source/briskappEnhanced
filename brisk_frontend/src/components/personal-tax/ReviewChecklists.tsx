@@ -120,7 +120,24 @@ const ReviewChecklists: React.FC = () => {
                         'text-green-800'
                       }`}>{exception.description}</p>
                       <button 
-                        onClick={() => console.log(`Action: ${exception.action}`)}
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/resolve-exception`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ 
+                                exception_id: exception.id,
+                                action: exception.action,
+                                taxpayer_id: 'current_taxpayer'
+                              })
+                            });
+                            if (response.ok) {
+                              await fetchChecklistsData();
+                            }
+                          } catch (error) {
+                            console.error('Error resolving exception:', error);
+                          }
+                        }}
                         className={`mt-2 text-sm underline hover:opacity-80 ${
                           exception.type === 'error' ? 'text-red-600' :
                           exception.type === 'warning' ? 'text-yellow-600' :

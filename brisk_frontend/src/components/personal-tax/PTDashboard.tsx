@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle, Clock, FileText, TrendingUp, DollarSign } from 'lucide-react';
+import DocumentUpload from './DocumentUpload';
 
 interface KPIData {
   label: string;
@@ -524,7 +525,7 @@ const PTDashboard: React.FC = () => {
             </p>
             <DocumentUpload 
               taxpayerId="current_taxpayer"
-              onUploadComplete={(files) => {
+              onUploadComplete={(files: any) => {
                 console.log('Files uploaded:', files);
               }}
             />
