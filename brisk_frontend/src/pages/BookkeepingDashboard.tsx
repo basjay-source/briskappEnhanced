@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import { 
   LayoutDashboard, Inbox, Banknote, ShoppingCart, Receipt, 
   Users, FolderOpen, BookOpen, Calculator, Building,
@@ -67,16 +68,16 @@ const BookkeepingDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <select className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option>Acme Corp Ltd</option>
               <option>Tech Solutions Inc</option>
               <option>Global Enterprises</option>
             </select>
-            <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <select className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option>Jan 2024</option>
               <option>Dec 2023</option>
               <option>Nov 2023</option>
@@ -85,7 +86,7 @@ const BookkeepingDashboard: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search transactions..."
-                className="border border-gray-300 rounded-lg px-3 py-2 pl-8 text-sm w-64"
+                className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pl-8 text-sm w-64 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
               <div className="absolute left-2 top-2.5 w-4 h-4 text-gray-400">🔍</div>
             </div>
@@ -94,20 +95,21 @@ const BookkeepingDashboard: React.FC = () => {
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
               Quick Add +
             </button>
-            <button className="border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50">
+            <button className="border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white">
               Sync/Feeds
             </button>
-            <button className="border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50">
+            <button className="border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white">
               Alerts/Tasks (3)
             </button>
+            <TopNavigation />
           </div>
         </div>
       </div>
 
       <div className="flex">
-        <div className="w-64 bg-white border-r border-gray-200 min-h-screen">
+        <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
           <div className="p-6">
-            <h1 className="text-xl font-bold text-gray-900 mb-6">Bookkeeping</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Bookkeeping</h1>
             <nav className="space-y-2">
               {menuItems.map((item) => {
                 const Icon = item.icon

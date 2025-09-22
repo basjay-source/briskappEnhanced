@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from 'react'
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Dashboard from '../components/business-tax/Dashboard'
 import EngagementSetup from '../components/business-tax/EngagementSetup'
@@ -72,19 +73,24 @@ const BusinessTaxDashboard: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Left Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-gray-200">
+      <div className="w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-800">Business Tax</h1>
-          <div className="mt-2 space-y-1">
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">{selectedClient}</span>
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-gray-800 dark:text-white">Business Tax</h1>
+              <div className="mt-2 space-y-1">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="font-medium">{selectedClient}</span>
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-500">
+                  {selectedPeriod} • Corporation Tax • {selectedStatus}
+                </div>
+              </div>
             </div>
-            <div className="text-sm text-gray-500">
-              {selectedPeriod} • Corporation Tax • {selectedStatus}
-            </div>
+            <TopNavigation />
           </div>
         </div>
 

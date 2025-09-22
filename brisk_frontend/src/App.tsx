@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './components/theme-provider'
 import LoginPage from './pages/LoginPage'
 import EcosystemHub from './pages/EcosystemHub'
 import AdminDashboard from './pages/AdminDashboard'
@@ -19,10 +20,11 @@ import './App.css'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Routes>
+    <ThemeProvider defaultTheme="light" storageKey="brisk-ui-theme">
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin/*" element={
               <ProtectedRoute>
@@ -89,10 +91,11 @@ function App() {
                 <EcosystemHub />
               </ProtectedRoute>
             } />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

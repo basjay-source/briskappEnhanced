@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import { 
   Shield, 
   Users, 
@@ -62,17 +63,20 @@ const AMLKYCDashboard: React.FC = () => {
   ]
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <div className="w-80 bg-white shadow-lg border-r border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
-              <Shield className="w-6 h-6 text-white" />
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="w-80 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">AML & KYC</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">International Compliance</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">AML & KYC</h1>
-              <p className="text-sm text-gray-500">International Compliance</p>
-            </div>
+            <TopNavigation />
           </div>
         </div>
 

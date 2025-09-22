@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import TopNavigation from '../components/shared/TopNavigation';
 import { 
   LayoutDashboard, User, Briefcase, Users, Home, PiggyBank, 
   TrendingUp, Globe, Shield, Calculator, CreditCard, CheckSquare,
@@ -94,9 +95,9 @@ const PersonalTaxDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Top Bar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <select 
@@ -179,15 +180,16 @@ const PersonalTaxDashboard: React.FC = () => {
             <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
               3 Alerts
             </div>
+            <TopNavigation />
           </div>
         </div>
       </div>
 
       <div className="flex">
         {/* Left Sidebar */}
-        <div className="w-64 bg-white border-r border-gray-200 min-h-screen">
+        <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
           <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Tax</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personal Tax</h2>
             <nav className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;

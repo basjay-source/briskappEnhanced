@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -55,24 +56,27 @@ const DocumentHubDashboard: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 flex">
+    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 flex">
       {/* Left Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
+      <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0">
         {/* Logo */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">D</span>
               </div>
-              <span className="font-bold text-lg text-gray-900">Document Hub</span>
+              <span className="font-bold text-lg text-gray-900 dark:text-white">Document Hub</span>
             </div>
-            <a 
-              href="/admin" 
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← Admin
-            </a>
+            <div className="flex items-center space-x-4">
+              <a 
+                href="/admin" 
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                ← Admin
+              </a>
+              <TopNavigation />
+            </div>
           </div>
         </div>
 

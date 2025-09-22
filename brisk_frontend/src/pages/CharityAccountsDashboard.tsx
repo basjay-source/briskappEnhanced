@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, Settings, Building, Upload, BarChart3, ArrowRightLeft, 
-  Gift, Activity, TrendingDown, DollarSign, Users, FileText, 
-  Calculator, Eye, CheckCircle, Send, Archive, Folder, 
-  PieChart, Target, Plug, BarChart
-} from 'lucide-react';
+import TopNavigation from '../components/shared/TopNavigation';
+import { ChevronRight } from 'lucide-react';
 
 import Dashboard from '../components/charity-accounts/Dashboard';
 import EngagementSetup from '../components/charity-accounts/EngagementSetup';
@@ -60,8 +56,6 @@ const CharityAccountsDashboard: React.FC = () => {
   const [selectedFund, setSelectedFund] = useState<string>('all');
   const [selectedVersion, setSelectedVersion] = useState<'draft' | 'review' | 'final'>('draft');
   const [activeSection, setActiveSection] = useState<string>('dashboard');
-  const [activeSubTab, setActiveSubTab] = useState<string>('');
-  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
   const [entities, setEntities] = useState<Entity[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -139,23 +133,9 @@ const CharityAccountsDashboard: React.FC = () => {
     }
   };
 
-  const toggleMenu = (menuId: string) => {
-    const newExpanded = new Set(expandedMenus);
-    if (newExpanded.has(menuId)) {
-      newExpanded.delete(menuId);
-    } else {
-      newExpanded.add(menuId);
-    }
-    setExpandedMenus(newExpanded);
-  };
 
-  const handleMenuClick = (sectionId: string, subTabId?: string) => {
+  const handleMenuClick = (sectionId: string) => {
     setActiveSection(sectionId);
-    if (subTabId) {
-      setActiveSubTab(subTabId);
-    } else {
-      setActiveSubTab('');
-    }
   };
 
   const renderActiveComponent = () => {
@@ -236,12 +216,12 @@ const CharityAccountsDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Top Bar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-gray-900">Charity/Academy Accounts</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Charity/Academy Accounts</h1>
             
             {/* Entity Switcher */}
             <select
@@ -326,13 +306,14 @@ const CharityAccountsDashboard: React.FC = () => {
               <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Connected</span>
             </div>
             <div className="text-orange-600 font-medium">3 Alerts</div>
+            <TopNavigation />
           </div>
         </div>
       </div>
 
       <div className="flex">
         {/* Left Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 min-h-screen">
+        <div className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
           <div className="p-4">
             <nav className="space-y-1">
               {menuStructure.map((item) => (
@@ -350,7 +331,7 @@ const CharityAccountsDashboard: React.FC = () => {
                       <span>{item.label}</span>
                     </div>
                     {item.hasSubTabs && (
-                      <ChevronRightIcon className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4" />
                     )}
                   </button>
                 </div>

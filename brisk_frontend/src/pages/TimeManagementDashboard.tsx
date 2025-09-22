@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import TopNavigation from '../components/shared/TopNavigation'
 import { 
   BarChart3, 
   Clock, 
@@ -83,18 +84,21 @@ const TimeManagementDashboard: React.FC = () => {
   const ActiveComponent = sections.find(s => s.id === activeSection)?.component || TMDashboard
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Left Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-white" />
+      <div className="w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
+                <Clock className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Time Management</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">& Fees</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Time Management</h1>
-              <p className="text-sm text-gray-600">& Fees</p>
-            </div>
+            <TopNavigation />
           </div>
         </div>
 
