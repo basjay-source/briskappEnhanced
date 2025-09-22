@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Plus, Calculator, TrendingUp, Minus } from 'lucide-react';
+import { Home, Plus, Calculator, TrendingUp, Minus, Save, ArrowLeft } from 'lucide-react';
 
 const UKProperty: React.FC = () => {
   const [activeTab, setActiveTab] = useState('properties');
   const [loading, setLoading] = useState(true);
   const [propertyData, setPropertyData] = useState<any>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    address: '',
+    type: 'residential',
+    rental_income: 0,
+    expenses: 0,
+    mortgage_interest: 0,
+    description: ''
+  });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchPropertyData();
@@ -13,7 +23,8 @@ const UKProperty: React.FC = () => {
   const fetchPropertyData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/personal-tax/uk-property?tax_year=2024-25`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://app-xrzbrdsj.fly.dev';
+      const response = await fetch(`${apiUrl}/api/personal-tax/uk-property?tax_year=2024-25`);
       const data = await response.json();
       setPropertyData(data);
     } catch (error) {
@@ -24,7 +35,51 @@ const UKProperty: React.FC = () => {
   };
 
   const handleAddProperty = () => {
-    console.log('Add property functionality');
+    setShowAddForm(true);
+  };
+
+  const handleSaveProperty = async () => {
+    try {
+      setSaving(true);
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://app-xrzbrdsj.fly.dev';
+      const response = await fetch(`${apiUrl}/api/personal-tax/uk-property`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          tax_year: '2024-25',
+          net_profit: formData.rental_income - formData.expenses - formData.mortgage_interest
+        }),
+      });
+
+      if (response.ok) {
+        await fetchPropertyData();
+        setShowAddForm(false);
+        setFormData({
+          address: '',
+          type: 'residential',
+          rental_income: 0,
+          expenses: 0,
+          mortgage_interest: 0,
+          description: ''
+        });
+      } else {
+        console.error('Failed to save property');
+      }
+    } catch (error) {
+      console.error('Error saving property:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   if (loading) {
@@ -46,6 +101,120 @@ const UKProperty: React.FC = () => {
     { id: 'allowances', label: 'Allowances', icon: Plus },
     { id: 'losses', label: 'Losses', icon: Minus }
   ];
+
+  if (showAddForm) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors flex items-center space-x-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Properties</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Add New Property</h1>
+          </div>
+          <button
+            onClick={handleSaveProperty}
+            disabled={saving}
+            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+          >
+            <Save className="h-4 w-4" />
+            <span>{saving ? 'Saving...' : 'Save Property'}</span>
+          </button>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Property Address</label>
+              <textarea
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                rows={3}
+                placeholder="Enter full property address"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+              <select
+                value={formData.type}
+                onChange={(e) => handleInputChange('type', e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              >
+                <option value="residential">Residential</option>
+                <option value="commercial">Commercial</option>
+                <option value="furnished_holiday_letting">Furnished Holiday Letting</option>
+                <option value="rent_a_room">Rent-a-Room</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Annual Rental Income (£)</label>
+              <input
+                type="number"
+                value={formData.rental_income}
+                onChange={(e) => handleInputChange('rental_income', parseFloat(e.target.value) || 0)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Annual Expenses (£)</label>
+              <input
+                type="number"
+                value={formData.expenses}
+                onChange={(e) => handleInputChange('expenses', parseFloat(e.target.value) || 0)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Mortgage Interest (£)</label>
+              <input
+                type="number"
+                value={formData.mortgage_interest}
+                onChange={(e) => handleInputChange('mortgage_interest', parseFloat(e.target.value) || 0)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                rows={3}
+                placeholder="Additional property details"
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <h4 className="font-medium text-blue-900 mb-2">Calculated Net Profit</h4>
+            <p className="text-2xl font-bold text-blue-600">
+              £{(formData.rental_income - formData.expenses - formData.mortgage_interest).toLocaleString()}
+            </p>
+            <p className="text-sm text-blue-700 mt-1">
+              Rental Income (£{formData.rental_income.toLocaleString()}) - 
+              Expenses (£{formData.expenses.toLocaleString()}) - 
+              Mortgage Interest (£{formData.mortgage_interest.toLocaleString()})
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -178,13 +347,21 @@ const UKProperty: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Rental Income</label>
                     <input
                       type="number"
-                        />
+                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Premiums</label>
                     <input
                       type="number"
-                        />
+                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
                 </div>
               </div>
@@ -195,19 +372,31 @@ const UKProperty: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Repairs & Maintenance</label>
                     <input
                       type="number"
-                        />
+                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Management Fees</label>
                     <input
                       type="number"
-                        />
+                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Insurance</label>
                     <input
                       type="number"
-                        />
+                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
                 </div>
               </div>

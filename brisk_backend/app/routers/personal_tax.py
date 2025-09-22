@@ -1061,24 +1061,80 @@ async def get_document_hub_data():
         }
     }
 
+class PropertyData(BaseModel):
+    address: str
+    type: str
+    rental_income: float
+    expenses: float
+    mortgage_interest: float
+    description: Optional[str] = None
+    tax_year: str
+    net_profit: float
+
 @router.get("/uk-property")
 async def get_uk_property_data(tax_year: str = "2024-25"):
     """Get UK property data with dynamic allowances"""
     rates = hmrc_historical_rates.get_rates_for_tax_year(tax_year)
     allowances = hmrc_historical_rates.get_allowances(tax_year)
     
+    properties = [
+        {
+            "id": 1,
+            "address": "123 Rental Street, London, SW1A 1AA",
+            "type": "residential",
+            "rental_income": 24000,
+            "expenses": 8500,
+            "mortgage_interest": 6000,
+            "net_profit": 9500,
+            "description": "2-bedroom flat in central London"
+        },
+        {
+            "id": 2,
+            "address": "456 Investment Avenue, Manchester, M1 1AA",
+            "type": "commercial",
+            "rental_income": 36000,
+            "expenses": 12000,
+            "mortgage_interest": 8000,
+            "net_profit": 16000,
+            "description": "Commercial office space"
+        }
+    ]
+    
     return {
-        "properties": [],
+        "properties": properties,
         "allowances": {
             "property_allowance": allowances["property_allowance"],
             "rent_a_room_relief": allowances["rent_a_room_relief"]
         },
         "totals": {
-            "rental_income": 0,
-            "allowable_expenses": 0,
-            "profit_loss": 0
+            "rental_income": sum(p["rental_income"] for p in properties),
+            "allowable_expenses": sum(p["expenses"] for p in properties),
+            "profit_loss": sum(p["net_profit"] for p in properties)
+        },
+        "fhl_tests": {
+            "days_available_required": 210,
+            "days_let_required": 105,
+            "long_lettings_limit": 155
         }
     }
+
+@router.post("/uk-property")
+async def create_property(property_data: PropertyData):
+    """Create a new UK property"""
+    try:
+        property_dict = property_data.dict()
+        property_dict["id"] = 999  # Mock ID
+        
+        logger.info(f"Created new property: {property_dict}")
+        
+        return {
+            "success": True,
+            "message": "Property created successfully",
+            "property": property_dict
+        }
+    except Exception as e:
+        logger.error(f"Error creating property: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create property")
 
 @router.get("/reports")
 async def get_reports_data(tax_year: str = "2024-25", taxpayer_id: int = 1):

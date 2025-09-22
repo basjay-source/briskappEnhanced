@@ -12,7 +12,7 @@ import TaxpayerProfile from '../components/personal-tax/TaxpayerProfile';
 import Employment from '../components/personal-tax/Employment';
 import SelfEmploymentCleanFixed from '../components/personal-tax/SelfEmploymentCleanFixed';
 import Partnerships from '../components/personal-tax/Partnerships';
-import UKProperty from '../components/personal-tax/UKProperty';
+import UKProperty from '../components/personal-tax/UKPropertyFinal';
 import SavingsInvestmentsClean from '../components/personal-tax/SavingsInvestmentsClean';
 import CapitalGains from '../components/personal-tax/CapitalGains';
 import ForeignIncome from '../components/personal-tax/ForeignIncome';
