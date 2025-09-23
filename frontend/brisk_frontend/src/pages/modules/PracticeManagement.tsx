@@ -17,7 +17,8 @@ import {
   Shield,
   TrendingUp,
   ChevronDown,
-  BarChart3
+  BarChart3,
+  Heart
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
