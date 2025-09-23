@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from app.database import create_tables
-from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat
+from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat, auth
 from app.middleware.tenant import TenantMiddleware
 from app.middleware.auth import AuthMiddleware
 
@@ -32,6 +32,7 @@ app.add_middleware(
 app.add_middleware(TenantMiddleware)
 app.add_middleware(AuthMiddleware)
 
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(accounts.router, prefix="/api/v1/accounts", tags=["Accounts Production"])
 app.include_router(tax_ct.router, prefix="/api/v1/tax/ct", tags=["Corporation Tax"])
 app.include_router(tax_sa.router, prefix="/api/v1/tax/sa", tags=["Personal Tax"])

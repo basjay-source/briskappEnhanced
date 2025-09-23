@@ -11,9 +11,25 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    navigate('/app')
+    
+    if (email === 'admin@briskaccountants.com' && password === 'brisk2024') {
+      const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGVtby11c2VyIiwiZW1haWwiOiJhZG1pbkBicmlza2FjY291bnRhbnRzLmNvbSIsInRlbmFudF9pZCI6ImRlZmF1bHQtdGVuYW50IiwiZXhwIjoxNzU4NjgyMDM4fQ.demo-signature'
+      const mockUser = {
+        id: 'demo-user',
+        email: 'admin@briskaccountants.com',
+        first_name: 'Admin',
+        last_name: 'User',
+        tenant_id: 'default-tenant'
+      }
+      
+      localStorage.setItem('access_token', mockToken)
+      localStorage.setItem('user', JSON.stringify(mockUser))
+      navigate('/app')
+    } else {
+      alert('Invalid credentials. Please use: admin@briskaccountants.com / brisk2024')
+    }
   }
 
   return (
