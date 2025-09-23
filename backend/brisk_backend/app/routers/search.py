@@ -114,3 +114,88 @@ def get_search_suggestions(
         suggestions.extend([name[0] for name in client_names])
     
     return {"suggestions": list(set(suggestions))[:10]}
+
+@router.get("/search/bookkeeping")
+def search_bookkeeping_data(
+    q: str = Query(..., description="Search query"),
+    type: Optional[str] = Query(None, description="Data type: transactions, invoices, bills, etc."),
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    from app.models import BankTransaction, Invoice, Bill
+    
+    results = {"transactions": [], "invoices": [], "bills": [], "total_results": 0}
+    
+    if not type or type == "transactions":
+        transactions = db.query(BankTransaction).filter(
+            BankTransaction.tenant_id == request.state.tenant_id,
+            BankTransaction.description.ilike(f"%{q}%")
+        ).limit(10).all()
+        results["transactions"] = [
+            {
+                "id": txn.id,
+                "description": txn.description,
+                "amount": float(txn.amount or 0),
+                "date": txn.transaction_date.isoformat() if txn.transaction_date else None,
+                "type": "transaction"
+            } for txn in transactions
+        ]
+    
+    if not type or type == "invoices":
+        invoices = db.query(Invoice).filter(
+            Invoice.tenant_id == request.state.tenant_id,
+            Invoice.invoice_number.ilike(f"%{q}%")
+        ).limit(10).all()
+        results["invoices"] = [
+            {
+                "id": invoice.id,
+                "invoice_number": invoice.invoice_number,
+                "client_name": invoice.client_name,
+                "amount": float(invoice.total_amount or 0),
+                "type": "invoice"
+            } for invoice in invoices
+        ]
+    
+    results["total_results"] = len(results["transactions"]) + len(results["invoices"]) + len(results["bills"])
+    return results
+
+@router.get("/search/payroll")
+def search_payroll_data(
+    q: str = Query(..., description="Search query"),
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    from app.models import Employee, PayRun
+    
+    results = {"employees": [], "pay_runs": [], "total_results": 0}
+    
+    employees = db.query(Employee).filter(
+        Employee.tenant_id == request.state.tenant_id,
+        Employee.first_name.ilike(f"%{q}%") | Employee.last_name.ilike(f"%{q}%")
+    ).limit(10).all()
+    results["employees"] = [
+        {
+            "id": emp.id,
+            "name": f"{emp.first_name} {emp.last_name}",
+            "employee_number": emp.employee_number,
+            "department": emp.department,
+            "type": "employee"
+        } for emp in employees
+    ]
+    
+    pay_runs = db.query(PayRun).filter(
+        PayRun.tenant_id == request.state.tenant_id,
+        PayRun.pay_period.ilike(f"%{q}%")
+    ).limit(10).all()
+    results["pay_runs"] = [
+        {
+            "id": run.id,
+            "pay_period": run.pay_period,
+            "status": run.status,
+            "employee_count": run.employee_count,
+            "type": "pay_run"
+        } for run in pay_runs
+    ]
+    
+    results["total_results"] = len(results["employees"]) + len(results["pay_runs"])
+    return results

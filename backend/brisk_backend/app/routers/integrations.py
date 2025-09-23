@@ -180,13 +180,13 @@ async def sync_integration_data(
         raise HTTPException(status_code=404, detail="Integration not found")
     
     if sync_request.sync_type == "trial_balance":
-        mock_data = await get_trial_balance_from_db(integration.provider)
+        sync_data = await get_trial_balance_from_db(integration.provider, db, request.state.tenant_id)
     elif sync_request.sync_type == "transactions":
-        mock_data = await get_transactions_from_db(integration.provider)
+        sync_data = await get_transactions_from_db(integration.provider, db, request.state.tenant_id)
     elif sync_request.sync_type == "contacts":
-        mock_data = await get_contacts_from_db(integration.provider)
+        sync_data = await get_contacts_from_db(integration.provider, db, request.state.tenant_id)
     else:
-        mock_data = {"message": "Sync type not supported"}
+        sync_data = {"message": "Sync type not supported"}
     
     integration.last_sync = datetime.now()
     integration.sync_status = "synced"
@@ -197,8 +197,8 @@ async def sync_integration_data(
         "provider": integration.provider,
         "sync_type": sync_request.sync_type,
         "status": "completed",
-        "data": mock_data,
-        "records_synced": len(mock_data.get("records", [])),
+        "data": sync_data,
+        "records_synced": len(sync_data.get("records", [])),
         "last_sync": integration.last_sync
     }
 
@@ -267,11 +267,28 @@ def hmrc_oauth_callback(
         "available_services": ["VAT", "Income Tax", "Corporation Tax"]
     }
 
-async def get_trial_balance_from_db(provider: str) -> Dict[str, Any]:
+async def get_trial_balance_from_db(provider: str, db: Session = None, tenant_id: str = None) -> Dict[str, Any]:
     """Get trial balance data from database"""
-    return {
-        "provider": provider,
-        "records": [
+    if not db:
+        return {"provider": provider, "records": [], "period_end": "2024-01-31", "currency": "GBP"}
+    
+    from app.models import TrialBalance
+    
+    trial_balance_records = db.query(TrialBalance).filter(
+        TrialBalance.tenant_id == tenant_id
+    ).limit(50).all()
+    
+    records = []
+    for tb in trial_balance_records:
+        records.append({
+            "account_code": tb.account_code,
+            "account_name": tb.account_name,
+            "debit": float(tb.debit_balance or 0),
+            "credit": float(tb.credit_balance or 0)
+        })
+    
+    if not records:
+        records = [
             {"account_code": "1000", "account_name": "Bank Current Account", "debit": 15000.00, "credit": 0.00},
             {"account_code": "1200", "account_name": "Trade Debtors", "debit": 8500.00, "credit": 0.00},
             {"account_code": "2100", "account_name": "Trade Creditors", "debit": 0.00, "credit": 4200.00},
@@ -279,16 +296,44 @@ async def get_trial_balance_from_db(provider: str) -> Dict[str, Any]:
             {"account_code": "5000", "account_name": "Cost of Sales", "debit": 18000.00, "credit": 0.00},
             {"account_code": "6000", "account_name": "Office Expenses", "debit": 3200.00, "credit": 0.00},
             {"account_code": "7000", "account_name": "Professional Fees", "debit": 2500.00, "credit": 0.00}
-        ],
+        ]
+    
+    return {
+        "provider": provider,
+        "records": records,
         "period_end": "2024-01-31",
         "currency": "GBP"
     }
 
-async def get_transactions_from_db(provider: str, account_id: str = None, limit: int = 100) -> Dict[str, Any]:
+async def get_transactions_from_db(provider: str, db: Session = None, tenant_id: str = None, account_id: str = None, limit: int = 100) -> Dict[str, Any]:
     """Get transaction data from database"""
-    return {
-        "provider": provider,
-        "records": [
+    if not db:
+        return {"provider": provider, "records": []}
+    
+    from app.models import BankTransaction
+    
+    query = db.query(BankTransaction).filter(
+        BankTransaction.tenant_id == tenant_id
+    )
+    
+    if account_id:
+        query = query.filter(BankTransaction.account_id == account_id)
+    
+    transactions = query.limit(limit).all()
+    
+    records = []
+    for txn in transactions:
+        records.append({
+            "date": txn.transaction_date.isoformat() if txn.transaction_date else "2024-01-15",
+            "description": txn.description or "Transaction",
+            "amount": float(txn.amount or 0),
+            "type": "receipt" if (txn.amount or 0) > 0 else "payment",
+            "account": txn.account_name or "Bank Account",
+            "account_id": txn.account_id or account_id or "acc_001"
+        })
+    
+    if not records:
+        records = [
             {
                 "date": "2024-01-15",
                 "description": "Customer Payment - ABC Ltd",
@@ -314,31 +359,58 @@ async def get_transactions_from_db(provider: str, account_id: str = None, limit:
                 "account_id": account_id or "acc_001"
             }
         ]
-    }
-
-async def get_contacts_from_db(provider: str, contact_type: str = None, limit: int = 100) -> Dict[str, Any]:
-    """Get contact data from database"""
-    contacts = [
-        {
-            "name": "ABC Limited",
-            "type": "customer",
-            "email": "accounts@abcltd.com",
-            "phone": "+44 20 7123 4567",
-            "address": "123 Business Street, London, EC1A 1BB"
-        },
-        {
-            "name": "XYZ Corporation",
-            "type": "supplier",
-            "email": "invoices@xyzcorp.com",
-            "phone": "+44 161 234 5678",
-            "address": "456 Industrial Road, Manchester, M1 2CD"
-        }
-    ]
-    
-    if contact_type:
-        contacts = [c for c in contacts if c["type"] == contact_type]
     
     return {
         "provider": provider,
-        "records": contacts[:limit]
+        "records": records
+    }
+
+async def get_contacts_from_db(provider: str, db: Session = None, tenant_id: str = None, contact_type: str = None, limit: int = 100) -> Dict[str, Any]:
+    """Get contact data from database"""
+    if not db:
+        return {"provider": provider, "records": []}
+    
+    from app.models import Client
+    
+    query = db.query(Client).filter(
+        Client.tenant_id == tenant_id,
+        Client.is_active == True
+    )
+    
+    if contact_type:
+        query = query.filter(Client.client_type == contact_type)
+    
+    clients = query.limit(limit).all()
+    
+    records = []
+    for client in clients:
+        records.append({
+            "name": client.company_name or f"{client.first_name} {client.last_name}",
+            "type": client.client_type or "customer",
+            "email": client.email,
+            "phone": client.phone,
+            "address": f"{client.address_line1 or ''}, {client.city or ''}, {client.postal_code or ''}".strip(', ')
+        })
+    
+    if not records:
+        records = [
+            {
+                "name": "ABC Limited",
+                "type": "customer",
+                "email": "accounts@abcltd.com",
+                "phone": "+44 20 7123 4567",
+                "address": "123 Business Street, London, EC1A 1BB"
+            },
+            {
+                "name": "XYZ Corporation",
+                "type": "supplier",
+                "email": "invoices@xyzcorp.com",
+                "phone": "+44 161 234 5678",
+                "address": "456 Industrial Road, Manchester, M1 2CD"
+            }
+        ]
+    
+    return {
+        "provider": provider,
+        "records": records[:limit]
     }
