@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import KPICard from '@/components/KPICard'
 
 export default function EcosystemHub() {
   const modules = [
@@ -174,23 +175,250 @@ export default function EcosystemHub() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {kpis.map((kpi, index) => {
-          const Icon = kpi.icon
-          return (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                    <p className="text-2xl font-bold">{kpi.value}</p>
-                    <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
+        <KPICard
+          title="Total Revenue"
+          value="£2.4M"
+          change="+12.5%"
+          icon={TrendingUp}
+          color="text-green-600"
+          drillDownData={{
+            title: "Revenue Analytics",
+            content: (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-900">Revenue Sources</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Practice Management</span>
+                        <span className="font-semibold">£850,450</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Bookkeeping</span>
+                        <span className="font-semibold">£645,230</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Tax Services</span>
+                        <span className="font-semibold">£512,350</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>AML Services</span>
+                        <span className="font-semibold">£387,970</span>
+                      </div>
+                    </div>
                   </div>
-                  <Icon className={`h-8 w-8 ${kpi.color}`} />
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-900">Growth Metrics</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>New MRR</span>
+                        <span className="font-semibold text-green-600">+£23,450</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Expansion MRR</span>
+                        <span className="font-semibold text-green-600">+£15,230</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Churn MRR</span>
+                        <span className="font-semibold text-red-600">-£8,920</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )
-        })}
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    View Detailed Report
+                  </button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    Export Data
+                  </button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="Active Clients"
+          value="1,247"
+          change="+8.3%"
+          icon={Users}
+          color="text-blue-600"
+          drillDownData={{
+            title: "Client Analytics",
+            content: (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-900">Client Segments</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Enterprise</span>
+                        <span className="font-semibold">247</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>SME</span>
+                        <span className="font-semibold">645</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Sole Traders</span>
+                        <span className="font-semibold">355</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-900">Client Health</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Healthy</span>
+                        <span className="font-semibold text-green-600">1,089</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>At Risk</span>
+                        <span className="font-semibold text-yellow-600">127</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Churned</span>
+                        <span className="font-semibold text-red-600">31</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    View Client List
+                  </button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    Export Report
+                  </button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="Completion Rate"
+          value="94.2%"
+          change="+2.1%"
+          icon={BarChart3}
+          color="text-purple-600"
+          drillDownData={{
+            title: "Task Completion Analytics",
+            content: (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-900">By Module</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Bookkeeping</span>
+                        <span className="font-semibold">96.8%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Tax Returns</span>
+                        <span className="font-semibold">94.2%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Payroll</span>
+                        <span className="font-semibold">92.1%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>AML Compliance</span>
+                        <span className="font-semibold">89.7%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-900">Performance Trends</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>This Week</span>
+                        <span className="font-semibold">94.2%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Last Week</span>
+                        <span className="font-semibold">92.1%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Monthly Avg</span>
+                        <span className="font-semibold">93.5%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    View Task Details
+                  </button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    Performance Report
+                  </button>
+                </div>
+              </div>
+            )
+          }}
+        />
+        <KPICard
+          title="Avg Response Time"
+          value="2.3h"
+          change="-15.2%"
+          icon={Clock}
+          color="text-orange-600"
+          drillDownData={{
+            title: "Response Time Analytics",
+            content: (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-900">By Channel</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Email</span>
+                        <span className="font-semibold">1.8h</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Phone</span>
+                        <span className="font-semibold">0.5h</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Portal</span>
+                        <span className="font-semibold">3.2h</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Chat</span>
+                        <span className="font-semibold">0.3h</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-orange-900">SLA Performance</h4>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span>Within 1h</span>
+                        <span className="font-semibold text-green-600">45%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Within 4h</span>
+                        <span className="font-semibold text-green-600">78%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Within 24h</span>
+                        <span className="font-semibold text-green-600">94%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    View Response Log
+                  </button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    SLA Report
+                  </button>
+                </div>
+              </div>
+            )
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
