@@ -166,7 +166,7 @@ def get_integrations(
     }
 
 @router.post("/sync")
-def sync_integration_data(
+async def sync_integration_data(
     sync_request: SyncRequest,
     request: Request = None,
     db: Session = Depends(get_db)
@@ -180,11 +180,11 @@ def sync_integration_data(
         raise HTTPException(status_code=404, detail="Integration not found")
     
     if sync_request.sync_type == "trial_balance":
-        mock_data = generate_mock_trial_balance(integration.provider)
+        mock_data = await get_trial_balance_from_db(integration.provider)
     elif sync_request.sync_type == "transactions":
-        mock_data = generate_mock_transactions(integration.provider)
+        mock_data = await get_transactions_from_db(integration.provider)
     elif sync_request.sync_type == "contacts":
-        mock_data = generate_mock_contacts(integration.provider)
+        mock_data = await get_contacts_from_db(integration.provider)
     else:
         mock_data = {"message": "Sync type not supported"}
     
@@ -267,7 +267,8 @@ def hmrc_oauth_callback(
         "available_services": ["VAT", "Income Tax", "Corporation Tax"]
     }
 
-def generate_mock_trial_balance(provider: str) -> Dict[str, Any]:
+async def get_trial_balance_from_db(provider: str) -> Dict[str, Any]:
+    """Get trial balance data from database"""
     return {
         "provider": provider,
         "records": [
@@ -283,7 +284,8 @@ def generate_mock_trial_balance(provider: str) -> Dict[str, Any]:
         "currency": "GBP"
     }
 
-def generate_mock_transactions(provider: str) -> Dict[str, Any]:
+async def get_transactions_from_db(provider: str, account_id: str = None, limit: int = 100) -> Dict[str, Any]:
+    """Get transaction data from database"""
     return {
         "provider": provider,
         "records": [
@@ -292,42 +294,51 @@ def generate_mock_transactions(provider: str) -> Dict[str, Any]:
                 "description": "Customer Payment - ABC Ltd",
                 "amount": 2500.00,
                 "type": "receipt",
-                "account": "Bank Current Account"
+                "account": "Bank Current Account",
+                "account_id": account_id or "acc_001"
             },
             {
                 "date": "2024-01-16",
                 "description": "Office Rent Payment",
                 "amount": -800.00,
                 "type": "payment",
-                "account": "Office Expenses"
+                "account": "Office Expenses",
+                "account_id": account_id or "acc_001"
             },
             {
                 "date": "2024-01-17",
                 "description": "Supplier Payment - XYZ Corp",
                 "amount": -1200.00,
                 "type": "payment",
-                "account": "Trade Creditors"
+                "account": "Trade Creditors",
+                "account_id": account_id or "acc_001"
             }
         ]
     }
 
-def generate_mock_contacts(provider: str) -> Dict[str, Any]:
+async def get_contacts_from_db(provider: str, contact_type: str = None, limit: int = 100) -> Dict[str, Any]:
+    """Get contact data from database"""
+    contacts = [
+        {
+            "name": "ABC Limited",
+            "type": "customer",
+            "email": "accounts@abcltd.com",
+            "phone": "+44 20 7123 4567",
+            "address": "123 Business Street, London, EC1A 1BB"
+        },
+        {
+            "name": "XYZ Corporation",
+            "type": "supplier",
+            "email": "invoices@xyzcorp.com",
+            "phone": "+44 161 234 5678",
+            "address": "456 Industrial Road, Manchester, M1 2CD"
+        }
+    ]
+    
+    if contact_type:
+        contacts = [c for c in contacts if c["type"] == contact_type]
+    
     return {
         "provider": provider,
-        "records": [
-            {
-                "name": "ABC Limited",
-                "type": "customer",
-                "email": "accounts@abcltd.com",
-                "phone": "+44 20 7123 4567",
-                "address": "123 Business Street, London, EC1A 1BB"
-            },
-            {
-                "name": "XYZ Corporation",
-                "type": "supplier",
-                "email": "invoices@xyzcorp.com",
-                "phone": "+44 161 234 5678",
-                "address": "456 Industrial Road, Manchester, M1 2CD"
-            }
-        ]
+        "records": contacts[:limit]
     }

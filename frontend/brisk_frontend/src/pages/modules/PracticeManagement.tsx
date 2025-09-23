@@ -620,7 +620,206 @@ export default function PracticeManagement() {
           <CardDescription>Analyze practice performance and efficiency</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Analytics dashboard will be implemented here.</p>
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-900">Practice Analytics</h3>
+              <div className="flex gap-2">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  Export Report
+                </button>
+                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  Schedule Report
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <KPICard
+                title="Practice Revenue"
+                value="£847,230"
+                change="+12.5%"
+                icon={TrendingUp}
+                color="text-green-600"
+                drillDownData={{
+                  title: "Practice Revenue Breakdown",
+                  description: "Detailed breakdown of practice revenue by service type and monthly trends",
+                  content: (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-blue-900">Revenue by Service</h4>
+                          <div className="mt-2 space-y-2">
+                            <div className="flex justify-between">
+                              <span>Advisory Services</span>
+                              <span className="font-semibold">£345,120</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Compliance</span>
+                              <span className="font-semibold">£234,560</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Project Work</span>
+                              <span className="font-semibold">£167,890</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Retainer Fees</span>
+                              <span className="font-semibold">£99,660</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="bg-orange-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
+                          <div className="mt-2 space-y-2">
+                            <div className="flex justify-between">
+                              <span>January</span>
+                              <span className="font-semibold">£78,450</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>February</span>
+                              <span className="font-semibold">£82,340</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>March</span>
+                              <span className="font-semibold">£89,120</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+              <KPICard
+                title="Client Satisfaction"
+                value="4.8/5"
+                change="+0.2"
+                icon={Heart}
+                color="text-pink-600"
+                drillDownData={{
+                  title: "Client Satisfaction Analysis",
+                  description: "Detailed analysis of client satisfaction metrics and feedback",
+                  content: (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-900">Satisfaction Breakdown</h4>
+                        <div className="mt-2 space-y-2">
+                          <div className="flex justify-between">
+                            <span>Service Quality</span>
+                            <span className="font-semibold">4.9/5</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Response Time</span>
+                            <span className="font-semibold">4.7/5</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Value for Money</span>
+                            <span className="font-semibold">4.6/5</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+              <KPICard
+                title="Team Utilization"
+                value="87.3%"
+                change="+5.2%"
+                icon={Users}
+                color="text-blue-600"
+                drillDownData={{
+                  title: "Team Utilization Details",
+                  description: "Detailed breakdown of team utilization by role and department",
+                  content: (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-900">Utilization by Role</h4>
+                        <div className="mt-2 space-y-2">
+                          <div className="flex justify-between">
+                            <span>Senior Partners</span>
+                            <span className="font-semibold">92.1%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Managers</span>
+                            <span className="font-semibold">89.4%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Associates</span>
+                            <span className="font-semibold">84.7%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+              <KPICard
+                title="Project Completion"
+                value="94.2%"
+                change="+3.1%"
+                icon={BarChart3}
+                color="text-purple-600"
+                drillDownData={{
+                  title: "Project Completion Analysis",
+                  description: "Analysis of project completion rates by type and timeline",
+                  content: (
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-900">Completion by Type</h4>
+                        <div className="mt-2 space-y-2">
+                          <div className="flex justify-between">
+                            <span>Tax Projects</span>
+                            <span className="font-semibold">96.8%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Advisory Projects</span>
+                            <span className="font-semibold">93.2%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Compliance Projects</span>
+                            <span className="font-semibold">91.7%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <h4 className="text-lg font-semibold mb-4">Revenue Trends</h4>
+                <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
+                  <span className="text-gray-500">Revenue Chart Placeholder</span>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <h4 className="text-lg font-semibold mb-4">Client Growth</h4>
+                <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
+                  <span className="text-gray-500">Client Growth Chart Placeholder</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">£2,847</div>
+                  <div className="text-sm text-gray-600">Average Project Value</div>
+                </div>
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <div className="text-2xl font-bold text-orange-600">12.3</div>
+                  <div className="text-sm text-gray-600">Days Average Completion</div>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">98.7%</div>
+                  <div className="text-sm text-gray-600">Client Retention Rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -647,7 +846,123 @@ export default function PracticeManagement() {
           <CardDescription>Get intelligent insights for practice optimization</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">AI adviser functionality will be implemented here.</p>
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-900">Ask your Practice Manager</h3>
+              <div className="flex gap-2">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  New Conversation
+                </button>
+                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  View History
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold">AI</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Practice Management AI Adviser</h4>
+                  <p className="text-sm text-gray-600">Specialized in practice operations, client management, and business strategy</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Practice workflow optimization and automation strategies</li>
+                    <li>• Client onboarding and relationship management best practices</li>
+                    <li>• Resource allocation and team utilization analysis</li>
+                    <li>• Business development and growth planning</li>
+                    <li>• Compliance and risk management frameworks</li>
+                    <li>• Performance metrics and KPI tracking</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 text-sm">You</span>
+                  </div>
+                  <div className="flex-1">
+                    <textarea
+                      className="w-full p-3 border rounded-lg resize-none"
+                      rows={3}
+                      placeholder="Ask me anything about practice management, client relationships, workflow optimization, or business strategy..."
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                      Workflow Analysis
+                    </button>
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                      Client Strategy
+                    </button>
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                      Performance Review
+                    </button>
+                  </div>
+                  <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
+                <div className="space-y-3">
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
+                    <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
+                  </div>
+                  <div className="p-3 bg-orange-50 rounded-lg">
+                    <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
+                    <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
+                    <p className="text-xs text-green-700 mt-1">Implementing weekly check-ins could increase client satisfaction scores by 15%.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <h4 className="text-lg font-semibold mb-4">Recommended Actions</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Review high-risk client accounts</p>
+                      <p className="text-xs text-gray-600">3 clients showing payment delays</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Update service agreements</p>
+                      <p className="text-xs text-gray-600">12 agreements due for renewal</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Schedule team training</p>
+                      <p className="text-xs text-gray-600">New compliance requirements</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -801,7 +1116,256 @@ export default function PracticeManagement() {
           <CardDescription>Generate comprehensive practice management reports</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Reports functionality will be implemented here.</p>
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-900">Practice Reports</h3>
+              <div className="flex gap-2">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  Generate Report
+                </button>
+                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  Schedule Reports
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600">📊</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Financial Reports</h4>
+                    <p className="text-sm text-gray-600">Revenue, profitability, and financial performance</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Monthly P&L</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Cash Flow Report</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Budget vs Actual</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Fee Analysis</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <span className="text-orange-600">👥</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Client Reports</h4>
+                    <p className="text-sm text-gray-600">Client analysis and relationship metrics</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Client Portfolio</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Satisfaction Survey</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Retention Analysis</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Service Utilization</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <span className="text-green-600">⚡</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Performance Reports</h4>
+                    <p className="text-sm text-gray-600">Team productivity and efficiency metrics</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Team Utilization</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Project Completion</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Time Analysis</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Quality Metrics</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <span className="text-purple-600">📋</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Compliance Reports</h4>
+                    <p className="text-sm text-gray-600">Regulatory and compliance tracking</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>AML Compliance</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>GDPR Audit</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Professional Standards</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Risk Assessment</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <span className="text-indigo-600">📈</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Business Intelligence</h4>
+                    <p className="text-sm text-gray-600">Strategic insights and analytics</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Market Analysis</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Competitive Benchmarking</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Growth Opportunities</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Trend Analysis</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                    <span className="text-red-600">🎯</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Custom Reports</h4>
+                    <p className="text-sm text-gray-600">Build your own reports and dashboards</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Report Builder</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Open</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Saved Templates</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">View</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Data Export</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Configure</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>API Access</span>
+                    <span className="text-blue-600 hover:underline cursor-pointer">Setup</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <h4 className="text-lg font-semibold mb-4">Recent Reports</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-2">Report Name</th>
+                      <th className="text-left py-2">Type</th>
+                      <th className="text-left py-2">Generated</th>
+                      <th className="text-left py-2">Status</th>
+                      <th className="text-left py-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-2">Monthly Financial Summary</td>
+                      <td className="py-2">Financial</td>
+                      <td className="py-2">2024-03-15</td>
+                      <td className="py-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
+                      </td>
+                      <td className="py-2">
+                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
+                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                      </td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2">Client Satisfaction Survey</td>
+                      <td className="py-2">Client</td>
+                      <td className="py-2">2024-03-14</td>
+                      <td className="py-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
+                      </td>
+                      <td className="py-2">
+                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
+                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                      </td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2">Team Utilization Report</td>
+                      <td className="py-2">Performance</td>
+                      <td className="py-2">2024-03-13</td>
+                      <td className="py-2">
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">Processing</span>
+                      </td>
+                      <td className="py-2">
+                        <button className="text-gray-400 text-sm mr-2">View</button>
+                        <button className="text-gray-400 text-sm">Download</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

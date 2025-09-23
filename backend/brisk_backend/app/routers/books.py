@@ -111,7 +111,7 @@ def create_bank_connection(
     }
 
 @router.post("/bank-feeds/sync/{connection_id}")
-def sync_bank_feed(
+async def sync_bank_feed(
     connection_id: str,
     request: Request = None,
     db: Session = Depends(get_db)
@@ -133,28 +133,10 @@ def sync_bank_feed(
     imported_count = len(existing_transactions)
     
     if imported_count == 0:
-        sample_transactions = [
-            {
-                "date": "2024-01-15",
-                "description": "Customer Payment - INV001",
-                "amount": 1250.00,
-                "type": "credit"
-            },
-            {
-                "date": "2024-01-16", 
-                "description": "Office Rent",
-                "amount": -800.00,
-                "type": "debit"
-            },
-            {
-                "date": "2024-01-17",
-                "description": "Supplier Payment - ABC Ltd",
-                "amount": -450.00,
-                "type": "debit"
-            }
-        ]
+        # In a real implementation, this would fetch actual bank transactions from the bank's API
+        real_transactions = []
         
-        for txn in sample_transactions:
+        for txn in real_transactions:
             journal_entry = JournalEntry(
                 tenant_id=request.state.tenant_id,
                 company_id=connection.company_id,
@@ -265,26 +247,10 @@ def sync_ecommerce_data(
     ).all()
     
     if len(existing_sales) == 0:
-        sample_sales_data = [
-            {
-                "order_id": "AMZ-001",
-                "date": "2024-01-15",
-                "gross_sales": 150.00,
-                "fees": 15.00,
-                "net_settlement": 135.00,
-                "platform": connection.platform
-            },
-            {
-                "order_id": "AMZ-002", 
-                "date": "2024-01-16",
-                "gross_sales": 89.99,
-                "fees": 9.00,
-                "net_settlement": 80.99,
-                "platform": connection.platform
-            }
-        ]
+        # In a real implementation, this would fetch actual sales data from the e-commerce platform's API
+        real_sales_data = []
         
-        for sale in sample_sales_data:
+        for sale in real_sales_data:
             journal_entry = JournalEntry(
                 tenant_id=request.state.tenant_id,
                 company_id=connection.company_id,

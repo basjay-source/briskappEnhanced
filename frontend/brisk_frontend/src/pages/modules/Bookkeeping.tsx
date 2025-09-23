@@ -4167,6 +4167,32 @@ export default function Bookkeeping() {
           </div>
         </div>
 
+        <SearchFilterHeader
+          searchPlaceholder="Search purchase orders by supplier, amount, status..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Category',
+              options: categoryOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
+
         <div className="grid gap-6 md:grid-cols-4">
           <Card>
             <CardHeader>
@@ -4568,6 +4594,32 @@ export default function Bookkeeping() {
           </div>
         </div>
 
+        <SearchFilterHeader
+          searchPlaceholder="Search bank accounts by name, bank, account number..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
+
         <div className="grid gap-6 md:grid-cols-4">
           <Card>
             <CardHeader>
@@ -4675,6 +4727,32 @@ export default function Bookkeeping() {
             </Button>
           </div>
         </div>
+
+        <SearchFilterHeader
+          searchPlaceholder="Search transactions by description, amount, category..."
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          filters={[
+            {
+              label: 'Status',
+              options: statusOptions,
+              value: selectedStatus,
+              onChange: setSelectedStatus
+            },
+            {
+              label: 'Type',
+              options: typeOptions,
+              value: selectedCategory,
+              onChange: setSelectedCategory
+            }
+          ]}
+          dateRange={{
+            from: dateFrom,
+            to: dateTo,
+            onFromChange: setDateFrom,
+            onToChange: setDateTo
+          }}
+        />
 
         <div className="grid gap-6 md:grid-cols-4">
           <Card>
