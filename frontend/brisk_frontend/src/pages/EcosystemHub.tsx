@@ -12,7 +12,6 @@ import {
   ArrowRight,
   TrendingUp,
   Clock,
-  AlertTriangle,
   Settings,
   Heart
 } from 'lucide-react'
@@ -121,36 +120,6 @@ export default function EcosystemHub() {
     }
   ]
 
-  const kpis = [
-    {
-      title: 'Active Jobs',
-      value: '24',
-      change: '+12%',
-      icon: Briefcase,
-      color: 'text-blue-600'
-    },
-    {
-      title: 'Overdue Tasks',
-      value: '3',
-      change: '-25%',
-      icon: AlertTriangle,
-      color: 'text-red-600'
-    },
-    {
-      title: 'This Week Hours',
-      value: '156',
-      change: '+8%',
-      icon: Clock,
-      color: 'text-green-600'
-    },
-    {
-      title: 'Revenue MTD',
-      value: '£45,200',
-      change: '+15%',
-      icon: TrendingUp,
-      color: 'text-purple-600'
-    }
-  ]
 
   const recentActivity = [
     { action: 'VAT return completed', client: 'ABC Ltd', time: '2 hours ago' },
@@ -183,6 +152,7 @@ export default function EcosystemHub() {
           color="text-green-600"
           drillDownData={{
             title: "Revenue Analytics",
+            description: "Detailed revenue breakdown and growth metrics analysis",
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -245,6 +215,7 @@ export default function EcosystemHub() {
           color="text-blue-600"
           drillDownData={{
             title: "Client Analytics",
+            description: "Comprehensive client segmentation and health metrics",
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -303,6 +274,7 @@ export default function EcosystemHub() {
           color="text-purple-600"
           drillDownData={{
             title: "Task Completion Analytics",
+            description: "Performance metrics and completion rates by module",
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -365,6 +337,7 @@ export default function EcosystemHub() {
           color="text-orange-600"
           drillDownData={{
             title: "Response Time Analytics",
+            description: "Client response time metrics and SLA performance tracking",
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
