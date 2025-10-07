@@ -722,7 +722,7 @@ export default function PracticeManagement() {
                            daysRemaining === 0 ? 'Due today' :
                            `${daysRemaining} days remaining`}
                         </p>
-                        <Badge className={`mt-1 ${deadline.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        <Badge className={`mt-1 ${deadline.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-900'}`}>
                           {deadline.status}
                         </Badge>
                       </div>
