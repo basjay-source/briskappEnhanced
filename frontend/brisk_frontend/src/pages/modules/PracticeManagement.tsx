@@ -1566,9 +1566,16 @@ export default function PracticeManagement() {
         </div>
       </div>
 
-      {/* Deadline Statistics */}
+      {/* Deadline Statistics - Clickable for drill-down */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setSelectedDeadlineStatus('all')
+            setSelectedDeadlinePriority('all')
+            setDeadlineSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Total Deadlines</CardTitle>
           </CardHeader>
@@ -1577,40 +1584,68 @@ export default function PracticeManagement() {
             <p className="text-xs text-gray-500">All deadlines</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setSelectedDeadlineStatus('pending')
+            setSelectedDeadlinePriority('all')
+            setDeadlineSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Pending</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{deadlineStats.pending}</div>
-            <p className="text-xs text-gray-500">Not completed</p>
+            <p className="text-xs text-gray-500">Not completed • Click to filter</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setSelectedDeadlineStatus('all')
+            setSelectedDeadlinePriority('all')
+            setDeadlineSearchTerm('overdue')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Overdue</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{deadlineStats.overdue}</div>
-            <p className="text-xs text-gray-500">Past due date</p>
+            <p className="text-xs text-gray-500">Past due date • Click to filter</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setSelectedDeadlineStatus('all')
+            setSelectedDeadlinePriority('all')
+            setDeadlineSearchTerm('week')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">This Week</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">{deadlineStats.dueThisWeek}</div>
-            <p className="text-xs text-gray-500">Due in 7 days</p>
+            <p className="text-xs text-gray-500">Due in 7 days • Click to filter</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setSelectedDeadlineStatus('all')
+            setSelectedDeadlinePriority('high')
+            setDeadlineSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">{deadlineStats.highPriority}</div>
-            <p className="text-xs text-gray-500">Urgent items</p>
+            <p className="text-xs text-gray-500">Urgent items • Click to filter</p>
           </CardContent>
         </Card>
       </div>
