@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { 
   Calculator, 
   Receipt, 
@@ -13,14 +14,78 @@ import {
   TrendingUp,
   Clock,
   Settings,
-  Heart
+  Heart,
+  AlertTriangle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import KPICard from '@/components/KPICard'
+import { apiClient } from '@/lib/api'
+
+interface DashboardData {
+  kpis: {
+    total_revenue: { value: number; change: string }
+    active_clients: { value: number; change: string }
+    completion_rate: { value: string; change: string }
+    avg_response_time: { value: string; change: string }
+  }
+  summary: {
+    active_jobs: number
+    overdue_jobs: number
+    upcoming_deadlines: number
+    this_week_hours: number
+  }
+}
+
+interface Activity {
+  action: string
+  client: string
+  time: string
+  job_id?: string
+}
+
+interface Insight {
+  type: string
+  title: string
+  description: string
+  action?: string
+  priority?: string
+}
 
 export default function EcosystemHub() {
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [recentActivity, setRecentActivity] = useState<Activity[]>([])
+  const [aiInsights, setAIInsights] = useState<Insight[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadDashboardData()
+  }, [])
+
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const [dashboard, activity, insights] = await Promise.all([
+        apiClient.getDashboard(),
+        apiClient.getRecentActivity(4),
+        apiClient.getAIInsights()
+      ])
+
+      setDashboardData(dashboard)
+      setRecentActivity(activity)
+      setAIInsights(insights)
+    } catch (err) {
+      console.error('Error loading dashboard data:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load dashboard data')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const modules = [
     {
       name: 'Practice Management',
@@ -120,12 +185,67 @@ export default function EcosystemHub() {
     }
   ]
 
-  const recentActivity = [
-    { action: 'VAT return completed', client: 'ABC Ltd', time: '2 hours ago' },
-    { action: 'Payroll run processed', client: 'XYZ Corp', time: '4 hours ago' },
-    { action: 'Annual accounts filed', client: 'DEF Ltd', time: '1 day ago' },
-    { action: 'R&D claim submitted', client: 'GHI Tech', time: '2 days ago' }
-  ]
+  const formatCurrency = (value: number) => {
+    if (value >= 1000000) {
+      return `£${(value / 1000000).toFixed(1)}M`
+    } else if (value >= 1000) {
+      return `£${(value / 1000).toFixed(1)}K`
+    }
+    return `£${value.toFixed(0)}`
+  }
+
+  const getInsightColor = (type: string) => {
+    switch (type) {
+      case 'warning':
+      case 'alert':
+        return 'bg-red-50 text-red-900'
+      case 'opportunity':
+        return 'bg-green-50 text-green-900'
+      default:
+        return 'bg-blue-50 text-blue-900'
+    }
+  }
+
+  const getInsightTextColor = (type: string) => {
+    switch (type) {
+      case 'warning':
+      case 'alert':
+        return 'text-red-700'
+      case 'opportunity':
+        return 'text-green-700'
+      default:
+        return 'text-blue-700'
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6 space-y-8">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brisk-primary mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 space-y-8">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
+            <p className="mt-4 text-gray-600">Error loading dashboard: {error}</p>
+            <Button onClick={loadDashboardData} className="mt-4">
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-6 space-y-8">
@@ -145,8 +265,8 @@ export default function EcosystemHub() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
           title="Total Revenue"
-          value="£2.4M"
-          change="+12.5%"
+          value={dashboardData ? formatCurrency(dashboardData.kpis.total_revenue.value) : '£0'}
+          change={dashboardData?.kpis.total_revenue.change || '+0%'}
           icon={TrendingUp}
           color="text-green-600"
           drillDownData={{
@@ -207,8 +327,8 @@ export default function EcosystemHub() {
         />
         <KPICard
           title="Active Clients"
-          value="1,247"
-          change="+8.3%"
+          value={dashboardData?.kpis.active_clients.value.toLocaleString() || '0'}
+          change={dashboardData?.kpis.active_clients.change || '+0%'}
           icon={Users}
           color="text-blue-600"
           drillDownData={{
@@ -265,8 +385,8 @@ export default function EcosystemHub() {
         />
         <KPICard
           title="Completion Rate"
-          value="94.2%"
-          change="+2.1%"
+          value={dashboardData?.kpis.completion_rate.value || '0%'}
+          change={dashboardData?.kpis.completion_rate.change || '+0%'}
           icon={BarChart3}
           color="text-purple-600"
           drillDownData={{
@@ -327,8 +447,8 @@ export default function EcosystemHub() {
         />
         <KPICard
           title="Avg Response Time"
-          value="2.3h"
-          change="-15.2%"
+          value={dashboardData?.kpis.avg_response_time.value || '0h'}
+          change={dashboardData?.kpis.avg_response_time.change || '+0%'}
           icon={Clock}
           color="text-orange-600"
           drillDownData={{
@@ -423,18 +543,24 @@ export default function EcosystemHub() {
           <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
           <Card>
             <CardContent className="p-6">
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
-                    <div className="flex-1">
-                      <p className="font-medium">{activity.action}</p>
-                      <p className="text-sm text-gray-600">{activity.client}</p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
+              {recentActivity.length > 0 ? (
+                <div className="space-y-4">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                      <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
+                      <div className="flex-1">
+                        <p className="font-medium">{activity.action}</p>
+                        <p className="text-sm text-gray-600">{activity.client}</p>
+                        <p className="text-xs text-gray-500">{activity.time}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No recent activity</p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -443,16 +569,28 @@ export default function EcosystemHub() {
               <CardTitle>AI Insights</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm font-medium text-blue-900">3 clients at risk of missing SA deadline</p>
-                  <p className="text-xs text-blue-700">Consider sending reminder emails</p>
+              {aiInsights.length > 0 ? (
+                <div className="space-y-3">
+                  {aiInsights.map((insight, index) => (
+                    <div 
+                      key={index} 
+                      className={`p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getInsightColor(insight.type)}`}
+                      onClick={() => {
+                        if (insight.action) {
+                          console.log('Navigate to:', insight.action)
+                        }
+                      }}
+                    >
+                      <p className="text-sm font-medium">{insight.title}</p>
+                      <p className={`text-xs ${getInsightTextColor(insight.type)}`}>{insight.description}</p>
+                    </div>
+                  ))}
                 </div>
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <p className="text-sm font-medium text-green-900">R&D claims available for 2 clients</p>
-                  <p className="text-xs text-green-700">Potential tax savings: £15,000</p>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No insights available</p>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

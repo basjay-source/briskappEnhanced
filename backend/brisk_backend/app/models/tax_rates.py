@@ -17,7 +17,7 @@ class TaxRate(Base):
     band_lower = Column(Float)  # For banded rates
     band_upper = Column(Float)
     description = Column(String)
-    metadata = Column(JSON)  # Additional rate-specific data
+    rate_metadata = Column(JSON)  # Additional rate-specific data
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
