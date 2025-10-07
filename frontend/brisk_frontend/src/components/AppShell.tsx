@@ -17,6 +17,8 @@ import { apiClient } from '@/lib/api'
 import BriskLogo from '@/components/BriskLogo'
 import ModuleNavigation from '@/components/ModuleNavigation'
 import MobileNavigation from '@/components/MobileNavigation'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import CurrencySwitcher from '@/components/CurrencySwitcher'
 
 export default function AppShell() {
   const { theme, setTheme } = useTheme()
@@ -169,6 +171,8 @@ export default function AppShell() {
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <CurrencySwitcher />
             <Button variant="ghost" size="icon">
               <Bell className="h-4 w-4" />
             </Button>

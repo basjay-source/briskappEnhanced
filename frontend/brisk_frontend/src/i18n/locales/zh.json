@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "search": "搜索",
+    "filter": "筛选",
+    "language": "语言",
+    "currency": "货币"
+  },
+  "navigation": {
+    "hub": "生态系统中心",
+    "practice": "实践管理",
+    "accounts": "账户生产",
+    "bookkeeping": "簿记",
+    "tax": "税务",
+    "reports": "报告"
+  }
+}
