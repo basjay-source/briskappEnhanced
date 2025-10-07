@@ -549,7 +549,7 @@ export default function EmailSystem() {
                 placeholder="Type your message..."
                 value={composeData.body}
                 onChange={(e) => setComposeData({...composeData, body: e.target.value})}
-                className="w-full h-64 p-3 border rounded-md resize-none"
+                className="w-full h-64 p-3 border-2 border-blue-900 rounded-[2px]-md resize-none"
               />
             </div>
           </div>
@@ -583,7 +583,7 @@ export default function EmailSystem() {
                 <h3 className="font-medium text-sm mb-2">Connected Accounts</h3>
                 <div className="space-y-2">
                   {connectedAccounts.map((account) => (
-                    <div key={account.id} className="flex items-center justify-between p-2 border rounded">
+                    <div key={account.id} className="flex items-center justify-between p-2 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${
                           account.status === 'connected' ? 'bg-green-500' :
@@ -773,7 +773,7 @@ export default function EmailSystem() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 text-sm text-blue-900">
                     <span>{selectedThread.emails.length} messages</span>
                     <span>{selectedThread.participants.length} participants</span>
                   </div>
@@ -808,7 +808,7 @@ export default function EmailSystem() {
                         <div className="whitespace-pre-wrap text-sm">{email.body}</div>
                         
                         {email.hasAttachments && (
-                          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                          <div className="mt-4 p-3 bg-gray-50 rounded-[2px]">
                             <div className="flex items-center gap-2 text-sm">
                               <Paperclip className="h-4 w-4" />
                               <span className="font-medium">3 attachments</span>
@@ -891,7 +891,7 @@ export default function EmailSystem() {
                         fetchClientTemplateData(e.target.value)
                       }
                     }}
-                    className="flex-1 px-2 py-1 border rounded text-sm h-8"
+                    className="flex-1 px-2 py-1 border-2 border-blue-900 rounded-[2px] text-sm h-8"
                   >
                     <option value="">Select client for template data...</option>
                     {availableClients.map(client => (

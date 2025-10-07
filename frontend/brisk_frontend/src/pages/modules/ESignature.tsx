@@ -214,14 +214,14 @@ export default function DocuSignage() {
                 content: (
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border rounded-lg">
-                        <h4 className="font-semibold mb-2">Current Status</h4>
+                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                        <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
-                      <div className="p-4 border rounded-lg">
-                        <h4 className="font-semibold mb-2">Performance Score</h4>
-                        <p className="text-sm text-gray-600">E-signature efficiency</p>
+                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                        <h4 className="font-semibold text-blue-900 mb-2">Performance Score</h4>
+                        <p className="text-sm text-blue-900">E-signature efficiency</p>
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
                             <span>Overall Score</span>
@@ -263,14 +263,14 @@ export default function DocuSignage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
                       <p className="font-medium text-blue-900">Contract Signed</p>
                       <p className="text-sm text-blue-700">Employment Agreement - John Smith</p>
                     </div>
                     <Badge variant="default">Completed</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-[2px]">
                     <div>
                       <p className="font-medium text-orange-900">Signature Pending</p>
                       <p className="text-sm text-orange-700">NDA - ABC Corp</p>
@@ -322,7 +322,7 @@ export default function DocuSignage() {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-gray-600">This section is under development</p>
+        <p className="text-blue-900">This section is under development</p>
       </div>
     )
   }
@@ -331,10 +331,10 @@ export default function DocuSignage() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+          <div className="p-4 border-b-2 border-blue-900">
             <h1 className="text-xl font-bold text-gray-900">DocuSignage</h1>
-            <p className="text-sm text-gray-600 mt-1">Digital Document Signing</p>
+            <p className="text-sm text-blue-900 mt-1">Digital Document Signing</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
@@ -348,7 +348,7 @@ export default function DocuSignage() {
                   <div key={item.id}>
                     <button
                       onClick={() => handleMainTabClick(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -371,7 +371,7 @@ export default function DocuSignage() {
                             <button
                               key={subTab.id}
                               onClick={() => handleSubTabClick(subTab.id)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
@@ -392,7 +392,7 @@ export default function DocuSignage() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-gray-200 bg-white">
+          <div className="p-4 border-b-2 border-blue-900 bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search envelopes, templates, or signers..."
               searchValue={searchTerm}

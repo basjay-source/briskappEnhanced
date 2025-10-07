@@ -20,7 +20,7 @@ export default function BriskLogo({ className, animated = false, showText = true
           )}
           style={{filter: 'drop-shadow(0 4px 8px rgba(255, 107, 53, 0.4)) drop-shadow(0 2px 4px rgba(255, 107, 53, 0.6))'}}
         />
-        <div className="absolute inset-0 bg-brisk-primary rounded-md -z-10" />
+        <div className="absolute inset-0 bg-brisk-primary rounded-[2px] -z-10" />
       </div>
       {showText && (
         <span className="text-lg font-semibold text-brisk-primary hidden sm:inline">

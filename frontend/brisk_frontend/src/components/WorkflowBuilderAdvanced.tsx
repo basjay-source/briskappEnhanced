@@ -336,7 +336,7 @@ export default function WorkflowBuilderAdvanced() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Workflow Automation</h2>
-          <p className="text-gray-600">Create and manage intelligent workflow templates</p>
+          <p className="text-blue-900">Create and manage intelligent workflow templates</p>
         </div>
         <Button onClick={createNewWorkflow} className="bg-brisk-primary hover:bg-brisk-primary-600">
           <Plus className="h-4 w-4 mr-2" />
@@ -364,11 +364,11 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent>
                 <div className="space-y-4">
                   {prebuiltTemplates.map((template) => (
-                    <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                    <div key={template.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h4 className="font-medium">{template.name}</h4>
-                          <p className="text-sm text-gray-600">{template.description}</p>
+                          <p className="text-sm text-blue-900">{template.description}</p>
                         </div>
                         <Badge className="bg-green-100 text-green-800">
                           {template.usageCount} uses
@@ -415,7 +415,7 @@ export default function WorkflowBuilderAdvanced() {
                 {customWorkflows.length === 0 ? (
                   <div className="text-center py-8">
                     <Workflow className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-4">No custom workflows yet</p>
+                    <p className="text-blue-900 mb-4">No custom workflows yet</p>
                     <Button onClick={createNewWorkflow} variant="outline">
                       <Plus className="h-4 w-4 mr-2" />
                       Create First Workflow
@@ -424,11 +424,11 @@ export default function WorkflowBuilderAdvanced() {
                 ) : (
                   <div className="space-y-4">
                     {customWorkflows.map((template) => (
-                      <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                      <div key={template.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <h4 className="font-medium">{template.name}</h4>
-                            <p className="text-sm text-gray-600">{template.description}</p>
+                            <p className="text-sm text-blue-900">{template.description}</p>
                           </div>
                           <Badge className={template.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
                             {template.isActive ? 'Active' : 'Draft'}
@@ -492,7 +492,7 @@ export default function WorkflowBuilderAdvanced() {
                   </CardHeader>
                   <CardContent>
                     <div 
-                      className="relative bg-gray-50 rounded-lg p-6 min-h-96 overflow-auto"
+                      className="relative bg-gray-50 rounded-[2px] p-6 min-h-96 overflow-auto"
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
                     >
@@ -501,7 +501,7 @@ export default function WorkflowBuilderAdvanced() {
                         return (
                           <div
                             key={step.id}
-                            className="absolute bg-white border-2 border-gray-200 rounded-lg p-4 w-48 cursor-move hover:border-brisk-primary"
+                            className="absolute bg-white border-2 border-gray-200 rounded-[2px] p-4 w-48 cursor-move hover:border-brisk-primary"
                             style={{ 
                               left: step.position.x, 
                               top: step.position.y,
@@ -527,7 +527,7 @@ export default function WorkflowBuilderAdvanced() {
                             </div>
                             <h4 className="font-medium text-sm mb-1">{step.title}</h4>
                             {step.description && (
-                              <p className="text-xs text-gray-600 mb-2">{step.description}</p>
+                              <p className="text-xs text-blue-900 mb-2">{step.description}</p>
                             )}
                             {step.assignedTo && (
                               <p className="text-xs text-blue-600">→ {step.assignedTo}</p>
@@ -665,7 +665,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent className="text-center py-12">
                 <Workflow className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No Workflow Selected</h3>
-                <p className="text-gray-600 mb-4">Select a template to edit or create a new workflow</p>
+                <p className="text-blue-900 mb-4">Select a template to edit or create a new workflow</p>
                 <Button onClick={createNewWorkflow} className="bg-brisk-primary">
                   <Plus className="h-4 w-4 mr-2" />
                   Create New Workflow
@@ -681,7 +681,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Active Workflows</p>
+                    <p className="text-sm font-medium text-blue-900">Active Workflows</p>
                     <p className="text-2xl font-bold">12</p>
                     <p className="text-xs text-green-600">+2 this month</p>
                   </div>
@@ -694,7 +694,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Jobs Automated</p>
+                    <p className="text-sm font-medium text-blue-900">Jobs Automated</p>
                     <p className="text-2xl font-bold">847</p>
                     <p className="text-xs text-green-600">87% automation rate</p>
                   </div>
@@ -707,7 +707,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Time Saved</p>
+                    <p className="text-sm font-medium text-blue-900">Time Saved</p>
                     <p className="text-2xl font-bold">156h</p>
                     <p className="text-xs text-green-600">This month</p>
                   </div>
@@ -720,7 +720,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Success Rate</p>
+                    <p className="text-sm font-medium text-blue-900">Success Rate</p>
                     <p className="text-2xl font-bold">94.2%</p>
                     <p className="text-xs text-green-600">+1.2% improvement</p>
                   </div>
@@ -738,23 +738,23 @@ export default function WorkflowBuilderAdvanced() {
             <CardContent>
               <div className="space-y-4">
                 {prebuiltTemplates.map((template) => (
-                  <div key={template.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={template.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <h4 className="font-medium">{template.name}</h4>
-                      <p className="text-sm text-gray-600">{template.jobType.replace('_', ' ')}</p>
+                      <p className="text-sm text-blue-900">{template.jobType.replace('_', ' ')}</p>
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-center">
                         <p className="text-sm font-medium">{template.usageCount}</p>
-                        <p className="text-xs text-gray-600">Uses</p>
+                        <p className="text-xs text-blue-900">Uses</p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm font-medium">92%</p>
-                        <p className="text-xs text-gray-600">Success</p>
+                        <p className="text-xs text-blue-900">Success</p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm font-medium">4.2h</p>
-                        <p className="text-xs text-gray-600">Avg Time</p>
+                        <p className="text-xs text-blue-900">Avg Time</p>
                       </div>
                       <Badge className="bg-green-100 text-green-800">Efficient</Badge>
                     </div>

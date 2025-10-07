@@ -11,7 +11,7 @@ interface KPICardProps {
   color: string
   drillDownData?: {
     title: string
-    description: string
+    description?: string
     content: React.ReactNode
   }
 }
@@ -28,13 +28,13 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
   return (
     <>
       <Card 
-        className={`${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+        className={`border-2 border-blue-900 ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
         onClick={handleClick}
       >
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{title}</p>
+              <p className="text-sm font-medium text-blue-900">{title}</p>
               <p className="text-2xl font-bold">{value}</p>
               <p className={`text-sm ${color}`}>{change}</p>
             </div>

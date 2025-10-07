@@ -252,7 +252,7 @@ export default function PayslipTemplateManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Payslip Templates</h2>
-          <p className="text-gray-600">Customize payslip templates and branding for your organization</p>
+          <p className="text-blue-900">Customize payslip templates and branding for your organization</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -392,7 +392,7 @@ export default function PayslipTemplateManager() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg p-6 bg-white min-h-[400px]">
+              <div className="border-2 border-blue-900 rounded-[2px] p-6 bg-white min-h-[400px]">
                 <div className="space-y-4">
                   {branding.custom_branding?.logo_url && (
                     <div className="flex justify-center">
@@ -422,19 +422,19 @@ export default function PayslipTemplateManager() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Employee Name</p>
+                        <p className="text-sm font-medium text-blue-900">Employee Name</p>
                         <p className="font-medium">John Smith</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Employee Number</p>
+                        <p className="text-sm font-medium text-blue-900">Employee Number</p>
                         <p className="font-medium">EMP001</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Pay Period</p>
+                        <p className="text-sm font-medium text-blue-900">Pay Period</p>
                         <p className="font-medium">January 2024</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Pay Date</p>
+                        <p className="text-sm font-medium text-blue-900">Pay Date</p>
                         <p className="font-medium">31/01/2024</p>
                       </div>
                     </div>

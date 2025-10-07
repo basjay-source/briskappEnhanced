@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api/v1'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://app-lhktufoy.fly.dev/api/v1'
 
 interface TrialBalanceEntry {
   code: string;
@@ -31,11 +31,13 @@ interface FinancialStatement {
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const url = `${API_BASE_URL}${endpoint}`
+    const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
       },
+      credentials: 'same-origin',
       ...options,
     })
     
@@ -44,6 +46,47 @@ class ApiClient {
     }
     
     return response.json()
+  }
+
+  async get<T = any>(url: string, config?: { params?: Record<string, any> }): Promise<{ data: T }> {
+    let endpoint = url
+    if (config?.params) {
+      const params = new URLSearchParams()
+      Object.entries(config.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, String(value))
+        }
+      })
+      const queryString = params.toString()
+      if (queryString) {
+        endpoint = `${url}?${queryString}`
+      }
+    }
+    const data = await this.request<T>(endpoint)
+    return { data }
+  }
+
+  async post<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined
+    })
+    return { data: result }
+  }
+
+  async put<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined
+    })
+    return { data: result }
+  }
+
+  async delete<T = any>(url: string): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'DELETE'
+    })
+    return { data: result }
   }
 
   async getTrialBalance(companyId: string, periodEnd?: string) {
@@ -297,6 +340,54 @@ class ApiClient {
     const params = new URLSearchParams(filters || {})
     return this.request(`/practice/employee-rates?${params}`)
   }
+
+  async getDashboard() {
+    return this.request('/practice/dashboard')
+  }
+
+  async getRecentActivity(limit: number = 10) {
+    return this.request(`/practice/recent-activity?limit=${limit}`)
+  }
+
+  async getAIInsights() {
+    return this.request('/practice/ai-insights')
+  }
+
+  async getComplianceDeadlines(upcomingDays: number = 30) {
+    return this.request(`/practice/compliance/deadlines?upcoming_days=${upcomingDays}`)
+  }
+
+  async getFirmKPIs(periodStart: string, periodEnd: string) {
+    return this.request(`/practice/analytics/firm-kpis?period_start=${periodStart}&period_end=${periodEnd}`)
+  }
+
+  async getTimeAnalytics(startDate?: string, endDate?: string) {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    return this.request(`/practice/time-analytics${params.toString() ? `?${params.toString()}` : ''}`)
+  }
+
+  async getCurrentTaxRates() {
+    return this.request('/tax-rates/rates/current')
+  }
+
+  async getHistoricalTaxRates(filters?: Record<string, string>) {
+    const params = new URLSearchParams(filters || {})
+    return this.request(`/tax-rates/rates/historical?${params}`)
+  }
+
+  async translateReport(data: Record<string, unknown>) {
+    return this.request('/reports/translate-report', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getLiveForexRate(from: string, to: string) {
+    return this.request(`/reports/live-forex-rate/${from}/${to}`)
+  }
 }
 
 export const apiClient = new ApiClient()
+export const api = apiClient

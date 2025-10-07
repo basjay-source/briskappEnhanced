@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "create": "बनाएं",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "language": "भाषा",
+    "currency": "मुद्रा"
+  },
+  "navigation": {
+    "hub": "पारिस्थितिकी केंद्र",
+    "practice": "अभ्यास प्रबंधन",
+    "accounts": "खाता उत्पादन",
+    "bookkeeping": "बहीखाता",
+    "tax": "कर",
+    "reports": "रिपोर्ट"
+  }
+}

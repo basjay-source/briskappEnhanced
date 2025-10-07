@@ -212,7 +212,7 @@ export default function TimeAndFeesModuleAdvanced() {
       case 'optimization': return <TrendingUp className="h-4 w-4 text-green-600" />
       case 'warning': return <AlertTriangle className="h-4 w-4 text-orange-600" />
       case 'opportunity': return <Lightbulb className="h-4 w-4 text-blue-600" />
-      default: return <Brain className="h-4 w-4 text-gray-600" />
+      default: return <Brain className="h-4 w-4 text-blue-900" />
     }
   }
 
@@ -301,16 +301,16 @@ export default function TimeAndFeesModuleAdvanced() {
               <CardContent>
                 <div className="space-y-4">
                   {timeEntries.map((entry) => (
-                    <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={entry.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-medium">{entry.jobTitle}</h4>
+                          <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                           {getStatusIcon(entry.status)}
                           <Badge className={getStatusColor(entry.status)}>
                             {entry.status}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600">{entry.clientName}</p>
+                        <p className="text-sm text-blue-900">{entry.clientName}</p>
                         <p className="text-sm text-gray-500">{entry.description}</p>
                       </div>
                       <div className="text-right">
@@ -335,12 +335,12 @@ export default function TimeAndFeesModuleAdvanced() {
               <CardContent>
                 <div className="space-y-3">
                   {aiInsights.map((insight, index) => (
-                    <div key={index} className={`p-3 border rounded-lg ${getInsightColor(insight.impact)}`}>
+                    <div key={index} className={`p-3 border-2 border-blue-900 rounded-[2px] ${getInsightColor(insight.impact)}`}>
                       <div className="flex items-start gap-2">
                         {getInsightIcon(insight.type)}
                         <div className="flex-1">
-                          <h4 className="font-medium text-sm">{insight.title}</h4>
-                          <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
+                          <h4 className="font-medium text-blue-900 text-sm">{insight.title}</h4>
+                          <p className="text-sm text-blue-900 mt-1">{insight.description}</p>
                           {insight.actionable && (
                             <Button size="sm" variant="outline" className="mt-2">
                               Take Action
@@ -413,11 +413,11 @@ export default function TimeAndFeesModuleAdvanced() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Job/Project</label>
+                      <label className="block text-sm font-medium text-blue-900 mb-2">Job/Project</label>
                       <select
                         value={selectedJob}
                         onChange={(e) => setSelectedJob(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="">Select a job...</option>
                         <option value="J001">ACC-001 - Year End Accounts</option>
@@ -426,11 +426,11 @@ export default function TimeAndFeesModuleAdvanced() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Task (Optional)</label>
+                      <label className="block text-sm font-medium text-blue-900 mb-2">Task (Optional)</label>
                       <select
                         value={selectedTask}
                         onChange={(e) => setSelectedTask(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="">Select a task...</option>
                         <option value="task1">Trial Balance Review</option>
@@ -448,14 +448,14 @@ export default function TimeAndFeesModuleAdvanced() {
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Time Entries</CardTitle>
+              <CardTitle className="text-blue-900">Time Entries</CardTitle>
               <CardDescription>Manage and review time tracking entries</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12">
                 <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Time Entry Management</h3>
-                <p className="text-gray-600">Review and manage time tracking entries</p>
+                <p className="text-blue-900">Review and manage time tracking entries</p>
               </div>
             </CardContent>
           </Card>
@@ -465,14 +465,14 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Analytics Dashboard</CardTitle>
+            <CardTitle className="text-blue-900">Analytics Dashboard</CardTitle>
             <CardDescription>Performance metrics and trends</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-12">
               <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Dashboard</h3>
-              <p className="text-gray-600">Advanced analytics and performance tracking</p>
+              <p className="text-blue-900">Advanced analytics and performance tracking</p>
             </div>
           </CardContent>
         </Card>
@@ -490,12 +490,12 @@ export default function TimeAndFeesModuleAdvanced() {
           <CardContent>
             <div className="space-y-4">
               {aiInsights.map((insight, index) => (
-                <div key={index} className={`p-4 border rounded-lg ${getInsightColor(insight.impact)}`}>
+                <div key={index} className={`p-4 border-2 border-blue-900 rounded-[2px] ${getInsightColor(insight.impact)}`}>
                   <div className="flex items-start gap-3">
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
-                      <h4 className="font-medium">{insight.title}</h4>
-                      <p className="text-gray-600 mt-1">{insight.description}</p>
+                      <h4 className="font-medium text-blue-900">{insight.title}</h4>
+                      <p className="text-blue-900 mt-1">{insight.description}</p>
                       <div className="flex items-center gap-2 mt-3">
                         <Badge variant={insight.impact === 'high' ? 'destructive' : insight.impact === 'medium' ? 'default' : 'secondary'}>
                           {insight.impact} impact
@@ -518,14 +518,14 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Automation Hub</CardTitle>
+            <CardTitle className="text-blue-900">Automation Hub</CardTitle>
             <CardDescription>Configure automated workflows and rules</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-12">
               <Zap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Automation Center</h3>
-              <p className="text-gray-600">Set up automated time tracking and billing workflows</p>
+              <p className="text-blue-900">Set up automated time tracking and billing workflows</p>
             </div>
           </CardContent>
         </Card>
@@ -534,14 +534,14 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Capacity Planning</CardTitle>
+            <CardTitle className="text-blue-900">Capacity Planning</CardTitle>
             <CardDescription>Plan and optimize team capacity</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-12">
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Capacity Management</h3>
-              <p className="text-gray-600">Optimize team capacity and resource planning</p>
+              <p className="text-blue-900">Optimize team capacity and resource planning</p>
             </div>
           </CardContent>
         </Card>
@@ -553,10 +553,10 @@ export default function TimeAndFeesModuleAdvanced() {
 
   return (
     <div className="flex min-h-screen bg-blue-50">
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-6 border-b border-gray-200">
+      <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+        <div className="p-6 border-b-2 border-blue-900">
           <h1 className="text-xl font-bold text-gray-900">Time Management</h1>
-          <p className="text-sm text-gray-600 mt-1">AI-powered time tracking & billing</p>
+          <p className="text-sm text-blue-900 mt-1">AI-powered time tracking & billing</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
@@ -564,7 +564,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <div key={tab.id}>
               <button
                 onClick={() => handleMainTabClick(tab.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                   activeMainTab === tab.id 
                     ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                     : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -583,7 +583,7 @@ export default function TimeAndFeesModuleAdvanced() {
                     <button
                       key={subTab.id}
                       onClick={() => handleSubTabClick(subTab.id)}
-                      className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         activeSubTab === subTab.id 
                           ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                           : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
@@ -601,13 +601,13 @@ export default function TimeAndFeesModuleAdvanced() {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-white">
+        <div className="p-6 border-b-2 border-blue-900 bg-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-blue-900">
                 {menuStructure.find(t => t.id === activeMainTab)?.label || 'Dashboard'}
               </h2>
-              <p className="text-gray-600 mt-1">
+              <p className="text-blue-900 mt-1">
                 AI-powered time tracking, advanced analytics, and intelligent workflow automation
               </p>
             </div>

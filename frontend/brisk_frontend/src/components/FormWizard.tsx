@@ -64,7 +64,7 @@ export default function FormWizard({
   return (
     <div className="space-y-6">
       {logoComponent && (
-        <div className={`${headerBgColor} ${headerTextColor} p-6 rounded-lg`}>
+        <div className={`${headerBgColor} ${headerTextColor} p-6 rounded-[2px]`}>
           <div className="flex items-center space-x-4">
             {logoComponent}
             <div>
@@ -99,7 +99,7 @@ export default function FormWizard({
                 ? `${activePageColor} text-white`
                 : index < currentPage
                 ? 'bg-green-100 text-green-800'
-                : 'bg-gray-100 text-gray-600'
+                : 'bg-gray-100 text-blue-900'
             }`}
           >
             {index + 1}

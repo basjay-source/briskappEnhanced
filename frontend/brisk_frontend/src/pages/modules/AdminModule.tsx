@@ -184,10 +184,10 @@ const AdminModule = () => {
   ];
 
   const renderLeftRail = () => (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Admin Control</h2>
-        <p className="text-sm text-gray-600">Multi-tenant management</p>
+    <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+      <div className="p-6 border-b-2 border-blue-900">
+        <h2 className="text-lg font-semibold text-blue-900">Admin Control</h2>
+        <p className="text-sm text-blue-900">Multi-tenant management</p>
       </div>
       <nav className="flex-1 p-4 space-y-2">
         {[
@@ -208,7 +208,7 @@ const AdminModule = () => {
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                 activeSection === item.id
                   ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
                   : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -230,8 +230,8 @@ const AdminModule = () => {
       content: (
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-semibold mb-2">Revenue Sources</h4>
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+              <h4 className="font-semibold text-blue-900 mb-2">Revenue Sources</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subscriptions</span>
@@ -247,8 +247,8 @@ const AdminModule = () => {
                 </div>
               </div>
             </div>
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-semibold mb-2">Growth Metrics</h4>
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+              <h4 className="font-semibold text-blue-900 mb-2">Growth Metrics</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>New MRR</span>
@@ -272,7 +272,7 @@ const AdminModule = () => {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Admin Overview</h1>
+          <h1 className="text-2xl font-bold text-blue-900">Admin Overview</h1>
           <div className="flex space-x-3">
             <Button variant="outline" onClick={() => setShowApprovalDialog(true)}>
               <AlertTriangle className="h-4 w-4 mr-2" />
@@ -302,16 +302,16 @@ const AdminModule = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="text-blue-900">Recent Activity</CardTitle>
               <CardDescription>Latest admin actions and system events</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {auditLogs.slice(0, 5).map((log) => (
-                  <div key={log.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={log.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <p className="font-medium">{log.action}</p>
-                      <p className="text-sm text-gray-600">{log.actor}</p>
+                      <p className="text-sm text-blue-900">{log.actor}</p>
                     </div>
                     <Badge variant="outline">{new Date(log.timestamp).toLocaleTimeString()}</Badge>
                   </div>
@@ -322,7 +322,7 @@ const AdminModule = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>System Health</CardTitle>
+              <CardTitle className="text-blue-900">System Health</CardTitle>
               <CardDescription>Platform performance and status</CardDescription>
             </CardHeader>
             <CardContent>
@@ -358,12 +358,12 @@ const AdminModule = () => {
             </DialogHeader>
             <div className="space-y-4">
               {approvalRequests.map((request) => (
-                <div key={request.id} className="p-4 border rounded-lg">
+                <div key={request.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold">{request.type}</h4>
+                    <h4 className="font-semibold text-blue-900">{request.type}</h4>
                     <Badge variant="secondary">{request.status}</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-blue-900 mb-3">
                     {request.type === 'refund' ? `Refund request: £${request.amount}` : request.description}
                   </p>
                   <div className="flex gap-2">
@@ -382,7 +382,7 @@ const AdminModule = () => {
   const renderCatalogPricing = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Catalog & Pricing</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Catalog & Pricing</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -408,8 +408,8 @@ const AdminModule = () => {
             content: (
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2">Plan Distribution</h4>
+                  <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                    <h4 className="font-semibold text-blue-900 mb-2">Plan Distribution</h4>
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
                         <span>{plan.name}</span>
@@ -417,8 +417,8 @@ const AdminModule = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2">Revenue by Plan</h4>
+                  <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                    <h4 className="font-semibold text-blue-900 mb-2">Revenue by Plan</h4>
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
                         <span>{plan.name}</span>
@@ -484,22 +484,22 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Plan Catalog</CardTitle>
+          <CardTitle className="text-blue-900">Plan Catalog</CardTitle>
           <CardDescription>Manage pricing plans and versions</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {plans.map((plan) => (
-              <div key={plan.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={plan.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{plan.name}</h3>
+                    <h3 className="font-semibold text-blue-900">{plan.name}</h3>
                     <Badge variant="outline">v{plan.version}</Badge>
                     <Badge variant={plan.status === 'active' ? 'default' : 'secondary'}>
                       {plan.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {plan.tenants} tenants • £{plan.mrr.toLocaleString()} MRR
                   </p>
                 </div>
@@ -522,7 +522,7 @@ const AdminModule = () => {
   const renderPromotions = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Promotions & Coupons</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Promotions & Coupons</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -601,22 +601,22 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Promotion Management</CardTitle>
+          <CardTitle className="text-blue-900">Promotion Management</CardTitle>
           <CardDescription>Manage promotional campaigns and coupon codes</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {promotions.map((promo) => (
-              <div key={promo.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={promo.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{promo.name}</h3>
+                    <h3 className="font-semibold text-blue-900">{promo.name}</h3>
                     <Badge variant="outline">{promo.id}</Badge>
                     <Badge variant={promo.status === 'active' ? 'default' : 'secondary'}>
                       {promo.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {promo.type === 'percent' ? `${promo.value}% discount` : `${promo.value} free months`} • 
                     {promo.redemptions} redemptions
                   </p>
@@ -640,7 +640,7 @@ const AdminModule = () => {
   const renderExperiments = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Experiments & Feature Flags</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Experiments & Feature Flags</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -719,22 +719,22 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Experiment Management</CardTitle>
+          <CardTitle className="text-blue-900">Experiment Management</CardTitle>
           <CardDescription>A/B tests and feature flag management</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {experiments.map((exp) => (
-              <div key={exp.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={exp.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{exp.name}</h3>
+                    <h3 className="font-semibold text-blue-900">{exp.name}</h3>
                     <Badge variant={exp.status === 'running' ? 'default' : 'secondary'}>
                       {exp.status}
                     </Badge>
                     {exp.winner && <Badge variant="outline">Winner: {exp.winner}</Badge>}
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {exp.variants} variants • {exp.exposure.toLocaleString()} exposed users
                   </p>
                 </div>
@@ -759,7 +759,7 @@ const AdminModule = () => {
   const renderTenants = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Tenants & Subscriptions</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Tenants & Subscriptions</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -800,16 +800,16 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Tenant Management</CardTitle>
+          <CardTitle className="text-blue-900">Tenant Management</CardTitle>
           <CardDescription>Manage customer subscriptions and entitlements</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {tenants.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={tenant.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{tenant.name}</h3>
+                    <h3 className="font-semibold text-blue-900">{tenant.name}</h3>
                     <Badge variant="outline">{tenant.plan}</Badge>
                     <Badge variant={
                       tenant.status === 'active' ? 'default' : 
@@ -818,7 +818,7 @@ const AdminModule = () => {
                       {tenant.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     £{tenant.mrr} MRR • {tenant.seats} seats • {tenant.region}
                   </p>
                 </div>
@@ -841,7 +841,7 @@ const AdminModule = () => {
   const renderSettings = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Settings</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Admin Settings</h1>
         <Button>
           <Settings className="h-4 w-4 mr-2" />
           Save Changes
@@ -851,16 +851,16 @@ const AdminModule = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>RBAC Configuration</CardTitle>
+            <CardTitle className="text-blue-900">RBAC Configuration</CardTitle>
             <CardDescription>Role-based access control settings</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {adminPersonas.slice(0, 4).map((persona) => (
-                <div key={persona.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={persona.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div>
-                    <h4 className="font-semibold">{persona.name}</h4>
-                    <p className="text-sm text-gray-600">{persona.description}</p>
+                    <h4 className="font-semibold text-blue-900">{persona.name}</h4>
+                    <p className="text-sm text-blue-900">{persona.description}</p>
                   </div>
                   <Badge variant={persona.dual_control ? 'destructive' : 'secondary'}>
                     {persona.dual_control ? 'Dual Control' : 'Single Control'}
@@ -873,7 +873,7 @@ const AdminModule = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>System Configuration</CardTitle>
+            <CardTitle className="text-blue-900">System Configuration</CardTitle>
             <CardDescription>Platform-wide settings and preferences</CardDescription>
           </CardHeader>
           <CardContent>
@@ -904,7 +904,7 @@ const AdminModule = () => {
   const renderInvoicesDunning = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Invoices & Dunning</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Invoices & Dunning</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -986,16 +986,16 @@ const AdminModule = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Invoice Management</CardTitle>
+              <CardTitle className="text-blue-900">Invoice Management</CardTitle>
               <CardDescription>Manage customer invoices and billing</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {invoices.map((invoice) => (
-                  <div key={invoice.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={invoice.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <h3 className="font-semibold">{invoice.id}</h3>
+                        <h3 className="font-semibold text-blue-900">{invoice.id}</h3>
                         <Badge variant={
                           invoice.status === 'paid' ? 'default' : 
                           invoice.status === 'past_due' ? 'destructive' : 'secondary'
@@ -1003,7 +1003,7 @@ const AdminModule = () => {
                           {invoice.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         {invoice.tenant} • £{invoice.amount} • Due: {invoice.due_date}
                       </p>
                     </div>
@@ -1027,7 +1027,7 @@ const AdminModule = () => {
   const renderPartnersReferrals = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Partners & Referrals</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Partners & Referrals</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1082,19 +1082,19 @@ const AdminModule = () => {
       <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Partner Management</CardTitle>
+              <CardTitle className="text-blue-900">Partner Management</CardTitle>
               <CardDescription>Manage channel partners and commission structures</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {partners.map((partner) => (
-                  <div key={partner.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={partner.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <h3 className="font-semibold">{partner.name}</h3>
+                        <h3 className="font-semibold text-blue-900">{partner.name}</h3>
                         <Badge variant="outline">{partner.tier}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         {partner.margin}% margin • {partner.tenants} tenants • £{partner.revenue.toLocaleString()} revenue
                       </p>
                     </div>
@@ -1114,21 +1114,21 @@ const AdminModule = () => {
         
           <Card>
             <CardHeader>
-              <CardTitle>Referral Management</CardTitle>
+              <CardTitle className="text-blue-900">Referral Management</CardTitle>
               <CardDescription>Track referral program performance</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {referrals.map((referral) => (
-                  <div key={referral.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={referral.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <h3 className="font-semibold">{referral.referee}</h3>
+                        <h3 className="font-semibold text-blue-900">{referral.referee}</h3>
                         <Badge variant={referral.status === 'converted' ? 'default' : 'secondary'}>
                           {referral.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         Referred by: {referral.referrer} • Reward: £{referral.reward}
                       </p>
                     </div>
@@ -1149,7 +1149,7 @@ const AdminModule = () => {
   const renderGrowthJourneys = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Growth Journeys</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Growth Journeys</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1203,21 +1203,21 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Journey Management</CardTitle>
+          <CardTitle className="text-blue-900">Journey Management</CardTitle>
           <CardDescription>Automated growth and engagement campaigns</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {growthJourneys.map((journey) => (
-              <div key={journey.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={journey.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{journey.name}</h3>
+                    <h3 className="font-semibold text-blue-900">{journey.name}</h3>
                     <Badge variant={journey.active ? 'default' : 'secondary'}>
                       {journey.active ? 'Active' : 'Paused'}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     Trigger: {journey.trigger} • {journey.actions} actions • {journey.conversions} conversions
                   </p>
                 </div>
@@ -1243,7 +1243,7 @@ const AdminModule = () => {
   const renderAuditLog = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Audit Log</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Audit Log</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1284,19 +1284,19 @@ const AdminModule = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>System Audit Trail</CardTitle>
+          <CardTitle className="text-blue-900">System Audit Trail</CardTitle>
           <CardDescription>Tamper-evident log of all administrative actions</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {auditLogs.map((log) => (
-              <div key={log.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={log.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold">{log.action}</h3>
+                    <h3 className="font-semibold text-blue-900">{log.action}</h3>
                     <Badge variant="outline">{log.entity}</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     Actor: {log.actor} • {new Date(log.timestamp).toLocaleString()}
                   </p>
                 </div>
@@ -1319,7 +1319,7 @@ const AdminModule = () => {
   const renderTemplates = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Templates & Branding</h1>
+        <h1 className="text-2xl font-bold text-blue-900">Templates & Branding</h1>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           Create Template
@@ -1354,7 +1354,7 @@ const AdminModule = () => {
         
         <div className="flex-1 flex flex-col overflow-hidden">
           {isMobile && (
-            <div className="p-4 bg-white border-b border-gray-200">
+            <div className="p-4 bg-white border-b-2 border-blue-900">
               <Select value={activeSection} onValueChange={setActiveSection}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select admin section" />

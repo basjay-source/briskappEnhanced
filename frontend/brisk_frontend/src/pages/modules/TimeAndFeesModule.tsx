@@ -239,7 +239,7 @@ export default function TimeAndFeesModule() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Time Management & Fees</h1>
-            <p className="text-gray-600 mt-2">Advanced time tracking, billing workflows, and comprehensive analytics</p>
+            <p className="text-blue-900 mt-2">Advanced time tracking, billing workflows, and comprehensive analytics</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -316,7 +316,7 @@ export default function TimeAndFeesModule() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                          <p className="text-sm font-medium text-blue-900">{kpi.title}</p>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
                         </div>
@@ -332,26 +332,26 @@ export default function TimeAndFeesModule() {
               <div className={isMobile ? '' : 'lg:col-span-2'}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Recent Time Entries</CardTitle>
+                    <CardTitle className="text-blue-900">Recent Time Entries</CardTitle>
                     <CardDescription>Latest time tracking activity</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {timeEntries.slice(0, 5).map((entry) => (
-                        <div key={entry.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                        <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                           <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                             {getStatusIcon(entry.status)}
                             <div className="flex-1">
-                              <h4 className="font-medium">{entry.jobTitle}</h4>
+                              <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                               {entry.taskName && <p className="text-sm text-gray-500">{entry.taskName}</p>}
-                              <p className="text-sm text-gray-600">{entry.clientName}</p>
+                              <p className="text-sm text-blue-900">{entry.clientName}</p>
                               <p className="text-xs text-gray-500">{entry.description}</p>
                             </div>
                           </div>
                           <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                             <div>
                               <p className="text-sm font-medium">{entry.hours}h</p>
-                              <p className="text-sm text-gray-600">{entry.employeeName}</p>
+                              <p className="text-sm text-blue-900">{entry.employeeName}</p>
                               <Badge className={`text-xs ${getStatusColor(entry.status)}`}>
                                 {entry.status}
                               </Badge>
@@ -373,7 +373,7 @@ export default function TimeAndFeesModule() {
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Team Utilization</CardTitle>
+                    <CardTitle className="text-blue-900">Team Utilization</CardTitle>
                     <CardDescription>Current week performance</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -411,21 +411,21 @@ export default function TimeAndFeesModule() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Revenue Analytics</CardTitle>
+                    <CardTitle className="text-blue-900">Revenue Analytics</CardTitle>
                     <CardDescription>This month's performance</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Billable Hours</span>
+                        <span className="text-sm text-blue-900">Billable Hours</span>
                         <span className="text-sm font-medium">324.5h</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Average Rate</span>
+                        <span className="text-sm text-blue-900">Average Rate</span>
                         <span className="text-sm font-medium">£85/hr</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Total Revenue</span>
+                        <span className="text-sm text-blue-900">Total Revenue</span>
                         <span className="text-sm font-medium">£27,582</span>
                       </div>
                       <div className="flex justify-between border-t pt-2">
@@ -444,7 +444,7 @@ export default function TimeAndFeesModule() {
           <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
             <Card>
               <CardHeader>
-                <CardTitle>Live Timer</CardTitle>
+                <CardTitle className="text-blue-900">Live Timer</CardTitle>
                 <CardDescription>Track time in real-time</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -452,7 +452,7 @@ export default function TimeAndFeesModule() {
                   <div className="text-6xl font-mono font-bold text-brisk-primary mb-4">
                     {formatTime(currentTime)}
                   </div>
-                  <div className="text-sm text-gray-600 mb-6">
+                  <div className="text-sm text-blue-900 mb-6">
                     {formatHours(currentTime)} hours
                   </div>
                   <div className="flex justify-center gap-3">
@@ -484,14 +484,14 @@ export default function TimeAndFeesModule() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Timer Settings</CardTitle>
+                <CardTitle className="text-blue-900">Timer Settings</CardTitle>
                 <CardDescription>Configure your time entry</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Job</label>
                   <select 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     value={selectedJob}
                     onChange={(e) => setSelectedJob(e.target.value)}
                   >
@@ -504,7 +504,7 @@ export default function TimeAndFeesModule() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Task (Optional)</label>
                   <select 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     value={selectedTask}
                     onChange={(e) => setSelectedTask(e.target.value)}
                   >
@@ -517,7 +517,7 @@ export default function TimeAndFeesModule() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Description</label>
                   <textarea 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     rows={3}
                     placeholder="Describe what you're working on..."
                   />
@@ -536,7 +536,7 @@ export default function TimeAndFeesModule() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Time Entries</CardTitle>
+                  <CardTitle className="text-blue-900">Time Entries</CardTitle>
                   <CardDescription>Manage all time entries</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
@@ -554,13 +554,13 @@ export default function TimeAndFeesModule() {
             <CardContent>
               <div className="space-y-4">
                 {timeEntries.map((entry) => (
-                  <div key={entry.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                  <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                     <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                       {getStatusIcon(entry.status)}
                       <div className="flex-1">
-                        <h4 className="font-medium">{entry.jobTitle}</h4>
+                        <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                         {entry.taskName && <p className="text-sm text-gray-500">{entry.taskName}</p>}
-                        <p className="text-sm text-gray-600">{entry.clientName}</p>
+                        <p className="text-sm text-blue-900">{entry.clientName}</p>
                         <p className="text-xs text-gray-500">{entry.description}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
@@ -575,7 +575,7 @@ export default function TimeAndFeesModule() {
                     <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                       <div>
                         <p className="text-sm font-medium">{entry.hours}h</p>
-                        <p className="text-sm text-gray-600">{entry.employeeName}</p>
+                        <p className="text-sm text-blue-900">{entry.employeeName}</p>
                         <p className="text-xs text-gray-500">{entry.date}</p>
                       </div>
                       <div className="text-right">
@@ -607,20 +607,20 @@ export default function TimeAndFeesModule() {
             <div className={isMobile ? '' : 'lg:col-span-2'}>
               <Card>
                 <CardHeader>
-                  <CardTitle>Pending Approvals</CardTitle>
+                  <CardTitle className="text-blue-900">Pending Approvals</CardTitle>
                   <CardDescription>Time entries awaiting approval</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {timeEntries.filter(entry => entry.status === 'submitted').map((entry) => (
-                      <div key={entry.id} className={`p-4 border rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                      <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                         <div className="flex-1">
-                          <h4 className="font-medium">{entry.jobTitle}</h4>
-                          <p className="text-sm text-gray-600">{entry.clientName}</p>
+                          <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
+                          <p className="text-sm text-blue-900">{entry.clientName}</p>
                           <p className="text-xs text-gray-500">{entry.description}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-sm font-medium">{entry.hours}h</span>
-                            <span className="text-sm text-gray-600">by {entry.employeeName}</span>
+                            <span className="text-sm text-blue-900">by {entry.employeeName}</span>
                             <Badge className="text-xs bg-blue-100 text-blue-800">
                               £{(entry.hours * entry.hourlyRate).toFixed(2)}
                             </Badge>
@@ -645,21 +645,21 @@ export default function TimeAndFeesModule() {
             <div>
               <Card>
                 <CardHeader>
-                  <CardTitle>Approval Summary</CardTitle>
+                  <CardTitle className="text-blue-900">Approval Summary</CardTitle>
                   <CardDescription>This week's activity</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Pending</span>
+                      <span className="text-sm text-blue-900">Pending</span>
                       <span className="text-sm font-medium">3 entries</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Approved</span>
+                      <span className="text-sm text-blue-900">Approved</span>
                       <span className="text-sm font-medium">24 entries</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Rejected</span>
+                      <span className="text-sm text-blue-900">Rejected</span>
                       <span className="text-sm font-medium">1 entry</span>
                     </div>
                     <div className="flex justify-between border-t pt-2">
@@ -677,16 +677,16 @@ export default function TimeAndFeesModule() {
           <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
             <Card>
               <CardHeader>
-                <CardTitle>Job Codes</CardTitle>
+                <CardTitle className="text-blue-900">Job Codes</CardTitle>
                 <CardDescription>Manage billing codes and default rates</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {jobCodes.map((code) => (
-                    <div key={code.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={code.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
-                        <h4 className="font-medium">{code.code}</h4>
-                        <p className="text-sm text-gray-600">{code.name}</p>
+                        <h4 className="font-medium text-blue-900">{code.code}</h4>
+                        <p className="text-sm text-blue-900">{code.name}</p>
                         <Badge variant="outline" className="text-xs mt-1">
                           {code.category}
                         </Badge>
@@ -707,16 +707,16 @@ export default function TimeAndFeesModule() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Employee Rates</CardTitle>
+                <CardTitle className="text-blue-900">Employee Rates</CardTitle>
                 <CardDescription>Per-employee hourly rates by job code</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {employeeRates.map((rate, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
-                        <h4 className="font-medium">{rate.employeeName}</h4>
-                        <p className="text-sm text-gray-600">
+                        <h4 className="font-medium text-blue-900">{rate.employeeName}</h4>
+                        <p className="text-sm text-blue-900">
                           {jobCodes.find(code => code.id === rate.jobCodeId)?.name}
                         </p>
                       </div>
@@ -739,42 +739,42 @@ export default function TimeAndFeesModule() {
             <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
               <Card>
                 <CardHeader>
-                  <CardTitle>Utilization Report</CardTitle>
+                  <CardTitle className="text-blue-900">Utilization Report</CardTitle>
                   <CardDescription>Team efficiency metrics</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
                     <PieChart className="h-16 w-16 mx-auto text-brisk-primary mb-4" />
                     <p className="text-2xl font-bold">87%</p>
-                    <p className="text-sm text-gray-600">Average utilization</p>
+                    <p className="text-sm text-blue-900">Average utilization</p>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Revenue Analysis</CardTitle>
+                  <CardTitle className="text-blue-900">Revenue Analysis</CardTitle>
                   <CardDescription>Financial performance</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
                     <TrendingUp className="h-16 w-16 mx-auto text-green-600 mb-4" />
                     <p className="text-2xl font-bold">£45,200</p>
-                    <p className="text-sm text-gray-600">This month</p>
+                    <p className="text-sm text-blue-900">This month</p>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Efficiency Metrics</CardTitle>
+                  <CardTitle className="text-blue-900">Efficiency Metrics</CardTitle>
                   <CardDescription>Performance indicators</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
                     <Target className="h-16 w-16 mx-auto text-purple-600 mb-4" />
                     <p className="text-2xl font-bold">94%</p>
-                    <p className="text-sm text-gray-600">On-time delivery</p>
+                    <p className="text-sm text-blue-900">On-time delivery</p>
                   </div>
                 </CardContent>
               </Card>
@@ -782,7 +782,7 @@ export default function TimeAndFeesModule() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Detailed Reports</CardTitle>
+                <CardTitle className="text-blue-900">Detailed Reports</CardTitle>
                 <CardDescription>Generate comprehensive reports</CardDescription>
               </CardHeader>
               <CardContent>

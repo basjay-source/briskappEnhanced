@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "language": "Sprache",
+    "currency": "Währung"
+  },
+  "navigation": {
+    "hub": "Ökosystem-Hub",
+    "practice": "Praxisverwaltung",
+    "accounts": "Rechnungswesen",
+    "bookkeeping": "Buchhaltung",
+    "tax": "Steuern",
+    "reports": "Berichte"
+  }
+}

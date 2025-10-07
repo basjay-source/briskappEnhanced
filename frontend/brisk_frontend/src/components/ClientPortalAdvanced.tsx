@@ -80,7 +80,7 @@ export default function ClientPortalAdvanced({
       case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'in_progress': return <Clock className="h-4 w-4 text-blue-600" />
       case 'pending': return <AlertTriangle className="h-4 w-4 text-orange-600" />
-      default: return <Clock className="h-4 w-4 text-gray-600" />
+      default: return <Clock className="h-4 w-4 text-blue-900" />
     }
   }
 
@@ -146,7 +146,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Active Jobs</p>
+                      <p className="text-sm font-medium text-blue-900">Active Jobs</p>
                       <p className="text-2xl font-bold">2</p>
                       <p className="text-xs text-blue-600">1 due this month</p>
                     </div>
@@ -159,7 +159,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Completed</p>
+                      <p className="text-sm font-medium text-blue-900">Completed</p>
                       <p className="text-2xl font-bold">1</p>
                       <p className="text-xs text-green-600">This quarter</p>
                     </div>
@@ -172,11 +172,11 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Documents</p>
+                      <p className="text-sm font-medium text-blue-900">Documents</p>
                       <p className="text-2xl font-bold">3</p>
-                      <p className="text-xs text-gray-600">Ready for review</p>
+                      <p className="text-xs text-blue-900">Ready for review</p>
                     </div>
-                    <FileText className="h-8 w-8 text-gray-600" />
+                    <FileText className="h-8 w-8 text-blue-900" />
                   </div>
                 </CardContent>
               </Card>
@@ -185,7 +185,7 @@ export default function ClientPortalAdvanced({
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Messages</p>
+                      <p className="text-sm font-medium text-blue-900">Messages</p>
                       <p className="text-2xl font-bold">2</p>
                       <p className="text-xs text-orange-600">Unread</p>
                     </div>
@@ -205,21 +205,21 @@ export default function ClientPortalAdvanced({
                   <CardContent>
                     <div className="space-y-4">
                       {jobs.slice(0, 3).map((job) => (
-                        <div key={job.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                        <div key={job.id} className="flex items-center gap-4 p-4 border-2 border-blue-900 rounded-[2px]">
                           {getStatusIcon(job.status)}
                           <div className="flex-1">
                             <h4 className="font-medium">{job.title}</h4>
-                            <p className="text-sm text-gray-600">{job.type}</p>
+                            <p className="text-sm text-blue-900">{job.type}</p>
                             <div className="flex items-center gap-2 mt-2">
                               <Progress value={job.progress} className="flex-1 h-2" />
-                              <span className="text-xs text-gray-600">{job.progress}%</span>
+                              <span className="text-xs text-blue-900">{job.progress}%</span>
                             </div>
                           </div>
                           <div className="text-right">
                             <Badge className={getStatusColor(job.status)}>
                               {job.status.replace('_', ' ')}
                             </Badge>
-                            <p className="text-xs text-gray-600 mt-1">Due: {job.dueDate}</p>
+                            <p className="text-xs text-blue-900 mt-1">Due: {job.dueDate}</p>
                           </div>
                         </div>
                       ))}
@@ -265,13 +265,13 @@ export default function ClientPortalAdvanced({
               <CardContent>
                 <div className="space-y-4">
                   {jobs.map((job) => (
-                    <div key={job.id} className="p-6 border rounded-lg">
+                    <div key={job.id} className="p-6 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {getStatusIcon(job.status)}
                           <div>
                             <h3 className="font-semibold">{job.title}</h3>
-                            <p className="text-sm text-gray-600">{job.type}</p>
+                            <p className="text-sm text-blue-900">{job.type}</p>
                           </div>
                         </div>
                         <Badge className={getStatusColor(job.status)}>
@@ -281,20 +281,20 @@ export default function ClientPortalAdvanced({
 
                       <div className="grid gap-4 md:grid-cols-2 mb-4">
                         <div>
-                          <p className="text-sm font-medium text-gray-600">Progress</p>
+                          <p className="text-sm font-medium text-blue-900">Progress</p>
                           <div className="flex items-center gap-2 mt-1">
                             <Progress value={job.progress} className="flex-1" />
-                            <span className="text-sm text-gray-600">{job.progress}%</span>
+                            <span className="text-sm text-blue-900">{job.progress}%</span>
                           </div>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-600">Due Date</p>
+                          <p className="text-sm font-medium text-blue-900">Due Date</p>
                           <p className="text-sm mt-1">{job.dueDate}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-blue-900">
                           Assigned to: <span className="font-medium">{job.assignedTo}</span>
                         </p>
                         <div className="flex gap-2">
@@ -325,12 +325,12 @@ export default function ClientPortalAdvanced({
                 <div className="space-y-4">
                   {jobs.flatMap(job => 
                     job.documents.map(doc => (
-                      <div key={`${job.id}-${doc.name}`} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={`${job.id}-${doc.name}`} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                         <div className="flex items-center gap-3">
                           <FileText className="h-8 w-8 text-blue-600" />
                           <div>
                             <h4 className="font-medium">{doc.name}</h4>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-blue-900">
                               {job.title} • {doc.size} • {doc.uploaded}
                             </p>
                           </div>
@@ -363,15 +363,15 @@ export default function ClientPortalAdvanced({
                 <div className="space-y-4">
                   {jobs.flatMap(job => 
                     job.messages.map((message, index) => (
-                      <div key={`${job.id}-${index}`} className="p-4 border rounded-lg">
+                      <div key={`${job.id}-${index}`} className="p-4 border-2 border-blue-900 rounded-[2px]">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <User className="h-4 w-4 text-gray-600" />
+                            <User className="h-4 w-4 text-blue-900" />
                             <span className="font-medium">{message.from}</span>
                           </div>
                           <span className="text-xs text-gray-500">{message.time}</span>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">{message.message}</p>
+                        <p className="text-sm text-blue-900 mb-2">{message.message}</p>
                         <p className="text-xs text-gray-500">Re: {job.title}</p>
                       </div>
                     ))

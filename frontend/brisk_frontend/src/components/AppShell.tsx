@@ -17,6 +17,8 @@ import { apiClient } from '@/lib/api'
 import BriskLogo from '@/components/BriskLogo'
 import ModuleNavigation from '@/components/ModuleNavigation'
 import MobileNavigation from '@/components/MobileNavigation'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import CurrencySwitcher from '@/components/CurrencySwitcher'
 
 export default function AppShell() {
   const { theme, setTheme } = useTheme()
@@ -74,22 +76,24 @@ export default function AppShell() {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col min-h-screen bg-background">
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
+      <div className="flex flex-col h-full w-full bg-background">
+        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 py-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <MobileNavigation />
             <BriskLogo className="h-6 w-6" showText={false} />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Search className="h-4 w-4" />
+            <LanguageSwitcher />
+            <CurrencySwitcher />
+            <Button variant="ghost" size="icon" className="h-9 w-9">
+              <Search className="h-4 w-4 text-blue-900" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="h-9 w-9">
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <Outlet />
         </main>
       </div>
@@ -98,35 +102,35 @@ export default function AppShell() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-background">
-        <Sidebar>
-        <SidebarHeader className="border-b border-sidebar-border p-4">
+      <div className="flex h-full w-full bg-background">
+        <Sidebar className="flex-shrink-0 h-full flex flex-col">
+        <SidebarHeader className="border-b border-sidebar-border p-4 flex-shrink-0">
           <div className="flex items-center gap-2">
             <BriskLogo className="h-8 w-8" showText={true} />
           </div>
         </SidebarHeader>
         
-        <SidebarContent>
+        <SidebarContent className="flex-1 overflow-y-auto overflow-x-hidden">
           <ModuleNavigation />
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="flex-1 flex flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-background px-6 py-3">
-          <div className="flex items-center gap-4">
+      <SidebarInset className="flex-1 flex flex-col h-full overflow-hidden">
+        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 md:px-6 py-3 flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <SidebarTrigger />
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900 cursor-pointer" />
               <Input
-                placeholder="Search across all modules... (⌘K)"
-                className="w-96 pl-10"
+                placeholder="Search..."
+                className="w-full pl-10 text-sm md:text-base border-2 border-blue-900"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
               />
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2px] shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
                     <span className="text-sm font-medium">Search Results</span>
                     <Button 
@@ -145,7 +149,7 @@ export default function AppShell() {
                       {searchResults.map((result, index) => (
                         <div 
                           key={index} 
-                          className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                          className="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0"
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -168,27 +172,30 @@ export default function AppShell() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
+          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+            <LanguageSwitcher />
+            <CurrencySwitcher />
+            <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <HelpCircle className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex">
+              <HelpCircle className="h-4 w-4 text-blue-900" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon"
+              className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-4 w-4 text-blue-900" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <User className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
+              <User className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden w-full">
           <Outlet />
         </main>
       </SidebarInset>

@@ -515,7 +515,7 @@ export default function NewEmailStudio() {
                   </div>
 
                   {templateData && (
-                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-50 rounded-[2px]">
                       <h4 className="font-medium text-blue-900 mb-2">Preview with Client Data:</h4>
                       <div className="text-sm text-blue-800">
                         <div><strong>Subject:</strong> {replaceTemplateVariables(composeData.subject)}</div>
@@ -534,7 +534,7 @@ export default function NewEmailStudio() {
               <div className="text-center">
                 <Mail className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Email Studio</h3>
-                <p className="text-gray-600 mb-4">Advanced email management with client data integration</p>
+                <p className="text-blue-900 mb-4">Advanced email management with client data integration</p>
                 <Button 
                   onClick={() => setIsComposing(true)}
                   className="bg-blue-600 hover:bg-blue-700"
@@ -551,7 +551,7 @@ export default function NewEmailStudio() {
         <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
           <div className="p-4 border-b">
             <h3 className="font-semibold text-gray-900">Template Variables</h3>
-            <p className="text-sm text-gray-600">Click to insert into email</p>
+            <p className="text-sm text-blue-900">Click to insert into email</p>
           </div>
 
           <div className="flex-1 overflow-y-auto">
@@ -566,7 +566,7 @@ export default function NewEmailStudio() {
                   <button
                     key={template.id}
                     onClick={() => loadTemplate(template)}
-                    className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="w-full text-left p-2 rounded-[2px] border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <div className="font-medium text-sm">{template.name}</div>
                     <div className="text-xs text-gray-500">{template.category}</div>
@@ -589,7 +589,7 @@ export default function NewEmailStudio() {
                       <button
                         key={variable.key}
                         onClick={() => insertVariable(variable.key)}
-                        className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                        className="w-full text-left p-2 rounded-[2px] border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       >
                         <div className="font-medium text-sm">{variable.label}</div>
                         <div className="text-xs text-gray-500">{variable.description}</div>
