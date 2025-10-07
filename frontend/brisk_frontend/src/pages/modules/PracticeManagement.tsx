@@ -20,8 +20,7 @@ import {
   BarChart3,
   Heart,
   Edit,
-  Trash2,
-  Search
+  Trash2
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'

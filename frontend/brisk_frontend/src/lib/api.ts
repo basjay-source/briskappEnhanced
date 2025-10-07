@@ -48,6 +48,47 @@ class ApiClient {
     return response.json()
   }
 
+  async get<T = any>(url: string, config?: { params?: Record<string, any> }): Promise<{ data: T }> {
+    let endpoint = url
+    if (config?.params) {
+      const params = new URLSearchParams()
+      Object.entries(config.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, String(value))
+        }
+      })
+      const queryString = params.toString()
+      if (queryString) {
+        endpoint = `${url}?${queryString}`
+      }
+    }
+    const data = await this.request<T>(endpoint)
+    return { data }
+  }
+
+  async post<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined
+    })
+    return { data: result }
+  }
+
+  async put<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined
+    })
+    return { data: result }
+  }
+
+  async delete<T = any>(url: string): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'DELETE'
+    })
+    return { data: result }
+  }
+
   async getTrialBalance(companyId: string, periodEnd?: string) {
     const params = periodEnd ? `?period_end=${periodEnd}` : ''
     return this.request<{ trial_balance: TrialBalanceEntry[] }>(`/accounts/trial-balance/${companyId}${params}`)
@@ -349,3 +390,4 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient()
+export const api = apiClient

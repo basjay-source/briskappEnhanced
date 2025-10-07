@@ -75,9 +75,9 @@ export default function EcosystemHub() {
         apiClient.getAIInsights()
       ])
 
-      setDashboardData(dashboard)
-      setRecentActivity(activity)
-      setAIInsights(insights)
+      setDashboardData(dashboard as DashboardData)
+      setRecentActivity(activity as Activity[])
+      setAIInsights(insights as Insight[])
     } catch (err) {
       console.error('Error loading dashboard data:', err)
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data')
