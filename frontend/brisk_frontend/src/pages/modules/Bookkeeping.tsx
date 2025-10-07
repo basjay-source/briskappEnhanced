@@ -5356,7 +5356,7 @@ export default function Bookkeeping() {
                 { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
                 { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
               ].map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{category.category}</p>
