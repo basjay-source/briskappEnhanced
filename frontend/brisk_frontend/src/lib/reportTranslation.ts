@@ -228,7 +228,7 @@ export async function refreshReportsWithLiveRates(
   const updatedReports: TranslatedReport[] = [];
 
   for (const report of reports) {
-    const liveRate = await getLiveForexRate(
+    await getLiveForexRate(
       report.originalCurrency,
       report.displayCurrency
     );

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import BriskLogo from '@/components/BriskLogo'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -22,9 +21,8 @@ export default function LoginPage() {
       {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 p-12 flex-col justify-between">
         <div>
-          <BriskLogo className="h-12 mb-8" showText={true} />
           <h1 className="text-4xl font-bold text-white mb-4">
-            Welcome to Brisk Practice Suite
+            Welcome Back
           </h1>
           <p className="text-xl text-blue-100 mb-8">
             The all-in-one accounting software platform for modern practices
@@ -66,16 +64,13 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="text-blue-100 text-sm">
-          © 2025 Brisk Practice Suite. All rights reserved.
+          © 2025 All rights reserved.
         </div>
       </div>
 
       {/* Right side - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
-          <div className="lg:hidden mb-8 text-center">
-            <BriskLogo className="h-10 mx-auto mb-4" showText={true} />
-          </div>
           
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
