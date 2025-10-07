@@ -69,6 +69,20 @@ interface Deadline {
   priority: string
 }
 
+interface TimeEntry {
+  id: string
+  job_id: string
+  task_id?: string
+  user_id: string
+  description?: string
+  hours: number
+  billable: boolean
+  hourly_rate?: number
+  date: string
+  status: string
+  created_at: string
+}
+
 interface DashboardData {
   kpis: {
     total_revenue: { value: number; change: string }
@@ -97,6 +111,7 @@ export default function PracticeManagement() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [jobs, setJobs] = useState<Job[]>([])
   const [deadlines, setDeadlines] = useState<Deadline[]>([])
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
@@ -113,10 +128,26 @@ export default function PracticeManagement() {
     job_type: 'general'
   })
 
+  const [isTimeEntryDialogOpen, setIsTimeEntryDialogOpen] = useState(false)
+  const [editingTimeEntry, setEditingTimeEntry] = useState<TimeEntry | null>(null)
+  const [timeEntryFormData, setTimeEntryFormData] = useState({
+    job_id: '',
+    task_id: '',
+    description: '',
+    hours: '',
+    billable: true,
+    hourly_rate: '',
+    date: new Date().toISOString().split('T')[0]
+  })
+  
+  const [timeSearchTerm, setTimeSearchTerm] = useState('')
+  const [selectedJobFilter, setSelectedJobFilter] = useState('all')
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
     loadDeadlines()
+    loadTimeEntries()
   }, [])
 
   const loadDashboardData = async () => {
@@ -158,9 +189,27 @@ export default function PracticeManagement() {
     }
   }
 
+  const loadTimeEntries = async () => {
+    try {
+      const params: any = {}
+      if (selectedJobFilter !== 'all') params.job_id = selectedJobFilter
+      if (timeSearchTerm) params.search = timeSearchTerm
+      
+      const response = await api.get('/api/v1/practice/time-entries', { params })
+      setTimeEntries(Array.isArray(response.data) ? response.data : [])
+    } catch (err: any) {
+      console.error('Error loading time entries:', err)
+      setError(err.message || 'Failed to load time entries')
+    }
+  }
+
   useEffect(() => {
     loadJobs()
   }, [selectedStatus, selectedPriority, searchTerm])
+
+  useEffect(() => {
+    loadTimeEntries()
+  }, [selectedJobFilter, timeSearchTerm])
 
   const handleDeleteJob = async (jobId: string) => {
     if (!confirm('Are you sure you want to delete this job?')) return
@@ -275,6 +324,102 @@ export default function PracticeManagement() {
       handleUpdateJob()
     } else {
       handleCreateJob()
+    }
+  }
+
+  const openTimeEntryDialog = (timeEntry?: TimeEntry) => {
+    if (timeEntry) {
+      setEditingTimeEntry(timeEntry)
+      setTimeEntryFormData({
+        job_id: timeEntry.job_id,
+        task_id: timeEntry.task_id || '',
+        description: timeEntry.description || '',
+        hours: timeEntry.hours.toString(),
+        billable: timeEntry.billable,
+        hourly_rate: timeEntry.hourly_rate?.toString() || '',
+        date: timeEntry.date
+      })
+    } else {
+      setEditingTimeEntry(null)
+      setTimeEntryFormData({
+        job_id: '',
+        task_id: '',
+        description: '',
+        hours: '',
+        billable: true,
+        hourly_rate: '',
+        date: new Date().toISOString().split('T')[0]
+      })
+    }
+    setIsTimeEntryDialogOpen(true)
+  }
+
+  const closeTimeEntryDialog = () => {
+    setIsTimeEntryDialogOpen(false)
+    setEditingTimeEntry(null)
+    setTimeEntryFormData({
+      job_id: '',
+      task_id: '',
+      description: '',
+      hours: '',
+      billable: true,
+      hourly_rate: '',
+      date: new Date().toISOString().split('T')[0]
+    })
+  }
+
+  const handleCreateTimeEntry = async () => {
+    try {
+      await api.post('/api/v1/practice/time-entries', {
+        ...timeEntryFormData,
+        hours: parseFloat(timeEntryFormData.hours),
+        hourly_rate: timeEntryFormData.hourly_rate ? parseFloat(timeEntryFormData.hourly_rate) : null
+      })
+      await loadTimeEntries()
+      await loadDashboardData()
+      closeTimeEntryDialog()
+    } catch (err: any) {
+      console.error('Error creating time entry:', err)
+      alert('Failed to create time entry: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateTimeEntry = async () => {
+    if (!editingTimeEntry) return
+    
+    try {
+      await api.put(`/api/v1/practice/time-entries/${editingTimeEntry.id}`, {
+        ...timeEntryFormData,
+        hours: parseFloat(timeEntryFormData.hours),
+        hourly_rate: timeEntryFormData.hourly_rate ? parseFloat(timeEntryFormData.hourly_rate) : null
+      })
+      await loadTimeEntries()
+      await loadDashboardData()
+      closeTimeEntryDialog()
+    } catch (err: any) {
+      console.error('Error updating time entry:', err)
+      alert('Failed to update time entry: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleDeleteTimeEntry = async (timeEntryId: string) => {
+    if (!confirm('Are you sure you want to delete this time entry?')) return
+    
+    try {
+      await api.delete(`/api/v1/practice/time-entries/${timeEntryId}`)
+      await loadTimeEntries()
+      await loadDashboardData()
+    } catch (err: any) {
+      console.error('Error deleting time entry:', err)
+      alert('Failed to delete time entry')
+    }
+  }
+
+  const handleSaveTimeEntry = () => {
+    if (editingTimeEntry) {
+      handleUpdateTimeEntry()
+    } else {
+      handleCreateTimeEntry()
     }
   }
 
@@ -966,7 +1111,15 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderTimeTracking = () => (
+  const renderTimeTracking = () => {
+    const timeStats = {
+      totalHours: timeEntries.reduce((sum, entry) => sum + entry.hours, 0),
+      billableHours: timeEntries.filter(e => e.billable).reduce((sum, entry) => sum + entry.hours, 0),
+      totalRevenue: timeEntries.filter(e => e.billable && e.hourly_rate).reduce((sum, entry) => sum + (entry.hours * (entry.hourly_rate || 0)), 0),
+      entriesCount: timeEntries.length
+    }
+
+    return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -974,24 +1127,294 @@ export default function PracticeManagement() {
           <p className="text-blue-900">Track time spent on jobs and tasks</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Clock className="h-4 w-4 mr-2" />
-            Start Timer
+          <Button variant="outline" onClick={loadTimeEntries}>
+            <Filter className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openTimeEntryDialog()}>
+            <Plus className="h-4 w-4 mr-2" />
+            Log Time
           </Button>
         </div>
       </div>
 
+      {/* Time Statistics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Entries</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">{timeStats.entriesCount}</div>
+            <p className="text-xs text-gray-500">Time records</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Hours</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{timeStats.totalHours.toFixed(1)}h</div>
+            <p className="text-xs text-gray-500">All time logged</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Billable Hours</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">{timeStats.billableHours.toFixed(1)}h</div>
+            <p className="text-xs text-gray-500">Client billable</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Revenue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">£{timeStats.totalRevenue.toFixed(2)}</div>
+            <p className="text-xs text-gray-500">Billable amount</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Time Entries</CardTitle>
+          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label>Search</Label>
+              <Input
+                placeholder="Search time entries..."
+                value={timeSearchTerm}
+                onChange={(e) => setTimeSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Filter by Job</Label>
+              <Select value={selectedJobFilter} onValueChange={setSelectedJobFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Jobs</SelectItem>
+                  {jobs.map(job => (
+                    <SelectItem key={job.id} value={job.id}>{job.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-blue-900">Time Entries ({timeEntries.length})</CardTitle>
           <CardDescription>Track time spent on jobs and tasks</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-blue-900">Time tracking functionality will be implemented here.</p>
+          {timeEntries.length === 0 ? (
+            <div className="text-center py-8">
+              <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-blue-900 mb-4">No time entries found. Start logging time to track your work.</p>
+              <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openTimeEntryDialog()}>
+                <Plus className="h-4 w-4 mr-2" />
+                Log First Entry
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {timeEntries.map((entry) => {
+                const relatedJob = jobs.find(j => j.id === entry.job_id)
+                const revenue = entry.billable && entry.hourly_rate ? entry.hours * entry.hourly_rate : 0
+                
+                return (
+                <div key={entry.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start space-x-4 flex-1">
+                      <Clock className="h-5 w-5 text-blue-900 mt-1" />
+                      <div className="flex-1 space-y-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-lg">{relatedJob?.title || 'Unknown Job'}</p>
+                            {entry.billable ? (
+                              <Badge className="bg-green-500">Billable</Badge>
+                            ) : (
+                              <Badge className="bg-gray-500">Non-Billable</Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-blue-900">Job ID: {entry.job_id}</p>
+                        </div>
+                        
+                        {entry.description && (
+                          <p className="text-sm text-gray-600">{entry.description}</p>
+                        )}
+                        
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            <span>{new Date(entry.date).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            <span className="font-medium text-blue-900">{entry.hours}h</span>
+                          </div>
+                          {entry.hourly_rate && (
+                            <div className="flex items-center gap-1">
+                              <span>Rate: £{entry.hourly_rate}/h</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-4">
+                      <div className="text-right space-y-2">
+                        {revenue > 0 && (
+                          <div>
+                            <p className="text-xs text-gray-500">Revenue</p>
+                            <p className="text-lg font-bold text-green-600">£{revenue.toFixed(2)}</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-col gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openTimeEntryDialog(entry)}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                          title="Edit time entry"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteTimeEntry(entry.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                          title="Delete time entry"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                )
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Time Entry Create/Edit Dialog */}
+      <Dialog open={isTimeEntryDialogOpen} onOpenChange={setIsTimeEntryDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{editingTimeEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
+            <DialogDescription>
+              {editingTimeEntry ? 'Update time entry details below' : 'Record time spent on a job or task'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="time_job_id">Job *</Label>
+              <Select value={timeEntryFormData.job_id} onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, job_id: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a job" />
+                </SelectTrigger>
+                <SelectContent>
+                  {jobs.map(job => (
+                    <SelectItem key={job.id} value={job.id}>{job.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="time_description">Description</Label>
+              <Textarea
+                id="time_description"
+                value={timeEntryFormData.description}
+                onChange={(e) => setTimeEntryFormData({ ...timeEntryFormData, description: e.target.value })}
+                placeholder="What did you work on?"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="time_hours">Hours *</Label>
+                <Input
+                  id="time_hours"
+                  type="number"
+                  step="0.25"
+                  min="0"
+                  value={timeEntryFormData.hours}
+                  onChange={(e) => setTimeEntryFormData({ ...timeEntryFormData, hours: e.target.value })}
+                  placeholder="0.00"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="time_date">Date *</Label>
+                <Input
+                  id="time_date"
+                  type="date"
+                  value={timeEntryFormData.date}
+                  onChange={(e) => setTimeEntryFormData({ ...timeEntryFormData, date: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="time_hourly_rate">Hourly Rate (£)</Label>
+                <Input
+                  id="time_hourly_rate"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={timeEntryFormData.hourly_rate}
+                  onChange={(e) => setTimeEntryFormData({ ...timeEntryFormData, hourly_rate: e.target.value })}
+                  placeholder="0.00"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="time_billable">Billable</Label>
+                <Select 
+                  value={timeEntryFormData.billable ? 'true' : 'false'} 
+                  onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, billable: value === 'true' })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Yes - Billable</SelectItem>
+                    <SelectItem value="false">No - Non-Billable</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeTimeEntryDialog}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveTimeEntry}
+              disabled={!timeEntryFormData.job_id || !timeEntryFormData.hours || !timeEntryFormData.date}
+            >
+              {editingTimeEntry ? 'Update Entry' : 'Log Time'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+    )
+  }
 
   const renderDeadlines = () => (
     <div className="space-y-6">
