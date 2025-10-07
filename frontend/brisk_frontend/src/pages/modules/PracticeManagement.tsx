@@ -143,6 +143,22 @@ export default function PracticeManagement() {
   const [timeSearchTerm, setTimeSearchTerm] = useState('')
   const [selectedJobFilter, setSelectedJobFilter] = useState('all')
 
+  const [isDeadlineDialogOpen, setIsDeadlineDialogOpen] = useState(false)
+  const [editingDeadline, setEditingDeadline] = useState<Deadline | null>(null)
+  const [deadlineFormData, setDeadlineFormData] = useState({
+    client_id: '',
+    title: '',
+    description: '',
+    deadline_type: 'tax_return',
+    due_date: '',
+    status: 'pending',
+    priority: 'medium'
+  })
+  
+  const [deadlineSearchTerm, setDeadlineSearchTerm] = useState('')
+  const [selectedDeadlineStatus, setSelectedDeadlineStatus] = useState('all')
+  const [selectedDeadlinePriority, setSelectedDeadlinePriority] = useState('all')
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
@@ -210,6 +226,10 @@ export default function PracticeManagement() {
   useEffect(() => {
     loadTimeEntries()
   }, [selectedJobFilter, timeSearchTerm])
+
+  useEffect(() => {
+    loadDeadlines()
+  }, [selectedDeadlineStatus, selectedDeadlinePriority, deadlineSearchTerm])
 
   const handleDeleteJob = async (jobId: string) => {
     if (!confirm('Are you sure you want to delete this job?')) return
@@ -420,6 +440,81 @@ export default function PracticeManagement() {
       handleUpdateTimeEntry()
     } else {
       handleCreateTimeEntry()
+    }
+  }
+
+  const openDeadlineDialog = (deadline?: Deadline) => {
+    if (deadline) {
+      setEditingDeadline(deadline)
+      setDeadlineFormData({
+        client_id: deadline.client_id,
+        title: deadline.title,
+        description: deadline.description || '',
+        deadline_type: deadline.deadline_type,
+        due_date: deadline.due_date,
+        status: deadline.status,
+        priority: deadline.priority
+      })
+    } else {
+      setEditingDeadline(null)
+      setDeadlineFormData({
+        client_id: '',
+        title: '',
+        description: '',
+        deadline_type: 'tax_return',
+        due_date: '',
+        status: 'pending',
+        priority: 'medium'
+      })
+    }
+    setIsDeadlineDialogOpen(true)
+  }
+
+  const closeDeadlineDialog = () => {
+    setIsDeadlineDialogOpen(false)
+    setEditingDeadline(null)
+    setDeadlineFormData({
+      client_id: '',
+      title: '',
+      description: '',
+      deadline_type: 'tax_return',
+      due_date: '',
+      status: 'pending',
+      priority: 'medium'
+    })
+  }
+
+  const handleCreateDeadline = async () => {
+    try {
+      await api.post('/api/v1/practice/compliance/deadlines', deadlineFormData)
+      await loadDeadlines()
+      await loadDashboardData()
+      closeDeadlineDialog()
+    } catch (err: any) {
+      console.error('Error creating deadline:', err)
+      alert('Failed to create deadline: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateDeadline = async () => {
+    if (!editingDeadline) return
+    
+    try {
+      await api.put(`/api/v1/practice/compliance/deadlines/${editingDeadline.id}`, deadlineFormData)
+      await loadDeadlines()
+      await loadDashboardData()
+      closeDeadlineDialog()
+    } catch (err: any) {
+      console.error('Error updating deadline:', err)
+      alert('Failed to update deadline: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveDeadline = () => {
+    if (editingDeadline) {
+      handleUpdateDeadline()
+    } else {
+      handleCreateDeadline()
     }
   }
 
@@ -1416,7 +1511,43 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderDeadlines = () => (
+  const renderDeadlines = () => {
+    const filteredDeadlines = deadlines.filter(deadline => {
+      const matchesSearch = !deadlineSearchTerm || 
+        deadline.title.toLowerCase().includes(deadlineSearchTerm.toLowerCase()) ||
+        deadline.client_id.toLowerCase().includes(deadlineSearchTerm.toLowerCase()) ||
+        deadline.deadline_type.toLowerCase().includes(deadlineSearchTerm.toLowerCase())
+      
+      const matchesStatus = selectedDeadlineStatus === 'all' || deadline.status === selectedDeadlineStatus
+      const matchesPriority = selectedDeadlinePriority === 'all' || deadline.priority === selectedDeadlinePriority
+      
+      return matchesSearch && matchesStatus && matchesPriority
+    })
+
+    const deadlineStats = {
+      total: deadlines.length,
+      pending: deadlines.filter(d => d.status === 'pending').length,
+      overdue: deadlines.filter(d => {
+        const days = calculateDaysRemaining(d.due_date)
+        return days < 0 && d.status !== 'completed'
+      }).length,
+      dueThisWeek: deadlines.filter(d => {
+        const days = calculateDaysRemaining(d.due_date)
+        return days >= 0 && days <= 7 && d.status !== 'completed'
+      }).length,
+      highPriority: deadlines.filter(d => d.priority === 'high' && d.status !== 'completed').length
+    }
+
+    const deadlineTypes = [
+      { value: 'tax_return', label: 'Tax Return' },
+      { value: 'vat_return', label: 'VAT Return' },
+      { value: 'accounts_filing', label: 'Accounts Filing' },
+      { value: 'companies_house', label: 'Companies House' },
+      { value: 'payroll', label: 'Payroll' },
+      { value: 'other', label: 'Other' }
+    ]
+
+    return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -1428,80 +1559,213 @@ export default function PracticeManagement() {
             <Filter className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
-            <AlertTriangle className="h-4 w-4 mr-2" />
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openDeadlineDialog()}>
+            <Plus className="h-4 w-4 mr-2" />
             Add Deadline
           </Button>
         </div>
       </div>
 
+      {/* Deadline Statistics */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Deadlines</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">{deadlineStats.total}</div>
+            <p className="text-xs text-gray-500">All deadlines</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Pending</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{deadlineStats.pending}</div>
+            <p className="text-xs text-gray-500">Not completed</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Overdue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{deadlineStats.overdue}</div>
+            <p className="text-xs text-gray-500">Past due date</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">This Week</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">{deadlineStats.dueThisWeek}</div>
+            <p className="text-xs text-gray-500">Due in 7 days</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">High Priority</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">{deadlineStats.highPriority}</div>
+            <p className="text-xs text-gray-500">Urgent items</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">All Deadlines ({deadlines.length})</CardTitle>
+          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid gap-2">
+              <Label>Search</Label>
+              <Input
+                placeholder="Search deadlines..."
+                value={deadlineSearchTerm}
+                onChange={(e) => setDeadlineSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Status</Label>
+              <Select value={selectedDeadlineStatus} onValueChange={setSelectedDeadlineStatus}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label>Priority</Label>
+              <Select value={selectedDeadlinePriority} onValueChange={setSelectedDeadlinePriority}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-blue-900">All Deadlines ({filteredDeadlines.length})</CardTitle>
           <CardDescription>Monitor and manage upcoming deadlines</CardDescription>
         </CardHeader>
         <CardContent>
-          {deadlines.length === 0 ? (
+          {filteredDeadlines.length === 0 ? (
             <div className="text-center py-8">
               <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-blue-900 mb-4">No deadlines found. Add your first deadline to track compliance.</p>
-              <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+              <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openDeadlineDialog()}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add First Deadline
               </Button>
             </div>
           ) : (
             <div className="space-y-4">
-              {deadlines.map((deadline) => {
+              {filteredDeadlines.map((deadline) => {
                 const daysRemaining = calculateDaysRemaining(deadline.due_date)
+                const isOverdue = daysRemaining < 0 && deadline.status !== 'completed'
+                
                 return (
-                  <div key={deadline.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{deadline.title}</p>
-                        <Badge className={getPriorityColor(deadline.priority)}>
-                          {deadline.priority}
-                        </Badge>
+                  <div 
+                    key={deadline.id} 
+                    className={`p-4 border-2 rounded-[2px] hover:bg-blue-50 transition-colors ${
+                      isOverdue ? 'border-red-600' : 'border-blue-900'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start space-x-4 flex-1">
+                        <AlertTriangle className={`h-5 w-5 mt-1 ${isOverdue ? 'text-red-600' : 'text-blue-900'}`} />
+                        <div className="flex-1 space-y-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-lg">{deadline.title}</p>
+                              <Badge className={getPriorityColor(deadline.priority)}>
+                                {deadline.priority}
+                              </Badge>
+                              {isOverdue && (
+                                <Badge className="bg-red-500">Overdue</Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-blue-900">Type: {deadline.deadline_type}</p>
+                            <p className="text-sm text-gray-500">Client ID: {deadline.client_id}</p>
+                          </div>
+                          
+                          {deadline.description && (
+                            <p className="text-sm text-gray-600">{deadline.description}</p>
+                          )}
+                          
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              <span>Due: {new Date(deadline.due_date).toLocaleDateString()}</span>
+                            </div>
+                            <div className={`flex items-center gap-1 font-medium ${
+                              daysRemaining < 0 ? 'text-red-700' : 
+                              daysRemaining <= 7 ? 'text-red-600' : 
+                              daysRemaining <= 14 ? 'text-orange-600' : 
+                              'text-blue-600'
+                            }`}>
+                              <Clock className="h-3 w-3" />
+                              <span>
+                                {daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` :
+                                 daysRemaining === 0 ? 'Due today' :
+                                 `${daysRemaining} days remaining`}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-blue-900 mt-1">{deadline.deadline_type}</p>
-                      <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
-                      {deadline.description && (
-                        <p className="text-xs text-gray-500 mt-1">{deadline.description}</p>
-                      )}
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <p className="text-sm font-medium">{new Date(deadline.due_date).toLocaleDateString()}</p>
-                        <p className={`text-sm font-semibold ${
-                          daysRemaining < 0 ? 'text-red-700' : 
-                          daysRemaining <= 7 ? 'text-red-600' : 
-                          daysRemaining <= 14 ? 'text-orange-600' : 
-                          'text-blue-600'
-                        }`}>
-                          {daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` :
-                           daysRemaining === 0 ? 'Due today' :
-                           `${daysRemaining} days remaining`}
-                        </p>
-                        <Badge className={`mt-1 ${deadline.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-900'}`}>
-                          {deadline.status}
-                        </Badge>
-                      </div>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteDeadline(deadline.id)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      
+                      <div className="flex items-start gap-4">
+                        <div className="text-right">
+                          <Badge className={`${
+                            deadline.status === 'completed' ? 'bg-green-500' : 
+                            deadline.status === 'cancelled' ? 'bg-gray-500' : 
+                            'bg-blue-500'
+                          }`}>
+                            {deadline.status}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openDeadlineDialog(deadline)}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            title="Edit deadline"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteDeadline(deadline.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                            title="Delete deadline"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1511,8 +1775,113 @@ export default function PracticeManagement() {
           )}
         </CardContent>
       </Card>
+
+      {/* Deadline Create/Edit Dialog */}
+      <Dialog open={isDeadlineDialogOpen} onOpenChange={setIsDeadlineDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{editingDeadline ? 'Edit Deadline' : 'Add Deadline'}</DialogTitle>
+            <DialogDescription>
+              {editingDeadline ? 'Update deadline details below' : 'Create a new compliance deadline'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="deadline_client_id">Client ID *</Label>
+              <Input
+                id="deadline_client_id"
+                value={deadlineFormData.client_id}
+                onChange={(e) => setDeadlineFormData({ ...deadlineFormData, client_id: e.target.value })}
+                placeholder="e.g., CLIENT001"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="deadline_title">Title *</Label>
+              <Input
+                id="deadline_title"
+                value={deadlineFormData.title}
+                onChange={(e) => setDeadlineFormData({ ...deadlineFormData, title: e.target.value })}
+                placeholder="e.g., Q2 VAT Return Filing"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="deadline_type">Deadline Type *</Label>
+              <Select value={deadlineFormData.deadline_type} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, deadline_type: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {deadlineTypes.map(type => (
+                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="deadline_description">Description</Label>
+              <Textarea
+                id="deadline_description"
+                value={deadlineFormData.description}
+                onChange={(e) => setDeadlineFormData({ ...deadlineFormData, description: e.target.value })}
+                placeholder="Additional details about this deadline..."
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="deadline_due_date">Due Date *</Label>
+                <Input
+                  id="deadline_due_date"
+                  type="date"
+                  value={deadlineFormData.due_date}
+                  onChange={(e) => setDeadlineFormData({ ...deadlineFormData, due_date: e.target.value })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="deadline_priority">Priority *</Label>
+                <Select value={deadlineFormData.priority} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, priority: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {priorityOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="deadline_status">Status *</Label>
+              <Select value={deadlineFormData.status} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, status: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeDeadlineDialog}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveDeadline}
+              disabled={!deadlineFormData.client_id || !deadlineFormData.title || !deadlineFormData.due_date}
+            >
+              {editingDeadline ? 'Update Deadline' : 'Create Deadline'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+    )
+  }
 
   const renderClientPortal = () => (
     <div className="space-y-6">
