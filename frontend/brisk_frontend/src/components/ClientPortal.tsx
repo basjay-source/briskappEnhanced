@@ -69,13 +69,13 @@ export default function ClientPortal() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Client Portal</h1>
-          <p className="text-gray-600 mt-2">Track your jobs, documents, and communications</p>
+          <p className="text-blue-900 mt-2">Track your jobs, documents, and communications</p>
         </div>
         <div className="flex items-center gap-2">
           <User className="h-8 w-8 text-gray-400" />
           <div className="text-right">
             <p className="font-medium">ABC Manufacturing Ltd</p>
-            <p className="text-sm text-gray-600">Client ID: CLI001</p>
+            <p className="text-sm text-blue-900">Client ID: CLI001</p>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function ClientPortal() {
                         {job.status === 'in_progress' ? 'In Progress' : 'Completed'}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">{job.description}</p>
+                    <p className="text-sm text-blue-900 mb-3">{job.description}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-20 bg-gray-200 rounded-full h-2">
@@ -110,9 +110,9 @@ export default function ClientPortal() {
                             style={{ width: `${job.progress}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs text-gray-600">{job.progress}%</span>
+                        <span className="text-xs text-blue-900">{job.progress}%</span>
                       </div>
-                      <p className="text-sm text-gray-600">Due: {job.dueDate}</p>
+                      <p className="text-sm text-blue-900">Due: {job.dueDate}</p>
                     </div>
                   </div>
                 ))}
@@ -129,7 +129,7 @@ export default function ClientPortal() {
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-300 rounded-[2px] p-6 text-center">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Drag and drop files here or click to browse</p>
+                  <p className="text-sm text-blue-900">Drag and drop files here or click to browse</p>
                   <Button variant="outline" className="mt-2">
                     Choose Files
                   </Button>
@@ -142,7 +142,7 @@ export default function ClientPortal() {
                         <FileText className="h-5 w-5 text-gray-400" />
                         <div>
                           <p className="font-medium text-sm">{doc.name}</p>
-                          <p className="text-xs text-gray-600">{doc.type} • {doc.uploadDate}</p>
+                          <p className="text-xs text-blue-900">{doc.type} • {doc.uploadDate}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">

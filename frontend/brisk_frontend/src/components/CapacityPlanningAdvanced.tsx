@@ -233,7 +233,7 @@ export default function CapacityPlanningAdvanced() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Advanced Capacity Planning</h2>
-          <p className="text-gray-600">AI-powered resource optimization and forecasting</p>
+          <p className="text-blue-900">AI-powered resource optimization and forecasting</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -252,7 +252,7 @@ export default function CapacityPlanningAdvanced() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Team Utilization</p>
+                <p className="text-sm font-medium text-blue-900">Team Utilization</p>
                 <p className="text-2xl font-bold">{metrics.avgUtilization.toFixed(1)}%</p>
                 <p className={`text-xs ${getUtilizationColor(metrics.avgUtilization)}`}>
                   {metrics.overloadedMembers} overloaded
@@ -267,7 +267,7 @@ export default function CapacityPlanningAdvanced() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Available Capacity</p>
+                <p className="text-sm font-medium text-blue-900">Available Capacity</p>
                 <p className="text-2xl font-bold">{metrics.availableCapacity.toFixed(0)}h</p>
                 <p className="text-xs text-green-600">This week</p>
               </div>
@@ -280,7 +280,7 @@ export default function CapacityPlanningAdvanced() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Unassigned Jobs</p>
+                <p className="text-sm font-medium text-blue-900">Unassigned Jobs</p>
                 <p className="text-2xl font-bold">{unassignedJobs.length}</p>
                 <p className="text-xs text-orange-600">Require assignment</p>
               </div>
@@ -293,7 +293,7 @@ export default function CapacityPlanningAdvanced() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Efficiency Score</p>
+                <p className="text-sm font-medium text-blue-900">Efficiency Score</p>
                 <p className="text-2xl font-bold">87%</p>
                 <p className="text-xs text-blue-600">+3% this month</p>
               </div>
@@ -328,7 +328,7 @@ export default function CapacityPlanningAdvanced() {
                         </div>
                         <div>
                           <h4 className="font-medium">{member.name}</h4>
-                          <p className="text-sm text-gray-600">{member.role}</p>
+                          <p className="text-sm text-blue-900">{member.role}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
@@ -344,7 +344,7 @@ export default function CapacityPlanningAdvanced() {
 
                     <div className="grid gap-4 md:grid-cols-3 mb-3">
                       <div>
-                        <p className="text-sm font-medium text-gray-600 mb-1">Current Utilization</p>
+                        <p className="text-sm font-medium text-blue-900 mb-1">Current Utilization</p>
                         <div className="flex items-center gap-2">
                           <Progress 
                             value={Math.min(member.currentUtilization, 100)} 
@@ -356,11 +356,11 @@ export default function CapacityPlanningAdvanced() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600 mb-1">Active Jobs</p>
+                        <p className="text-sm font-medium text-blue-900 mb-1">Active Jobs</p>
                         <p className="text-lg font-semibold">{member.assignedJobs}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600 mb-1">Available This Week</p>
+                        <p className="text-sm font-medium text-blue-900 mb-1">Available This Week</p>
                         <p className="text-lg font-semibold">{member.availability.thisWeek}h</p>
                       </div>
                     </div>
@@ -412,13 +412,13 @@ export default function CapacityPlanningAdvanced() {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h4 className="font-medium text-sm">{job.title}</h4>
-                          <p className="text-xs text-gray-600">{job.client}</p>
+                          <p className="text-xs text-blue-900">{job.client}</p>
                         </div>
                         <Badge className={getPriorityColor(job.priority)}>
                           {job.priority}
                         </Badge>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-gray-600">
+                      <div className="flex items-center justify-between text-xs text-blue-900">
                         <span>{job.estimatedHours}h estimated</span>
                         <span>Due: {job.dueDate}</span>
                       </div>
@@ -456,13 +456,13 @@ export default function CapacityPlanningAdvanced() {
                           </div>
                           <div>
                             <h4 className="font-medium">{member.name}</h4>
-                            <p className="text-sm text-gray-600">{member.role}</p>
+                            <p className="text-sm text-blue-900">{member.role}</p>
                           </div>
                         </div>
 
                         <div className="mb-3">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm text-gray-600">Utilization</span>
+                            <span className="text-sm text-blue-900">Utilization</span>
                             <span className={`text-sm font-medium ${getUtilizationColor(member.currentUtilization)}`}>
                               {member.currentUtilization}%
                             </span>
@@ -599,7 +599,7 @@ export default function CapacityPlanningAdvanced() {
                       </Button>
                     </div>
                     <h4 className="font-medium mb-2">{rec.title}</h4>
-                    <p className="text-sm text-gray-600 mb-3">{rec.description}</p>
+                    <p className="text-sm text-blue-900 mb-3">{rec.description}</p>
                     <div className="grid gap-2 md:grid-cols-3 text-xs">
                       <div>
                         <span className="font-medium text-green-600">Impact:</span>

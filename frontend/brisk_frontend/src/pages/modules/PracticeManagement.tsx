@@ -423,7 +423,7 @@ export default function PracticeManagement() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading dashboard data...</p>
+            <p className="text-blue-900">Loading dashboard data...</p>
           </div>
         </div>
       )
@@ -481,7 +481,7 @@ export default function PracticeManagement() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
-            <p className="text-gray-600 mt-2">Workflow automation, job tracking, compliance management & communications</p>
+            <p className="text-blue-900 mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -541,7 +541,7 @@ export default function PracticeManagement() {
             </CardHeader>
             <CardContent>
               {jobs.length === 0 ? (
-                <p className="text-gray-600 text-center py-4">No jobs found. Create your first job to get started.</p>
+                <p className="text-blue-900 text-center py-4">No jobs found. Create your first job to get started.</p>
               ) : (
                 <div className="space-y-4">
                   {jobs.slice(0, 5).map((job) => (
@@ -550,7 +550,7 @@ export default function PracticeManagement() {
                         {getStatusIcon(job.status)}
                         <div>
                           <p className="font-medium">{job.title}</p>
-                          <p className="text-sm text-gray-600">Client ID: {job.client_id}</p>
+                          <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
                           {job.due_date && (
                             <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
                           )}
@@ -562,7 +562,7 @@ export default function PracticeManagement() {
                             {job.priority}
                           </Badge>
                           {job.assigned_to && (
-                            <p className="text-sm text-gray-600 mt-1">{job.assigned_to}</p>
+                            <p className="text-sm text-blue-900 mt-1">{job.assigned_to}</p>
                           )}
                         </div>
                         <Button
@@ -591,7 +591,7 @@ export default function PracticeManagement() {
             </CardHeader>
             <CardContent>
               {deadlines.length === 0 ? (
-                <p className="text-gray-600 text-center py-4">No upcoming deadlines.</p>
+                <p className="text-blue-900 text-center py-4">No upcoming deadlines.</p>
               ) : (
                 <div className="space-y-4">
                   {deadlines.slice(0, 5).map((deadline) => {
@@ -600,7 +600,7 @@ export default function PracticeManagement() {
                       <div key={deadline.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
                         <div className="flex-1">
                           <p className="font-medium">{deadline.title}</p>
-                          <p className="text-sm text-gray-600">{deadline.deadline_type}</p>
+                          <p className="text-sm text-blue-900">{deadline.deadline_type}</p>
                           <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
                         </div>
                         <div className="text-right flex items-center gap-2">
@@ -639,7 +639,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Job Overview</h2>
-          <p className="text-gray-600">Complete job management and tracking</p>
+          <p className="text-blue-900">Complete job management and tracking</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={loadJobs}>
@@ -663,7 +663,7 @@ export default function PracticeManagement() {
             {jobs.length === 0 ? (
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">No jobs found. Create your first job to get started.</p>
+                <p className="text-blue-900 mb-4">No jobs found. Create your first job to get started.</p>
                 <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openJobDialog()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create First Job
@@ -677,7 +677,7 @@ export default function PracticeManagement() {
                       {getStatusIcon(job.status)}
                       <div className="flex-1">
                         <p className="font-medium">{job.title}</p>
-                        <p className="text-sm text-gray-600">Client ID: {job.client_id}</p>
+                        <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
                         {job.due_date && (
                           <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
                         )}
@@ -692,7 +692,7 @@ export default function PracticeManagement() {
                           {job.priority}
                         </Badge>
                         {job.assigned_to && (
-                          <p className="text-sm text-gray-600 mt-1">{job.assigned_to}</p>
+                          <p className="text-sm text-blue-900 mt-1">{job.assigned_to}</p>
                         )}
                         <Progress value={job.progress_percentage} className="w-20 mt-2" />
                         <p className="text-xs text-gray-500 mt-1">{job.progress_percentage}% Complete</p>
@@ -835,7 +835,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Time Tracking</h2>
-          <p className="text-gray-600">Track time spent on jobs and tasks</p>
+          <p className="text-blue-900">Track time spent on jobs and tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -851,7 +851,7 @@ export default function PracticeManagement() {
           <CardDescription>Track time spent on jobs and tasks</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Time tracking functionality will be implemented here.</p>
+          <p className="text-blue-900">Time tracking functionality will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -862,7 +862,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Deadlines Management</h2>
-          <p className="text-gray-600">Monitor and manage upcoming deadlines</p>
+          <p className="text-blue-900">Monitor and manage upcoming deadlines</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={loadDeadlines}>
@@ -885,7 +885,7 @@ export default function PracticeManagement() {
           {deadlines.length === 0 ? (
             <div className="text-center py-8">
               <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-4">No deadlines found. Add your first deadline to track compliance.</p>
+              <p className="text-blue-900 mb-4">No deadlines found. Add your first deadline to track compliance.</p>
               <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
                 <Plus className="h-4 w-4 mr-2" />
                 Add First Deadline
@@ -904,7 +904,7 @@ export default function PracticeManagement() {
                           {deadline.priority}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">{deadline.deadline_type}</p>
+                      <p className="text-sm text-blue-900 mt-1">{deadline.deadline_type}</p>
                       <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
                       {deadline.description && (
                         <p className="text-xs text-gray-500 mt-1">{deadline.description}</p>
@@ -960,7 +960,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Client Portal</h2>
-          <p className="text-gray-600">Advanced client portal management and configuration</p>
+          <p className="text-blue-900">Advanced client portal management and configuration</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -978,7 +978,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Workflow Builder</h2>
-          <p className="text-gray-600">Design and configure automated workflows</p>
+          <p className="text-blue-900">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -996,7 +996,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
-          <p className="text-gray-600">Configure automated workflow triggers and actions</p>
+          <p className="text-blue-900">Configure automated workflow triggers and actions</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1012,7 +1012,7 @@ export default function PracticeManagement() {
           <CardDescription>Configure automated workflow triggers and actions</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">Workflow automation configuration will be implemented here.</p>
+          <p className="text-blue-900">Workflow automation configuration will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -1023,7 +1023,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Capacity Planning</h2>
-          <p className="text-gray-600">Advanced capacity planning and resource allocation</p>
+          <p className="text-blue-900">Advanced capacity planning and resource allocation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1041,7 +1041,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Compliance Management</h2>
-          <p className="text-gray-600">Automated compliance monitoring and management</p>
+          <p className="text-blue-900">Automated compliance monitoring and management</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1059,7 +1059,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Practice Analytics</h2>
-          <p className="text-gray-600">Analyze practice performance and efficiency</p>
+          <p className="text-blue-900">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1082,7 +1082,7 @@ export default function PracticeManagement() {
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   Export Report
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                   Schedule Report
                 </button>
               </div>
@@ -1262,15 +1262,15 @@ export default function PracticeManagement() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
-                  <div className="text-sm text-gray-600">Average Project Value</div>
+                  <div className="text-sm text-blue-900">Average Project Value</div>
                 </div>
                 <div className="text-center p-4 bg-orange-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-orange-600">12.3</div>
-                  <div className="text-sm text-gray-600">Days Average Completion</div>
+                  <div className="text-sm text-blue-900">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-green-600">98.7%</div>
-                  <div className="text-sm text-gray-600">Client Retention Rate</div>
+                  <div className="text-sm text-blue-900">Client Retention Rate</div>
                 </div>
               </div>
             </div>
@@ -1285,7 +1285,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">AI Practice Adviser</h2>
-          <p className="text-gray-600">Get intelligent insights for practice optimization</p>
+          <p className="text-blue-900">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1308,7 +1308,7 @@ export default function PracticeManagement() {
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   New Conversation
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                   View History
                 </button>
               </div>
@@ -1321,7 +1321,7 @@ export default function PracticeManagement() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-blue-900">Practice Management AI Adviser</h4>
-                  <p className="text-sm text-gray-600">Specialized in practice operations, client management, and business strategy</p>
+                  <p className="text-sm text-blue-900">Specialized in practice operations, client management, and business strategy</p>
                 </div>
               </div>
 
@@ -1342,7 +1342,7 @@ export default function PracticeManagement() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-gray-600 text-sm">You</span>
+                    <span className="text-blue-900 text-sm">You</span>
                   </div>
                   <div className="flex-1">
                     <textarea
@@ -1354,13 +1354,13 @@ export default function PracticeManagement() {
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
                       Workflow Analysis
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
                       Client Strategy
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
                       Performance Review
                     </button>
                   </div>
@@ -1397,21 +1397,21 @@ export default function PracticeManagement() {
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Review high-risk client accounts</p>
-                      <p className="text-xs text-gray-600">3 clients showing payment delays</p>
+                      <p className="text-xs text-blue-900">3 clients showing payment delays</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
-                      <p className="text-xs text-gray-600">12 agreements due for renewal</p>
+                      <p className="text-xs text-blue-900">12 agreements due for renewal</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Schedule team training</p>
-                      <p className="text-xs text-gray-600">New compliance requirements</p>
+                      <p className="text-xs text-blue-900">New compliance requirements</p>
                     </div>
                   </div>
                 </div>
@@ -1428,7 +1428,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Email Studio</h2>
-          <p className="text-gray-600">Advanced email management and automation</p>
+          <p className="text-blue-900">Advanced email management and automation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1446,7 +1446,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Payslip Templates</h2>
-          <p className="text-gray-600">Streamline payroll processing with branded templates</p>
+          <p className="text-blue-900">Streamline payroll processing with branded templates</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1473,7 +1473,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Invoice Templates</h2>
-          <p className="text-gray-600">Streamline invoice creation with branded templates</p>
+          <p className="text-blue-900">Streamline invoice creation with branded templates</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1500,7 +1500,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Template Analytics</h2>
-          <p className="text-gray-600">Monitor template performance and usage patterns</p>
+          <p className="text-blue-900">Monitor template performance and usage patterns</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1523,7 +1523,7 @@ export default function PracticeManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">24</div>
-                <p className="text-xs text-gray-600">+3 this month</p>
+                <p className="text-xs text-blue-900">+3 this month</p>
               </CardContent>
             </Card>
             <Card>
@@ -1532,7 +1532,7 @@ export default function PracticeManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">156</div>
-                <p className="text-xs text-gray-600">+12 this week</p>
+                <p className="text-xs text-blue-900">+12 this week</p>
               </CardContent>
             </Card>
             <Card>
@@ -1541,7 +1541,7 @@ export default function PracticeManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">42h</div>
-                <p className="text-xs text-gray-600">This month</p>
+                <p className="text-xs text-blue-900">This month</p>
               </CardContent>
             </Card>
           </div>
@@ -1555,7 +1555,7 @@ export default function PracticeManagement() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Practice Reports</h2>
-          <p className="text-gray-600">Generate comprehensive practice management reports</p>
+          <p className="text-blue-900">Generate comprehensive practice management reports</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -1578,7 +1578,7 @@ export default function PracticeManagement() {
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   Generate Report
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                   Schedule Reports
                 </button>
               </div>
@@ -1592,7 +1592,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Financial Reports</h4>
-                    <p className="text-sm text-gray-600">Revenue, profitability, and financial performance</p>
+                    <p className="text-sm text-blue-900">Revenue, profitability, and financial performance</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -1622,7 +1622,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Client Reports</h4>
-                    <p className="text-sm text-gray-600">Client analysis and relationship metrics</p>
+                    <p className="text-sm text-blue-900">Client analysis and relationship metrics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -1652,7 +1652,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Performance Reports</h4>
-                    <p className="text-sm text-gray-600">Team productivity and efficiency metrics</p>
+                    <p className="text-sm text-blue-900">Team productivity and efficiency metrics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -1682,7 +1682,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Compliance Reports</h4>
-                    <p className="text-sm text-gray-600">Regulatory and compliance tracking</p>
+                    <p className="text-sm text-blue-900">Regulatory and compliance tracking</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -1712,7 +1712,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Business Intelligence</h4>
-                    <p className="text-sm text-gray-600">Strategic insights and analytics</p>
+                    <p className="text-sm text-blue-900">Strategic insights and analytics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -1742,7 +1742,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Custom Reports</h4>
-                    <p className="text-sm text-gray-600">Build your own reports and dashboards</p>
+                    <p className="text-sm text-blue-900">Build your own reports and dashboards</p>
                   </div>
                 </div>
                 <div className="space-y-2">

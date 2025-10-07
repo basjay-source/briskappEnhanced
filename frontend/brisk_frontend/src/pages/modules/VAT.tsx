@@ -110,7 +110,7 @@ export default function VAT() {
           <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>
             VAT Management
           </h1>
-          <p className="text-gray-600 mt-2">Comprehensive VAT returns, schemes, and compliance management</p>
+          <p className="text-blue-900 mt-2">Comprehensive VAT returns, schemes, and compliance management</p>
         </div>
         <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
           <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -181,15 +181,15 @@ export default function VAT() {
                 <CardContent>
                   <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} mb-4`}>
                     <div>
-                      <Label className="text-sm text-gray-600">Net Sales</Label>
+                      <Label className="text-sm text-blue-900">Net Sales</Label>
                       <p className="font-semibold">£{vatReturn.netSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-gray-600">VAT on Sales</Label>
+                      <Label className="text-sm text-blue-900">VAT on Sales</Label>
                       <p className="font-semibold">£{vatReturn.vatOnSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-gray-600">VAT on Purchases</Label>
+                      <Label className="text-sm text-blue-900">VAT on Purchases</Label>
                       <p className="font-semibold">£{vatReturn.vatOnPurchases.toLocaleString()}</p>
                     </div>
                   </div>
@@ -242,7 +242,7 @@ export default function VAT() {
                 <CardContent>
                   {scheme.rate && (
                     <div className="mb-4">
-                      <Label className="text-sm text-gray-600">Rate</Label>
+                      <Label className="text-sm text-blue-900">Rate</Label>
                       <p className="text-2xl font-bold text-brisk-primary">{scheme.rate}%</p>
                     </div>
                   )}
@@ -281,7 +281,7 @@ export default function VAT() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-4">Track VAT liability over time</p>
+                <p className="text-sm text-blue-900 mb-4">Track VAT liability over time</p>
                 <Button className="w-full bg-brisk-primary hover:bg-brisk-primary-600">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   View Report
@@ -297,7 +297,7 @@ export default function VAT() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-4">Analyze VAT rates across transactions</p>
+                <p className="text-sm text-blue-900 mb-4">Analyze VAT rates across transactions</p>
                 <Button className="w-full bg-brisk-primary hover:bg-brisk-primary-600">
                   <Calculator className="h-4 w-4 mr-2" />
                   View Analysis
@@ -313,7 +313,7 @@ export default function VAT() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-4">Historical VAT return submissions</p>
+                <p className="text-sm text-blue-900 mb-4">Historical VAT return submissions</p>
                 <Button className="w-full bg-brisk-primary hover:bg-brisk-primary-600">
                   <Calendar className="h-4 w-4 mr-2" />
                   View History
@@ -344,28 +344,28 @@ export default function VAT() {
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-semibold">Digital Records</p>
-                      <p className="text-sm text-gray-600">Compliant</p>
+                      <p className="text-sm text-blue-900">Compliant</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-semibold">Software Integration</p>
-                      <p className="text-sm text-gray-600">Active</p>
+                      <p className="text-sm text-blue-900">Active</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-blue-500" />
                     <div>
                       <p className="font-semibold">Quarterly Submissions</p>
-                      <p className="text-sm text-gray-600">1 Overdue</p>
+                      <p className="text-sm text-blue-900">1 Overdue</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-semibold">API Connection</p>
-                      <p className="text-sm text-gray-600">Connected</p>
+                      <p className="text-sm text-blue-900">Connected</p>
                     </div>
                   </div>
                 </div>
@@ -383,7 +383,7 @@ export default function VAT() {
                     <Upload className="h-4 w-4 text-blue-500" />
                     <div className="flex-1">
                       <p className="font-semibold">VAT Return Q4 2024 Submitted</p>
-                      <p className="text-sm text-gray-600">Submitted to HMRC on 28 Jan 2025</p>
+                      <p className="text-sm text-blue-900">Submitted to HMRC on 28 Jan 2025</p>
                     </div>
                     <span className="text-sm text-gray-500">2 days ago</span>
                   </div>
@@ -391,7 +391,7 @@ export default function VAT() {
                     <Edit className="h-4 w-4 text-green-500" />
                     <div className="flex-1">
                       <p className="font-semibold">VAT Scheme Updated</p>
-                      <p className="text-sm text-gray-600">Changed to Standard VAT scheme</p>
+                      <p className="text-sm text-blue-900">Changed to Standard VAT scheme</p>
                     </div>
                     <span className="text-sm text-gray-500">1 week ago</span>
                   </div>
@@ -399,7 +399,7 @@ export default function VAT() {
                     <AlertCircle className="h-4 w-4 text-red-500" />
                     <div className="flex-1">
                       <p className="font-semibold">Overdue Return Detected</p>
-                      <p className="text-sm text-gray-600">Q3 2024 return is overdue</p>
+                      <p className="text-sm text-blue-900">Q3 2024 return is overdue</p>
                     </div>
                     <span className="text-sm text-gray-500">2 weeks ago</span>
                   </div>

@@ -140,7 +140,7 @@ export default function WorkflowBuilder() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Workflow Builder</h1>
-          <p className="text-gray-600 mt-2">Create and customize workflow templates</p>
+          <p className="text-blue-900 mt-2">Create and customize workflow templates</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline">

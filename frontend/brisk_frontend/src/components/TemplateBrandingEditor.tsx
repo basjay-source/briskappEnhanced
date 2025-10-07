@@ -239,7 +239,7 @@ export default function TemplateBrandingEditor({
                 >
                   {branding.custom_branding?.company_name || 'Your Company Name'}
                 </h5>
-                <p className="text-sm text-gray-600">Sample {templateType} content</p>
+                <p className="text-sm text-blue-900">Sample {templateType} content</p>
                 <div 
                   className="mt-2 px-3 py-1 rounded text-white text-sm inline-block"
                   style={{ backgroundColor: branding.theme_colors?.secondary || '#1E40AF' }}

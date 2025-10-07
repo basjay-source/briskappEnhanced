@@ -325,7 +325,7 @@ export default function PersonalTax() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h2 className={`font-bold text-gray-900 ${isMobile ? 'text-xl' : 'text-2xl'}`}>Personal Tax Dashboard</h2>
-            <p className="text-gray-600 mt-2">SA returns, CGT optimization, and personal tax planning</p>
+            <p className="text-blue-900 mt-2">SA returns, CGT optimization, and personal tax planning</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -349,12 +349,12 @@ export default function PersonalTax() {
                 <div className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-3 border-2 border-blue-900 rounded-[2px]">
-                      <div className="text-sm text-gray-600">Current Period</div>
+                      <div className="text-sm text-blue-900">Current Period</div>
                       <div className="text-lg font-semibold">{kpi.value}</div>
                       <div className="text-xs text-green-600">{kpi.change}</div>
                     </div>
                     <div className="p-3 border-2 border-blue-900 rounded-[2px]">
-                      <div className="text-sm text-gray-600">Previous Period</div>
+                      <div className="text-sm text-blue-900">Previous Period</div>
                       <div className="text-lg font-semibold">£125,000</div>
                       <div className="text-xs text-green-600">+8%</div>
                     </div>
@@ -433,7 +433,7 @@ export default function PersonalTax() {
                       <div className="font-medium">{opportunity.opportunity}</div>
                       <Badge variant="outline">£{opportunity.potentialSaving}</Badge>
                     </div>
-                    <div className="text-sm text-gray-600 mb-2">{opportunity.description}</div>
+                    <div className="text-sm text-blue-900 mb-2">{opportunity.description}</div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">Priority: {opportunity.priority}</span>
                       <Button size="sm" variant="outline">
@@ -463,7 +463,7 @@ export default function PersonalTax() {
                         </div>
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                           <h4 className="font-semibold text-blue-900 mb-2">Tax Efficiency</h4>
-                          <p className="text-sm text-gray-600">Personal tax optimization</p>
+                          <p className="text-sm text-blue-900">Personal tax optimization</p>
                           <div className="mt-2">
                             <div className="flex justify-between text-xs">
                               <span>Efficiency Score</span>
@@ -570,7 +570,7 @@ export default function PersonalTax() {
                             {getStatusIcon(saReturn.status)}
                             <div className="flex-1">
                               <h4 className="font-medium text-blue-900">{saReturn.client}</h4>
-                              <p className="text-sm text-gray-600">Tax Year: {saReturn.taxYear}</p>
+                              <p className="text-sm text-blue-900">Tax Year: {saReturn.taxYear}</p>
                               <div className="flex items-center gap-2 mt-1">
                                 <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
@@ -589,7 +589,7 @@ export default function PersonalTax() {
                                     style={{ width: `${saReturn.progress}%` }}
                                   ></div>
                                 </div>
-                                <span className="text-xs text-gray-600">{saReturn.progress}%</span>
+                                <span className="text-xs text-blue-900">{saReturn.progress}%</span>
                               </div>
                             </div>
                           </div>
@@ -659,21 +659,21 @@ export default function PersonalTax() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">SA100 Filing</p>
-                          <p className="text-xs text-gray-600">12 returns pending</p>
+                          <p className="text-xs text-blue-900">12 returns pending</p>
                         </div>
                         <Badge className="bg-red-100 text-red-800">7 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">Payment on Account</p>
-                          <p className="text-xs text-gray-600">8 clients affected</p>
+                          <p className="text-xs text-blue-900">8 clients affected</p>
                         </div>
                         <Badge className="bg-orange-100 text-orange-800">14 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">CGT Annual Exemption</p>
-                          <p className="text-xs text-gray-600">Planning required</p>
+                          <p className="text-xs text-blue-900">Planning required</p>
                         </div>
                         <Badge className="bg-brisk-primary-50 text-brisk-primary">45 days</Badge>
                       </div>
@@ -766,7 +766,7 @@ export default function PersonalTax() {
                               {getStatusIcon(saReturn.status)}
                               <div>
                                 <h3 className="font-semibold text-blue-900">{saReturn.client}</h3>
-                                <p className="text-sm text-gray-600">Tax Year: {saReturn.taxYear}</p>
+                                <p className="text-sm text-blue-900">Tax Year: {saReturn.taxYear}</p>
                                 <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
                                 </Badge>
@@ -775,7 +775,7 @@ export default function PersonalTax() {
                             <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
                               <div>
                                 <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
-                                <p className="text-sm text-gray-600">Estimated Tax</p>
+                                <p className="text-sm text-blue-900">Estimated Tax</p>
                                 <p className="text-xs text-gray-500">Due: {saReturn.dueDate}</p>
                               </div>
                               <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
@@ -878,12 +878,12 @@ export default function PersonalTax() {
                           <div>
                             <h3 className="font-semibold text-blue-900">{opportunity.client}</h3>
                             <p className="text-sm font-medium text-brisk-primary">{opportunity.opportunity}</p>
-                            <p className="text-sm text-gray-600">{opportunity.description}</p>
+                            <p className="text-sm text-blue-900">{opportunity.description}</p>
                           </div>
                           <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                             <div>
                               <p className="text-lg font-bold text-green-600">£{opportunity.potentialSaving}</p>
-                              <p className="text-sm text-gray-600">Potential Saving</p>
+                              <p className="text-sm text-blue-900">Potential Saving</p>
                             </div>
                             <Button size="sm" className={isMobile ? '' : 'ml-4'}>
                               Apply
@@ -1160,7 +1160,7 @@ export default function PersonalTax() {
                             <Banknote className="h-4 w-4 text-blue-600" />
                             <span className="font-medium">Junior ISAs</span>
                           </div>
-                          <p className="text-sm text-gray-600">£9,000 annual allowance per child</p>
+                          <p className="text-sm text-blue-900">£9,000 annual allowance per child</p>
                           <Button size="sm" className="mt-2" variant="outline">Setup</Button>
                         </div>
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
@@ -1168,7 +1168,7 @@ export default function PersonalTax() {
                             <Shield className="h-4 w-4 text-green-600" />
                             <span className="font-medium">Education Planning</span>
                           </div>
-                          <p className="text-sm text-gray-600">Tax-efficient education funding</p>
+                          <p className="text-sm text-blue-900">Tax-efficient education funding</p>
                           <Button size="sm" className="mt-2" variant="outline">Plan</Button>
                         </div>
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
@@ -1176,7 +1176,7 @@ export default function PersonalTax() {
                             <Users className="h-4 w-4 text-purple-600" />
                             <span className="font-medium">Income Splitting</span>
                           </div>
-                          <p className="text-sm text-gray-600">Optimize family income distribution</p>
+                          <p className="text-sm text-blue-900">Optimize family income distribution</p>
                           <Button size="sm" className="mt-2" variant="outline">Analyze</Button>
                         </div>
                       </div>

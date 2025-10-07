@@ -360,14 +360,14 @@ export default function Payroll() {
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">Monthly Payroll</p>
-                      <p className="text-sm text-gray-600">December 2024</p>
+                      <p className="text-sm text-blue-900">December 2024</p>
                     </div>
                     <Badge variant="outline">Due: 28 Dec</Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">RTI Submission</p>
-                      <p className="text-sm text-gray-600">FPS December</p>
+                      <p className="text-sm text-blue-900">FPS December</p>
                     </div>
                     <Badge variant="secondary">Due: 19 Jan</Badge>
                   </div>
@@ -418,7 +418,7 @@ export default function Payroll() {
         <div className="text-center py-8">
           <Calculator className="h-12 w-12 mx-auto text-gray-400 mb-4" />
           <h3 className="text-lg font-semibold mb-2">Select a Payroll Processing Option</h3>
-          <p className="text-gray-600">Choose from the sub-menu to access payroll processing features</p>
+          <p className="text-blue-900">Choose from the sub-menu to access payroll processing features</p>
         </div>
       )
     }
@@ -487,7 +487,7 @@ export default function Payroll() {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-gray-600">This section is under development</p>
+        <p className="text-blue-900">This section is under development</p>
       </div>
     )
   }
@@ -499,7 +499,7 @@ export default function Payroll() {
         <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
           <div className="p-4 border-b-2 border-blue-900">
             <h1 className="text-xl font-bold text-gray-900">Payroll</h1>
-            <p className="text-sm text-gray-600 mt-1">Comprehensive payroll management</p>
+            <p className="text-sm text-blue-900 mt-1">Comprehensive payroll management</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">

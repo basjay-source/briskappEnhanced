@@ -251,7 +251,7 @@ export default function InvoiceTemplateManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Invoice Templates</h2>
-          <p className="text-gray-600">Customize invoice templates and branding for your business</p>
+          <p className="text-blue-900">Customize invoice templates and branding for your business</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -411,10 +411,10 @@ export default function InvoiceTemplateManager() {
                       >
                         {branding.custom_branding?.company_name || 'Your Company Name'}
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-blue-900">
                         {branding.custom_branding?.address || '123 Business Street, City, Country'}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-blue-900">
                         {branding.custom_branding?.phone || '+44 20 1234 5678'} | {branding.custom_branding?.email || 'info@company.com'}
                       </p>
                     </div>
@@ -425,9 +425,9 @@ export default function InvoiceTemplateManager() {
                       >
                         INVOICE
                       </h2>
-                      <p className="text-gray-600">Invoice #: INV-001</p>
-                      <p className="text-gray-600">Date: {new Date().toLocaleDateString()}</p>
-                      <p className="text-gray-600">Due Date: {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</p>
+                      <p className="text-blue-900">Invoice #: INV-001</p>
+                      <p className="text-blue-900">Date: {new Date().toLocaleDateString()}</p>
+                      <p className="text-blue-900">Due Date: {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</p>
                     </div>
                   </div>
 
@@ -435,14 +435,14 @@ export default function InvoiceTemplateManager() {
                     <div>
                       <h4 className="font-semibold mb-2">Bill To:</h4>
                       <p className="font-medium">ABC Client Ltd</p>
-                      <p className="text-gray-600">456 Client Avenue</p>
-                      <p className="text-gray-600">London, UK</p>
-                      <p className="text-gray-600">client@example.com</p>
+                      <p className="text-blue-900">456 Client Avenue</p>
+                      <p className="text-blue-900">London, UK</p>
+                      <p className="text-blue-900">client@example.com</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Payment Terms:</h4>
-                      <p className="text-gray-600">Net 30 days</p>
-                      <p className="text-gray-600">Bank transfer preferred</p>
+                      <p className="text-blue-900">Net 30 days</p>
+                      <p className="text-blue-900">Bank transfer preferred</p>
                     </div>
                   </div>
 
@@ -495,7 +495,7 @@ export default function InvoiceTemplateManager() {
                     </div>
                   </div>
 
-                  <div className="text-center text-gray-600 text-sm">
+                  <div className="text-center text-blue-900 text-sm">
                     <p>Thank you for your business!</p>
                     <p>Payment is due within 30 days of invoice date.</p>
                   </div>

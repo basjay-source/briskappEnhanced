@@ -212,7 +212,7 @@ export default function TimeAndFeesModuleAdvanced() {
       case 'optimization': return <TrendingUp className="h-4 w-4 text-green-600" />
       case 'warning': return <AlertTriangle className="h-4 w-4 text-orange-600" />
       case 'opportunity': return <Lightbulb className="h-4 w-4 text-blue-600" />
-      default: return <Brain className="h-4 w-4 text-gray-600" />
+      default: return <Brain className="h-4 w-4 text-blue-900" />
     }
   }
 
@@ -310,7 +310,7 @@ export default function TimeAndFeesModuleAdvanced() {
                             {entry.status}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600">{entry.clientName}</p>
+                        <p className="text-sm text-blue-900">{entry.clientName}</p>
                         <p className="text-sm text-gray-500">{entry.description}</p>
                       </div>
                       <div className="text-right">
@@ -340,7 +340,7 @@ export default function TimeAndFeesModuleAdvanced() {
                         {getInsightIcon(insight.type)}
                         <div className="flex-1">
                           <h4 className="font-medium text-blue-900 text-sm">{insight.title}</h4>
-                          <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
+                          <p className="text-sm text-blue-900 mt-1">{insight.description}</p>
                           {insight.actionable && (
                             <Button size="sm" variant="outline" className="mt-2">
                               Take Action
@@ -413,7 +413,7 @@ export default function TimeAndFeesModuleAdvanced() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Job/Project</label>
+                      <label className="block text-sm font-medium text-blue-900 mb-2">Job/Project</label>
                       <select
                         value={selectedJob}
                         onChange={(e) => setSelectedJob(e.target.value)}
@@ -426,7 +426,7 @@ export default function TimeAndFeesModuleAdvanced() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Task (Optional)</label>
+                      <label className="block text-sm font-medium text-blue-900 mb-2">Task (Optional)</label>
                       <select
                         value={selectedTask}
                         onChange={(e) => setSelectedTask(e.target.value)}
@@ -455,7 +455,7 @@ export default function TimeAndFeesModuleAdvanced() {
               <div className="text-center py-12">
                 <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Time Entry Management</h3>
-                <p className="text-gray-600">Review and manage time tracking entries</p>
+                <p className="text-blue-900">Review and manage time tracking entries</p>
               </div>
             </CardContent>
           </Card>
@@ -472,7 +472,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <div className="text-center py-12">
               <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Dashboard</h3>
-              <p className="text-gray-600">Advanced analytics and performance tracking</p>
+              <p className="text-blue-900">Advanced analytics and performance tracking</p>
             </div>
           </CardContent>
         </Card>
@@ -495,7 +495,7 @@ export default function TimeAndFeesModuleAdvanced() {
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
                       <h4 className="font-medium text-blue-900">{insight.title}</h4>
-                      <p className="text-gray-600 mt-1">{insight.description}</p>
+                      <p className="text-blue-900 mt-1">{insight.description}</p>
                       <div className="flex items-center gap-2 mt-3">
                         <Badge variant={insight.impact === 'high' ? 'destructive' : insight.impact === 'medium' ? 'default' : 'secondary'}>
                           {insight.impact} impact
@@ -525,7 +525,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <div className="text-center py-12">
               <Zap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Automation Center</h3>
-              <p className="text-gray-600">Set up automated time tracking and billing workflows</p>
+              <p className="text-blue-900">Set up automated time tracking and billing workflows</p>
             </div>
           </CardContent>
         </Card>
@@ -541,7 +541,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <div className="text-center py-12">
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Capacity Management</h3>
-              <p className="text-gray-600">Optimize team capacity and resource planning</p>
+              <p className="text-blue-900">Optimize team capacity and resource planning</p>
             </div>
           </CardContent>
         </Card>
@@ -556,7 +556,7 @@ export default function TimeAndFeesModuleAdvanced() {
       <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
         <div className="p-6 border-b-2 border-blue-900">
           <h1 className="text-xl font-bold text-gray-900">Time Management</h1>
-          <p className="text-sm text-gray-600 mt-1">AI-powered time tracking & billing</p>
+          <p className="text-sm text-blue-900 mt-1">AI-powered time tracking & billing</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
@@ -607,7 +607,7 @@ export default function TimeAndFeesModuleAdvanced() {
               <h2 className="text-2xl font-bold text-blue-900">
                 {menuStructure.find(t => t.id === activeMainTab)?.label || 'Dashboard'}
               </h2>
-              <p className="text-gray-600 mt-1">
+              <p className="text-blue-900 mt-1">
                 AI-powered time tracking, advanced analytics, and intelligent workflow automation
               </p>
             </div>

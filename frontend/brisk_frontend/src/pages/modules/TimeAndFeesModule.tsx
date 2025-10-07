@@ -239,7 +239,7 @@ export default function TimeAndFeesModule() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Time Management & Fees</h1>
-            <p className="text-gray-600 mt-2">Advanced time tracking, billing workflows, and comprehensive analytics</p>
+            <p className="text-blue-900 mt-2">Advanced time tracking, billing workflows, and comprehensive analytics</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -316,7 +316,7 @@ export default function TimeAndFeesModule() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
+                          <p className="text-sm font-medium text-blue-900">{kpi.title}</p>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
                         </div>
@@ -344,14 +344,14 @@ export default function TimeAndFeesModule() {
                             <div className="flex-1">
                               <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                               {entry.taskName && <p className="text-sm text-gray-500">{entry.taskName}</p>}
-                              <p className="text-sm text-gray-600">{entry.clientName}</p>
+                              <p className="text-sm text-blue-900">{entry.clientName}</p>
                               <p className="text-xs text-gray-500">{entry.description}</p>
                             </div>
                           </div>
                           <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                             <div>
                               <p className="text-sm font-medium">{entry.hours}h</p>
-                              <p className="text-sm text-gray-600">{entry.employeeName}</p>
+                              <p className="text-sm text-blue-900">{entry.employeeName}</p>
                               <Badge className={`text-xs ${getStatusColor(entry.status)}`}>
                                 {entry.status}
                               </Badge>
@@ -417,15 +417,15 @@ export default function TimeAndFeesModule() {
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Billable Hours</span>
+                        <span className="text-sm text-blue-900">Billable Hours</span>
                         <span className="text-sm font-medium">324.5h</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Average Rate</span>
+                        <span className="text-sm text-blue-900">Average Rate</span>
                         <span className="text-sm font-medium">£85/hr</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Total Revenue</span>
+                        <span className="text-sm text-blue-900">Total Revenue</span>
                         <span className="text-sm font-medium">£27,582</span>
                       </div>
                       <div className="flex justify-between border-t pt-2">
@@ -452,7 +452,7 @@ export default function TimeAndFeesModule() {
                   <div className="text-6xl font-mono font-bold text-brisk-primary mb-4">
                     {formatTime(currentTime)}
                   </div>
-                  <div className="text-sm text-gray-600 mb-6">
+                  <div className="text-sm text-blue-900 mb-6">
                     {formatHours(currentTime)} hours
                   </div>
                   <div className="flex justify-center gap-3">
@@ -560,7 +560,7 @@ export default function TimeAndFeesModule() {
                       <div className="flex-1">
                         <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                         {entry.taskName && <p className="text-sm text-gray-500">{entry.taskName}</p>}
-                        <p className="text-sm text-gray-600">{entry.clientName}</p>
+                        <p className="text-sm text-blue-900">{entry.clientName}</p>
                         <p className="text-xs text-gray-500">{entry.description}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge variant="outline" className="text-xs">
@@ -575,7 +575,7 @@ export default function TimeAndFeesModule() {
                     <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                       <div>
                         <p className="text-sm font-medium">{entry.hours}h</p>
-                        <p className="text-sm text-gray-600">{entry.employeeName}</p>
+                        <p className="text-sm text-blue-900">{entry.employeeName}</p>
                         <p className="text-xs text-gray-500">{entry.date}</p>
                       </div>
                       <div className="text-right">
@@ -616,11 +616,11 @@ export default function TimeAndFeesModule() {
                       <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                         <div className="flex-1">
                           <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
-                          <p className="text-sm text-gray-600">{entry.clientName}</p>
+                          <p className="text-sm text-blue-900">{entry.clientName}</p>
                           <p className="text-xs text-gray-500">{entry.description}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-sm font-medium">{entry.hours}h</span>
-                            <span className="text-sm text-gray-600">by {entry.employeeName}</span>
+                            <span className="text-sm text-blue-900">by {entry.employeeName}</span>
                             <Badge className="text-xs bg-blue-100 text-blue-800">
                               £{(entry.hours * entry.hourlyRate).toFixed(2)}
                             </Badge>
@@ -651,15 +651,15 @@ export default function TimeAndFeesModule() {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Pending</span>
+                      <span className="text-sm text-blue-900">Pending</span>
                       <span className="text-sm font-medium">3 entries</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Approved</span>
+                      <span className="text-sm text-blue-900">Approved</span>
                       <span className="text-sm font-medium">24 entries</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Rejected</span>
+                      <span className="text-sm text-blue-900">Rejected</span>
                       <span className="text-sm font-medium">1 entry</span>
                     </div>
                     <div className="flex justify-between border-t pt-2">
@@ -686,7 +686,7 @@ export default function TimeAndFeesModule() {
                     <div key={code.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
                         <h4 className="font-medium text-blue-900">{code.code}</h4>
-                        <p className="text-sm text-gray-600">{code.name}</p>
+                        <p className="text-sm text-blue-900">{code.name}</p>
                         <Badge variant="outline" className="text-xs mt-1">
                           {code.category}
                         </Badge>
@@ -716,7 +716,7 @@ export default function TimeAndFeesModule() {
                     <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
                         <h4 className="font-medium text-blue-900">{rate.employeeName}</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-blue-900">
                           {jobCodes.find(code => code.id === rate.jobCodeId)?.name}
                         </p>
                       </div>
@@ -746,7 +746,7 @@ export default function TimeAndFeesModule() {
                   <div className="text-center">
                     <PieChart className="h-16 w-16 mx-auto text-brisk-primary mb-4" />
                     <p className="text-2xl font-bold">87%</p>
-                    <p className="text-sm text-gray-600">Average utilization</p>
+                    <p className="text-sm text-blue-900">Average utilization</p>
                   </div>
                 </CardContent>
               </Card>
@@ -760,7 +760,7 @@ export default function TimeAndFeesModule() {
                   <div className="text-center">
                     <TrendingUp className="h-16 w-16 mx-auto text-green-600 mb-4" />
                     <p className="text-2xl font-bold">£45,200</p>
-                    <p className="text-sm text-gray-600">This month</p>
+                    <p className="text-sm text-blue-900">This month</p>
                   </div>
                 </CardContent>
               </Card>
@@ -774,7 +774,7 @@ export default function TimeAndFeesModule() {
                   <div className="text-center">
                     <Target className="h-16 w-16 mx-auto text-purple-600 mb-4" />
                     <p className="text-2xl font-bold">94%</p>
-                    <p className="text-sm text-gray-600">On-time delivery</p>
+                    <p className="text-sm text-blue-900">On-time delivery</p>
                   </div>
                 </CardContent>
               </Card>

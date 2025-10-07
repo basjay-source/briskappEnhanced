@@ -534,7 +534,7 @@ export default function NewEmailStudio() {
               <div className="text-center">
                 <Mail className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Email Studio</h3>
-                <p className="text-gray-600 mb-4">Advanced email management with client data integration</p>
+                <p className="text-blue-900 mb-4">Advanced email management with client data integration</p>
                 <Button 
                   onClick={() => setIsComposing(true)}
                   className="bg-blue-600 hover:bg-blue-700"
@@ -551,7 +551,7 @@ export default function NewEmailStudio() {
         <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
           <div className="p-4 border-b">
             <h3 className="font-semibold text-gray-900">Template Variables</h3>
-            <p className="text-sm text-gray-600">Click to insert into email</p>
+            <p className="text-sm text-blue-900">Click to insert into email</p>
           </div>
 
           <div className="flex-1 overflow-y-auto">

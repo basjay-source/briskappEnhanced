@@ -203,7 +203,7 @@ export default function ComplianceAutomation() {
       case 'upcoming': return <Clock className="h-4 w-4 text-blue-600" />
       case 'due_soon': return <AlertTriangle className="h-4 w-4 text-orange-600" />
       case 'overdue': return <AlertTriangle className="h-4 w-4 text-red-600" />
-      default: return <Clock className="h-4 w-4 text-gray-600" />
+      default: return <Clock className="h-4 w-4 text-blue-900" />
     }
   }
 
@@ -212,7 +212,7 @@ export default function ComplianceAutomation() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Compliance Automation</h2>
-          <p className="text-gray-600">Automated deadline tracking and client communication</p>
+          <p className="text-blue-900">Automated deadline tracking and client communication</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
@@ -231,7 +231,7 @@ export default function ComplianceAutomation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Deadlines</p>
+                <p className="text-sm font-medium text-blue-900">Active Deadlines</p>
                 <p className="text-2xl font-bold">12</p>
                 <p className="text-xs text-orange-600">3 due this week</p>
               </div>
@@ -244,7 +244,7 @@ export default function ComplianceAutomation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Automation Rate</p>
+                <p className="text-sm font-medium text-blue-900">Automation Rate</p>
                 <p className="text-2xl font-bold">94%</p>
                 <p className="text-xs text-green-600">+2% this month</p>
               </div>
@@ -257,7 +257,7 @@ export default function ComplianceAutomation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Time Saved</p>
+                <p className="text-sm font-medium text-blue-900">Time Saved</p>
                 <p className="text-2xl font-bold">47h</p>
                 <p className="text-xs text-green-600">This month</p>
               </div>
@@ -270,7 +270,7 @@ export default function ComplianceAutomation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Success Rate</p>
+                <p className="text-sm font-medium text-blue-900">Success Rate</p>
                 <p className="text-2xl font-bold">96.2%</p>
                 <p className="text-xs text-green-600">On-time filings</p>
               </div>
@@ -303,7 +303,7 @@ export default function ComplianceAutomation() {
                         {getStatusIcon(deadline.status)}
                         <div>
                           <h4 className="font-medium">{deadline.type}</h4>
-                          <p className="text-sm text-gray-600">{deadline.client}</p>
+                          <p className="text-sm text-blue-900">{deadline.client}</p>
                           <p className="text-xs text-gray-500">{deadline.description}</p>
                         </div>
                       </div>
@@ -319,11 +319,11 @@ export default function ComplianceAutomation() {
 
                     <div className="grid gap-4 md:grid-cols-4 mb-3">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Due Date</p>
+                        <p className="text-sm font-medium text-blue-900">Due Date</p>
                         <p className="text-sm">{deadline.dueDate}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Days Remaining</p>
+                        <p className="text-sm font-medium text-blue-900">Days Remaining</p>
                         <p className={`text-sm font-medium ${
                           deadline.daysRemaining < 0 ? 'text-red-600' :
                           deadline.daysRemaining < 7 ? 'text-orange-600' :
@@ -333,16 +333,16 @@ export default function ComplianceAutomation() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Reminders Sent</p>
+                        <p className="text-sm font-medium text-blue-900">Reminders Sent</p>
                         <p className="text-sm">{deadline.remindersSent}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Automation</p>
+                        <p className="text-sm font-medium text-blue-900">Automation</p>
                         <div className="flex items-center gap-2">
                           <Switch 
                             checked={deadline.automationEnabled}
                           />
-                          <span className="text-xs text-gray-600">
+                          <span className="text-xs text-blue-900">
                             {deadline.automationEnabled ? 'Enabled' : 'Disabled'}
                           </span>
                         </div>
@@ -387,7 +387,7 @@ export default function ComplianceAutomation() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h4 className="font-medium">{rule.name}</h4>
-                        <p className="text-sm text-gray-600 mb-2">{rule.description}</p>
+                        <p className="text-sm text-blue-900 mb-2">{rule.description}</p>
                         <div className="grid gap-2 md:grid-cols-2 text-xs text-gray-500">
                           <div>
                             <span className="font-medium">Trigger:</span> {rule.trigger}
@@ -407,14 +407,14 @@ export default function ComplianceAutomation() {
 
                     <div className="grid gap-4 md:grid-cols-3">
                       <div>
-                        <p className="text-sm font-medium text-gray-600 mb-1">Success Rate</p>
+                        <p className="text-sm font-medium text-blue-900 mb-1">Success Rate</p>
                         <div className="flex items-center gap-2">
                           <Progress value={rule.successRate} className="flex-1" />
                           <span className="text-sm font-medium text-green-600">{rule.successRate}%</span>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Time Saved</p>
+                        <p className="text-sm font-medium text-blue-900">Time Saved</p>
                         <p className="text-sm font-semibold text-blue-600">{rule.timeSaved}</p>
                       </div>
                       <div className="flex justify-end">
@@ -453,11 +453,11 @@ export default function ComplianceAutomation() {
 
                   <div className="grid gap-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Last Sync:</span>
+                      <span className="text-blue-900">Last Sync:</span>
                       <span className="font-medium">{hmrcIntegration.lastSync}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Next Sync:</span>
+                      <span className="text-blue-900">Next Sync:</span>
                       <span className="font-medium">{hmrcIntegration.nextSync}</span>
                     </div>
                   </div>
@@ -503,15 +503,15 @@ export default function ComplianceAutomation() {
 
                   <div className="grid gap-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Last Sync:</span>
+                      <span className="text-blue-900">Last Sync:</span>
                       <span className="font-medium">{companiesHouseIntegration.lastSync}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Next Sync:</span>
+                      <span className="text-blue-900">Next Sync:</span>
                       <span className="font-medium">{companiesHouseIntegration.nextSync}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Filing Alerts:</span>
+                      <span className="text-blue-900">Filing Alerts:</span>
                       <Badge className="bg-orange-100 text-orange-800">
                         {companiesHouseIntegration.filingAlerts} pending
                       </Badge>

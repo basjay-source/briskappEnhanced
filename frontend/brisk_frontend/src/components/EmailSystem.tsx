@@ -773,7 +773,7 @@ export default function EmailSystem() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 text-sm text-blue-900">
                     <span>{selectedThread.emails.length} messages</span>
                     <span>{selectedThread.participants.length} participants</span>
                   </div>

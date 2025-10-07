@@ -153,14 +153,14 @@ const AccountsProduction: React.FC = () => {
             <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
               <div>
                 <h3 className="font-semibold text-blue-900">Trial Balance Updated</h3>
-                <p className="text-sm text-gray-600">Client: ABC Ltd - Period: Dec 2024</p>
+                <p className="text-sm text-blue-900">Client: ABC Ltd - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
             <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
               <div>
                 <h3 className="font-semibold text-blue-900">Financial Statements Generated</h3>
-                <p className="text-sm text-gray-600">Client: XYZ Corp - Period: Q4 2024</p>
+                <p className="text-sm text-blue-900">Client: XYZ Corp - Period: Q4 2024</p>
               </div>
               <Badge variant="secondary">In Progress</Badge>
             </div>
@@ -204,7 +204,7 @@ const AccountsProduction: React.FC = () => {
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h3 className="font-semibold text-blue-900">Balance</h3>
-                <p className="text-2xl font-bold text-gray-600">£0.00</p>
+                <p className="text-2xl font-bold text-blue-900">£0.00</p>
               </div>
             </div>
           </div>
@@ -385,7 +385,7 @@ const AccountsProduction: React.FC = () => {
         <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
           <div className="p-4 border-b-2 border-blue-900">
             <h1 className="text-xl font-bold text-gray-900">Accounts Production</h1>
-            <p className="text-sm text-gray-600 mt-1">Financial Statement Preparation</p>
+            <p className="text-sm text-blue-900 mt-1">Financial Statement Preparation</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">

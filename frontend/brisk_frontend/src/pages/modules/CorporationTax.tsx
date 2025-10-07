@@ -273,7 +273,7 @@ export default function CorporationTax() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-blue-900">Corporation Tax Dashboard</h2>
-            <p className="text-gray-600 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
+            <p className="text-blue-900 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline">
@@ -376,7 +376,7 @@ export default function CorporationTax() {
                       {claim.status}
                     </Badge>
                   </div>
-                  <div className="text-xs text-gray-600 space-y-1">
+                  <div className="text-xs text-blue-900 space-y-1">
                     <div>Expenditure: £{claim.expenditure.toLocaleString()}</div>
                     <div>Relief: £{claim.relief.toLocaleString()}</div>
                   </div>
@@ -417,7 +417,7 @@ export default function CorporationTax() {
                     <Badge className="bg-green-100 text-green-800">{rec.impact}</Badge>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{rec.description}</p>
+                <p className="text-sm text-blue-900 mb-2">{rec.description}</p>
                 <p className="text-xs font-medium text-brisk-primary">{rec.action}</p>
               </div>
             ))}
@@ -530,7 +530,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Tax Adjustments</h2>
-        <p className="text-gray-600">Manage corporation tax adjustments and corrections</p>
+        <p className="text-blue-900">Manage corporation tax adjustments and corrections</p>
       </div>
     )
   }
@@ -539,7 +539,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Supporting Schedules</h2>
-        <p className="text-gray-600">CT600 supporting schedules and computations</p>
+        <p className="text-blue-900">CT600 supporting schedules and computations</p>
       </div>
     )
   }
@@ -548,7 +548,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Validation</h2>
-        <p className="text-gray-600">Validate CT600 computation and check for errors</p>
+        <p className="text-blue-900">Validate CT600 computation and check for errors</p>
       </div>
     )
   }
@@ -595,7 +595,7 @@ export default function CorporationTax() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold text-blue-900">{claim.project}</h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-blue-900">
                         Expenditure: £{claim.expenditure.toLocaleString()} | 
                         Relief: £{claim.relief.toLocaleString()}
                       </p>
@@ -620,7 +620,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Reliefs & Credits</h2>
-        <p className="text-gray-600">Manage corporation tax reliefs and credits</p>
+        <p className="text-blue-900">Manage corporation tax reliefs and credits</p>
       </div>
     )
   }
@@ -629,7 +629,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Group Relief</h2>
-        <p className="text-gray-600">Group relief elections and surrenders</p>
+        <p className="text-blue-900">Group relief elections and surrenders</p>
       </div>
     )
   }
@@ -638,7 +638,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Quarterly Payments</h2>
-        <p className="text-gray-600">Quarterly instalment payments and planning</p>
+        <p className="text-blue-900">Quarterly instalment payments and planning</p>
       </div>
     )
   }
@@ -647,7 +647,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Filing</h2>
-        <p className="text-gray-600">CT600 filing and HMRC submissions</p>
+        <p className="text-blue-900">CT600 filing and HMRC submissions</p>
       </div>
     )
   }
@@ -657,7 +657,7 @@ export default function CorporationTax() {
       <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
         <div className="p-4 border-b-2 border-blue-900">
           <h1 className="text-lg font-semibold text-blue-900">Corporation Tax</h1>
-          <p className="text-sm text-gray-600">CT600 & R&D Claims</p>
+          <p className="text-sm text-blue-900">CT600 & R&D Claims</p>
         </div>
         
         <div className="flex-1 overflow-y-auto p-2">

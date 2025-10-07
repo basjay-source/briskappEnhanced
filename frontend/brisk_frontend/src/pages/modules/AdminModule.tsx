@@ -187,7 +187,7 @@ const AdminModule = () => {
     <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
       <div className="p-6 border-b-2 border-blue-900">
         <h2 className="text-lg font-semibold text-blue-900">Admin Control</h2>
-        <p className="text-sm text-gray-600">Multi-tenant management</p>
+        <p className="text-sm text-blue-900">Multi-tenant management</p>
       </div>
       <nav className="flex-1 p-4 space-y-2">
         {[
@@ -311,7 +311,7 @@ const AdminModule = () => {
                   <div key={log.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <p className="font-medium">{log.action}</p>
-                      <p className="text-sm text-gray-600">{log.actor}</p>
+                      <p className="text-sm text-blue-900">{log.actor}</p>
                     </div>
                     <Badge variant="outline">{new Date(log.timestamp).toLocaleTimeString()}</Badge>
                   </div>
@@ -363,7 +363,7 @@ const AdminModule = () => {
                     <h4 className="font-semibold text-blue-900">{request.type}</h4>
                     <Badge variant="secondary">{request.status}</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-blue-900 mb-3">
                     {request.type === 'refund' ? `Refund request: £${request.amount}` : request.description}
                   </p>
                   <div className="flex gap-2">
@@ -499,7 +499,7 @@ const AdminModule = () => {
                       {plan.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {plan.tenants} tenants • £{plan.mrr.toLocaleString()} MRR
                   </p>
                 </div>
@@ -616,7 +616,7 @@ const AdminModule = () => {
                       {promo.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {promo.type === 'percent' ? `${promo.value}% discount` : `${promo.value} free months`} • 
                     {promo.redemptions} redemptions
                   </p>
@@ -734,7 +734,7 @@ const AdminModule = () => {
                     </Badge>
                     {exp.winner && <Badge variant="outline">Winner: {exp.winner}</Badge>}
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     {exp.variants} variants • {exp.exposure.toLocaleString()} exposed users
                   </p>
                 </div>
@@ -818,7 +818,7 @@ const AdminModule = () => {
                       {tenant.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     £{tenant.mrr} MRR • {tenant.seats} seats • {tenant.region}
                   </p>
                 </div>
@@ -860,7 +860,7 @@ const AdminModule = () => {
                 <div key={persona.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div>
                     <h4 className="font-semibold text-blue-900">{persona.name}</h4>
-                    <p className="text-sm text-gray-600">{persona.description}</p>
+                    <p className="text-sm text-blue-900">{persona.description}</p>
                   </div>
                   <Badge variant={persona.dual_control ? 'destructive' : 'secondary'}>
                     {persona.dual_control ? 'Dual Control' : 'Single Control'}
@@ -1003,7 +1003,7 @@ const AdminModule = () => {
                           {invoice.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         {invoice.tenant} • £{invoice.amount} • Due: {invoice.due_date}
                       </p>
                     </div>
@@ -1094,7 +1094,7 @@ const AdminModule = () => {
                         <h3 className="font-semibold text-blue-900">{partner.name}</h3>
                         <Badge variant="outline">{partner.tier}</Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         {partner.margin}% margin • {partner.tenants} tenants • £{partner.revenue.toLocaleString()} revenue
                       </p>
                     </div>
@@ -1128,7 +1128,7 @@ const AdminModule = () => {
                           {referral.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-blue-900 mt-1">
                         Referred by: {referral.referrer} • Reward: £{referral.reward}
                       </p>
                     </div>
@@ -1217,7 +1217,7 @@ const AdminModule = () => {
                       {journey.active ? 'Active' : 'Paused'}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     Trigger: {journey.trigger} • {journey.actions} actions • {journey.conversions} conversions
                   </p>
                 </div>
@@ -1296,7 +1296,7 @@ const AdminModule = () => {
                     <h3 className="font-semibold text-blue-900">{log.action}</h3>
                     <Badge variant="outline">{log.entity}</Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-blue-900 mt-1">
                     Actor: {log.actor} • {new Date(log.timestamp).toLocaleString()}
                   </p>
                 </div>

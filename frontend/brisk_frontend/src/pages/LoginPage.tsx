@@ -74,12 +74,12 @@ export default function LoginPage() {
           
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
-            <p className="text-gray-600">Welcome back! Please enter your details.</p>
+            <p className="text-blue-900">Welcome back! Please enter your details.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="email" className="text-sm font-medium text-blue-900">
                 Email address
               </Label>
               <Input
@@ -95,7 +95,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password" className="text-sm font-medium text-blue-900">
                   Password
                 </Label>
                 <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 hover:underline">
@@ -121,7 +121,7 @@ export default function LoginPage() {
               />
               <label
                 htmlFor="remember"
-                className="text-sm text-gray-700 cursor-pointer"
+                className="text-sm text-blue-900 cursor-pointer"
               >
                 Remember me for 30 days
               </label>
@@ -164,7 +164,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="mt-8 text-center text-sm text-gray-600">
+          <p className="mt-8 text-center text-sm text-blue-900">
             Don't have an account?{' '}
             <Link to="/" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
               Start free trial

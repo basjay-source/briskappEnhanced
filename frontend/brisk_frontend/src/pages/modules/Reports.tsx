@@ -253,7 +253,7 @@ const Reports: React.FC = () => {
               </span>
             </div>
             <h3 className="text-lg font-semibold text-blue-900 mb-2">{report.name}</h3>
-            <p className="text-sm text-gray-600 mb-4">{report.description}</p>
+            <p className="text-sm text-blue-900 mb-4">{report.description}</p>
             <div className="space-y-4">
               <div className="text-sm text-gray-500">
                 Last generated: {report.lastGenerated}
@@ -279,7 +279,7 @@ const Reports: React.FC = () => {
       <div className="bg-white rounded-[2px] border shadow-sm">
         <div className="p-6">
           <h3 className="text-lg font-semibold text-blue-900 mb-2">Report Builder</h3>
-          <p className="text-sm text-gray-600 mb-4">Create custom reports with your preferred data and formatting</p>
+          <p className="text-sm text-blue-900 mb-4">Create custom reports with your preferred data and formatting</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Report Type</label>
@@ -386,7 +386,7 @@ const Reports: React.FC = () => {
       <div className="space-y-6">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-blue-900 mb-2">Reports Dashboard</h2>
-          <p className="text-gray-600">Generate comprehensive financial and management reports</p>
+          <p className="text-blue-900">Generate comprehensive financial and management reports</p>
         </div>
         {renderReportGrid(financialReports)}
       </div>

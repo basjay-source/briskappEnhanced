@@ -224,7 +224,7 @@ export default function EcosystemHub() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brisk-primary mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading dashboard...</p>
+            <p className="mt-4 text-blue-900">Loading dashboard...</p>
           </div>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function EcosystemHub() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
-            <p className="mt-4 text-gray-600">Error loading dashboard: {error}</p>
+            <p className="mt-4 text-blue-900">Error loading dashboard: {error}</p>
             <Button onClick={loadDashboardData} className="mt-4">
               Retry
             </Button>
@@ -252,7 +252,7 @@ export default function EcosystemHub() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-blue-900">Ecosystem Hub</h1>
-          <p className="text-gray-600 mt-2">Welcome to your all-in-one practice management suite</p>
+          <p className="text-blue-900 mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
           <Link to="/app/practice" className="flex items-center gap-2">
@@ -317,7 +317,7 @@ export default function EcosystemHub() {
                   <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     View Detailed Report
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                     Export Data
                   </button>
                 </div>
@@ -375,7 +375,7 @@ export default function EcosystemHub() {
                   <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     View Client List
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                     Export Report
                   </button>
                 </div>
@@ -437,7 +437,7 @@ export default function EcosystemHub() {
                   <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     View Task Details
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                     Performance Report
                   </button>
                 </div>
@@ -499,7 +499,7 @@ export default function EcosystemHub() {
                   <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     View Response Log
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
                     SLA Report
                   </button>
                 </div>
@@ -550,7 +550,7 @@ export default function EcosystemHub() {
                       <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
                       <div className="flex-1">
                         <p className="font-medium">{activity.action}</p>
-                        <p className="text-sm text-gray-600">{activity.client}</p>
+                        <p className="text-sm text-blue-900">{activity.client}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
                       </div>
                     </div>
