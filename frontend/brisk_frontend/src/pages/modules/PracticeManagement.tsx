@@ -27,6 +27,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useIsMobile } from '@/hooks/use-mobile'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import KPICard from '@/components/KPICard'
@@ -94,6 +99,19 @@ export default function PracticeManagement() {
   const [deadlines, setDeadlines] = useState<Deadline[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  const [isJobDialogOpen, setIsJobDialogOpen] = useState(false)
+  const [editingJob, setEditingJob] = useState<Job | null>(null)
+  const [jobFormData, setJobFormData] = useState({
+    client_id: '',
+    title: '',
+    description: '',
+    status: 'not_started',
+    priority: 'medium',
+    assigned_to: '',
+    due_date: '',
+    job_type: 'general'
+  })
 
   useEffect(() => {
     loadDashboardData()
@@ -179,6 +197,84 @@ export default function PracticeManagement() {
       console.error('Error:', error)
     } finally {
       setIsAILoading(false)
+    }
+  }
+
+  const openJobDialog = (job?: Job) => {
+    if (job) {
+      setEditingJob(job)
+      setJobFormData({
+        client_id: job.client_id,
+        title: job.title,
+        description: job.description || '',
+        status: job.status,
+        priority: job.priority,
+        assigned_to: job.assigned_to || '',
+        due_date: job.due_date || '',
+        job_type: 'general'
+      })
+    } else {
+      setEditingJob(null)
+      setJobFormData({
+        client_id: '',
+        title: '',
+        description: '',
+        status: 'not_started',
+        priority: 'medium',
+        assigned_to: '',
+        due_date: '',
+        job_type: 'general'
+      })
+    }
+    setIsJobDialogOpen(true)
+  }
+
+  const closeJobDialog = () => {
+    setIsJobDialogOpen(false)
+    setEditingJob(null)
+    setJobFormData({
+      client_id: '',
+      title: '',
+      description: '',
+      status: 'not_started',
+      priority: 'medium',
+      assigned_to: '',
+      due_date: '',
+      job_type: 'general'
+    })
+  }
+
+  const handleCreateJob = async () => {
+    try {
+      await api.post('/api/v1/practice/jobs', jobFormData)
+      await loadJobs()
+      await loadDashboardData()
+      closeJobDialog()
+    } catch (err: any) {
+      console.error('Error creating job:', err)
+      alert('Failed to create job: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateJob = async () => {
+    if (!editingJob) return
+    
+    try {
+      await api.put(`/api/v1/practice/jobs/${editingJob.id}`, jobFormData)
+      await loadJobs()
+      await loadDashboardData()
+      closeJobDialog()
+    } catch (err: any) {
+      console.error('Error updating job:', err)
+      alert('Failed to update job: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveJob = () => {
+    if (editingJob) {
+      handleUpdateJob()
+    } else {
+      handleCreateJob()
     }
   }
 
@@ -550,7 +646,7 @@ export default function PracticeManagement() {
             <Filter className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openJobDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             New Job
           </Button>
@@ -568,7 +664,7 @@ export default function PracticeManagement() {
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-4">No jobs found. Create your first job to get started.</p>
-                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openJobDialog()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create First Job
                 </Button>
@@ -605,6 +701,7 @@ export default function PracticeManagement() {
                         <Button
                           variant="ghost"
                           size="sm"
+                          onClick={() => openJobDialog(job)}
                           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                         >
                           <Edit className="h-4 w-4" />
@@ -626,6 +723,110 @@ export default function PracticeManagement() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Job Create/Edit Dialog */}
+      <Dialog open={isJobDialogOpen} onOpenChange={setIsJobDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{editingJob ? 'Edit Job' : 'Create New Job'}</DialogTitle>
+            <DialogDescription>
+              {editingJob ? 'Update job details below' : 'Fill in the details to create a new job'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="client_id">Client ID *</Label>
+              <Input
+                id="client_id"
+                value={jobFormData.client_id}
+                onChange={(e) => setJobFormData({ ...jobFormData, client_id: e.target.value })}
+                placeholder="Enter client ID"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Job Title *</Label>
+              <Input
+                id="title"
+                value={jobFormData.title}
+                onChange={(e) => setJobFormData({ ...jobFormData, title: e.target.value })}
+                placeholder="Enter job title"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={jobFormData.description}
+                onChange={(e) => setJobFormData({ ...jobFormData, description: e.target.value })}
+                placeholder="Enter job description"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="status">Status</Label>
+                <Select value={jobFormData.status} onValueChange={(value) => setJobFormData({ ...jobFormData, status: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="not_started">Not Started</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="on_hold">On Hold</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Select value={jobFormData.priority} onValueChange={(value) => setJobFormData({ ...jobFormData, priority: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="assigned_to">Assigned To</Label>
+                <Input
+                  id="assigned_to"
+                  value={jobFormData.assigned_to}
+                  onChange={(e) => setJobFormData({ ...jobFormData, assigned_to: e.target.value })}
+                  placeholder="Assignee name"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="due_date">Due Date</Label>
+                <Input
+                  id="due_date"
+                  type="date"
+                  value={jobFormData.due_date}
+                  onChange={(e) => setJobFormData({ ...jobFormData, due_date: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeJobDialog}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveJob}
+              disabled={!jobFormData.client_id || !jobFormData.title}
+            >
+              {editingJob ? 'Update Job' : 'Create Job'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 
