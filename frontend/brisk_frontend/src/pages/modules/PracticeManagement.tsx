@@ -20,7 +20,13 @@ import {
   BarChart3,
   Heart,
   Edit,
-  Trash2
+  Trash2,
+  Settings,
+  Activity,
+  UserPlus,
+  Upload,
+  ImageIcon,
+  Eye
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -39,7 +45,6 @@ import NewEmailStudio from '@/components/NewEmailStudio'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 import AIPromptSection from '../../components/AIPromptSection'
-import ClientPortalAdvanced from '../../components/ClientPortalAdvanced'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
@@ -1918,23 +1923,312 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderClientPortal = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  const renderClientPortal = () => {
+    const [activePortalTab, setActivePortalTab] = useState('overview')
+    
+    return (
+    <div className="space-y-6 w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Client Portal</h2>
           <p className="text-blue-900">Advanced client portal management and configuration</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
-            <Globe className="h-4 w-4 mr-2" />
+            <Settings className="h-4 w-4 mr-2" />
             Portal Settings
+          </Button>
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Client Access
           </Button>
         </div>
       </div>
-      <ClientPortalAdvanced />
+
+      {/* Portal Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Active Clients</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">0</div>
+            <p className="text-xs text-gray-500">Portal access enabled</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Documents Shared</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">0</div>
+            <p className="text-xs text-gray-500">Available to clients</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Pending Signatures</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">0</div>
+            <p className="text-xs text-gray-500">Awaiting e-signature</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Client Messages</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">0</div>
+            <p className="text-xs text-gray-500">Unread messages</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Portal Tabs */}
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex gap-2 border-b border-blue-900 pb-2 w-full overflow-x-auto">
+            <Button
+              variant={activePortalTab === 'overview' ? 'default' : 'ghost'}
+              onClick={() => setActivePortalTab('overview')}
+              className={activePortalTab === 'overview' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Overview
+            </Button>
+            <Button
+              variant={activePortalTab === 'clients' ? 'default' : 'ghost'}
+              onClick={() => setActivePortalTab('clients')}
+              className={activePortalTab === 'clients' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Client Access
+            </Button>
+            <Button
+              variant={activePortalTab === 'documents' ? 'default' : 'ghost'}
+              onClick={() => setActivePortalTab('documents')}
+              className={activePortalTab === 'documents' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Documents
+            </Button>
+            <Button
+              variant={activePortalTab === 'branding' ? 'default' : 'ghost'}
+              onClick={() => setActivePortalTab('branding')}
+              className={activePortalTab === 'branding' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Branding
+            </Button>
+            <Button
+              variant={activePortalTab === 'security' ? 'default' : 'ghost'}
+              onClick={() => setActivePortalTab('security')}
+              className={activePortalTab === 'security' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Security
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="w-full">
+          {activePortalTab === 'overview' && (
+            <div className="space-y-4 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Recent Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-8">
+                      <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-blue-900">No recent portal activity</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Portal Status</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-blue-900">Portal Status</span>
+                      <Badge className="bg-green-500">Active</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-blue-900">SSL Certificate</span>
+                      <Badge className="bg-green-500">Valid</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-blue-900">Two-Factor Auth</span>
+                      <Badge className="bg-blue-500">Enabled</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-blue-900">Auto Backups</span>
+                      <Badge className="bg-green-500">Active</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activePortalTab === 'clients' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <Input placeholder="Search clients..." className="max-w-sm" />
+                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Invite Client
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center py-8">
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-blue-900 mb-4">No clients with portal access yet</p>
+                    <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add First Client
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activePortalTab === 'documents' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <Input placeholder="Search documents..." className="max-w-sm" />
+                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Document
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center py-8">
+                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-blue-900 mb-4">No documents shared on portal</p>
+                    <p className="text-sm text-gray-500 mb-4">Upload documents to share with clients securely</p>
+                    <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload First Document
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activePortalTab === 'branding' && (
+            <div className="space-y-6 w-full">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Portal Appearance</CardTitle>
+                  <CardDescription>Customize your client portal branding</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-2">
+                    <Label>Company Logo</Label>
+                    <div className="flex items-center gap-4">
+                      <div className="w-32 h-32 border-2 border-blue-900 rounded flex items-center justify-center bg-gray-50">
+                        <ImageIcon className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <Button variant="outline">
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Logo
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Portal Title</Label>
+                    <Input placeholder="e.g., My Firm Client Portal" defaultValue="Client Portal" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Welcome Message</Label>
+                    <Textarea 
+                      placeholder="Welcome message for clients..." 
+                      rows={4}
+                      defaultValue="Welcome to our secure client portal. Access your documents, invoices, and communicate with us securely."
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Primary Color</Label>
+                    <div className="flex gap-2">
+                      <Input type="color" className="w-20" defaultValue="#1e40af" />
+                      <Input placeholder="#1e40af" defaultValue="#1e40af" className="flex-1" />
+                    </div>
+                  </div>
+                  <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                    Save Branding Changes
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activePortalTab === 'security' && (
+            <div className="space-y-6 w-full">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Security Settings</CardTitle>
+                  <CardDescription>Configure portal security and access controls</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <p className="font-medium text-blue-900">Two-Factor Authentication</p>
+                      <p className="text-sm text-gray-500">Require 2FA for all client logins</p>
+                    </div>
+                    <Badge className="bg-green-500">Enabled</Badge>
+                  </div>
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <p className="font-medium text-blue-900">Session Timeout</p>
+                      <p className="text-sm text-gray-500">Auto-logout after inactivity</p>
+                    </div>
+                    <Select defaultValue="30">
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="15">15 minutes</SelectItem>
+                        <SelectItem value="30">30 minutes</SelectItem>
+                        <SelectItem value="60">1 hour</SelectItem>
+                        <SelectItem value="120">2 hours</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <p className="font-medium text-blue-900">IP Whitelist</p>
+                      <p className="text-sm text-gray-500">Restrict access to specific IPs</p>
+                    </div>
+                    <Button variant="outline" size="sm">Configure</Button>
+                  </div>
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <p className="font-medium text-blue-900">Password Policy</p>
+                      <p className="text-sm text-gray-500">Minimum password requirements</p>
+                    </div>
+                    <Button variant="outline" size="sm">Edit Policy</Button>
+                  </div>
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium text-blue-900">Audit Logs</p>
+                      <p className="text-sm text-gray-500">Track all portal access and changes</p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Logs
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
-  )
+    )
+  }
 
   const renderWorkflowBuilder = () => (
     <div className="space-y-6">
