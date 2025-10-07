@@ -123,7 +123,7 @@ export default function AppShell() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900 cursor-pointer" />
               <Input
                 placeholder="Search..."
-                className="w-full pl-10 text-sm md:text-base"
+                className="w-full pl-10 text-sm md:text-base border-2 border-blue-900"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
