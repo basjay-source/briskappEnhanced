@@ -1,4 +1,4 @@
-#!/home/ubuntu/brisk-practice-suite/backend/brisk_backend/.venv/bin/python
+#!/home/ubuntu/briskappEnhanced/backend/brisk_backend/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

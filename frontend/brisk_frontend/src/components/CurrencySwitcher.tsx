@@ -24,7 +24,7 @@ export default function CurrencySwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2 border-2 border-blue-900 rounded-md">
-          <DollarSign className="h-4 w-4" />
+          <DollarSign className="h-4 w-4 text-blue-900" />
           <span>{selectedCurrency.flag} {selectedCurrency.code}</span>
         </Button>
       </DropdownMenuTrigger>

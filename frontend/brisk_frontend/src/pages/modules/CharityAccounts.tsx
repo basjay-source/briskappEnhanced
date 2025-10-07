@@ -1029,7 +1029,7 @@ const CharityAccounts: React.FC = () => {
           <CardContent className="p-8">
             <div className="text-center">
               <Gift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Grants Management</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Grants Management</h3>
               <p className="text-gray-600 mb-4">
                 Comprehensive grant tracking system
               </p>
@@ -1281,7 +1281,7 @@ const CharityAccounts: React.FC = () => {
           <CardContent className="p-8">
             <div className="text-center">
               <Link className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">System Integrations</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">System Integrations</h3>
               <p className="text-gray-600 mb-4">
                 Connect with Charity Commission API and other platforms
               </p>
@@ -1299,8 +1299,8 @@ const CharityAccounts: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Left Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
+      <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+        <div className="p-4 border-b-2 border-blue-900">
           <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
             <Heart className="h-6 w-6 text-brisk-primary" />
             Charity & Academy Accounts

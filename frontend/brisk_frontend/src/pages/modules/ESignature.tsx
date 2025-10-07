@@ -331,8 +331,8 @@ export default function DocuSignage() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+          <div className="p-4 border-b-2 border-blue-900">
             <h1 className="text-xl font-bold text-gray-900">DocuSignage</h1>
             <p className="text-sm text-gray-600 mt-1">Digital Document Signing</p>
           </div>
@@ -392,7 +392,7 @@ export default function DocuSignage() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-gray-200 bg-white">
+          <div className="p-4 border-b-2 border-blue-900 bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search envelopes, templates, or signers..."
               searchValue={searchTerm}

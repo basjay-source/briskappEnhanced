@@ -1233,7 +1233,7 @@ export default function PersonalTax() {
         {/* Left Sidebar Navigation */}
         <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
           <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Tax</h2>
+            <h2 className="text-lg font-semibold text-blue-900 mb-4">Personal Tax</h2>
             <nav className="space-y-1">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>

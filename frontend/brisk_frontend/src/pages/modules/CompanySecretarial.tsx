@@ -623,7 +623,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -705,7 +705,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Accounting Period Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Accounting Period Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -781,7 +781,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -887,7 +887,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -946,7 +946,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Registered Office Address</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Registered Office Address</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -1025,7 +1025,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Share Capital Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Share Capital Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -1089,7 +1089,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -1201,7 +1201,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -1265,7 +1265,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Person Being Terminated</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Person Being Terminated</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -1352,7 +1352,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Termination Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Termination Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -1433,7 +1433,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -1545,7 +1545,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -1609,7 +1609,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Secretary Type Selection</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Secretary Type Selection</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -1687,7 +1687,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Secretary Personal/Corporate Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Secretary Personal/Corporate Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -1782,7 +1782,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Service Address Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Service Address Details</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Service Address Information</h4>
@@ -1881,7 +1881,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -1997,7 +1997,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -2061,7 +2061,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">PSC Type Selection</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">PSC Type Selection</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -2147,7 +2147,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">PSC Personal/Corporate Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">PSC Personal/Corporate Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -2249,7 +2249,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Nature and Extent of Control</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Nature and Extent of Control</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Control Thresholds</h4>
@@ -2347,7 +2347,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Service Address Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Service Address Details</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Service Address Information</h4>
@@ -2446,7 +2446,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -2563,7 +2563,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -2627,7 +2627,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Address Change Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Address Change Information</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -2720,7 +2720,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">New Registered Office Address</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">New Registered Office Address</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Address Requirements</h4>
@@ -2831,7 +2831,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -2948,7 +2948,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -3012,7 +3012,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">New Company Name Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">New Company Name Information</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Important</h4>
@@ -3115,7 +3115,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Name Availability and Compliance</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Name Availability and Compliance</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Name Requirements</h4>
@@ -3215,7 +3215,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -4262,7 +4262,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Employment Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employment Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4310,7 +4310,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Income and Tax Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Income and Tax Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4387,7 +4387,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Employment Expenses and Deductions</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employment Expenses and Deductions</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4480,7 +4480,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4541,7 +4541,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Income and Expenses</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Income and Expenses</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4611,7 +4611,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Capital Allowances and Adjustments</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Allowances and Adjustments</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4708,7 +4708,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Partnership Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Partnership Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4762,7 +4762,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Share of Partnership Income</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Your Share of Partnership Income</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4827,7 +4827,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Adjustments and Additional Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Adjustments and Additional Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4925,7 +4925,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">UK Property Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">UK Property Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -4996,7 +4996,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Income Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Property Income Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5066,7 +5066,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Expenses and Allowances</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Property Expenses and Allowances</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5192,7 +5192,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Foreign Income Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Foreign Income Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5277,7 +5277,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Foreign Tax and Relief Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Foreign Tax and Relief Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5353,7 +5353,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Foreign Income Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Additional Foreign Income Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5451,7 +5451,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Asset Disposal Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Asset Disposal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5538,7 +5538,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Capital Gains Calculation</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Gains Calculation</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5614,7 +5614,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Capital Gains Tax Summary</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Gains Tax Summary</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5729,7 +5729,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">UK Residence Status</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">UK Residence Status</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5803,7 +5803,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Remittance Basis Claim</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Remittance Basis Claim</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5877,7 +5877,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Residence Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Additional Residence Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -5993,7 +5993,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contractor Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Contractor Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6069,7 +6069,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Subcontractor Payment Details</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Subcontractor Payment Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6139,7 +6139,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -6237,7 +6237,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Employer Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employer Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6322,7 +6322,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Employee and Payment Summary</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employee and Payment Summary</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6398,7 +6398,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -6511,7 +6511,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6567,7 +6567,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">VAT Liability Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">VAT Liability Information</h3>
               
               <div className="space-y-4">
                 <div>
@@ -6631,7 +6631,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Activities</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Activities</h3>
               
               <div className="space-y-4">
                 <div>
@@ -6696,7 +6696,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Contact Information</h3>
               
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -6797,7 +6797,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Representative Member Information</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Representative Member Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -6884,7 +6884,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">VAT Group Member Companies</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">VAT Group Member Companies</h3>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-800 mb-2">Group Eligibility Requirements</h4>
@@ -6990,7 +6990,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
@@ -7752,7 +7752,7 @@ export default function CompanySecretarial() {
         {/* Left Sidebar Navigation */}
         <div className="w-64 bg-white border-r border-gray-200 min-h-screen">
           <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Company Secretarial</h2>
+            <h2 className="text-lg font-semibold text-blue-900 mb-4">Company Secretarial</h2>
             <nav className="space-y-2">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>

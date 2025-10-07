@@ -496,8 +496,8 @@ export default function Payroll() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
+        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+          <div className="p-4 border-b-2 border-blue-900">
             <h1 className="text-xl font-bold text-gray-900">Payroll</h1>
             <p className="text-sm text-gray-600 mt-1">Comprehensive payroll management</p>
           </div>
@@ -557,7 +557,7 @@ export default function Payroll() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-gray-200 bg-white">
+          <div className="p-4 border-b-2 border-blue-900 bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search employees, payslips, or submissions..."
               searchValue={searchTerm}

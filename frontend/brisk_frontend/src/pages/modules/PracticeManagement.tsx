@@ -1421,9 +1421,9 @@ export default function PracticeManagement() {
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Practice Management</h2>
+        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+          <div className="p-4 border-b-2 border-blue-900">
+            <h2 className="text-lg font-semibold text-blue-900">Practice Management</h2>
           </div>
           
           <div className="flex-1 overflow-y-auto">

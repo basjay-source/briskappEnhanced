@@ -184,9 +184,9 @@ const AdminModule = () => {
   ];
 
   const renderLeftRail = () => (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Admin Control</h2>
+    <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
+      <div className="p-6 border-b-2 border-blue-900">
+        <h2 className="text-lg font-semibold text-blue-900">Admin Control</h2>
         <p className="text-sm text-gray-600">Multi-tenant management</p>
       </div>
       <nav className="flex-1 p-4 space-y-2">
@@ -1354,7 +1354,7 @@ const AdminModule = () => {
         
         <div className="flex-1 flex flex-col overflow-hidden">
           {isMobile && (
-            <div className="p-4 bg-white border-b border-gray-200">
+            <div className="p-4 bg-white border-b-2 border-blue-900">
               <Select value={activeSection} onValueChange={setActiveSection}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select admin section" />

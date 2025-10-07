@@ -77,7 +77,7 @@ export default function AppShell() {
   if (isMobile) {
     return (
       <div className="flex flex-col h-full w-full bg-background">
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3 flex-shrink-0">
+        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 py-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <MobileNavigation />
             <BriskLogo className="h-6 w-6" showText={false} />
@@ -116,7 +116,7 @@ export default function AppShell() {
       </Sidebar>
 
       <SidebarInset className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 md:px-6 py-3 flex-shrink-0">
+        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 md:px-6 py-3 flex-shrink-0">
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <SidebarTrigger />
             <div className="relative flex-1 max-w-md">
