@@ -76,8 +76,8 @@ export default function AppShell() {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col h-full w-full bg-background">
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3 flex-shrink-0">
+      <div className="flex flex-col min-h-screen bg-background">
+        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3 flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <MobileNavigation />
             <BriskLogo className="h-6 w-6" showText={false} />
@@ -93,7 +93,7 @@ export default function AppShell() {
             </Button>
           </div>
         </header>
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1">
           <Outlet />
         </main>
       </div>
@@ -102,7 +102,7 @@ export default function AppShell() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-full w-full bg-background overflow-hidden">
+      <div className="flex min-h-screen bg-background">
         <Sidebar className="flex-shrink-0">
         <SidebarHeader className="border-b border-sidebar-border p-4 flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -115,8 +115,8 @@ export default function AppShell() {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 md:px-6 py-3 flex-shrink-0">
+      <SidebarInset className="flex-1 flex flex-col">
+        <header className="flex items-center justify-between border-b border-border bg-background px-4 md:px-6 py-3 flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <SidebarTrigger />
             <div className="relative flex-1 max-w-md">
@@ -195,7 +195,7 @@ export default function AppShell() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto w-full">
+        <main className="flex-1 w-full">
           <Outlet />
         </main>
       </SidebarInset>
