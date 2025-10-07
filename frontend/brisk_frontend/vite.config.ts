@@ -15,6 +15,12 @@ export default defineConfig({
       '.devinapps.com',
       'localhost',
     ],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
   },
 })
 
