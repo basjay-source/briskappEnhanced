@@ -440,7 +440,7 @@ export default function PracticeManagement() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Jobs</CardTitle>
+              <CardTitle className="text-blue-900">Recent Jobs</CardTitle>
               <CardDescription>Latest job assignments and progress</CardDescription>
             </CardHeader>
             <CardContent>
@@ -490,7 +490,7 @@ export default function PracticeManagement() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Deadlines</CardTitle>
+              <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
               <CardDescription>Critical deadlines requiring attention</CardDescription>
             </CardHeader>
             <CardContent>
@@ -542,7 +542,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Job Overview</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Job Overview</h2>
           <p className="text-gray-600">Complete job management and tracking</p>
         </div>
         <div className="flex gap-2">
@@ -560,7 +560,7 @@ export default function PracticeManagement() {
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>All Jobs ({jobs.length})</CardTitle>
+            <CardTitle className="text-blue-900">All Jobs ({jobs.length})</CardTitle>
             <CardDescription>Complete job management and tracking</CardDescription>
           </CardHeader>
           <CardContent>
@@ -633,7 +633,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Time Tracking</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Time Tracking</h2>
           <p className="text-gray-600">Track time spent on jobs and tasks</p>
         </div>
         <div className="flex gap-2">
@@ -646,7 +646,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Time Entries</CardTitle>
+          <CardTitle className="text-blue-900">Time Entries</CardTitle>
           <CardDescription>Track time spent on jobs and tasks</CardDescription>
         </CardHeader>
         <CardContent>
@@ -660,7 +660,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Deadlines Management</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Deadlines Management</h2>
           <p className="text-gray-600">Monitor and manage upcoming deadlines</p>
         </div>
         <div className="flex gap-2">
@@ -677,7 +677,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>All Deadlines ({deadlines.length})</CardTitle>
+          <CardTitle className="text-blue-900">All Deadlines ({deadlines.length})</CardTitle>
           <CardDescription>Monitor and manage upcoming deadlines</CardDescription>
         </CardHeader>
         <CardContent>
@@ -758,7 +758,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Client Portal</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Client Portal</h2>
           <p className="text-gray-600">Advanced client portal management and configuration</p>
         </div>
         <div className="flex gap-2">
@@ -776,7 +776,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Workflow Builder</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Workflow Builder</h2>
           <p className="text-gray-600">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
@@ -794,7 +794,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Workflow Automation</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
           <p className="text-gray-600">Configure automated workflow triggers and actions</p>
         </div>
         <div className="flex gap-2">
@@ -807,7 +807,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Automation Rules</CardTitle>
+          <CardTitle className="text-blue-900">Automation Rules</CardTitle>
           <CardDescription>Configure automated workflow triggers and actions</CardDescription>
         </CardHeader>
         <CardContent>
@@ -821,7 +821,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Capacity Planning</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Capacity Planning</h2>
           <p className="text-gray-600">Advanced capacity planning and resource allocation</p>
         </div>
         <div className="flex gap-2">
@@ -839,7 +839,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Compliance Management</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Compliance Management</h2>
           <p className="text-gray-600">Automated compliance monitoring and management</p>
         </div>
         <div className="flex gap-2">
@@ -857,7 +857,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Practice Analytics</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Practice Analytics</h2>
           <p className="text-gray-600">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
@@ -870,7 +870,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Performance Metrics</CardTitle>
+          <CardTitle className="text-blue-900">Performance Metrics</CardTitle>
           <CardDescription>Analyze practice performance and efficiency</CardDescription>
         </CardHeader>
         <CardContent>
@@ -1083,7 +1083,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">AI Practice Adviser</h2>
+          <h2 className="text-2xl font-bold text-blue-900">AI Practice Adviser</h2>
           <p className="text-gray-600">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
@@ -1096,7 +1096,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>AI Recommendations</CardTitle>
+          <CardTitle className="text-blue-900">AI Recommendations</CardTitle>
           <CardDescription>Get intelligent insights for practice optimization</CardDescription>
         </CardHeader>
         <CardContent>
@@ -1119,7 +1119,7 @@ export default function PracticeManagement() {
                   <span className="text-white font-semibold">AI</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Practice Management AI Adviser</h4>
+                  <h4 className="font-semibold text-blue-900">Practice Management AI Adviser</h4>
                   <p className="text-sm text-gray-600">Specialized in practice operations, client management, and business strategy</p>
                 </div>
               </div>
@@ -1226,7 +1226,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Email Studio</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Email Studio</h2>
           <p className="text-gray-600">Advanced email management and automation</p>
         </div>
         <div className="flex gap-2">
@@ -1244,7 +1244,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Payslip Templates</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Payslip Templates</h2>
           <p className="text-gray-600">Streamline payroll processing with branded templates</p>
         </div>
         <div className="flex gap-2">
@@ -1257,7 +1257,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Payslip Template Workflows</CardTitle>
+          <CardTitle className="text-blue-900">Payslip Template Workflows</CardTitle>
           <CardDescription>Streamline payroll processing with branded templates</CardDescription>
         </CardHeader>
         <CardContent>
@@ -1271,7 +1271,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Invoice Templates</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Invoice Templates</h2>
           <p className="text-gray-600">Streamline invoice creation with branded templates</p>
         </div>
         <div className="flex gap-2">
@@ -1284,7 +1284,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Invoice Template Workflows</CardTitle>
+          <CardTitle className="text-blue-900">Invoice Template Workflows</CardTitle>
           <CardDescription>Streamline invoice creation with branded templates</CardDescription>
         </CardHeader>
         <CardContent>
@@ -1298,7 +1298,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Template Analytics</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Template Analytics</h2>
           <p className="text-gray-600">Monitor template performance and usage patterns</p>
         </div>
         <div className="flex gap-2">
@@ -1311,14 +1311,14 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Template Usage Analytics</CardTitle>
+          <CardTitle className="text-blue-900">Template Usage Analytics</CardTitle>
           <CardDescription>Monitor template performance and usage patterns</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Templates Created</CardTitle>
+                <CardTitle className="text-sm text-blue-900">Templates Created</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">24</div>
@@ -1327,7 +1327,7 @@ export default function PracticeManagement() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Templates Used</CardTitle>
+                <CardTitle className="text-sm text-blue-900">Templates Used</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">156</div>
@@ -1336,7 +1336,7 @@ export default function PracticeManagement() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Time Saved</CardTitle>
+                <CardTitle className="text-sm text-blue-900">Time Saved</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">42h</div>
@@ -1353,7 +1353,7 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Practice Reports</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Practice Reports</h2>
           <p className="text-gray-600">Generate comprehensive practice management reports</p>
         </div>
         <div className="flex gap-2">
@@ -1366,7 +1366,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Management Reports</CardTitle>
+          <CardTitle className="text-blue-900">Management Reports</CardTitle>
           <CardDescription>Generate comprehensive practice management reports</CardDescription>
         </CardHeader>
         <CardContent>
@@ -1390,7 +1390,7 @@ export default function PracticeManagement() {
                     <span className="text-blue-600">📊</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold">Financial Reports</h4>
+                    <h4 className="font-semibold text-blue-900">Financial Reports</h4>
                     <p className="text-sm text-gray-600">Revenue, profitability, and financial performance</p>
                   </div>
                 </div>
@@ -1420,7 +1420,7 @@ export default function PracticeManagement() {
                     <span className="text-orange-600">👥</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold">Client Reports</h4>
+                    <h4 className="font-semibold text-blue-900">Client Reports</h4>
                     <p className="text-sm text-gray-600">Client analysis and relationship metrics</p>
                   </div>
                 </div>
@@ -1450,7 +1450,7 @@ export default function PracticeManagement() {
                     <span className="text-green-600">⚡</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold">Performance Reports</h4>
+                    <h4 className="font-semibold text-blue-900">Performance Reports</h4>
                     <p className="text-sm text-gray-600">Team productivity and efficiency metrics</p>
                   </div>
                 </div>
@@ -1480,7 +1480,7 @@ export default function PracticeManagement() {
                     <span className="text-purple-600">📋</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold">Compliance Reports</h4>
+                    <h4 className="font-semibold text-blue-900">Compliance Reports</h4>
                     <p className="text-sm text-gray-600">Regulatory and compliance tracking</p>
                   </div>
                 </div>
