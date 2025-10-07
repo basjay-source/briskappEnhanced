@@ -553,19 +553,19 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start border-2 border-blue-900">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
                   <FileText className="h-4 w-4 mr-2" />
                   Generate Report
                 </Button>
