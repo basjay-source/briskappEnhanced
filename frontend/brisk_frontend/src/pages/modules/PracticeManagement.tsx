@@ -212,7 +212,7 @@ export default function PracticeManagement() {
       case 'in_progress':
         return <Circle className="h-4 w-4 text-blue-600" />
       case 'on_hold':
-        return <Pause className="h-4 w-4 text-brisk-primary" />
+        return <Pause className="h-4 w-4 text-blue-900" />
       default:
         return <Circle className="h-4 w-4 text-gray-400" />
     }
