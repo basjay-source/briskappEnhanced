@@ -205,7 +205,7 @@ export default function ClientPortalAdvanced({
                   <CardContent>
                     <div className="space-y-4">
                       {jobs.slice(0, 3).map((job) => (
-                        <div key={job.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                        <div key={job.id} className="flex items-center gap-4 p-4 border-2 border-blue-900 rounded-[2px]">
                           {getStatusIcon(job.status)}
                           <div className="flex-1">
                             <h4 className="font-medium">{job.title}</h4>
@@ -265,7 +265,7 @@ export default function ClientPortalAdvanced({
               <CardContent>
                 <div className="space-y-4">
                   {jobs.map((job) => (
-                    <div key={job.id} className="p-6 border rounded-lg">
+                    <div key={job.id} className="p-6 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {getStatusIcon(job.status)}
@@ -325,7 +325,7 @@ export default function ClientPortalAdvanced({
                 <div className="space-y-4">
                   {jobs.flatMap(job => 
                     job.documents.map(doc => (
-                      <div key={`${job.id}-${doc.name}`} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={`${job.id}-${doc.name}`} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                         <div className="flex items-center gap-3">
                           <FileText className="h-8 w-8 text-blue-600" />
                           <div>
@@ -363,7 +363,7 @@ export default function ClientPortalAdvanced({
                 <div className="space-y-4">
                   {jobs.flatMap(job => 
                     job.messages.map((message, index) => (
-                      <div key={`${job.id}-${index}`} className="p-4 border rounded-lg">
+                      <div key={`${job.id}-${index}`} className="p-4 border-2 border-blue-900 rounded-[2px]">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4 text-gray-600" />

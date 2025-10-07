@@ -43,7 +43,7 @@ export function ResponsiveCard({ children, className }: ResponsiveLayoutProps) {
 
   return (
     <div className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-[2px] border bg-card text-card-foreground shadow-sm",
       isMobile ? "p-4" : "p-6",
       className
     )}>

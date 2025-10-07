@@ -297,7 +297,7 @@ export default function ComplianceAutomation() {
             <CardContent>
               <div className="space-y-4">
                 {deadlines.map((deadline) => (
-                  <div key={deadline.id} className="p-4 border rounded-lg">
+                  <div key={deadline.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(deadline.status)}
@@ -383,7 +383,7 @@ export default function ComplianceAutomation() {
             <CardContent>
               <div className="space-y-4">
                 {automationRules.map((rule) => (
-                  <div key={rule.id} className="p-4 border rounded-lg">
+                  <div key={rule.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h4 className="font-medium">{rule.name}</h4>
@@ -443,7 +443,7 @@ export default function ComplianceAutomation() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <span className="font-medium text-green-900">Connected</span>
@@ -465,7 +465,7 @@ export default function ComplianceAutomation() {
                   <div className="space-y-2">
                     <h4 className="font-medium">Services</h4>
                     {hmrcIntegration.services.map((service) => (
-                      <div key={service.name} className="flex items-center justify-between p-2 border rounded">
+                      <div key={service.name} className="flex items-center justify-between p-2 border-2 border-blue-900 rounded-[2px]">
                         <div>
                           <span className="text-sm font-medium">{service.name}</span>
                           <p className="text-xs text-gray-500">Last update: {service.lastUpdate}</p>
@@ -493,7 +493,7 @@ export default function ComplianceAutomation() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <span className="font-medium text-green-900">Connected</span>
@@ -518,7 +518,7 @@ export default function ComplianceAutomation() {
                     </div>
                   </div>
 
-                  <div className="p-3 bg-blue-50 rounded-lg">
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Bell className="h-4 w-4 text-blue-600" />
                       <span className="font-medium text-blue-900">Auto-Sync Features</span>
@@ -589,7 +589,7 @@ export default function ComplianceAutomation() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="p-3 bg-green-50 rounded-lg">
+                  <div className="p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="h-4 w-4 text-green-600" />
                       <span className="font-medium text-green-900">Time Savings</span>
@@ -597,7 +597,7 @@ export default function ComplianceAutomation() {
                     <p className="text-2xl font-bold text-green-700">47 hours</p>
                     <p className="text-sm text-green-600">This month</p>
                   </div>
-                  <div className="p-3 bg-blue-50 rounded-lg">
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="h-4 w-4 text-blue-600" />
                       <span className="font-medium text-blue-900">Cost Savings</span>
@@ -605,7 +605,7 @@ export default function ComplianceAutomation() {
                     <p className="text-2xl font-bold text-blue-700">£3,760</p>
                     <p className="text-sm text-blue-600">This month</p>
                   </div>
-                  <div className="p-3 bg-purple-50 rounded-lg">
+                  <div className="p-3 bg-purple-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Zap className="h-4 w-4 text-purple-600" />
                       <span className="font-medium text-purple-900">Efficiency Gain</span>

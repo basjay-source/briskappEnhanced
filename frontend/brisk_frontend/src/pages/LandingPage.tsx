@@ -105,7 +105,7 @@ export default function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {modules.map((module, index) => (
-              <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border">
+              <div key={index} className="flex items-center gap-3 p-4 bg-white rounded-[2px] shadow-sm border">
                 <CheckCircle className="h-5 w-5 text-brisk-accent" />
                 <span className="font-medium">{module}</span>
               </div>

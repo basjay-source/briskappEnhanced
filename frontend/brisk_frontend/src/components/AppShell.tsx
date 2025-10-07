@@ -130,7 +130,7 @@ export default function AppShell() {
               />
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-[60vh] overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2px] shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
                     <span className="text-sm font-medium">Search Results</span>
                     <Button 

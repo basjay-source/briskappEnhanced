@@ -290,21 +290,21 @@ export default function PracticeManagement() {
         ))}
       </ResponsiveGrid>
 
-      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-lg border">
+      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border">
         <div className="flex-1">
           <input
             type="text"
             placeholder="Search jobs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
           />
         </div>
         <div className="flex gap-2">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
           >
             {statusOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -313,7 +313,7 @@ export default function PracticeManagement() {
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
           >
             {priorityOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -331,7 +331,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.slice(0, 5).map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(job.status)}
                     <div>
@@ -359,7 +359,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {upcomingDeadlines.map((deadline, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div>
                     <p className="font-medium">{deadline.type}</p>
                     <p className="text-sm text-gray-600">{deadline.client}</p>
@@ -407,7 +407,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center space-x-4">
                     {getStatusIcon(job.status)}
                     <div>
@@ -482,7 +482,7 @@ export default function PracticeManagement() {
         <CardContent>
           <div className="space-y-4">
             {upcomingDeadlines.map((deadline, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div>
                   <p className="font-medium">{deadline.type}</p>
                   <p className="text-sm text-gray-600">{deadline.client}</p>
@@ -647,7 +647,7 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="bg-blue-50 p-4 rounded-[2px]">
                           <h4 className="font-semibold text-blue-900">Revenue by Service</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
@@ -668,7 +668,7 @@ export default function PracticeManagement() {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-orange-50 p-4 rounded-lg">
+                        <div className="bg-orange-50 p-4 rounded-[2px]">
                           <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
@@ -701,7 +701,7 @@ export default function PracticeManagement() {
                   description: "Detailed analysis of client satisfaction metrics and feedback",
                   content: (
                     <div className="space-y-4">
-                      <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="bg-blue-50 p-4 rounded-[2px]">
                         <h4 className="font-semibold text-blue-900">Satisfaction Breakdown</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
@@ -733,7 +733,7 @@ export default function PracticeManagement() {
                   description: "Detailed breakdown of team utilization by role and department",
                   content: (
                     <div className="space-y-4">
-                      <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="bg-blue-50 p-4 rounded-[2px]">
                         <h4 className="font-semibold text-blue-900">Utilization by Role</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
@@ -765,7 +765,7 @@ export default function PracticeManagement() {
                   description: "Analysis of project completion rates by type and timeline",
                   content: (
                     <div className="space-y-4">
-                      <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="bg-blue-50 p-4 rounded-[2px]">
                         <h4 className="font-semibold text-blue-900">Completion by Type</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
@@ -789,13 +789,13 @@ export default function PracticeManagement() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
                 <h4 className="text-lg font-semibold mb-4">Revenue Trends</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
                   <span className="text-gray-500">Revenue Chart Placeholder</span>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
                 <h4 className="text-lg font-semibold mb-4">Client Growth</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
                   <span className="text-gray-500">Client Growth Chart Placeholder</span>
@@ -803,18 +803,18 @@ export default function PracticeManagement() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <div className="bg-white p-6 rounded-[2px] shadow-sm border">
               <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="text-center p-4 bg-blue-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-gray-600">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                <div className="text-center p-4 bg-orange-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-orange-600">12.3</div>
                   <div className="text-sm text-gray-600">Days Average Completion</div>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="text-center p-4 bg-green-50 rounded-[2px]">
                   <div className="text-2xl font-bold text-green-600">98.7%</div>
                   <div className="text-sm text-gray-600">Client Retention Rate</div>
                 </div>
@@ -860,7 +860,7 @@ export default function PracticeManagement() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-[2px] shadow-sm border p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold">AI</span>
@@ -872,7 +872,7 @@ export default function PracticeManagement() {
               </div>
 
               <div className="space-y-4 mb-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-blue-50 p-4 rounded-[2px]">
                   <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• Practice workflow optimization and automation strategies</li>
@@ -892,7 +892,7 @@ export default function PracticeManagement() {
                   </div>
                   <div className="flex-1">
                     <textarea
-                      className="w-full p-3 border rounded-lg resize-none"
+                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none"
                       rows={3}
                       placeholder="Ask me anything about practice management, client relationships, workflow optimization, or business strategy..."
                     />
@@ -918,42 +918,42 @@ export default function PracticeManagement() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
                 <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
                 <div className="space-y-3">
-                  <div className="p-3 bg-blue-50 rounded-lg">
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
                     <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
                     <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-lg">
+                  <div className="p-3 bg-orange-50 rounded-[2px]">
                     <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
                     <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
                   </div>
-                  <div className="p-3 bg-green-50 rounded-lg">
+                  <div className="p-3 bg-green-50 rounded-[2px]">
                     <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
                     <p className="text-xs text-green-700 mt-1">Implementing weekly check-ins could increase client satisfaction scores by 15%.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
                 <h4 className="text-lg font-semibold mb-4">Recommended Actions</h4>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Review high-risk client accounts</p>
                       <p className="text-xs text-gray-600">3 clients showing payment delays</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
                       <p className="text-xs text-gray-600">12 agreements due for renewal</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Schedule team training</p>
@@ -1131,9 +1131,9 @@ export default function PracticeManagement() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-blue-600">📊</span>
                   </div>
                   <div>
@@ -1161,9 +1161,9 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-orange-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-orange-600">👥</span>
                   </div>
                   <div>
@@ -1191,9 +1191,9 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-green-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-green-600">⚡</span>
                   </div>
                   <div>
@@ -1221,9 +1221,9 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-purple-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-purple-600">📋</span>
                   </div>
                   <div>
@@ -1251,9 +1251,9 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-indigo-600">📈</span>
                   </div>
                   <div>
@@ -1281,9 +1281,9 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-red-100 rounded-[2px] flex items-center justify-center">
                     <span className="text-red-600">🎯</span>
                   </div>
                   <div>
@@ -1312,7 +1312,7 @@ export default function PracticeManagement() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <div className="bg-white p-6 rounded-[2px] shadow-sm border">
               <h4 className="text-lg font-semibold mb-4">Recent Reports</h4>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -1437,7 +1437,7 @@ export default function PracticeManagement() {
                   <div key={key} className="mb-1">
                     <button
                       onClick={() => handleMainTabClick(key)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -1464,7 +1464,7 @@ export default function PracticeManagement() {
                             <button
                               key={subKey}
                               onClick={() => handleSubTabClick(subKey, key)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'

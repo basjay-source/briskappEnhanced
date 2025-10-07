@@ -301,7 +301,7 @@ export default function TimeAndFeesModuleAdvanced() {
               <CardContent>
                 <div className="space-y-4">
                   {timeEntries.map((entry) => (
-                    <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={entry.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-medium">{entry.jobTitle}</h4>
@@ -335,7 +335,7 @@ export default function TimeAndFeesModuleAdvanced() {
               <CardContent>
                 <div className="space-y-3">
                   {aiInsights.map((insight, index) => (
-                    <div key={index} className={`p-3 border rounded-lg ${getInsightColor(insight.impact)}`}>
+                    <div key={index} className={`p-3 border-2 border-blue-900 rounded-[2px] ${getInsightColor(insight.impact)}`}>
                       <div className="flex items-start gap-2">
                         {getInsightIcon(insight.type)}
                         <div className="flex-1">
@@ -417,7 +417,7 @@ export default function TimeAndFeesModuleAdvanced() {
                       <select
                         value={selectedJob}
                         onChange={(e) => setSelectedJob(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="">Select a job...</option>
                         <option value="J001">ACC-001 - Year End Accounts</option>
@@ -430,7 +430,7 @@ export default function TimeAndFeesModuleAdvanced() {
                       <select
                         value={selectedTask}
                         onChange={(e) => setSelectedTask(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="">Select a task...</option>
                         <option value="task1">Trial Balance Review</option>
@@ -490,7 +490,7 @@ export default function TimeAndFeesModuleAdvanced() {
           <CardContent>
             <div className="space-y-4">
               {aiInsights.map((insight, index) => (
-                <div key={index} className={`p-4 border rounded-lg ${getInsightColor(insight.impact)}`}>
+                <div key={index} className={`p-4 border-2 border-blue-900 rounded-[2px] ${getInsightColor(insight.impact)}`}>
                   <div className="flex items-start gap-3">
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
@@ -564,7 +564,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <div key={tab.id}>
               <button
                 onClick={() => handleMainTabClick(tab.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                   activeMainTab === tab.id 
                     ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                     : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -583,7 +583,7 @@ export default function TimeAndFeesModuleAdvanced() {
                     <button
                       key={subTab.id}
                       onClick={() => handleSubTabClick(subTab.id)}
-                      className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         activeSubTab === subTab.id 
                           ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                           : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'

@@ -515,7 +515,7 @@ export default function NewEmailStudio() {
                   </div>
 
                   {templateData && (
-                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-50 rounded-[2px]">
                       <h4 className="font-medium text-blue-900 mb-2">Preview with Client Data:</h4>
                       <div className="text-sm text-blue-800">
                         <div><strong>Subject:</strong> {replaceTemplateVariables(composeData.subject)}</div>
@@ -566,7 +566,7 @@ export default function NewEmailStudio() {
                   <button
                     key={template.id}
                     onClick={() => loadTemplate(template)}
-                    className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="w-full text-left p-2 rounded-[2px] border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <div className="font-medium text-sm">{template.name}</div>
                     <div className="text-xs text-gray-500">{template.category}</div>
@@ -589,7 +589,7 @@ export default function NewEmailStudio() {
                       <button
                         key={variable.key}
                         onClick={() => insertVariable(variable.key)}
-                        className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                        className="w-full text-left p-2 rounded-[2px] border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       >
                         <div className="font-medium text-sm">{variable.label}</div>
                         <div className="text-xs text-gray-500">{variable.description}</div>

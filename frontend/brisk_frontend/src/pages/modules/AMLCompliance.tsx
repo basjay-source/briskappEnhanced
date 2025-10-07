@@ -203,12 +203,12 @@ export default function AMLCompliance() {
                 content: (
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border-2 border-blue-900 rounded-lg">
+                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                         <h4 className="font-semibold mb-2">Current Status</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
-                      <div className="p-4 border-2 border-blue-900 rounded-lg">
+                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                         <h4 className="font-semibold mb-2">Compliance Score</h4>
                         <p className="text-sm text-gray-600">AML regulatory compliance</p>
                         <div className="mt-2">
@@ -272,14 +272,14 @@ export default function AMLCompliance() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-[2px]">
                     <div>
                       <p className="font-medium text-red-900">High Risk Transaction</p>
                       <p className="text-sm text-red-700">Client ABC Ltd - £50,000 cash deposit</p>
                     </div>
                     <Badge variant="destructive">Urgent</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-[2px]">
                     <div>
                       <p className="font-medium text-orange-900">KYC Update Required</p>
                       <p className="text-sm text-orange-700">XYZ Corp - Annual review due</p>
@@ -357,7 +357,7 @@ export default function AMLCompliance() {
                   <div key={item.id}>
                     <button
                       onClick={() => handleMainTabClick(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -380,7 +380,7 @@ export default function AMLCompliance() {
                             <button
                               key={subTab.id}
                               onClick={() => handleSubTabClick(subTab.id)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'

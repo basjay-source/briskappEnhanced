@@ -379,7 +379,7 @@ export default function VAT() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <Upload className="h-4 w-4 text-blue-500" />
                     <div className="flex-1">
                       <p className="font-semibold">VAT Return Q4 2024 Submitted</p>
@@ -387,7 +387,7 @@ export default function VAT() {
                     </div>
                     <span className="text-sm text-gray-500">2 days ago</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <Edit className="h-4 w-4 text-green-500" />
                     <div className="flex-1">
                       <p className="font-semibold">VAT Scheme Updated</p>
@@ -395,7 +395,7 @@ export default function VAT() {
                     </div>
                     <span className="text-sm text-gray-500">1 week ago</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <AlertCircle className="h-4 w-4 text-red-500" />
                     <div className="flex-1">
                       <p className="font-semibold">Overdue Return Detected</p>

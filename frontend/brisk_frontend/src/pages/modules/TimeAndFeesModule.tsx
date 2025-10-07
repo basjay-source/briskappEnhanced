@@ -338,7 +338,7 @@ export default function TimeAndFeesModule() {
                   <CardContent>
                     <div className="space-y-4">
                       {timeEntries.slice(0, 5).map((entry) => (
-                        <div key={entry.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                        <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                           <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                             {getStatusIcon(entry.status)}
                             <div className="flex-1">
@@ -491,7 +491,7 @@ export default function TimeAndFeesModule() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Job</label>
                   <select 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     value={selectedJob}
                     onChange={(e) => setSelectedJob(e.target.value)}
                   >
@@ -504,7 +504,7 @@ export default function TimeAndFeesModule() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Task (Optional)</label>
                   <select 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     value={selectedTask}
                     onChange={(e) => setSelectedTask(e.target.value)}
                   >
@@ -517,7 +517,7 @@ export default function TimeAndFeesModule() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Description</label>
                   <textarea 
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
                     rows={3}
                     placeholder="Describe what you're working on..."
                   />
@@ -554,7 +554,7 @@ export default function TimeAndFeesModule() {
             <CardContent>
               <div className="space-y-4">
                 {timeEntries.map((entry) => (
-                  <div key={entry.id} className={`p-4 border rounded-lg hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                  <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                     <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                       {getStatusIcon(entry.status)}
                       <div className="flex-1">
@@ -613,7 +613,7 @@ export default function TimeAndFeesModule() {
                 <CardContent>
                   <div className="space-y-4">
                     {timeEntries.filter(entry => entry.status === 'submitted').map((entry) => (
-                      <div key={entry.id} className={`p-4 border rounded-lg ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                      <div key={entry.id} className={`p-4 border-2 border-blue-900 rounded-[2px] ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                         <div className="flex-1">
                           <h4 className="font-medium">{entry.jobTitle}</h4>
                           <p className="text-sm text-gray-600">{entry.clientName}</p>
@@ -683,7 +683,7 @@ export default function TimeAndFeesModule() {
               <CardContent>
                 <div className="space-y-4">
                   {jobCodes.map((code) => (
-                    <div key={code.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                    <div key={code.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
                         <h4 className="font-medium">{code.code}</h4>
                         <p className="text-sm text-gray-600">{code.name}</p>
@@ -713,7 +713,7 @@ export default function TimeAndFeesModule() {
               <CardContent>
                 <div className="space-y-4">
                   {employeeRates.map((rate, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div>
                         <h4 className="font-medium">{rate.employeeName}</h4>
                         <p className="text-sm text-gray-600">

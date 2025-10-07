@@ -154,7 +154,7 @@ export default function TemplateBrandingEditor({
             <div>
               <Label>Company Logo</Label>
               <div 
-                className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+                className={`border-2 border-dashed rounded-[2px] p-6 text-center cursor-pointer transition-colors ${
                   dragActive ? 'border-brisk-primary bg-blue-50' : 'border-gray-300 hover:border-brisk-primary'
                 }`}
                 onDragOver={(e) => {
@@ -217,7 +217,7 @@ export default function TemplateBrandingEditor({
               </div>
             </div>
 
-            <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="p-4 bg-gray-50 rounded-[2px]">
               <h4 className="font-medium mb-2">Branding Preview</h4>
               <div 
                 className="p-4 bg-white rounded border"

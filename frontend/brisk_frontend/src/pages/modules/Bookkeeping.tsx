@@ -406,12 +406,12 @@ export default function Bookkeeping() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Current Value</h4>
                       <p className="text-2xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Monthly Trend</h4>
                       <p className="text-sm text-gray-600">Performance over time</p>
                       <div className="mt-2">
@@ -529,7 +529,7 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">Payment from ABC Corp</p>
@@ -688,7 +688,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="font-medium">INV-001</p>
@@ -881,7 +881,7 @@ export default function Bookkeeping() {
                   { type: 'PO', ref: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, status: 'Approved', time: '3 hours ago' },
                   { type: 'Expense', ref: 'EXP-2024-045', supplier: 'Travel Agency', amount: 185, status: 'Submitted', time: '5 hours ago' }
                 ].map((activity, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium">{activity.ref}</p>
@@ -969,7 +969,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-center gap-4">
                   <CreditCard className="h-8 w-8 text-blue-600" />
                   <div>
@@ -1017,7 +1017,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <p className="font-medium">Office supplies purchase</p>
                   <p className="text-sm text-gray-600">JE001 - Office Expenses</p>
@@ -1062,15 +1062,15 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="p-4 bg-blue-50 rounded-[2px]">
                 <p className="text-sm font-medium text-blue-600">VAT on Sales</p>
                 <p className="text-xl font-bold text-blue-900">£5,700</p>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg">
+              <div className="p-4 bg-green-50 rounded-[2px]">
                 <p className="text-sm font-medium text-green-600">VAT on Purchases</p>
                 <p className="text-xl font-bold text-green-900">£1,890</p>
               </div>
-              <div className="p-4 bg-orange-50 rounded-lg">
+              <div className="p-4 bg-orange-50 rounded-[2px]">
                 <p className="text-sm font-medium text-orange-600">VAT Due</p>
                 <p className="text-xl font-bold text-orange-900">£3,810</p>
               </div>
@@ -1203,7 +1203,7 @@ export default function Bookkeeping() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Report Status</h4>
                       <p className="text-sm text-gray-600">{report.description}</p>
                       <div className="mt-2">
@@ -1213,7 +1213,7 @@ export default function Bookkeeping() {
                         <p className="text-xs text-gray-500 mt-1">Last generated: {report.lastGenerated}</p>
                       </div>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Report Metrics</h4>
                       <p className="text-sm text-gray-600">Financial performance indicators</p>
                       <div className="mt-2">
@@ -1431,12 +1431,12 @@ export default function Bookkeeping() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Current Status</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.description}</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Performance Score</h4>
                       <p className="text-sm text-gray-600">Management effectiveness</p>
                       <div className="mt-2">
@@ -1654,12 +1654,12 @@ export default function Bookkeeping() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Current Performance</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.status}</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Analytics Score</h4>
                       <p className="text-sm text-gray-600">Data quality and insights</p>
                       <div className="mt-2">
@@ -1783,7 +1783,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <p className="font-medium">Website Redesign</p>
                   <p className="text-sm text-gray-600">Client: ABC Corp</p>
@@ -1833,7 +1833,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <p className="font-medium">Revenue</p>
                   <div className="flex items-center gap-2 mt-1">
@@ -1882,7 +1882,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-center gap-4">
                   <Building className="h-8 w-8 text-blue-600" />
                   <div>
@@ -1930,7 +1930,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-center gap-4">
                   <ShoppingCart className="h-8 w-8 text-orange-600" />
                   <div>
@@ -1977,7 +1977,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-center gap-3">
                   <FileText className="h-6 w-6 text-blue-600" />
                   <div>
@@ -2028,9 +2028,9 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+              <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
                     <Database className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
@@ -2109,7 +2109,7 @@ export default function Bookkeeping() {
                 { name: 'Mobile App Development', client: 'XYZ Ltd', progress: 45, budget: 25000, spent: 11250, status: 'Behind' },
                 { name: 'Brand Identity', client: 'StartupCo', progress: 90, budget: 8000, spent: 7200, status: 'Ahead' }
               ].map((project, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-4">
                       <Target className="h-8 w-8 text-brisk-primary" />
@@ -2220,7 +2220,7 @@ export default function Bookkeeping() {
                 { project: 'Brand Identity', task: 'Logo Design', hours: 1.5, date: 'Yesterday', billable: true },
                 { project: 'Internal', task: 'Team Meeting', hours: 1.0, date: 'Yesterday', billable: false }
               ].map((entry, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-3">
                     <Clock className="h-5 w-5 text-brisk-primary" />
                     <div>
@@ -2306,7 +2306,7 @@ export default function Bookkeeping() {
                 { name: 'Mobile App Development', budget: 25000, labor: 15000, materials: 2000, overhead: 1500, total: 18500, margin: 26.0 },
                 { name: 'Brand Identity', budget: 8000, labor: 4800, materials: 400, overhead: 300, total: 5500, margin: 31.3 }
               ].map((project, index) => (
-                <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium">{project.name}</h3>
                     <Badge className={`${project.margin > 30 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`}>
@@ -2415,7 +2415,7 @@ export default function Bookkeeping() {
                 { name: 'Project Profitability Report', type: 'Financial', generated: '3 days ago', size: '3.1 MB' },
                 { name: 'Client Project Status', type: 'Status', generated: '1 week ago', size: '1.2 MB' }
               ].map((report, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-brisk-primary" />
                     <div>
@@ -2510,7 +2510,7 @@ export default function Bookkeeping() {
                 { category: 'Technology', allocated: 60000, spent: 45000, remaining: 15000, percentage: 75.0 },
                 { category: 'Human Resources', allocated: 90000, spent: 78000, remaining: 12000, percentage: 86.7 }
               ].map((budget, index) => (
-                <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium">{budget.category}</h3>
                     <Badge className={`${budget.percentage > 85 ? 'bg-red-100 text-red-800' : budget.percentage > 75 ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
@@ -2618,7 +2618,7 @@ export default function Bookkeeping() {
                 { month: 'March', budgeted: 37500, actual: 36900, variance: -1.6, status: 'Under' },
                 { month: 'April', budgeted: 37500, actual: 38200, variance: 1.9, status: 'Over' }
               ].map((month, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <TrendingUp className={`h-6 w-6 ${month.status === 'Over' ? 'text-red-600' : 'text-green-600'}`} />
                     <div>
@@ -2705,7 +2705,7 @@ export default function Bookkeeping() {
                 { scenario: 'Most Likely', revenue: 275000, expenses: 195000, profit: 80000, probability: 85 },
                 { scenario: 'Optimistic', revenue: 320000, expenses: 210000, profit: 110000, probability: 45 }
               ].map((scenario, index) => (
-                <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium">{scenario.scenario}</h3>
                     <Badge className={`${scenario.probability > 70 ? 'bg-green-100 text-green-800' : scenario.probability > 50 ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}>
@@ -2807,7 +2807,7 @@ export default function Bookkeeping() {
                 { category: 'Operating Expenses', budgeted: 35000, actual: 40000, variance: -5000, type: 'Unfavorable' },
                 { category: 'Marketing Costs', budgeted: 15000, actual: 12000, variance: 3000, type: 'Favorable' }
               ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <BarChart3 className={`h-6 w-6 ${item.type === 'Favorable' ? 'text-green-600' : 'text-red-600'}`} />
                     <div>
@@ -2906,7 +2906,7 @@ export default function Bookkeeping() {
                 { address: '789 Pine Road', type: '1 bed flat', tenant: null, rent: 900, status: 'Vacant', value: 120000 },
                 { address: '321 Elm Street', type: '4 bed house', tenant: 'Mike Wilson', rent: 2200, status: 'Occupied', value: 320000 }
               ].map((property, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Building className="h-8 w-8 text-brisk-primary" />
                     <div>
@@ -3005,7 +3005,7 @@ export default function Bookkeeping() {
                 { name: 'Mike Wilson', property: '321 Elm Street', lease: '2023-03-01 to 2025-02-28', rent: 2200, status: 'Current', contact: 'mike@email.com' },
                 { name: 'Emma Davis', property: '789 Pine Road', lease: '2022-12-01 to 2023-11-30', rent: 900, status: 'Former', contact: 'emma@email.com' }
               ].map((tenant, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Users className="h-8 w-8 text-brisk-primary" />
                     <div>
@@ -3102,7 +3102,7 @@ export default function Bookkeeping() {
                 { tenant: 'Mike Wilson', property: '321 Elm Street', amount: 2200, date: '2024-01-01', status: 'Paid', method: 'Direct Debit' },
                 { tenant: 'Emma Davis', property: '789 Pine Road', amount: 900, date: '2024-01-01', status: 'Overdue', method: 'Bank Transfer' }
               ].map((payment, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <PoundSterling className={`h-6 w-6 ${payment.status === 'Paid' ? 'text-green-600' : 'text-red-600'}`} />
                     <div>
@@ -3199,7 +3199,7 @@ export default function Bookkeeping() {
                 { description: 'Garden Maintenance', property: '456 Oak Avenue', amount: 180, date: '2024-01-08', category: 'Maintenance', status: 'Pending' },
                 { description: 'Electrical Safety Check', property: '321 Elm Street', amount: 320, date: '2024-01-05', category: 'Safety', status: 'Paid' }
               ].map((expense, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Receipt className="h-6 w-6 text-brisk-primary" />
                     <div>
@@ -3297,7 +3297,7 @@ export default function Bookkeeping() {
                 { name: 'Etsy Shop', type: 'Marketplace', sales: 3200, orders: 89, status: 'Error', lastSync: '1 day ago' },
                 { name: 'WooCommerce', type: 'Website', sales: 2330, orders: 45, status: 'Connected', lastSync: '1 hour ago' }
               ].map((platform, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <ShoppingCart className="h-8 w-8 text-brisk-primary" />
                     <div>
@@ -3394,7 +3394,7 @@ export default function Bookkeeping() {
                 { orderId: 'SH-112233', platform: 'Shopify', customer: 'Mike Johnson', amount: 129.99, status: 'Processing', date: '2024-01-14' },
                 { orderId: 'ET-445566', platform: 'Etsy', customer: 'Emma Wilson', amount: 24.99, status: 'Delivered', date: '2024-01-14' }
               ].map((order, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Package className="h-6 w-6 text-brisk-primary" />
                     <div>
@@ -3495,7 +3495,7 @@ export default function Bookkeeping() {
                 { platform: 'Shopify', amount: 12500, fees: 375, net: 12125, date: '2024-01-05', status: 'Settled' },
                 { platform: 'Etsy', amount: 3200, fees: 256, net: 2944, date: '2024-01-03', status: 'Pending' }
               ].map((settlement, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <CreditCard className={`h-6 w-6 ${settlement.status === 'Settled' ? 'text-green-600' : 'text-orange-600'}`} />
                     <div>
@@ -3619,7 +3619,7 @@ export default function Bookkeeping() {
                 { number: 'INV-2024-004', customer: 'Tech Solutions Inc', amount: 3200, date: '2024-01-18', status: 'Outstanding', dueDate: '2024-02-17' },
                 { number: 'INV-2024-005', customer: 'Marketing Pro Ltd', amount: 1450, date: '2024-01-19', status: 'Paid', dueDate: '2024-02-18' }
               ].map((invoice, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{invoice.number}</p>
@@ -3741,7 +3741,7 @@ export default function Bookkeeping() {
                 { number: 'QUO-2024-018', customer: 'Tech Solutions Inc', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17' },
                 { number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16' }
               ].map((quote, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{quote.number}</p>
@@ -3855,7 +3855,7 @@ export default function Bookkeeping() {
                 { name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', totalSpent: 15600, lastOrder: '2024-01-08', status: 'VIP' },
                 { name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', totalSpent: 5400, lastOrder: '2024-01-05', status: 'Active' }
               ].map((customer, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{customer.name}</p>
@@ -3967,7 +3967,7 @@ export default function Bookkeeping() {
                 { name: 'Training Program', category: 'Services', price: 1500, cost: 600, margin: 60, sales: 12, status: 'Active' },
                 { name: 'Support Package', category: 'Services', price: 950, cost: 350, margin: 63, sales: 28, status: 'Active' }
               ].map((product, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{product.name}</p>
@@ -4105,7 +4105,7 @@ export default function Bookkeeping() {
                 { number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
                 { number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15' }
               ].map((bill, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{bill.number}</p>
@@ -4246,7 +4246,7 @@ export default function Bookkeeping() {
                 { number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30' },
                 { number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08' }
               ].map((po, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{po.number}</p>
@@ -4359,7 +4359,7 @@ export default function Bookkeeping() {
                 { name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active' },
                 { name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active' }
               ].map((supplier, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{supplier.name}</p>
@@ -4470,7 +4470,7 @@ export default function Bookkeeping() {
                 { reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson' },
                 { reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown' }
               ].map((expense, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{expense.reference}</p>
@@ -4554,7 +4554,7 @@ export default function Bookkeeping() {
                   { month: 'September 2023', amount: 10120, change: '-2%' },
                   { month: 'August 2023', amount: 10350, change: '+7%' }
                 ].map((month, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <p className="font-medium">{month.month}</p>
                     </div>
@@ -4673,7 +4673,7 @@ export default function Bookkeeping() {
                 { name: 'Tax Reserve Account', bank: 'NatWest', accountNumber: '****3456', balance: 12800, type: 'Savings', status: 'Active' },
                 { name: 'Petty Cash Account', bank: 'Santander', accountNumber: '****7890', balance: 6400, type: 'Current', status: 'Active' }
               ].map((account, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Landmark className="h-8 w-8 text-brisk-primary" />
                     <div>
@@ -4807,7 +4807,7 @@ export default function Bookkeeping() {
                 { date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', amount: 5000, type: 'Credit', category: '', status: 'Uncategorized' },
                 { date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', amount: -185, type: 'Debit', category: 'Utilities', status: 'Categorized' }
               ].map((transaction, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{transaction.description}</p>
@@ -4919,7 +4919,7 @@ export default function Bookkeeping() {
                   { account: 'Payroll Account', lastReconciled: '2024-01-12', status: 'Complete', balance: 28900, difference: 0 },
                   { account: 'Tax Reserve Account', lastReconciled: '2024-01-08', status: 'Pending', balance: 12800, difference: -75 }
                 ].map((account, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <p className="font-medium">{account.account}</p>
                       <p className="text-sm text-gray-600">Last: {account.lastReconciled}</p>
@@ -4958,7 +4958,7 @@ export default function Bookkeeping() {
                   { description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit' },
                   { description: 'Unknown Transfer', amount: -200, date: '2024-01-15', type: 'Debit' }
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <p className="font-medium">{item.description}</p>
                       <p className="text-sm text-gray-600">{item.date}</p>
@@ -5059,7 +5059,7 @@ export default function Bookkeeping() {
                 { bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5 },
                 { bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0 }
               ].map((feed, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-4">
                     <Link className={`h-6 w-6 ${
                       feed.status === 'Active' ? 'text-green-600' : 
@@ -5116,7 +5116,7 @@ export default function Bookkeeping() {
                   { rule: 'Contains "HMRC" → Tax Payments', matches: 8 },
                   { rule: 'Amount > £1000 → Manual Review', matches: 23 }
                 ].map((rule, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <p className="text-sm">{rule.rule}</p>
                     <Badge className="bg-blue-100 text-blue-800">{rule.matches} matches</Badge>
                   </div>
@@ -5253,7 +5253,7 @@ export default function Bookkeeping() {
                   { product: 'Bluetooth Speaker', sales: 89, revenue: 7120, platform: 'Etsy' },
                   { product: 'Laptop Stand', sales: 67, revenue: 4020, platform: 'Amazon' }
                 ].map((product, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <p className="font-medium">{product.product}</p>
                       <p className="text-sm text-gray-600">{product.platform} • {product.sales} sold</p>
@@ -5356,7 +5356,7 @@ export default function Bookkeeping() {
                 { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
                 { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
               ].map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{category.category}</p>
@@ -5478,7 +5478,7 @@ export default function Bookkeeping() {
                 { id: 'JE-2024-003', description: 'Bank reconciliation adjustment', date: '2024-01-29', amount: 450, status: 'Posted' },
                 { id: 'JE-2024-004', description: 'Prepaid insurance allocation', date: '2024-01-28', amount: 750, status: 'Draft' }
               ].map((entry, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{entry.id}</p>
@@ -5549,7 +5549,7 @@ export default function Bookkeeping() {
                 { type: 'Depreciation', count: 15, amount: 22400, description: 'Asset depreciation charges' },
                 { type: 'Bad Debt', count: 3, amount: 4500, description: 'Provision for doubtful debts' }
               ].map((adjustment, index) => (
-                <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-medium">{adjustment.type}</h3>
                     <Badge>{adjustment.count} entries</Badge>
@@ -5597,7 +5597,7 @@ export default function Bookkeeping() {
                 { original: 'JE-2024-032', reversal: 'JE-2024-047', date: '2024-01-24', amount: 850, reason: 'Duplicate entry' },
                 { original: 'JE-2024-028', reversal: 'JE-2024-048', date: '2024-01-23', amount: 2100, reason: 'Wrong period' }
               ].map((reversal, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{reversal.original}</p>
@@ -5652,7 +5652,7 @@ export default function Bookkeeping() {
                 { name: 'Prepaid Insurance', category: 'Assets', usage: 6, description: 'Insurance prepayment allocation' },
                 { name: 'Bank Charges', category: 'Expenses', usage: 15, description: 'Monthly bank fee entries' }
               ].map((template, index) => (
-                <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-medium">{template.name}</h3>
                     <Badge variant="outline">{template.category}</Badge>
@@ -5764,7 +5764,7 @@ export default function Bookkeeping() {
                 { period: 'Q3 2023', submitted: '2023-11-06', due: 4800, status: 'Paid', reference: 'VAT-2023-Q3' },
                 { period: 'Q2 2023', submitted: '2023-08-05', due: 6100, status: 'Paid', reference: 'VAT-2023-Q2' }
               ].map((return_, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{return_.period}</p>
@@ -5826,7 +5826,7 @@ export default function Bookkeeping() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 border rounded-lg bg-blue-50">
+              <div className="p-4 border-2 border-blue-900 rounded-[2px] bg-blue-50">
                 <h3 className="font-medium text-blue-900">Standard VAT Scheme</h3>
                 <p className="text-sm text-blue-700 mt-1">Standard rate: 20%</p>
                 <p className="text-sm text-blue-700">Registration: GB123456789</p>
@@ -5863,7 +5863,7 @@ export default function Bookkeeping() {
                 { name: 'Cash Accounting', rate: '20%', threshold: '£1.35m', description: 'Pay VAT when you receive payment from customers' },
                 { name: 'Annual Accounting', rate: '20%', threshold: '£1.35m', description: 'Make monthly payments with annual return' }
               ].map((scheme, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{scheme.name}</p>
@@ -5992,7 +5992,7 @@ export default function Bookkeeping() {
                 { month: 'February 2024', output: 3200, input: 1100, net: 2100 },
                 { month: 'March 2024', output: 2450, input: 900, net: 1550 }
               ].map((month, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex-1">
                     <p className="font-medium">{month.month}</p>
                     <div className="flex gap-4 mt-1">
@@ -6048,7 +6048,7 @@ export default function Bookkeeping() {
                   { item: 'Digital records maintained', status: 'complete', description: 'Records stored digitally' },
                   { item: 'VAT invoices compliant', status: 'warning', description: 'Some invoices missing details' }
                 ].map((check, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                  <div key={index} className="flex items-start gap-3 p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="mt-1">
                       {check.status === 'complete' ? (
                         <CheckCircle className="h-4 w-4 text-green-600" />
@@ -6078,7 +6078,7 @@ export default function Bookkeeping() {
                   { task: 'VAT Payment Due', date: '7 May 2024', days: 15, type: 'payment' },
                   { task: 'Annual VAT Review', date: '31 March 2024', days: -5, type: 'review' }
                 ].map((deadline, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <p className="font-medium">{deadline.task}</p>
                       <p className="text-sm text-gray-600">{deadline.date}</p>
@@ -6113,7 +6113,7 @@ export default function Bookkeeping() {
                 { type: 'info', message: 'New VAT rate changes effective April 2024', date: '2024-01-25', action: 'Review rate settings' },
                 { type: 'success', message: 'Q4 2023 VAT return successfully submitted', date: '2024-01-20', action: 'No action required' }
               ].map((alert, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+                <div key={index} className="flex items-start gap-3 p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="mt-1">
                     {alert.type === 'warning' ? (
                       <AlertCircle className="h-4 w-4 text-orange-600" />
@@ -6156,7 +6156,7 @@ export default function Bookkeeping() {
                   <div key={key} className="mb-1">
                     <button
                       onClick={() => handleMainTabClick(key)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -6183,7 +6183,7 @@ export default function Bookkeeping() {
                             <button
                               key={subKey}
                               onClick={() => handleSubTabClick(subKey, key)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'

@@ -401,12 +401,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Current Portfolio</h4>
                       <p className="text-2xl font-bold">{charities.length}</p>
                       <p className="text-sm text-green-600">+2 this month</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Growth Rate</h4>
                       <p className="text-sm text-gray-600">Portfolio expansion</p>
                       <div className="mt-2">
@@ -458,12 +458,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Total Income</h4>
                       <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}</p>
                       <p className="text-sm text-green-600">+15% vs last year</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Income Growth</h4>
                       <p className="text-sm text-gray-600">Year-over-year growth</p>
                       <div className="mt-2">
@@ -515,12 +515,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Total Net Assets</h4>
                       <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
                       <p className="text-sm text-blue-600">Stable</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Asset Utilization</h4>
                       <p className="text-sm text-gray-600">Efficiency ratio</p>
                       <div className="mt-2">
@@ -572,12 +572,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Overall Score</h4>
                       <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
                       <p className="text-sm text-green-600">Excellent</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold mb-2">Compliance Trend</h4>
                       <p className="text-sm text-gray-600">6-month improvement</p>
                       <div className="mt-2">
@@ -638,7 +638,7 @@ const CharityAccounts: React.FC = () => {
                 />
                 <div className="space-y-3">
                   {filteredCharities.map((charity) => (
-                    <div key={charity.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                    <div key={charity.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-medium">{charity.name}</h4>
@@ -673,7 +673,7 @@ const CharityAccounts: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <div className="p-4 bg-blue-50 rounded-[2px] border-l-4 border-blue-500">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
                     <div>
@@ -685,7 +685,7 @@ const CharityAccounts: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                <div className="p-4 bg-green-50 rounded-[2px] border-l-4 border-green-500">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
                     <div>
@@ -697,7 +697,7 @@ const CharityAccounts: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                <div className="p-4 bg-orange-50 rounded-[2px] border-l-4 border-orange-500">
                   <div className="flex items-start gap-3">
                     <Zap className="h-5 w-5 text-orange-500 mt-0.5" />
                     <div>
@@ -762,7 +762,7 @@ const CharityAccounts: React.FC = () => {
             <CardContent>
               <div className="space-y-4">
                 {funds.filter(f => f.type === 'unrestricted').map((fund) => (
-                  <div key={fund.id} className="p-3 border rounded-lg">
+                  <div key={fund.id} className="p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">{fund.name}</h4>
                       <span className="font-semibold text-green-600">{formatCurrency(fund.balance)}</span>
@@ -785,7 +785,7 @@ const CharityAccounts: React.FC = () => {
             <CardContent>
               <div className="space-y-4">
                 {funds.filter(f => f.type === 'restricted').map((fund) => (
-                  <div key={fund.id} className="p-3 border rounded-lg">
+                  <div key={fund.id} className="p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">{fund.name}</h4>
                       <span className="font-semibold text-blue-600">{formatCurrency(fund.balance)}</span>
@@ -809,7 +809,7 @@ const CharityAccounts: React.FC = () => {
             <CardContent>
               <div className="space-y-4">
                 {funds.filter(f => f.type === 'endowment').map((fund) => (
-                  <div key={fund.id} className="p-3 border rounded-lg">
+                  <div key={fund.id} className="p-3 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">{fund.name}</h4>
                       <span className="font-semibold text-purple-600">{formatCurrency(fund.balance)}</span>
@@ -904,7 +904,7 @@ const CharityAccounts: React.FC = () => {
           <CardContent className="p-6">
             <div className="space-y-4">
               {trustees.map((trustee) => (
-                <div key={trustee.id} className="p-4 border-2 border-blue-900 rounded-lg">
+                <div key={trustee.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
@@ -952,21 +952,21 @@ const CharityAccounts: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span>Trustee Annual Report</span>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Complete</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span>Public Benefit Statement</span>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Complete</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-orange-500" />
                     <span>Risk Management Policy</span>
@@ -1312,7 +1312,7 @@ const CharityAccounts: React.FC = () => {
             <div key={categoryKey}>
               <button
                 onClick={() => toggleCategory(categoryKey)}
-                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-[2px]"
               >
                 <div className="flex items-center gap-2">
                   <category.icon className="h-4 w-4" />
@@ -1333,7 +1333,7 @@ const CharityAccounts: React.FC = () => {
                       onClick={() => {
                         handleSubTabClick(categoryKey, subKey)
                       }}
-                      className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                      className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
                         activeMainTab === categoryKey && activeSubTab === subKey
                           ? 'bg-brisk-primary text-white'
                           : 'text-gray-600 hover:bg-gray-100'
@@ -1349,7 +1349,7 @@ const CharityAccounts: React.FC = () => {
                 <div className="ml-6 mt-1">
                   <button
                     onClick={() => handleMainTabClick(categoryKey)}
-                    className={`w-full text-left p-2 text-sm rounded-md transition-colors ${
+                    className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
                       activeMainTab === categoryKey
                         ? 'bg-brisk-primary text-white'
                         : 'text-gray-600 hover:bg-gray-100'

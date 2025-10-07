@@ -364,7 +364,7 @@ export default function WorkflowBuilderAdvanced() {
               <CardContent>
                 <div className="space-y-4">
                   {prebuiltTemplates.map((template) => (
-                    <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                    <div key={template.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h4 className="font-medium">{template.name}</h4>
@@ -424,7 +424,7 @@ export default function WorkflowBuilderAdvanced() {
                 ) : (
                   <div className="space-y-4">
                     {customWorkflows.map((template) => (
-                      <div key={template.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                      <div key={template.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <h4 className="font-medium">{template.name}</h4>
@@ -492,7 +492,7 @@ export default function WorkflowBuilderAdvanced() {
                   </CardHeader>
                   <CardContent>
                     <div 
-                      className="relative bg-gray-50 rounded-lg p-6 min-h-96 overflow-auto"
+                      className="relative bg-gray-50 rounded-[2px] p-6 min-h-96 overflow-auto"
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
                     >
@@ -501,7 +501,7 @@ export default function WorkflowBuilderAdvanced() {
                         return (
                           <div
                             key={step.id}
-                            className="absolute bg-white border-2 border-gray-200 rounded-lg p-4 w-48 cursor-move hover:border-brisk-primary"
+                            className="absolute bg-white border-2 border-gray-200 rounded-[2px] p-4 w-48 cursor-move hover:border-brisk-primary"
                             style={{ 
                               left: step.position.x, 
                               top: step.position.y,
@@ -738,7 +738,7 @@ export default function WorkflowBuilderAdvanced() {
             <CardContent>
               <div className="space-y-4">
                 {prebuiltTemplates.map((template) => (
-                  <div key={template.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={template.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <h4 className="font-medium">{template.name}</h4>
                       <p className="text-sm text-gray-600">{template.jobType.replace('_', ' ')}</p>

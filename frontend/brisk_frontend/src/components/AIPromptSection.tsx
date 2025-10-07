@@ -64,7 +64,7 @@ export default function AIPromptSection({
           
           {recentQuestions.length > 0 && (
             <div className="space-y-3">
-              <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="p-3 bg-gray-50 rounded-[2px]">
                 <p className="text-sm font-medium mb-1">Recent Questions:</p>
                 <div className="space-y-1">
                   {recentQuestions.map((q, index) => (

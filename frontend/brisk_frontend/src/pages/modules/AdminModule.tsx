@@ -208,7 +208,7 @@ const AdminModule = () => {
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                 activeSection === item.id
                   ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
                   : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -230,7 +230,7 @@ const AdminModule = () => {
       content: (
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="p-4 border rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
               <h4 className="font-semibold mb-2">Revenue Sources</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -247,7 +247,7 @@ const AdminModule = () => {
                 </div>
               </div>
             </div>
-            <div className="p-4 border rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
               <h4 className="font-semibold mb-2">Growth Metrics</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -308,7 +308,7 @@ const AdminModule = () => {
             <CardContent>
               <div className="space-y-4">
                 {auditLogs.slice(0, 5).map((log) => (
-                  <div key={log.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={log.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                     <div>
                       <p className="font-medium">{log.action}</p>
                       <p className="text-sm text-gray-600">{log.actor}</p>
@@ -358,7 +358,7 @@ const AdminModule = () => {
             </DialogHeader>
             <div className="space-y-4">
               {approvalRequests.map((request) => (
-                <div key={request.id} className="p-4 border rounded-lg">
+                <div key={request.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold">{request.type}</h4>
                     <Badge variant="secondary">{request.status}</Badge>
@@ -408,7 +408,7 @@ const AdminModule = () => {
             content: (
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <h4 className="font-semibold mb-2">Plan Distribution</h4>
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
@@ -417,7 +417,7 @@ const AdminModule = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <h4 className="font-semibold mb-2">Revenue by Plan</h4>
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
@@ -490,7 +490,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {plans.map((plan) => (
-              <div key={plan.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={plan.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{plan.name}</h3>
@@ -607,7 +607,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {promotions.map((promo) => (
-              <div key={promo.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={promo.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{promo.name}</h3>
@@ -725,7 +725,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {experiments.map((exp) => (
-              <div key={exp.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={exp.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{exp.name}</h3>
@@ -806,7 +806,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {tenants.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={tenant.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{tenant.name}</h3>
@@ -857,7 +857,7 @@ const AdminModule = () => {
           <CardContent>
             <div className="space-y-4">
               {adminPersonas.slice(0, 4).map((persona) => (
-                <div key={persona.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={persona.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                   <div>
                     <h4 className="font-semibold">{persona.name}</h4>
                     <p className="text-sm text-gray-600">{persona.description}</p>
@@ -992,7 +992,7 @@ const AdminModule = () => {
             <CardContent>
               <div className="space-y-4">
                 {invoices.map((invoice) => (
-                  <div key={invoice.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={invoice.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <h3 className="font-semibold">{invoice.id}</h3>
@@ -1088,7 +1088,7 @@ const AdminModule = () => {
             <CardContent>
               <div className="space-y-4">
                 {partners.map((partner) => (
-                  <div key={partner.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={partner.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <h3 className="font-semibold">{partner.name}</h3>
@@ -1120,7 +1120,7 @@ const AdminModule = () => {
             <CardContent>
               <div className="space-y-4">
                 {referrals.map((referral) => (
-                  <div key={referral.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={referral.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <h3 className="font-semibold">{referral.referee}</h3>
@@ -1209,7 +1209,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {growthJourneys.map((journey) => (
-              <div key={journey.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={journey.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{journey.name}</h3>
@@ -1290,7 +1290,7 @@ const AdminModule = () => {
         <CardContent>
           <div className="space-y-4">
             {auditLogs.map((log) => (
-              <div key={log.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={log.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold">{log.action}</h3>

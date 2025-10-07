@@ -320,7 +320,7 @@ export default function CapacityPlanningAdvanced() {
             <CardContent>
               <div className="space-y-4">
                 {teamMembers.map((member) => (
-                  <div key={member.id} className="p-4 border rounded-lg hover:bg-gray-50">
+                  <div key={member.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 bg-brisk-primary-100 rounded-full flex items-center justify-center">
@@ -405,7 +405,7 @@ export default function CapacityPlanningAdvanced() {
                   {unassignedJobs.map((job) => (
                     <div
                       key={job.id}
-                      className="p-3 border rounded-lg cursor-move hover:bg-gray-50"
+                      className="p-3 border-2 border-blue-900 rounded-[2px] cursor-move hover:bg-gray-50"
                       draggable
                       onDragStart={() => handleDragStart(job.id)}
                     >
@@ -446,7 +446,7 @@ export default function CapacityPlanningAdvanced() {
                     {teamMembers.map((member) => (
                       <div
                         key={member.id}
-                        className="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-brisk-primary transition-colors"
+                        className="p-4 border-2 border-dashed border-gray-200 rounded-[2px] hover:border-brisk-primary transition-colors"
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, member.id)}
                       >
@@ -536,7 +536,7 @@ export default function CapacityPlanningAdvanced() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="p-3 bg-blue-50 rounded-lg">
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="h-4 w-4 text-blue-600" />
                       <span className="font-medium text-blue-900">High Demand Period</span>
@@ -545,7 +545,7 @@ export default function CapacityPlanningAdvanced() {
                       Week 3: Year-end deadline rush expected. 25% increase in workload.
                     </p>
                   </div>
-                  <div className="p-3 bg-green-50 rounded-lg">
+                  <div className="p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="h-4 w-4 text-green-600" />
                       <span className="font-medium text-green-900">Optimal Scheduling</span>
@@ -554,7 +554,7 @@ export default function CapacityPlanningAdvanced() {
                       Week 4: Lower demand period. Good time for training and development.
                     </p>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-lg">
+                  <div className="p-3 bg-orange-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <AlertTriangle className="h-4 w-4 text-orange-600" />
                       <span className="font-medium text-orange-900">Capacity Risk</span>
@@ -581,7 +581,7 @@ export default function CapacityPlanningAdvanced() {
             <CardContent>
               <div className="space-y-4">
                 {aiRecommendations.map((rec, index) => (
-                  <div key={index} className="p-4 border rounded-lg">
+                  <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <Badge className={

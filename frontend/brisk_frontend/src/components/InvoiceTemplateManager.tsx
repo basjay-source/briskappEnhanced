@@ -391,7 +391,7 @@ export default function InvoiceTemplateManager() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg p-6 bg-white min-h-[400px]">
+              <div className="border-2 border-blue-900 rounded-[2px] p-6 bg-white min-h-[400px]">
                 <div className="space-y-6">
                   <div className="flex justify-between items-start">
                     <div>
@@ -446,7 +446,7 @@ export default function InvoiceTemplateManager() {
                     </div>
                   </div>
 
-                  <div className="border rounded-lg overflow-hidden">
+                  <div className="border-2 border-blue-900 rounded-[2px] overflow-hidden">
                     <div 
                       className="px-4 py-3 font-semibold text-white"
                       style={{ backgroundColor: branding.theme_colors?.primary }}

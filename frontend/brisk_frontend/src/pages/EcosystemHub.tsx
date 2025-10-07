@@ -274,7 +274,7 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-blue-900">Revenue Sources</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -295,7 +295,7 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="bg-orange-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-orange-900">Growth Metrics</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -336,7 +336,7 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-blue-900">Client Segments</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -353,7 +353,7 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="bg-orange-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-orange-900">Client Health</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -394,7 +394,7 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-blue-900">By Module</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -415,7 +415,7 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="bg-orange-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-orange-900">Performance Trends</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -456,7 +456,7 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-blue-900">By Channel</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -477,7 +477,7 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="bg-orange-50 p-4 rounded-[2px]">
                     <h4 className="font-semibold text-orange-900">SLA Performance</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
@@ -520,7 +520,7 @@ export default function EcosystemHub() {
                   <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-2 border-blue-900">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <div className={`p-2 rounded-lg ${module.color} text-white`}>
+                        <div className={`p-2 rounded-[2px] ${module.color} text-white`}>
                           <Icon className="h-6 w-6" />
                         </div>
                         <Badge variant={module.status === 'active' ? 'default' : 'secondary'}>
@@ -574,7 +574,7 @@ export default function EcosystemHub() {
                   {aiInsights.map((insight, index) => (
                     <div 
                       key={index} 
-                      className={`p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getInsightColor(insight.type)}`}
+                      className={`p-3 rounded-[2px] cursor-pointer hover:shadow-md transition-shadow ${getInsightColor(insight.type)}`}
                       onClick={() => {
                         if (insight.action) {
                           console.log('Navigate to:', insight.action)

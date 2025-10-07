@@ -90,7 +90,7 @@ export default function ClientPortal() {
             <CardContent>
               <div className="space-y-4">
                 {jobs.map((job) => (
-                  <div key={job.id} className="p-4 border rounded-lg">
+                  <div key={job.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">{job.title}</h4>
                       <Badge className={
@@ -127,7 +127,7 @@ export default function ClientPortal() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="border-2 border-dashed border-gray-300 rounded-[2px] p-6 text-center">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Drag and drop files here or click to browse</p>
                   <Button variant="outline" className="mt-2">
@@ -137,7 +137,7 @@ export default function ClientPortal() {
                 
                 <div className="space-y-3">
                   {documents.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-gray-400" />
                         <div>
@@ -173,7 +173,7 @@ export default function ClientPortal() {
             <CardContent>
               <div className="space-y-4">
                 {messages.map((msg, index) => (
-                  <div key={index} className={`p-3 rounded-lg ${
+                  <div key={index} className={`p-3 rounded-[2px] ${
                     msg.type === 'sent' ? 'bg-brisk-primary-50 ml-4' : 'bg-gray-50 mr-4'
                   }`}>
                     <div className="flex items-center justify-between mb-1">

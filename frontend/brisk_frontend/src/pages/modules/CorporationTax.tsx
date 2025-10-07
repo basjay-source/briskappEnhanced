@@ -366,7 +366,7 @@ export default function CorporationTax() {
             </CardHeader>
             <CardContent className="space-y-4">
               {rdClaims.map((claim, index) => (
-                <div key={index} className="p-3 border rounded-lg">
+                <div key={index} className="p-3 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-sm">{claim.project}</span>
                     <Badge variant={
@@ -402,7 +402,7 @@ export default function CorporationTax() {
           </CardHeader>
           <CardContent className="space-y-4">
             {aiRecommendations.map((rec, index) => (
-              <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
+              <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
@@ -424,7 +424,7 @@ export default function CorporationTax() {
           </CardContent>
         </Card>
 
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-[2px] border p-6">
           <AIPromptSection
             title="Corporation Tax AI Assistant"
             description="Get expert corporation tax guidance and optimization strategies"
@@ -671,7 +671,7 @@ export default function CorporationTax() {
                 <div key={item.id}>
                   <button
                     onClick={() => handleMainTabClick(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                    className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                       isActive 
                         ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                         : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -696,7 +696,7 @@ export default function CorporationTax() {
                           <button
                             key={subTab.id}
                             onClick={() => handleSubTabClick(subTab.id)}
-                            className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                            className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                               isSubActive 
                                 ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                 : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'

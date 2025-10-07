@@ -392,7 +392,7 @@ export default function PayslipTemplateManager() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg p-6 bg-white min-h-[400px]">
+              <div className="border-2 border-blue-900 rounded-[2px] p-6 bg-white min-h-[400px]">
                 <div className="space-y-4">
                   {branding.custom_branding?.logo_url && (
                     <div className="flex justify-center">

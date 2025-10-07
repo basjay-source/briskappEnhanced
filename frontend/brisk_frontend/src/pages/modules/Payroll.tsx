@@ -185,7 +185,7 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 border-2 border-blue-900 rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h4 className="font-semibold mb-2">Department Breakdown</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -206,7 +206,7 @@ export default function Payroll() {
                   </div>
                 </div>
               </div>
-              <div className="p-4 border-2 border-blue-900 rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h4 className="font-semibold mb-2">Employment Status</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -239,7 +239,7 @@ export default function Payroll() {
         description: 'Monthly payroll breakdown and trends',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
               <h4 className="font-semibold mb-2">Cost Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -271,7 +271,7 @@ export default function Payroll() {
         description: 'Real Time Information submission status',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
               <h4 className="font-semibold mb-2">Submission History</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -303,7 +303,7 @@ export default function Payroll() {
         description: 'Outstanding payroll tasks requiring attention',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
               <h4 className="font-semibold mb-2">Action Items</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -357,14 +357,14 @@ export default function Payroll() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">Monthly Payroll</p>
                       <p className="text-sm text-gray-600">December 2024</p>
                     </div>
                     <Badge variant="outline">Due: 28 Dec</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">RTI Submission</p>
                       <p className="text-sm text-gray-600">FPS December</p>
@@ -513,7 +513,7 @@ export default function Payroll() {
                   <div key={item.id}>
                     <button
                       onClick={() => handleMainTabClick(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
@@ -536,7 +536,7 @@ export default function Payroll() {
                             <button
                               key={subTab.id}
                               onClick={() => handleSubTabClick(subTab.id)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-lg transition-all duration-200 shadow-sm ${
+                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
