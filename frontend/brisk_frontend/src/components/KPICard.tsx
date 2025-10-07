@@ -11,7 +11,7 @@ interface KPICardProps {
   color: string
   drillDownData?: {
     title: string
-    description: string
+    description?: string
     content: React.ReactNode
   }
 }

@@ -12,7 +12,6 @@ import {
   ArrowRight,
   TrendingUp,
   Clock,
-  AlertTriangle,
   Settings,
   Heart
 } from 'lucide-react'
@@ -118,37 +117,6 @@ export default function EcosystemHub() {
       description: 'System administration & settings',
       status: 'active',
       color: 'bg-gray-500'
-    }
-  ]
-
-  const kpis = [
-    {
-      title: 'Active Jobs',
-      value: '24',
-      change: '+12%',
-      icon: Briefcase,
-      color: 'text-blue-600'
-    },
-    {
-      title: 'Overdue Tasks',
-      value: '3',
-      change: '-25%',
-      icon: AlertTriangle,
-      color: 'text-red-600'
-    },
-    {
-      title: 'This Week Hours',
-      value: '156',
-      change: '+8%',
-      icon: Clock,
-      color: 'text-green-600'
-    },
-    {
-      title: 'Revenue MTD',
-      value: '£45,200',
-      change: '+15%',
-      icon: TrendingUp,
-      color: 'text-purple-600'
     }
   ]
 
