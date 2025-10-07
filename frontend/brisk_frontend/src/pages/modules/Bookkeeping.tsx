@@ -382,7 +382,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bookkeeping Dashboard</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bookkeeping Dashboard</h2>
             <p className="text-gray-600">Overview of your financial position and key metrics</p>
           </div>
           <div className="flex gap-2">
@@ -522,7 +522,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Recent Transactions</CardTitle>
               <CardDescription>Latest financial transactions</CardDescription>
@@ -546,7 +546,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Common bookkeeping tasks</CardDescription>
@@ -583,7 +583,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Sales Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Sales Management</h2>
             <p className="text-gray-600">Invoices, quotes, customers, and sales analytics</p>
           </div>
           <div className="flex gap-2">
@@ -631,7 +631,7 @@ export default function Bookkeeping() {
         />
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -643,7 +643,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -655,7 +655,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -667,7 +667,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -681,7 +681,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Invoices</CardTitle>
             <CardDescription>Latest sales invoices and their status</CardDescription>
@@ -713,7 +713,7 @@ export default function Bookkeeping() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Invoice Template Management</CardTitle>
             <CardDescription>Customize invoice templates with your company branding</CardDescription>
@@ -731,7 +731,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Purchases Overview</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Purchases Overview</h2>
             <p className="text-gray-600">Complete purchase management dashboard and quick access to all purchase functions</p>
           </div>
           <div className="flex gap-2">
@@ -779,7 +779,7 @@ export default function Bookkeeping() {
         />
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -791,7 +791,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -803,7 +803,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -815,7 +815,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -830,7 +830,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Purchase Functions</CardTitle>
               <CardDescription>Quick access to all purchase management features</CardDescription>
@@ -869,7 +869,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>Latest purchase transactions and updates</CardDescription>
@@ -915,7 +915,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Banking & Reconciliation</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Banking & Reconciliation</h2>
             <p className="text-gray-600">Bank feeds, reconciliation, and transaction management</p>
           </div>
           <div className="flex gap-2">
@@ -962,7 +962,7 @@ export default function Bookkeeping() {
           }}
         />
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Bank Accounts</CardTitle>
             <CardDescription>Connected bank accounts and their balances</CardDescription>
@@ -995,7 +995,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Journal Entries</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Journal Entries</h2>
             <p className="text-gray-600">Manual journal entries and adjustments</p>
           </div>
           <div className="flex gap-2">
@@ -1010,7 +1010,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Journal Entries</CardTitle>
             <CardDescription>Latest manual entries and adjustments</CardDescription>
@@ -1040,7 +1040,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Returns</h2>
+            <h2 className="text-2xl font-bold text-blue-900">VAT Returns</h2>
             <p className="text-gray-600">VAT calculations and Making Tax Digital submissions</p>
           </div>
           <div className="flex gap-2">
@@ -1055,7 +1055,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>VAT Summary</CardTitle>
             <CardDescription>Current quarter VAT position</CardDescription>
@@ -1153,7 +1153,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Financial Reports</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Financial Reports</h2>
             <p className="text-gray-600">Generate comprehensive financial statements and reports</p>
           </div>
           <div className="flex gap-2">
@@ -1381,7 +1381,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Management Reports</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Management Reports</h2>
             <p className="text-gray-600">Strategic insights and performance analytics for decision making</p>
           </div>
           <div className="flex gap-2">
@@ -1604,7 +1604,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Analytics & Insights</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Analytics & Insights</h2>
             <p className="text-gray-600">Advanced analytics and business intelligence for strategic planning</p>
           </div>
           <div className="flex gap-2">
@@ -1761,7 +1761,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Project Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Project Management</h2>
             <p className="text-gray-600">Track project costs, time, and profitability</p>
           </div>
           <div className="flex gap-2">
@@ -1776,7 +1776,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Active Projects</CardTitle>
             <CardDescription>Current projects and their status</CardDescription>
@@ -1811,7 +1811,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Budgets & Forecasting</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Budgets & Forecasting</h2>
             <p className="text-gray-600">Budget planning and financial forecasting</p>
           </div>
           <div className="flex gap-2">
@@ -1826,7 +1826,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Budget vs Actual</CardTitle>
             <CardDescription>Current year budget performance</CardDescription>
@@ -1860,7 +1860,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Property Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Property Management</h2>
             <p className="text-gray-600">Rental properties, tenants, and property income</p>
           </div>
           <div className="flex gap-2">
@@ -1875,7 +1875,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Property Portfolio</CardTitle>
             <CardDescription>Overview of rental properties</CardDescription>
@@ -1908,7 +1908,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">eCommerce Integration</h2>
+            <h2 className="text-2xl font-bold text-blue-900">eCommerce Integration</h2>
             <p className="text-gray-600">Connect and sync with online sales platforms</p>
           </div>
           <div className="flex gap-2">
@@ -1923,7 +1923,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Connected Platforms</CardTitle>
             <CardDescription>Your eCommerce integrations</CardDescription>
@@ -1955,7 +1955,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Document Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Document Management</h2>
             <p className="text-gray-600">Upload, scan, and organize financial documents</p>
           </div>
           <div className="flex gap-2">
@@ -1970,7 +1970,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Documents</CardTitle>
             <CardDescription>Latest uploaded and scanned documents</CardDescription>
@@ -2006,7 +2006,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Integrations & Import</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Integrations & Import</h2>
             <p className="text-gray-600">Connect external bookkeeping software and import trial balance data</p>
           </div>
           <div className="flex gap-2">
@@ -2021,7 +2021,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Available Integrations</CardTitle>
             <CardDescription>Connect with popular accounting software</CardDescription>
@@ -2052,7 +2052,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Project Overview</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Project Overview</h2>
             <p className="text-gray-600">Monitor all active projects and their progress</p>
           </div>
           <div className="flex gap-2">
@@ -2068,7 +2068,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Active Projects</CardTitle>
             </CardHeader>
@@ -2077,7 +2077,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Currently in progress</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Budget</CardTitle>
             </CardHeader>
@@ -2086,7 +2086,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Across all projects</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Completion Rate</CardTitle>
             </CardHeader>
@@ -2097,7 +2097,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Projects</CardTitle>
             <CardDescription>Latest project activity and status updates</CardDescription>
@@ -2153,7 +2153,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Time Tracking</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Time Tracking</h2>
             <p className="text-gray-600">Track time spent on projects and tasks</p>
           </div>
           <div className="flex gap-2">
@@ -2169,7 +2169,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Today</CardTitle>
             </CardHeader>
@@ -2178,7 +2178,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Hours logged</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Week</CardTitle>
             </CardHeader>
@@ -2187,7 +2187,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Total hours</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Billable</CardTitle>
             </CardHeader>
@@ -2196,7 +2196,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This week</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Utilization</CardTitle>
             </CardHeader>
@@ -2207,7 +2207,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Time Entries</CardTitle>
             <CardDescription>Latest time tracking entries across projects</CardDescription>
@@ -2249,7 +2249,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Project Costing</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Project Costing</h2>
             <p className="text-gray-600">Analyze project costs and profitability</p>
           </div>
           <div className="flex gap-2">
@@ -2265,7 +2265,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Revenue</CardTitle>
             </CardHeader>
@@ -2274,7 +2274,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">From completed projects</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Costs</CardTitle>
             </CardHeader>
@@ -2283,7 +2283,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Direct and indirect costs</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Profit Margin</CardTitle>
             </CardHeader>
@@ -2294,7 +2294,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Project Cost Breakdown</CardTitle>
             <CardDescription>Detailed cost analysis by project</CardDescription>
@@ -2349,7 +2349,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Project Reports</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Project Reports</h2>
             <p className="text-gray-600">Comprehensive project reporting and analytics</p>
           </div>
           <div className="flex gap-2">
@@ -2365,7 +2365,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <Target className="h-8 w-8 text-brisk-primary mx-auto mb-2" />
               <h3 className="font-semibold mb-1">Project Summary</h3>
@@ -2377,7 +2377,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <Clock className="h-8 w-8 text-green-500 mx-auto mb-2" />
               <h3 className="font-semibold mb-1">Time Analysis</h3>
@@ -2389,7 +2389,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <PoundSterling className="h-8 w-8 text-orange-500 mx-auto mb-2" />
               <h3 className="font-semibold mb-1">Profitability</h3>
@@ -2402,7 +2402,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Reports</CardTitle>
             <CardDescription>Generated project reports and scheduled deliveries</CardDescription>
@@ -2443,7 +2443,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Budget Planning</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Budget Planning</h2>
             <p className="text-gray-600">Create and manage financial budgets</p>
           </div>
           <div className="flex gap-2">
@@ -2459,7 +2459,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Annual Budget</CardTitle>
             </CardHeader>
@@ -2468,7 +2468,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">2024 total budget</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Allocated</CardTitle>
             </CardHeader>
@@ -2477,7 +2477,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">84% allocated</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Remaining</CardTitle>
             </CardHeader>
@@ -2486,7 +2486,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Available to allocate</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Departments</CardTitle>
             </CardHeader>
@@ -2497,7 +2497,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Budget Categories</CardTitle>
             <CardDescription>Budget allocation by department and category</CardDescription>
@@ -2551,7 +2551,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Budget Monitoring</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Budget Monitoring</h2>
             <p className="text-gray-600">Track budget performance and spending patterns</p>
           </div>
           <div className="flex gap-2">
@@ -2567,7 +2567,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Budget Health</CardTitle>
             </CardHeader>
@@ -2576,7 +2576,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Overall status</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Variance</CardTitle>
             </CardHeader>
@@ -2585,7 +2585,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">vs planned</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Burn Rate</CardTitle>
             </CardHeader>
@@ -2594,7 +2594,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Monthly average</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Forecast</CardTitle>
             </CardHeader>
@@ -2605,7 +2605,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Monthly Budget Performance</CardTitle>
             <CardDescription>Budget vs actual spending by month</CardDescription>
@@ -2648,7 +2648,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Financial Forecasting</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Financial Forecasting</h2>
             <p className="text-gray-600">Predict future financial performance and trends</p>
           </div>
           <div className="flex gap-2">
@@ -2664,7 +2664,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">6-Month Forecast</CardTitle>
             </CardHeader>
@@ -2673,7 +2673,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Projected revenue</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Growth Rate</CardTitle>
             </CardHeader>
@@ -2682,7 +2682,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Year over year</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Confidence</CardTitle>
             </CardHeader>
@@ -2693,7 +2693,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Forecast Scenarios</CardTitle>
             <CardDescription>Different financial scenarios and their projections</CardDescription>
@@ -2740,7 +2740,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Variance Analysis</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Variance Analysis</h2>
             <p className="text-gray-600">Analyze differences between budgeted and actual performance</p>
           </div>
           <div className="flex gap-2">
@@ -2756,7 +2756,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Revenue Variance</CardTitle>
             </CardHeader>
@@ -2765,7 +2765,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Above budget</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Cost Variance</CardTitle>
             </CardHeader>
@@ -2774,7 +2774,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Over budget</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Net Variance</CardTitle>
             </CardHeader>
@@ -2783,7 +2783,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Favorable</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Variance %</CardTitle>
             </CardHeader>
@@ -2794,7 +2794,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Detailed Variance Analysis</CardTitle>
             <CardDescription>Line-by-line comparison of budget vs actual</CardDescription>
@@ -2839,7 +2839,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Property Portfolio</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Property Portfolio</h2>
             <p className="text-gray-600">Manage your rental property portfolio</p>
           </div>
           <div className="flex gap-2">
@@ -2855,7 +2855,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Properties</CardTitle>
             </CardHeader>
@@ -2864,7 +2864,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">In portfolio</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Occupied</CardTitle>
             </CardHeader>
@@ -2873,7 +2873,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">87% occupancy</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Monthly Income</CardTitle>
             </CardHeader>
@@ -2882,7 +2882,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Rental income</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Portfolio Value</CardTitle>
             </CardHeader>
@@ -2893,7 +2893,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Property List</CardTitle>
             <CardDescription>Overview of all properties in your portfolio</CardDescription>
@@ -2938,7 +2938,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Tenant Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Tenant Management</h2>
             <p className="text-gray-600">Manage tenant relationships and communications</p>
           </div>
           <div className="flex gap-2">
@@ -2954,7 +2954,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Active Tenants</CardTitle>
             </CardHeader>
@@ -2963,7 +2963,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Current tenants</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Lease Renewals</CardTitle>
             </CardHeader>
@@ -2972,7 +2972,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Due this quarter</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Outstanding Rent</CardTitle>
             </CardHeader>
@@ -2981,7 +2981,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Overdue payments</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Satisfaction</CardTitle>
             </CardHeader>
@@ -2992,7 +2992,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Tenant Directory</CardTitle>
             <CardDescription>Complete list of current and past tenants</CardDescription>
@@ -3035,7 +3035,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Rental Income</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Rental Income</h2>
             <p className="text-gray-600">Track and analyze rental income streams</p>
           </div>
           <div className="flex gap-2">
@@ -3051,7 +3051,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Month</CardTitle>
             </CardHeader>
@@ -3060,7 +3060,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Collected rent</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">YTD Income</CardTitle>
             </CardHeader>
@@ -3069,7 +3069,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Year to date</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Collection Rate</CardTitle>
             </CardHeader>
@@ -3078,7 +3078,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">On-time payments</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Yield</CardTitle>
             </CardHeader>
@@ -3089,7 +3089,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Rent Payments</CardTitle>
             <CardDescription>Latest rental income transactions</CardDescription>
@@ -3132,7 +3132,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Property Expenses</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Property Expenses</h2>
             <p className="text-gray-600">Track maintenance, repairs, and property-related costs</p>
           </div>
           <div className="flex gap-2">
@@ -3148,7 +3148,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Month</CardTitle>
             </CardHeader>
@@ -3157,7 +3157,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Total expenses</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">YTD Expenses</CardTitle>
             </CardHeader>
@@ -3166,7 +3166,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Year to date</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Maintenance</CardTitle>
             </CardHeader>
@@ -3175,7 +3175,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Repairs & upkeep</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Net Income</CardTitle>
             </CardHeader>
@@ -3186,7 +3186,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Expenses</CardTitle>
             <CardDescription>Latest property-related expenditures</CardDescription>
@@ -3229,7 +3229,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Connected Platforms</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Connected Platforms</h2>
             <p className="text-gray-600">Manage your eCommerce platform integrations</p>
           </div>
           <div className="flex gap-2">
@@ -3245,7 +3245,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Connected</CardTitle>
             </CardHeader>
@@ -3254,7 +3254,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Active platforms</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Sales</CardTitle>
             </CardHeader>
@@ -3263,7 +3263,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Orders</CardTitle>
             </CardHeader>
@@ -3272,7 +3272,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Last Sync</CardTitle>
             </CardHeader>
@@ -3283,7 +3283,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Platform Integrations</CardTitle>
             <CardDescription>Your connected eCommerce platforms and their status</CardDescription>
@@ -3327,7 +3327,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Order Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Order Management</h2>
             <p className="text-gray-600">Track and manage orders across all platforms</p>
           </div>
           <div className="flex gap-2">
@@ -3343,7 +3343,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Today's Orders</CardTitle>
             </CardHeader>
@@ -3352,7 +3352,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">New orders</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Pending</CardTitle>
             </CardHeader>
@@ -3361,7 +3361,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Awaiting fulfillment</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Shipped</CardTitle>
             </CardHeader>
@@ -3370,7 +3370,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This week</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Returns</CardTitle>
             </CardHeader>
@@ -3381,7 +3381,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Orders</CardTitle>
             <CardDescription>Latest orders from all connected platforms</CardDescription>
@@ -3428,7 +3428,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Settlement Tracking</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Settlement Tracking</h2>
             <p className="text-gray-600">Monitor platform payouts and settlement schedules</p>
           </div>
           <div className="flex gap-2">
@@ -3444,7 +3444,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Pending</CardTitle>
             </CardHeader>
@@ -3453,7 +3453,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Awaiting settlement</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Month</CardTitle>
             </CardHeader>
@@ -3462,7 +3462,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Settled amount</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Fees</CardTitle>
             </CardHeader>
@@ -3471,7 +3471,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Platform fees</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Net Income</CardTitle>
             </CardHeader>
@@ -3482,7 +3482,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Settlement History</CardTitle>
             <CardDescription>Recent platform settlements and payouts</CardDescription>
@@ -3525,7 +3525,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Invoice Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Invoice Management</h2>
             <p className="text-gray-600">Create, manage, and track all customer invoices</p>
           </div>
           <div className="flex gap-2">
@@ -3567,7 +3567,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Outstanding</CardTitle>
             </CardHeader>
@@ -3576,7 +3576,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">12 invoices</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Overdue</CardTitle>
             </CardHeader>
@@ -3585,7 +3585,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">3 invoices</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Paid This Month</CardTitle>
             </CardHeader>
@@ -3594,7 +3594,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">28 invoices</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Value</CardTitle>
             </CardHeader>
@@ -3605,7 +3605,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Invoices</CardTitle>
             <CardDescription>Latest invoice activity and payment status</CardDescription>
@@ -3655,7 +3655,7 @@ export default function Bookkeeping() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Invoice Template Management</CardTitle>
             <CardDescription>Customize invoice templates with your company branding</CardDescription>
@@ -3673,7 +3673,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Quote Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Quote Management</h2>
             <p className="text-gray-600">Create, manage, and convert quotes to invoices</p>
           </div>
           <div className="flex gap-2">
@@ -3689,7 +3689,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Pending Quotes</CardTitle>
             </CardHeader>
@@ -3698,7 +3698,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Awaiting response</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Accepted</CardTitle>
             </CardHeader>
@@ -3707,7 +3707,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Conversion Rate</CardTitle>
             </CardHeader>
@@ -3716,7 +3716,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Quotes to sales</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Value</CardTitle>
             </CardHeader>
@@ -3727,7 +3727,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Quotes</CardTitle>
             <CardDescription>Latest quotes and their status</CardDescription>
@@ -3787,7 +3787,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Customer Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Customer Management</h2>
             <p className="text-gray-600">Manage customer information, contacts, and transaction history</p>
           </div>
           <div className="flex gap-2">
@@ -3803,7 +3803,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Customers</CardTitle>
             </CardHeader>
@@ -3812,7 +3812,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Active customers</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">New This Month</CardTitle>
             </CardHeader>
@@ -3821,7 +3821,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">+12% growth</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Top Customer Value</CardTitle>
             </CardHeader>
@@ -3830,7 +3830,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Lifetime value</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Order</CardTitle>
             </CardHeader>
@@ -3841,7 +3841,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Customer Database</CardTitle>
             <CardDescription>Complete customer information and transaction history</CardDescription>
@@ -3899,7 +3899,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Product Catalog</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Product Catalog</h2>
             <p className="text-gray-600">Manage products, services, pricing, and inventory</p>
           </div>
           <div className="flex gap-2">
@@ -3915,7 +3915,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Products</CardTitle>
             </CardHeader>
@@ -3924,7 +3924,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Active products</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Services</CardTitle>
             </CardHeader>
@@ -3933,7 +3933,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Service offerings</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Top Seller</CardTitle>
             </CardHeader>
@@ -3942,7 +3942,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Revenue this month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Price</CardTitle>
             </CardHeader>
@@ -3953,7 +3953,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Product Catalog</CardTitle>
             <CardDescription>Complete product and service listings with pricing</CardDescription>
@@ -4011,7 +4011,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bill Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bill Management</h2>
             <p className="text-gray-600">Process, approve, and track supplier bills and payments</p>
           </div>
           <div className="flex gap-2">
@@ -4053,7 +4053,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Outstanding Bills</CardTitle>
             </CardHeader>
@@ -4062,7 +4062,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">8 bills</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Overdue</CardTitle>
             </CardHeader>
@@ -4071,7 +4071,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">2 bills</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Paid This Month</CardTitle>
             </CardHeader>
@@ -4080,7 +4080,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">18 bills</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Value</CardTitle>
             </CardHeader>
@@ -4091,7 +4091,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Bills</CardTitle>
             <CardDescription>Latest supplier bills and payment status</CardDescription>
@@ -4152,7 +4152,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Purchase Order Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Purchase Order Management</h2>
             <p className="text-gray-600">Create, track, and manage purchase orders</p>
           </div>
           <div className="flex gap-2">
@@ -4194,7 +4194,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Active POs</CardTitle>
             </CardHeader>
@@ -4203,7 +4203,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">In progress</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Pending Approval</CardTitle>
             </CardHeader>
@@ -4212,7 +4212,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Awaiting approval</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Completed</CardTitle>
             </CardHeader>
@@ -4221,7 +4221,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Value</CardTitle>
             </CardHeader>
@@ -4232,7 +4232,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Purchase Orders</CardTitle>
             <CardDescription>Latest purchase orders and their status</CardDescription>
@@ -4291,7 +4291,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Supplier Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Supplier Management</h2>
             <p className="text-gray-600">Manage supplier information, payment terms, and transaction history</p>
           </div>
           <div className="flex gap-2">
@@ -4307,7 +4307,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Suppliers</CardTitle>
             </CardHeader>
@@ -4316,7 +4316,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Active suppliers</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">New This Month</CardTitle>
             </CardHeader>
@@ -4325,7 +4325,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">+5% growth</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Top Supplier Spend</CardTitle>
             </CardHeader>
@@ -4334,7 +4334,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Payment</CardTitle>
             </CardHeader>
@@ -4345,7 +4345,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Supplier Database</CardTitle>
             <CardDescription>Complete supplier information and payment terms</CardDescription>
@@ -4402,7 +4402,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Expense Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Expense Management</h2>
             <p className="text-gray-600">Track, categorize, and manage business expenses</p>
           </div>
           <div className="flex gap-2">
@@ -4418,7 +4418,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Month</CardTitle>
             </CardHeader>
@@ -4427,7 +4427,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Total expenses</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Pending Approval</CardTitle>
             </CardHeader>
@@ -4436,7 +4436,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">8 expenses</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Reimbursable</CardTitle>
             </CardHeader>
@@ -4445,7 +4445,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Employee expenses</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Average Expense</CardTitle>
             </CardHeader>
@@ -4456,7 +4456,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Expenses</CardTitle>
             <CardDescription>Latest expense submissions and approvals</CardDescription>
@@ -4507,7 +4507,7 @@ export default function Bookkeeping() {
         </Card>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Expense Categories</CardTitle>
               <CardDescription>Breakdown by expense category</CardDescription>
@@ -4539,7 +4539,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Monthly Trend</CardTitle>
               <CardDescription>Expense trends over the last 6 months</CardDescription>
@@ -4579,7 +4579,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bank Account Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bank Account Management</h2>
             <p className="text-gray-600">Manage bank accounts, balances, and account settings</p>
           </div>
           <div className="flex gap-2">
@@ -4621,7 +4621,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Balance</CardTitle>
             </CardHeader>
@@ -4630,7 +4630,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Across all accounts</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Active Accounts</CardTitle>
             </CardHeader>
@@ -4639,7 +4639,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Connected accounts</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Monthly Inflow</CardTitle>
             </CardHeader>
@@ -4648,7 +4648,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Monthly Outflow</CardTitle>
             </CardHeader>
@@ -4659,7 +4659,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Bank Accounts</CardTitle>
             <CardDescription>All connected bank accounts and their current balances</CardDescription>
@@ -4713,7 +4713,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bank Transactions</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bank Transactions</h2>
             <p className="text-gray-600">View, categorize, and manage all bank transactions</p>
           </div>
           <div className="flex gap-2">
@@ -4755,7 +4755,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">This Month</CardTitle>
             </CardHeader>
@@ -4764,7 +4764,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Total transactions</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Uncategorized</CardTitle>
             </CardHeader>
@@ -4773,7 +4773,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Need attention</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Income</CardTitle>
             </CardHeader>
@@ -4782,7 +4782,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Expenses</CardTitle>
             </CardHeader>
@@ -4793,7 +4793,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Transactions</CardTitle>
             <CardDescription>Latest bank transactions across all accounts</CardDescription>
@@ -4851,7 +4851,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bank Reconciliation</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bank Reconciliation</h2>
             <p className="text-gray-600">Reconcile bank statements with your accounting records</p>
           </div>
           <div className="flex gap-2">
@@ -4867,7 +4867,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Reconciled</CardTitle>
             </CardHeader>
@@ -4876,7 +4876,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Outstanding</CardTitle>
             </CardHeader>
@@ -4885,7 +4885,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Needs attention</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Discrepancies</CardTitle>
             </CardHeader>
@@ -4894,7 +4894,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Items to review</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Match Rate</CardTitle>
             </CardHeader>
@@ -4906,7 +4906,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Reconciliation Status</CardTitle>
               <CardDescription>Current reconciliation status by account</CardDescription>
@@ -4945,7 +4945,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Outstanding Items</CardTitle>
               <CardDescription>Items requiring manual reconciliation</CardDescription>
@@ -4991,7 +4991,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Bank Feed Management</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Bank Feed Management</h2>
             <p className="text-gray-600">Manage automatic bank feed connections and data synchronization</p>
           </div>
           <div className="flex gap-2">
@@ -5007,7 +5007,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Active Feeds</CardTitle>
             </CardHeader>
@@ -5016,7 +5016,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Connected banks</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Last Sync</CardTitle>
             </CardHeader>
@@ -5025,7 +5025,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Ago</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">New Transactions</CardTitle>
             </CardHeader>
@@ -5034,7 +5034,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">Since last sync</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Sync Success</CardTitle>
             </CardHeader>
@@ -5045,7 +5045,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Bank Feed Status</CardTitle>
             <CardDescription>Status and configuration of all bank feed connections</CardDescription>
@@ -5101,7 +5101,7 @@ export default function Bookkeeping() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Feed Configuration</CardTitle>
             <CardDescription>Configure automatic categorization rules and sync settings</CardDescription>
@@ -5155,7 +5155,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Sales Analytics</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Sales Analytics</h2>
             <p className="text-gray-600">Analyze sales performance across all platforms</p>
           </div>
           <div className="flex gap-2">
@@ -5171,7 +5171,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Total Revenue</CardTitle>
             </CardHeader>
@@ -5180,7 +5180,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">This quarter</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Growth Rate</CardTitle>
             </CardHeader>
@@ -5189,7 +5189,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">vs last quarter</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Best Platform</CardTitle>
             </CardHeader>
@@ -5198,7 +5198,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-gray-600">£45,230 revenue</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-lg">Conversion</CardTitle>
             </CardHeader>
@@ -5210,7 +5210,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Revenue by Platform</CardTitle>
               <CardDescription>Sales breakdown by eCommerce platform</CardDescription>
@@ -5239,7 +5239,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Top Products</CardTitle>
               <CardDescription>Best-selling products across all platforms</CardDescription>
@@ -5276,7 +5276,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Chart of Accounts</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Chart of Accounts</h2>
             <p className="text-gray-600">Manage your complete chart of accounts structure</p>
           </div>
           <div className="flex gap-2">
@@ -5292,7 +5292,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5304,7 +5304,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5316,7 +5316,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5328,7 +5328,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5342,7 +5342,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Account Categories</CardTitle>
             <CardDescription>Organized by account type and classification</CardDescription>
@@ -5399,7 +5399,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">General Journal</h2>
+            <h2 className="text-2xl font-bold text-blue-900">General Journal</h2>
             <p className="text-gray-600">Record and manage all journal entries</p>
           </div>
           <div className="flex gap-2">
@@ -5415,7 +5415,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5427,7 +5427,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5439,7 +5439,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5451,7 +5451,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5465,7 +5465,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Recent Journal Entries</CardTitle>
             <CardDescription>Latest journal entries and their status</CardDescription>
@@ -5521,7 +5521,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Journal Adjustments</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Journal Adjustments</h2>
             <p className="text-gray-600">Period-end adjustments and corrections</p>
           </div>
           <div className="flex gap-2">
@@ -5536,7 +5536,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Adjustment Categories</CardTitle>
             <CardDescription>Common adjustment types and their impact</CardDescription>
@@ -5570,7 +5570,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Journal Reversals</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Journal Reversals</h2>
             <p className="text-gray-600">Reverse and correct journal entries</p>
           </div>
           <div className="flex gap-2">
@@ -5585,7 +5585,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Reversal History</CardTitle>
             <CardDescription>Recently reversed journal entries</CardDescription>
@@ -5624,7 +5624,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">Journal Templates</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Journal Templates</h2>
             <p className="text-gray-600">Reusable journal entry templates</p>
           </div>
           <div className="flex gap-2">
@@ -5639,7 +5639,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Available Templates</CardTitle>
             <CardDescription>Pre-configured journal entry templates</CardDescription>
@@ -5686,7 +5686,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Returns</h2>
+            <h2 className="text-2xl font-bold text-blue-900">VAT Returns</h2>
             <p className="text-gray-600">Manage VAT returns and submissions</p>
           </div>
           <div className="flex gap-2">
@@ -5702,7 +5702,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5714,7 +5714,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5726,7 +5726,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5738,7 +5738,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5752,7 +5752,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>VAT Return History</CardTitle>
             <CardDescription>Previous VAT return submissions</CardDescription>
@@ -5804,7 +5804,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Schemes</h2>
+            <h2 className="text-2xl font-bold text-blue-900">VAT Schemes</h2>
             <p className="text-gray-600">Manage VAT scheme settings and configurations</p>
           </div>
           <div className="flex gap-2">
@@ -5819,7 +5819,7 @@ export default function Bookkeeping() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Current VAT Scheme</CardTitle>
             <CardDescription>Your active VAT registration details</CardDescription>
@@ -5850,7 +5850,7 @@ export default function Bookkeeping() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Available VAT Schemes</CardTitle>
             <CardDescription>Compare different VAT scheme options</CardDescription>
@@ -5894,7 +5894,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Reports</h2>
+            <h2 className="text-2xl font-bold text-blue-900">VAT Reports</h2>
             <p className="text-gray-600">Comprehensive VAT analysis and reporting</p>
           </div>
           <div className="flex gap-2">
@@ -5910,7 +5910,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>VAT Summary</CardTitle>
               <CardDescription>Current period overview</CardDescription>
@@ -5933,7 +5933,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>VAT by Rate</CardTitle>
               <CardDescription>Breakdown by VAT rates</CardDescription>
@@ -5956,7 +5956,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Compliance Status</CardTitle>
               <CardDescription>VAT compliance indicators</CardDescription>
@@ -5980,7 +5980,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>VAT Analysis by Month</CardTitle>
             <CardDescription>Monthly VAT liability trends</CardDescription>
@@ -6018,7 +6018,7 @@ export default function Bookkeeping() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">VAT Compliance</h2>
+            <h2 className="text-2xl font-bold text-blue-900">VAT Compliance</h2>
             <p className="text-gray-600">Monitor VAT compliance and regulatory requirements</p>
           </div>
           <div className="flex gap-2">
@@ -6034,7 +6034,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Compliance Checklist</CardTitle>
               <CardDescription>Essential VAT compliance requirements</CardDescription>
@@ -6066,7 +6066,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle>Upcoming Deadlines</CardTitle>
               <CardDescription>Important VAT dates and deadlines</CardDescription>
@@ -6101,7 +6101,7 @@ export default function Bookkeeping() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle>Compliance Alerts</CardTitle>
             <CardDescription>Recent compliance notifications and actions required</CardDescription>
