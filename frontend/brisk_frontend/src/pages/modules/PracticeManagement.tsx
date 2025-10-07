@@ -18,9 +18,12 @@ import {
   TrendingUp,
   ChevronDown,
   BarChart3,
-  Heart
+  Heart,
+  Edit,
+  Trash2,
+  Search
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -36,6 +39,46 @@ import ClientPortalAdvanced from '../../components/ClientPortalAdvanced'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
+import { api } from '@/lib/api'
+
+interface Job {
+  id: string
+  client_id: string
+  title: string
+  description?: string
+  status: string
+  priority: string
+  assigned_to?: string
+  due_date?: string
+  progress_percentage: number
+  created_at: string
+}
+
+interface Deadline {
+  id: string
+  client_id: string
+  title: string
+  description?: string
+  deadline_type: string
+  due_date: string
+  status: string
+  priority: string
+}
+
+interface DashboardData {
+  kpis: {
+    total_revenue: { value: number; change: string }
+    active_clients: { value: number; change: string }
+    completion_rate: { value: string; change: string }
+    avg_response_time: { value: string; change: string }
+  }
+  summary: {
+    active_jobs: number
+    overdue_jobs: number
+    upcoming_deadlines: number
+    this_week_hours: number
+  }
+}
 
 export default function PracticeManagement() {
   const isMobile = useIsMobile()
@@ -46,6 +89,87 @@ export default function PracticeManagement() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedPriority, setSelectedPriority] = useState('all')
+  
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [deadlines, setDeadlines] = useState<Deadline[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadDashboardData()
+    loadJobs()
+    loadDeadlines()
+  }, [])
+
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true)
+      const response = await api.get('/api/v1/practice/dashboard')
+      setDashboardData(response.data)
+      setError(null)
+    } catch (err: any) {
+      console.error('Error loading dashboard:', err)
+      setError(err.message || 'Failed to load dashboard data')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadJobs = async () => {
+    try {
+      const params: any = {}
+      if (selectedStatus !== 'all') params.status = selectedStatus
+      if (selectedPriority !== 'all') params.priority = selectedPriority
+      if (searchTerm) params.search = searchTerm
+      
+      const response = await api.get('/api/v1/practice/jobs', { params })
+      setJobs(response.data.jobs || [])
+    } catch (err: any) {
+      console.error('Error loading jobs:', err)
+      setError(err.message || 'Failed to load jobs')
+    }
+  }
+
+  const loadDeadlines = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/compliance/deadlines')
+      setDeadlines(response.data.deadlines || [])
+    } catch (err: any) {
+      console.error('Error loading deadlines:', err)
+      setError(err.message || 'Failed to load deadlines')
+    }
+  }
+
+  useEffect(() => {
+    loadJobs()
+  }, [selectedStatus, selectedPriority, searchTerm])
+
+  const handleDeleteJob = async (jobId: string) => {
+    if (!confirm('Are you sure you want to delete this job?')) return
+    
+    try {
+      await api.delete(`/api/v1/practice/jobs/${jobId}`)
+      await loadJobs()
+      await loadDashboardData()
+    } catch (err: any) {
+      console.error('Error deleting job:', err)
+      alert('Failed to delete job')
+    }
+  }
+
+  const handleDeleteDeadline = async (deadlineId: string) => {
+    if (!confirm('Are you sure you want to delete this deadline?')) return
+    
+    try {
+      await api.delete(`/api/v1/practice/compliance/deadlines/${deadlineId}`)
+      await loadDeadlines()
+      await loadDashboardData()
+    } catch (err: any) {
+      console.error('Error deleting deadline:', err)
+      alert('Failed to delete deadline')
+    }
+  }
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -61,9 +185,10 @@ export default function PracticeManagement() {
 
   const statusOptions = [
     { value: 'all', label: 'All Status' },
-    { value: 'completed', label: 'Completed' },
+    { value: 'not_started', label: 'Not Started' },
     { value: 'in_progress', label: 'In Progress' },
-    { value: 'on_hold', label: 'On Hold' }
+    { value: 'on_hold', label: 'On Hold' },
+    { value: 'completed', label: 'Completed' }
   ]
 
   const priorityOptions = [
@@ -73,81 +198,13 @@ export default function PracticeManagement() {
     { value: 'low', label: 'Low' }
   ]
 
-
-  const kpis = [
-    {
-      title: 'Active Jobs',
-      value: '24',
-      change: '+3 from last week',
-      trend: 'up' as const,
-      icon: Users,
-      color: 'blue'
-    },
-    {
-      title: 'Completed This Month',
-      value: '156',
-      change: '+12% from last month',
-      trend: 'up' as const,
-      icon: CheckCircle,
-      color: 'green'
-    },
-    {
-      title: 'Avg. Completion Time',
-      value: '4.2 days',
-      change: '-0.8 days improvement',
-      trend: 'up' as const,
-      icon: Clock,
-      color: 'orange'
-    },
-    {
-      title: 'Client Satisfaction',
-      value: '94%',
-      change: '+2% from last month',
-      trend: 'up' as const,
-      icon: Award,
-      color: 'purple'
-    }
-  ]
-
-  const jobs = [
-    {
-      id: 1,
-      title: 'Annual Accounts - ABC Ltd',
-      client: 'ABC Ltd',
-      status: 'in_progress',
-      priority: 'high',
-      assignee: 'John Smith',
-      dueDate: '2024-02-15',
-      progress: 75
-    },
-    {
-      id: 2,
-      title: 'VAT Return Q4',
-      client: 'XYZ Corp',
-      status: 'completed',
-      priority: 'medium',
-      assignee: 'Sarah Johnson',
-      dueDate: '2024-02-10',
-      progress: 100
-    },
-    {
-      id: 3,
-      title: 'Payroll Processing',
-      client: 'DEF Ltd',
-      status: 'on_hold',
-      priority: 'low',
-      assignee: 'Mike Wilson',
-      dueDate: '2024-02-20',
-      progress: 30
-    }
-  ]
-
-  const upcomingDeadlines = [
-    { type: 'VAT Return', client: 'ABC Ltd', date: '2024-02-15', days: 5 },
-    { type: 'Corporation Tax', client: 'XYZ Corp', date: '2024-02-18', days: 8 },
-    { type: 'Annual Accounts', client: 'DEF Ltd', date: '2024-02-25', days: 15 },
-    { type: 'Confirmation Statement', client: 'GHI Ltd', date: '2024-02-20', days: 23 }
-  ]
+  const calculateDaysRemaining = (dueDate: string) => {
+    const today = new Date()
+    const due = new Date(dueDate)
+    const diffTime = due.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -265,30 +322,89 @@ export default function PracticeManagement() {
     setActiveSubTab(subTabKey)
   }
 
-  const renderDashboard = () => (
-    <div className="space-y-6">
-      <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
-        <div>
-          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
-          <p className="text-gray-600 mt-2">Workflow automation, job tracking, compliance management & communications</p>
+  const renderDashboard = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard data...</p>
+          </div>
         </div>
-        <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-          <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-          <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Job
-          </Button>
-        </div>
-      </div>
+      )
+    }
 
-      <ResponsiveGrid>
-        {kpis.map((kpi, index) => (
-          <KPICard key={index} {...kpi} />
-        ))}
-      </ResponsiveGrid>
+    if (error) {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <AlertTriangle className="h-12 w-12 text-red-600 mx-auto mb-4" />
+            <p className="text-red-600">{error}</p>
+            <Button onClick={loadDashboardData} className="mt-4">Retry</Button>
+          </div>
+        </div>
+      )
+    }
+
+    const kpis = dashboardData ? [
+      {
+        title: 'Total Revenue',
+        value: `£${dashboardData.kpis.total_revenue.value.toLocaleString()}`,
+        change: dashboardData.kpis.total_revenue.change,
+        trend: 'up' as const,
+        icon: TrendingUp,
+        color: 'blue'
+      },
+      {
+        title: 'Active Clients',
+        value: dashboardData.kpis.active_clients.value.toString(),
+        change: dashboardData.kpis.active_clients.change,
+        trend: 'up' as const,
+        icon: Users,
+        color: 'green'
+      },
+      {
+        title: 'Completion Rate',
+        value: dashboardData.kpis.completion_rate.value,
+        change: dashboardData.kpis.completion_rate.change,
+        trend: 'up' as const,
+        icon: CheckCircle,
+        color: 'orange'
+      },
+      {
+        title: 'Avg Response Time',
+        value: dashboardData.kpis.avg_response_time.value,
+        change: dashboardData.kpis.avg_response_time.change,
+        trend: 'up' as const,
+        icon: Clock,
+        color: 'purple'
+      }
+    ] : []
+
+    return (
+      <div className="space-y-6">
+        <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
+          <div>
+            <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
+            <p className="text-gray-600 mt-2">Workflow automation, job tracking, compliance management & communications</p>
+          </div>
+          <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
+            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+            <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Job
+            </Button>
+          </div>
+        </div>
+
+        <ResponsiveGrid>
+          {kpis.map((kpi, index) => (
+            <KPICard key={index} {...kpi} />
+          ))}
+        </ResponsiveGrid>
 
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border">
         <div className="flex-1">
@@ -322,62 +438,106 @@ export default function PracticeManagement() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Jobs</CardTitle>
-            <CardDescription>Latest job assignments and progress</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {jobs.slice(0, 5).map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex items-center space-x-3">
-                    {getStatusIcon(job.status)}
-                    <div>
-                      <p className="font-medium">{job.title}</p>
-                      <p className="text-sm text-gray-600">{job.client}</p>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Jobs</CardTitle>
+              <CardDescription>Latest job assignments and progress</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {jobs.length === 0 ? (
+                <p className="text-gray-600 text-center py-4">No jobs found. Create your first job to get started.</p>
+              ) : (
+                <div className="space-y-4">
+                  {jobs.slice(0, 5).map((job) => (
+                    <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                      <div className="flex items-center space-x-3 flex-1">
+                        {getStatusIcon(job.status)}
+                        <div>
+                          <p className="font-medium">{job.title}</p>
+                          <p className="text-sm text-gray-600">Client ID: {job.client_id}</p>
+                          {job.due_date && (
+                            <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right flex items-center gap-2">
+                        <div>
+                          <Badge className={getPriorityColor(job.priority)}>
+                            {job.priority}
+                          </Badge>
+                          {job.assigned_to && (
+                            <p className="text-sm text-gray-600 mt-1">{job.assigned_to}</p>
+                          )}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteJob(job.id)
+                          }}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <Badge className={getPriorityColor(job.priority)}>
-                      {job.priority}
-                    </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              )}
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Deadlines</CardTitle>
-            <CardDescription>Critical deadlines requiring attention</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {upcomingDeadlines.map((deadline, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                  <div>
-                    <p className="font-medium">{deadline.type}</p>
-                    <p className="text-sm text-gray-600">{deadline.client}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium">{deadline.date}</p>
-                    <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-blue-600'}`}>
-                      {deadline.days} days
-                    </p>
-                  </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Deadlines</CardTitle>
+              <CardDescription>Critical deadlines requiring attention</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {deadlines.length === 0 ? (
+                <p className="text-gray-600 text-center py-4">No upcoming deadlines.</p>
+              ) : (
+                <div className="space-y-4">
+                  {deadlines.slice(0, 5).map((deadline) => {
+                    const daysRemaining = calculateDaysRemaining(deadline.due_date)
+                    return (
+                      <div key={deadline.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                        <div className="flex-1">
+                          <p className="font-medium">{deadline.title}</p>
+                          <p className="text-sm text-gray-600">{deadline.deadline_type}</p>
+                          <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
+                        </div>
+                        <div className="text-right flex items-center gap-2">
+                          <div>
+                            <p className="text-sm font-medium">{new Date(deadline.due_date).toLocaleDateString()}</p>
+                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-orange-600' : 'text-blue-600'}`}>
+                              {daysRemaining > 0 ? `${daysRemaining} days` : 'Overdue'}
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteDeadline(deadline.id)
+                            }}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   const renderJobOverview = () => (
     <div className="space-y-6">
@@ -387,9 +547,9 @@ export default function PracticeManagement() {
           <p className="text-gray-600">Complete job management and tracking</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={loadJobs}>
             <Filter className="h-4 w-4 mr-2" />
-            Filter Jobs
+            Refresh
           </Button>
           <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
             <Plus className="h-4 w-4 mr-2" />
@@ -401,31 +561,69 @@ export default function PracticeManagement() {
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>All Jobs</CardTitle>
+            <CardTitle>All Jobs ({jobs.length})</CardTitle>
             <CardDescription>Complete job management and tracking</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {jobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex items-center space-x-4">
-                    {getStatusIcon(job.status)}
-                    <div>
-                      <p className="font-medium">{job.title}</p>
-                      <p className="text-sm text-gray-600">{job.client}</p>
-                      <p className="text-xs text-gray-500">Due: {job.dueDate}</p>
+            {jobs.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-4">No jobs found. Create your first job to get started.</p>
+                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create First Job
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {jobs.map((job) => (
+                  <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                    <div className="flex items-center space-x-4 flex-1">
+                      {getStatusIcon(job.status)}
+                      <div className="flex-1">
+                        <p className="font-medium">{job.title}</p>
+                        <p className="text-sm text-gray-600">Client ID: {job.client_id}</p>
+                        {job.due_date && (
+                          <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
+                        )}
+                        {job.description && (
+                          <p className="text-xs text-gray-500 mt-1">{job.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <Badge className={getPriorityColor(job.priority)}>
+                          {job.priority}
+                        </Badge>
+                        {job.assigned_to && (
+                          <p className="text-sm text-gray-600 mt-1">{job.assigned_to}</p>
+                        )}
+                        <Progress value={job.progress_percentage} className="w-20 mt-2" />
+                        <p className="text-xs text-gray-500 mt-1">{job.progress_percentage}% Complete</p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteJob(job.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <Badge className={getPriorityColor(job.priority)}>
-                      {job.priority}
-                    </Badge>
-                    <p className="text-sm text-gray-600 mt-1">{job.assignee}</p>
-                    <Progress value={job.progress} className="w-20 mt-2" />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -467,7 +665,11 @@ export default function PracticeManagement() {
           <p className="text-gray-600">Monitor and manage upcoming deadlines</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={loadDeadlines}>
+            <Filter className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
             <AlertTriangle className="h-4 w-4 mr-2" />
             Add Deadline
           </Button>
@@ -476,26 +678,78 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Critical Deadlines</CardTitle>
+          <CardTitle>All Deadlines ({deadlines.length})</CardTitle>
           <CardDescription>Monitor and manage upcoming deadlines</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {upcomingDeadlines.map((deadline, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                <div>
-                  <p className="font-medium">{deadline.type}</p>
-                  <p className="text-sm text-gray-600">{deadline.client}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium">{deadline.date}</p>
-                  <p className={`text-sm ${deadline.days <= 7 ? 'text-red-600' : 'text-orange-600'}`}>
-                    {deadline.days} days remaining
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {deadlines.length === 0 ? (
+            <div className="text-center py-8">
+              <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600 mb-4">No deadlines found. Add your first deadline to track compliance.</p>
+              <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Deadline
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {deadlines.map((deadline) => {
+                const daysRemaining = calculateDaysRemaining(deadline.due_date)
+                return (
+                  <div key={deadline.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{deadline.title}</p>
+                        <Badge className={getPriorityColor(deadline.priority)}>
+                          {deadline.priority}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">{deadline.deadline_type}</p>
+                      <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
+                      {deadline.description && (
+                        <p className="text-xs text-gray-500 mt-1">{deadline.description}</p>
+                      )}
+                    </div>
+                    <div className="text-right flex items-center gap-3">
+                      <div>
+                        <p className="text-sm font-medium">{new Date(deadline.due_date).toLocaleDateString()}</p>
+                        <p className={`text-sm font-semibold ${
+                          daysRemaining < 0 ? 'text-red-700' : 
+                          daysRemaining <= 7 ? 'text-red-600' : 
+                          daysRemaining <= 14 ? 'text-orange-600' : 
+                          'text-blue-600'
+                        }`}>
+                          {daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` :
+                           daysRemaining === 0 ? 'Due today' :
+                           `${daysRemaining} days remaining`}
+                        </p>
+                        <Badge className={`mt-1 ${deadline.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                          {deadline.status}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteDeadline(deadline.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

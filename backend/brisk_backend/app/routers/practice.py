@@ -786,3 +786,159 @@ def get_time_analytics(
             "end": end_date
         }
     }
+
+@router.put("/jobs/{job_id}")
+def update_job(
+    job_id: str,
+    job_data: JobCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update a job"""
+    job = db.query(Job).filter(
+        Job.id == job_id,
+        Job.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    for key, value in job_data.dict(exclude_unset=True).items():
+        setattr(job, key, value)
+    
+    db.commit()
+    db.refresh(job)
+    
+    return {"job": job, "message": "Job updated successfully"}
+
+@router.delete("/jobs/{job_id}")
+def delete_job(
+    job_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Delete a job and all associated tasks"""
+    job = db.query(Job).filter(
+        Job.id == job_id,
+        Job.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    db.query(Task).filter(Task.job_id == job_id).delete()
+    db.query(TimeEntry).filter(TimeEntry.job_id == job_id).delete()
+    
+    db.delete(job)
+    db.commit()
+    
+    return {"message": "Job deleted successfully"}
+
+@router.put("/tasks/{task_id}")
+def update_task(
+    task_id: str,
+    task_data: TaskCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update a task"""
+    task = db.query(Task).filter(
+        Task.id == task_id,
+        Task.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    for key, value in task_data.dict(exclude_unset=True).items():
+        setattr(task, key, value)
+    
+    db.commit()
+    db.refresh(task)
+    
+    return {"task": task, "message": "Task updated successfully"}
+
+@router.delete("/tasks/{task_id}")
+def delete_task(
+    task_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Delete a task"""
+    task = db.query(Task).filter(
+        Task.id == task_id,
+        Task.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    db.query(TimeEntry).filter(TimeEntry.task_id == task_id).delete()
+    
+    db.delete(task)
+    db.commit()
+    
+    return {"message": "Task deleted successfully"}
+
+@router.post("/compliance/deadlines")
+def create_deadline(
+    deadline_data: Dict[str, Any],
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Create a compliance deadline"""
+    deadline = ComplianceDeadline(
+        tenant_id=request.state.tenant_id,
+        **deadline_data
+    )
+    
+    db.add(deadline)
+    db.commit()
+    db.refresh(deadline)
+    
+    return {"deadline": deadline, "message": "Deadline created successfully"}
+
+@router.put("/compliance/deadlines/{deadline_id}")
+def update_deadline(
+    deadline_id: str,
+    deadline_data: Dict[str, Any],
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update a compliance deadline"""
+    deadline = db.query(ComplianceDeadline).filter(
+        ComplianceDeadline.id == deadline_id,
+        ComplianceDeadline.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not deadline:
+        raise HTTPException(status_code=404, detail="Deadline not found")
+    
+    for key, value in deadline_data.items():
+        if hasattr(deadline, key):
+            setattr(deadline, key, value)
+    
+    db.commit()
+    db.refresh(deadline)
+    
+    return {"deadline": deadline, "message": "Deadline updated successfully"}
+
+@router.delete("/compliance/deadlines/{deadline_id}")
+def delete_deadline(
+    deadline_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Delete a compliance deadline"""
+    deadline = db.query(ComplianceDeadline).filter(
+        ComplianceDeadline.id == deadline_id,
+        ComplianceDeadline.tenant_id == request.state.tenant_id
+    ).first()
+    
+    if not deadline:
+        raise HTTPException(status_code=404, detail="Deadline not found")
+    
+    db.delete(deadline)
+    db.commit()
+    
+    return {"message": "Deadline deleted successfully"}
