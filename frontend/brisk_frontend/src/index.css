@@ -54,8 +54,23 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     min-height: 100vh;
+    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
     width: 100vw;
-    overflow-x: hidden;
+    width: 100dvw;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  #root {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
   }
   
   /* Tenant branding support */

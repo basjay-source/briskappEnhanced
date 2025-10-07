@@ -17,9 +17,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen w-screen flex overflow-hidden">
       {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 p-12 flex-col justify-between">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 p-8 xl:p-12 flex-col justify-between overflow-y-auto">
         <div>
           <h1 className="text-4xl font-bold text-white mb-4">
             Welcome Back
@@ -69,8 +69,8 @@ export default function LoginPage() {
       </div>
 
       {/* Right side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md my-auto">
           
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
