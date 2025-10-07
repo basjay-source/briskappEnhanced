@@ -185,7 +185,7 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-lg">
                 <h4 className="font-semibold mb-2">Department Breakdown</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -206,7 +206,7 @@ export default function Payroll() {
                   </div>
                 </div>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-lg">
                 <h4 className="font-semibold mb-2">Employment Status</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -239,7 +239,7 @@ export default function Payroll() {
         description: 'Monthly payroll breakdown and trends',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-lg">
               <h4 className="font-semibold mb-2">Cost Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -271,7 +271,7 @@ export default function Payroll() {
         description: 'Real Time Information submission status',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-lg">
               <h4 className="font-semibold mb-2">Submission History</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -303,7 +303,7 @@ export default function Payroll() {
         description: 'Outstanding payroll tasks requiring attention',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border rounded-lg">
+            <div className="p-4 border-2 border-blue-900 rounded-lg">
               <h4 className="font-semibold mb-2">Action Items</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">

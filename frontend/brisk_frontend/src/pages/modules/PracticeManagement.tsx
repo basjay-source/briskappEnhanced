@@ -331,7 +331,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.slice(0, 5).map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(job.status)}
                     <div>
@@ -359,7 +359,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {upcomingDeadlines.map((deadline, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                   <div>
                     <p className="font-medium">{deadline.type}</p>
                     <p className="text-sm text-gray-600">{deadline.client}</p>
@@ -407,7 +407,7 @@ export default function PracticeManagement() {
           <CardContent>
             <div className="space-y-4">
               {jobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center space-x-4">
                     {getStatusIcon(job.status)}
                     <div>
@@ -482,7 +482,7 @@ export default function PracticeManagement() {
         <CardContent>
           <div className="space-y-4">
             {upcomingDeadlines.map((deadline, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+              <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
                 <div>
                   <p className="font-medium">{deadline.type}</p>
                   <p className="text-sm text-gray-600">{deadline.client}</p>

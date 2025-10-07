@@ -203,12 +203,12 @@ export default function AMLCompliance() {
                 content: (
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border rounded-lg">
+                      <div className="p-4 border-2 border-blue-900 rounded-lg">
                         <h4 className="font-semibold mb-2">Current Status</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
-                      <div className="p-4 border rounded-lg">
+                      <div className="p-4 border-2 border-blue-900 rounded-lg">
                         <h4 className="font-semibold mb-2">Compliance Score</h4>
                         <p className="text-sm text-gray-600">AML regulatory compliance</p>
                         <div className="mt-2">
@@ -225,15 +225,15 @@ export default function AMLCompliance() {
                       <div>
                         <h4 className="font-semibold mb-3">Case Risk Profile</h4>
                         <div className="space-y-2">
-                          <div className="flex justify-between p-2 border rounded">
+                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                             <span>Low Risk</span>
                             <span className="font-semibold">15 cases (65%)</span>
                           </div>
-                          <div className="flex justify-between p-2 border rounded">
+                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                             <span>Medium Risk</span>
                             <span className="font-semibold">6 cases (26%)</span>
                           </div>
-                          <div className="flex justify-between p-2 border rounded">
+                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                             <span>High Risk</span>
                             <span className="font-semibold">2 cases (9%)</span>
                           </div>

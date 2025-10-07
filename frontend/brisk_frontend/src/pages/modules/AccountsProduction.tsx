@@ -150,14 +150,14 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
               <div>
                 <h3 className="font-semibold">Trial Balance Updated</h3>
                 <p className="text-sm text-gray-600">Client: ABC Ltd - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
               <div>
                 <h3 className="font-semibold">Financial Statements Generated</h3>
                 <p className="text-sm text-gray-600">Client: XYZ Corp - Period: Q4 2024</p>
@@ -194,15 +194,15 @@ const AccountsProduction: React.FC = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-lg">
                 <h3 className="font-semibold">Total Debits</h3>
                 <p className="text-2xl font-bold text-blue-600">£208,500</p>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-lg">
                 <h3 className="font-semibold">Total Credits</h3>
                 <p className="text-2xl font-bold text-green-600">£208,500</p>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div className="p-4 border-2 border-blue-900 rounded-lg">
                 <h3 className="font-semibold">Balance</h3>
                 <p className="text-2xl font-bold text-gray-600">£0.00</p>
               </div>

@@ -401,12 +401,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Current Portfolio</h4>
                       <p className="text-2xl font-bold">{charities.length}</p>
                       <p className="text-sm text-green-600">+2 this month</p>
                     </div>
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Growth Rate</h4>
                       <p className="text-sm text-gray-600">Portfolio expansion</p>
                       <div className="mt-2">
@@ -422,15 +422,15 @@ const CharityAccounts: React.FC = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Charity Types</h4>
                     <div className="space-y-2">
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Registered Charities</span>
                         <span className="font-semibold">{charities.filter(c => c.type === 'charity').length}</span>
                       </div>
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Academy Trusts</span>
                         <span className="font-semibold">{charities.filter(c => c.type === 'academy').length}</span>
                       </div>
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Other Trusts</span>
                         <span className="font-semibold">{charities.filter(c => c.type === 'trust').length}</span>
                       </div>
@@ -458,12 +458,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Total Income</h4>
                       <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.totalIncome, 0))}</p>
                       <p className="text-sm text-green-600">+15% vs last year</p>
                     </div>
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Income Growth</h4>
                       <p className="text-sm text-gray-600">Year-over-year growth</p>
                       <div className="mt-2">
@@ -479,15 +479,15 @@ const CharityAccounts: React.FC = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Income Sources</h4>
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Donations & Grants</span>
                         <Badge variant="default">£2.1M (65%)</Badge>
                       </div>
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Trading Activities</span>
                         <Badge variant="secondary">£850K (26%)</Badge>
                       </div>
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Investment Income</span>
                         <Badge variant="outline">£290K (9%)</Badge>
                       </div>
@@ -515,12 +515,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Total Net Assets</h4>
                       <p className="text-2xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
                       <p className="text-sm text-blue-600">Stable</p>
                     </div>
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Asset Utilization</h4>
                       <p className="text-sm text-gray-600">Efficiency ratio</p>
                       <div className="mt-2">
@@ -536,15 +536,15 @@ const CharityAccounts: React.FC = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Fund Breakdown</h4>
                     <div className="space-y-2">
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Unrestricted Funds</span>
                         <span className="font-semibold">£4.2M</span>
                       </div>
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Restricted Funds</span>
                         <span className="font-semibold">£2.8M</span>
                       </div>
-                      <div className="flex justify-between p-2 border rounded">
+                      <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                         <span>Endowment Funds</span>
                         <span className="font-semibold">£1.5M</span>
                       </div>
@@ -572,12 +572,12 @@ const CharityAccounts: React.FC = () => {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Overall Score</h4>
                       <p className="text-2xl font-bold">{Math.round(charities.reduce((sum, c) => sum + c.complianceScore, 0) / charities.length)}%</p>
                       <p className="text-sm text-green-600">Excellent</p>
                     </div>
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Compliance Trend</h4>
                       <p className="text-sm text-gray-600">6-month improvement</p>
                       <div className="mt-2">
@@ -593,15 +593,15 @@ const CharityAccounts: React.FC = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Compliance Areas</h4>
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Annual Returns</span>
                         <Badge variant="default">100% Complete</Badge>
                       </div>
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Trustee Updates</span>
                         <Badge variant="secondary">95% Complete</Badge>
                       </div>
-                      <div className="flex justify-between items-center p-2 border rounded">
+                      <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                         <span>Financial Reporting</span>
                         <Badge variant="outline">92% Complete</Badge>
                       </div>
@@ -904,7 +904,7 @@ const CharityAccounts: React.FC = () => {
           <CardContent className="p-6">
             <div className="space-y-4">
               {trustees.map((trustee) => (
-                <div key={trustee.id} className="p-4 border rounded-lg">
+                <div key={trustee.id} className="p-4 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
@@ -952,21 +952,21 @@ const CharityAccounts: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span>Trustee Annual Report</span>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Complete</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span>Public Benefit Statement</span>
                   </div>
                   <Badge className="bg-green-100 text-green-800">Complete</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-orange-500" />
                     <span>Risk Management Policy</span>

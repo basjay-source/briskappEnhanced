@@ -7156,12 +7156,12 @@ export default function CompanySecretarial() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Current Status</h4>
                       <p className="text-2xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
-                    <div className="p-4 border rounded-lg">
+                    <div className="p-4 border-2 border-blue-900 rounded-lg">
                       <h4 className="font-semibold mb-2">Compliance Score</h4>
                       <p className="text-sm text-gray-600">Companies House compliance</p>
                       <div className="mt-2">
@@ -7178,15 +7178,15 @@ export default function CompanySecretarial() {
                     <div>
                       <h4 className="font-semibold mb-3">Company Breakdown</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Private Limited</span>
                           <span className="font-semibold">20 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Public Limited</span>
                           <span className="font-semibold">3 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>LLP</span>
                           <span className="font-semibold">1 company</span>
                         </div>
@@ -7198,15 +7198,15 @@ export default function CompanySecretarial() {
                     <div>
                       <h4 className="font-semibold mb-3">Filing Status</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between items-center p-2 border rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Confirmation Statements - 5 filings</span>
                           <Badge variant="default">Due Soon</Badge>
                         </div>
-                        <div className="flex justify-between items-center p-2 border rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Annual Returns - 2 filings</span>
                           <Badge variant="secondary">In Progress</Badge>
                         </div>
-                        <div className="flex justify-between items-center p-2 border rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Overdue - 1 filing</span>
                           <Badge variant="destructive">Urgent</Badge>
                         </div>
@@ -7218,15 +7218,15 @@ export default function CompanySecretarial() {
                     <div>
                       <h4 className="font-semibold mb-3">PSC Register Status</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Up to Date</span>
                           <span className="font-semibold">20 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Pending Updates</span>
                           <span className="font-semibold">3 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border rounded">
+                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Verification Required</span>
                           <span className="font-semibold">1 company</span>
                         </div>
@@ -7264,7 +7264,7 @@ export default function CompanySecretarial() {
             <CardContent>
               <div className="space-y-4">
                 {filings.slice(0, 5).map((filing) => (
-                  <div key={filing.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={filing.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                     <div className="flex items-center space-x-3">
                       {getStatusIcon(filing.status)}
                       <div>
@@ -7287,7 +7287,7 @@ export default function CompanySecretarial() {
             <CardContent>
               <div className="space-y-4">
                 {companies.slice(0, 5).map((company) => (
-                  <div key={company.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={company.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                     <div>
                       <p className="font-medium">{company.name}</p>
                       <p className="text-sm text-gray-500">{company.filingType}</p>
@@ -7343,7 +7343,7 @@ export default function CompanySecretarial() {
           <CardContent>
             <div className="space-y-4">
               {companies.map((company) => (
-                <div key={company.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={company.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <Building className="h-8 w-8 text-blue-600" />
                     <div>
@@ -7474,7 +7474,7 @@ export default function CompanySecretarial() {
           <CardContent>
             <div className="space-y-4">
               {pscRegister.map((psc) => (
-                <div key={psc.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={psc.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <Users className="h-8 w-8 text-purple-600" />
                     <div>

@@ -397,7 +397,7 @@ export default function PersonalTax() {
               <div className="space-y-3">
                 {saReturns.map((saReturn, index) => {
                   return (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(saReturn.status)}
                         <div>
@@ -456,12 +456,12 @@ export default function PersonalTax() {
                   content: (
                     <div className="space-y-6">
                       <div className="grid gap-4 md:grid-cols-2">
-                        <div className="p-4 border rounded-lg">
+                        <div className="p-4 border-2 border-blue-900 rounded-lg">
                           <h4 className="font-semibold mb-2">Current Period</h4>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
-                        <div className="p-4 border rounded-lg">
+                        <div className="p-4 border-2 border-blue-900 rounded-lg">
                           <h4 className="font-semibold mb-2">Tax Efficiency</h4>
                           <p className="text-sm text-gray-600">Personal tax optimization</p>
                           <div className="mt-2">
@@ -478,15 +478,15 @@ export default function PersonalTax() {
                         <div>
                           <h4 className="font-semibold mb-3">Return Breakdown</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>In Progress</span>
                               <span className="font-semibold">8 returns</span>
                             </div>
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>Ready for Review</span>
                               <span className="font-semibold">3 returns</span>
                             </div>
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>Submitted</span>
                               <span className="font-semibold">1 return</span>
                             </div>
@@ -498,15 +498,15 @@ export default function PersonalTax() {
                         <div>
                           <h4 className="font-semibold mb-3">Savings Breakdown</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>Pension Contributions</span>
                               <span className="font-semibold">£18,500</span>
                             </div>
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>CGT Optimization</span>
                               <span className="font-semibold">£15,200</span>
                             </div>
-                            <div className="flex justify-between p-2 border rounded">
+                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>Allowance Utilization</span>
                               <span className="font-semibold">£11,500</span>
                             </div>
@@ -518,15 +518,15 @@ export default function PersonalTax() {
                         <div>
                           <h4 className="font-semibold mb-3">CGT Opportunities</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between items-center p-2 border rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                               <span>Timing Optimization</span>
                               <Badge variant="default">£4,200</Badge>
                             </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                               <span>Annual Exemption</span>
                               <Badge variant="secondary">£2,800</Badge>
                             </div>
-                            <div className="flex justify-between items-center p-2 border rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                               <span>Loss Harvesting</span>
                               <Badge variant="outline">£1,500</Badge>
                             </div>
@@ -1155,7 +1155,7 @@ export default function PersonalTax() {
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-4 md:grid-cols-3">
-                        <div className="p-4 border rounded-lg">
+                        <div className="p-4 border-2 border-blue-900 rounded-lg">
                           <div className="flex items-center gap-2 mb-2">
                             <Banknote className="h-4 w-4 text-blue-600" />
                             <span className="font-medium">Junior ISAs</span>
@@ -1163,7 +1163,7 @@ export default function PersonalTax() {
                           <p className="text-sm text-gray-600">£9,000 annual allowance per child</p>
                           <Button size="sm" className="mt-2" variant="outline">Setup</Button>
                         </div>
-                        <div className="p-4 border rounded-lg">
+                        <div className="p-4 border-2 border-blue-900 rounded-lg">
                           <div className="flex items-center gap-2 mb-2">
                             <Shield className="h-4 w-4 text-green-600" />
                             <span className="font-medium">Education Planning</span>
@@ -1171,7 +1171,7 @@ export default function PersonalTax() {
                           <p className="text-sm text-gray-600">Tax-efficient education funding</p>
                           <Button size="sm" className="mt-2" variant="outline">Plan</Button>
                         </div>
-                        <div className="p-4 border rounded-lg">
+                        <div className="p-4 border-2 border-blue-900 rounded-lg">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-4 w-4 text-purple-600" />
                             <span className="font-medium">Income Splitting</span>

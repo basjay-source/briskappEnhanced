@@ -402,7 +402,7 @@ export default function CorporationTax() {
           </CardHeader>
           <CardContent className="space-y-4">
             {aiRecommendations.map((rec, index) => (
-              <div key={index} className="p-4 border rounded-lg">
+              <div key={index} className="p-4 border-2 border-blue-900 rounded-lg">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}

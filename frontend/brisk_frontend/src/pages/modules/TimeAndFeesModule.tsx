@@ -683,7 +683,7 @@ export default function TimeAndFeesModule() {
               <CardContent>
                 <div className="space-y-4">
                   {jobCodes.map((code) => (
-                    <div key={code.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={code.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                       <div>
                         <h4 className="font-medium">{code.code}</h4>
                         <p className="text-sm text-gray-600">{code.name}</p>
@@ -713,7 +713,7 @@ export default function TimeAndFeesModule() {
               <CardContent>
                 <div className="space-y-4">
                   {employeeRates.map((rate, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-lg">
                       <div>
                         <h4 className="font-medium">{rate.employeeName}</h4>
                         <p className="text-sm text-gray-600">
