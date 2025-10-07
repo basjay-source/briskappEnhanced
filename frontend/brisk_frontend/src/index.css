@@ -53,16 +53,9 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    margin: 0;
-    padding: 0;
-  }
-  
-  #root {
     min-height: 100vh;
-    min-height: 100dvh;
     width: 100vw;
-    display: flex;
-    flex-direction: column;
+    overflow-x: hidden;
   }
   
   /* Tenant branding support */
