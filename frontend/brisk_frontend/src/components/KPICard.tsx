@@ -28,7 +28,7 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
   return (
     <>
       <Card 
-        className={`${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+        className={`border-2 border-blue-900 ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
         onClick={handleClick}
       >
         <CardContent className="p-6">

@@ -947,7 +947,7 @@ export default function PracticeManagement() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
                       <p className="text-xs text-gray-600">12 agreements due for renewal</p>
@@ -1355,7 +1355,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Performance</td>
                       <td className="py-2">2024-03-13</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">Processing</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Processing</span>
                       </td>
                       <td className="py-2">
                         <button className="text-gray-400 text-sm mr-2">View</button>

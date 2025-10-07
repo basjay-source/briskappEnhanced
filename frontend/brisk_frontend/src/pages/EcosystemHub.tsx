@@ -362,7 +362,7 @@ export default function EcosystemHub() {
                       </div>
                       <div className="flex justify-between">
                         <span>At Risk</span>
-                        <span className="font-semibold text-yellow-600">127</span>
+                        <span className="font-semibold text-orange-600">127</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Churned</span>
@@ -511,13 +511,13 @@ export default function EcosystemHub() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold mb-6">Modules</h2>
+          <h2 className="text-2xl font-bold mb-6 text-blue-900">Modules</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {modules.map((module, index) => {
               const Icon = module.icon
               return (
                 <Link key={index} to={module.path}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-2 border-blue-900">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <div className={`p-2 rounded-lg ${module.color} text-white`}>
@@ -540,8 +540,8 @@ export default function EcosystemHub() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
-          <Card>
+          <h2 className="text-2xl font-bold mb-6 text-blue-900">Recent Activity</h2>
+          <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               {recentActivity.length > 0 ? (
                 <div className="space-y-4">
@@ -564,7 +564,7 @@ export default function EcosystemHub() {
             </CardContent>
           </Card>
 
-          <Card className="mt-6">
+          <Card className="mt-6 border-2 border-blue-900">
             <CardHeader>
               <CardTitle>AI Insights</CardTitle>
             </CardHeader>

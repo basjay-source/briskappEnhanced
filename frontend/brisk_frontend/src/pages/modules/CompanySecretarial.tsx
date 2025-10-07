@@ -783,9 +783,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Annual accounts must be filed within 9 months of the accounting period end date</li>
                   <li>• Late filing penalties apply for overdue accounts</li>
                   <li>• Accounts must be approved by the board of directors before filing</li>
@@ -1091,9 +1091,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Annual returns must be filed within 28 days of the made up to date</li>
                   <li>• Late filing penalties apply for overdue returns</li>
                   <li>• The information provided must be accurate as of the made up to date</li>
@@ -1435,9 +1435,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Termination forms must be filed within 14 days of the termination date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -1883,9 +1883,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Secretary appointments must be filed within 14 days of the appointment date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2448,9 +2448,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• PSC notifications must be filed within 14 days of the relevant date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2833,9 +2833,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Address changes must be filed within 14 days of the change</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -3217,9 +3217,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Name changes must be filed within 15 days of the resolution</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -6141,9 +6141,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• You must submit your CIS300 return by the 19th of the month following the return period</li>
                   <li>• Late returns may result in penalties</li>
                   <li>• You must keep records of all payments and deductions for at least 3 years</li>
@@ -6400,9 +6400,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• You must submit your P35 return by 19 May following the end of the tax year</li>
                   <li>• You must also provide P60s to all employees by 31 May</li>
                   <li>• Late returns may result in penalties</li>
@@ -6992,9 +6992,9 @@ export default function CompanySecretarial() {
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Declaration and Submission</h3>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">Important Information</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+              <div className="bg-blue-50 border border-blue-900 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Important Information</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
                   <li>• VAT group registration takes effect from the date specified in your application</li>
                   <li>• All group members become jointly and severally liable for VAT</li>
                   <li>• Supplies between group members are disregarded for VAT purposes</li>

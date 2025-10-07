@@ -86,10 +86,10 @@ export default function AppShell() {
             <LanguageSwitcher />
             <CurrencySwitcher />
             <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Bell className="h-4 w-4" />
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
@@ -120,7 +120,7 @@ export default function AppShell() {
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <SidebarTrigger />
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900 cursor-pointer" />
               <Input
                 placeholder="Search..."
                 className="w-full pl-10 text-sm md:text-base"
@@ -176,10 +176,10 @@ export default function AppShell() {
             <LanguageSwitcher />
             <CurrencySwitcher />
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
-              <Bell className="h-4 w-4" />
+              <Bell className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex">
-              <HelpCircle className="h-4 w-4" />
+              <HelpCircle className="h-4 w-4 text-blue-900" />
             </Button>
             <Button 
               variant="ghost" 
@@ -187,10 +187,10 @@ export default function AppShell() {
               className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-4 w-4 text-blue-900" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
-              <User className="h-4 w-4" />
+              <User className="h-4 w-4 text-blue-900" />
             </Button>
           </div>
         </header>
