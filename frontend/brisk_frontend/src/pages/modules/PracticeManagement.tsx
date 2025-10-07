@@ -645,11 +645,14 @@ export default function PracticeManagement() {
       delete clonedData.id
       delete clonedData.created_at
       delete clonedData.updated_at
+      delete clonedData.executions
       const response = await api.post('/api/v1/practice/workflows', clonedData)
       setWorkflows([...workflows, response.data])
+      setActiveWorkflowTab('builder')
+      alert(`Successfully created "${response.data.name}" from template!`)
     } catch (err: any) {
       console.error('Failed to clone workflow:', err)
-      alert('Failed to clone workflow')
+      alert('Failed to clone workflow: ' + (err.message || 'Unknown error'))
     }
   }
 
@@ -2459,40 +2462,63 @@ export default function PracticeManagement() {
 
       {/* Workflow Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Total Workflows</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-900">{workflowStats.total}</div>
-            <p className="text-xs text-gray-500">All workflows</p>
+            <p className="text-xs text-gray-500">All workflows • Click to view</p>
           </CardContent>
         </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Active</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{workflowStats.active}</div>
-            <p className="text-xs text-gray-500">Currently running</p>
+            <p className="text-xs text-gray-500">Currently running • Click to view</p>
           </CardContent>
         </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Inactive</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-600">{workflowStats.inactive}</div>
-            <p className="text-xs text-gray-500">Paused workflows</p>
+            <p className="text-xs text-gray-500">Paused workflows • Click to view</p>
           </CardContent>
         </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('analytics')
+          }}
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-blue-900">Total Executions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">{workflowStats.executions}</div>
-            <p className="text-xs text-gray-500">All time</p>
+            <p className="text-xs text-gray-500">All time • Click for analytics</p>
           </CardContent>
         </Card>
       </div>
