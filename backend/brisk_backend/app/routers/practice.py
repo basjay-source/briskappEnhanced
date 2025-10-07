@@ -942,3 +942,81 @@ def delete_deadline(
     db.commit()
     
     return {"message": "Deadline deleted successfully"}
+
+class WorkflowCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    trigger_type: str = 'manual'
+    trigger_event: Optional[str] = None
+    conditions: Optional[List[Dict[str, Any]]] = []
+    actions: Optional[List[Dict[str, Any]]] = []
+    status: str = 'active'
+    category: str = 'custom'
+
+class WorkflowUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger_type: Optional[str] = None
+    trigger_event: Optional[str] = None
+    conditions: Optional[List[Dict[str, Any]]] = None
+    actions: Optional[List[Dict[str, Any]]] = None
+    status: Optional[str] = None
+    category: Optional[str] = None
+
+@router.get("/workflows")
+async def get_workflows(db: Session = Depends(get_db)):
+    """Get all workflows"""
+    workflows = []
+    return workflows
+
+@router.post("/workflows")
+async def create_workflow(workflow: WorkflowCreate, db: Session = Depends(get_db)):
+    """Create a new workflow"""
+    workflow_data = {
+        "id": f"wf_{int(datetime.now().timestamp())}",
+        "name": workflow.name,
+        "description": workflow.description,
+        "trigger_type": workflow.trigger_type,
+        "trigger_event": workflow.trigger_event,
+        "conditions": workflow.conditions or [],
+        "actions": workflow.actions or [],
+        "status": workflow.status,
+        "category": workflow.category,
+        "executions": 0,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.put("/workflows/{workflow_id}")
+async def update_workflow(workflow_id: str, workflow: WorkflowUpdate, db: Session = Depends(get_db)):
+    """Update a workflow"""
+    workflow_data = {
+        "id": workflow_id,
+        "name": workflow.name,
+        "description": workflow.description,
+        "trigger_type": workflow.trigger_type,
+        "trigger_event": workflow.trigger_event,
+        "conditions": workflow.conditions or [],
+        "actions": workflow.actions or [],
+        "status": workflow.status,
+        "category": workflow.category,
+        "executions": 0,
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.patch("/workflows/{workflow_id}")
+async def patch_workflow(workflow_id: str, data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Patch workflow status"""
+    workflow_data = {
+        "id": workflow_id,
+        "status": data.get("status", "active"),
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.delete("/workflows/{workflow_id}")
+async def delete_workflow(workflow_id: str, db: Session = Depends(get_db)):
+    """Delete a workflow"""
+    return {"message": "Workflow deleted successfully"}

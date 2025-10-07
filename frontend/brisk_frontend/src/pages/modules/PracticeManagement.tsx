@@ -45,7 +45,6 @@ import NewEmailStudio from '@/components/NewEmailStudio'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 import AIPromptSection from '../../components/AIPromptSection'
-import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
 import { api } from '@/lib/api'
@@ -164,11 +163,28 @@ export default function PracticeManagement() {
   const [selectedDeadlineStatus, setSelectedDeadlineStatus] = useState('all')
   const [selectedDeadlinePriority, setSelectedDeadlinePriority] = useState('all')
 
+  const [workflows, setWorkflows] = useState<any[]>([])
+  const [isWorkflowDialogOpen, setIsWorkflowDialogOpen] = useState(false)
+  const [editingWorkflow, setEditingWorkflow] = useState<any | null>(null)
+  const [activeWorkflowTab, setActiveWorkflowTab] = useState('builder')
+  const [workflowSearchTerm, setWorkflowSearchTerm] = useState('')
+  const [workflowFormData, setWorkflowFormData] = useState({
+    name: '',
+    description: '',
+    trigger_type: 'manual',
+    trigger_event: '',
+    conditions: [] as any[],
+    actions: [] as any[],
+    status: 'active',
+    category: 'custom'
+  })
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
     loadDeadlines()
     loadTimeEntries()
+    loadWorkflows()
   }, [])
 
   const loadDashboardData = async () => {
@@ -520,6 +536,131 @@ export default function PracticeManagement() {
       handleUpdateDeadline()
     } else {
       handleCreateDeadline()
+    }
+  }
+
+  const loadWorkflows = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/workflows')
+      setWorkflows(response.data)
+    } catch (err: any) {
+      console.error('Failed to load workflows:', err)
+      setWorkflows([])
+    }
+  }
+
+  const openWorkflowDialog = (workflow: any | null = null) => {
+    if (workflow) {
+      setEditingWorkflow(workflow)
+      setWorkflowFormData({
+        name: workflow.name,
+        description: workflow.description,
+        trigger_type: workflow.trigger_type,
+        trigger_event: workflow.trigger_event || '',
+        conditions: workflow.conditions || [],
+        actions: workflow.actions || [],
+        status: workflow.status,
+        category: workflow.category
+      })
+    } else {
+      setEditingWorkflow(null)
+      setWorkflowFormData({
+        name: '',
+        description: '',
+        trigger_type: 'manual',
+        trigger_event: '',
+        conditions: [],
+        actions: [],
+        status: 'active',
+        category: 'custom'
+      })
+    }
+    setIsWorkflowDialogOpen(true)
+  }
+
+  const closeWorkflowDialog = () => {
+    setIsWorkflowDialogOpen(false)
+    setEditingWorkflow(null)
+    setWorkflowFormData({
+      name: '',
+      description: '',
+      trigger_type: 'manual',
+      trigger_event: '',
+      conditions: [],
+      actions: [],
+      status: 'active',
+      category: 'custom'
+    })
+  }
+
+  const handleCreateWorkflow = async () => {
+    try {
+      const response = await api.post('/api/v1/practice/workflows', workflowFormData)
+      setWorkflows([...workflows, response.data])
+      closeWorkflowDialog()
+    } catch (err: any) {
+      console.error('Failed to create workflow:', err)
+      alert('Failed to create workflow: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateWorkflow = async () => {
+    if (!editingWorkflow) return
+    try {
+      const response = await api.put(`/api/v1/practice/workflows/${editingWorkflow.id}`, workflowFormData)
+      setWorkflows(workflows.map(w => w.id === editingWorkflow.id ? response.data : w))
+      closeWorkflowDialog()
+    } catch (err: any) {
+      console.error('Failed to update workflow:', err)
+      alert('Failed to update workflow: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveWorkflow = () => {
+    if (editingWorkflow) {
+      handleUpdateWorkflow()
+    } else {
+      handleCreateWorkflow()
+    }
+  }
+
+  const handleDeleteWorkflow = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this workflow?')) return
+    try {
+      await api.delete(`/api/v1/practice/workflows/${id}`)
+      setWorkflows(workflows.filter(w => w.id !== id))
+    } catch (err: any) {
+      console.error('Failed to delete workflow:', err)
+      alert('Failed to delete workflow')
+    }
+  }
+
+  const handleCloneWorkflow = async (workflow: any) => {
+    try {
+      const clonedData = {
+        ...workflow,
+        name: `${workflow.name} (Copy)`,
+        category: 'custom'
+      }
+      delete clonedData.id
+      delete clonedData.created_at
+      delete clonedData.updated_at
+      const response = await api.post('/api/v1/practice/workflows', clonedData)
+      setWorkflows([...workflows, response.data])
+    } catch (err: any) {
+      console.error('Failed to clone workflow:', err)
+      alert('Failed to clone workflow')
+    }
+  }
+
+  const handleToggleWorkflowStatus = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
+      const response = await api.patch(`/api/v1/practice/workflows/${id}`, { status: newStatus })
+      setWorkflows(workflows.map(w => w.id === id ? response.data : w))
+    } catch (err: any) {
+      console.error('Failed to toggle workflow status:', err)
+      alert('Failed to toggle workflow status')
     }
   }
 
@@ -2230,23 +2371,501 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderWorkflowBuilder = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  const renderWorkflowBuilder = () => {
+    const preBuiltTemplates = [
+      {
+        id: 'template-1',
+        name: 'Client Onboarding Workflow',
+        description: 'Automated workflow for new client setup',
+        trigger_type: 'event',
+        trigger_event: 'client_created',
+        actions: ['send_welcome_email', 'create_folder', 'assign_manager'],
+        category: 'template',
+        status: 'active',
+        executions: 24
+      },
+      {
+        id: 'template-2',
+        name: 'Tax Return Reminder',
+        description: 'Sends reminders for upcoming tax deadlines',
+        trigger_type: 'scheduled',
+        trigger_event: 'deadline_approaching',
+        actions: ['send_email', 'create_task'],
+        category: 'template',
+        status: 'active',
+        executions: 156
+      },
+      {
+        id: 'template-3',
+        name: 'Invoice Payment Follow-up',
+        description: 'Automated follow-up for overdue invoices',
+        trigger_type: 'scheduled',
+        trigger_event: 'invoice_overdue',
+        actions: ['send_reminder', 'notify_manager'],
+        category: 'template',
+        status: 'active',
+        executions: 89
+      },
+      {
+        id: 'template-4',
+        name: 'Document Review Approval',
+        description: 'Route documents for review and approval',
+        trigger_type: 'event',
+        trigger_event: 'document_uploaded',
+        actions: ['assign_reviewer', 'send_notification'],
+        category: 'template',
+        status: 'active',
+        executions: 45
+      }
+    ]
+
+    const customWorkflows = workflows.filter(w => w.category === 'custom')
+    const filteredWorkflows = customWorkflows.filter(w => 
+      w.name.toLowerCase().includes(workflowSearchTerm.toLowerCase()) ||
+      w.description?.toLowerCase().includes(workflowSearchTerm.toLowerCase())
+    )
+
+    const workflowStats = {
+      total: workflows.length,
+      active: workflows.filter(w => w.status === 'active').length,
+      inactive: workflows.filter(w => w.status === 'inactive').length,
+      executions: workflows.reduce((sum, w) => sum + (w.executions || 0), 0)
+    }
+
+    return (
+    <div className="space-y-6 w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Workflow Builder</h2>
           <p className="text-blue-900">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Workflow className="h-4 w-4 mr-2" />
+          <Button 
+            variant="outline"
+            onClick={() => setActiveWorkflowTab('templates')}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Browse Templates
+          </Button>
+          <Button 
+            className="bg-brisk-primary hover:bg-brisk-primary-600"
+            onClick={() => openWorkflowDialog()}
+          >
+            <Plus className="h-4 w-4 mr-2" />
             New Workflow
           </Button>
         </div>
       </div>
-      <WorkflowBuilderAdvanced />
+
+      {/* Workflow Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Workflows</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">{workflowStats.total}</div>
+            <p className="text-xs text-gray-500">All workflows</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Active</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{workflowStats.active}</div>
+            <p className="text-xs text-gray-500">Currently running</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Inactive</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-600">{workflowStats.inactive}</div>
+            <p className="text-xs text-gray-500">Paused workflows</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Executions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">{workflowStats.executions}</div>
+            <p className="text-xs text-gray-500">All time</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Tabs */}
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex gap-2 border-b border-blue-900 pb-2 w-full overflow-x-auto">
+            <Button
+              variant={activeWorkflowTab === 'builder' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('builder')}
+              className={activeWorkflowTab === 'builder' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Builder
+            </Button>
+            <Button
+              variant={activeWorkflowTab === 'templates' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('templates')}
+              className={activeWorkflowTab === 'templates' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Templates
+            </Button>
+            <Button
+              variant={activeWorkflowTab === 'analytics' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('analytics')}
+              className={activeWorkflowTab === 'analytics' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Analytics
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="w-full">
+          {activeWorkflowTab === 'builder' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <Input 
+                  placeholder="Search workflows..." 
+                  className="max-w-sm"
+                  value={workflowSearchTerm}
+                  onChange={(e) => setWorkflowSearchTerm(e.target.value)}
+                />
+                <Badge variant="outline" className="text-blue-900">
+                  {filteredWorkflows.length} Custom Workflows
+                </Badge>
+              </div>
+
+              {filteredWorkflows.length === 0 ? (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center py-8">
+                      <Workflow className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-blue-900 mb-4">No custom workflows yet</p>
+                      <p className="text-sm text-gray-500 mb-4">Create your first workflow or start from a template</p>
+                      <div className="flex gap-2 justify-center">
+                        <Button 
+                          className="bg-brisk-primary hover:bg-brisk-primary-600"
+                          onClick={() => openWorkflowDialog()}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Create Workflow
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          onClick={() => setActiveWorkflowTab('templates')}
+                        >
+                          Browse Templates
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                  {filteredWorkflows.map((workflow) => (
+                    <Card key={workflow.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <CardTitle className="text-blue-900">{workflow.name}</CardTitle>
+                            <CardDescription>{workflow.description}</CardDescription>
+                          </div>
+                          <Badge className={workflow.status === 'active' ? 'bg-green-500' : 'bg-gray-500'}>
+                            {workflow.status}
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Target className="h-4 w-4 text-blue-900" />
+                            <span className="text-blue-900">Trigger: {workflow.trigger_type}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <TrendingUp className="h-4 w-4 text-blue-900" />
+                            <span className="text-blue-900">Executions: {workflow.executions || 0}</span>
+                          </div>
+                          <div className="flex gap-2 pt-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => openWorkflowDialog(workflow)}
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleCloneWorkflow(workflow)}
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              Clone
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleToggleWorkflowStatus(workflow.id, workflow.status)}
+                            >
+                              {workflow.status === 'active' ? <Pause className="h-4 w-4 mr-1" /> : <CheckCircle className="h-4 w-4 mr-1" />}
+                              {workflow.status === 'active' ? 'Pause' : 'Activate'}
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleDeleteWorkflow(workflow.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeWorkflowTab === 'templates' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <h3 className="text-lg font-semibold text-blue-900">Pre-built Workflow Templates</h3>
+                <Badge variant="outline" className="text-blue-900">
+                  {preBuiltTemplates.length} Templates Available
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                {preBuiltTemplates.map((template) => (
+                  <Card key={template.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className="text-blue-900">{template.name}</CardTitle>
+                          <CardDescription>{template.description}</CardDescription>
+                        </div>
+                        <Badge className="bg-blue-500">Template</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Target className="h-4 w-4 text-blue-900" />
+                          <span className="text-blue-900">Trigger: {template.trigger_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <TrendingUp className="h-4 w-4 text-blue-900" />
+                          <span className="text-blue-900">Used {template.executions} times</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1 pt-2">
+                          <span className="text-xs text-gray-500">Actions:</span>
+                          {template.actions.map((action, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">
+                              {action.replace(/_/g, ' ')}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                          <Button 
+                            size="sm" 
+                            className="bg-brisk-primary hover:bg-brisk-primary-600 flex-1"
+                            onClick={() => handleCloneWorkflow(template)}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Use Template
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openWorkflowDialog(template)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Preview
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeWorkflowTab === 'analytics' && (
+            <div className="space-y-6 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Success Rate</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-green-600">98.5%</div>
+                    <p className="text-sm text-gray-500">Successful executions</p>
+                    <Progress value={98.5} className="mt-2" />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Avg Execution Time</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-blue-900">2.3s</div>
+                    <p className="text-sm text-gray-500">Average duration</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Time Saved</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-purple-600">142hrs</div>
+                    <p className="text-sm text-gray-500">This month</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Top Performing Workflows</CardTitle>
+                  <CardDescription>Workflows with the highest execution count</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[...preBuiltTemplates].sort((a, b) => b.executions - a.executions).slice(0, 5).map((workflow, idx) => (
+                      <div key={workflow.id} className="flex items-center justify-between p-3 border border-blue-900 rounded">
+                        <div className="flex items-center gap-3">
+                          <div className="text-lg font-bold text-blue-900">#{idx + 1}</div>
+                          <div>
+                            <p className="font-medium text-blue-900">{workflow.name}</p>
+                            <p className="text-sm text-gray-500">{workflow.trigger_type} trigger</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-blue-900">{workflow.executions}</p>
+                          <p className="text-xs text-gray-500">executions</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Recent Activity</CardTitle>
+                  <CardDescription>Latest workflow executions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {workflows.length === 0 ? (
+                      <p className="text-center text-gray-500 py-4">No workflow activity yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-500">Workflow execution history will appear here</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Workflow Dialog */}
+      <Dialog open={isWorkflowDialogOpen} onOpenChange={setIsWorkflowDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">
+              {editingWorkflow ? 'Edit Workflow' : 'Create New Workflow'}
+            </DialogTitle>
+            <DialogDescription>
+              Configure your workflow triggers, conditions, and actions
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Workflow Name</Label>
+              <Input
+                value={workflowFormData.name}
+                onChange={(e) => setWorkflowFormData({...workflowFormData, name: e.target.value})}
+                placeholder="e.g., New Client Onboarding"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Description</Label>
+              <Textarea
+                value={workflowFormData.description}
+                onChange={(e) => setWorkflowFormData({...workflowFormData, description: e.target.value})}
+                placeholder="Describe what this workflow does..."
+                rows={3}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Trigger Type</Label>
+              <Select 
+                value={workflowFormData.trigger_type}
+                onValueChange={(value) => setWorkflowFormData({...workflowFormData, trigger_type: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="manual">Manual</SelectItem>
+                  <SelectItem value="event">Event-based</SelectItem>
+                  <SelectItem value="scheduled">Scheduled</SelectItem>
+                  <SelectItem value="conditional">Conditional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {workflowFormData.trigger_type !== 'manual' && (
+              <div className="grid gap-2">
+                <Label className="text-blue-900">Trigger Event</Label>
+                <Input
+                  value={workflowFormData.trigger_event}
+                  onChange={(e) => setWorkflowFormData({...workflowFormData, trigger_event: e.target.value})}
+                  placeholder="e.g., client_created, deadline_approaching"
+                />
+              </div>
+            )}
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Status</Label>
+              <Select 
+                value={workflowFormData.status}
+                onValueChange={(value) => setWorkflowFormData({...workflowFormData, status: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeWorkflowDialog}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveWorkflow}
+              disabled={!workflowFormData.name}
+            >
+              {editingWorkflow ? 'Update Workflow' : 'Create Workflow'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+    )
+  }
 
   const renderWorkflowAutomation = () => (
     <div className="space-y-6">

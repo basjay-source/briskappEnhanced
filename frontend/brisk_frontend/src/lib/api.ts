@@ -89,6 +89,14 @@ class ApiClient {
     return { data: result }
   }
 
+  async patch<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined
+    })
+    return { data: result }
+  }
+
   async getTrialBalance(companyId: string, periodEnd?: string) {
     const params = periodEnd ? `?period_end=${periodEnd}` : ''
     return this.request<{ trial_balance: TrialBalanceEntry[] }>(`/accounts/trial-balance/${companyId}${params}`)
