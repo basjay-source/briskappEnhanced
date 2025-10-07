@@ -31,11 +31,13 @@ interface FinancialStatement {
 
 class ApiClient {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const url = `${API_BASE_URL}${endpoint}`
+    const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
       },
+      credentials: 'same-origin',
       ...options,
     })
     
