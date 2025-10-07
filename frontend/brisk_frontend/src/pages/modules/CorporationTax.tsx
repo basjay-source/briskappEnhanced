@@ -272,7 +272,7 @@ export default function CorporationTax() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Corporation Tax Dashboard</h2>
+            <h2 className="text-2xl font-bold text-blue-900">Corporation Tax Dashboard</h2>
             <p className="text-gray-600 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
           </div>
           <div className="flex items-center gap-3">
@@ -314,7 +314,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-blue-900">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -489,7 +489,7 @@ export default function CorporationTax() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Corporation Tax Computation</CardTitle>
+              <CardTitle className="text-blue-900">Corporation Tax Computation</CardTitle>
               <CardDescription>Automated CT600 computation with real-time calculations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -508,7 +508,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-blue-900">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -594,7 +594,7 @@ export default function CorporationTax() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold">{claim.project}</h3>
+                      <h3 className="font-semibold text-blue-900">{claim.project}</h3>
                       <p className="text-sm text-gray-600">
                         Expenditure: £{claim.expenditure.toLocaleString()} | 
                         Relief: £{claim.relief.toLocaleString()}

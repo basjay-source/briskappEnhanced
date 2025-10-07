@@ -145,21 +145,21 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
+          <CardTitle className="text-blue-900">Recent Activity</CardTitle>
           <CardDescription>Latest accounts production activities</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
               <div>
-                <h3 className="font-semibold">Trial Balance Updated</h3>
+                <h3 className="font-semibold text-blue-900">Trial Balance Updated</h3>
                 <p className="text-sm text-gray-600">Client: ABC Ltd - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
             <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
               <div>
-                <h3 className="font-semibold">Financial Statements Generated</h3>
+                <h3 className="font-semibold text-blue-900">Financial Statements Generated</h3>
                 <p className="text-sm text-gray-600">Client: XYZ Corp - Period: Q4 2024</p>
               </div>
               <Badge variant="secondary">In Progress</Badge>
@@ -188,22 +188,22 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Trial Balance Summary</CardTitle>
+          <CardTitle className="text-blue-900">Trial Balance Summary</CardTitle>
           <CardDescription>Current period trial balance data</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold">Total Debits</h3>
+                <h3 className="font-semibold text-blue-900">Total Debits</h3>
                 <p className="text-2xl font-bold text-blue-600">£208,500</p>
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold">Total Credits</h3>
+                <h3 className="font-semibold text-blue-900">Total Credits</h3>
                 <p className="text-2xl font-bold text-green-600">£208,500</p>
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold">Balance</h3>
+                <h3 className="font-semibold text-blue-900">Balance</h3>
                 <p className="text-2xl font-bold text-gray-600">£0.00</p>
               </div>
             </div>
@@ -225,7 +225,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Adjustment Entries</CardTitle>
+          <CardTitle className="text-blue-900">Adjustment Entries</CardTitle>
           <CardDescription>Year-end and period adjustments</CardDescription>
         </CardHeader>
         <CardContent>
@@ -250,7 +250,7 @@ const AccountsProduction: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Balance Sheet</CardTitle>
+            <CardTitle className="text-blue-900">Balance Sheet</CardTitle>
             <CardDescription>Statement of financial position</CardDescription>
           </CardHeader>
           <CardContent>
@@ -263,7 +263,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Profit & Loss</CardTitle>
+            <CardTitle className="text-blue-900">Profit & Loss</CardTitle>
             <CardDescription>Income statement</CardDescription>
           </CardHeader>
           <CardContent>
@@ -289,7 +289,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Group Consolidation</CardTitle>
+          <CardTitle className="text-blue-900">Group Consolidation</CardTitle>
           <CardDescription>Multi-entity financial consolidation</CardDescription>
         </CardHeader>
         <CardContent>
@@ -314,7 +314,7 @@ const AccountsProduction: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Management Accounts</CardTitle>
+            <CardTitle className="text-blue-900">Management Accounts</CardTitle>
             <CardDescription>Monthly management reporting</CardDescription>
           </CardHeader>
           <CardContent>
@@ -327,7 +327,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Financial Analysis</CardTitle>
+            <CardTitle className="text-blue-900">Financial Analysis</CardTitle>
             <CardDescription>Ratio and trend analysis</CardDescription>
           </CardHeader>
           <CardContent>
@@ -340,7 +340,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Variance Reports</CardTitle>
+            <CardTitle className="text-blue-900">Variance Reports</CardTitle>
             <CardDescription>Budget vs actual analysis</CardDescription>
           </CardHeader>
           <CardContent>
@@ -366,7 +366,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>iXBRL Documents</CardTitle>
+          <CardTitle className="text-blue-900">iXBRL Documents</CardTitle>
           <CardDescription>Interactive XBRL document generation</CardDescription>
         </CardHeader>
         <CardContent>

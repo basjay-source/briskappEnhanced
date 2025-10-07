@@ -407,12 +407,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Current Value</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Current Value</h4>
                       <p className="text-2xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Monthly Trend</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Monthly Trend</h4>
                       <p className="text-sm text-gray-600">Performance over time</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -426,7 +426,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Total Revenue' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Revenue Breakdown</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Revenue Breakdown</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Product Sales</span>
@@ -446,7 +446,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Outstanding Invoices' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Outstanding Invoice Details</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Outstanding Invoice Details</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>INV-001 - ABC Corp</span>
@@ -466,7 +466,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Bank Balance' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Account Balances</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Account Balances</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Current Account</span>
@@ -482,7 +482,7 @@ export default function Bookkeeping() {
                   
                   {kpi.title === 'Monthly Expenses' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Expense Categories</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Expense Categories</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Office Rent - £8,500</span>
@@ -524,7 +524,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Recent Transactions</CardTitle>
+              <CardTitle className="text-blue-900">Recent Transactions</CardTitle>
               <CardDescription>Latest financial transactions</CardDescription>
             </CardHeader>
             <CardContent>
@@ -548,7 +548,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle className="text-blue-900">Quick Actions</CardTitle>
               <CardDescription>Common bookkeeping tasks</CardDescription>
             </CardHeader>
             <CardContent>
@@ -683,7 +683,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Invoices</CardTitle>
+            <CardTitle className="text-blue-900">Recent Invoices</CardTitle>
             <CardDescription>Latest sales invoices and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -715,7 +715,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Invoice Template Management</CardTitle>
+            <CardTitle className="text-blue-900">Invoice Template Management</CardTitle>
             <CardDescription>Customize invoice templates with your company branding</CardDescription>
           </CardHeader>
           <CardContent>
@@ -832,7 +832,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Purchase Functions</CardTitle>
+              <CardTitle className="text-blue-900">Purchase Functions</CardTitle>
               <CardDescription>Quick access to all purchase management features</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -871,7 +871,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="text-blue-900">Recent Activity</CardTitle>
               <CardDescription>Latest purchase transactions and updates</CardDescription>
             </CardHeader>
             <CardContent>
@@ -964,7 +964,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Bank Accounts</CardTitle>
+            <CardTitle className="text-blue-900">Bank Accounts</CardTitle>
             <CardDescription>Connected bank accounts and their balances</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1012,7 +1012,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Journal Entries</CardTitle>
+            <CardTitle className="text-blue-900">Recent Journal Entries</CardTitle>
             <CardDescription>Latest manual entries and adjustments</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1057,7 +1057,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>VAT Summary</CardTitle>
+            <CardTitle className="text-blue-900">VAT Summary</CardTitle>
             <CardDescription>Current quarter VAT position</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1204,7 +1204,7 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Report Status</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Report Status</h4>
                       <p className="text-sm text-gray-600">{report.description}</p>
                       <div className="mt-2">
                         <Badge variant={report.status === 'Generated' ? 'default' : 'secondary'}>
@@ -1214,7 +1214,7 @@ export default function Bookkeeping() {
                       </div>
                     </div>
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Report Metrics</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Report Metrics</h4>
                       <p className="text-sm text-gray-600">Financial performance indicators</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1228,7 +1228,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Profit & Loss' && (
                     <div>
-                      <h4 className="font-semibold mb-3">P&L Summary</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">P&L Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Total Revenue</span>
@@ -1248,7 +1248,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Balance Sheet' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Balance Sheet Summary</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Balance Sheet Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Total Assets</span>
@@ -1268,7 +1268,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Cash Flow Statement' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Cash Flow Summary</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Cash Flow Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Operating Cash Flow</span>
@@ -1432,12 +1432,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Current Status</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.description}</p>
                     </div>
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Performance Score</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Performance Score</h4>
                       <p className="text-sm text-gray-600">Management effectiveness</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1451,7 +1451,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Monthly Management Pack' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Executive Summary</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Executive Summary</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Revenue Growth</span>
@@ -1471,7 +1471,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Budget vs Actual' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Variance Analysis</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Variance Analysis</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Revenue Variance</span>
@@ -1491,7 +1491,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Cash Flow Forecast' && (
                     <div>
-                      <h4 className="font-semibold mb-3">13-Week Forecast</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">13-Week Forecast</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Week 1-4 Projection</span>
@@ -1655,12 +1655,12 @@ export default function Bookkeeping() {
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Current Performance</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Current Performance</h4>
                       <p className="text-2xl font-bold">{report.value}</p>
                       <p className="text-sm text-gray-600">{report.status}</p>
                     </div>
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold mb-2">Analytics Score</h4>
+                      <h4 className="font-semibold text-blue-900 mb-2">Analytics Score</h4>
                       <p className="text-sm text-gray-600">Data quality and insights</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
@@ -1674,7 +1674,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Ratio Analysis' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Key Financial Ratios</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Key Financial Ratios</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Current Ratio</span>
@@ -1694,7 +1694,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Trend Analysis' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Performance Trends</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Performance Trends</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                           <span>Revenue Trend</span>
@@ -1714,7 +1714,7 @@ export default function Bookkeeping() {
                   
                   {report.title === 'Benchmarking Report' && (
                     <div>
-                      <h4 className="font-semibold mb-3">Industry Comparison</h4>
+                      <h4 className="font-semibold text-blue-900 mb-3">Industry Comparison</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                           <span>Revenue per Employee</span>
@@ -1778,7 +1778,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Active Projects</CardTitle>
+            <CardTitle className="text-blue-900">Active Projects</CardTitle>
             <CardDescription>Current projects and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1828,7 +1828,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Budget vs Actual</CardTitle>
+            <CardTitle className="text-blue-900">Budget vs Actual</CardTitle>
             <CardDescription>Current year budget performance</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1877,7 +1877,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Property Portfolio</CardTitle>
+            <CardTitle className="text-blue-900">Property Portfolio</CardTitle>
             <CardDescription>Overview of rental properties</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1925,7 +1925,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Connected Platforms</CardTitle>
+            <CardTitle className="text-blue-900">Connected Platforms</CardTitle>
             <CardDescription>Your eCommerce integrations</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1972,7 +1972,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Documents</CardTitle>
+            <CardTitle className="text-blue-900">Recent Documents</CardTitle>
             <CardDescription>Latest uploaded and scanned documents</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2023,7 +2023,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Available Integrations</CardTitle>
+            <CardTitle className="text-blue-900">Available Integrations</CardTitle>
             <CardDescription>Connect with popular accounting software</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2070,7 +2070,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Active Projects</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Active Projects</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">12</div>
@@ -2079,7 +2079,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Budget</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Budget</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£145,000</div>
@@ -2088,7 +2088,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Completion Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Completion Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">68%</div>
@@ -2099,7 +2099,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Projects</CardTitle>
+            <CardTitle className="text-blue-900">Recent Projects</CardTitle>
             <CardDescription>Latest project activity and status updates</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2171,7 +2171,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Today</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Today</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brisk-primary">7.5h</div>
@@ -2180,7 +2180,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Week</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Week</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">38h</div>
@@ -2189,7 +2189,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Billable</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Billable</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">32h</div>
@@ -2198,7 +2198,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Utilization</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Utilization</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">84%</div>
@@ -2209,7 +2209,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Time Entries</CardTitle>
+            <CardTitle className="text-blue-900">Recent Time Entries</CardTitle>
             <CardDescription>Latest time tracking entries across projects</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2267,7 +2267,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Revenue</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Revenue</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£89,500</div>
@@ -2276,7 +2276,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Costs</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Costs</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£62,300</div>
@@ -2285,7 +2285,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Profit Margin</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Profit Margin</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">30.4%</div>
@@ -2296,7 +2296,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Project Cost Breakdown</CardTitle>
+            <CardTitle className="text-blue-900">Project Cost Breakdown</CardTitle>
             <CardDescription>Detailed cost analysis by project</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2308,7 +2308,7 @@ export default function Bookkeeping() {
               ].map((project, index) => (
                 <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{project.name}</h3>
+                    <h3 className="font-medium text-blue-900">{project.name}</h3>
                     <Badge className={`${project.margin > 30 ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`}>
                       {project.margin}% margin
                     </Badge>
@@ -2368,7 +2368,7 @@ export default function Bookkeeping() {
           <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <Target className="h-8 w-8 text-brisk-primary mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Project Summary</h3>
+              <h3 className="font-semibold text-blue-900 mb-1">Project Summary</h3>
               <p className="text-sm text-gray-600 mb-3">Overview of all project metrics</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2380,7 +2380,7 @@ export default function Bookkeeping() {
           <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <Clock className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Time Analysis</h3>
+              <h3 className="font-semibold text-blue-900 mb-1">Time Analysis</h3>
               <p className="text-sm text-gray-600 mb-3">Detailed time tracking reports</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2392,7 +2392,7 @@ export default function Bookkeeping() {
           <Card className="border-2 border-blue-900">
             <CardContent className="p-6 text-center">
               <PoundSterling className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Profitability</h3>
+              <h3 className="font-semibold text-blue-900 mb-1">Profitability</h3>
               <p className="text-sm text-gray-600 mb-3">Project profitability analysis</p>
               <div className="flex gap-2 justify-center">
                 <Button size="sm" variant="outline">Generate</Button>
@@ -2404,7 +2404,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Reports</CardTitle>
+            <CardTitle className="text-blue-900">Recent Reports</CardTitle>
             <CardDescription>Generated project reports and scheduled deliveries</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2461,7 +2461,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Annual Budget</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Annual Budget</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brisk-primary">£450,000</div>
@@ -2470,7 +2470,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Allocated</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Allocated</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">£380,000</div>
@@ -2479,7 +2479,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Remaining</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Remaining</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">£70,000</div>
@@ -2488,7 +2488,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Departments</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Departments</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">8</div>
@@ -2499,7 +2499,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Budget Categories</CardTitle>
+            <CardTitle className="text-blue-900">Budget Categories</CardTitle>
             <CardDescription>Budget allocation by department and category</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2512,7 +2512,7 @@ export default function Bookkeeping() {
               ].map((budget, index) => (
                 <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{budget.category}</h3>
+                    <h3 className="font-medium text-blue-900">{budget.category}</h3>
                     <Badge className={`${budget.percentage > 85 ? 'bg-red-100 text-red-800' : budget.percentage > 75 ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
                       {budget.percentage}% used
                     </Badge>
@@ -2569,7 +2569,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Budget Health</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Budget Health</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">Good</div>
@@ -2578,7 +2578,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Variance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Variance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">-5.2%</div>
@@ -2587,7 +2587,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Burn Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Burn Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brisk-primary">£31,667</div>
@@ -2596,7 +2596,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Forecast</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Forecast</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">£425,000</div>
@@ -2607,7 +2607,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Monthly Budget Performance</CardTitle>
+            <CardTitle className="text-blue-900">Monthly Budget Performance</CardTitle>
             <CardDescription>Budget vs actual spending by month</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2666,7 +2666,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">6-Month Forecast</CardTitle>
+              <CardTitle className="text-lg text-blue-900">6-Month Forecast</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brisk-primary">£275,000</div>
@@ -2675,7 +2675,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Growth Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Growth Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">+12.5%</div>
@@ -2684,7 +2684,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Confidence</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Confidence</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">87%</div>
@@ -2695,7 +2695,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Forecast Scenarios</CardTitle>
+            <CardTitle className="text-blue-900">Forecast Scenarios</CardTitle>
             <CardDescription>Different financial scenarios and their projections</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2707,7 +2707,7 @@ export default function Bookkeeping() {
               ].map((scenario, index) => (
                 <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium">{scenario.scenario}</h3>
+                    <h3 className="font-medium text-blue-900">{scenario.scenario}</h3>
                     <Badge className={`${scenario.probability > 70 ? 'bg-green-100 text-green-800' : scenario.probability > 50 ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}`}>
                       {scenario.probability}% likely
                     </Badge>
@@ -2758,7 +2758,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Revenue Variance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Revenue Variance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">+£15,000</div>
@@ -2767,7 +2767,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Cost Variance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Cost Variance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-red-600">+£8,500</div>
@@ -2776,7 +2776,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Net Variance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Net Variance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brisk-primary">+£6,500</div>
@@ -2785,7 +2785,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Variance %</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Variance %</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">2.8%</div>
@@ -2796,7 +2796,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Detailed Variance Analysis</CardTitle>
+            <CardTitle className="text-blue-900">Detailed Variance Analysis</CardTitle>
             <CardDescription>Line-by-line comparison of budget vs actual</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2857,7 +2857,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Properties</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Properties</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">15</div>
@@ -2866,7 +2866,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Occupied</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Occupied</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">13</div>
@@ -2875,7 +2875,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Monthly Income</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Monthly Income</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£18,500</div>
@@ -2884,7 +2884,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Portfolio Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Portfolio Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">£2.4M</div>
@@ -2895,7 +2895,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Property List</CardTitle>
+            <CardTitle className="text-blue-900">Property List</CardTitle>
             <CardDescription>Overview of all properties in your portfolio</CardDescription>
           </CardHeader>
           <CardContent>
@@ -2956,7 +2956,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Active Tenants</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Active Tenants</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">13</div>
@@ -2965,7 +2965,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Lease Renewals</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Lease Renewals</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">3</div>
@@ -2974,7 +2974,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Outstanding Rent</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Outstanding Rent</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£2,400</div>
@@ -2983,7 +2983,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Satisfaction</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Satisfaction</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">4.2/5</div>
@@ -2994,7 +2994,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Tenant Directory</CardTitle>
+            <CardTitle className="text-blue-900">Tenant Directory</CardTitle>
             <CardDescription>Complete list of current and past tenants</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3053,7 +3053,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£18,500</div>
@@ -3062,7 +3062,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">YTD Income</CardTitle>
+              <CardTitle className="text-lg text-blue-900">YTD Income</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£185,000</div>
@@ -3071,7 +3071,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Collection Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Collection Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">96%</div>
@@ -3080,7 +3080,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Yield</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Yield</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">7.8%</div>
@@ -3091,7 +3091,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Rent Payments</CardTitle>
+            <CardTitle className="text-blue-900">Recent Rent Payments</CardTitle>
             <CardDescription>Latest rental income transactions</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3150,7 +3150,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£3,200</div>
@@ -3159,7 +3159,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">YTD Expenses</CardTitle>
+              <CardTitle className="text-lg text-blue-900">YTD Expenses</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£28,500</div>
@@ -3168,7 +3168,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Maintenance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Maintenance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£15,200</div>
@@ -3177,7 +3177,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Net Income</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Net Income</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£156,500</div>
@@ -3188,7 +3188,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Expenses</CardTitle>
+            <CardTitle className="text-blue-900">Recent Expenses</CardTitle>
             <CardDescription>Latest property-related expenditures</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3247,7 +3247,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Connected</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Connected</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">5</div>
@@ -3256,7 +3256,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Sales</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Sales</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£45,230</div>
@@ -3265,7 +3265,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Orders</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Orders</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">1,247</div>
@@ -3274,7 +3274,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Last Sync</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Last Sync</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">2h</div>
@@ -3285,7 +3285,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Platform Integrations</CardTitle>
+            <CardTitle className="text-blue-900">Platform Integrations</CardTitle>
             <CardDescription>Your connected eCommerce platforms and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3345,7 +3345,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Today's Orders</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Today's Orders</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">47</div>
@@ -3354,7 +3354,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Pending</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Pending</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">23</div>
@@ -3363,7 +3363,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Shipped</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Shipped</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">156</div>
@@ -3372,7 +3372,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Returns</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Returns</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">8</div>
@@ -3383,7 +3383,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
+            <CardTitle className="text-blue-900">Recent Orders</CardTitle>
             <CardDescription>Latest orders from all connected platforms</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3446,7 +3446,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Pending</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Pending</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£8,450</div>
@@ -3455,7 +3455,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£42,300</div>
@@ -3464,7 +3464,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Fees</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Fees</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£3,180</div>
@@ -3473,7 +3473,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Net Income</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Net Income</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£39,120</div>
@@ -3484,7 +3484,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Settlement History</CardTitle>
+            <CardTitle className="text-blue-900">Settlement History</CardTitle>
             <CardDescription>Recent platform settlements and payouts</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3569,7 +3569,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Outstanding</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£23,450</div>
@@ -3578,7 +3578,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Overdue</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Overdue</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£8,200</div>
@@ -3587,7 +3587,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Paid This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Paid This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£45,600</div>
@@ -3596,7 +3596,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£1,850</div>
@@ -3607,7 +3607,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Invoices</CardTitle>
+            <CardTitle className="text-blue-900">Recent Invoices</CardTitle>
             <CardDescription>Latest invoice activity and payment status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3657,7 +3657,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Invoice Template Management</CardTitle>
+            <CardTitle className="text-blue-900">Invoice Template Management</CardTitle>
             <CardDescription>Customize invoice templates with your company branding</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3691,7 +3691,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Pending Quotes</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Pending Quotes</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-600">15</div>
@@ -3700,7 +3700,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Accepted</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Accepted</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">8</div>
@@ -3709,7 +3709,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Conversion Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Conversion Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">68%</div>
@@ -3718,7 +3718,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£34,750</div>
@@ -3729,7 +3729,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Quotes</CardTitle>
+            <CardTitle className="text-blue-900">Recent Quotes</CardTitle>
             <CardDescription>Latest quotes and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3805,7 +3805,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Customers</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Customers</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">156</div>
@@ -3814,7 +3814,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">New This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">8</div>
@@ -3823,7 +3823,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Top Customer Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Top Customer Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£12,450</div>
@@ -3832,7 +3832,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Order</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Order</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">£1,850</div>
@@ -3843,7 +3843,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Customer Database</CardTitle>
+            <CardTitle className="text-blue-900">Customer Database</CardTitle>
             <CardDescription>Complete customer information and transaction history</CardDescription>
           </CardHeader>
           <CardContent>
@@ -3917,7 +3917,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Products</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Products</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">45</div>
@@ -3926,7 +3926,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Services</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Services</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">28</div>
@@ -3935,7 +3935,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Top Seller</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Top Seller</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£45,600</div>
@@ -3944,7 +3944,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Price</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Price</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">£1,245</div>
@@ -3955,7 +3955,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Product Catalog</CardTitle>
+            <CardTitle className="text-blue-900">Product Catalog</CardTitle>
             <CardDescription>Complete product and service listings with pricing</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4055,7 +4055,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Outstanding Bills</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Outstanding Bills</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£18,750</div>
@@ -4064,7 +4064,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Overdue</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Overdue</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£5,200</div>
@@ -4073,7 +4073,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Paid This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Paid This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£32,400</div>
@@ -4082,7 +4082,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£1,245</div>
@@ -4093,7 +4093,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Bills</CardTitle>
+            <CardTitle className="text-blue-900">Recent Bills</CardTitle>
             <CardDescription>Latest supplier bills and payment status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4196,7 +4196,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Active POs</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Active POs</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-600">12</div>
@@ -4205,7 +4205,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Pending Approval</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">5</div>
@@ -4214,7 +4214,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Completed</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Completed</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">28</div>
@@ -4223,7 +4223,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Value</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£45,600</div>
@@ -4234,7 +4234,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Purchase Orders</CardTitle>
+            <CardTitle className="text-blue-900">Recent Purchase Orders</CardTitle>
             <CardDescription>Latest purchase orders and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4309,7 +4309,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Suppliers</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Suppliers</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">89</div>
@@ -4318,7 +4318,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">New This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">3</div>
@@ -4327,7 +4327,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Top Supplier Spend</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Top Supplier Spend</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£8,450</div>
@@ -4336,7 +4336,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Payment</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Payment</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">£1,245</div>
@@ -4347,7 +4347,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Supplier Database</CardTitle>
+            <CardTitle className="text-blue-900">Supplier Database</CardTitle>
             <CardDescription>Complete supplier information and payment terms</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4420,7 +4420,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£12,450</div>
@@ -4429,7 +4429,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Pending Approval</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£2,850</div>
@@ -4438,7 +4438,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Reimbursable</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Reimbursable</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-600">£1,650</div>
@@ -4447,7 +4447,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Average Expense</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Average Expense</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">£185</div>
@@ -4458,7 +4458,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Expenses</CardTitle>
+            <CardTitle className="text-blue-900">Recent Expenses</CardTitle>
             <CardDescription>Latest expense submissions and approvals</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4509,7 +4509,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Expense Categories</CardTitle>
+              <CardTitle className="text-blue-900">Expense Categories</CardTitle>
               <CardDescription>Breakdown by expense category</CardDescription>
             </CardHeader>
             <CardContent>
@@ -4541,7 +4541,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Monthly Trend</CardTitle>
+              <CardTitle className="text-blue-900">Monthly Trend</CardTitle>
               <CardDescription>Expense trends over the last 6 months</CardDescription>
             </CardHeader>
             <CardContent>
@@ -4623,7 +4623,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Balance</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Balance</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£125,430</div>
@@ -4632,7 +4632,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Active Accounts</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Active Accounts</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">8</div>
@@ -4641,7 +4641,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Monthly Inflow</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Monthly Inflow</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-600">£45,230</div>
@@ -4650,7 +4650,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Monthly Outflow</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Monthly Outflow</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£32,180</div>
@@ -4661,7 +4661,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Bank Accounts</CardTitle>
+            <CardTitle className="text-blue-900">Bank Accounts</CardTitle>
             <CardDescription>All connected bank accounts and their current balances</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4757,7 +4757,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">This Month</CardTitle>
+              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">1,245</div>
@@ -4766,7 +4766,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Uncategorized</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Uncategorized</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">23</div>
@@ -4775,7 +4775,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Income</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Income</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£45,230</div>
@@ -4784,7 +4784,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Expenses</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Expenses</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">£32,180</div>
@@ -4795,7 +4795,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
+            <CardTitle className="text-blue-900">Recent Transactions</CardTitle>
             <CardDescription>Latest bank transactions across all accounts</CardDescription>
           </CardHeader>
           <CardContent>
@@ -4869,7 +4869,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Reconciled</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Reconciled</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£123,450</div>
@@ -4878,7 +4878,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Outstanding</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">£2,850</div>
@@ -4887,7 +4887,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Discrepancies</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Discrepancies</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-red-600">3</div>
@@ -4896,7 +4896,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Match Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Match Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">97.8%</div>
@@ -4908,7 +4908,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Reconciliation Status</CardTitle>
+              <CardTitle className="text-blue-900">Reconciliation Status</CardTitle>
               <CardDescription>Current reconciliation status by account</CardDescription>
             </CardHeader>
             <CardContent>
@@ -4947,7 +4947,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Outstanding Items</CardTitle>
+              <CardTitle className="text-blue-900">Outstanding Items</CardTitle>
               <CardDescription>Items requiring manual reconciliation</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5009,7 +5009,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Active Feeds</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Active Feeds</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">8</div>
@@ -5018,7 +5018,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Last Sync</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Last Sync</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">2 hrs</div>
@@ -5027,7 +5027,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">New Transactions</CardTitle>
+              <CardTitle className="text-lg text-blue-900">New Transactions</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-blue-600">45</div>
@@ -5036,7 +5036,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Sync Success</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Sync Success</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">99.2%</div>
@@ -5047,7 +5047,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Bank Feed Status</CardTitle>
+            <CardTitle className="text-blue-900">Bank Feed Status</CardTitle>
             <CardDescription>Status and configuration of all bank feed connections</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5103,7 +5103,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Feed Configuration</CardTitle>
+            <CardTitle className="text-blue-900">Feed Configuration</CardTitle>
             <CardDescription>Configure automatic categorization rules and sync settings</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5173,7 +5173,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Total Revenue</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Revenue</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-green-600">£125,430</div>
@@ -5182,7 +5182,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Growth Rate</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Growth Rate</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-brisk-primary">+18.5%</div>
@@ -5191,7 +5191,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Best Platform</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Best Platform</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-orange-600">Amazon</div>
@@ -5200,7 +5200,7 @@ export default function Bookkeeping() {
           </Card>
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle className="text-lg">Conversion</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Conversion</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-purple-600">3.2%</div>
@@ -5212,7 +5212,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Revenue by Platform</CardTitle>
+              <CardTitle className="text-blue-900">Revenue by Platform</CardTitle>
               <CardDescription>Sales breakdown by eCommerce platform</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5241,7 +5241,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Top Products</CardTitle>
+              <CardTitle className="text-blue-900">Top Products</CardTitle>
               <CardDescription>Best-selling products across all platforms</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5344,7 +5344,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Account Categories</CardTitle>
+            <CardTitle className="text-blue-900">Account Categories</CardTitle>
             <CardDescription>Organized by account type and classification</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5467,7 +5467,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Recent Journal Entries</CardTitle>
+            <CardTitle className="text-blue-900">Recent Journal Entries</CardTitle>
             <CardDescription>Latest journal entries and their status</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5538,7 +5538,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Adjustment Categories</CardTitle>
+            <CardTitle className="text-blue-900">Adjustment Categories</CardTitle>
             <CardDescription>Common adjustment types and their impact</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5551,7 +5551,7 @@ export default function Bookkeeping() {
               ].map((adjustment, index) => (
                 <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium">{adjustment.type}</h3>
+                    <h3 className="font-medium text-blue-900">{adjustment.type}</h3>
                     <Badge>{adjustment.count} entries</Badge>
                   </div>
                   <p className="text-sm text-gray-600 mb-2">{adjustment.description}</p>
@@ -5587,7 +5587,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Reversal History</CardTitle>
+            <CardTitle className="text-blue-900">Reversal History</CardTitle>
             <CardDescription>Recently reversed journal entries</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5641,7 +5641,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Available Templates</CardTitle>
+            <CardTitle className="text-blue-900">Available Templates</CardTitle>
             <CardDescription>Pre-configured journal entry templates</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5654,7 +5654,7 @@ export default function Bookkeeping() {
               ].map((template, index) => (
                 <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium">{template.name}</h3>
+                    <h3 className="font-medium text-blue-900">{template.name}</h3>
                     <Badge variant="outline">{template.category}</Badge>
                   </div>
                   <p className="text-sm text-gray-600 mb-2">{template.description}</p>
@@ -5754,7 +5754,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>VAT Return History</CardTitle>
+            <CardTitle className="text-blue-900">VAT Return History</CardTitle>
             <CardDescription>Previous VAT return submissions</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5821,13 +5821,13 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Current VAT Scheme</CardTitle>
+            <CardTitle className="text-blue-900">Current VAT Scheme</CardTitle>
             <CardDescription>Your active VAT registration details</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="p-4 border-2 border-blue-900 rounded-[2px] bg-blue-50">
-                <h3 className="font-medium text-blue-900">Standard VAT Scheme</h3>
+                <h3 className="font-medium text-blue-900 text-blue-900">Standard VAT Scheme</h3>
                 <p className="text-sm text-blue-700 mt-1">Standard rate: 20%</p>
                 <p className="text-sm text-blue-700">Registration: GB123456789</p>
                 <p className="text-sm text-blue-700">Effective from: 1 April 2023</p>
@@ -5852,7 +5852,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Available VAT Schemes</CardTitle>
+            <CardTitle className="text-blue-900">Available VAT Schemes</CardTitle>
             <CardDescription>Compare different VAT scheme options</CardDescription>
           </CardHeader>
           <CardContent>
@@ -5912,7 +5912,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>VAT Summary</CardTitle>
+              <CardTitle className="text-blue-900">VAT Summary</CardTitle>
               <CardDescription>Current period overview</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5935,7 +5935,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>VAT by Rate</CardTitle>
+              <CardTitle className="text-blue-900">VAT by Rate</CardTitle>
               <CardDescription>Breakdown by VAT rates</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5958,7 +5958,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Compliance Status</CardTitle>
+              <CardTitle className="text-blue-900">Compliance Status</CardTitle>
               <CardDescription>VAT compliance indicators</CardDescription>
             </CardHeader>
             <CardContent>
@@ -5982,7 +5982,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>VAT Analysis by Month</CardTitle>
+            <CardTitle className="text-blue-900">VAT Analysis by Month</CardTitle>
             <CardDescription>Monthly VAT liability trends</CardDescription>
           </CardHeader>
           <CardContent>
@@ -6036,7 +6036,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Compliance Checklist</CardTitle>
+              <CardTitle className="text-blue-900">Compliance Checklist</CardTitle>
               <CardDescription>Essential VAT compliance requirements</CardDescription>
             </CardHeader>
             <CardContent>
@@ -6068,7 +6068,7 @@ export default function Bookkeeping() {
 
           <Card className="border-2 border-blue-900">
             <CardHeader>
-              <CardTitle>Upcoming Deadlines</CardTitle>
+              <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
               <CardDescription>Important VAT dates and deadlines</CardDescription>
             </CardHeader>
             <CardContent>
@@ -6103,7 +6103,7 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-blue-900">
           <CardHeader>
-            <CardTitle>Compliance Alerts</CardTitle>
+            <CardTitle className="text-blue-900">Compliance Alerts</CardTitle>
             <CardDescription>Recent compliance notifications and actions required</CardDescription>
           </CardHeader>
           <CardContent>

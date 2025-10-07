@@ -360,7 +360,7 @@ export default function PersonalTax() {
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-2">Key Insights</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2">Key Insights</h4>
                     <ul className="text-sm space-y-1">
                       <li>• Strong performance in Q2 with 15% growth</li>
                       <li>• Seasonal trends showing consistent improvement</li>
@@ -457,12 +457,12 @@ export default function PersonalTax() {
                     <div className="space-y-6">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                          <h4 className="font-semibold mb-2">Current Period</h4>
+                          <h4 className="font-semibold text-blue-900 mb-2">Current Period</h4>
                           <p className="text-2xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                          <h4 className="font-semibold mb-2">Tax Efficiency</h4>
+                          <h4 className="font-semibold text-blue-900 mb-2">Tax Efficiency</h4>
                           <p className="text-sm text-gray-600">Personal tax optimization</p>
                           <div className="mt-2">
                             <div className="flex justify-between text-xs">
@@ -476,7 +476,7 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'Active SA Returns' && (
                         <div>
-                          <h4 className="font-semibold mb-3">Return Breakdown</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">Return Breakdown</h4>
                           <div className="space-y-2">
                             <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>In Progress</span>
@@ -496,7 +496,7 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'Tax Saved (YTD)' && (
                         <div>
-                          <h4 className="font-semibold mb-3">Savings Breakdown</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">Savings Breakdown</h4>
                           <div className="space-y-2">
                             <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                               <span>Pension Contributions</span>
@@ -516,7 +516,7 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'CGT Optimization' && (
                         <div>
-                          <h4 className="font-semibold mb-3">CGT Opportunities</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">CGT Opportunities</h4>
                           <div className="space-y-2">
                             <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
                               <span>Timing Optimization</span>
@@ -559,7 +559,7 @@ export default function PersonalTax() {
               <div className={isMobile ? '' : 'lg:col-span-2'}>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Recent SA Returns</CardTitle>
+                    <CardTitle className="text-blue-900">Recent SA Returns</CardTitle>
                     <CardDescription>Current tax year progress</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -569,7 +569,7 @@ export default function PersonalTax() {
                           <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                             {getStatusIcon(saReturn.status)}
                             <div className="flex-1">
-                              <h4 className="font-medium">{saReturn.client}</h4>
+                              <h4 className="font-medium text-blue-900">{saReturn.client}</h4>
                               <p className="text-sm text-gray-600">Tax Year: {saReturn.taxYear}</p>
                               <div className="flex items-center gap-2 mt-1">
                                 <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
@@ -652,7 +652,7 @@ export default function PersonalTax() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Upcoming Deadlines</CardTitle>
+                    <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
@@ -693,7 +693,7 @@ export default function PersonalTax() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>SA100 Returns Management</CardTitle>
+                    <CardTitle className="text-blue-900">SA100 Returns Management</CardTitle>
                     <CardDescription>Create and manage Self Assessment returns</CardDescription>
                   </div>
                   <Button>
@@ -765,7 +765,7 @@ export default function PersonalTax() {
                             <div className="flex items-center gap-4">
                               {getStatusIcon(saReturn.status)}
                               <div>
-                                <h3 className="font-semibold">{saReturn.client}</h3>
+                                <h3 className="font-semibold text-blue-900">{saReturn.client}</h3>
                                 <p className="text-sm text-gray-600">Tax Year: {saReturn.taxYear}</p>
                                 <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
@@ -800,7 +800,7 @@ export default function PersonalTax() {
       <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Capital Gains Tax Calculator</CardTitle>
+                <CardTitle className="text-blue-900">Capital Gains Tax Calculator</CardTitle>
                 <CardDescription>Calculate CGT liability and optimization opportunities</CardDescription>
               </CardHeader>
               <CardContent>
@@ -830,7 +830,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">CGT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">CGT Calculation</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -866,7 +866,7 @@ export default function PersonalTax() {
       <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Tax Optimization Opportunities</CardTitle>
+                <CardTitle className="text-blue-900">Tax Optimization Opportunities</CardTitle>
                 <CardDescription>AI-powered recommendations for tax savings</CardDescription>
               </CardHeader>
               <CardContent>
@@ -876,7 +876,7 @@ export default function PersonalTax() {
                       <CardContent className="p-4">
                         <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                           <div>
-                            <h3 className="font-semibold">{opportunity.client}</h3>
+                            <h3 className="font-semibold text-blue-900">{opportunity.client}</h3>
                             <p className="text-sm font-medium text-brisk-primary">{opportunity.opportunity}</p>
                             <p className="text-sm text-gray-600">{opportunity.description}</p>
                           </div>
@@ -938,7 +938,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">IHT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">IHT Calculation</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -963,7 +963,7 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Gift Planning</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">Gift Planning</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
@@ -1030,7 +1030,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Annual Allowance</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">Annual Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -1055,7 +1055,7 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Lifetime Allowance</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">Lifetime Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -1102,7 +1102,7 @@ export default function PersonalTax() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Marriage Allowance</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">Marriage Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
@@ -1126,7 +1126,7 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Child Benefit</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">Child Benefit</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
@@ -1151,7 +1151,7 @@ export default function PersonalTax() {
                   </div>
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg">Family Investment Planning</CardTitle>
+                      <CardTitle className="text-lg text-blue-900">Family Investment Planning</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-4 md:grid-cols-3">
@@ -1194,27 +1194,27 @@ export default function PersonalTax() {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>HMRC Filing and Submissions</CardTitle>
+            <CardTitle className="text-blue-900">HMRC Filing and Submissions</CardTitle>
             <CardDescription>Submit returns and track filing status</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="p-4 bg-blue-50 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900">Ready for Filing</h3>
+                <h3 className="font-semibold text-blue-900 text-blue-900">Ready for Filing</h3>
                 <p className="text-sm text-blue-700">3 SA returns completed and ready for HMRC submission</p>
                 <Button className="mt-2" size="sm">
                   Submit to HMRC
                 </Button>
               </div>
               <div className="p-4 bg-green-50 rounded-[2px]">
-                <h3 className="font-semibold text-green-900">Successfully Filed</h3>
+                <h3 className="font-semibold text-blue-900 text-green-900">Successfully Filed</h3>
                 <p className="text-sm text-green-700">8 returns filed this month with confirmation receipts</p>
                 <Button variant="outline" className="mt-2" size="sm">
                   View Receipts
                 </Button>
               </div>
               <div className="p-4 bg-orange-50 rounded-[2px]">
-                <h3 className="font-semibold text-orange-900">Pending Review</h3>
+                <h3 className="font-semibold text-blue-900 text-orange-900">Pending Review</h3>
                 <p className="text-sm text-orange-700">2 returns require client approval before filing</p>
                 <Button variant="outline" className="mt-2" size="sm">
                   Send for Approval

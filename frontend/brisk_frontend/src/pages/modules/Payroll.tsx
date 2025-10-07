@@ -186,7 +186,7 @@ export default function Payroll() {
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h4 className="font-semibold mb-2">Department Breakdown</h4>
+                <h4 className="font-semibold text-blue-900 mb-2">Department Breakdown</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Development</span>
@@ -207,7 +207,7 @@ export default function Payroll() {
                 </div>
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h4 className="font-semibold mb-2">Employment Status</h4>
+                <h4 className="font-semibold text-blue-900 mb-2">Employment Status</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Full-time</span>
@@ -240,7 +240,7 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold mb-2">Cost Breakdown</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">Cost Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Gross Pay</span>
@@ -272,7 +272,7 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold mb-2">Submission History</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">Submission History</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span>December 2024</span>
@@ -304,7 +304,7 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold mb-2">Action Items</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">Action Items</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span>New starter forms</span>
@@ -437,7 +437,7 @@ export default function Payroll() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Current Pay Period</CardTitle>
+                <CardTitle className="text-blue-900">Current Pay Period</CardTitle>
                 <CardDescription>December 2024 - Monthly</CardDescription>
               </CardHeader>
               <CardContent>
@@ -460,7 +460,7 @@ export default function Payroll() {
             
             <Card>
               <CardHeader>
-                <CardTitle>Payroll Checklist</CardTitle>
+                <CardTitle className="text-blue-900">Payroll Checklist</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">

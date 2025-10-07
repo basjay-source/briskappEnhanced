@@ -251,7 +251,7 @@ export default function EcosystemHub() {
     <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ecosystem Hub</h1>
+          <h1 className="text-3xl font-bold text-blue-900">Ecosystem Hub</h1>
           <p className="text-gray-600 mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">

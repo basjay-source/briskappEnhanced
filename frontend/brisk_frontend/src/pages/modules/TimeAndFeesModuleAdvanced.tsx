@@ -304,7 +304,7 @@ export default function TimeAndFeesModuleAdvanced() {
                     <div key={entry.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-medium">{entry.jobTitle}</h4>
+                          <h4 className="font-medium text-blue-900">{entry.jobTitle}</h4>
                           {getStatusIcon(entry.status)}
                           <Badge className={getStatusColor(entry.status)}>
                             {entry.status}
@@ -339,7 +339,7 @@ export default function TimeAndFeesModuleAdvanced() {
                       <div className="flex items-start gap-2">
                         {getInsightIcon(insight.type)}
                         <div className="flex-1">
-                          <h4 className="font-medium text-sm">{insight.title}</h4>
+                          <h4 className="font-medium text-blue-900 text-sm">{insight.title}</h4>
                           <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
                           {insight.actionable && (
                             <Button size="sm" variant="outline" className="mt-2">
@@ -448,7 +448,7 @@ export default function TimeAndFeesModuleAdvanced() {
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Time Entries</CardTitle>
+              <CardTitle className="text-blue-900">Time Entries</CardTitle>
               <CardDescription>Manage and review time tracking entries</CardDescription>
             </CardHeader>
             <CardContent>
@@ -465,7 +465,7 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Analytics Dashboard</CardTitle>
+            <CardTitle className="text-blue-900">Analytics Dashboard</CardTitle>
             <CardDescription>Performance metrics and trends</CardDescription>
           </CardHeader>
           <CardContent>
@@ -494,7 +494,7 @@ export default function TimeAndFeesModuleAdvanced() {
                   <div className="flex items-start gap-3">
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
-                      <h4 className="font-medium">{insight.title}</h4>
+                      <h4 className="font-medium text-blue-900">{insight.title}</h4>
                       <p className="text-gray-600 mt-1">{insight.description}</p>
                       <div className="flex items-center gap-2 mt-3">
                         <Badge variant={insight.impact === 'high' ? 'destructive' : insight.impact === 'medium' ? 'default' : 'secondary'}>
@@ -518,7 +518,7 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Automation Hub</CardTitle>
+            <CardTitle className="text-blue-900">Automation Hub</CardTitle>
             <CardDescription>Configure automated workflows and rules</CardDescription>
           </CardHeader>
           <CardContent>
@@ -534,7 +534,7 @@ export default function TimeAndFeesModuleAdvanced() {
       return (
         <Card>
           <CardHeader>
-            <CardTitle>Capacity Planning</CardTitle>
+            <CardTitle className="text-blue-900">Capacity Planning</CardTitle>
             <CardDescription>Plan and optimize team capacity</CardDescription>
           </CardHeader>
           <CardContent>
@@ -604,7 +604,7 @@ export default function TimeAndFeesModuleAdvanced() {
         <div className="p-6 border-b-2 border-blue-900 bg-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-blue-900">
                 {menuStructure.find(t => t.id === activeMainTab)?.label || 'Dashboard'}
               </h2>
               <p className="text-gray-600 mt-1">

@@ -168,7 +168,7 @@ export default function VAT() {
                     <div className="flex items-center gap-3">
                       {getStatusIcon(vatReturn.status)}
                       <div>
-                        <CardTitle className="text-lg">VAT Return - {vatReturn.period}</CardTitle>
+                        <CardTitle className="text-lg text-blue-900">VAT Return - {vatReturn.period}</CardTitle>
                         <CardDescription>Due: {vatReturn.dueDate}</CardDescription>
                       </div>
                     </div>
@@ -231,7 +231,7 @@ export default function VAT() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Settings className="h-5 w-5 text-brisk-primary" />
-                      <CardTitle className="text-lg">{scheme.name}</CardTitle>
+                      <CardTitle className="text-lg text-blue-900">{scheme.name}</CardTitle>
                     </div>
                     <Badge variant={scheme.active ? 'default' : 'secondary'}>
                       {scheme.active ? 'Active' : 'Inactive'}
@@ -277,7 +277,7 @@ export default function VAT() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5 text-brisk-primary" />
-                  <CardTitle className="text-lg">VAT Liability Trend</CardTitle>
+                  <CardTitle className="text-lg text-blue-900">VAT Liability Trend</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -293,7 +293,7 @@ export default function VAT() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Calculator className="h-5 w-5 text-brisk-primary" />
-                  <CardTitle className="text-lg">VAT Rate Analysis</CardTitle>
+                  <CardTitle className="text-lg text-blue-900">VAT Rate Analysis</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -309,7 +309,7 @@ export default function VAT() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-brisk-primary" />
-                  <CardTitle className="text-lg">Submission History</CardTitle>
+                  <CardTitle className="text-lg text-blue-900">Submission History</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -335,7 +335,7 @@ export default function VAT() {
           <div className="grid gap-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">MTD Compliance Status</CardTitle>
+                <CardTitle className="text-lg text-blue-900">MTD Compliance Status</CardTitle>
                 <CardDescription>Making Tax Digital compliance overview</CardDescription>
               </CardHeader>
               <CardContent>
@@ -374,7 +374,7 @@ export default function VAT() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Audit Trail</CardTitle>
+                <CardTitle className="text-lg text-blue-900">Audit Trail</CardTitle>
                 <CardDescription>Recent VAT-related activities and changes</CardDescription>
               </CardHeader>
               <CardContent>

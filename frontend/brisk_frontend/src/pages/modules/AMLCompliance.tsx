@@ -204,12 +204,12 @@ export default function AMLCompliance() {
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold mb-2">Current Status</h4>
+                        <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
                       <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold mb-2">Compliance Score</h4>
+                        <h4 className="font-semibold text-blue-900 mb-2">Compliance Score</h4>
                         <p className="text-sm text-gray-600">AML regulatory compliance</p>
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
@@ -223,7 +223,7 @@ export default function AMLCompliance() {
                     
                     {kpi.title === 'Active Cases' && (
                       <div>
-                        <h4 className="font-semibold mb-3">Case Risk Profile</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Case Risk Profile</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
                             <span>Low Risk</span>

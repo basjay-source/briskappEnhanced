@@ -215,12 +215,12 @@ export default function DocuSignage() {
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold mb-2">Current Status</h4>
+                        <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
                         <p className="text-2xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
                       <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold mb-2">Performance Score</h4>
+                        <h4 className="font-semibold text-blue-900 mb-2">Performance Score</h4>
                         <p className="text-sm text-gray-600">E-signature efficiency</p>
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">

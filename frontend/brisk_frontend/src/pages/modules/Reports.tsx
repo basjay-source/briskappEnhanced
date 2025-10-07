@@ -385,7 +385,7 @@ const Reports: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Reports Dashboard</h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-2">Reports Dashboard</h2>
           <p className="text-gray-600">Generate comprehensive financial and management reports</p>
         </div>
         {renderReportGrid(financialReports)}
