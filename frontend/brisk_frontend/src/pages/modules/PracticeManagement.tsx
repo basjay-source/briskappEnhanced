@@ -634,7 +634,18 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderJobOverview = () => (
+  const renderJobOverview = () => {
+    const jobStats = {
+      total: jobs.length,
+      notStarted: jobs.filter(j => j.status === 'not_started').length,
+      inProgress: jobs.filter(j => j.status === 'in_progress').length,
+      onHold: jobs.filter(j => j.status === 'on_hold').length,
+      completed: jobs.filter(j => j.status === 'completed').length,
+      highPriority: jobs.filter(j => j.priority === 'high' || j.priority === 'urgent').length,
+      overdue: jobs.filter(j => j.due_date && new Date(j.due_date) < new Date() && j.status !== 'completed').length
+    }
+
+    return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -652,6 +663,91 @@ export default function PracticeManagement() {
           </Button>
         </div>
       </div>
+
+      {/* Job Statistics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Jobs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">{jobStats.total}</div>
+            <p className="text-xs text-gray-500">All active jobs</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">In Progress</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{jobStats.inProgress}</div>
+            <p className="text-xs text-gray-500">Currently working</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">High Priority</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">{jobStats.highPriority}</div>
+            <p className="text-xs text-gray-500">Urgent attention needed</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Overdue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{jobStats.overdue}</div>
+            <p className="text-xs text-gray-500">Past due date</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid gap-2">
+              <Label>Search</Label>
+              <Input
+                placeholder="Search jobs..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Status</Label>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {statusOptions.map(option => (
+                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label>Priority</Label>
+              <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {priorityOptions.map(option => (
+                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6">
         <Card>
@@ -671,53 +767,92 @@ export default function PracticeManagement() {
               </div>
             ) : (
               <div className="space-y-4">
-                {jobs.map((job) => (
-                  <div key={job.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
-                    <div className="flex items-center space-x-4 flex-1">
-                      {getStatusIcon(job.status)}
-                      <div className="flex-1">
-                        <p className="font-medium">{job.title}</p>
-                        <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
-                        {job.due_date && (
-                          <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
-                        )}
-                        {job.description && (
-                          <p className="text-xs text-gray-500 mt-1">{job.description}</p>
-                        )}
+                {jobs.map((job) => {
+                  const isOverdue = job.due_date && new Date(job.due_date) < new Date() && job.status !== 'completed'
+                  const daysUntilDue = job.due_date ? Math.ceil((new Date(job.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
+                  
+                  return (
+                  <div key={job.id} className={`p-4 border-2 rounded-[2px] hover:bg-blue-50 transition-colors ${isOverdue ? 'border-red-500 bg-red-50' : 'border-blue-900'}`}>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start space-x-4 flex-1">
+                        {getStatusIcon(job.status)}
+                        <div className="flex-1 space-y-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-lg">{job.title}</p>
+                              {isOverdue && (
+                                <Badge className="bg-red-500">Overdue</Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
+                          </div>
+                          
+                          {job.description && (
+                            <p className="text-sm text-gray-600">{job.description}</p>
+                          )}
+                          
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                            {job.due_date && (
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                <span>Due: {new Date(job.due_date).toLocaleDateString()}</span>
+                                {daysUntilDue !== null && !isOverdue && (
+                                  <span className="text-blue-900 font-medium">({daysUntilDue} days)</span>
+                                )}
+                              </div>
+                            )}
+                            {job.created_at && (
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                <span>Created: {new Date(job.created_at).toLocaleDateString()}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right flex items-center gap-3">
-                      <div>
-                        <Badge className={getPriorityColor(job.priority)}>
-                          {job.priority}
-                        </Badge>
-                        {job.assigned_to && (
-                          <p className="text-sm text-blue-900 mt-1">{job.assigned_to}</p>
-                        )}
-                        <Progress value={job.progress_percentage} className="w-20 mt-2" />
-                        <p className="text-xs text-gray-500 mt-1">{job.progress_percentage}% Complete</p>
-                      </div>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openJobDialog(job)}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteJob(job.id)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      
+                      <div className="flex items-start gap-4">
+                        <div className="text-right space-y-2">
+                          <Badge className={getPriorityColor(job.priority)}>
+                            {job.priority.toUpperCase()}
+                          </Badge>
+                          {job.assigned_to && (
+                            <div className="text-sm">
+                              <p className="text-xs text-gray-500">Assigned to</p>
+                              <p className="text-blue-900 font-medium">{job.assigned_to}</p>
+                            </div>
+                          )}
+                          <div className="space-y-1">
+                            <Progress value={job.progress_percentage} className="w-24 h-2" />
+                            <p className="text-xs text-gray-500">{job.progress_percentage}% Complete</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openJobDialog(job)}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            title="Edit job"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteJob(job.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                            title="Delete job"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </CardContent>
@@ -828,7 +963,8 @@ export default function PracticeManagement() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+    )
+  }
 
   const renderTimeTracking = () => (
     <div className="space-y-6">
