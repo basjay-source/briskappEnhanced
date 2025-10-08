@@ -1403,3 +1403,99 @@ async def sync_compliance_data(db: Session = Depends(get_db)):
 async def compliance_check(db: Session = Depends(get_db)):
     """Run compliance check"""
     return {"message": "All compliance checks passed"}
+
+# AI Conversation Persistence Routes
+class AIMessageCreate(BaseModel):
+    question: str
+    answer: str
+    category: str = 'general'
+
+class AIConversationCreate(BaseModel):
+    title: str
+    messages: List[Dict[str, Any]] = []
+
+class AIConversationUpdate(BaseModel):
+    title: Optional[str] = None
+    messages: Optional[List[Dict[str, Any]]] = None
+
+# In-memory storage for AI conversations (replace with database later)
+ai_conversations_store = {}
+
+@router.get("/ai/conversations")
+async def get_ai_conversations(db: Session = Depends(get_db)):
+    """Get all AI conversations for the user"""
+    conversations = list(ai_conversations_store.values())
+    conversations.sort(key=lambda x: x['created_at'], reverse=True)
+    return conversations
+
+@router.post("/ai/conversations")
+async def create_ai_conversation(conversation: AIConversationCreate, db: Session = Depends(get_db)):
+    """Create a new AI conversation"""
+    conversation_id = f"conv_{int(datetime.now().timestamp() * 1000)}"
+    conversation_data = {
+        "id": conversation_id,
+        "title": conversation.title,
+        "messages": conversation.messages,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    ai_conversations_store[conversation_id] = conversation_data
+    return conversation_data
+
+@router.get("/ai/conversations/{conversation_id}")
+async def get_ai_conversation(conversation_id: str, db: Session = Depends(get_db)):
+    """Get a specific AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return ai_conversations_store[conversation_id]
+
+@router.put("/ai/conversations/{conversation_id}")
+async def update_ai_conversation(
+    conversation_id: str, 
+    conversation: AIConversationUpdate, 
+    db: Session = Depends(get_db)
+):
+    """Update an AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    stored_conversation = ai_conversations_store[conversation_id]
+    if conversation.title is not None:
+        stored_conversation["title"] = conversation.title
+    if conversation.messages is not None:
+        stored_conversation["messages"] = conversation.messages
+    stored_conversation["updated_at"] = datetime.now().isoformat()
+    
+    return stored_conversation
+
+@router.delete("/ai/conversations/{conversation_id}")
+async def delete_ai_conversation(conversation_id: str, db: Session = Depends(get_db)):
+    """Delete an AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    del ai_conversations_store[conversation_id]
+    return {"message": "Conversation deleted successfully"}
+
+@router.post("/ai/conversations/{conversation_id}/messages")
+async def add_message_to_conversation(
+    conversation_id: str,
+    message: AIMessageCreate,
+    db: Session = Depends(get_db)
+):
+    """Add a message to an existing conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    conversation = ai_conversations_store[conversation_id]
+    new_message = {
+        "id": f"msg_{int(datetime.now().timestamp() * 1000)}",
+        "question": message.question,
+        "answer": message.answer,
+        "timestamp": datetime.now().isoformat(),
+        "category": message.category
+    }
+    conversation["messages"].append(new_message)
+    conversation["updated_at"] = datetime.now().isoformat()
+    
+    return new_message

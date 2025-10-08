@@ -218,7 +218,17 @@ export default function PracticeManagement() {
     loadTimeEntries()
     loadWorkflows()
     loadAutomationRules()
+    loadAIConversations()
   }, [])
+
+  const loadAIConversations = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/ai/conversations')
+      setAiConversations(response.data || [])
+    } catch (err: any) {
+      console.error('Error loading AI conversations:', err)
+    }
+  }
 
   const loadDashboardData = async () => {
     try {
@@ -325,25 +335,25 @@ export default function PracticeManagement() {
       }
       
       if (currentConversation) {
-        const updatedConversation = {
-          ...currentConversation,
-          messages: [...currentConversation.messages, newMessage]
-        }
-        setCurrentConversation(updatedConversation)
+        const updatedMessages = [...currentConversation.messages, newMessage]
+        const response = await api.put(`/api/v1/practice/ai/conversations/${currentConversation.id}`, {
+          messages: updatedMessages
+        })
         
+        setCurrentConversation(response.data)
         const updatedConversations = aiConversations.map(conv => 
-          conv.id === currentConversation.id ? updatedConversation : conv
+          conv.id === currentConversation.id ? response.data : conv
         )
         setAiConversations(updatedConversations)
       } else {
         const newConversation = {
-          id: Date.now().toString(),
           title: question.substring(0, 50) + '...',
-          messages: [newMessage],
-          created_at: new Date().toISOString()
+          messages: [newMessage]
         }
-        setCurrentConversation(newConversation)
-        setAiConversations([newConversation, ...aiConversations])
+        
+        const response = await api.post('/api/v1/practice/ai/conversations', newConversation)
+        setCurrentConversation(response.data)
+        setAiConversations([response.data, ...aiConversations])
       }
       
       setAiQuestion('')
@@ -369,10 +379,18 @@ export default function PracticeManagement() {
     setShowConversationHistory(false)
   }
 
-  const handleDeleteConversation = (conversationId: string) => {
-    setAiConversations(aiConversations.filter(conv => conv.id !== conversationId))
-    if (currentConversation?.id === conversationId) {
-      setCurrentConversation(null)
+  const handleDeleteConversation = async (conversationId: string) => {
+    if (!confirm('Are you sure you want to delete this conversation?')) return
+    
+    try {
+      await api.delete(`/api/v1/practice/ai/conversations/${conversationId}`)
+      setAiConversations(aiConversations.filter(conv => conv.id !== conversationId))
+      if (currentConversation?.id === conversationId) {
+        setCurrentConversation(null)
+      }
+    } catch (error) {
+      console.error('Error deleting conversation:', error)
+      alert('Failed to delete conversation. Please try again.')
     }
   }
 
