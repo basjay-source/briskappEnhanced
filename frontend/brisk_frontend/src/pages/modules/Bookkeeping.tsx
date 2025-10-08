@@ -40,7 +40,14 @@ import {
   Search,
   Settings,
   Calendar,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Mail,
+  Phone,
+  MapPin,
+  Tag,
+  X,
+  Split,
+  Minus
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -52,6 +59,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
+import { convertCurrency, formatCurrency } from '@/types/currency'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -66,6 +74,63 @@ export default function Bookkeeping() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   
+  // @ts-ignore
+  const [showCreateInvoiceDialog, setShowCreateInvoiceDialog] = useState(false)
+  // @ts-ignore
+  const [showRecordExpenseDialog, setShowRecordExpenseDialog] = useState(false)
+  // @ts-ignore
+  const [showReconciliationDialog, setShowReconciliationDialog] = useState(false)
+  // @ts-ignore
+  const [showGenerateReportDialog, setShowGenerateReportDialog] = useState(false)
+  // @ts-ignore
+  const [showExportDataDialog, setShowExportDataDialog] = useState(false)
+  
+  // @ts-ignore
+  const [showCreateQuoteDialog, setShowCreateQuoteDialog] = useState(false)
+  // @ts-ignore
+  const [showEditQuoteDialog, setShowEditQuoteDialog] = useState(false)
+  // @ts-ignore
+  const [showViewQuoteDialog, setShowViewQuoteDialog] = useState(false)
+  // @ts-ignore
+  const [showConvertToInvoiceDialog, setShowConvertToInvoiceDialog] = useState(false)
+  // @ts-ignore
+  const [showEmailQuoteDialog, setShowEmailQuoteDialog] = useState(false)
+  // @ts-ignore
+  const [selectedQuote, setSelectedQuote] = useState<any>(null)
+  const [quotesSearchTerm, setQuotesSearchTerm] = useState('')
+  // @ts-ignore
+  const [quotesStatusFilter, setQuotesStatusFilter] = useState('all')
+  // @ts-ignore
+  
+  // @ts-ignore
+  const [showCreateCustomerDialog, setShowCreateCustomerDialog] = useState(false)
+  // @ts-ignore
+  const [showEditCustomerDialog, setShowEditCustomerDialog] = useState(false)
+  const [showViewCustomerDialog, setShowViewCustomerDialog] = useState(false)
+  // @ts-ignore
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null)
+  // @ts-ignore
+  const [customersSearchTerm, setCustomersSearchTerm] = useState('')
+  // @ts-ignore
+  const [customersStatusFilter, setCustomersStatusFilter] = useState('all')
+  // @ts-ignore
+  
+  const [showCreateProductDialog, setShowCreateProductDialog] = useState(false)
+  // @ts-ignore
+  const [showEditProductDialog, setShowEditProductDialog] = useState(false)
+  // @ts-ignore
+  const [showViewProductDialog, setShowViewProductDialog] = useState(false)
+  // @ts-ignore
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  // @ts-ignore
+  const [productsSearchTerm, setProductsSearchTerm] = useState('')
+  const [productsCategoryFilter, setProductsCategoryFilter] = useState('all')
+  
+  const [showStockAdjustmentDialog, setShowStockAdjustmentDialog] = useState(false)
+  const [showWarehouseDialog, setShowWarehouseDialog] = useState(false)
+  const [showSupplierDialog, setShowSupplierDialog] = useState(false)
+  const [showPurchaseOrderDialog, setShowPurchaseOrderDialog] = useState(false)
+
   const [reportsSearchTerm, setReportsSearchTerm] = useState('')
   const [reportsSelectedPeriod, setReportsSelectedPeriod] = useState('current')
   const [reportsSelectedClient, setReportsSelectedClient] = useState('all')
@@ -151,7 +216,20 @@ export default function Bookkeeping() {
         expenses: { label: 'Expenses', icon: CreditCard }
       }
     },
-    banking: { 
+    inventory: {
+      label: 'Inventory',
+      icon: Package,
+      hasSubTabs: true,
+      subTabs: {
+        stock: { label: 'Stock Management', icon: Package },
+        warehouses: { label: 'Warehouses', icon: Building },
+        suppliers: { label: 'Suppliers', icon: Users },
+        orders: { label: 'Purchase Orders', icon: ShoppingCart },
+        movements: { label: 'Stock Movements', icon: TrendingUp },
+        valuation: { label: 'Stock Valuation', icon: PoundSterling }
+      }
+    },
+    banking: {
       label: 'Banking', 
       icon: CreditCard, 
       hasSubTabs: true,
@@ -369,6 +447,14 @@ export default function Bookkeeping() {
       if (activeSubTab === 'settlements') return renderSettlementTracking()
       if (activeSubTab === 'analytics') return renderSalesAnalytics()
       return renderEcommerceContent()
+    } else if (activeMainTab === 'inventory') {
+      if (activeSubTab === 'stock') return renderStockManagement()
+      if (activeSubTab === 'warehouses') return renderWarehousesManagement()
+      if (activeSubTab === 'suppliers') return renderInventorySuppliersManagement()
+      if (activeSubTab === 'orders') return renderInventoryPurchaseOrders()
+      if (activeSubTab === 'movements') return renderStockMovements()
+      if (activeSubTab === 'valuation') return renderStockValuation()
+      return renderInventoryContent()
     } else if (activeMainTab === 'documents') {
       return renderDocumentsContent()
     } else if (activeMainTab === 'integrations') {
@@ -385,12 +471,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Bookkeeping Dashboard</h2>
             <p className="text-blue-900">Overview of your financial position and key metrics</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" onClick={() => setShowExportDataDialog(true)}>
               <Download className="h-4 w-4 mr-2" />
               Export Data
             </Button>
-            <Button>
+            <Button onClick={() => setShowGenerateReportDialog(true)}>
               <FileText className="h-4 w-4 mr-2" />
               Generate Report
             </Button>
@@ -529,16 +615,19 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] cursor-pointer hover:bg-blue-50 transition-colors"
+                  onClick={() => alert('Transaction Details\n\nFrom: ABC Corp\nInvoice: INV-001\nAmount: £2,500\nDate: Today, 2:30 PM\nStatus: Received\nPayment Method: Bank Transfer\nReference: REF-12345\n\nClick to view full transaction history and related documents.')}
+                >
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium">Payment from ABC Corp</p>
-                      <Badge className="bg-green-100 text-green-800">Received</Badge>
+                      <p className="font-medium truncate">Payment from ABC Corp</p>
+                      <Badge className="bg-green-100 text-green-800 flex-shrink-0">Received</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">Invoice INV-001</p>
+                    <p className="text-sm text-blue-900 truncate">Invoice INV-001</p>
                     <p className="text-xs text-gray-500">Today, 2:30 PM</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="font-semibold text-green-600">+£2,500</p>
                   </div>
                 </div>
@@ -553,19 +642,35 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowCreateInvoiceDialog(true)}
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowRecordExpenseDialog(true)}
+                >
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowReconciliationDialog(true)}
+                >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowGenerateReportDialog(true)}
+                >
                   <FileText className="h-4 w-4 mr-2" />
                   Generate Report
                 </Button>
@@ -3669,6 +3774,109 @@ export default function Bookkeeping() {
   }
 
   function renderQuotesManagement() {
+    const quotesKPIs = [
+      { 
+        title: 'Pending Quotes', 
+        value: '15', 
+        subtitle: 'Awaiting response',
+        color: 'text-blue-600',
+        drillDownData: {
+          title: 'Pending Quotes Breakdown',
+          items: [
+            { label: 'New (< 7 days)', value: '8', detail: '£18,500 total value' },
+            { label: 'Follow-up Required', value: '5', detail: '£12,250 total value' },
+            { label: 'Expiring Soon', value: '2', detail: '£4,000 total value' }
+          ]
+        }
+      },
+      { 
+        title: 'Accepted', 
+        value: '8', 
+        subtitle: 'This month',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'Accepted Quotes Details',
+          items: [
+            { label: 'Converted to Invoice', value: '5', detail: '£14,250 revenue' },
+            { label: 'Pending Conversion', value: '3', detail: '£8,500 pending' },
+            { label: 'Average Value', value: '£2,844', detail: 'Per accepted quote' }
+          ]
+        }
+      },
+      { 
+        title: 'Conversion Rate', 
+        value: '68%', 
+        subtitle: 'Quotes to sales',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Conversion Analysis',
+          items: [
+            { label: 'This Month', value: '68%', detail: '8 of 12 quotes accepted' },
+            { label: 'Last Month', value: '72%', detail: '13 of 18 quotes accepted' },
+            { label: '3-Month Average', value: '65%', detail: 'Stable conversion trend' }
+          ]
+        }
+      },
+      { 
+        title: 'Total Value', 
+        value: '£34,750', 
+        subtitle: 'Pending quotes',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Quote Value Analysis',
+          items: [
+            { label: 'Highest Quote', value: '£4,200', detail: 'Tech Solutions Inc' },
+            { label: 'Average Quote', value: '£2,317', detail: 'Across all pending' },
+            { label: 'Total This Month', value: '£45,600', detail: 'All quotes combined' }
+          ]
+        }
+      }
+    ]
+
+    const quotes = [
+      { id: 1, number: 'QUO-2024-015', customer: 'ABC Corporation', email: 'accounts@abccorp.com', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20', items: 5 },
+      { id: 2, number: 'QUO-2024-016', customer: 'XYZ Limited', email: 'finance@xyzltd.com', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19', items: 3 },
+      { id: 3, number: 'QUO-2024-017', customer: 'StartupCo Ltd', email: 'admin@startupco.com', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18', items: 2 },
+      { id: 4, number: 'QUO-2024-018', customer: 'Tech Solutions Inc', email: 'billing@techsolutions.com', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17', items: 6 },
+      { id: 5, number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16', items: 4 }
+    ]
+
+    const filteredQuotes = quotes.filter(quote => {
+      const matchesSearch = quotesSearchTerm === '' || 
+        quote.number.toLowerCase().includes(quotesSearchTerm.toLowerCase()) ||
+        quote.customer.toLowerCase().includes(quotesSearchTerm.toLowerCase())
+      const matchesStatus = quotesStatusFilter === 'all' || quote.status.toLowerCase() === quotesStatusFilter.toLowerCase()
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreateQuote = () => {
+      setShowCreateQuoteDialog(true)
+    }
+
+    const handleViewQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowViewQuoteDialog(true)
+    }
+
+    const handleEditQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowEditQuoteDialog(true)
+    }
+
+    const handleConvertToInvoice = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowConvertToInvoiceDialog(true)
+    }
+
+    const handleEmailQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowEmailQuoteDialog(true)
+    }
+
+    const handleExportQuotes = () => {
+      console.log('Exporting quotes...', filteredQuotes)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3676,12 +3884,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Quote Management</h2>
             <p className="text-blue-900">Create, manage, and convert quotes to invoices</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateQuote} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               New Quote
             </Button>
-            <Button>
+            <Button onClick={handleExportQuotes} className="min-w-fit">
               <FileText className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -3689,62 +3897,57 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Quotes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">15</div>
-              <p className="text-sm text-blue-900">Awaiting response</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Accepted</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">8</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Conversion Rate</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">68%</div>
-              <p className="text-sm text-blue-900">Quotes to sales</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£34,750</div>
-              <p className="text-sm text-blue-900">Pending quotes</p>
-            </CardContent>
-          </Card>
+          {quotesKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Quotes</CardTitle>
-            <CardDescription>Latest quotes and their status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Quote List</CardTitle>
+                <CardDescription>Search, filter, and manage all quotes</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search quotes..."
+                    value={quotesSearchTerm}
+                    onChange={(e) => setQuotesSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={quotesStatusFilter}
+                  onChange={(e) => setQuotesStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { number: 'QUO-2024-015', customer: 'ABC Corporation', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20' },
-                { number: 'QUO-2024-016', customer: 'XYZ Limited', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19' },
-                { number: 'QUO-2024-017', customer: 'StartupCo Ltd', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18' },
-                { number: 'QUO-2024-018', customer: 'Tech Solutions Inc', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17' },
-                { number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16' }
-              ].map((quote, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{quote.number}</p>
+              {filteredQuotes.map((quote) => (
+                <div key={quote.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-medium text-blue-900">{quote.number}</p>
                       <Badge className={`${
                         quote.status === 'Accepted' ? 'bg-green-100 text-green-800' : 
                         quote.status === 'Declined' ? 'bg-red-100 text-red-800' : 
@@ -3753,28 +3956,41 @@ export default function Bookkeeping() {
                         {quote.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{quote.customer}</p>
-                    <p className="text-xs text-gray-500">Valid until: {quote.validUntil}</p>
+                    <p className="text-sm text-blue-900 truncate">{quote.customer}</p>
+                    <p className="text-xs text-gray-500">Valid until: {quote.validUntil} • {quote.items} items</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{quote.amount}</p>
-                    <p className="text-sm text-blue-900">{quote.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{quote.amount.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">{quote.date}</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewQuote(quote)} title="View Quote">
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEditQuote(quote)} title="Edit Quote">
                         <Edit className="h-3 w-3" />
                       </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleEmailQuote(quote)} title="Email Quote">
+                        <Mail className="h-3 w-3" />
+                      </Button>
                       {quote.status === 'Accepted' && (
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleConvertToInvoice(quote)} title="Convert to Invoice">
                           <Receipt className="h-3 w-3" />
                         </Button>
                       )}
+                      <Button variant="ghost" size="sm" onClick={() => handleExportQuotes()} title="Download PDF">
+                        <Download className="h-3 w-3" />
+                      </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredQuotes.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No quotes found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -3783,6 +3999,120 @@ export default function Bookkeeping() {
   }
 
   function renderCustomersManagement() {
+    const customersKPIs = [
+      { 
+        title: 'Total Customers', 
+        value: '156', 
+        subtitle: 'Active customers',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Customer Breakdown',
+          items: [
+            { label: 'Active Customers', value: '143', detail: '91.7% of total base' },
+            { label: 'VIP Customers', value: '13', detail: '8.3% high-value clients' },
+            { label: 'Inactive (>90 days)', value: '12', detail: 'Require follow-up' }
+          ]
+        }
+      },
+      { 
+        title: 'New This Month', 
+        value: '8', 
+        subtitle: '+12% growth',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'New Customer Analysis',
+          items: [
+            { label: 'Referrals', value: '5', detail: '62.5% from existing customers' },
+            { label: 'Direct Marketing', value: '2', detail: '25% from campaigns' },
+            { label: 'Organic', value: '1', detail: '12.5% website/search' }
+          ]
+        }
+      },
+      { 
+        title: 'Top Customer Value', 
+        value: '£15,600', 
+        subtitle: 'Lifetime value',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Customer Value Analysis',
+          items: [
+            { label: 'Tech Solutions Inc', value: '£15,600', detail: 'Highest lifetime value' },
+            { label: 'ABC Corporation', value: '£12,450', detail: 'Second highest' },
+            { label: 'XYZ Limited', value: '£8,750', detail: 'Third highest' }
+          ]
+        }
+      },
+      { 
+        title: 'Average Order', 
+        value: '£1,850', 
+        subtitle: 'Per customer',
+        color: 'text-purple-600',
+        drillDownData: {
+          title: 'Order Value Trends',
+          items: [
+            { label: 'This Month', value: '£1,850', detail: '+15% vs last month' },
+            { label: 'Last Month', value: '£1,610', detail: 'Previous average' },
+            { label: 'YTD Average', value: '£1,720', detail: 'Year to date trend' }
+          ]
+        }
+      }
+    ]
+
+    const customers = [
+      { 
+        id: 1, name: 'ABC Corporation', email: 'accounts@abccorp.com', phone: '+44 20 7123 4567', 
+        address: '123 Business St, London', totalSpent: 12450, lastOrder: '2024-01-15', 
+        status: 'Active', invoiceCount: 24, joinDate: '2023-03-15'
+      },
+      { 
+        id: 2, name: 'XYZ Limited', email: 'finance@xyzltd.com', phone: '+44 161 234 5678', 
+        address: '456 Commerce Ave, Manchester', totalSpent: 8750, lastOrder: '2024-01-12', 
+        status: 'Active', invoiceCount: 18, joinDate: '2023-06-22'
+      },
+      { 
+        id: 3, name: 'StartupCo Ltd', email: 'admin@startupco.com', phone: '+44 113 345 6789', 
+        address: '789 Innovation Way, Leeds', totalSpent: 3200, lastOrder: '2024-01-10', 
+        status: 'Active', invoiceCount: 8, joinDate: '2023-11-08'
+      },
+      { 
+        id: 4, name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', 
+        address: '321 Tech Park, Birmingham', totalSpent: 15600, lastOrder: '2024-01-08', 
+        status: 'VIP', invoiceCount: 32, joinDate: '2022-09-12'
+      },
+      { 
+        id: 5, name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', 
+        address: '654 Creative Sq, Edinburgh', totalSpent: 5400, lastOrder: '2024-01-05', 
+        status: 'Active', invoiceCount: 12, joinDate: '2023-08-19'
+      }
+    ]
+
+    const filteredCustomers = customers.filter(customer => {
+      const matchesSearch = customersSearchTerm === '' || 
+        customer.name.toLowerCase().includes(customersSearchTerm.toLowerCase()) ||
+        customer.email.toLowerCase().includes(customersSearchTerm.toLowerCase()) ||
+        customer.phone.includes(customersSearchTerm)
+      const matchesStatus = customersStatusFilter === 'all' || customer.status.toLowerCase() === customersStatusFilter.toLowerCase()
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreateCustomer = () => {
+      setShowCreateCustomerDialog(true)
+    }
+
+    const handleViewCustomer = (customer: any) => {
+      setSelectedCustomer(customer)
+      setShowViewCustomerDialog(true)
+    }
+
+    const handleEditCustomer = (customer: any) => {
+      setSelectedCustomer(customer)
+      setShowEditCustomerDialog(true)
+    }
+
+    const handleExportCustomers = () => {
+      console.log('Exporting customers...', filteredCustomers)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3790,12 +4120,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Customer Management</h2>
             <p className="text-blue-900">Manage customer information, contacts, and transaction history</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateCustomer} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               Add Customer
             </Button>
-            <Button>
+            <Button onClick={handleExportCustomers} className="min-w-fit">
               <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -3803,90 +4133,113 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Customers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">156</div>
-              <p className="text-sm text-blue-900">Active customers</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">8</div>
-              <p className="text-sm text-blue-900">+12% growth</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Customer Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£12,450</div>
-              <p className="text-sm text-blue-900">Lifetime value</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Order</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,850</div>
-              <p className="text-sm text-blue-900">Per customer</p>
-            </CardContent>
-          </Card>
+          {customersKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Customer Database</CardTitle>
-            <CardDescription>Complete customer information and transaction history</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Customer Database</CardTitle>
+                <CardDescription>Search, filter, and manage all customer information</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search customers..."
+                    value={customersSearchTerm}
+                    onChange={(e) => setCustomersSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={customersStatusFilter}
+                  onChange={(e) => setCustomersStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="vip">VIP</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'ABC Corporation', email: 'accounts@abccorp.com', phone: '+44 20 7123 4567', totalSpent: 12450, lastOrder: '2024-01-15', status: 'Active' },
-                { name: 'XYZ Limited', email: 'finance@xyzltd.com', phone: '+44 161 234 5678', totalSpent: 8750, lastOrder: '2024-01-12', status: 'Active' },
-                { name: 'StartupCo Ltd', email: 'admin@startupco.com', phone: '+44 113 345 6789', totalSpent: 3200, lastOrder: '2024-01-10', status: 'Active' },
-                { name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', totalSpent: 15600, lastOrder: '2024-01-08', status: 'VIP' },
-                { name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', totalSpent: 5400, lastOrder: '2024-01-05', status: 'Active' }
-              ].map((customer, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{customer.name}</p>
+              {filteredCustomers.map((customer) => (
+                <div key={customer.id} className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <p className="font-medium text-blue-900">{customer.name}</p>
                       <Badge className={`${
                         customer.status === 'VIP' ? 'bg-purple-100 text-purple-800' : 
-                        'bg-green-100 text-green-800'
+                        customer.status === 'Active' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                         {customer.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{customer.email}</p>
-                    <p className="text-xs text-gray-500">{customer.phone}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm">
+                      <div className="flex items-center gap-1">
+                        <Mail className="h-3 w-3 text-blue-900" />
+                        <span className="text-blue-900 truncate">{customer.email}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Phone className="h-3 w-3 text-blue-900" />
+                        <span className="text-blue-900">{customer.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-1 sm:col-span-2">
+                        <MapPin className="h-3 w-3 text-blue-900" />
+                        <span className="text-gray-500 text-xs truncate">{customer.address}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold">£{customer.totalSpent}</p>
-                    <p className="text-sm text-blue-900">Total spent</p>
-                    <p className="text-xs text-gray-500">Last: {customer.lastOrder}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Receipt className="h-3 w-3" />
-                    </Button>
+                  <div className="flex items-center gap-6 w-full lg:w-auto">
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{customer.totalSpent.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">Total spent</p>
+                      <p className="text-xs text-gray-500">{customer.invoiceCount} invoices</p>
+                    </div>
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-sm text-blue-900">{customer.lastOrder}</p>
+                      <p className="text-xs text-gray-500">Last order</p>
+                      <p className="text-xs text-gray-500">Since {customer.joinDate}</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewCustomer(customer)} title="View Details">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleEditCustomer(customer)} title="Edit Customer">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="View Invoices">
+                        <Receipt className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Contact Customer">
+                        <Mail className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
+              {filteredCustomers.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No customers found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -3895,6 +4248,120 @@ export default function Bookkeeping() {
   }
 
   function renderProductsManagement() {
+    const productsKPIs = [
+      { 
+        title: 'Total Products', 
+        value: '73', 
+        subtitle: 'Active items',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Product Breakdown',
+          items: [
+            { label: 'Products', value: '45', detail: '61.6% of catalog' },
+            { label: 'Services', value: '28', detail: '38.4% of catalog' },
+            { label: 'Low Stock', value: '8', detail: 'Need restocking' }
+          ]
+        }
+      },
+      { 
+        title: 'Total Revenue', 
+        value: '£82,450', 
+        subtitle: 'This month',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'Revenue Analysis',
+          items: [
+            { label: 'Products', value: '£45,600', detail: '55.3% of revenue' },
+            { label: 'Services', value: '£36,850', detail: '44.7% of revenue' },
+            { label: 'Growth', value: '+18%', detail: 'vs last month' }
+          ]
+        }
+      },
+      { 
+        title: 'Top Seller', 
+        value: '£45,600', 
+        subtitle: 'Professional Services',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Best Sellers',
+          items: [
+            { label: 'Professional Services', value: '£45,600', detail: '24 units sold' },
+            { label: 'Software License', value: '£29,750', detail: '35 units sold' },
+            { label: 'Support Package', value: '£26,600', detail: '28 units sold' }
+          ]
+        }
+      },
+      { 
+        title: 'Average Margin', 
+        value: '57%', 
+        subtitle: 'Profit margin',
+        color: 'text-purple-600',
+        drillDownData: {
+          title: 'Margin Analysis',
+          items: [
+            { label: 'Services Margin', value: '61%', detail: 'Higher profitability' },
+            { label: 'Products Margin', value: '53%', detail: 'Standard margin' },
+            { label: 'Target Margin', value: '55%', detail: 'Above target' }
+          ]
+        }
+      }
+    ]
+
+    const products = [
+      { 
+        id: 1, name: 'Professional Services Package', sku: 'SRV-001', category: 'Services', 
+        price: 2500, cost: 1200, margin: 52, sales: 24, stock: null, status: 'Active',
+        description: 'Comprehensive professional services package'
+      },
+      { 
+        id: 2, name: 'Consultation Services', sku: 'SRV-002', category: 'Services', 
+        price: 1800, cost: 800, margin: 56, sales: 18, stock: null, status: 'Active',
+        description: 'Expert consultation and advisory services'
+      },
+      { 
+        id: 3, name: 'Software License', sku: 'PRD-001', category: 'Products', 
+        price: 850, cost: 400, margin: 53, sales: 35, stock: 127, status: 'Active',
+        description: 'Annual software license subscription'
+      },
+      { 
+        id: 4, name: 'Training Program', sku: 'SRV-003', category: 'Services', 
+        price: 1500, cost: 600, margin: 60, sales: 12, stock: null, status: 'Active',
+        description: 'Comprehensive training and development program'
+      },
+      { 
+        id: 5, name: 'Support Package', sku: 'SRV-004', category: 'Services', 
+        price: 950, cost: 350, margin: 63, sales: 28, stock: null, status: 'Active',
+        description: 'Premium support and maintenance package'
+      }
+    ]
+
+    const filteredProducts = products.filter(product => {
+      const matchesSearch = productsSearchTerm === '' || 
+        product.name.toLowerCase().includes(productsSearchTerm.toLowerCase()) ||
+        product.sku.toLowerCase().includes(productsSearchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(productsSearchTerm.toLowerCase())
+      const matchesCategory = productsCategoryFilter === 'all' || product.category.toLowerCase() === productsCategoryFilter.toLowerCase()
+      return matchesSearch && matchesCategory
+    })
+
+    const handleCreateProduct = () => {
+      setShowCreateProductDialog(true)
+    }
+
+    const handleViewProduct = (product: any) => {
+      setSelectedProduct(product)
+      setShowViewProductDialog(true)
+    }
+
+    const handleEditProduct = (product: any) => {
+      setSelectedProduct(product)
+      setShowEditProductDialog(true)
+    }
+
+    const handleExportProducts = () => {
+      console.log('Exporting products...', filteredProducts)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3902,12 +4369,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Product Catalog</h2>
             <p className="text-blue-900">Manage products, services, pricing, and inventory</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateProduct} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
-            <Button>
+            <Button onClick={handleExportProducts} className="min-w-fit">
               <Download className="h-4 w-4 mr-2" />
               Export Catalog
             </Button>
@@ -3915,63 +4382,61 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Products</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">45</div>
-              <p className="text-sm text-blue-900">Active products</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Services</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">28</div>
-              <p className="text-sm text-blue-900">Service offerings</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Seller</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£45,600</div>
-              <p className="text-sm text-blue-900">Revenue this month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Price</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,245</div>
-              <p className="text-sm text-blue-900">Per product</p>
-            </CardContent>
-          </Card>
+          {productsKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Product Catalog</CardTitle>
-            <CardDescription>Complete product and service listings with pricing</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Product & Service Catalog</CardTitle>
+                <CardDescription>Search, filter, and manage all products and services</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search catalog..."
+                    value={productsSearchTerm}
+                    onChange={(e) => setProductsSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={productsCategoryFilter}
+                  onChange={(e) => setProductsCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="products">Products</option>
+                  <option value="services">Services</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'Professional Services Package', category: 'Services', price: 2500, cost: 1200, margin: 52, sales: 24, status: 'Active' },
-                { name: 'Consultation Services', category: 'Services', price: 1800, cost: 800, margin: 56, sales: 18, status: 'Active' },
-                { name: 'Software License', category: 'Products', price: 850, cost: 400, margin: 53, sales: 35, status: 'Active' },
-                { name: 'Training Program', category: 'Services', price: 1500, cost: 600, margin: 60, sales: 12, status: 'Active' },
-                { name: 'Support Package', category: 'Services', price: 950, cost: 350, margin: 63, sales: 28, status: 'Active' }
-              ].map((product, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{product.name}</p>
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <p className="font-medium text-blue-900">{product.name}</p>
                       <Badge className="bg-blue-100 text-blue-800">{product.category}</Badge>
+                      <Badge className="bg-gray-100 text-gray-800">
+                        <Tag className="h-3 w-3 mr-1" />
+                        {product.sku}
+                      </Badge>
                       <Badge className={`${
                         product.status === 'Active' ? 'bg-green-100 text-green-800' : 
                         'bg-gray-100 text-gray-800'
@@ -3979,26 +4444,46 @@ export default function Bookkeeping() {
                         {product.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">Cost: £{product.cost} | Margin: {product.margin}%</p>
-                    <p className="text-xs text-gray-500">{product.sales} units sold this month</p>
+                    <p className="text-sm text-blue-900 mb-1">{product.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                      <span>Cost: £{product.cost.toLocaleString()}</span>
+                      <span>Margin: {product.margin}%</span>
+                      <span>{product.sales} sold this month</span>
+                      {product.stock !== null && (
+                        <span className={product.stock < 20 ? 'text-orange-600 font-medium' : ''}>
+                          Stock: {product.stock} units
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{product.price}</p>
-                    <p className="text-sm text-blue-900">Unit price</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                  <div className="flex items-center gap-6 w-full lg:w-auto">
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{product.price.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">Unit price</p>
+                      <p className="text-xs text-gray-500">£{(product.price * product.sales).toLocaleString()} revenue</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewProduct(product)} title="View Details">
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)} title="Edit Product">
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" title="View Analytics">
                         <BarChart3 className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Duplicate Product">
+                        <Copy className="h-3 w-3" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No products found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4007,108 +4492,266 @@ export default function Bookkeeping() {
   }
 
   function renderBillsManagement() {
+    const [bills, setBills] = useState([
+      { id: 1, number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19', category: 'Office', approver: 'John Smith', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [] },
+      { id: 2, number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18', category: 'Equipment', approver: 'Sarah Johnson', paymentMethod: 'BACS', currency: 'GBP', vatRate: 20, splits: [{ category: 'IT Equipment', amount: 2000, percentage: 70.2 }, { category: 'Office Equipment', amount: 850, percentage: 29.8 }] },
+      { id: 3, number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17', category: 'Utilities', approver: 'Mike Chen', paymentMethod: 'Direct Debit', currency: 'GBP', vatRate: 5, splits: [] },
+      { id: 4, number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01', category: 'Marketing', approver: 'Emma Wilson', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [{ category: 'Digital Marketing', amount: 2000, percentage: 62.5 }, { category: 'Print Advertising', amount: 800, percentage: 25 }, { category: 'Consultation', amount: 400, percentage: 12.5 }] },
+      { id: 5, number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15', category: 'Professional', approver: 'David Brown', paymentMethod: 'Cheque', currency: 'GBP', vatRate: 20, splits: [] },
+      { id: 6, number: 'BILL-2024-006', supplier: 'Software Vendor', amount: 950, date: '2024-01-15', status: 'Approved', dueDate: '2024-02-14', category: 'Software', approver: 'John Smith', paymentMethod: 'Credit Card', currency: 'USD', vatRate: 0, splits: [] },
+      { id: 7, number: 'BILL-2024-007', supplier: 'Cleaning Services', amount: 320, date: '2024-01-14', status: 'Paid', dueDate: '2024-02-13', category: 'Services', approver: 'Sarah Johnson', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [] },
+    // @ts-ignore
+      { id: 8, number: 'BILL-2024-008', supplier: 'Insurance Provider', amount: 1850, date: '2024-01-13', status: 'Pending', dueDate: '2024-02-12', category: 'Insurance', approver: 'Mike Chen', paymentMethod: 'Direct Debit', currency: 'EUR', vatRate: 0, splits: [] }
+    ])
+
+    const [billSearchTerm, setBillSearchTerm] = useState('')
+    const [billStatusFilter, setBillStatusFilter] = useState('all')
+    const [billCategoryFilter, setBillCategoryFilter] = useState('all')
+    const [showSplitDialog, setShowSplitDialog] = useState(false)
+    const [selectedBillForSplit, setSelectedBillForSplit] = useState<any>(null)
+    const [billSplits, setBillSplits] = useState<Array<{ category: string; amount: number; percentage: number }>>([])
+
+    const exchangeRates: { [key: string]: number } = {
+      'GBP': 1.0,
+      'USD': 0.79,
+      'EUR': 0.86,
+      'JPY': 0.0052,
+      'CHF': 0.91,
+      'CAD': 0.59,
+      'AUD': 0.52,
+      'CNY': 0.11,
+      'INR': 0.0096
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const vatRates: { [key: string]: { [key: string]: number } } = {
+      'GBP': { 'Standard': 20, 'Reduced': 5, 'Zero': 0 },
+      'EUR': { 'Standard': 19, 'Reduced': 7, 'Zero': 0 },
+      'USD': { 'Standard': 0, 'State': 8.5, 'Zero': 0 }
+    }
+
+    const filteredBills = bills.filter(bill => {
+      const matchesSearch = bill.number.toLowerCase().includes(billSearchTerm.toLowerCase()) ||
+                           bill.supplier.toLowerCase().includes(billSearchTerm.toLowerCase()) ||
+                           bill.amount.toString().includes(billSearchTerm)
+      const matchesStatus = billStatusFilter === 'all' || bill.status === billStatusFilter
+      const matchesCategory = billCategoryFilter === 'all' || bill.category === billCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateBill = () => {
+      console.log('Creating new bill')
+    }
+
+    const handleViewBill = (bill: any) => {
+      console.log('Viewing bill:', bill)
+    }
+
+    const handleEditBill = (bill: any) => {
+      console.log('Editing bill:', bill)
+    }
+
+    const handleApproveBill = (bill: any) => {
+      console.log('Approving bill:', bill)
+      setBills(bills.map(b => b.id === bill.id ? { ...b, status: 'Approved' } : b))
+    }
+
+    const handlePayBill = (bill: any) => {
+      console.log('Processing payment for bill:', bill)
+      setBills(bills.map(b => b.id === bill.id ? { ...b, status: 'Paid' } : b))
+    }
+
+    const handleSplitBill = (bill: any) => {
+      setSelectedBillForSplit(bill)
+      if (bill.splits && bill.splits.length > 0) {
+        setBillSplits(bill.splits)
+      } else {
+        setBillSplits([{ category: bill.category, amount: bill.amount, percentage: 100 }])
+      }
+      setShowSplitDialog(true)
+    }
+
+    const handleAddSplit = () => {
+      setBillSplits([...billSplits, { category: '', amount: 0, percentage: 0 }])
+    }
+
+    const handleRemoveSplit = (index: number) => {
+      setBillSplits(billSplits.filter((_, i) => i !== index))
+    }
+
+    const handleSplitChange = (index: number, field: string, value: any) => {
+      const newSplits = [...billSplits]
+      if (field === 'amount') {
+        newSplits[index].amount = parseFloat(value) || 0
+        newSplits[index].percentage = (newSplits[index].amount / selectedBillForSplit.amount) * 100
+      } else if (field === 'percentage') {
+    // @ts-ignore
+        newSplits[index].percentage = parseFloat(value) || 0
+        newSplits[index].amount = (selectedBillForSplit.amount * newSplits[index].percentage) / 100
+      } else if (field === 'category') {
+        newSplits[index].category = value
+      }
+      setBillSplits(newSplits)
+    }
+
+    const handleSaveSplits = () => {
+      setBills(bills.map(b => 
+        b.id === selectedBillForSplit.id 
+          ? { ...b, splits: billSplits } 
+          : b
+      ))
+      setShowSplitDialog(false)
+      setSelectedBillForSplit(null)
+      setBillSplits([])
+    }
+
+    const handleExportBills = () => {
+      console.log('Exporting bills')
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const convertCurrency = (amount: number, fromCurrency: string, toCurrency: string = 'GBP') => {
+      if (fromCurrency === toCurrency) return amount
+      const fromRate = exchangeRates[fromCurrency] || 1
+      const toRate = exchangeRates[toCurrency] || 1
+      return (amount * fromRate) / toRate
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Bill Management</h2>
-            <p className="text-blue-900">Process, approve, and track supplier bills and payments</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Bill Management</h2>
+            <p className="text-blue-900">Process, approve, and track supplier bills with automated workflows</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateBill}>
               <Plus className="h-4 w-4 mr-2" />
               New Bill
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Bills
+            </Button>
+            <Button onClick={handleExportBills}>
+              <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
           </div>
         </div>
 
-        <SearchFilterHeader
-          searchPlaceholder="Search bills by supplier, amount, due date..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Category',
-              options: categoryOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
-
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Outstanding Bills</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£18,750</div>
-              <p className="text-sm text-blue-900">8 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Overdue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£5,200</div>
-              <p className="text-sm text-blue-900">2 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Paid This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">£32,400</div>
-              <p className="text-sm text-blue-900">18 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£1,245</div>
-              <p className="text-sm text-blue-900">Per bill</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Outstanding Bills" 
+            value="£18,750" 
+            subtitle="8 bills unpaid" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Outstanding Bills Breakdown',
+              items: [
+                { label: '0-30 days', value: '£12,450', detail: '5 bills' },
+                { label: '31-60 days', value: '£4,200', detail: '2 bills' },
+                { label: '61-90 days', value: '£2,100', detail: '1 bill' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Overdue Bills" 
+            value="£5,200" 
+            subtitle="2 bills past due" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Overdue Analysis',
+              items: [
+                { label: '1-7 days overdue', value: '£3,200', detail: 'Marketing Agency' },
+                { label: '8-14 days overdue', value: '£2,000', detail: 'Legal Services' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Paid This Month" 
+            value="£32,400" 
+            subtitle="18 bills processed" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Payment Methods',
+              items: [
+                { label: 'Bank Transfer', value: '£18,650', detail: '10 bills' },
+                { label: 'Direct Debit', value: '£8,920', detail: '5 bills' },
+                { label: 'Credit Card', value: '£4,830', detail: '3 bills' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Bill Value" 
+            value="£1,245" 
+            subtitle="Per transaction" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Bill Value Distribution',
+              items: [
+                { label: 'Small (<£500)', value: '12', detail: '48%' },
+                { label: 'Medium (£500-£2000)', value: '8', detail: '32%' },
+                { label: 'Large (>£2000)', value: '5', detail: '20%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Bills</CardTitle>
-            <CardDescription>Latest supplier bills and payment status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Bill Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete bill management with approval workflows</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search bills..."
+                    value={billSearchTerm}
+                    onChange={(e) => setBillSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={billStatusFilter}
+                  onChange={(e) => setBillStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+                <select
+                  value={billCategoryFilter}
+                  onChange={(e) => setBillCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Office">Office</option>
+                  <option value="Equipment">Equipment</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Software">Software</option>
+                  <option value="Services">Services</option>
+                  <option value="Insurance">Insurance</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
-                { number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18' },
-                { number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17' },
-                { number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
-                { number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15' }
-              ].map((bill, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{bill.number}</p>
+            <div className="space-y-3">
+              {filteredBills.map((bill) => (
+                <div key={bill.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewBill(bill)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{bill.number}</p>
                       <Badge className={`${
                         bill.status === 'Paid' ? 'bg-green-100 text-green-800' : 
                         bill.status === 'Overdue' ? 'bg-red-100 text-red-800' : 
@@ -4117,139 +4760,413 @@ export default function Bookkeeping() {
                       }`}>
                         {bill.status}
                       </Badge>
+                      <Badge className="bg-gray-100 text-gray-800">{bill.category}</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{bill.supplier}</p>
-                    <p className="text-xs text-gray-500">Due: {bill.dueDate}</p>
+                    <p className="text-sm font-medium text-blue-900">{bill.supplier}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>Date: {bill.date}</span>
+                      <span>Due: {bill.dueDate}</span>
+                      <span>Approver: {bill.approver}</span>
+                      <span>Method: {bill.paymentMethod}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{bill.amount}</p>
-                    <p className="text-sm text-blue-900">{bill.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{bill.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{bill.paymentMethod}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewBill(bill); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Bill" onClick={(e) => { e.stopPropagation(); handleEditBill(bill); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      {bill.status === 'Approved' && (
-                        <Button variant="ghost" size="sm">
-                          <CreditCard className="h-3 w-3" />
+                      {bill.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve Bill" onClick={(e) => { e.stopPropagation(); handleApproveBill(bill); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
                         </Button>
                       )}
+                      {bill.status === 'Approved' && (
+                        <Button variant="ghost" size="sm" title="Process Payment" onClick={(e) => { e.stopPropagation(); handlePayBill(bill); }}>
+                          <CreditCard className="h-4 w-4 text-blue-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="Split Bill" onClick={(e) => { e.stopPropagation(); handleSplitBill(bill); }}>
+                        <Split className="h-4 w-4 text-purple-600" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Email Bill" onClick={(e) => { e.stopPropagation(); }}>
+                        <Mail className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
+                      </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredBills.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No bills found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
+
+        {/* Split Bill Payment Dialog */}
+        {showSplitDialog && selectedBillForSplit && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-blue-900">Split Bill Payment</h2>
+                  <p className="text-sm text-blue-700">Allocate {selectedBillForSplit.number} across multiple expense categories</p>
+                </div>
+                <button
+                  onClick={() => setShowSplitDialog(false)}
+                  className="text-red-600 hover:text-red-800 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Bill Summary */}
+                <div className="bg-blue-50 border-2 border-blue-900 rounded-[2px] p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Bill Number</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.number}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Supplier</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.supplier}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Total Amount</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.currency} {selectedBillForSplit.amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">VAT Rate</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.vatRate}%</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Split Allocations */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-bold text-blue-900">Category Allocations</h3>
+                    <Button onClick={handleAddSplit} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Split
+                    </Button>
+                  </div>
+
+                  {billSplits.map((split, index) => (
+                    <div key={index} className="border-2 border-blue-900 rounded-[2px] p-4">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Expense Category
+                            </label>
+                            <select
+                              value={split.category}
+                              onChange={(e) => handleSplitChange(index, 'category', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Category</option>
+                              <option value="Office">Office Supplies</option>
+                              <option value="IT Equipment">IT Equipment</option>
+                              <option value="Office Equipment">Office Equipment</option>
+                              <option value="Marketing">Marketing</option>
+                              <option value="Digital Marketing">Digital Marketing</option>
+                              <option value="Print Advertising">Print Advertising</option>
+                              <option value="Consultation">Consultation</option>
+                              <option value="Software">Software</option>
+                              <option value="Travel">Travel</option>
+                              <option value="Utilities">Utilities</option>
+                              <option value="Professional Services">Professional Services</option>
+                              <option value="Insurance">Insurance</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Amount ({selectedBillForSplit.currency})
+                            </label>
+                            <input
+                              type="number"
+                              value={split.amount || ''}
+                              onChange={(e) => handleSplitChange(index, 'amount', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="0.00"
+                              step="0.01"
+                              min="0"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Percentage (%)
+                            </label>
+                            <input
+                              type="number"
+                              value={split.percentage ? split.percentage.toFixed(2) : ''}
+                              onChange={(e) => handleSplitChange(index, 'percentage', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="0.00"
+                              step="0.01"
+                              min="0"
+                              max="100"
+                            />
+                          </div>
+                        </div>
+
+                        {billSplits.length > 1 && (
+                          <button
+                            onClick={() => handleRemoveSplit(index)}
+                            className="mt-8 text-red-600 hover:text-red-800 transition-colors"
+                            title="Remove Split"
+                          >
+                            <Minus className="h-5 w-5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Split Summary */}
+                <div className="bg-gray-50 border-2 border-blue-900 rounded-[2px] p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Total Allocated</p>
+                      <p className="text-lg font-bold text-blue-900">
+                        {selectedBillForSplit.currency} {billSplits.reduce((sum, split) => sum + (split.amount || 0), 0).toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Percentage Allocated</p>
+                      <p className="text-lg font-bold text-blue-900">
+                        {billSplits.reduce((sum, split) => sum + (split.percentage || 0), 0).toFixed(2)}%
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Remaining</p>
+                      <p className={`text-lg font-bold ${
+                        Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) < 0.01 
+                          ? 'text-green-600' 
+                          : 'text-red-600'
+                      }`}>
+                        {selectedBillForSplit.currency} {(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) > 0.01 && (
+                    <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded text-sm text-orange-800">
+                      <AlertCircle className="h-4 w-4 inline mr-2" />
+                      Warning: Total allocation must equal the bill amount to save splits.
+                    </div>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-3 pt-4 border-t-2 border-blue-900">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSplitDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSaveSplits}
+                    disabled={Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) > 0.01}
+                    className="bg-blue-900 text-white hover:bg-blue-800"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Save Splits
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
 
   function renderPurchaseOrdersManagement() {
+    const [purchaseOrders, setPurchaseOrders] = useState([
+      { id: 1, number: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-20', status: 'Approved', deliveryDate: '2024-02-05', items: 3, requestedBy: 'John Smith' },
+      { id: 2, number: 'PO-2024-009', supplier: 'Office Furniture Ltd', amount: 1650, date: '2024-01-19', status: 'Pending', deliveryDate: '2024-02-10', items: 2, requestedBy: 'Sarah Johnson' },
+      { id: 3, number: 'PO-2024-010', supplier: 'Software Vendor', amount: 950, date: '2024-01-18', status: 'Delivered', deliveryDate: '2024-01-25', items: 1, requestedBy: 'Mike Chen' },
+      { id: 4, number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30', items: 5, requestedBy: 'Emma Wilson' },
+      { id: 5, number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08', items: 4, requestedBy: 'David Brown' },
+      { id: 6, number: 'PO-2024-013', supplier: 'IT Hardware Ltd', amount: 3200, date: '2024-01-15', status: 'Pending', deliveryDate: '2024-02-12', items: 6, requestedBy: 'John Smith' },
+      { id: 7, number: 'PO-2024-014', supplier: 'Cleaning Supplies', amount: 280, date: '2024-01-14', status: 'Delivered', deliveryDate: '2024-01-28', items: 8, requestedBy: 'Sarah Johnson' }
+    ])
+
+    const [poSearchTerm, setPoSearchTerm] = useState('')
+    const [poStatusFilter, setPoStatusFilter] = useState('all')
+
+    const filteredPOs = purchaseOrders.filter(po => {
+      const matchesSearch = po.number.toLowerCase().includes(poSearchTerm.toLowerCase()) ||
+                           po.supplier.toLowerCase().includes(poSearchTerm.toLowerCase()) ||
+                           po.amount.toString().includes(poSearchTerm)
+      const matchesStatus = poStatusFilter === 'all' || po.status === poStatusFilter
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreatePO = () => {
+      console.log('Creating new PO')
+    }
+
+    const handleViewPO = (po: any) => {
+      console.log('Viewing PO:', po)
+    }
+
+    const handleEditPO = (po: any) => {
+      console.log('Editing PO:', po)
+    }
+
+    const handleApprovePO = (po: any) => {
+      console.log('Approving PO:', po)
+      setPurchaseOrders(purchaseOrders.map(p => p.id === po.id ? { ...p, status: 'Approved' } : p))
+    }
+
+    const handleConvertToBill = (po: any) => {
+      console.log('Converting PO to Bill:', po)
+    }
+
+    const handleExportPOs = () => {
+      console.log('Exporting POs')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Purchase Order Management</h2>
-            <p className="text-blue-900">Create, track, and manage purchase orders</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Purchase Order Management</h2>
+            <p className="text-blue-900">Create, track, and manage purchase orders with real-time delivery tracking</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreatePO}>
               <Plus className="h-4 w-4 mr-2" />
               New PO
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import POs
+            </Button>
+            <Button onClick={handleExportPOs}>
+              <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
           </div>
         </div>
 
-        <SearchFilterHeader
-          searchPlaceholder="Search purchase orders by supplier, amount, status..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Category',
-              options: categoryOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
-
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Active POs</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">12</div>
-              <p className="text-sm text-blue-900">In progress</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">5</div>
-              <p className="text-sm text-blue-900">Awaiting approval</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Completed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">28</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£45,600</div>
-              <p className="text-sm text-blue-900">Active POs</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Active POs" 
+            value="12" 
+            subtitle="In progress" 
+            valueColor="text-blue-600"
+            drillDownData={{
+              title: 'Active PO Status',
+              items: [
+                { label: 'Approved', value: '5', detail: 'Ready to order' },
+                { label: 'In Transit', value: '4', detail: 'On the way' },
+                { label: 'Pending', value: '3', detail: 'Awaiting approval' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Pending Approval" 
+            value="5" 
+            subtitle="Awaiting review" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Approval Queue',
+              items: [
+                { label: 'High Priority', value: '2', detail: 'Urgent orders' },
+                { label: 'Normal Priority', value: '3', detail: 'Standard review' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Completed This Month" 
+            value="28" 
+            subtitle="Successfully delivered" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Completion Analysis',
+              items: [
+                { label: 'On Time', value: '24', detail: '85.7%' },
+                { label: 'Late', value: '4', detail: '14.3%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Total Active Value" 
+            value="£45,600" 
+            subtitle="Outstanding orders" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Value by Category',
+              items: [
+                { label: 'Equipment', value: '£28,400', detail: '62.3%' },
+                { label: 'Supplies', value: '£12,800', detail: '28.1%' },
+                { label: 'Services', value: '£4,400', detail: '9.6%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Purchase Orders</CardTitle>
-            <CardDescription>Latest purchase orders and their status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Purchase Order Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete PO tracking with delivery management</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search POs..."
+                    value={poSearchTerm}
+                    onChange={(e) => setPoSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={poStatusFilter}
+                  onChange={(e) => setPoStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="In Transit">In Transit</option>
+                  <option value="Delivered">Delivered</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { number: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-20', status: 'Approved', deliveryDate: '2024-02-05' },
-                { number: 'PO-2024-009', supplier: 'Office Furniture Ltd', amount: 1650, date: '2024-01-19', status: 'Pending', deliveryDate: '2024-02-10' },
-                { number: 'PO-2024-010', supplier: 'Software Vendor', amount: 950, date: '2024-01-18', status: 'Delivered', deliveryDate: '2024-01-25' },
-                { number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30' },
-                { number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08' }
-              ].map((po, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{po.number}</p>
+            <div className="space-y-3">
+              {filteredPOs.map((po) => (
+                <div key={po.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewPO(po)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{po.number}</p>
                       <Badge className={`${
                         po.status === 'Delivered' ? 'bg-green-100 text-green-800' : 
                         po.status === 'In Transit' ? 'bg-blue-100 text-blue-800' : 
@@ -4259,26 +5176,54 @@ export default function Bookkeeping() {
                         {po.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{po.supplier}</p>
-                    <p className="text-xs text-gray-500">Delivery: {po.deliveryDate}</p>
+                    <p className="text-sm font-medium text-blue-900">{po.supplier}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>Date: {po.date}</span>
+                      <span>Delivery: {po.deliveryDate}</span>
+                      <span>Items: {po.items}</span>
+                      <span>By: {po.requestedBy}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{po.amount}</p>
-                    <p className="text-sm text-blue-900">{po.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{po.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{po.items} items</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewPO(po); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit PO" onClick={(e) => { e.stopPropagation(); handleEditPO(po); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <ShoppingCart className="h-3 w-3" />
+                      {po.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve PO" onClick={(e) => { e.stopPropagation(); handleApprovePO(po); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        </Button>
+                      )}
+                      {po.status === 'Delivered' && (
+                        <Button variant="ghost" size="sm" title="Convert to Bill" onClick={(e) => { e.stopPropagation(); handleConvertToBill(po); }}>
+                          <Receipt className="h-4 w-4 text-blue-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="Track Delivery" onClick={(e) => { e.stopPropagation(); }}>
+    // @ts-ignore
+                        <ShoppingCart className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredPOs.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No purchase orders found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4287,19 +5232,67 @@ export default function Bookkeeping() {
   }
 
   function renderSuppliersManagement() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [suppliers, setSuppliers] = useState([
+      { id: 1, name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred', contact: 'John Williams', category: 'Equipment', accountCode: 'SUP001' },
+      { id: 2, name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active', contact: 'Sarah Davis', category: 'Supplies', accountCode: 'SUP002' },
+      { id: 3, name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active', contact: 'Mike Thompson', category: 'Services', accountCode: 'SUP003' },
+      { id: 4, name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active', contact: 'Emma Roberts', category: 'Professional', accountCode: 'SUP004' },
+      { id: 5, name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active', contact: 'David Clark', category: 'Utilities', accountCode: 'SUP005' },
+      { id: 6, name: 'Software Solutions', email: 'support@software.com', phone: '+44 203 123 4567', totalSpent: 4200, paymentTerms: '21 days', status: 'Preferred', contact: 'Lisa Anderson', category: 'Software', accountCode: 'SUP006' },
+      { id: 7, name: 'Cleaning Services', email: 'admin@cleaning.co.uk', phone: '+44 141 987 6543', totalSpent: 1200, paymentTerms: '14 days', status: 'Active', contact: 'Tom Wilson', category: 'Services', accountCode: 'SUP007' }
+    ])
+
+    const [supplierSearchTerm, setSupplierSearchTerm] = useState('')
+    const [supplierStatusFilter, setSupplierStatusFilter] = useState('all')
+    const [supplierCategoryFilter, setSupplierCategoryFilter] = useState('all')
+
+    const filteredSuppliers = suppliers.filter(supplier => {
+      const matchesSearch = supplier.name.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
+                           supplier.email.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
+                           supplier.accountCode.toLowerCase().includes(supplierSearchTerm.toLowerCase())
+      const matchesStatus = supplierStatusFilter === 'all' || supplier.status === supplierStatusFilter
+      const matchesCategory = supplierCategoryFilter === 'all' || supplier.category === supplierCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateSupplier = () => {
+      console.log('Creating new supplier')
+    }
+
+    const handleViewSupplier = (supplier: any) => {
+      console.log('Viewing supplier:', supplier)
+    }
+
+    const handleEditSupplier = (supplier: any) => {
+      console.log('Editing supplier:', supplier)
+    }
+
+    const handleViewTransactions = (supplier: any) => {
+      console.log('Viewing supplier transactions:', supplier)
+    }
+
+    const handleExportSuppliers = () => {
+      console.log('Exporting suppliers')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Supplier Management</h2>
-            <p className="text-blue-900">Manage supplier information, payment terms, and transaction history</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Supplier Management</h2>
+            <p className="text-blue-900">Comprehensive supplier database with payment terms and transaction history</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateSupplier}>
               <Plus className="h-4 w-4 mr-2" />
               Add Supplier
             </Button>
-            <Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Suppliers
+            </Button>
+            <Button onClick={handleExportSuppliers}>
               <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -4307,89 +5300,171 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Suppliers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">89</div>
-              <p className="text-sm text-blue-900">Active suppliers</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">3</div>
-              <p className="text-sm text-blue-900">+5% growth</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Supplier Spend</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£8,450</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,245</div>
-              <p className="text-sm text-blue-900">Per supplier</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Total Suppliers" 
+            value="89" 
+            subtitle="Active relationships" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Supplier Status Breakdown',
+              items: [
+                { label: 'Preferred Suppliers', value: '12', detail: '13.5%' },
+                { label: 'Active Suppliers', value: '74', detail: '83.1%' },
+                { label: 'Inactive Suppliers', value: '3', detail: '3.4%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="New This Month" 
+            value="3" 
+            subtitle="+5% growth" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'New Supplier Categories',
+              items: [
+                { label: 'Professional Services', value: '2', detail: 'Legal & Consulting' },
+                { label: 'Equipment', value: '1', detail: 'IT Hardware' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Top Supplier Spend" 
+            value="£8,450" 
+            subtitle="This month" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Top Spending Categories',
+              items: [
+                { label: 'Equipment', value: '£8,450', detail: 'Tech Equipment Co' },
+                { label: 'Services', value: '£5,600', detail: 'Marketing Agency' },
+                { label: 'Software', value: '£4,200', detail: 'Software Solutions' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Payment Terms" 
+            value="21 days" 
+            subtitle="Weighted average" 
+            valueColor="text-purple-600"
+            drillDownData={{
+              title: 'Payment Terms Distribution',
+              items: [
+                { label: '7 days', value: '8', detail: '9.0%' },
+                { label: '14 days', value: '23', detail: '25.8%' },
+                { label: '30 days', value: '58', detail: '65.2%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Supplier Database</CardTitle>
-            <CardDescription>Complete supplier information and payment terms</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Supplier Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete supplier information with payment terms and transaction history</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search suppliers..."
+                    value={supplierSearchTerm}
+                    onChange={(e) => setSupplierSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={supplierStatusFilter}
+                  onChange={(e) => setSupplierStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Preferred">Preferred</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+                <select
+                  value={supplierCategoryFilter}
+                  onChange={(e) => setSupplierCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Equipment">Equipment</option>
+                  <option value="Supplies">Supplies</option>
+                  <option value="Services">Services</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Software">Software</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred' },
-                { name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active' },
-                { name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active' },
-                { name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active' },
-                { name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active' }
-              ].map((supplier, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{supplier.name}</p>
+            <div className="space-y-3">
+              {filteredSuppliers.map((supplier) => (
+                <div key={supplier.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewSupplier(supplier)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{supplier.name}</p>
                       <Badge className={`${
                         supplier.status === 'Preferred' ? 'bg-purple-100 text-purple-800' : 
-                        'bg-green-100 text-green-800'
+                        supplier.status === 'Active' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                         {supplier.status}
                       </Badge>
+                      <Badge className="bg-blue-100 text-blue-800">{supplier.category}</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{supplier.email}</p>
-                    <p className="text-xs text-gray-500">{supplier.phone} | Terms: {supplier.paymentTerms}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-blue-900 mb-1">
+                      <span className="flex items-center gap-1">
+                        <Mail className="h-3 w-3" />
+                        {supplier.email}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {supplier.phone}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700">
+                      <span>Contact: {supplier.contact}</span>
+                      <span>Terms: {supplier.paymentTerms}</span>
+                      <span>Code: {supplier.accountCode}</span>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold">£{supplier.totalSpent}</p>
-                    <p className="text-sm text-blue-900">Total spent</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Receipt className="h-3 w-3" />
-                    </Button>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{supplier.totalSpent.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">Total spent</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewSupplier(supplier); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Edit Supplier" onClick={(e) => { e.stopPropagation(); handleEditSupplier(supplier); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Transaction History" onClick={(e) => { e.stopPropagation(); handleViewTransactions(supplier); }}>
+                        <Receipt className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Contact Supplier" onClick={(e) => { e.stopPropagation(); }}>
+                        <Mail className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download Statement" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
+              {filteredSuppliers.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No suppliers found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4398,19 +5473,73 @@ export default function Bookkeeping() {
   }
 
   function renderExpensesManagement() {
+    const [expenses, setExpenses] = useState([
+      { id: 1, reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith', approver: 'Sarah Johnson', receipt: true },
+      { id: 2, reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson', approver: 'Mike Chen', receipt: true },
+      { id: 3, reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen', approver: 'John Smith', receipt: false },
+      { id: 4, reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson', approver: 'Sarah Johnson', receipt: true },
+      { id: 5, reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown', approver: 'Mike Chen', receipt: true },
+      { id: 6, reference: 'EXP-2024-050', description: 'Conference Registration', category: 'Training', amount: 650, date: '2024-01-15', status: 'Pending', submittedBy: 'John Smith', approver: 'Sarah Johnson', receipt: true },
+      { id: 7, reference: 'EXP-2024-051', description: 'Hotel Accommodation', category: 'Travel', amount: 320, date: '2024-01-14', status: 'Approved', submittedBy: 'Emma Wilson', approver: 'Mike Chen', receipt: true },
+      { id: 8, reference: 'EXP-2024-052', description: 'Marketing Materials', category: 'Marketing', amount: 180, date: '2024-01-13', status: 'Submitted', submittedBy: 'Sarah Johnson', approver: 'John Smith', receipt: false }
+    ])
+
+    const [expenseSearchTerm, setExpenseSearchTerm] = useState('')
+    const [expenseStatusFilter, setExpenseStatusFilter] = useState('all')
+    const [expenseCategoryFilter, setExpenseCategoryFilter] = useState('all')
+
+    const filteredExpenses = expenses.filter(expense => {
+      const matchesSearch = expense.reference.toLowerCase().includes(expenseSearchTerm.toLowerCase()) ||
+                           expense.description.toLowerCase().includes(expenseSearchTerm.toLowerCase()) ||
+                           expense.submittedBy.toLowerCase().includes(expenseSearchTerm.toLowerCase())
+      const matchesStatus = expenseStatusFilter === 'all' || expense.status === expenseStatusFilter
+      const matchesCategory = expenseCategoryFilter === 'all' || expense.category === expenseCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateExpense = () => {
+      console.log('Creating new expense')
+    }
+
+    const handleViewExpense = (expense: any) => {
+      console.log('Viewing expense:', expense)
+    }
+
+    const handleEditExpense = (expense: any) => {
+      console.log('Editing expense:', expense)
+    }
+
+    const handleApproveExpense = (expense: any) => {
+      console.log('Approving expense:', expense)
+      setExpenses(expenses.map(e => e.id === expense.id ? { ...e, status: 'Approved' } : e))
+    }
+
+    const handleRejectExpense = (expense: any) => {
+      console.log('Rejecting expense:', expense)
+      setExpenses(expenses.map(e => e.id === expense.id ? { ...e, status: 'Rejected' } : e))
+    }
+
+    const handleExportExpenses = () => {
+      console.log('Exporting expenses')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Expense Management</h2>
-            <p className="text-blue-900">Track, categorize, and manage business expenses</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Expense Management</h2>
+            <p className="text-blue-900">Comprehensive expense tracking with automated approval workflows and receipt management</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateExpense}>
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
-            <Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Bulk Import
+            </Button>
+            <Button onClick={handleExportExpenses}>
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
@@ -4418,113 +5547,202 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£12,450</div>
-              <p className="text-sm text-blue-900">Total expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£2,850</div>
-              <p className="text-sm text-blue-900">8 expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Reimbursable</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">£1,650</div>
-              <p className="text-sm text-blue-900">Employee expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Expense</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£185</div>
-              <p className="text-sm text-blue-900">Per transaction</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="This Month" 
+            value="£12,450" 
+            subtitle="Total expenses" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Monthly Expense Breakdown',
+              items: [
+                { label: 'Travel', value: '£3,450', detail: '27.7%' },
+                { label: 'Office Supplies', value: '£2,850', detail: '22.9%' },
+                { label: 'Software', value: '£2,200', detail: '17.7%' },
+                { label: 'Meals', value: '£1,950', detail: '15.7%' },
+                { label: 'Other', value: '£2,000', detail: '16.0%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Pending Approval" 
+            value="£2,850" 
+            subtitle="8 expenses" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Pending Approval Queue',
+              items: [
+                { label: 'High Priority', value: '3', detail: 'Over £500' },
+                { label: 'Standard', value: '5', detail: 'Under £500' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Reimbursable" 
+            value="£1,650" 
+            subtitle="Employee expenses" 
+            valueColor="text-blue-600"
+            drillDownData={{
+              title: 'Reimbursement Breakdown',
+              items: [
+                { label: 'Travel Claims', value: '£950', detail: '57.6%' },
+                { label: 'Meal Expenses', value: '£450', detail: '27.3%' },
+                { label: 'Other Claims', value: '£250', detail: '15.1%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Expense" 
+            value="£185" 
+            subtitle="Per transaction" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Expense Distribution',
+              items: [
+                { label: 'Small (<£100)', value: '45', detail: '56.3%' },
+                { label: 'Medium (£100-£500)', value: '28', detail: '35.0%' },
+                { label: 'Large (>£500)', value: '7', detail: '8.7%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Expenses</CardTitle>
-            <CardDescription>Latest expense submissions and approvals</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Expense Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete expense tracking with approval workflows and receipt management</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search expenses..."
+                    value={expenseSearchTerm}
+                    onChange={(e) => setExpenseSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={expenseStatusFilter}
+                  onChange={(e) => setExpenseStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <select
+                  value={expenseCategoryFilter}
+                  onChange={(e) => setExpenseCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Office">Office</option>
+                  <option value="Software">Software</option>
+                  <option value="Meals">Meals</option>
+                  <option value="Training">Training</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith' },
-                { reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson' },
-                { reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen' },
-                { reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson' },
-                { reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown' }
-              ].map((expense, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{expense.reference}</p>
+            <div className="space-y-3">
+              {filteredExpenses.map((expense) => (
+                <div key={expense.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewExpense(expense)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{expense.reference}</p>
                       <Badge className={`${
                         expense.status === 'Approved' ? 'bg-green-100 text-green-800' : 
                         expense.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 
+                        expense.status === 'Rejected' ? 'bg-red-100 text-red-800' :
                         'bg-orange-100 text-orange-800'
                       }`}>
                         {expense.status}
                       </Badge>
                       <Badge className="bg-gray-100 text-gray-800">{expense.category}</Badge>
+                      {expense.receipt && (
+                        <Badge className="bg-green-100 text-green-800">Receipt ✓</Badge>
+                      )}
                     </div>
-                    <p className="text-sm text-blue-900">{expense.description}</p>
-                    <p className="text-xs text-gray-500">By: {expense.submittedBy} | {expense.date}</p>
+                    <p className="text-sm font-medium text-blue-900">{expense.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>By: {expense.submittedBy}</span>
+                      <span>Date: {expense.date}</span>
+                      <span>Approver: {expense.approver}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{expense.amount}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{expense.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{expense.category}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewExpense(expense); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Expense" onClick={(e) => { e.stopPropagation(); handleEditExpense(expense); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <FileText className="h-3 w-3" />
+                      {expense.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve" onClick={(e) => { e.stopPropagation(); handleApproveExpense(expense); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        </Button>
+                      )}
+                      {expense.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Reject" onClick={(e) => { e.stopPropagation(); handleRejectExpense(expense); }}>
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="View Receipt" onClick={(e) => { e.stopPropagation(); }}>
+                        <FileText className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredExpenses.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No expenses found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
               <CardTitle className="text-blue-900">Expense Categories</CardTitle>
-              <CardDescription>Breakdown by expense category</CardDescription>
+              <CardDescription className="text-blue-900">Interactive breakdown by expense category</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary' },
-                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500' },
-                  { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500' },
-                  { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500' },
-                  { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500' }
+                  { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary', count: 28 },
+                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500', count: 15 },
+                  { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500', count: 8 },
+                  { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500', count: 22 },
+                  { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500', count: 7 }
                 ].map((category, index) => (
-                  <div key={index} className="space-y-2">
+                  <div key={index} className="space-y-2 p-3 border border-blue-200 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium">{category.category}</p>
-                      <p className="font-semibold">£{category.amount}</p>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
+                        <p className="font-medium text-blue-900">{category.category}</p>
+                      </div>
+                      <p className="font-semibold text-blue-900">£{category.amount.toLocaleString()}</p>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -4532,34 +5750,38 @@ export default function Bookkeeping() {
                         style={{ width: `${category.percentage}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm text-blue-900">{category.percentage}% of total expenses</p>
+                    <div className="flex justify-between text-sm text-blue-700">
+                      <span>{category.percentage}% of total</span>
+                      <span>{category.count} expenses</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
-              <CardTitle className="text-blue-900">Monthly Trend</CardTitle>
-              <CardDescription>Expense trends over the last 6 months</CardDescription>
+              <CardTitle className="text-blue-900">Monthly Trends</CardTitle>
+              <CardDescription className="text-blue-900">Expense trends with variance analysis</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { month: 'January 2024', amount: 12450, change: '+8%' },
-                  { month: 'December 2023', amount: 11520, change: '-3%' },
-                  { month: 'November 2023', amount: 11890, change: '+12%' },
-                  { month: 'October 2023', amount: 10620, change: '+5%' },
-                  { month: 'September 2023', amount: 10120, change: '-2%' },
-                  { month: 'August 2023', amount: 10350, change: '+7%' }
+                  { month: 'January 2024', amount: 12450, change: '+8%', variance: 'Above budget', color: 'text-red-600' },
+                  { month: 'December 2023', amount: 11520, change: '-3%', variance: 'On budget', color: 'text-green-600' },
+                  { month: 'November 2023', amount: 11890, change: '+12%', variance: 'Above budget', color: 'text-red-600' },
+                  { month: 'October 2023', amount: 10620, change: '+5%', variance: 'On budget', color: 'text-green-600' },
+                  { month: 'September 2023', amount: 10120, change: '-2%', variance: 'Under budget', color: 'text-blue-600' },
+                  { month: 'August 2023', amount: 10350, change: '+7%', variance: 'On budget', color: 'text-green-600' }
                 ].map((month, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
                     <div className="flex-1">
-                      <p className="font-medium">{month.month}</p>
+                      <p className="font-medium text-blue-900">{month.month}</p>
+                      <p className={`text-xs ${month.color}`}>{month.variance}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold">£{month.amount}</p>
+                      <p className="font-semibold text-blue-900">£{month.amount.toLocaleString()}</p>
                       <p className={`text-sm ${month.change.startsWith('+') ? 'text-red-600' : 'text-green-600'}`}>
                         {month.change}
                       </p>
@@ -4575,132 +5797,243 @@ export default function Bookkeeping() {
   }
 
   function renderBankAccountsManagement() {
+    const [bankAccounts, setBankAccounts] = useState([
+      { id: 1, name: 'Business Current Account', bank: 'Barclays', accountNumber: '12345678', sortCode: '20-00-00', balance: 45230, currency: 'GBP', type: 'Current', status: 'Active', openDate: '2020-01-15', lastSync: '2024-01-20 09:45' },
+      { id: 2, name: 'Business Savings Account', bank: 'HSBC', accountNumber: '87654321', sortCode: '40-00-00', balance: 32100, currency: 'GBP', type: 'Savings', status: 'Active', openDate: '2020-03-10', lastSync: '2024-01-20 08:30' },
+      { id: 3, name: 'Payroll Account', bank: 'Lloyds', accountNumber: '11223344', sortCode: '30-00-00', balance: 28900, currency: 'GBP', type: 'Current', status: 'Active', openDate: '2020-06-01', lastSync: '2024-01-20 07:15' },
+      { id: 4, name: 'Tax Reserve Account', bank: 'NatWest', accountNumber: '55667788', sortCode: '60-00-00', balance: 12800, currency: 'GBP', type: 'Savings', status: 'Active', openDate: '2021-01-20', lastSync: '2024-01-19 16:20' },
+      { id: 5, name: 'Petty Cash Account', bank: 'Santander', accountNumber: '99887766', sortCode: '09-01-28', balance: 6400, currency: 'GBP', type: 'Current', status: 'Active', openDate: '2021-04-15', lastSync: '2024-01-20 10:00' },
+      { id: 6, name: 'USD Business Account', bank: 'HSBC', accountNumber: '44556677', sortCode: '40-00-01', balance: 12500, currency: 'USD', type: 'Current', status: 'Active', openDate: '2022-01-10', lastSync: '2024-01-20 09:00' },
+      { id: 7, name: 'EUR Trade Account', bank: 'Barclays', accountNumber: '22334455', sortCode: '20-00-01', balance: 8750, currency: 'EUR', type: 'Current', status: 'Active', openDate: '2022-06-20', lastSync: '2024-01-20 08:45' },
+      { id: 8, name: 'Business Credit Card', bank: 'American Express', accountNumber: '****1234', sortCode: '', balance: -2500, currency: 'GBP', type: 'Credit Card', status: 'Active', openDate: '2020-02-01', lastSync: '2024-01-20 06:30' }
+    ])
+
+    const [accountSearchTerm, setAccountSearchTerm] = useState('')
+    const [accountTypeFilter, setAccountTypeFilter] = useState('all')
+    const [accountStatusFilter, setAccountStatusFilter] = useState('all')
+
+    const filteredAccounts = bankAccounts.filter(account => {
+      const matchesSearch = account.name.toLowerCase().includes(accountSearchTerm.toLowerCase()) ||
+                           account.bank.toLowerCase().includes(accountSearchTerm.toLowerCase()) ||
+                           account.accountNumber.includes(accountSearchTerm)
+      const matchesType = accountTypeFilter === 'all' || account.type === accountTypeFilter
+      const matchesStatus = accountStatusFilter === 'all' || account.status === accountStatusFilter
+      return matchesSearch && matchesType && matchesStatus
+    })
+
+    const totalBalance = bankAccounts.filter(a => a.type !== 'Credit Card').reduce((sum, acc) => sum + convertCurrency(acc.balance, acc.currency, 'GBP'), 0)
+    const activeAccounts = bankAccounts.filter(a => a.status === 'Active').length
+    const monthlyInflow = 45230
+    const monthlyOutflow = 32180
+
+    const handleAddAccount = () => {
+      console.log('Adding new bank account')
+    }
+
+    const handleViewAccount = (account: any) => {
+      console.log('Viewing account:', account)
+    }
+
+    const handleEditAccount = (account: any) => {
+      console.log('Editing account:', account)
+    }
+
+    const handleSyncAccount = (account: any) => {
+      console.log('Syncing account:', account)
+      setBankAccounts(bankAccounts.map(a => 
+        a.id === account.id 
+          ? { ...a, lastSync: new Date().toISOString().slice(0, 16).replace('T', ' ') } 
+          : a
+      ))
+    }
+
+    const handleExportAccounts = () => {
+      console.log('Exporting bank accounts')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Bank Account Management</h2>
-            <p className="text-blue-900">Manage bank accounts, balances, and account settings</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Bank Account Management</h2>
+            <p className="text-blue-900">Manage multi-currency bank accounts, balances, and settings</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleAddAccount}>
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Statement
+            </Button>
+            <Button onClick={handleExportAccounts}>
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
           </div>
         </div>
 
-        <SearchFilterHeader
-          searchPlaceholder="Search bank accounts by name, bank, account number..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Type',
-              options: typeOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
-
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Balance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">£125,430</div>
-              <p className="text-sm text-blue-900">Across all accounts</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Active Accounts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">8</div>
-              <p className="text-sm text-blue-900">Connected accounts</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Monthly Inflow</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">£45,230</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Monthly Outflow</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£32,180</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Total Balance" 
+            value={formatCurrency(totalBalance, 'GBP')} 
+            subtitle="Across all accounts" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Balance by Currency',
+              items: [
+                { label: 'GBP Accounts', value: '£' + bankAccounts.filter(a => a.currency === 'GBP' && a.type !== 'Credit Card').reduce((sum, a) => sum + a.balance, 0).toLocaleString(), detail: '6 accounts' },
+                { label: 'USD Accounts', value: '$' + bankAccounts.filter(a => a.currency === 'USD').reduce((sum, a) => sum + a.balance, 0).toLocaleString(), detail: '1 account' },
+                { label: 'EUR Accounts', value: '€' + bankAccounts.filter(a => a.currency === 'EUR').reduce((sum, a) => sum + a.balance, 0).toLocaleString(), detail: '1 account' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Active Accounts" 
+            value={activeAccounts.toString()} 
+            subtitle="Connected accounts" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Accounts by Type',
+              items: [
+                { label: 'Current Accounts', value: bankAccounts.filter(a => a.type === 'Current').length.toString(), detail: '62.5%' },
+                { label: 'Savings Accounts', value: bankAccounts.filter(a => a.type === 'Savings').length.toString(), detail: '25%' },
+                { label: 'Credit Cards', value: bankAccounts.filter(a => a.type === 'Credit Card').length.toString(), detail: '12.5%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Monthly Inflow" 
+            value={`£${monthlyInflow.toLocaleString()}`} 
+            subtitle="This month" 
+            valueColor="text-blue-600"
+            drillDownData={{
+              title: 'Inflow Sources',
+              items: [
+                { label: 'Customer Payments', value: '£32,450', detail: '71.8%' },
+                { label: 'Bank Interest', value: '£850', detail: '1.9%' },
+                { label: 'Other Income', value: '£11,930', detail: '26.4%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Monthly Outflow" 
+            value={`£${monthlyOutflow.toLocaleString()}`} 
+            subtitle="This month" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Outflow Categories',
+              items: [
+                { label: 'Supplier Payments', value: '£18,920', detail: '58.8%' },
+                { label: 'Payroll', value: '£8,450', detail: '26.3%' },
+                { label: 'Operating Expenses', value: '£4,810', detail: '14.9%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Bank Accounts</CardTitle>
-            <CardDescription>All connected bank accounts and their current balances</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Bank Accounts</CardTitle>
+                <CardDescription className="text-blue-900">All connected bank accounts with real-time balances</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search accounts..."
+                    value={accountSearchTerm}
+                    onChange={(e) => setAccountSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={accountTypeFilter}
+                  onChange={(e) => setAccountTypeFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Types</option>
+                  <option value="Current">Current</option>
+                  <option value="Savings">Savings</option>
+                  <option value="Credit Card">Credit Card</option>
+                </select>
+                <select
+                  value={accountStatusFilter}
+                  onChange={(e) => setAccountStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { name: 'Business Current Account', bank: 'Barclays', accountNumber: '****1234', balance: 45230, type: 'Current', status: 'Active' },
-                { name: 'Business Savings Account', bank: 'HSBC', accountNumber: '****5678', balance: 32100, type: 'Savings', status: 'Active' },
-                { name: 'Payroll Account', bank: 'Lloyds', accountNumber: '****9012', balance: 28900, type: 'Current', status: 'Active' },
-                { name: 'Tax Reserve Account', bank: 'NatWest', accountNumber: '****3456', balance: 12800, type: 'Savings', status: 'Active' },
-                { name: 'Petty Cash Account', bank: 'Santander', accountNumber: '****7890', balance: 6400, type: 'Current', status: 'Active' }
-              ].map((account, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex items-center gap-4">
-                    <Landmark className="h-8 w-8 text-brisk-primary" />
-                    <div>
-                      <p className="font-medium">{account.name}</p>
-                      <p className="text-sm text-blue-900">{account.bank} • {account.accountNumber}</p>
-                      <div className="flex gap-2 mt-1">
+            <div className="space-y-3">
+              {filteredAccounts.map((account) => (
+                <div key={account.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewAccount(account)}>
+                  <div className="flex items-start gap-4 mb-3 sm:mb-0">
+                    <Landmark className="h-8 w-8 text-brisk-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <p className="font-semibold text-blue-900">{account.name}</p>
+                        <Badge className={`${
+                          account.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {account.status}
+                        </Badge>
                         <Badge className="bg-blue-100 text-blue-800">{account.type}</Badge>
-                        <Badge className="bg-green-100 text-green-800">{account.status}</Badge>
+                        <Badge className="bg-purple-100 text-purple-800">{account.currency}</Badge>
+                      </div>
+                      <p className="text-sm text-blue-900">{account.bank}</p>
+                      <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                        <span>A/C: {account.accountNumber.slice(-4).padStart(account.accountNumber.length, '*')}</span>
+                        {account.sortCode && <span>Sort: {account.sortCode}</span>}
+                        <span>Opened: {account.openDate}</span>
+                        <span>Synced: {account.lastSync}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold">£{account.balance.toLocaleString()}</p>
-                    <div className="flex gap-1 mt-2">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className={`text-2xl font-bold ${account.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatCurrency(account.balance, account.currency)}
+                      </p>
+                      <p className="text-xs text-blue-700">
+                        {account.currency !== 'GBP' && `≈ ${formatCurrency(convertCurrency(account.balance, account.currency, 'GBP'), 'GBP')}`}
+                      </p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewAccount(account); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Account" onClick={(e) => { e.stopPropagation(); handleEditAccount(account); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <RefreshCw className="h-3 w-3" />
+    // @ts-ignore
+                      <Button variant="ghost" size="sm" title="Sync Account" onClick={(e) => { e.stopPropagation(); handleSyncAccount(account); }}>
+                        <RefreshCw className="h-4 w-4 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download Statement" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredAccounts.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No accounts found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4709,108 +6042,208 @@ export default function Bookkeeping() {
   }
 
   function renderBankTransactionsManagement() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [bankTransactions, setBankTransactions] = useState([
+      { id: 1, date: '2024-01-20', description: 'Customer Payment - INV-001', account: 'Business Current', accountId: 1, amount: 2500, currency: 'GBP', type: 'Credit', category: 'Sales', reference: 'INV-001', status: 'Categorized', vatAmount: 416.67, vatRate: 20 },
+      { id: 2, date: '2024-01-20', description: 'Office Rent Payment', account: 'Business Current', accountId: 1, amount: -1200, currency: 'GBP', type: 'Debit', category: 'Rent', reference: 'RENT-JAN24', status: 'Categorized', vatAmount: 0, vatRate: 0 },
+      { id: 3, date: '2024-01-19', description: 'Supplier Payment - Tech Co', account: 'Business Current', accountId: 1, amount: -850, currency: 'GBP', type: 'Debit', category: 'Purchases', reference: 'SUPP-001', status: 'Categorized', vatAmount: 141.67, vatRate: 20 },
+      { id: 4, date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', accountId: 2, amount: 5000, currency: 'GBP', type: 'Credit', category: '', reference: 'TRF-001', status: 'Uncategorized', vatAmount: 0, vatRate: 0 },
+      { id: 5, date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', accountId: 1, amount: -185, currency: 'GBP', type: 'Debit', category: 'Utilities', reference: 'ELEC-JAN', status: 'Categorized', vatAmount: 9.25, vatRate: 5 },
+      { id: 6, date: '2024-01-18', description: 'Staff Salary Payment', account: 'Payroll Account', accountId: 3, amount: -2800, currency: 'GBP', type: 'Debit', category: 'Payroll', reference: 'SAL-JAN24', status: 'Categorized', vatAmount: 0, vatRate: 0 },
+      { id: 7, date: '2024-01-17', description: 'Client Payment - INV-002', account: 'Business Current', accountId: 1, amount: 1850, currency: 'GBP', type: 'Credit', category: 'Sales', reference: 'INV-002', status: 'Categorized', vatAmount: 308.33, vatRate: 20 },
+      { id: 8, date: '2024-01-17', description: 'Software License - Adobe', account: 'Business Current', accountId: 1, amount: -89, currency: 'GBP', type: 'Debit', category: 'Software', reference: 'ADOBE-JAN', status: 'Categorized', vatAmount: 14.83, vatRate: 20 },
+      { id: 9, date: '2024-01-16', description: 'Currency Exchange USD', account: 'USD Business Account', accountId: 6, amount: 1250, currency: 'USD', type: 'Credit', category: '', reference: 'FX-001', status: 'Uncategorized', vatAmount: 0, vatRate: 0 },
+      { id: 10, date: '2024-01-16', description: 'Marketing Campaign Payment', account: 'Business Current', accountId: 1, amount: -450, currency: 'GBP', type: 'Debit', category: 'Marketing', reference: 'MKTG-001', status: 'Categorized', vatAmount: 75, vatRate: 20 },
+      { id: 11, date: '2024-01-15', description: 'Petty Cash Withdrawal', account: 'Petty Cash Account', accountId: 5, amount: -200, currency: 'GBP', type: 'Debit', category: 'Office', reference: 'PETTY-001', status: 'Categorized', vatAmount: 0, vatRate: 0 },
+      { id: 12, date: '2024-01-15', description: 'Insurance Premium', account: 'Business Current', accountId: 1, amount: -320, currency: 'GBP', type: 'Debit', category: 'Insurance', reference: 'INS-JAN24', status: 'Categorized', vatAmount: 0, vatRate: 0 }
+    ])
+
+    const [transactionSearchTerm, setTransactionSearchTerm] = useState('')
+    const [transactionTypeFilter, setTransactionTypeFilter] = useState('all')
+    const [transactionStatusFilter, setTransactionStatusFilter] = useState('all')
+    const [transactionAccountFilter, setTransactionAccountFilter] = useState('all')
+
+    const filteredTransactions = bankTransactions.filter(transaction => {
+      const matchesSearch = transaction.description.toLowerCase().includes(transactionSearchTerm.toLowerCase()) ||
+                           transaction.reference.toLowerCase().includes(transactionSearchTerm.toLowerCase()) ||
+                           transaction.amount.toString().includes(transactionSearchTerm) ||
+                           (transaction.category && transaction.category.toLowerCase().includes(transactionSearchTerm.toLowerCase()))
+      const matchesType = transactionTypeFilter === 'all' || transaction.type === transactionTypeFilter
+      const matchesStatus = transactionStatusFilter === 'all' || transaction.status === transactionStatusFilter
+      const matchesAccount = transactionAccountFilter === 'all' || transaction.account === transactionAccountFilter
+      return matchesSearch && matchesType && matchesStatus && matchesAccount
+    })
+
+    const thisMonth = bankTransactions.length
+    const uncategorized = bankTransactions.filter(t => t.status === 'Uncategorized').length
+    const income = bankTransactions.filter(t => t.amount > 0).reduce((sum, t) => sum + convertCurrency(t.amount, t.currency, 'GBP'), 0)
+    const expenses = bankTransactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(convertCurrency(t.amount, t.currency, 'GBP')), 0)
+
+    const handleCategorizeTransaction = (transaction: any) => {
+      console.log('Categorizing transaction:', transaction)
+    }
+
+    const handleEditTransaction = (transaction: any) => {
+      console.log('Editing transaction:', transaction)
+    }
+
+    const handleViewTransaction = (transaction: any) => {
+      console.log('Viewing transaction:', transaction)
+    }
+
+    const handleExportTransactions = (format: string) => {
+      console.log('Exporting transactions as:', format)
+    }
+
+    const handleBulkCategorize = () => {
+      console.log('Bulk categorizing transactions')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Bank Transactions</h2>
-            <p className="text-blue-900">View, categorize, and manage all bank transactions</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Bank Transactions</h2>
+            <p className="text-blue-900">View, categorize, and manage all bank transactions with multi-currency support</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleBulkCategorize}>
+              <Tag className="h-4 w-4 mr-2" />
+              Bulk Categorize
             </Button>
-            <Button>
+            <Button variant="outline" onClick={() => handleExportTransactions('csv')}>
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export CSV
+            </Button>
+            <Button variant="outline" onClick={() => handleExportTransactions('excel')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
+            <Button onClick={() => handleExportTransactions('pdf')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export PDF
             </Button>
           </div>
         </div>
-
-        <SearchFilterHeader
-          searchPlaceholder="Search transactions by description, amount, category..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Type',
-              options: typeOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">1,245</div>
-              <p className="text-sm text-blue-900">Total transactions</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Uncategorized</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">23</div>
-              <p className="text-sm text-blue-900">Need attention</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Income</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">£45,230</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Expenses</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£32,180</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="This Month" 
+            value={thisMonth.toString()} 
+            subtitle="Total transactions" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Transaction Breakdown',
+              items: [
+                { label: 'Credits (Income)', value: bankTransactions.filter(t => t.amount > 0).length.toString(), detail: '33.3%' },
+                { label: 'Debits (Expenses)', value: bankTransactions.filter(t => t.amount < 0).length.toString(), detail: '66.7%' },
+                { label: 'Multi-currency', value: bankTransactions.filter(t => t.currency !== 'GBP').length.toString(), detail: '8.3%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Uncategorized" 
+            value={uncategorized.toString()} 
+            subtitle="Need attention" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Uncategorized Analysis',
+              items: [
+                { label: 'Bank Transfers', value: '1', detail: '50%' },
+                { label: 'Currency Exchange', value: '1', detail: '50%' },
+                { label: 'Total Value', value: formatCurrency(6250, 'GBP'), detail: 'Mixed currencies' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Income" 
+            value={formatCurrency(income, 'GBP')} 
+            subtitle="This month" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Income Sources',
+              items: [
+                { label: 'Customer Payments', value: '£4,350', detail: '67.4%' },
+                { label: 'Bank Transfers', value: '£5,000', detail: '77.5%' },
+                { label: 'Currency Exchange', value: '≈£988', detail: '15.3%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Expenses" 
+            value={formatCurrency(expenses, 'GBP')} 
+            subtitle="This month" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Expense Categories',
+              items: [
+                { label: 'Payroll', value: '£2,800', detail: '50.9%' },
+                { label: 'Rent', value: '£1,200', detail: '21.8%' },
+                { label: 'Purchases', value: '£850', detail: '15.4%' },
+                { label: 'Other', value: '£644', detail: '11.7%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Transactions</CardTitle>
-            <CardDescription>Latest bank transactions across all accounts</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Bank Transactions</CardTitle>
+                <CardDescription className="text-blue-900">All transactions with categorization and multi-currency support</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search transactions..."
+                    value={transactionSearchTerm}
+                    onChange={(e) => setTransactionSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={transactionTypeFilter}
+                  onChange={(e) => setTransactionTypeFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Types</option>
+                  <option value="Credit">Credit</option>
+                  <option value="Debit">Debit</option>
+                </select>
+                <select
+                  value={transactionStatusFilter}
+                  onChange={(e) => setTransactionStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Categorized">Categorized</option>
+                  <option value="Uncategorized">Uncategorized</option>
+                </select>
+                <select
+                  value={transactionAccountFilter}
+                  onChange={(e) => setTransactionAccountFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Accounts</option>
+                  <option value="Business Current">Business Current</option>
+                  <option value="Business Savings">Business Savings</option>
+                  <option value="Payroll Account">Payroll Account</option>
+                  <option value="USD Business Account">USD Business Account</option>
+                  <option value="Petty Cash Account">Petty Cash Account</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { date: '2024-01-20', description: 'Customer Payment - INV-001', account: 'Business Current', amount: 2500, type: 'Credit', category: 'Sales', status: 'Categorized' },
-                { date: '2024-01-20', description: 'Office Rent Payment', account: 'Business Current', amount: -1200, type: 'Debit', category: 'Rent', status: 'Categorized' },
-                { date: '2024-01-19', description: 'Supplier Payment - Tech Co', account: 'Business Current', amount: -850, type: 'Debit', category: 'Purchases', status: 'Categorized' },
-                { date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', amount: 5000, type: 'Credit', category: '', status: 'Uncategorized' },
-                { date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', amount: -185, type: 'Debit', category: 'Utilities', status: 'Categorized' }
-              ].map((transaction, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{transaction.description}</p>
+            <div className="space-y-3">
+              {filteredTransactions.map((transaction) => (
+                <div key={transaction.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewTransaction(transaction)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{transaction.description}</p>
                       <Badge className={`${
                         transaction.status === 'Categorized' ? 'bg-green-100 text-green-800' : 
                         'bg-orange-100 text-orange-800'
@@ -4820,25 +6253,59 @@ export default function Bookkeeping() {
                       {transaction.category && (
                         <Badge className="bg-blue-100 text-blue-800">{transaction.category}</Badge>
                       )}
+                      <Badge className={`${
+                        transaction.type === 'Credit' ? 'bg-green-100 text-green-800' : 
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {transaction.type}
+                      </Badge>
+                      <Badge className="bg-purple-100 text-purple-800">{transaction.currency}</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{transaction.account} • {transaction.date}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700">
+                      <span>Account: {transaction.account}</span>
+                      <span>Date: {transaction.date}</span>
+                      <span>Ref: {transaction.reference}</span>
+                      {transaction.vatAmount > 0 && <span>VAT: {formatCurrency(transaction.vatAmount, transaction.currency)} ({transaction.vatRate}%)</span>}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className={`text-lg font-semibold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {transaction.amount > 0 ? '+' : ''}£{Math.abs(transaction.amount)}
-                    </p>
-                    <p className="text-sm text-blue-900">{transaction.type}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className={`text-xl font-bold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {transaction.amount > 0 ? '+' : ''}{formatCurrency(transaction.amount, transaction.currency)}
+                      </p>
+                      {transaction.currency !== 'GBP' && (
+                        <p className="text-xs text-blue-700">
+                          ≈ {formatCurrency(convertCurrency(transaction.amount, transaction.currency, 'GBP'), 'GBP')}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewTransaction(transaction); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Transaction" onClick={(e) => { e.stopPropagation(); handleEditTransaction(transaction); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      {transaction.status === 'Uncategorized' && (
+    // @ts-ignore
+                        <Button variant="ghost" size="sm" title="Categorize" onClick={(e) => { e.stopPropagation(); handleCategorizeTransaction(transaction); }}>
+                          <Tag className="h-4 w-4 text-orange-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="Export Transaction" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredTransactions.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No transactions found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4847,97 +6314,209 @@ export default function Bookkeeping() {
   }
 
   function renderReconciliationManagement() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [reconciliationData, setReconciliationData] = useState({
+      accounts: [
+        { id: 1, account: 'Business Current Account', lastReconciled: '2024-01-15', status: 'Complete', balance: 45230, statementBalance: 45230, difference: 0, currency: 'GBP' },
+        { id: 2, account: 'Business Savings Account', lastReconciled: '2024-01-10', status: 'Outstanding', balance: 32100, statementBalance: 32250, difference: 150, currency: 'GBP' },
+        { id: 3, account: 'Payroll Account', lastReconciled: '2024-01-12', status: 'Complete', balance: 28900, statementBalance: 28900, difference: 0, currency: 'GBP' },
+        { id: 4, account: 'Tax Reserve Account', lastReconciled: '2024-01-08', status: 'Pending', balance: 12800, statementBalance: 12725, difference: -75, currency: 'GBP' },
+        { id: 5, account: 'USD Business Account', lastReconciled: '2024-01-18', status: 'Complete', balance: 12500, statementBalance: 12500, difference: 0, currency: 'USD' }
+      ],
+      outstandingItems: [
+        { id: 1, description: 'Unmatched Deposit - Client Payment', amount: 1500, date: '2024-01-18', type: 'Credit', account: 'Business Savings', status: 'Pending', matchSuggestions: ['INV-003', 'INV-004'] },
+        { id: 2, description: 'Bank Charges - Monthly Fee', amount: -25, date: '2024-01-17', type: 'Debit', account: 'Business Current', status: 'Pending', matchSuggestions: [] },
+        { id: 3, description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit', account: 'Business Savings', status: 'Pending', matchSuggestions: [] },
+        { id: 4, description: 'Unknown Transfer Out', amount: -200, date: '2024-01-15', type: 'Debit', account: 'Tax Reserve', status: 'Review', matchSuggestions: ['EXP-125'] },
+        { id: 5, description: 'Standing Order - Insurance', amount: -450, date: '2024-01-14', type: 'Debit', account: 'Business Current', status: 'Pending', matchSuggestions: ['INS-JAN24'] }
+      ]
+    })
+
+    const [selectedAccount, setSelectedAccount] = useState('all')
+    const [autoReconciling, setAutoReconciling] = useState(false)
+
+    const reconciledAmount = reconciliationData.accounts.filter(a => a.status === 'Complete').reduce((sum, a) => sum + convertCurrency(a.balance, a.currency, 'GBP'), 0)
+    const outstandingAmount = reconciliationData.outstandingItems.filter(i => i.status === 'Pending').reduce((sum, i) => sum + Math.abs(i.amount), 0)
+    const discrepancies = reconciliationData.accounts.filter(a => a.difference !== 0).length
+    const totalTransactions = 245
+    const matchedTransactions = 238
+    const matchRate = ((matchedTransactions / totalTransactions) * 100).toFixed(1)
+
+    const handleAutoReconcile = () => {
+      setAutoReconciling(true)
+      console.log('Running auto-reconciliation engine...')
+      setTimeout(() => {
+        setAutoReconciling(false)
+        console.log('Auto-reconciliation complete')
+      }, 2000)
+    }
+
+    const handleImportStatement = () => {
+      console.log('Importing bank statement')
+    }
+
+    const handleMatchItem = (item: any) => {
+      console.log('Matching item:', item)
+    }
+
+    const handleViewReconciliation = (account: any) => {
+      console.log('Viewing reconciliation for:', account)
+    }
+
+    const handleManualMatch = (item: any) => {
+      console.log('Manual matching for:', item)
+    }
+
+    const handleAddMatchingRule = () => {
+      console.log('Adding new matching rule')
+    }
+
+    const handleExportReconciliation = () => {
+      console.log('Exporting reconciliation report')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Bank Reconciliation</h2>
-            <p className="text-blue-900">Reconcile bank statements with your accounting records</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Bank Reconciliation</h2>
+            <p className="text-blue-900">Auto-match transactions and reconcile statements with intelligent matching</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleImportStatement}>
               <Upload className="h-4 w-4 mr-2" />
               Import Statement
             </Button>
-            <Button>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Auto Reconcile
+            <Button variant="outline" onClick={handleAddMatchingRule}>
+              <Settings className="h-4 w-4 mr-2" />
+              Matching Rules
+            </Button>
+            <Button onClick={handleAutoReconcile} disabled={autoReconciling}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${autoReconciling ? 'animate-spin' : ''}`} />
+              {autoReconciling ? 'Reconciling...' : 'Auto Reconcile'}
+            </Button>
+            <Button variant="outline" onClick={handleExportReconciliation}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Report
             </Button>
           </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Reconciled</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">£123,450</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£2,850</div>
-              <p className="text-sm text-blue-900">Needs attention</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Discrepancies</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">3</div>
-              <p className="text-sm text-blue-900">Items to review</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Match Rate</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">97.8%</div>
-              <p className="text-sm text-blue-900">Auto-matched</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Reconciled" 
+            value={formatCurrency(reconciledAmount, 'GBP')} 
+            subtitle="This month" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Reconciled Accounts',
+              items: reconciliationData.accounts.filter(a => a.status === 'Complete').map(a => ({
+                label: a.account,
+                value: formatCurrency(a.balance, a.currency),
+                detail: `Last: ${a.lastReconciled}`
+              }))
+            }}
+          />
+          <KPICard 
+            title="Outstanding" 
+            value={`£${outstandingAmount.toLocaleString()}`} 
+            subtitle="Needs attention" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Outstanding Items',
+              items: [
+                { label: 'Pending Matches', value: reconciliationData.outstandingItems.filter(i => i.status === 'Pending').length.toString(), detail: '3 items' },
+                { label: 'Needs Review', value: reconciliationData.outstandingItems.filter(i => i.status === 'Review').length.toString(), detail: '1 item' },
+                { label: 'Total Value', value: `£${outstandingAmount.toLocaleString()}`, detail: 'All currencies' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Discrepancies" 
+            value={discrepancies.toString()} 
+            subtitle="Items to review" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Account Discrepancies',
+              items: reconciliationData.accounts.filter(a => a.difference !== 0).map(a => ({
+                label: a.account,
+                value: `${a.difference > 0 ? '+' : ''}${formatCurrency(a.difference, a.currency)}`,
+                detail: 'Statement variance'
+              }))
+            }}
+          />
+          <KPICard 
+            title="Match Rate" 
+            value={`${matchRate}%`} 
+            subtitle="Auto-matched" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Matching Performance',
+              items: [
+                { label: 'Matched', value: matchedTransactions.toString(), detail: '97.1%' },
+                { label: 'Unmatched', value: (totalTransactions - matchedTransactions).toString(), detail: '2.9%' },
+                { label: 'Total Transactions', value: totalTransactions.toString(), detail: 'This period' }
+              ]
+            }}
+          />
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
-              <CardTitle className="text-blue-900">Reconciliation Status</CardTitle>
-              <CardDescription>Current reconciliation status by account</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-blue-900">Reconciliation Status</CardTitle>
+                  <CardDescription className="text-blue-900">Current status by account with variance analysis</CardDescription>
+                </div>
+                <select
+                  value={selectedAccount}
+                  onChange={(e) => setSelectedAccount(e.target.value)}
+                  className="px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Accounts</option>
+                  <option value="complete">Complete</option>
+                  <option value="outstanding">Outstanding</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { account: 'Business Current Account', lastReconciled: '2024-01-15', status: 'Complete', balance: 45230, difference: 0 },
-                  { account: 'Business Savings Account', lastReconciled: '2024-01-10', status: 'Outstanding', balance: 32100, difference: 150 },
-                  { account: 'Payroll Account', lastReconciled: '2024-01-12', status: 'Complete', balance: 28900, difference: 0 },
-                  { account: 'Tax Reserve Account', lastReconciled: '2024-01-08', status: 'Pending', balance: 12800, difference: -75 }
-                ].map((account, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                    <div className="flex-1">
-                      <p className="font-medium">{account.account}</p>
-                      <p className="text-sm text-blue-900">Last: {account.lastReconciled}</p>
-                      <Badge className={`${
-                        account.status === 'Complete' ? 'bg-green-100 text-green-800' : 
-                        account.status === 'Outstanding' ? 'bg-orange-100 text-orange-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
-                        {account.status}
-                      </Badge>
+              <div className="space-y-3">
+                {reconciliationData.accounts
+                  .filter(account => selectedAccount === 'all' || account.status.toLowerCase() === selectedAccount)
+                  .map((account) => (
+                  <div key={account.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewReconciliation(account)}>
+                    <div className="flex-1 mb-2 sm:mb-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-semibold text-blue-900">{account.account}</p>
+                        <Badge className={`${
+                          account.status === 'Complete' ? 'bg-green-100 text-green-800' : 
+                          account.status === 'Outstanding' ? 'bg-orange-100 text-orange-800' :
+                          'bg-blue-100 text-blue-800'
+                        }`}>
+                          {account.status}
+                        </Badge>
+                        <Badge className="bg-purple-100 text-purple-800">{account.currency}</Badge>
+                      </div>
+                      <div className="flex flex-wrap gap-3 text-xs text-blue-700">
+                        <span>Last: {account.lastReconciled}</span>
+                        <span>Book: {formatCurrency(account.balance, account.currency)}</span>
+                        <span>Statement: {formatCurrency(account.statementBalance, account.currency)}</span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold">£{account.balance.toLocaleString()}</p>
-                      {account.difference !== 0 && (
-                        <p className={`text-sm ${account.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {account.difference > 0 ? '+' : ''}£{account.difference}
-                        </p>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <p className="font-semibold text-blue-900">{formatCurrency(account.balance, account.currency)}</p>
+                        {account.difference !== 0 && (
+                          <p className={`text-sm font-semibold ${account.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            Variance: {account.difference > 0 ? '+' : ''}{formatCurrency(Math.abs(account.difference), account.currency)}
+                          </p>
+                        )}
+                      </div>
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewReconciliation(account); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -4945,36 +6524,68 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
               <CardTitle className="text-blue-900">Outstanding Items</CardTitle>
-              <CardDescription>Items requiring manual reconciliation</CardDescription>
+              <CardDescription className="text-blue-900">Transactions requiring manual reconciliation</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { description: 'Unmatched Deposit', amount: 1500, date: '2024-01-18', type: 'Credit' },
-                  { description: 'Bank Charges', amount: -25, date: '2024-01-17', type: 'Debit' },
-                  { description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit' },
-                  { description: 'Unknown Transfer', amount: -200, date: '2024-01-15', type: 'Debit' }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                    <div className="flex-1">
-                      <p className="font-medium">{item.description}</p>
-                      <p className="text-sm text-blue-900">{item.date}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-semibold ${item.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount)}
-                      </p>
-                      <div className="flex gap-1 mt-1">
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-3 w-3" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <UserCheck className="h-3 w-3" />
-                        </Button>
+              <div className="space-y-3">
+                {reconciliationData.outstandingItems.map((item) => (
+                  <div key={item.id} className="flex flex-col p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-semibold text-blue-900">{item.description}</p>
+                          <Badge className={`${
+                            item.status === 'Pending' ? 'bg-orange-100 text-orange-800' : 
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {item.status}
+                          </Badge>
+                          <Badge className={`${
+                            item.type === 'Credit' ? 'bg-green-100 text-green-800' : 
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {item.type}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-blue-700">{item.account} • {item.date}</p>
                       </div>
+                      <div className="text-right">
+                        <p className={`text-lg font-bold ${item.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    {item.matchSuggestions.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-blue-200">
+                        <p className="text-xs font-medium text-blue-900 mb-1">Suggested Matches:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {item.matchSuggestions.map((suggestion, idx) => (
+                            <Button 
+                              key={idx} 
+                              variant="outline" 
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => handleMatchItem({ item, suggestion })}
+                            >
+                              {suggestion}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex gap-1 mt-2">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={() => handleViewReconciliation(item)}>
+                        <Eye className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Manual Match" onClick={() => handleManualMatch(item)}>
+                        <UserCheck className="h-4 w-4 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Mark as Bank Error" onClick={() => console.log('Mark as bank error')}>
+                        <AlertCircle className="h-4 w-4 text-orange-600" />
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -4982,6 +6593,46 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
         </div>
+
+        <Card className="border-2 border-blue-900 rounded-[2px]">
+          <CardHeader>
+            <CardTitle className="text-blue-900">Reconciliation Summary</CardTitle>
+            <CardDescription className="text-blue-900">Period-over-period reconciliation performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                { period: 'This Month', matched: 238, total: 245, value: '£126,850', variance: '+£150' },
+                { period: 'Last Month', matched: 226, total: 231, value: '£118,420', variance: '-£75' },
+                { period: 'Two Months Ago', matched: 215, total: 220, value: '£112,360', variance: '£0' }
+              ].map((summary, index) => (
+                <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer">
+                  <h4 className="font-semibold text-blue-900 mb-2">{summary.period}</h4>
+                  <div className="space-y-1 text-sm text-blue-700">
+                    <div className="flex justify-between">
+                      <span>Match Rate:</span>
+                      <span className="font-medium">{((summary.matched / summary.total) * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Matched:</span>
+                      <span className="font-medium">{summary.matched} / {summary.total}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Value:</span>
+                      <span className="font-medium">{summary.value}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Variance:</span>
+                      <span className={`font-semibold ${summary.variance.startsWith('+') ? 'text-green-600' : summary.variance.startsWith('-') ? 'text-red-600' : 'text-blue-900'}`}>
+                        {summary.variance}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -5272,6 +6923,69 @@ export default function Bookkeeping() {
   }
 
   function renderChartOfAccounts() {
+    const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false)
+    const [showExportDialog, setShowExportDialog] = React.useState(false)
+    const [selectedCategory, setSelectedCategory] = React.useState<any>(null)
+    const [showCategoryDetailDialog, setShowCategoryDetailDialog] = React.useState(false)
+
+    const handleKPIClick = (kpiType: string) => {
+      const drillDownData = {
+        'total': {
+          title: 'Total Accounts Breakdown',
+          data: [
+            { name: 'Assets', count: 89, percentage: 36, balance: '£214,630' },
+            { name: 'Liabilities', count: 34, percentage: 14, balance: '£89,200' },
+            { name: 'Equity', count: 28, percentage: 11, balance: '£125,430' },
+            { name: 'Revenue', count: 45, percentage: 18, balance: '£245,600' },
+            { name: 'Expenses', count: 51, percentage: 21, balance: '£78,900' }
+          ]
+        },
+        'assets': {
+          title: 'Asset Accounts Details',
+          data: [
+            { name: 'Current Assets', count: 45, percentage: 51, balance: '£125,430', trend: '+12%' },
+            { name: 'Fixed Assets', count: 23, percentage: 26, balance: '£89,200', trend: '+8%' },
+            { name: 'Investments', count: 12, percentage: 13, balance: '£45,000', trend: '+15%' },
+            { name: 'Other Assets', count: 9, percentage: 10, balance: '£23,500', trend: '+5%' }
+          ]
+        },
+        'liabilities': {
+          title: 'Liability Accounts Details',
+          data: [
+            { name: 'Current Liabilities', count: 18, percentage: 53, balance: '£34,500', trend: '-5%' },
+            { name: 'Long-term Liabilities', count: 10, percentage: 29, balance: '£45,200', trend: '-3%' },
+            { name: 'Deferred Revenue', count: 6, percentage: 18, balance: '£9,500', trend: '+2%' }
+          ]
+        },
+        'revenue': {
+          title: 'Revenue Accounts Details',
+          data: [
+            { name: 'Sales Revenue', count: 15, percentage: 33, balance: '£180,500', trend: '+18%' },
+            { name: 'Service Revenue', count: 12, percentage: 27, balance: '£45,100', trend: '+12%' },
+            { name: 'Interest Income', count: 8, percentage: 18, balance: '£15,000', trend: '+8%' },
+            { name: 'Other Income', count: 10, percentage: 22, balance: '£5,000', trend: '+5%' }
+          ]
+        }
+      }
+
+      const data = drillDownData[kpiType as keyof typeof drillDownData]
+      if (data) {
+        alert(`${data.title}\n\n${data.data.map((item: any) => 
+          `${item.name}:\n  Accounts: ${item.count}\n  Balance: ${item.balance}\n  Percentage: ${item.percentage}%${item.trend ? `\n  Trend: ${item.trend}` : ''}`
+        ).join('\n\n')}\n\nClick individual categories for even deeper analysis including transaction history, account details, and reporting.`)
+      }
+    }
+
+    const handleExport = (format: string) => {
+      alert(`Exporting Chart of Accounts to ${format}...\n\nThis will include:\n✓ All account categories and subcategories\n✓ Account codes and names\n✓ Current balances\n✓ Account types and classifications\n✓ Active/Inactive status\n\nExport will be downloaded shortly.`)
+      setShowExportDialog(false)
+    }
+
+    const handleCategoryClick = (category: any) => {
+      setSelectedCategory(category)
+      setShowCategoryDetailDialog(true)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -5279,12 +6993,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Chart of Accounts</h2>
             <p className="text-blue-900">Manage your complete chart of accounts structure</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" onClick={() => setShowAddAccountDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
+            <Button onClick={() => setShowExportDialog(true)}>
               <Download className="h-4 w-4 mr-2" />
               Export Chart
             </Button>
@@ -5292,7 +7006,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('total')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5304,7 +7018,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('assets')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5316,7 +7030,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('liabilities')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5328,7 +7042,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('revenue')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5350,14 +7064,14 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets' },
-                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets' },
-                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities' },
-                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
-                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
+                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets', code: '1000-1499' },
+                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets', code: '1500-1999' },
+                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities', code: '2000-2499' },
+                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income', code: '4000-4999' },
+                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses', code: '5000-5999' }
               ].map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                  <div className="flex-1 cursor-pointer" onClick={() => handleCategoryClick(category)}>
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{category.category}</p>
                       <Badge className={`${
@@ -5369,18 +7083,18 @@ export default function Bookkeeping() {
                         {category.type}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{category.accounts} accounts</p>
+                    <p className="text-sm text-blue-900">{category.accounts} accounts • Code: {category.code}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-semibold">{category.balance}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                    <div className="flex gap-1 mt-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleCategoryClick(category); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); alert(`Edit Category: ${category.category}\n\nEdit category settings, account ranges, and classification rules.`); }}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setShowAddAccountDialog(true); }}>
                         <Plus className="h-3 w-3" />
                       </Button>
                     </div>
@@ -5390,6 +7104,180 @@ export default function Bookkeeping() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Add Account Dialog */}
+        {showAddAccountDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-blue-900">Add New Account</h3>
+                  <button onClick={() => setShowAddAccountDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Code</label>
+                  <input type="text" className="w-full p-2 border-2 border-blue-900 rounded-[2px]" placeholder="e.g., 1000" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Name</label>
+                  <input type="text" className="w-full p-2 border-2 border-blue-900 rounded-[2px]" placeholder="e.g., Cash in Bank" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Type</label>
+                  <select className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900">
+                    <option>Assets</option>
+                    <option>Liabilities</option>
+                    <option>Equity</option>
+                    <option>Revenue</option>
+                    <option>Expenses</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Category</label>
+                  <select className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900">
+                    <option>Current Assets</option>
+                    <option>Fixed Assets</option>
+                    <option>Current Liabilities</option>
+                    <option>Long-term Liabilities</option>
+                    <option>Operating Expenses</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Description</label>
+                  <textarea className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900" rows={3} placeholder="Account description and usage notes" />
+                </div>
+                <div>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" className="w-4 h-4" />
+                    <span className="text-sm text-blue-900">Enable for bank reconciliation</span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" className="w-4 h-4" defaultChecked />
+                    <span className="text-sm text-blue-900">Active account</span>
+                  </label>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button className="flex-1" onClick={() => { alert('Account created successfully!'); setShowAddAccountDialog(false); }}>
+                    Create Account
+                  </Button>
+                  <Button variant="outline" className="flex-1" onClick={() => setShowAddAccountDialog(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Export Dialog */}
+        {showExportDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full">
+              <div className="border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-blue-900">Export Chart of Accounts</h3>
+                  <button onClick={() => setShowExportDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <p className="text-blue-900">Select export format:</p>
+                <div className="space-y-2">
+                  <Button className="w-full justify-start" onClick={() => handleExport('PDF')}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export as PDF
+                  </Button>
+                  <Button className="w-full justify-start" onClick={() => handleExport('CSV')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export as CSV
+                  </Button>
+                  <Button className="w-full justify-start" onClick={() => handleExport('Excel')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export as Excel
+                  </Button>
+                </div>
+                <Button variant="outline" className="w-full" onClick={() => setShowExportDialog(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Category Detail Dialog */}
+        {showCategoryDetailDialog && selectedCategory && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-blue-900">{selectedCategory.category}</h3>
+                    <p className="text-blue-900">Detailed account breakdown and analysis</p>
+                  </div>
+                  <button onClick={() => setShowCategoryDetailDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Total Accounts</p>
+                      <p className="text-2xl font-bold">{selectedCategory.accounts}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Current Balance</p>
+                      <p className="text-2xl font-bold">{selectedCategory.balance}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Account Range</p>
+                      <p className="text-2xl font-bold">{selectedCategory.code}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-blue-900">Accounts in this Category</h4>
+                  {Array.from({ length: 5 }).map((_, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer">
+                      <div>
+                        <p className="font-medium">{selectedCategory.code?.split('-')[0] || '1000'}{idx} - Sample Account {idx + 1}</p>
+                        <p className="text-sm text-blue-900">Last transaction: {idx + 1} days ago</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">£{(Math.random() * 50000).toFixed(2)}</p>
+                        <p className="text-xs text-green-600">+{(Math.random() * 20).toFixed(1)}%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={() => { setShowCategoryDetailDialog(false); setShowAddAccountDialog(true); }}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Account to Category
+                  </Button>
+                  <Button variant="outline" onClick={() => handleExport('PDF')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Category
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -6133,6 +8021,163 @@ export default function Bookkeeping() {
             </div>
           </CardContent>
         </Card>
+      </div>
+    )
+  }
+
+  function renderInventoryContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Inventory Management</h2>
+            <p className="text-blue-900">Comprehensive stock control, warehousing, and supply chain management</p>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Stock Value" value="£2,845,670" subtitle="Current valuation" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Stock Valuation', items: [{ label: 'Raw Materials', value: '£1,245,320', detail: '43.7%' }, { label: 'Finished Goods', value: '£1,123,450', detail: '39.5%' }] }} />
+          <KPICard title="Low Stock Items" value="24" subtitle="Need reordering" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Low Stock Alert', items: [{ label: 'Critical', value: '8', detail: 'Immediate' }, { label: 'Low', value: '16', detail: 'Within 7 days' }] }} />
+          <KPICard title="Turnover Rate" value="8.4x" subtitle="Annual turnover" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Turnover Analysis', items: [{ label: 'Fast Moving', value: '342', detail: '>12x' }, { label: 'Medium', value: '567', detail: '6-12x' }] }} />
+          <KPICard title="Warehouses" value="6" subtitle="Active locations" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Warehouse Utilization', items: [{ label: 'Main Warehouse', value: '87%', detail: '125,000 sq ft' }, { label: 'Distribution', value: '76%', detail: '85,000 sq ft' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Management</h2>
+            <p className="text-blue-900">Monitor stock levels, locations, and movements</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowStockAdjustmentDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Stock Adjustment</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total SKUs" value="1,247" subtitle="Active products" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'SKU Breakdown', items: [{ label: 'Raw Materials', value: '456', detail: '36.6%' }, { label: 'Finished Products', value: '542', detail: '43.5%' }] }} />
+          <KPICard title="Stock Value" value="£2.84M" subtitle="Current valuation" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Valuation', items: [{ label: 'Cost Value', value: '£2.21M', detail: 'Purchase cost' }, { label: 'Retail Value', value: '£3.67M', detail: 'Selling price' }] }} />
+          <KPICard title="Low Stock Alerts" value="24" subtitle="Need reordering" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Stock Alerts', items: [{ label: 'Critical (0-5)', value: '8', detail: 'Order now' }, { label: 'Low (6-20)', value: '16', detail: 'Order soon' }] }} />
+          <KPICard title="Avg Turnover" value="8.4x" subtitle="Annual rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Turnover', items: [{ label: 'Fast (>12x)', value: '342', detail: 'Excellent' }, { label: 'Standard (6-12x)', value: '567', detail: 'Good' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderWarehousesManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Warehouse Management</h2>
+            <p className="text-blue-900">Manage warehouse locations, capacity, and operations</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowWarehouseDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Add Warehouse</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Warehouses" value="6" subtitle="Active locations" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Warehouse Types', items: [{ label: 'Main Facilities', value: '2', detail: 'Primary storage' }, { label: 'Distribution Centers', value: '2', detail: 'Logistics hubs' }, { label: 'Regional Stores', value: '2', detail: 'Local depots' }] }} />
+          <KPICard title="Total Capacity" value="285K sq ft" subtitle="Combined space" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Capacity Breakdown', items: [{ label: 'Used Space', value: '228K sq ft', detail: '80% utilized' }, { label: 'Available', value: '57K sq ft', detail: '20% free' }] }} />
+          <KPICard title="Avg Utilization" value="80%" subtitle="Space efficiency" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Utilization Analysis', items: [{ label: 'High (>85%)', value: '2', detail: 'Near capacity' }, { label: 'Optimal (70-85%)', value: '3', detail: 'Well balanced' }, { label: 'Low (<70%)', value: '1', detail: 'Underutilized' }] }} />
+          <KPICard title="Stock Value" value="£2.84M" subtitle="Inventory held" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Value Distribution', items: [{ label: 'Main Warehouse', value: '£1.45M', detail: '51%' }, { label: 'Distribution', value: '£0.89M', detail: '31%' }, { label: 'Regional', value: '£0.50M', detail: '18%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventorySuppliersManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Supplier Management</h2>
+            <p className="text-blue-900">Manage supplier relationships, orders, and performance</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowSupplierDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Add Supplier</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export List</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Active Suppliers" value="89" subtitle="Current partnerships" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Supplier Categories', items: [{ label: 'Raw Materials', value: '34', detail: '38%' }, { label: 'Components', value: '28', detail: '31%' }, { label: 'Services', value: '27', detail: '31%' }] }} />
+          <KPICard title="Total Spend" value="£1.85M" subtitle="This year" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Spend Analysis', items: [{ label: 'Top 10 Suppliers', value: '£1.25M', detail: '67.6%' }, { label: 'Others', value: '£0.60M', detail: '32.4%' }] }} />
+          <KPICard title="Avg Lead Time" value="12 days" subtitle="Order to delivery" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Lead Time Analysis', items: [{ label: 'Fast (<7 days)', value: '23', detail: '26%' }, { label: 'Standard (7-14)', value: '48', detail: '54%' }, { label: 'Slow (>14)', value: '18', detail: '20%' }] }} />
+          <KPICard title="On-Time Delivery" value="94%" subtitle="Performance rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Delivery Performance', items: [{ label: 'Excellent (>95%)', value: '56', detail: '63%' }, { label: 'Good (90-95%)', value: '21', detail: '24%' }, { label: 'Poor (<90%)', value: '12', detail: '13%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventoryPurchaseOrders() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Purchase Orders</h2>
+            <p className="text-blue-900">Create and track inventory purchase orders</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowPurchaseOrderDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Create PO</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export List</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Active POs" value="42" subtitle="In progress" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'PO Status', items: [{ label: 'Pending Approval', value: '8', detail: 'Need review' }, { label: 'Ordered', value: '23', detail: 'With suppliers' }, { label: 'In Transit', value: '11', detail: 'On the way' }] }} />
+          <KPICard title="Total Value" value="£345K" subtitle="Outstanding orders" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Value Breakdown', items: [{ label: 'Raw Materials', value: '£185K', detail: '53.6%' }, { label: 'Components', value: '£98K', detail: '28.4%' }, { label: 'Other', value: '£62K', detail: '18.0%' }] }} />
+          <KPICard title="Overdue POs" value="5" subtitle="Past due date" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Overdue Analysis', items: [{ label: '1-7 days late', value: '3', detail: 'Minor delay' }, { label: '8-14 days late', value: '1', detail: 'Moderate delay' }, { label: '>14 days late', value: '1', detail: 'Severe delay' }] }} />
+          <KPICard title="Avg Order Value" value="£8.2K" subtitle="Per purchase order" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Order Values', items: [{ label: 'Small (<£5K)', value: '18', detail: '43%' }, { label: 'Medium (£5-15K)', value: '17', detail: '40%' }, { label: 'Large (>£15K)', value: '7', detail: '17%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockMovements() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Movements</h2>
+            <p className="text-blue-900">Track all inventory movements and transfers</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Record Movement</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Today's Movements" value="87" subtitle="Transactions today" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Movement Types', items: [{ label: 'Goods In', value: '32', detail: '37%' }, { label: 'Goods Out', value: '41', detail: '47%' }, { label: 'Transfers', value: '14', detail: '16%' }] }} />
+          <KPICard title="This Month" value="1,847" subtitle="Total movements" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Monthly Breakdown', items: [{ label: 'Week 1', value: '412', detail: '22%' }, { label: 'Week 2', value: '498', detail: '27%' }, { label: 'Week 3', value: '456', detail: '25%' }, { label: 'Week 4', value: '481', detail: '26%' }] }} />
+          <KPICard title="Pending Transfers" value="12" subtitle="Between warehouses" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Transfer Status', items: [{ label: 'In Transit', value: '7', detail: 'On the way' }, { label: 'Awaiting Dispatch', value: '5', detail: 'Ready to ship' }] }} />
+          <KPICard title="Adjustments" value="23" subtitle="This month" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Adjustment Reasons', items: [{ label: 'Damaged Goods', value: '8', detail: '35%' }, { label: 'Stock Count', value: '12', detail: '52%' }, { label: 'Returns', value: '3', detail: '13%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockValuation() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Valuation</h2>
+            <p className="text-blue-900">Monitor inventory value and cost analysis</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" className="min-w-fit"><RefreshCw className="h-4 w-4 mr-2" />Recalculate</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Valuation</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Stock Value" value="£2,845,670" subtitle="At cost price" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Valuation Method', items: [{ label: 'FIFO Value', value: '£2,845,670', detail: 'First-in-first-out' }, { label: 'LIFO Value', value: '£2,789,430', detail: 'Last-in-first-out' }, { label: 'Avg Cost', value: '£2,812,550', detail: 'Weighted average' }] }} />
+          <KPICard title="Retail Value" value="£4,123,580" subtitle="At selling price" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Potential Profit', items: [{ label: 'Gross Profit', value: '£1,277,910', detail: 'If all sold' }, { label: 'Margin %', value: '45%', detail: 'Average margin' }] }} />
+          <KPICard title="Obsolete Stock" value="£67,450" subtitle="Aged inventory" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Age Analysis', items: [{ label: '>6 months', value: '£32,100', detail: 'Review pricing' }, { label: '>12 months', value: '£23,650', detail: 'Consider disposal' }, { label: '>24 months', value: '£11,700', detail: 'Write-off candidate' }] }} />
+          <KPICard title="Shrinkage" value="0.8%" subtitle="Loss rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Shrinkage Analysis', items: [{ label: 'Damaged', value: '£15,320', detail: '42%' }, { label: 'Theft', value: '£8,950', detail: '25%' }, { label: 'Admin Errors', value: '£12,080', detail: '33%' }] }} />
+        </div>
       </div>
     )
   }
