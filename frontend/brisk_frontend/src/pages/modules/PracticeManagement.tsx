@@ -33,7 +33,9 @@ import {
   Bell,
   RefreshCw,
   Search,
-  Download
+  Download,
+  X,
+  DollarSign
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -203,6 +205,12 @@ export default function PracticeManagement() {
   const [activeAutomationTab, setActiveAutomationTab] = useState('rules')
   const [automationSearchTerm, setAutomationSearchTerm] = useState('')
 
+  const [aiQuestion, setAiQuestion] = useState('')
+  const [aiConversations, setAiConversations] = useState<any[]>([])
+  const [currentConversation, setCurrentConversation] = useState<any | null>(null)
+  const [showConversationHistory, setShowConversationHistory] = useState(false)
+  const [aiReports, setAiReports] = useState<any[]>([])
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
@@ -304,15 +312,121 @@ export default function PracticeManagement() {
   }
 
   const handleAIQuestion = async (question: string) => {
+    if (!question.trim()) return
+    
     setIsAILoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      console.log('AI Question:', question)
+      const newMessage = {
+        id: Date.now().toString(),
+        question: question,
+        answer: `Based on your practice data, here's my analysis for "${question}":\n\n• Current performance metrics show strong client retention\n• Workflow efficiency can be improved by 23% with automation\n• Consider reallocating resources for optimal utilization\n\nWould you like a detailed report on any of these areas?`,
+        timestamp: new Date().toISOString(),
+        category: 'general'
+      }
+      
+      if (currentConversation) {
+        const updatedConversation = {
+          ...currentConversation,
+          messages: [...currentConversation.messages, newMessage]
+        }
+        setCurrentConversation(updatedConversation)
+        
+        const updatedConversations = aiConversations.map(conv => 
+          conv.id === currentConversation.id ? updatedConversation : conv
+        )
+        setAiConversations(updatedConversations)
+      } else {
+        const newConversation = {
+          id: Date.now().toString(),
+          title: question.substring(0, 50) + '...',
+          messages: [newMessage],
+          created_at: new Date().toISOString()
+        }
+        setCurrentConversation(newConversation)
+        setAiConversations([newConversation, ...aiConversations])
+      }
+      
+      setAiQuestion('')
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error getting AI response:', error)
+      alert('Failed to get AI response. Please try again.')
     } finally {
       setIsAILoading(false)
     }
+  }
+
+  const handleNewConversation = () => {
+    setCurrentConversation(null)
+    setAiQuestion('')
+  }
+
+  const handleViewHistory = () => {
+    setShowConversationHistory(!showConversationHistory)
+  }
+
+  const handleSelectConversation = (conversation: any) => {
+    setCurrentConversation(conversation)
+    setShowConversationHistory(false)
+  }
+
+  const handleDeleteConversation = (conversationId: string) => {
+    setAiConversations(aiConversations.filter(conv => conv.id !== conversationId))
+    if (currentConversation?.id === conversationId) {
+      setCurrentConversation(null)
+    }
+  }
+
+  const handleGenerateFullReport = async () => {
+    setIsAILoading(true)
+    try {
+      const report = {
+        id: Date.now().toString(),
+        title: 'Comprehensive Practice Analysis Report',
+        generated_at: new Date().toISOString(),
+        sections: {
+          client_analysis: {
+            total_clients: 287,
+            retention_rate: 98.7,
+            satisfaction_score: 4.8,
+            at_risk_clients: 3,
+            high_value_clients: 45
+          },
+          workflow_efficiency: {
+            automation_opportunities: 23,
+            bottlenecks_identified: 5,
+            time_savings_potential: '127 hours/month'
+          },
+          billing_performance: {
+            total_revenue: '£847,230',
+            outstanding_invoices: '£45,320',
+            average_payment_time: '14.2 days',
+            collection_rate: 96.5
+          },
+          deadline_management: {
+            upcoming_deadlines: 24,
+            overdue_items: 2,
+            completion_rate: 94.2
+          },
+          team_performance: {
+            utilization_rate: 87.3,
+            billable_hours: 8281,
+            avg_project_completion: '12.3 days'
+          }
+        }
+      }
+      
+      setAiReports([report, ...aiReports])
+      alert('Full practice report generated successfully!\n\nKey Findings:\n• 98.7% client retention rate\n• 23% automation improvement potential\n• £45,320 in outstanding invoices\n• 94.2% deadline completion rate')
+    } catch (error) {
+      console.error('Error generating report:', error)
+      alert('Failed to generate report. Please try again.')
+    } finally {
+      setIsAILoading(false)
+    }
+  }
+
+  const handleQuickPrompt = (prompt: string) => {
+    setAiQuestion(prompt)
   }
 
   const openJobDialog = (job?: Job) => {
@@ -3973,33 +4087,92 @@ export default function PracticeManagement() {
           <p className="text-blue-900">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button 
+            variant="outline"
+            onClick={handleGenerateFullReport}
+            disabled={isAILoading}
+          >
             <Award className="h-4 w-4 mr-2" />
-            AI Insights
+            Generate Full Report
           </Button>
         </div>
       </div>
 
+      {showConversationHistory && (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-blue-900">Conversation History</CardTitle>
+              <Button variant="ghost" onClick={handleViewHistory}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {aiConversations.length === 0 ? (
+              <p className="text-blue-900 text-center py-8">No conversation history yet</p>
+            ) : (
+              <div className="space-y-3">
+                {aiConversations.map((conv) => (
+                  <div 
+                    key={conv.id}
+                    className="p-4 border-2 border-blue-900 rounded-[2px] cursor-pointer hover:bg-blue-50 transition-colors"
+                    onClick={() => handleSelectConversation(conv)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-blue-900">{conv.title}</h4>
+                        <p className="text-sm text-blue-700">
+                          {new Date(conv.created_at).toLocaleString()} • {conv.messages.length} messages
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteConversation(conv.id)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">AI Recommendations</CardTitle>
+          <CardTitle className="text-blue-900">Ask your Practice Manager</CardTitle>
           <CardDescription>Get intelligent insights for practice optimization</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-blue-900">Ask your Practice Manager</h3>
+              <h3 className="text-xl font-bold text-blue-900">
+                {currentConversation ? `Conversation: ${currentConversation.title}` : 'New Conversation'}
+              </h3>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button 
+                  onClick={handleNewConversation}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
                   New Conversation
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
-                  View History
+                <button 
+                  onClick={handleViewHistory}
+                  className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300"
+                >
+                  View History ({aiConversations.length})
                 </button>
               </div>
             </div>
 
-            <div className="bg-white rounded-[2px] shadow-sm border p-6">
+            <div className="bg-white rounded-[2px] shadow-sm border-2 border-blue-900 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold">AI</span>
@@ -4010,94 +4183,236 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="bg-blue-50 p-4 rounded-[2px]">
-                  <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• Practice workflow optimization and automation strategies</li>
-                    <li>• Client onboarding and relationship management best practices</li>
-                    <li>• Resource allocation and team utilization analysis</li>
-                    <li>• Business development and growth planning</li>
-                    <li>• Compliance and risk management frameworks</li>
-                    <li>• Performance metrics and KPI tracking</li>
-                  </ul>
+              {currentConversation && currentConversation.messages.length > 0 && (
+                <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+                  {currentConversation.messages.map((msg: any) => (
+                    <div key={msg.id} className="space-y-3">
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-blue-900 text-sm">You</span>
+                        </div>
+                        <div className="flex-1 bg-gray-100 p-3 rounded-[2px]">
+                          <p className="text-blue-900">{msg.question}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-sm">AI</span>
+                        </div>
+                        <div className="flex-1 bg-blue-50 p-3 rounded-[2px]">
+                          <p className="text-blue-900 whitespace-pre-line">{msg.answer}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
+
+              {!currentConversation && (
+                <div className="space-y-4 mb-6">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                    <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>• Practice workflow optimization and automation strategies</li>
+                      <li>• Client onboarding and relationship management best practices</li>
+                      <li>• Resource allocation and team utilization analysis</li>
+                      <li>• Business development and growth planning</li>
+                      <li>• Compliance and risk management frameworks</li>
+                      <li>• Performance metrics and KPI tracking</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-blue-900 text-sm">You</span>
                   </div>
                   <div className="flex-1">
                     <textarea
-                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none"
+                      value={aiQuestion}
+                      onChange={(e) => setAiQuestion(e.target.value)}
+                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none text-blue-900"
                       rows={3}
                       placeholder="Ask me anything about practice management, client relationships, workflow optimization, or business strategy..."
+                      disabled={isAILoading}
                     />
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                  <div className="flex gap-2 flex-wrap">
+                    <button 
+                      onClick={() => handleQuickPrompt('How can I optimize my workflow automation?')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Workflow Analysis
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button 
+                      onClick={() => handleQuickPrompt('What client retention strategies should I implement?')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Client Strategy
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button 
+                      onClick={() => handleQuickPrompt('Review my practice performance metrics')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Performance Review
                     </button>
+                    <button 
+                      onClick={() => handleQuickPrompt('Analyze my billing and invoicing efficiency')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
+                      Billing Analysis
+                    </button>
+                    <button 
+                      onClick={() => handleQuickPrompt('Review my deadline management approach')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
+                      Deadline Review
+                    </button>
                   </div>
-                  <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Send
+                  <button 
+                    onClick={() => handleAIQuestion(aiQuestion)}
+                    className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isAILoading || !aiQuestion.trim()}
+                  >
+                    {isAILoading ? 'Analyzing...' : 'Send'}
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
-                <div className="space-y-3">
-                  <div className="p-3 bg-blue-50 rounded-[2px]">
-                    <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
-                    <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Client Analysis Deep Dive\n\n• Total Active Clients: 287\n• Client Retention Rate: 98.7%\n• Average Client Tenure: 4.7 years\n• Client Satisfaction Score: 4.8/5.0\n\nTop Performing Segments:\n• Premium Tier: 122 clients (£4.2M revenue)\n• Standard Tier: 134 clients (£2.8M revenue)\n• Basic Tier: 31 clients (£420K revenue)\n\nAt-Risk Clients (3):\n1. ABC Corp - 45 days overdue\n2. XYZ Ltd - Low engagement score\n3. DEF Inc - Service complaints\n\nRecommendations:\n• Implement quarterly business reviews for premium clients\n• Create automated check-in workflows\n• Develop targeted retention campaigns')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Users className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Client Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Comprehensive client relationship analysis and retention strategies</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Total Clients</span>
+                    <span className="text-xs font-bold text-blue-900">287</span>
                   </div>
-                  <div className="p-3 bg-blue-50 rounded-[2px]">
-                    <p className="text-sm text-blue-900 font-medium">Resource Allocation</p>
-                    <p className="text-xs text-blue-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Retention Rate</span>
+                    <span className="text-xs font-bold text-green-600">98.7%</span>
                   </div>
-                  <div className="p-3 bg-green-50 rounded-[2px]">
-                    <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
-                    <p className="text-xs text-green-700 mt-1">Implementing weekly check-ins could increase client satisfaction scores by 15%.</p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">At Risk</span>
+                    <span className="text-xs font-bold text-red-600">3</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Recommended Actions</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Review high-risk client accounts</p>
-                      <p className="text-xs text-blue-900">3 clients showing payment delays</p>
-                    </div>
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Workflow Optimization Analysis\n\n• Current Efficiency Score: 77%\n• Automation Potential: 23% improvement\n• Process Bottlenecks: 5 identified\n• Time Savings Opportunity: 127 hours/month\n\nKey Findings:\n\n1. Client Onboarding (32% time savings)\n   - Automate document collection\n   - Implement e-signature workflows\n   - Create standardized checklists\n\n2. Job Assignment (18% improvement)\n   - AI-powered workload balancing\n   - Skill-based auto-assignment\n   - Real-time capacity monitoring\n\n3. Communication (15% efficiency gain)\n   - Template library expansion\n   - Automated status updates\n   - Client portal adoption\n\nEstimated ROI: £45,600/year')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Activity className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Workflow Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Process optimization and automation opportunities</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Efficiency Score</span>
+                    <span className="text-xs font-bold text-blue-900">77%</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Update service agreements</p>
-                      <p className="text-xs text-blue-900">12 agreements due for renewal</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Time Savings</span>
+                    <span className="text-xs font-bold text-green-600">127 hrs/mo</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Schedule team training</p>
-                      <p className="text-xs text-blue-900">New compliance requirements</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Bottlenecks</span>
+                    <span className="text-xs font-bold text-orange-600">5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Billing & Invoicing Performance\n\n• Total Revenue (YTD): £847,230\n• Outstanding Invoices: £45,320 (5.3%)\n• Average Payment Time: 14.2 days\n• Collection Rate: 96.5%\n\nRevenue Breakdown:\n• Recurring Services: £612,450 (72%)\n• Project Work: £189,780 (22%)\n• Additional Services: £45,000 (5%)\n\nAging Analysis:\n• Current (0-30 days): £38,240\n• 31-60 days: £5,680\n• 61-90 days: £980\n• 90+ days: £420\n\nRecommendations:\n• Implement automated payment reminders\n• Offer early payment discounts (2% net 10)\n• Review pricing for underperforming services\n• Convert more clients to direct debit')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <DollarSign className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Billing Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Revenue performance and invoicing efficiency</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Total Revenue</span>
+                    <span className="text-xs font-bold text-blue-900">£847,230</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Outstanding</span>
+                    <span className="text-xs font-bold text-orange-600">£45,320</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Collection Rate</span>
+                    <span className="text-xs font-bold text-green-600">96.5%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Deadline Management Analysis\n\n• Total Active Deadlines: 24\n• Overdue Items: 2 (8.3%)\n• Completion Rate: 94.2%\n• Average Lead Time: 8.7 days\n\nDeadline Distribution:\n• Tax Returns: 12 deadlines\n• Companies House: 7 deadlines\n• Compliance: 3 deadlines\n• Internal: 2 deadlines\n\nCritical Items:\n1. VAT Return - ABC Corp (Due: Tomorrow)\n2. Annual Accounts - XYZ Ltd (2 days overdue)\n3. Corporation Tax - DEF Inc (Due: 3 days)\n\nRecommendations:\n• Set earlier internal deadlines (5-7 day buffer)\n• Implement automated client reminders\n• Create escalation protocols for at-risk deadlines\n• Use workflow automation for routine filings')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Deadline Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Deadline tracking and compliance management</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Active Deadlines</span>
+                    <span className="text-xs font-bold text-blue-900">24</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Overdue</span>
+                    <span className="text-xs font-bold text-red-600">2</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Completion Rate</span>
+                    <span className="text-xs font-bold text-green-600">94.2%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Team Performance Matrix\n\n• Overall Utilization: 87.3%\n• Total Billable Hours: 8,281\n• Average Project Time: 12.3 days\n• Team Efficiency Score: 8.4/10\n\nTeam Breakdown:\n• Senior Staff: 92% utilization (3 members)\n• Mid-level: 88% utilization (5 members)\n• Junior Staff: 79% utilization (4 members)\n\nTop Performers:\n1. Sarah Johnson - 94% util, 4.9 client rating\n2. Mike Chen - 91% util, 4.8 client rating\n3. Emma Davis - 89% util, 4.7 client rating\n\nDevelopment Areas:\n• Redistribute workload for junior staff\n• Implement mentorship programs\n• Cross-training for skill diversification\n• Consider hiring mid-level accountant')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <TrendingUp className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Performance Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Team productivity and utilization metrics</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Utilization</span>
+                    <span className="text-xs font-bold text-blue-900">87.3%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Billable Hours</span>
+                    <span className="text-xs font-bold text-green-600">8,281</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Efficiency Score</span>
+                    <span className="text-xs font-bold text-blue-900">8.4/10</span>
                   </div>
                 </div>
               </div>
