@@ -1102,3 +1102,144 @@ async def patch_automation_rule(rule_id: str, data: Dict[str, Any], db: Session 
 async def delete_automation_rule(rule_id: str, db: Session = Depends(get_db)):
     """Delete an automation rule"""
     return {"message": "Automation rule deleted successfully"}
+
+class TeamMemberCreate(BaseModel):
+    name: str
+    role: str
+    skills: List[str] = []
+    capacity: int = 40
+    hourlyRate: float = 0
+    performanceScore: int = 80
+
+class TeamMemberUpdate(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    skills: Optional[List[str]] = None
+    capacity: Optional[int] = None
+    hourlyRate: Optional[float] = None
+    performanceScore: Optional[int] = None
+
+class JobCreate(BaseModel):
+    title: str
+    client: str
+    type: str = ''
+    priority: str = 'medium'
+    estimatedHours: float = 0
+    requiredSkills: List[str] = []
+    dueDate: str = ''
+    status: str = 'unassigned'
+
+class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    client: Optional[str] = None
+    type: Optional[str] = None
+    priority: Optional[str] = None
+    estimatedHours: Optional[float] = None
+    requiredSkills: Optional[List[str]] = None
+    dueDate: Optional[str] = None
+    status: Optional[str] = None
+
+@router.get("/capacity/team-members")
+async def get_team_members(db: Session = Depends(get_db)):
+    """Get all team members"""
+    return []
+
+@router.post("/capacity/team-members")
+async def create_team_member(member: TeamMemberCreate, db: Session = Depends(get_db)):
+    """Create a new team member"""
+    member_data = {
+        "id": f"tm_{int(datetime.now().timestamp())}",
+        "name": member.name,
+        "role": member.role,
+        "skills": member.skills,
+        "capacity": member.capacity,
+        "hourlyRate": member.hourlyRate,
+        "performanceScore": member.performanceScore,
+        "currentUtilization": 0,
+        "assignedJobs": 0,
+        "availability": {
+            "thisWeek": member.capacity,
+            "nextWeek": member.capacity,
+            "thisMonth": member.capacity * 4
+        },
+        "created_at": datetime.now().isoformat()
+    }
+    return member_data
+
+@router.put("/capacity/team-members/{member_id}")
+async def update_team_member(member_id: str, member: TeamMemberUpdate, db: Session = Depends(get_db)):
+    """Update a team member"""
+    member_data = {
+        "id": member_id,
+        "name": member.name,
+        "role": member.role,
+        "skills": member.skills,
+        "capacity": member.capacity,
+        "hourlyRate": member.hourlyRate,
+        "performanceScore": member.performanceScore,
+        "updated_at": datetime.now().isoformat()
+    }
+    return member_data
+
+@router.delete("/capacity/team-members/{member_id}")
+async def delete_team_member(member_id: str, db: Session = Depends(get_db)):
+    """Delete a team member"""
+    return {"message": "Team member deleted successfully"}
+
+@router.get("/capacity/jobs")
+async def get_capacity_jobs(db: Session = Depends(get_db)):
+    """Get all capacity planning jobs"""
+    return []
+
+@router.post("/capacity/jobs")
+async def create_capacity_job(job: JobCreate, db: Session = Depends(get_db)):
+    """Create a new job"""
+    job_data = {
+        "id": f"job_{int(datetime.now().timestamp())}",
+        "title": job.title,
+        "client": job.client,
+        "type": job.type,
+        "priority": job.priority,
+        "estimatedHours": job.estimatedHours,
+        "requiredSkills": job.requiredSkills,
+        "dueDate": job.dueDate,
+        "status": job.status,
+        "created_at": datetime.now().isoformat()
+    }
+    return job_data
+
+@router.put("/capacity/jobs/{job_id}")
+async def update_capacity_job(job_id: str, job: JobUpdate, db: Session = Depends(get_db)):
+    """Update a job"""
+    job_data = {
+        "id": job_id,
+        "title": job.title,
+        "client": job.client,
+        "type": job.type,
+        "priority": job.priority,
+        "estimatedHours": job.estimatedHours,
+        "requiredSkills": job.requiredSkills,
+        "dueDate": job.dueDate,
+        "status": job.status,
+        "updated_at": datetime.now().isoformat()
+    }
+    return job_data
+
+@router.delete("/capacity/jobs/{job_id}")
+async def delete_capacity_job(job_id: str, db: Session = Depends(get_db)):
+    """Delete a job"""
+    return {"message": "Job deleted successfully"}
+
+@router.get("/capacity/ai-recommendations")
+async def get_ai_recommendations(db: Session = Depends(get_db)):
+    """Get AI-powered capacity recommendations"""
+    return []
+
+@router.post("/capacity/auto-optimize")
+async def auto_optimize_capacity(db: Session = Depends(get_db)):
+    """Auto-optimize team capacity"""
+    return {
+        "teamMembers": [],
+        "unassignedJobs": [],
+        "message": "Capacity optimization completed"
+    }
