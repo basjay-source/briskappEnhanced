@@ -1499,3 +1499,103 @@ async def add_message_to_conversation(
     conversation["updated_at"] = datetime.now().isoformat()
     
     return new_message
+
+# Email Studio Routes
+class EmailCreate(BaseModel):
+    to: List[str]
+    cc: Optional[List[str]] = []
+    bcc: Optional[List[str]] = []
+    subject: str
+    body: str
+    priority: str = 'normal'
+    client_id: Optional[str] = None
+
+class EmailTemplateCreate(BaseModel):
+    name: str
+    subject: str
+    body: str
+    category: str
+
+# In-memory storage for emails (replace with database later)
+emails_store = {}
+email_templates_store = {}
+
+@router.get("/emails")
+async def get_emails(db: Session = Depends(get_db)):
+    """Get all emails"""
+    emails = list(emails_store.values())
+    emails.sort(key=lambda x: x['date'], reverse=True)
+    return emails
+
+@router.post("/emails")
+async def send_email(email: EmailCreate, db: Session = Depends(get_db)):
+    """Send a new email"""
+    email_id = f"email_{int(datetime.now().timestamp() * 1000)}"
+    email_data = {
+        "id": email_id,
+        "from": "practice@briskaccountants.com",
+        "to": email.to,
+        "cc": email.cc,
+        "bcc": email.bcc,
+        "subject": email.subject,
+        "body": email.body,
+        "priority": email.priority,
+        "client_id": email.client_id,
+        "date": datetime.now().isoformat(),
+        "status": "sent",
+        "hasAttachments": False,
+        "folder": "sent"
+    }
+    emails_store[email_id] = email_data
+    return email_data
+
+@router.get("/email-templates")
+async def get_email_templates(db: Session = Depends(get_db)):
+    """Get all email templates"""
+    return list(email_templates_store.values())
+
+@router.post("/email-templates")
+async def create_email_template(template: EmailTemplateCreate, db: Session = Depends(get_db)):
+    """Create a new email template"""
+    template_id = f"template_{int(datetime.now().timestamp() * 1000)}"
+    template_data = {
+        "id": template_id,
+        "name": template.name,
+        "subject": template.subject,
+        "body": template.body,
+        "category": template.category,
+        "created_at": datetime.now().isoformat()
+    }
+    email_templates_store[template_id] = template_data
+    return template_data
+
+@router.get("/email-automations")
+async def get_email_automations(db: Session = Depends(get_db)):
+    """Get all email automation rules"""
+    return [
+        {
+            "id": "auto_1",
+            "name": "Welcome Email",
+            "trigger": "New client onboarding",
+            "action": "Send welcome email with firm details",
+            "isActive": True
+        },
+        {
+            "id": "auto_2",
+            "name": "Deadline Reminder",
+            "trigger": "3 days before deadline",
+            "action": "Send reminder email to client",
+            "isActive": True
+        }
+    ]
+
+@router.get("/email-metrics")
+async def get_email_metrics(db: Session = Depends(get_db)):
+    """Get email analytics metrics"""
+    return {
+        "totalSent": 145,
+        "totalReceived": 234,
+        "openRate": 87.3,
+        "responseRate": 64.2,
+        "avgResponseTime": "2.4h"
+    }
