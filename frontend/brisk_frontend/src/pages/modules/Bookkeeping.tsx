@@ -40,7 +40,12 @@ import {
   Search,
   Settings,
   Calendar,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Mail,
+  Phone,
+  MapPin,
+  Tag,
+  Trash2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -71,6 +76,35 @@ export default function Bookkeeping() {
   const [showReconciliationDialog, setShowReconciliationDialog] = useState(false)
   const [showGenerateReportDialog, setShowGenerateReportDialog] = useState(false)
   const [showExportDataDialog, setShowExportDataDialog] = useState(false)
+  
+  const [showCreateQuoteDialog, setShowCreateQuoteDialog] = useState(false)
+  const [showEditQuoteDialog, setShowEditQuoteDialog] = useState(false)
+  const [showViewQuoteDialog, setShowViewQuoteDialog] = useState(false)
+  const [showConvertToInvoiceDialog, setShowConvertToInvoiceDialog] = useState(false)
+  const [showEmailQuoteDialog, setShowEmailQuoteDialog] = useState(false)
+  const [selectedQuote, setSelectedQuote] = useState<any>(null)
+  const [quotesSearchTerm, setQuotesSearchTerm] = useState('')
+  const [quotesStatusFilter, setQuotesStatusFilter] = useState('all')
+  
+  const [showCreateCustomerDialog, setShowCreateCustomerDialog] = useState(false)
+  const [showEditCustomerDialog, setShowEditCustomerDialog] = useState(false)
+  const [showViewCustomerDialog, setShowViewCustomerDialog] = useState(false)
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null)
+  const [customersSearchTerm, setCustomersSearchTerm] = useState('')
+  const [customersStatusFilter, setCustomersStatusFilter] = useState('all')
+  
+  const [showCreateProductDialog, setShowCreateProductDialog] = useState(false)
+  const [showEditProductDialog, setShowEditProductDialog] = useState(false)
+  const [showViewProductDialog, setShowViewProductDialog] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [productsSearchTerm, setProductsSearchTerm] = useState('')
+  const [productsCategoryFilter, setProductsCategoryFilter] = useState('all')
+  
+  const [showStockAdjustmentDialog, setShowStockAdjustmentDialog] = useState(false)
+  const [showWarehouseDialog, setShowWarehouseDialog] = useState(false)
+  const [showSupplierDialog, setShowSupplierDialog] = useState(false)
+  const [showPurchaseOrderDialog, setShowPurchaseOrderDialog] = useState(false)
+  const [inventorySearchTerm, setInventorySearchTerm] = useState('')
   
   const [reportsSearchTerm, setReportsSearchTerm] = useState('')
   const [reportsSelectedPeriod, setReportsSelectedPeriod] = useState('current')
@@ -388,6 +422,14 @@ export default function Bookkeeping() {
       if (activeSubTab === 'settlements') return renderSettlementTracking()
       if (activeSubTab === 'analytics') return renderSalesAnalytics()
       return renderEcommerceContent()
+    } else if (activeMainTab === 'inventory') {
+      if (activeSubTab === 'stock') return renderStockManagement()
+      if (activeSubTab === 'warehouses') return renderWarehousesManagement()
+      if (activeSubTab === 'suppliers') return renderInventorySuppliersManagement()
+      if (activeSubTab === 'orders') return renderInventoryPurchaseOrders()
+      if (activeSubTab === 'movements') return renderStockMovements()
+      if (activeSubTab === 'valuation') return renderStockValuation()
+      return renderInventoryContent()
     } else if (activeMainTab === 'documents') {
       return renderDocumentsContent()
     } else if (activeMainTab === 'integrations') {
@@ -3707,6 +3749,109 @@ export default function Bookkeeping() {
   }
 
   function renderQuotesManagement() {
+    const quotesKPIs = [
+      { 
+        title: 'Pending Quotes', 
+        value: '15', 
+        subtitle: 'Awaiting response',
+        color: 'text-blue-600',
+        drillDownData: {
+          title: 'Pending Quotes Breakdown',
+          items: [
+            { label: 'New (< 7 days)', value: '8', detail: '£18,500 total value' },
+            { label: 'Follow-up Required', value: '5', detail: '£12,250 total value' },
+            { label: 'Expiring Soon', value: '2', detail: '£4,000 total value' }
+          ]
+        }
+      },
+      { 
+        title: 'Accepted', 
+        value: '8', 
+        subtitle: 'This month',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'Accepted Quotes Details',
+          items: [
+            { label: 'Converted to Invoice', value: '5', detail: '£14,250 revenue' },
+            { label: 'Pending Conversion', value: '3', detail: '£8,500 pending' },
+            { label: 'Average Value', value: '£2,844', detail: 'Per accepted quote' }
+          ]
+        }
+      },
+      { 
+        title: 'Conversion Rate', 
+        value: '68%', 
+        subtitle: 'Quotes to sales',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Conversion Analysis',
+          items: [
+            { label: 'This Month', value: '68%', detail: '8 of 12 quotes accepted' },
+            { label: 'Last Month', value: '72%', detail: '13 of 18 quotes accepted' },
+            { label: '3-Month Average', value: '65%', detail: 'Stable conversion trend' }
+          ]
+        }
+      },
+      { 
+        title: 'Total Value', 
+        value: '£34,750', 
+        subtitle: 'Pending quotes',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Quote Value Analysis',
+          items: [
+            { label: 'Highest Quote', value: '£4,200', detail: 'Tech Solutions Inc' },
+            { label: 'Average Quote', value: '£2,317', detail: 'Across all pending' },
+            { label: 'Total This Month', value: '£45,600', detail: 'All quotes combined' }
+          ]
+        }
+      }
+    ]
+
+    const quotes = [
+      { id: 1, number: 'QUO-2024-015', customer: 'ABC Corporation', email: 'accounts@abccorp.com', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20', items: 5 },
+      { id: 2, number: 'QUO-2024-016', customer: 'XYZ Limited', email: 'finance@xyzltd.com', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19', items: 3 },
+      { id: 3, number: 'QUO-2024-017', customer: 'StartupCo Ltd', email: 'admin@startupco.com', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18', items: 2 },
+      { id: 4, number: 'QUO-2024-018', customer: 'Tech Solutions Inc', email: 'billing@techsolutions.com', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17', items: 6 },
+      { id: 5, number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16', items: 4 }
+    ]
+
+    const filteredQuotes = quotes.filter(quote => {
+      const matchesSearch = quotesSearchTerm === '' || 
+        quote.number.toLowerCase().includes(quotesSearchTerm.toLowerCase()) ||
+        quote.customer.toLowerCase().includes(quotesSearchTerm.toLowerCase())
+      const matchesStatus = quotesStatusFilter === 'all' || quote.status.toLowerCase() === quotesStatusFilter.toLowerCase()
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreateQuote = () => {
+      setShowCreateQuoteDialog(true)
+    }
+
+    const handleViewQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowViewQuoteDialog(true)
+    }
+
+    const handleEditQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowEditQuoteDialog(true)
+    }
+
+    const handleConvertToInvoice = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowConvertToInvoiceDialog(true)
+    }
+
+    const handleEmailQuote = (quote: any) => {
+      setSelectedQuote(quote)
+      setShowEmailQuoteDialog(true)
+    }
+
+    const handleExportQuotes = () => {
+      console.log('Exporting quotes...', filteredQuotes)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3714,12 +3859,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Quote Management</h2>
             <p className="text-blue-900">Create, manage, and convert quotes to invoices</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateQuote} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               New Quote
             </Button>
-            <Button>
+            <Button onClick={handleExportQuotes} className="min-w-fit">
               <FileText className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -3727,62 +3872,57 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Quotes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">15</div>
-              <p className="text-sm text-blue-900">Awaiting response</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Accepted</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">8</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Conversion Rate</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">68%</div>
-              <p className="text-sm text-blue-900">Quotes to sales</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£34,750</div>
-              <p className="text-sm text-blue-900">Pending quotes</p>
-            </CardContent>
-          </Card>
+          {quotesKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Quotes</CardTitle>
-            <CardDescription>Latest quotes and their status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Quote List</CardTitle>
+                <CardDescription>Search, filter, and manage all quotes</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search quotes..."
+                    value={quotesSearchTerm}
+                    onChange={(e) => setQuotesSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={quotesStatusFilter}
+                  onChange={(e) => setQuotesStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { number: 'QUO-2024-015', customer: 'ABC Corporation', amount: 3500, date: '2024-01-20', status: 'Pending', validUntil: '2024-02-20' },
-                { number: 'QUO-2024-016', customer: 'XYZ Limited', amount: 2850, date: '2024-01-19', status: 'Accepted', validUntil: '2024-02-19' },
-                { number: 'QUO-2024-017', customer: 'StartupCo Ltd', amount: 1950, date: '2024-01-18', status: 'Declined', validUntil: '2024-02-18' },
-                { number: 'QUO-2024-018', customer: 'Tech Solutions Inc', amount: 4200, date: '2024-01-17', status: 'Pending', validUntil: '2024-02-17' },
-                { number: 'QUO-2024-019', customer: 'Marketing Pro Ltd', amount: 1650, date: '2024-01-16', status: 'Accepted', validUntil: '2024-02-16' }
-              ].map((quote, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{quote.number}</p>
+              {filteredQuotes.map((quote) => (
+                <div key={quote.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-medium text-blue-900">{quote.number}</p>
                       <Badge className={`${
                         quote.status === 'Accepted' ? 'bg-green-100 text-green-800' : 
                         quote.status === 'Declined' ? 'bg-red-100 text-red-800' : 
@@ -3791,28 +3931,41 @@ export default function Bookkeeping() {
                         {quote.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{quote.customer}</p>
-                    <p className="text-xs text-gray-500">Valid until: {quote.validUntil}</p>
+                    <p className="text-sm text-blue-900 truncate">{quote.customer}</p>
+                    <p className="text-xs text-gray-500">Valid until: {quote.validUntil} • {quote.items} items</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{quote.amount}</p>
-                    <p className="text-sm text-blue-900">{quote.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{quote.amount.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">{quote.date}</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewQuote(quote)} title="View Quote">
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEditQuote(quote)} title="Edit Quote">
                         <Edit className="h-3 w-3" />
                       </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleEmailQuote(quote)} title="Email Quote">
+                        <Mail className="h-3 w-3" />
+                      </Button>
                       {quote.status === 'Accepted' && (
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleConvertToInvoice(quote)} title="Convert to Invoice">
                           <Receipt className="h-3 w-3" />
                         </Button>
                       )}
+                      <Button variant="ghost" size="sm" onClick={() => handleExportQuotes()} title="Download PDF">
+                        <Download className="h-3 w-3" />
+                      </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredQuotes.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No quotes found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -3821,6 +3974,120 @@ export default function Bookkeeping() {
   }
 
   function renderCustomersManagement() {
+    const customersKPIs = [
+      { 
+        title: 'Total Customers', 
+        value: '156', 
+        subtitle: 'Active customers',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Customer Breakdown',
+          items: [
+            { label: 'Active Customers', value: '143', detail: '91.7% of total base' },
+            { label: 'VIP Customers', value: '13', detail: '8.3% high-value clients' },
+            { label: 'Inactive (>90 days)', value: '12', detail: 'Require follow-up' }
+          ]
+        }
+      },
+      { 
+        title: 'New This Month', 
+        value: '8', 
+        subtitle: '+12% growth',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'New Customer Analysis',
+          items: [
+            { label: 'Referrals', value: '5', detail: '62.5% from existing customers' },
+            { label: 'Direct Marketing', value: '2', detail: '25% from campaigns' },
+            { label: 'Organic', value: '1', detail: '12.5% website/search' }
+          ]
+        }
+      },
+      { 
+        title: 'Top Customer Value', 
+        value: '£15,600', 
+        subtitle: 'Lifetime value',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Customer Value Analysis',
+          items: [
+            { label: 'Tech Solutions Inc', value: '£15,600', detail: 'Highest lifetime value' },
+            { label: 'ABC Corporation', value: '£12,450', detail: 'Second highest' },
+            { label: 'XYZ Limited', value: '£8,750', detail: 'Third highest' }
+          ]
+        }
+      },
+      { 
+        title: 'Average Order', 
+        value: '£1,850', 
+        subtitle: 'Per customer',
+        color: 'text-purple-600',
+        drillDownData: {
+          title: 'Order Value Trends',
+          items: [
+            { label: 'This Month', value: '£1,850', detail: '+15% vs last month' },
+            { label: 'Last Month', value: '£1,610', detail: 'Previous average' },
+            { label: 'YTD Average', value: '£1,720', detail: 'Year to date trend' }
+          ]
+        }
+      }
+    ]
+
+    const customers = [
+      { 
+        id: 1, name: 'ABC Corporation', email: 'accounts@abccorp.com', phone: '+44 20 7123 4567', 
+        address: '123 Business St, London', totalSpent: 12450, lastOrder: '2024-01-15', 
+        status: 'Active', invoiceCount: 24, joinDate: '2023-03-15'
+      },
+      { 
+        id: 2, name: 'XYZ Limited', email: 'finance@xyzltd.com', phone: '+44 161 234 5678', 
+        address: '456 Commerce Ave, Manchester', totalSpent: 8750, lastOrder: '2024-01-12', 
+        status: 'Active', invoiceCount: 18, joinDate: '2023-06-22'
+      },
+      { 
+        id: 3, name: 'StartupCo Ltd', email: 'admin@startupco.com', phone: '+44 113 345 6789', 
+        address: '789 Innovation Way, Leeds', totalSpent: 3200, lastOrder: '2024-01-10', 
+        status: 'Active', invoiceCount: 8, joinDate: '2023-11-08'
+      },
+      { 
+        id: 4, name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', 
+        address: '321 Tech Park, Birmingham', totalSpent: 15600, lastOrder: '2024-01-08', 
+        status: 'VIP', invoiceCount: 32, joinDate: '2022-09-12'
+      },
+      { 
+        id: 5, name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', 
+        address: '654 Creative Sq, Edinburgh', totalSpent: 5400, lastOrder: '2024-01-05', 
+        status: 'Active', invoiceCount: 12, joinDate: '2023-08-19'
+      }
+    ]
+
+    const filteredCustomers = customers.filter(customer => {
+      const matchesSearch = customersSearchTerm === '' || 
+        customer.name.toLowerCase().includes(customersSearchTerm.toLowerCase()) ||
+        customer.email.toLowerCase().includes(customersSearchTerm.toLowerCase()) ||
+        customer.phone.includes(customersSearchTerm)
+      const matchesStatus = customersStatusFilter === 'all' || customer.status.toLowerCase() === customersStatusFilter.toLowerCase()
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreateCustomer = () => {
+      setShowCreateCustomerDialog(true)
+    }
+
+    const handleViewCustomer = (customer: any) => {
+      setSelectedCustomer(customer)
+      setShowViewCustomerDialog(true)
+    }
+
+    const handleEditCustomer = (customer: any) => {
+      setSelectedCustomer(customer)
+      setShowEditCustomerDialog(true)
+    }
+
+    const handleExportCustomers = () => {
+      console.log('Exporting customers...', filteredCustomers)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3828,12 +4095,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Customer Management</h2>
             <p className="text-blue-900">Manage customer information, contacts, and transaction history</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateCustomer} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               Add Customer
             </Button>
-            <Button>
+            <Button onClick={handleExportCustomers} className="min-w-fit">
               <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -3841,90 +4108,113 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Customers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">156</div>
-              <p className="text-sm text-blue-900">Active customers</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">8</div>
-              <p className="text-sm text-blue-900">+12% growth</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Customer Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£12,450</div>
-              <p className="text-sm text-blue-900">Lifetime value</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Order</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,850</div>
-              <p className="text-sm text-blue-900">Per customer</p>
-            </CardContent>
-          </Card>
+          {customersKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Customer Database</CardTitle>
-            <CardDescription>Complete customer information and transaction history</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Customer Database</CardTitle>
+                <CardDescription>Search, filter, and manage all customer information</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search customers..."
+                    value={customersSearchTerm}
+                    onChange={(e) => setCustomersSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={customersStatusFilter}
+                  onChange={(e) => setCustomersStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="vip">VIP</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'ABC Corporation', email: 'accounts@abccorp.com', phone: '+44 20 7123 4567', totalSpent: 12450, lastOrder: '2024-01-15', status: 'Active' },
-                { name: 'XYZ Limited', email: 'finance@xyzltd.com', phone: '+44 161 234 5678', totalSpent: 8750, lastOrder: '2024-01-12', status: 'Active' },
-                { name: 'StartupCo Ltd', email: 'admin@startupco.com', phone: '+44 113 345 6789', totalSpent: 3200, lastOrder: '2024-01-10', status: 'Active' },
-                { name: 'Tech Solutions Inc', email: 'billing@techsolutions.com', phone: '+44 121 456 7890', totalSpent: 15600, lastOrder: '2024-01-08', status: 'VIP' },
-                { name: 'Marketing Pro Ltd', email: 'accounts@marketingpro.com', phone: '+44 131 567 8901', totalSpent: 5400, lastOrder: '2024-01-05', status: 'Active' }
-              ].map((customer, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{customer.name}</p>
+              {filteredCustomers.map((customer) => (
+                <div key={customer.id} className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <p className="font-medium text-blue-900">{customer.name}</p>
                       <Badge className={`${
                         customer.status === 'VIP' ? 'bg-purple-100 text-purple-800' : 
-                        'bg-green-100 text-green-800'
+                        customer.status === 'Active' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                         {customer.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{customer.email}</p>
-                    <p className="text-xs text-gray-500">{customer.phone}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm">
+                      <div className="flex items-center gap-1">
+                        <Mail className="h-3 w-3 text-blue-900" />
+                        <span className="text-blue-900 truncate">{customer.email}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Phone className="h-3 w-3 text-blue-900" />
+                        <span className="text-blue-900">{customer.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-1 sm:col-span-2">
+                        <MapPin className="h-3 w-3 text-blue-900" />
+                        <span className="text-gray-500 text-xs truncate">{customer.address}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold">£{customer.totalSpent}</p>
-                    <p className="text-sm text-blue-900">Total spent</p>
-                    <p className="text-xs text-gray-500">Last: {customer.lastOrder}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Receipt className="h-3 w-3" />
-                    </Button>
+                  <div className="flex items-center gap-6 w-full lg:w-auto">
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{customer.totalSpent.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">Total spent</p>
+                      <p className="text-xs text-gray-500">{customer.invoiceCount} invoices</p>
+                    </div>
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-sm text-blue-900">{customer.lastOrder}</p>
+                      <p className="text-xs text-gray-500">Last order</p>
+                      <p className="text-xs text-gray-500">Since {customer.joinDate}</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewCustomer(customer)} title="View Details">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleEditCustomer(customer)} title="Edit Customer">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="View Invoices">
+                        <Receipt className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Contact Customer">
+                        <Mail className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
+              {filteredCustomers.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No customers found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -3933,6 +4223,120 @@ export default function Bookkeeping() {
   }
 
   function renderProductsManagement() {
+    const productsKPIs = [
+      { 
+        title: 'Total Products', 
+        value: '73', 
+        subtitle: 'Active items',
+        color: 'text-brisk-primary',
+        drillDownData: {
+          title: 'Product Breakdown',
+          items: [
+            { label: 'Products', value: '45', detail: '61.6% of catalog' },
+            { label: 'Services', value: '28', detail: '38.4% of catalog' },
+            { label: 'Low Stock', value: '8', detail: 'Need restocking' }
+          ]
+        }
+      },
+      { 
+        title: 'Total Revenue', 
+        value: '£82,450', 
+        subtitle: 'This month',
+        color: 'text-green-600',
+        drillDownData: {
+          title: 'Revenue Analysis',
+          items: [
+            { label: 'Products', value: '£45,600', detail: '55.3% of revenue' },
+            { label: 'Services', value: '£36,850', detail: '44.7% of revenue' },
+            { label: 'Growth', value: '+18%', detail: 'vs last month' }
+          ]
+        }
+      },
+      { 
+        title: 'Top Seller', 
+        value: '£45,600', 
+        subtitle: 'Professional Services',
+        color: 'text-orange-600',
+        drillDownData: {
+          title: 'Best Sellers',
+          items: [
+            { label: 'Professional Services', value: '£45,600', detail: '24 units sold' },
+            { label: 'Software License', value: '£29,750', detail: '35 units sold' },
+            { label: 'Support Package', value: '£26,600', detail: '28 units sold' }
+          ]
+        }
+      },
+      { 
+        title: 'Average Margin', 
+        value: '57%', 
+        subtitle: 'Profit margin',
+        color: 'text-purple-600',
+        drillDownData: {
+          title: 'Margin Analysis',
+          items: [
+            { label: 'Services Margin', value: '61%', detail: 'Higher profitability' },
+            { label: 'Products Margin', value: '53%', detail: 'Standard margin' },
+            { label: 'Target Margin', value: '55%', detail: 'Above target' }
+          ]
+        }
+      }
+    ]
+
+    const products = [
+      { 
+        id: 1, name: 'Professional Services Package', sku: 'SRV-001', category: 'Services', 
+        price: 2500, cost: 1200, margin: 52, sales: 24, stock: null, status: 'Active',
+        description: 'Comprehensive professional services package'
+      },
+      { 
+        id: 2, name: 'Consultation Services', sku: 'SRV-002', category: 'Services', 
+        price: 1800, cost: 800, margin: 56, sales: 18, stock: null, status: 'Active',
+        description: 'Expert consultation and advisory services'
+      },
+      { 
+        id: 3, name: 'Software License', sku: 'PRD-001', category: 'Products', 
+        price: 850, cost: 400, margin: 53, sales: 35, stock: 127, status: 'Active',
+        description: 'Annual software license subscription'
+      },
+      { 
+        id: 4, name: 'Training Program', sku: 'SRV-003', category: 'Services', 
+        price: 1500, cost: 600, margin: 60, sales: 12, stock: null, status: 'Active',
+        description: 'Comprehensive training and development program'
+      },
+      { 
+        id: 5, name: 'Support Package', sku: 'SRV-004', category: 'Services', 
+        price: 950, cost: 350, margin: 63, sales: 28, stock: null, status: 'Active',
+        description: 'Premium support and maintenance package'
+      }
+    ]
+
+    const filteredProducts = products.filter(product => {
+      const matchesSearch = productsSearchTerm === '' || 
+        product.name.toLowerCase().includes(productsSearchTerm.toLowerCase()) ||
+        product.sku.toLowerCase().includes(productsSearchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(productsSearchTerm.toLowerCase())
+      const matchesCategory = productsCategoryFilter === 'all' || product.category.toLowerCase() === productsCategoryFilter.toLowerCase()
+      return matchesSearch && matchesCategory
+    })
+
+    const handleCreateProduct = () => {
+      setShowCreateProductDialog(true)
+    }
+
+    const handleViewProduct = (product: any) => {
+      setSelectedProduct(product)
+      setShowViewProductDialog(true)
+    }
+
+    const handleEditProduct = (product: any) => {
+      setSelectedProduct(product)
+      setShowEditProductDialog(true)
+    }
+
+    const handleExportProducts = () => {
+      console.log('Exporting products...', filteredProducts)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -3940,12 +4344,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Product Catalog</h2>
             <p className="text-blue-900">Manage products, services, pricing, and inventory</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={handleCreateProduct} className="min-w-fit">
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
-            <Button>
+            <Button onClick={handleExportProducts} className="min-w-fit">
               <Download className="h-4 w-4 mr-2" />
               Export Catalog
             </Button>
@@ -3953,63 +4357,61 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Products</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">45</div>
-              <p className="text-sm text-blue-900">Active products</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Services</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">28</div>
-              <p className="text-sm text-blue-900">Service offerings</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Seller</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£45,600</div>
-              <p className="text-sm text-blue-900">Revenue this month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Price</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,245</div>
-              <p className="text-sm text-blue-900">Per product</p>
-            </CardContent>
-          </Card>
+          {productsKPIs.map((kpi, index) => (
+            <KPICard
+              key={index}
+              title={kpi.title}
+              value={kpi.value}
+              subtitle={kpi.subtitle}
+              valueColor={kpi.color}
+              onClick={() => {}}
+              drillDownData={kpi.drillDownData}
+            />
+          ))}
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Product Catalog</CardTitle>
-            <CardDescription>Complete product and service listings with pricing</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Product & Service Catalog</CardTitle>
+                <CardDescription>Search, filter, and manage all products and services</CardDescription>
+              </div>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search catalog..."
+                    value={productsSearchTerm}
+                    onChange={(e) => setProductsSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder:text-blue-900/50 focus:outline-none focus:ring-2 focus:ring-brisk-primary"
+                  />
+                </div>
+                <select
+                  value={productsCategoryFilter}
+                  onChange={(e) => setProductsCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-brisk-primary min-w-fit"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="products">Products</option>
+                  <option value="services">Services</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'Professional Services Package', category: 'Services', price: 2500, cost: 1200, margin: 52, sales: 24, status: 'Active' },
-                { name: 'Consultation Services', category: 'Services', price: 1800, cost: 800, margin: 56, sales: 18, status: 'Active' },
-                { name: 'Software License', category: 'Products', price: 850, cost: 400, margin: 53, sales: 35, status: 'Active' },
-                { name: 'Training Program', category: 'Services', price: 1500, cost: 600, margin: 60, sales: 12, status: 'Active' },
-                { name: 'Support Package', category: 'Services', price: 950, cost: 350, margin: 63, sales: 28, status: 'Active' }
-              ].map((product, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{product.name}</p>
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <p className="font-medium text-blue-900">{product.name}</p>
                       <Badge className="bg-blue-100 text-blue-800">{product.category}</Badge>
+                      <Badge className="bg-gray-100 text-gray-800">
+                        <Tag className="h-3 w-3 mr-1" />
+                        {product.sku}
+                      </Badge>
                       <Badge className={`${
                         product.status === 'Active' ? 'bg-green-100 text-green-800' : 
                         'bg-gray-100 text-gray-800'
@@ -4017,26 +4419,46 @@ export default function Bookkeeping() {
                         {product.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">Cost: £{product.cost} | Margin: {product.margin}%</p>
-                    <p className="text-xs text-gray-500">{product.sales} units sold this month</p>
+                    <p className="text-sm text-blue-900 mb-1">{product.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                      <span>Cost: £{product.cost.toLocaleString()}</span>
+                      <span>Margin: {product.margin}%</span>
+                      <span>{product.sales} sold this month</span>
+                      {product.stock !== null && (
+                        <span className={product.stock < 20 ? 'text-orange-600 font-medium' : ''}>
+                          Stock: {product.stock} units
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{product.price}</p>
-                    <p className="text-sm text-blue-900">Unit price</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                  <div className="flex items-center gap-6 w-full lg:w-auto">
+                    <div className="text-center flex-shrink-0">
+                      <p className="text-lg font-semibold text-blue-900">£{product.price.toLocaleString()}</p>
+                      <p className="text-sm text-blue-900">Unit price</p>
+                      <p className="text-xs text-gray-500">£{(product.price * product.sales).toLocaleString()} revenue</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewProduct(product)} title="View Details">
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)} title="Edit Product">
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" title="View Analytics">
                         <BarChart3 className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Duplicate Product">
+                        <Copy className="h-3 w-3" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-8 text-blue-900">
+                  <p>No products found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
