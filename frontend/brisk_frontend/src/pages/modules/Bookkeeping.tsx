@@ -45,7 +45,8 @@ import {
   Phone,
   MapPin,
   Tag,
-  Trash2
+  Trash2,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
