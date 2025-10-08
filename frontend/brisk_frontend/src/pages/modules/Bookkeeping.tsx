@@ -244,6 +244,19 @@ export default function Bookkeeping() {
         analytics: { label: 'Sales Analytics', icon: BarChart3 }
       }
     },
+    inventory: {
+      label: 'Inventory',
+      icon: Package,
+      hasSubTabs: true,
+      subTabs: {
+        stock: { label: 'Stock Management', icon: Package },
+        warehouses: { label: 'Warehouses', icon: Building },
+        suppliers: { label: 'Suppliers', icon: Users },
+        orders: { label: 'Purchase Orders', icon: ShoppingCart },
+        movements: { label: 'Stock Movements', icon: TrendingUp },
+        valuation: { label: 'Stock Valuation', icon: PoundSterling }
+      }
+    },
     documents: { label: 'Documents', icon: Scan, hasSubTabs: false },
     integrations: { label: 'Integrations', icon: Link, hasSubTabs: false }
   }
