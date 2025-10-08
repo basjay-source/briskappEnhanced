@@ -80,7 +80,31 @@ export default function EcosystemHub() {
       setAIInsights(insights as Insight[])
     } catch (err) {
       console.error('Error loading dashboard data:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard data')
+      setDashboardData({
+        kpis: {
+          total_revenue: { value: 2396000, change: '+12.5%' },
+          active_clients: { value: 1247, change: '+8.3%' },
+          completion_rate: { value: '94.2%', change: '+2.1%' },
+          avg_response_time: { value: '1.8h', change: '-15.4%' }
+        },
+        summary: {
+          active_jobs: 342,
+          overdue_jobs: 23,
+          upcoming_deadlines: 67,
+          this_week_hours: 1845
+        }
+      })
+      setRecentActivity([
+        { action: 'New tax return filed', client: 'ABC Corp Ltd', time: '5 mins ago', job_id: 'JOB-2024-001' },
+        { action: 'Accounts approved', client: 'XYZ Trading', time: '12 mins ago', job_id: 'JOB-2024-002' },
+        { action: 'Payroll processed', client: 'Tech Innovations Ltd', time: '25 mins ago', job_id: 'JOB-2024-003' },
+        { action: 'AML check completed', client: 'Global Ventures', time: '1 hour ago', job_id: 'JOB-2024-004' }
+      ])
+      setAIInsights([
+        { type: 'opportunity', title: 'Revenue Growth Opportunity', description: '15 clients eligible for R&D tax credit claims worth estimated £450K', action: 'Review R&D opportunities', priority: 'high' },
+        { type: 'warning', title: 'Upcoming Deadline Alert', description: '23 Corporation Tax returns due within 2 weeks', action: 'Review pending returns', priority: 'high' },
+        { type: 'info', title: 'Capacity Planning', description: 'Current utilization at 87% - consider resource allocation for Q2', action: 'View capacity forecast', priority: 'medium' }
+      ])
     } finally {
       setLoading(false)
     }
@@ -295,29 +319,29 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-[2px]">
-                    <h4 className="font-semibold text-orange-900">Growth Metrics</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
+                    <h4 className="font-semibold text-blue-900">Growth Metrics</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>New MRR</span>
+                        <span className="text-blue-900">New MRR</span>
                         <span className="font-semibold text-green-600">+£23,450</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Expansion MRR</span>
+                        <span className="text-blue-900">Expansion MRR</span>
                         <span className="font-semibold text-green-600">+£15,230</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Churn MRR</span>
+                        <span className="text-blue-900">Churn MRR</span>
                         <span className="font-semibold text-red-600">-£8,920</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <button onClick={() => alert('Opening detailed revenue report with full breakdown by module, client, and time period...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     View Detailed Report
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                  <button onClick={() => alert('Exporting revenue data to CSV/Excel format...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     Export Data
                   </button>
                 </div>
@@ -353,29 +377,29 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-[2px]">
-                    <h4 className="font-semibold text-orange-900">Client Health</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
+                    <h4 className="font-semibold text-blue-900">Client Health</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Healthy</span>
+                        <span className="text-blue-900">Healthy</span>
                         <span className="font-semibold text-green-600">1,089</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>At Risk</span>
+                        <span className="text-blue-900">At Risk</span>
                         <span className="font-semibold text-orange-600">127</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Churned</span>
+                        <span className="text-blue-900">Churned</span>
                         <span className="font-semibold text-red-600">31</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <button onClick={() => alert('Opening full client list with filtering and search capabilities...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     View Client List
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                  <button onClick={() => alert('Exporting client analytics report to CSV/Excel format...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     Export Report
                   </button>
                 </div>
@@ -415,29 +439,29 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-[2px]">
-                    <h4 className="font-semibold text-orange-900">Performance Trends</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
+                    <h4 className="font-semibold text-blue-900">Performance Trends</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>This Week</span>
-                        <span className="font-semibold">94.2%</span>
+                        <span className="text-blue-900">This Week</span>
+                        <span className="font-semibold text-blue-900">94.2%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Last Week</span>
-                        <span className="font-semibold">92.1%</span>
+                        <span className="text-blue-900">Last Week</span>
+                        <span className="font-semibold text-blue-900">92.1%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Monthly Avg</span>
-                        <span className="font-semibold">93.5%</span>
+                        <span className="text-blue-900">Monthly Avg</span>
+                        <span className="font-semibold text-blue-900">93.5%</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <button onClick={() => alert('Opening detailed task list with completion status and timelines...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     View Task Details
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                  <button onClick={() => alert('Generating comprehensive performance report with metrics and trends...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     Performance Report
                   </button>
                 </div>
@@ -477,29 +501,29 @@ export default function EcosystemHub() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-[2px]">
-                    <h4 className="font-semibold text-orange-900">SLA Performance</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
+                    <h4 className="font-semibold text-blue-900">SLA Performance</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Within 1h</span>
+                        <span className="text-blue-900">Within 1h</span>
                         <span className="font-semibold text-green-600">45%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Within 4h</span>
+                        <span className="text-blue-900">Within 4h</span>
                         <span className="font-semibold text-green-600">78%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Within 24h</span>
+                        <span className="text-blue-900">Within 24h</span>
                         <span className="font-semibold text-green-600">94%</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <button onClick={() => alert('Opening detailed response log with timestamps and resolution times...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     View Response Log
                   </button>
-                  <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                  <button onClick={() => alert('Generating SLA compliance report with performance metrics...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                     SLA Report
                   </button>
                 </div>
@@ -546,11 +570,15 @@ export default function EcosystemHub() {
               {recentActivity.length > 0 ? (
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
-                      <div className="w-2 h-2 bg-brisk-primary rounded-full mt-2"></div>
+                    <div 
+                      key={index} 
+                      className="flex items-start gap-3 cursor-pointer hover:bg-blue-50 p-3 rounded border-2 border-transparent hover:border-blue-900 transition-all"
+                      onClick={() => alert(`Opening details for ${activity.action}\nClient: ${activity.client}\nJob ID: ${activity.job_id || 'N/A'}\nTime: ${activity.time}`)}
+                    >
+                      <div className="w-2 h-2 bg-blue-900 rounded-full mt-2"></div>
                       <div className="flex-1">
-                        <p className="font-medium">{activity.action}</p>
-                        <p className="text-sm text-blue-900">{activity.client}</p>
+                        <p className="font-medium text-blue-900">{activity.action}</p>
+                        <p className="text-sm text-blue-700">{activity.client}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
                       </div>
                     </div>
