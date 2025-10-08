@@ -3778,38 +3778,38 @@ export default function PracticeManagement() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-blue-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900">Revenue by Service</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">Revenue by Service</h4>
                           <div className="mt-2 space-y-2">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Advisory Services - £345,120\n\nBreakdown:\n• Tax Advisory: £145,000\n• Business Strategy: £98,500\n• Financial Planning: £101,620')}>
                               <span>Advisory Services</span>
                               <span className="font-semibold">£345,120</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Compliance - £234,560\n\nBreakdown:\n• Annual Accounts: £124,300\n• Tax Returns: £78,900\n• Statutory Filing: £31,360')}>
                               <span>Compliance</span>
                               <span className="font-semibold">£234,560</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Project Work - £167,890\n\nBreakdown:\n• M&A Support: £89,400\n• Due Diligence: £45,200\n• Special Projects: £33,290')}>
                               <span>Project Work</span>
                               <span className="font-semibold">£167,890</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Retainer Fees - £99,660\n\nBreakdown:\n• Monthly Retainers: £67,800\n• Quarterly Reviews: £21,400\n• On-Call Support: £10,460')}>
                               <span>Retainer Fees</span>
                               <span className="font-semibold">£99,660</span>
                             </div>
                           </div>
                         </div>
                         <div className="bg-blue-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900">Monthly Trends</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: January Revenue - £78,450\n\nBreakdown:\n• Week 1: £18,200\n• Week 2: £19,800\n• Week 3: £21,150\n• Week 4: £19,300')}>
                               <span>January</span>
                               <span className="font-semibold">£78,450</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: February Revenue - £82,340\n\nBreakdown:\n• Week 1: £20,100\n• Week 2: £21,450\n• Week 3: £19,890\n• Week 4: £20,900')}>
                               <span>February</span>
                               <span className="font-semibold">£82,340</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: March Revenue - £89,120\n\nBreakdown:\n• Week 1: £22,800\n• Week 2: £23,150\n• Week 3: £21,670\n• Week 4: £21,500')}>
                               <span>March</span>
                               <span className="font-semibold">£89,120</span>
                             </div>
@@ -3832,17 +3832,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Satisfaction Breakdown</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Satisfaction Breakdown</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Service Quality - 4.9/5\n\nClient Feedback:\n• Technical Expertise: 5.0/5\n• Professionalism: 4.9/5\n• Accuracy: 4.8/5\n• Communication: 4.9/5')}>
                             <span>Service Quality</span>
                             <span className="font-semibold">4.9/5</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Response Time - 4.7/5\n\nMetrics:\n• Email Response: 4.8/5 (avg 2.1 hours)\n• Phone Response: 4.9/5 (avg 15 mins)\n• Query Resolution: 4.5/5 (avg 1.2 days)')}>
                             <span>Response Time</span>
                             <span className="font-semibold">4.7/5</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Value for Money - 4.6/5\n\nClient Perception:\n• Pricing Transparency: 4.7/5\n• Service vs Cost: 4.6/5\n• Additional Value: 4.5/5')}>
                             <span>Value for Money</span>
                             <span className="font-semibold">4.6/5</span>
                           </div>
@@ -3864,17 +3864,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Utilization by Role</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Utilization by Role</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Senior Partners - 92.1%\n\n5 Staff Members:\n• Billable Hours: 1,840h (92.1%)\n• Non-billable: 158h\n• Chargeable Rate: £285/hr\n• Total Revenue: £524,400')}>
                             <span>Senior Partners</span>
                             <span className="font-semibold">92.1%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Managers - 89.4%\n\n8 Staff Members:\n• Billable Hours: 2,863h (89.4%)\n• Non-billable: 339h\n• Chargeable Rate: £175/hr\n• Total Revenue: £501,025')}>
                             <span>Managers</span>
                             <span className="font-semibold">89.4%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Associates - 84.7%\n\n15 Staff Members:\n• Billable Hours: 4,578h (84.7%)\n• Non-billable: 827h\n• Chargeable Rate: £95/hr\n• Total Revenue: £434,910')}>
                             <span>Associates</span>
                             <span className="font-semibold">84.7%</span>
                           </div>
@@ -3896,17 +3896,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Completion by Type</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Completion by Type</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Tax Projects - 96.8%\n\nCompletion Details:\n• On Time: 89 projects (94.7%)\n• Early: 2 projects (2.1%)\n• Late: 3 projects (3.2%)\n• Avg Days to Complete: 8.3')}>
                             <span>Tax Projects</span>
                             <span className="font-semibold">96.8%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Advisory Projects - 93.2%\n\nCompletion Details:\n• On Time: 43 projects (87.8%)\n• Early: 3 projects (6.1%)\n• Late: 3 projects (6.1%)\n• Avg Days to Complete: 14.7')}>
                             <span>Advisory Projects</span>
                             <span className="font-semibold">93.2%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Compliance Projects - 91.7%\n\nCompletion Details:\n• On Time: 55 projects (91.7%)\n• Early: 0 projects (0%)\n• Late: 5 projects (8.3%)\n• Avg Days to Complete: 12.1')}>
                             <span>Compliance Projects</span>
                             <span className="font-semibold">91.7%</span>
                           </div>
@@ -3936,15 +3936,24 @@ export default function PracticeManagement() {
             <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
               <h4 className="text-lg font-semibold mb-4 text-blue-900">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+                <div 
+                  className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Average Project Value - £2,847\n\nDetailed Breakdown:\n\n• Small Projects (<£1,000): £685 avg\n  127 projects, £87,045 total\n\n• Medium Projects (£1,000-£5,000): £2,340 avg\n  89 projects, £208,260 total\n\n• Large Projects (>£5,000): £8,950 avg\n  34 projects, £304,300 total\n\n• Year-over-year: +8.3%\n• Quarterly trend: Increasing\n• Top service type: Advisory (£3,840 avg)')}
+                >
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-blue-900">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+                <div 
+                  className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Days Average Completion - 12.3 days\n\nDetailed Breakdown:\n\n• Fast Track (<7 days): 5.2 days\n  78 projects (31%)\n\n• Standard (7-14 days): 10.8 days\n  124 projects (50%)\n\n• Extended (>14 days): 21.4 days\n  48 projects (19%)\n\n• Year-over-year: -2.1 days (improved)\n• On-time completion: 92.8%\n• Client satisfaction impact: +0.3 rating')}
+                >
                   <div className="text-2xl font-bold text-blue-600">12.3</div>
                   <div className="text-sm text-blue-900">Days Average Completion</div>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+                <div 
+                  className="text-center p-4 bg-green-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Client Retention Rate - 98.7%\n\nDetailed Analysis:\n\n• Active Clients: 287\n• Clients Retained: 283\n• New Clients This Year: 47\n• Clients Lost: 4\n\n• Retention by Segment:\n  - Premium: 99.2% (121/122)\n  - Standard: 98.5% (132/134)\n  - Basic: 97.4% (30/31)\n\n• Average client tenure: 4.7 years\n• Lifetime value per client: £34,200')}
+                >
                   <div className="text-2xl font-bold text-green-600">98.7%</div>
                   <div className="text-sm text-blue-900">Client Retention Rate</div>
                 </div>
