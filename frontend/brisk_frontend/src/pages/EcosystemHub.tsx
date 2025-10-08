@@ -301,19 +301,19 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Revenue Sources</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Practice Management Revenue Details:\n\n- Total: £850,450\n- Growth: +12.5% YoY\n- Active Jobs: 145\n- Top Clients: 23\n- Avg Job Value: £5,865\n- Recurring Revenue: £425,000\n- One-time Projects: £425,450')}>
                         <span className="text-blue-900">Practice Management</span>
                         <span className="font-semibold text-blue-900">£850,450</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Bookkeeping Revenue Details:\n\n- Total: £645,230\n- Growth: +8.3% YoY\n- Active Clients: 289\n- Monthly Retainers: £487,500\n- VAT Services: £95,230\n- Management Accounts: £62,500')}>
                         <span className="text-blue-900">Bookkeeping</span>
                         <span className="font-semibold text-blue-900">£645,230</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Services Revenue Details:\n\n- Total: £512,350\n- Growth: +15.2% YoY\n- Corporation Tax: £287,450\n- Personal Tax: £156,900\n- R&D Claims: £68,000\n- Tax Planning: £45,000')}>
                         <span className="text-blue-900">Tax Services</span>
                         <span className="font-semibold text-blue-900">£512,350</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('AML Services Revenue Details:\n\n- Total: £387,970\n- Growth: +6.7% YoY\n- Risk Assessments: £245,000\n- Compliance Reviews: £95,470\n- Training Services: £47,500')}>
                         <span className="text-blue-900">AML Services</span>
                         <span className="font-semibold text-blue-900">£387,970</span>
                       </div>
@@ -322,15 +322,15 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Growth Metrics</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('New MRR Details:\n\n- Total New MRR: +£23,450\n- New Clients: 18\n- Avg Contract Value: £1,303\n- Top Services:\n  * Bookkeeping: £12,450\n  * Tax Planning: £6,890\n  * Payroll: £4,110\n- Conversion Rate: 42%')}>
                         <span className="text-blue-900">New MRR</span>
                         <span className="font-semibold text-green-600">+£23,450</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Expansion MRR Details:\n\n- Total Expansion: +£15,230\n- Upsells: 12 clients\n- Cross-sells: 8 clients\n- Service Additions:\n  * Added Tax Services: £7,890\n  * Added Payroll: £4,560\n  * Added AML: £2,780\n- Expansion Rate: 8.2%')}>
                         <span className="text-blue-900">Expansion MRR</span>
                         <span className="font-semibold text-green-600">+£15,230</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Churn MRR Details:\n\n- Total Churn: -£8,920\n- Churned Clients: 5\n- Avg Lost Revenue: £1,784\n- Churn Reasons:\n  * Cost: 2 clients (-£4,560)\n  * Service Quality: 1 client (-£1,890)\n  * Business Closure: 2 clients (-£2,470)\n- Churn Rate: 1.9%')}>
                         <span className="text-blue-900">Churn MRR</span>
                         <span className="font-semibold text-red-600">-£8,920</span>
                       </div>
@@ -363,15 +363,15 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Client Segments</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Enterprise Clients Details:\n\n- Total Clients: 247\n- Avg Revenue per Client: £8,945/month\n- Services:\n  * Full Practice Management: 187\n  * Tax & Compliance: 234\n  * Payroll Services: 156\n  * AML/KYC: 198\n- Retention Rate: 96.8%\n- Growth: +12 clients YoY')}>
                         <span className="text-blue-900">Enterprise</span>
                         <span className="font-semibold text-blue-900">247</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('SME Clients Details:\n\n- Total Clients: 645\n- Avg Revenue per Client: £2,340/month\n- Services:\n  * Bookkeeping: 589\n  * Tax Returns: 612\n  * Payroll: 387\n  * VAT Returns: 534\n- Retention Rate: 94.2%\n- Growth: +45 clients YoY')}>
                         <span className="text-blue-900">SME</span>
                         <span className="font-semibold text-blue-900">645</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Sole Trader Clients Details:\n\n- Total Clients: 355\n- Avg Revenue per Client: £890/month\n- Services:\n  * Self Assessment: 342\n  * Basic Bookkeeping: 298\n  * Tax Planning: 167\n  * VAT Returns: 189\n- Retention Rate: 91.5%\n- Growth: +23 clients YoY')}>
                         <span className="text-blue-900">Sole Traders</span>
                         <span className="font-semibold text-blue-900">355</span>
                       </div>
@@ -380,15 +380,15 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Client Health</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Healthy Clients Details:\n\n- Total: 1,089 clients (87.4%)\n- Characteristics:\n  * On-time payments: 100%\n  * Active engagement: High\n  * Service utilization: 85%+\n  * Satisfaction score: 4.5+/5\n- Revenue: £2.1M/month\n- Retention forecast: 98%')}>
                         <span className="text-blue-900">Healthy</span>
                         <span className="font-semibold text-green-600">1,089</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('At Risk Clients Details:\n\n- Total: 127 clients (10.2%)\n- Risk Factors:\n  * Payment delays: 45 clients\n  * Reduced engagement: 38 clients\n  * Service complaints: 24 clients\n  * Price sensitivity: 20 clients\n- Revenue at risk: £287K/month\n- Action required: Immediate outreach')}>
                         <span className="text-blue-900">At Risk</span>
                         <span className="font-semibold text-orange-600">127</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Churned Clients Details:\n\n- Total: 31 clients (2.4%)\n- Time Period: Last 90 days\n- Lost Revenue: £42K/month\n- Churn Reasons:\n  * Price: 12 clients\n  * Service issues: 7 clients\n  * Business closure: 8 clients\n  * Competitor: 4 clients\n- Win-back opportunity: 8 clients')}>
                         <span className="text-blue-900">Churned</span>
                         <span className="font-semibold text-red-600">31</span>
                       </div>
@@ -421,19 +421,19 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">By Module</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Bookkeeping Completion Details:\n\n- Completion Rate: 96.8%\n- Total Tasks: 1,847\n- Completed: 1,788\n- In Progress: 42\n- Overdue: 17\n- Avg Completion Time: 2.3 days\n- Top Performers: Team A (98.5%)\n- Key Metrics: Bank Recs, VAT, Mgmt Accounts')}>
                         <span className="text-blue-900">Bookkeeping</span>
                         <span className="font-semibold text-blue-900">96.8%</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Returns Completion Details:\n\n- Completion Rate: 94.2%\n- Total Tasks: 892\n- Completed: 840\n- In Progress: 38\n- Overdue: 14\n- Avg Completion Time: 4.1 days\n- Top Performers: Team C (97.2%)\n- Key Metrics: CT600, SA100, R&D Claims')}>
                         <span className="text-blue-900">Tax Returns</span>
                         <span className="font-semibold text-blue-900">94.2%</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Payroll Completion Details:\n\n- Completion Rate: 92.1%\n- Total Tasks: 1,234\n- Completed: 1,137\n- In Progress: 67\n- Overdue: 30\n- Avg Completion Time: 1.8 days\n- Top Performers: Team B (95.8%)\n- Key Metrics: RTI, Pensions, P11D, CIS')}>
                         <span className="text-blue-900">Payroll</span>
                         <span className="font-semibold text-blue-900">92.1%</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('AML Compliance Completion Details:\n\n- Completion Rate: 89.7%\n- Total Tasks: 567\n- Completed: 508\n- In Progress: 42\n- Overdue: 17\n- Avg Completion Time: 5.2 days\n- Top Performers: Team D (93.4%)\n- Key Metrics: Risk Assessments, PEP Checks, Reviews')}>
                         <span className="text-blue-900">AML Compliance</span>
                         <span className="font-semibold text-blue-900">89.7%</span>
                       </div>
@@ -483,19 +483,19 @@ export default function EcosystemHub() {
                   <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">By Channel</h4>
                     <div className="mt-2 space-y-2">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Email Response Details:\n\n- Avg Response Time: 1.8h\n- Total Queries: 2,847/month\n- First Response: 1.2h\n- Resolution Time: 4.5h\n- Volume by Time:\n  * Morning: 45%\n  * Afternoon: 35%\n  * Evening: 20%\n- SLA Compliance: 87%')}>
                         <span className="text-blue-900">Email</span>
                         <span className="font-semibold text-blue-900">1.8h</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Phone Response Details:\n\n- Avg Response Time: 0.5h\n- Total Calls: 1,234/month\n- Answer Rate: 94%\n- Avg Call Duration: 8.5 min\n- Peak Hours:\n  * 9-11am: 40%\n  * 2-4pm: 35%\n  * Other: 25%\n- SLA Compliance: 96%')}>
                         <span className="text-blue-900">Phone</span>
                         <span className="font-semibold text-blue-900">0.5h</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Portal Response Details:\n\n- Avg Response Time: 3.2h\n- Total Tickets: 1,567/month\n- First Response: 2.8h\n- Resolution Time: 12.4h\n- Ticket Types:\n  * Document Requests: 45%\n  * Query/Question: 35%\n  * Issue Report: 20%\n- SLA Compliance: 82%')}>
                         <span className="text-blue-900">Portal</span>
                         <span className="font-semibold text-blue-900">3.2h</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Chat Response Details:\n\n- Avg Response Time: 0.3h (18 min)\n- Total Chats: 892/month\n- Instant Response: 78%\n- Avg Chat Duration: 12 min\n- Popular Times:\n  * Business Hours: 85%\n  * After Hours: 15%\n- SLA Compliance: 98%\n- Satisfaction: 4.7/5')}>
                         <span className="text-blue-900">Chat</span>
                         <span className="font-semibold text-blue-900">0.3h</span>
                       </div>
@@ -599,20 +599,88 @@ export default function EcosystemHub() {
             <CardContent>
               {aiInsights.length > 0 ? (
                 <div className="space-y-3">
-                  {aiInsights.map((insight, index) => (
-                    <div 
-                      key={index} 
-                      className={`p-3 rounded-[2px] cursor-pointer hover:shadow-md transition-shadow ${getInsightColor(insight.type)}`}
-                      onClick={() => {
-                        if (insight.action) {
-                          console.log('Navigate to:', insight.action)
-                        }
-                      }}
-                    >
-                      <p className="text-sm font-medium">{insight.title}</p>
-                      <p className={`text-xs ${getInsightTextColor(insight.type)}`}>{insight.description}</p>
-                    </div>
-                  ))}
+                  {aiInsights.map((insight, index) => {
+                    const getDetailedInsight = (title: string) => {
+                      if (title.includes('Revenue Growth')) {
+                        return 'Revenue Growth Opportunity - Detailed Analysis:\n\n' +
+                               '📊 R&D Tax Credit Analysis:\n' +
+                               '- Eligible Clients: 15\n' +
+                               '- Estimated Total Claims: £450,000\n' +
+                               '- Average Claim Value: £30,000\n\n' +
+                               '💰 Revenue Breakdown:\n' +
+                               '- Consultation Fees: £75,000\n' +
+                               '- Claim Preparation: £120,000\n' +
+                               '- Success Fees: £255,000\n\n' +
+                               '🎯 Target Sectors:\n' +
+                               '- Technology: 6 clients (£180K)\n' +
+                               '- Manufacturing: 5 clients (£150K)\n' +
+                               '- Healthcare: 4 clients (£120K)\n\n' +
+                               '📅 Action Plan:\n' +
+                               '1. Send personalized outreach emails\n' +
+                               '2. Schedule discovery calls\n' +
+                               '3. Prepare eligibility assessments\n' +
+                               '4. Target completion: Q2 2025'
+                      } else if (title.includes('Deadline Alert')) {
+                        return 'Corporation Tax Deadline Alert - Details:\n\n' +
+                               '⚠️ Returns Due Within 2 Weeks:\n' +
+                               '- Total Returns: 23\n' +
+                               '- High Priority: 8 returns\n' +
+                               '- Medium Priority: 10 returns\n' +
+                               '- Low Priority: 5 returns\n\n' +
+                               '📋 Status Breakdown:\n' +
+                               '- Ready to File: 12 returns\n' +
+                               '- Awaiting Client Info: 7 returns\n' +
+                               '- In Review: 4 returns\n\n' +
+                               '👥 Resource Allocation:\n' +
+                               '- Team A: 9 returns\n' +
+                               '- Team B: 8 returns\n' +
+                               '- Team C: 6 returns\n\n' +
+                               '⏰ Critical Deadlines:\n' +
+                               '- Next 7 days: 8 returns\n' +
+                               '- Days 8-14: 15 returns\n\n' +
+                               '✅ Recommended Actions:\n' +
+                               '1. Send client reminders today\n' +
+                               '2. Allocate additional resources\n' +
+                               '3. Daily progress reviews'
+                      } else if (title.includes('Capacity Planning')) {
+                        return 'Capacity Planning - Q2 Analysis:\n\n' +
+                               '📊 Current Utilization: 87%\n' +
+                               '- Optimal Range: 75-85%\n' +
+                               '- Status: Over Capacity\n\n' +
+                               '👥 Team Breakdown:\n' +
+                               '- Team A: 92% (Overloaded)\n' +
+                               '- Team B: 85% (At Capacity)\n' +
+                               '- Team C: 84% (At Capacity)\n' +
+                               '- Team D: 88% (Overloaded)\n\n' +
+                               '📈 Q2 Forecast:\n' +
+                               '- Expected Growth: +15%\n' +
+                               '- New Client Onboarding: 25\n' +
+                               '- Additional Workload: +120 hours/week\n\n' +
+                               '💡 Recommendations:\n' +
+                               '1. Hire 2 additional staff members\n' +
+                               '2. Redistribute workload across teams\n' +
+                               '3. Consider outsourcing overflow\n' +
+                               '4. Implement workflow automation\n' +
+                               '5. Review and optimize processes\n\n' +
+                               '⚡ Immediate Actions:\n' +
+                               '- Post job listings this week\n' +
+                               '- Rebalance Team A workload\n' +
+                               '- Identify automation opportunities'
+                      }
+                      return 'Click for detailed analysis...'
+                    }
+                    
+                    return (
+                      <div 
+                        key={index} 
+                        className={`p-3 rounded-[2px] cursor-pointer hover:shadow-md transition-shadow ${getInsightColor(insight.type)}`}
+                        onClick={() => alert(getDetailedInsight(insight.title))}
+                      >
+                        <p className="text-sm font-medium">{insight.title}</p>
+                        <p className={`text-xs ${getInsightTextColor(insight.type)}`}>{insight.description}</p>
+                      </div>
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-8 text-gray-500">
