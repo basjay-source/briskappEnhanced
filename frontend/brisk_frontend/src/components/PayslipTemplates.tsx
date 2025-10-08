@@ -74,7 +74,7 @@ export default function PayslipTemplates() {
 
   const loadTemplates = async () => {
     try {
-      const response = await api.get('/api/v1/payroll/payslip-templates')
+      const response = await api.get('/payroll/payslip-templates')
       setTemplates(response.data || [])
     } catch (error) {
       console.error('Failed to load templates:', error)
@@ -83,7 +83,7 @@ export default function PayslipTemplates() {
 
   const loadMetrics = async () => {
     try {
-      const response = await api.get('/api/v1/payroll/payslip-metrics')
+      const response = await api.get('/payroll/payslip-metrics')
       setMetrics(response.data || metrics)
     } catch (error) {
       console.error('Failed to load metrics:', error)
@@ -92,7 +92,7 @@ export default function PayslipTemplates() {
 
   const handleCreate = async () => {
     try {
-      const response = await api.post('/api/v1/payroll/payslip-templates', formData)
+      const response = await api.post('/payroll/payslip-templates', formData)
       setTemplates([...templates, response.data])
       setIsCreating(false)
       resetForm()
@@ -105,7 +105,7 @@ export default function PayslipTemplates() {
   const handleUpdate = async () => {
     if (!selectedTemplate) return
     try {
-      const response = await api.put(`/api/v1/payroll/payslip-templates/${selectedTemplate.id}`, formData)
+      const response = await api.put(`/payroll/payslip-templates/${selectedTemplate.id}`, formData)
       setTemplates(templates.map(t => t.id === selectedTemplate.id ? response.data : t))
       setIsEditing(false)
       setSelectedTemplate(null)
@@ -124,7 +124,7 @@ export default function PayslipTemplates() {
         createdAt: undefined,
         usageCount: 0
       }
-      const response = await api.post('/api/v1/payroll/payslip-templates', clonedData)
+      const response = await api.post('/payroll/payslip-templates', clonedData)
       setTemplates([...templates, response.data])
       loadMetrics()
     } catch (error) {
@@ -135,7 +135,7 @@ export default function PayslipTemplates() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this template?')) return
     try {
-      await api.delete(`/api/v1/payroll/payslip-templates/${id}`)
+      await api.delete(`/payroll/payslip-templates/${id}`)
       setTemplates(templates.filter(t => t.id !== id))
       loadMetrics()
     } catch (error) {
