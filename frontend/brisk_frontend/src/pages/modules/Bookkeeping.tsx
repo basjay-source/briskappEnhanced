@@ -4468,108 +4468,191 @@ export default function Bookkeeping() {
   }
 
   function renderBillsManagement() {
+    const [bills, setBills] = useState([
+      { id: 1, number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19', category: 'Office', approver: 'John Smith', paymentMethod: 'Bank Transfer' },
+      { id: 2, number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18', category: 'Equipment', approver: 'Sarah Johnson', paymentMethod: 'BACS' },
+      { id: 3, number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17', category: 'Utilities', approver: 'Mike Chen', paymentMethod: 'Direct Debit' },
+      { id: 4, number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01', category: 'Marketing', approver: 'Emma Wilson', paymentMethod: 'Bank Transfer' },
+      { id: 5, number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15', category: 'Professional', approver: 'David Brown', paymentMethod: 'Cheque' },
+      { id: 6, number: 'BILL-2024-006', supplier: 'Software Vendor', amount: 950, date: '2024-01-15', status: 'Approved', dueDate: '2024-02-14', category: 'Software', approver: 'John Smith', paymentMethod: 'Credit Card' },
+      { id: 7, number: 'BILL-2024-007', supplier: 'Cleaning Services', amount: 320, date: '2024-01-14', status: 'Paid', dueDate: '2024-02-13', category: 'Services', approver: 'Sarah Johnson', paymentMethod: 'Bank Transfer' },
+      { id: 8, number: 'BILL-2024-008', supplier: 'Insurance Provider', amount: 1850, date: '2024-01-13', status: 'Pending', dueDate: '2024-02-12', category: 'Insurance', approver: 'Mike Chen', paymentMethod: 'Direct Debit' }
+    ])
+
+    const [billSearchTerm, setBillSearchTerm] = useState('')
+    const [billStatusFilter, setBillStatusFilter] = useState('all')
+    const [billCategoryFilter, setBillCategoryFilter] = useState('all')
+
+    const filteredBills = bills.filter(bill => {
+      const matchesSearch = bill.number.toLowerCase().includes(billSearchTerm.toLowerCase()) ||
+                           bill.supplier.toLowerCase().includes(billSearchTerm.toLowerCase()) ||
+                           bill.amount.toString().includes(billSearchTerm)
+      const matchesStatus = billStatusFilter === 'all' || bill.status === billStatusFilter
+      const matchesCategory = billCategoryFilter === 'all' || bill.category === billCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateBill = () => {
+      console.log('Creating new bill')
+    }
+
+    const handleViewBill = (bill: any) => {
+      console.log('Viewing bill:', bill)
+    }
+
+    const handleEditBill = (bill: any) => {
+      console.log('Editing bill:', bill)
+    }
+
+    const handleApproveBill = (bill: any) => {
+      console.log('Approving bill:', bill)
+      setBills(bills.map(b => b.id === bill.id ? { ...b, status: 'Approved' } : b))
+    }
+
+    const handlePayBill = (bill: any) => {
+      console.log('Processing payment for bill:', bill)
+      setBills(bills.map(b => b.id === bill.id ? { ...b, status: 'Paid' } : b))
+    }
+
+    const handleExportBills = () => {
+      console.log('Exporting bills')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Bill Management</h2>
-            <p className="text-blue-900">Process, approve, and track supplier bills and payments</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Bill Management</h2>
+            <p className="text-blue-900">Process, approve, and track supplier bills with automated workflows</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateBill}>
               <Plus className="h-4 w-4 mr-2" />
               New Bill
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Bills
+            </Button>
+            <Button onClick={handleExportBills}>
+              <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
           </div>
         </div>
 
-        <SearchFilterHeader
-          searchPlaceholder="Search bills by supplier, amount, due date..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Category',
-              options: categoryOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
-
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Outstanding Bills</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£18,750</div>
-              <p className="text-sm text-blue-900">8 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Overdue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£5,200</div>
-              <p className="text-sm text-blue-900">2 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Paid This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">£32,400</div>
-              <p className="text-sm text-blue-900">18 bills</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£1,245</div>
-              <p className="text-sm text-blue-900">Per bill</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Outstanding Bills" 
+            value="£18,750" 
+            subtitle="8 bills unpaid" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Outstanding Bills Breakdown',
+              items: [
+                { label: '0-30 days', value: '£12,450', detail: '5 bills' },
+                { label: '31-60 days', value: '£4,200', detail: '2 bills' },
+                { label: '61-90 days', value: '£2,100', detail: '1 bill' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Overdue Bills" 
+            value="£5,200" 
+            subtitle="2 bills past due" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Overdue Analysis',
+              items: [
+                { label: '1-7 days overdue', value: '£3,200', detail: 'Marketing Agency' },
+                { label: '8-14 days overdue', value: '£2,000', detail: 'Legal Services' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Paid This Month" 
+            value="£32,400" 
+            subtitle="18 bills processed" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Payment Methods',
+              items: [
+                { label: 'Bank Transfer', value: '£18,650', detail: '10 bills' },
+                { label: 'Direct Debit', value: '£8,920', detail: '5 bills' },
+                { label: 'Credit Card', value: '£4,830', detail: '3 bills' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Bill Value" 
+            value="£1,245" 
+            subtitle="Per transaction" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Bill Value Distribution',
+              items: [
+                { label: 'Small (<£500)', value: '12', detail: '48%' },
+                { label: 'Medium (£500-£2000)', value: '8', detail: '32%' },
+                { label: 'Large (>£2000)', value: '5', detail: '20%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Bills</CardTitle>
-            <CardDescription>Latest supplier bills and payment status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Bill Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete bill management with approval workflows</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search bills..."
+                    value={billSearchTerm}
+                    onChange={(e) => setBillSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={billStatusFilter}
+                  onChange={(e) => setBillStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+                <select
+                  value={billCategoryFilter}
+                  onChange={(e) => setBillCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Office">Office</option>
+                  <option value="Equipment">Equipment</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Software">Software</option>
+                  <option value="Services">Services</option>
+                  <option value="Insurance">Insurance</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19' },
-                { number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18' },
-                { number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17' },
-                { number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01' },
-                { number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15' }
-              ].map((bill, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{bill.number}</p>
+            <div className="space-y-3">
+              {filteredBills.map((bill) => (
+                <div key={bill.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewBill(bill)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{bill.number}</p>
                       <Badge className={`${
                         bill.status === 'Paid' ? 'bg-green-100 text-green-800' : 
                         bill.status === 'Overdue' ? 'bg-red-100 text-red-800' : 
@@ -4578,29 +4661,55 @@ export default function Bookkeeping() {
                       }`}>
                         {bill.status}
                       </Badge>
+                      <Badge className="bg-gray-100 text-gray-800">{bill.category}</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{bill.supplier}</p>
-                    <p className="text-xs text-gray-500">Due: {bill.dueDate}</p>
+                    <p className="text-sm font-medium text-blue-900">{bill.supplier}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>Date: {bill.date}</span>
+                      <span>Due: {bill.dueDate}</span>
+                      <span>Approver: {bill.approver}</span>
+                      <span>Method: {bill.paymentMethod}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{bill.amount}</p>
-                    <p className="text-sm text-blue-900">{bill.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{bill.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{bill.paymentMethod}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewBill(bill); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Bill" onClick={(e) => { e.stopPropagation(); handleEditBill(bill); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      {bill.status === 'Approved' && (
-                        <Button variant="ghost" size="sm">
-                          <CreditCard className="h-3 w-3" />
+                      {bill.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve Bill" onClick={(e) => { e.stopPropagation(); handleApproveBill(bill); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
                         </Button>
                       )}
+                      {bill.status === 'Approved' && (
+                        <Button variant="ghost" size="sm" title="Process Payment" onClick={(e) => { e.stopPropagation(); handlePayBill(bill); }}>
+                          <CreditCard className="h-4 w-4 text-blue-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="Email Bill" onClick={(e) => { e.stopPropagation(); }}>
+                        <Mail className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
+                      </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredBills.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No bills found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4609,108 +4718,171 @@ export default function Bookkeeping() {
   }
 
   function renderPurchaseOrdersManagement() {
+    const [purchaseOrders, setPurchaseOrders] = useState([
+      { id: 1, number: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-20', status: 'Approved', deliveryDate: '2024-02-05', items: 3, requestedBy: 'John Smith' },
+      { id: 2, number: 'PO-2024-009', supplier: 'Office Furniture Ltd', amount: 1650, date: '2024-01-19', status: 'Pending', deliveryDate: '2024-02-10', items: 2, requestedBy: 'Sarah Johnson' },
+      { id: 3, number: 'PO-2024-010', supplier: 'Software Vendor', amount: 950, date: '2024-01-18', status: 'Delivered', deliveryDate: '2024-01-25', items: 1, requestedBy: 'Mike Chen' },
+      { id: 4, number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30', items: 5, requestedBy: 'Emma Wilson' },
+      { id: 5, number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08', items: 4, requestedBy: 'David Brown' },
+      { id: 6, number: 'PO-2024-013', supplier: 'IT Hardware Ltd', amount: 3200, date: '2024-01-15', status: 'Pending', deliveryDate: '2024-02-12', items: 6, requestedBy: 'John Smith' },
+      { id: 7, number: 'PO-2024-014', supplier: 'Cleaning Supplies', amount: 280, date: '2024-01-14', status: 'Delivered', deliveryDate: '2024-01-28', items: 8, requestedBy: 'Sarah Johnson' }
+    ])
+
+    const [poSearchTerm, setPoSearchTerm] = useState('')
+    const [poStatusFilter, setPoStatusFilter] = useState('all')
+
+    const filteredPOs = purchaseOrders.filter(po => {
+      const matchesSearch = po.number.toLowerCase().includes(poSearchTerm.toLowerCase()) ||
+                           po.supplier.toLowerCase().includes(poSearchTerm.toLowerCase()) ||
+                           po.amount.toString().includes(poSearchTerm)
+      const matchesStatus = poStatusFilter === 'all' || po.status === poStatusFilter
+      return matchesSearch && matchesStatus
+    })
+
+    const handleCreatePO = () => {
+      console.log('Creating new PO')
+    }
+
+    const handleViewPO = (po: any) => {
+      console.log('Viewing PO:', po)
+    }
+
+    const handleEditPO = (po: any) => {
+      console.log('Editing PO:', po)
+    }
+
+    const handleApprovePO = (po: any) => {
+      console.log('Approving PO:', po)
+      setPurchaseOrders(purchaseOrders.map(p => p.id === po.id ? { ...p, status: 'Approved' } : p))
+    }
+
+    const handleConvertToBill = (po: any) => {
+      console.log('Converting PO to Bill:', po)
+    }
+
+    const handleExportPOs = () => {
+      console.log('Exporting POs')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Purchase Order Management</h2>
-            <p className="text-blue-900">Create, track, and manage purchase orders</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Purchase Order Management</h2>
+            <p className="text-blue-900">Create, track, and manage purchase orders with real-time delivery tracking</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreatePO}>
               <Plus className="h-4 w-4 mr-2" />
               New PO
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import POs
+            </Button>
+            <Button onClick={handleExportPOs}>
+              <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
           </div>
         </div>
 
-        <SearchFilterHeader
-          searchPlaceholder="Search purchase orders by supplier, amount, status..."
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          filters={[
-            {
-              label: 'Status',
-              options: statusOptions,
-              value: selectedStatus,
-              onChange: setSelectedStatus
-            },
-            {
-              label: 'Category',
-              options: categoryOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
-            }
-          ]}
-          dateRange={{
-            from: dateFrom,
-            to: dateTo,
-            onFromChange: setDateFrom,
-            onToChange: setDateTo
-          }}
-        />
-
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Active POs</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">12</div>
-              <p className="text-sm text-blue-900">In progress</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">5</div>
-              <p className="text-sm text-blue-900">Awaiting approval</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Completed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">28</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Value</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£45,600</div>
-              <p className="text-sm text-blue-900">Active POs</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Active POs" 
+            value="12" 
+            subtitle="In progress" 
+            valueColor="text-blue-600"
+            drillDownData={{
+              title: 'Active PO Status',
+              items: [
+                { label: 'Approved', value: '5', detail: 'Ready to order' },
+                { label: 'In Transit', value: '4', detail: 'On the way' },
+                { label: 'Pending', value: '3', detail: 'Awaiting approval' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Pending Approval" 
+            value="5" 
+            subtitle="Awaiting review" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Approval Queue',
+              items: [
+                { label: 'High Priority', value: '2', detail: 'Urgent orders' },
+                { label: 'Normal Priority', value: '3', detail: 'Standard review' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Completed This Month" 
+            value="28" 
+            subtitle="Successfully delivered" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'Completion Analysis',
+              items: [
+                { label: 'On Time', value: '24', detail: '85.7%' },
+                { label: 'Late', value: '4', detail: '14.3%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Total Active Value" 
+            value="£45,600" 
+            subtitle="Outstanding orders" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Value by Category',
+              items: [
+                { label: 'Equipment', value: '£28,400', detail: '62.3%' },
+                { label: 'Supplies', value: '£12,800', detail: '28.1%' },
+                { label: 'Services', value: '£4,400', detail: '9.6%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Purchase Orders</CardTitle>
-            <CardDescription>Latest purchase orders and their status</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Purchase Order Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete PO tracking with delivery management</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search POs..."
+                    value={poSearchTerm}
+                    onChange={(e) => setPoSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={poStatusFilter}
+                  onChange={(e) => setPoStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="In Transit">In Transit</option>
+                  <option value="Delivered">Delivered</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { number: 'PO-2024-008', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-20', status: 'Approved', deliveryDate: '2024-02-05' },
-                { number: 'PO-2024-009', supplier: 'Office Furniture Ltd', amount: 1650, date: '2024-01-19', status: 'Pending', deliveryDate: '2024-02-10' },
-                { number: 'PO-2024-010', supplier: 'Software Vendor', amount: 950, date: '2024-01-18', status: 'Delivered', deliveryDate: '2024-01-25' },
-                { number: 'PO-2024-011', supplier: 'Stationery Supplies', amount: 320, date: '2024-01-17', status: 'In Transit', deliveryDate: '2024-01-30' },
-                { number: 'PO-2024-012', supplier: 'Marketing Materials', amount: 1450, date: '2024-01-16', status: 'Approved', deliveryDate: '2024-02-08' }
-              ].map((po, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{po.number}</p>
+            <div className="space-y-3">
+              {filteredPOs.map((po) => (
+                <div key={po.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewPO(po)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{po.number}</p>
                       <Badge className={`${
                         po.status === 'Delivered' ? 'bg-green-100 text-green-800' : 
                         po.status === 'In Transit' ? 'bg-blue-100 text-blue-800' : 
@@ -4720,26 +4892,53 @@ export default function Bookkeeping() {
                         {po.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{po.supplier}</p>
-                    <p className="text-xs text-gray-500">Delivery: {po.deliveryDate}</p>
+                    <p className="text-sm font-medium text-blue-900">{po.supplier}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>Date: {po.date}</span>
+                      <span>Delivery: {po.deliveryDate}</span>
+                      <span>Items: {po.items}</span>
+                      <span>By: {po.requestedBy}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{po.amount}</p>
-                    <p className="text-sm text-blue-900">{po.date}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{po.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{po.items} items</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewPO(po); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit PO" onClick={(e) => { e.stopPropagation(); handleEditPO(po); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <ShoppingCart className="h-3 w-3" />
+                      {po.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve PO" onClick={(e) => { e.stopPropagation(); handleApprovePO(po); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        </Button>
+                      )}
+                      {po.status === 'Delivered' && (
+                        <Button variant="ghost" size="sm" title="Convert to Bill" onClick={(e) => { e.stopPropagation(); handleConvertToBill(po); }}>
+                          <Receipt className="h-4 w-4 text-blue-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="Track Delivery" onClick={(e) => { e.stopPropagation(); }}>
+                        <ShoppingCart className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredPOs.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No purchase orders found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4748,19 +4947,66 @@ export default function Bookkeeping() {
   }
 
   function renderSuppliersManagement() {
+    const [suppliers, setSuppliers] = useState([
+      { id: 1, name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred', contact: 'John Williams', category: 'Equipment', accountCode: 'SUP001' },
+      { id: 2, name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active', contact: 'Sarah Davis', category: 'Supplies', accountCode: 'SUP002' },
+      { id: 3, name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active', contact: 'Mike Thompson', category: 'Services', accountCode: 'SUP003' },
+      { id: 4, name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active', contact: 'Emma Roberts', category: 'Professional', accountCode: 'SUP004' },
+      { id: 5, name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active', contact: 'David Clark', category: 'Utilities', accountCode: 'SUP005' },
+      { id: 6, name: 'Software Solutions', email: 'support@software.com', phone: '+44 203 123 4567', totalSpent: 4200, paymentTerms: '21 days', status: 'Preferred', contact: 'Lisa Anderson', category: 'Software', accountCode: 'SUP006' },
+      { id: 7, name: 'Cleaning Services', email: 'admin@cleaning.co.uk', phone: '+44 141 987 6543', totalSpent: 1200, paymentTerms: '14 days', status: 'Active', contact: 'Tom Wilson', category: 'Services', accountCode: 'SUP007' }
+    ])
+
+    const [supplierSearchTerm, setSupplierSearchTerm] = useState('')
+    const [supplierStatusFilter, setSupplierStatusFilter] = useState('all')
+    const [supplierCategoryFilter, setSupplierCategoryFilter] = useState('all')
+
+    const filteredSuppliers = suppliers.filter(supplier => {
+      const matchesSearch = supplier.name.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
+                           supplier.email.toLowerCase().includes(supplierSearchTerm.toLowerCase()) ||
+                           supplier.accountCode.toLowerCase().includes(supplierSearchTerm.toLowerCase())
+      const matchesStatus = supplierStatusFilter === 'all' || supplier.status === supplierStatusFilter
+      const matchesCategory = supplierCategoryFilter === 'all' || supplier.category === supplierCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateSupplier = () => {
+      console.log('Creating new supplier')
+    }
+
+    const handleViewSupplier = (supplier: any) => {
+      console.log('Viewing supplier:', supplier)
+    }
+
+    const handleEditSupplier = (supplier: any) => {
+      console.log('Editing supplier:', supplier)
+    }
+
+    const handleViewTransactions = (supplier: any) => {
+      console.log('Viewing supplier transactions:', supplier)
+    }
+
+    const handleExportSuppliers = () => {
+      console.log('Exporting suppliers')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Supplier Management</h2>
-            <p className="text-blue-900">Manage supplier information, payment terms, and transaction history</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Supplier Management</h2>
+            <p className="text-blue-900">Comprehensive supplier database with payment terms and transaction history</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateSupplier}>
               <Plus className="h-4 w-4 mr-2" />
               Add Supplier
             </Button>
-            <Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Import Suppliers
+            </Button>
+            <Button onClick={handleExportSuppliers}>
               <Download className="h-4 w-4 mr-2" />
               Export List
             </Button>
@@ -4768,89 +5014,171 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Total Suppliers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">89</div>
-              <p className="text-sm text-blue-900">Active suppliers</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">3</div>
-              <p className="text-sm text-blue-900">+5% growth</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Top Supplier Spend</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£8,450</div>
-              <p className="text-sm text-blue-900">This month</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-600">£1,245</div>
-              <p className="text-sm text-blue-900">Per supplier</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="Total Suppliers" 
+            value="89" 
+            subtitle="Active relationships" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Supplier Status Breakdown',
+              items: [
+                { label: 'Preferred Suppliers', value: '12', detail: '13.5%' },
+                { label: 'Active Suppliers', value: '74', detail: '83.1%' },
+                { label: 'Inactive Suppliers', value: '3', detail: '3.4%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="New This Month" 
+            value="3" 
+            subtitle="+5% growth" 
+            valueColor="text-green-600"
+            drillDownData={{
+              title: 'New Supplier Categories',
+              items: [
+                { label: 'Professional Services', value: '2', detail: 'Legal & Consulting' },
+                { label: 'Equipment', value: '1', detail: 'IT Hardware' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Top Supplier Spend" 
+            value="£8,450" 
+            subtitle="This month" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Top Spending Categories',
+              items: [
+                { label: 'Equipment', value: '£8,450', detail: 'Tech Equipment Co' },
+                { label: 'Services', value: '£5,600', detail: 'Marketing Agency' },
+                { label: 'Software', value: '£4,200', detail: 'Software Solutions' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Payment Terms" 
+            value="21 days" 
+            subtitle="Weighted average" 
+            valueColor="text-purple-600"
+            drillDownData={{
+              title: 'Payment Terms Distribution',
+              items: [
+                { label: '7 days', value: '8', detail: '9.0%' },
+                { label: '14 days', value: '23', detail: '25.8%' },
+                { label: '30 days', value: '58', detail: '65.2%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Supplier Database</CardTitle>
-            <CardDescription>Complete supplier information and payment terms</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Supplier Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete supplier information with payment terms and transaction history</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search suppliers..."
+                    value={supplierSearchTerm}
+                    onChange={(e) => setSupplierSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={supplierStatusFilter}
+                  onChange={(e) => setSupplierStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Preferred">Preferred</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+                <select
+                  value={supplierCategoryFilter}
+                  onChange={(e) => setSupplierCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Equipment">Equipment</option>
+                  <option value="Supplies">Supplies</option>
+                  <option value="Services">Services</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Software">Software</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { name: 'Tech Equipment Co', email: 'orders@techequipment.com', phone: '+44 20 8123 4567', totalSpent: 8450, paymentTerms: '30 days', status: 'Preferred' },
-                { name: 'Office Supplies Ltd', email: 'sales@officesupplies.com', phone: '+44 161 234 5678', totalSpent: 3200, paymentTerms: '14 days', status: 'Active' },
-                { name: 'Marketing Agency', email: 'billing@marketingagency.com', phone: '+44 113 345 6789', totalSpent: 5600, paymentTerms: '30 days', status: 'Active' },
-                { name: 'Legal Services', email: 'accounts@legalservices.com', phone: '+44 121 456 7890', totalSpent: 2850, paymentTerms: '7 days', status: 'Active' },
-                { name: 'Utilities Provider', email: 'billing@utilities.com', phone: '+44 131 567 8901', totalSpent: 1450, paymentTerms: '30 days', status: 'Active' }
-              ].map((supplier, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{supplier.name}</p>
+            <div className="space-y-3">
+              {filteredSuppliers.map((supplier) => (
+                <div key={supplier.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewSupplier(supplier)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{supplier.name}</p>
                       <Badge className={`${
                         supplier.status === 'Preferred' ? 'bg-purple-100 text-purple-800' : 
-                        'bg-green-100 text-green-800'
+                        supplier.status === 'Active' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                         {supplier.status}
                       </Badge>
+                      <Badge className="bg-blue-100 text-blue-800">{supplier.category}</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{supplier.email}</p>
-                    <p className="text-xs text-gray-500">{supplier.phone} | Terms: {supplier.paymentTerms}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-blue-900 mb-1">
+                      <span className="flex items-center gap-1">
+                        <Mail className="h-3 w-3" />
+                        {supplier.email}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {supplier.phone}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700">
+                      <span>Contact: {supplier.contact}</span>
+                      <span>Terms: {supplier.paymentTerms}</span>
+                      <span>Code: {supplier.accountCode}</span>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold">£{supplier.totalSpent}</p>
-                    <p className="text-sm text-blue-900">Total spent</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Receipt className="h-3 w-3" />
-                    </Button>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{supplier.totalSpent.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">Total spent</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewSupplier(supplier); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Edit Supplier" onClick={(e) => { e.stopPropagation(); handleEditSupplier(supplier); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Transaction History" onClick={(e) => { e.stopPropagation(); handleViewTransactions(supplier); }}>
+                        <Receipt className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Contact Supplier" onClick={(e) => { e.stopPropagation(); }}>
+                        <Mail className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download Statement" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
+              {filteredSuppliers.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No suppliers found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -4859,19 +5187,73 @@ export default function Bookkeeping() {
   }
 
   function renderExpensesManagement() {
+    const [expenses, setExpenses] = useState([
+      { id: 1, reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith', approver: 'Sarah Johnson', receipt: true },
+      { id: 2, reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson', approver: 'Mike Chen', receipt: true },
+      { id: 3, reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen', approver: 'John Smith', receipt: false },
+      { id: 4, reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson', approver: 'Sarah Johnson', receipt: true },
+      { id: 5, reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown', approver: 'Mike Chen', receipt: true },
+      { id: 6, reference: 'EXP-2024-050', description: 'Conference Registration', category: 'Training', amount: 650, date: '2024-01-15', status: 'Pending', submittedBy: 'John Smith', approver: 'Sarah Johnson', receipt: true },
+      { id: 7, reference: 'EXP-2024-051', description: 'Hotel Accommodation', category: 'Travel', amount: 320, date: '2024-01-14', status: 'Approved', submittedBy: 'Emma Wilson', approver: 'Mike Chen', receipt: true },
+      { id: 8, reference: 'EXP-2024-052', description: 'Marketing Materials', category: 'Marketing', amount: 180, date: '2024-01-13', status: 'Submitted', submittedBy: 'Sarah Johnson', approver: 'John Smith', receipt: false }
+    ])
+
+    const [expenseSearchTerm, setExpenseSearchTerm] = useState('')
+    const [expenseStatusFilter, setExpenseStatusFilter] = useState('all')
+    const [expenseCategoryFilter, setExpenseCategoryFilter] = useState('all')
+
+    const filteredExpenses = expenses.filter(expense => {
+      const matchesSearch = expense.reference.toLowerCase().includes(expenseSearchTerm.toLowerCase()) ||
+                           expense.description.toLowerCase().includes(expenseSearchTerm.toLowerCase()) ||
+                           expense.submittedBy.toLowerCase().includes(expenseSearchTerm.toLowerCase())
+      const matchesStatus = expenseStatusFilter === 'all' || expense.status === expenseStatusFilter
+      const matchesCategory = expenseCategoryFilter === 'all' || expense.category === expenseCategoryFilter
+      return matchesSearch && matchesStatus && matchesCategory
+    })
+
+    const handleCreateExpense = () => {
+      console.log('Creating new expense')
+    }
+
+    const handleViewExpense = (expense: any) => {
+      console.log('Viewing expense:', expense)
+    }
+
+    const handleEditExpense = (expense: any) => {
+      console.log('Editing expense:', expense)
+    }
+
+    const handleApproveExpense = (expense: any) => {
+      console.log('Approving expense:', expense)
+      setExpenses(expenses.map(e => e.id === expense.id ? { ...e, status: 'Approved' } : e))
+    }
+
+    const handleRejectExpense = (expense: any) => {
+      console.log('Rejecting expense:', expense)
+      setExpenses(expenses.map(e => e.id === expense.id ? { ...e, status: 'Rejected' } : e))
+    }
+
+    const handleExportExpenses = () => {
+      console.log('Exporting expenses')
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Expense Management</h2>
-            <p className="text-blue-900">Track, categorize, and manage business expenses</p>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Expense Management</h2>
+            <p className="text-blue-900">Comprehensive expense tracking with automated approval workflows and receipt management</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleCreateExpense}>
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
-            <Button>
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />
+              Bulk Import
+            </Button>
+            <Button onClick={handleExportExpenses}>
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
@@ -4879,113 +5261,202 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600">£12,450</div>
-              <p className="text-sm text-blue-900">Total expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Pending Approval</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">£2,850</div>
-              <p className="text-sm text-blue-900">8 expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Reimbursable</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600">£1,650</div>
-              <p className="text-sm text-blue-900">Employee expenses</p>
-            </CardContent>
-          </Card>
-          <Card className="border-2 border-blue-900">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-900">Average Expense</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-brisk-primary">£185</div>
-              <p className="text-sm text-blue-900">Per transaction</p>
-            </CardContent>
-          </Card>
+          <KPICard 
+            title="This Month" 
+            value="£12,450" 
+            subtitle="Total expenses" 
+            valueColor="text-red-600"
+            drillDownData={{
+              title: 'Monthly Expense Breakdown',
+              items: [
+                { label: 'Travel', value: '£3,450', detail: '27.7%' },
+                { label: 'Office Supplies', value: '£2,850', detail: '22.9%' },
+                { label: 'Software', value: '£2,200', detail: '17.7%' },
+                { label: 'Meals', value: '£1,950', detail: '15.7%' },
+                { label: 'Other', value: '£2,000', detail: '16.0%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Pending Approval" 
+            value="£2,850" 
+            subtitle="8 expenses" 
+            valueColor="text-orange-600"
+            drillDownData={{
+              title: 'Pending Approval Queue',
+              items: [
+                { label: 'High Priority', value: '3', detail: 'Over £500' },
+                { label: 'Standard', value: '5', detail: 'Under £500' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Reimbursable" 
+            value="£1,650" 
+            subtitle="Employee expenses" 
+            valueColor="text-blue-600"
+            drillDownData={{
+              title: 'Reimbursement Breakdown',
+              items: [
+                { label: 'Travel Claims', value: '£950', detail: '57.6%' },
+                { label: 'Meal Expenses', value: '£450', detail: '27.3%' },
+                { label: 'Other Claims', value: '£250', detail: '15.1%' }
+              ]
+            }}
+          />
+          <KPICard 
+            title="Average Expense" 
+            value="£185" 
+            subtitle="Per transaction" 
+            valueColor="text-brisk-primary"
+            drillDownData={{
+              title: 'Expense Distribution',
+              items: [
+                { label: 'Small (<£100)', value: '45', detail: '56.3%' },
+                { label: 'Medium (£100-£500)', value: '28', detail: '35.0%' },
+                { label: 'Large (>£500)', value: '7', detail: '8.7%' }
+              ]
+            }}
+          />
         </div>
 
-        <Card className="border-2 border-blue-900">
+        <Card className="border-2 border-blue-900 rounded-[2px]">
           <CardHeader>
-            <CardTitle className="text-blue-900">Recent Expenses</CardTitle>
-            <CardDescription>Latest expense submissions and approvals</CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-blue-900">Expense Database</CardTitle>
+                <CardDescription className="text-blue-900">Complete expense tracking with approval workflows and receipt management</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                  <input
+                    type="text"
+                    placeholder="Search expenses..."
+                    value={expenseSearchTerm}
+                    onChange={(e) => setExpenseSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <select
+                  value={expenseStatusFilter}
+                  onChange={(e) => setExpenseStatusFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <select
+                  value={expenseCategoryFilter}
+                  onChange={(e) => setExpenseCategoryFilter(e.target.value)}
+                  className="px-4 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Office">Office</option>
+                  <option value="Software">Software</option>
+                  <option value="Meals">Meals</option>
+                  <option value="Training">Training</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { reference: 'EXP-2024-045', description: 'Travel - Client Meeting', category: 'Travel', amount: 185, date: '2024-01-20', status: 'Approved', submittedBy: 'John Smith' },
-                { reference: 'EXP-2024-046', description: 'Office Supplies', category: 'Office', amount: 95, date: '2024-01-19', status: 'Pending', submittedBy: 'Sarah Johnson' },
-                { reference: 'EXP-2024-047', description: 'Software Subscription', category: 'Software', amount: 450, date: '2024-01-18', status: 'Approved', submittedBy: 'Mike Chen' },
-                { reference: 'EXP-2024-048', description: 'Client Lunch', category: 'Meals', amount: 85, date: '2024-01-17', status: 'Submitted', submittedBy: 'Emma Wilson' },
-                { reference: 'EXP-2024-049', description: 'Parking Fees', category: 'Travel', amount: 25, date: '2024-01-16', status: 'Approved', submittedBy: 'David Brown' }
-              ].map((expense, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{expense.reference}</p>
+            <div className="space-y-3">
+              {filteredExpenses.map((expense) => (
+                <div key={expense.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewExpense(expense)}>
+                  <div className="flex-1 min-w-0 mb-3 sm:mb-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="font-semibold text-blue-900">{expense.reference}</p>
                       <Badge className={`${
                         expense.status === 'Approved' ? 'bg-green-100 text-green-800' : 
                         expense.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 
+                        expense.status === 'Rejected' ? 'bg-red-100 text-red-800' :
                         'bg-orange-100 text-orange-800'
                       }`}>
                         {expense.status}
                       </Badge>
                       <Badge className="bg-gray-100 text-gray-800">{expense.category}</Badge>
+                      {expense.receipt && (
+                        <Badge className="bg-green-100 text-green-800">Receipt ✓</Badge>
+                      )}
                     </div>
-                    <p className="text-sm text-blue-900">{expense.description}</p>
-                    <p className="text-xs text-gray-500">By: {expense.submittedBy} | {expense.date}</p>
+                    <p className="text-sm font-medium text-blue-900">{expense.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-blue-700 mt-1">
+                      <span>By: {expense.submittedBy}</span>
+                      <span>Date: {expense.date}</span>
+                      <span>Approver: {expense.approver}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">£{expense.amount}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-blue-900">£{expense.amount.toLocaleString()}</p>
+                      <p className="text-xs text-blue-700">{expense.category}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" title="View Details" onClick={(e) => { e.stopPropagation(); handleViewExpense(expense); }}>
+                        <Eye className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
+                      <Button variant="ghost" size="sm" title="Edit Expense" onClick={(e) => { e.stopPropagation(); handleEditExpense(expense); }}>
+                        <Edit className="h-4 w-4 text-blue-900" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        <FileText className="h-3 w-3" />
+                      {expense.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Approve" onClick={(e) => { e.stopPropagation(); handleApproveExpense(expense); }}>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        </Button>
+                      )}
+                      {expense.status === 'Pending' && (
+                        <Button variant="ghost" size="sm" title="Reject" onClick={(e) => { e.stopPropagation(); handleRejectExpense(expense); }}>
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm" title="View Receipt" onClick={(e) => { e.stopPropagation(); }}>
+                        <FileText className="h-4 w-4 text-blue-900" />
+                      </Button>
+                      <Button variant="ghost" size="sm" title="Download PDF" onClick={(e) => { e.stopPropagation(); }}>
+                        <Download className="h-4 w-4 text-blue-900" />
                       </Button>
                     </div>
                   </div>
                 </div>
               ))}
+              {filteredExpenses.length === 0 && (
+                <div className="text-center py-12 text-blue-900">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg font-medium">No expenses found</p>
+                  <p className="text-sm">Try adjusting your search or filters</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
               <CardTitle className="text-blue-900">Expense Categories</CardTitle>
-              <CardDescription>Breakdown by expense category</CardDescription>
+              <CardDescription className="text-blue-900">Interactive breakdown by expense category</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary' },
-                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500' },
-                  { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500' },
-                  { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500' },
-                  { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500' }
+                  { category: 'Travel', amount: 3450, percentage: 28, color: 'bg-brisk-primary', count: 28 },
+                  { category: 'Office Supplies', amount: 2850, percentage: 23, color: 'bg-orange-500', count: 15 },
+                  { category: 'Software', amount: 2200, percentage: 18, color: 'bg-green-500', count: 8 },
+                  { category: 'Meals & Entertainment', amount: 1950, percentage: 16, color: 'bg-purple-500', count: 22 },
+                  { category: 'Other', amount: 2000, percentage: 15, color: 'bg-gray-500', count: 7 }
                 ].map((category, index) => (
-                  <div key={index} className="space-y-2">
+                  <div key={index} className="space-y-2 p-3 border border-blue-200 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium">{category.category}</p>
-                      <p className="font-semibold">£{category.amount}</p>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
+                        <p className="font-medium text-blue-900">{category.category}</p>
+                      </div>
+                      <p className="font-semibold text-blue-900">£{category.amount.toLocaleString()}</p>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -4993,34 +5464,38 @@ export default function Bookkeeping() {
                         style={{ width: `${category.percentage}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm text-blue-900">{category.percentage}% of total expenses</p>
+                    <div className="flex justify-between text-sm text-blue-700">
+                      <span>{category.percentage}% of total</span>
+                      <span>{category.count} expenses</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 rounded-[2px]">
             <CardHeader>
-              <CardTitle className="text-blue-900">Monthly Trend</CardTitle>
-              <CardDescription>Expense trends over the last 6 months</CardDescription>
+              <CardTitle className="text-blue-900">Monthly Trends</CardTitle>
+              <CardDescription className="text-blue-900">Expense trends with variance analysis</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { month: 'January 2024', amount: 12450, change: '+8%' },
-                  { month: 'December 2023', amount: 11520, change: '-3%' },
-                  { month: 'November 2023', amount: 11890, change: '+12%' },
-                  { month: 'October 2023', amount: 10620, change: '+5%' },
-                  { month: 'September 2023', amount: 10120, change: '-2%' },
-                  { month: 'August 2023', amount: 10350, change: '+7%' }
+                  { month: 'January 2024', amount: 12450, change: '+8%', variance: 'Above budget', color: 'text-red-600' },
+                  { month: 'December 2023', amount: 11520, change: '-3%', variance: 'On budget', color: 'text-green-600' },
+                  { month: 'November 2023', amount: 11890, change: '+12%', variance: 'Above budget', color: 'text-red-600' },
+                  { month: 'October 2023', amount: 10620, change: '+5%', variance: 'On budget', color: 'text-green-600' },
+                  { month: 'September 2023', amount: 10120, change: '-2%', variance: 'Under budget', color: 'text-blue-600' },
+                  { month: 'August 2023', amount: 10350, change: '+7%', variance: 'On budget', color: 'text-green-600' }
                 ].map((month, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
                     <div className="flex-1">
-                      <p className="font-medium">{month.month}</p>
+                      <p className="font-medium text-blue-900">{month.month}</p>
+                      <p className={`text-xs ${month.color}`}>{month.variance}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold">£{month.amount}</p>
+                      <p className="font-semibold text-blue-900">£{month.amount.toLocaleString()}</p>
                       <p className={`text-sm ${month.change.startsWith('+') ? 'text-red-600' : 'text-green-600'}`}>
                         {month.change}
                       </p>
