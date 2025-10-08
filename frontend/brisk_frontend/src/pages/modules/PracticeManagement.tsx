@@ -637,22 +637,29 @@ export default function PracticeManagement() {
 
   const handleCloneWorkflow = async (workflow: any) => {
     try {
+      console.log('Cloning workflow:', workflow)
       const clonedData = {
-        ...workflow,
-        name: `${workflow.name} (Copy)`,
+        name: workflow.name ? `${workflow.name} (Copy)` : 'New Workflow (Copy)',
+        description: workflow.description || '',
+        trigger_type: workflow.trigger_type || 'manual',
+        trigger_event: workflow.trigger_event || '',
+        conditions: workflow.conditions || [],
+        actions: workflow.actions || [],
+        status: 'active',
         category: 'custom'
       }
-      delete clonedData.id
-      delete clonedData.created_at
-      delete clonedData.updated_at
-      delete clonedData.executions
+      console.log('Sending cloned data:', clonedData)
       const response = await api.post('/api/v1/practice/workflows', clonedData)
+      console.log('Clone response:', response)
       setWorkflows([...workflows, response.data])
       setActiveWorkflowTab('builder')
       alert(`Successfully created "${response.data.name}" from template!`)
+      await loadWorkflows()
     } catch (err: any) {
-      console.error('Failed to clone workflow:', err)
-      alert('Failed to clone workflow: ' + (err.message || 'Unknown error'))
+      console.error('Failed to clone workflow - Full error:', err)
+      console.error('Error message:', err.message)
+      console.error('Error response:', err.response)
+      alert('Failed to clone workflow: ' + (err.message || err.toString()))
     }
   }
 
