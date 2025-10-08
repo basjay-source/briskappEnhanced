@@ -32,7 +32,8 @@ import {
   CheckSquare,
   Bell,
   RefreshCw,
-  Search
+  Search,
+  Download
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -3249,7 +3250,7 @@ export default function PracticeManagement() {
                               </span>
                               <span className={`px-2 py-1 text-xs font-medium rounded ${
                                 rule.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                rule.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                rule.priority === 'medium' ? 'bg-blue-100 text-blue-800' :
                                 'bg-blue-100 text-blue-800'
                               }`}>
                                 {rule.priority}
@@ -3740,9 +3741,17 @@ export default function PracticeManagement() {
           <p className="text-blue-900">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => alert('Generating report...')}>
             <TrendingUp className="h-4 w-4 mr-2" />
             Generate Report
+          </Button>
+          <Button variant="outline" onClick={() => alert('Exporting report...')}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
+          <Button variant="outline" onClick={() => alert('Schedule report dialog...')}>
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule Report
           </Button>
         </div>
       </div>
@@ -3754,17 +3763,6 @@ export default function PracticeManagement() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-blue-900">Practice Analytics</h3>
-              <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  Export Report
-                </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
-                  Schedule Report
-                </button>
-              </div>
-            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <KPICard
@@ -3921,32 +3919,32 @@ export default function PracticeManagement() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Revenue Trends</h4>
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+                <h4 className="text-lg font-semibold mb-4 text-blue-900">Revenue Trends</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500">Revenue Chart Placeholder</span>
+                  <span className="text-blue-900">Revenue Chart Placeholder</span>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Client Growth</h4>
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+                <h4 className="text-lg font-semibold mb-4 text-blue-900">Client Growth</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500">Client Growth Chart Placeholder</span>
+                  <span className="text-blue-900">Client Growth Chart Placeholder</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-              <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
+            <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+              <h4 className="text-lg font-semibold mb-4 text-blue-900">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-[2px]">
+                <div className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-blue-900">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-[2px]">
+                <div className="text-center p-4 bg-orange-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
                   <div className="text-2xl font-bold text-orange-600">12.3</div>
                   <div className="text-sm text-blue-900">Days Average Completion</div>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-[2px]">
+                <div className="text-center p-4 bg-green-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
                   <div className="text-2xl font-bold text-green-600">98.7%</div>
                   <div className="text-sm text-blue-900">Client Retention Rate</div>
                 </div>
