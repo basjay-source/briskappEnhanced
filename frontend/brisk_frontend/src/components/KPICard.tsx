@@ -28,17 +28,17 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
   return (
     <>
       <Card 
-        className={`border-2 border-blue-900 ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+        className={`border-2 border-blue-900 rounded-[2px] ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
         onClick={handleClick}
       >
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-blue-900">{title}</p>
-              <p className="text-2xl font-bold">{value}</p>
-              <p className={`text-sm ${color}`}>{change}</p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-blue-900 truncate">{title}</p>
+              <p className="text-2xl font-bold text-blue-900 truncate">{value}</p>
+              <p className={`text-sm ${color} truncate`}>{change}</p>
             </div>
-            <Icon className={`h-8 w-8 ${color}`} />
+            <Icon className={`h-8 w-8 flex-shrink-0 ${color}`} />
           </div>
         </CardContent>
       </Card>
