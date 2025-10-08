@@ -6834,6 +6834,163 @@ export default function Bookkeeping() {
     )
   }
 
+  function renderInventoryContent() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Advanced Inventory Management</h2>
+            <p className="text-blue-900">Comprehensive stock control, warehousing, and supply chain management</p>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Stock Value" value="£2,845,670" subtitle="Current valuation" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Stock Valuation', items: [{ label: 'Raw Materials', value: '£1,245,320', detail: '43.7%' }, { label: 'Finished Goods', value: '£1,123,450', detail: '39.5%' }] }} />
+          <KPICard title="Low Stock Items" value="24" subtitle="Need reordering" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Low Stock Alert', items: [{ label: 'Critical', value: '8', detail: 'Immediate' }, { label: 'Low', value: '16', detail: 'Within 7 days' }] }} />
+          <KPICard title="Turnover Rate" value="8.4x" subtitle="Annual turnover" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Turnover Analysis', items: [{ label: 'Fast Moving', value: '342', detail: '>12x' }, { label: 'Medium', value: '567', detail: '6-12x' }] }} />
+          <KPICard title="Warehouses" value="6" subtitle="Active locations" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Warehouse Utilization', items: [{ label: 'Main Warehouse', value: '87%', detail: '125,000 sq ft' }, { label: 'Distribution', value: '76%', detail: '85,000 sq ft' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Management</h2>
+            <p className="text-blue-900">Monitor stock levels, locations, and movements</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowStockAdjustmentDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Stock Adjustment</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total SKUs" value="1,247" subtitle="Active products" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'SKU Breakdown', items: [{ label: 'Raw Materials', value: '456', detail: '36.6%' }, { label: 'Finished Products', value: '542', detail: '43.5%' }] }} />
+          <KPICard title="Stock Value" value="£2.84M" subtitle="Current valuation" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Valuation', items: [{ label: 'Cost Value', value: '£2.21M', detail: 'Purchase cost' }, { label: 'Retail Value', value: '£3.67M', detail: 'Selling price' }] }} />
+          <KPICard title="Low Stock Alerts" value="24" subtitle="Need reordering" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Stock Alerts', items: [{ label: 'Critical (0-5)', value: '8', detail: 'Order now' }, { label: 'Low (6-20)', value: '16', detail: 'Order soon' }] }} />
+          <KPICard title="Avg Turnover" value="8.4x" subtitle="Annual rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Turnover', items: [{ label: 'Fast (>12x)', value: '342', detail: 'Excellent' }, { label: 'Standard (6-12x)', value: '567', detail: 'Good' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderWarehousesManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Warehouse Management</h2>
+            <p className="text-blue-900">Manage warehouse locations, capacity, and operations</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowWarehouseDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Add Warehouse</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Warehouses" value="6" subtitle="Active locations" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Warehouse Types', items: [{ label: 'Main Facilities', value: '2', detail: 'Primary storage' }, { label: 'Distribution Centers', value: '2', detail: 'Logistics hubs' }, { label: 'Regional Stores', value: '2', detail: 'Local depots' }] }} />
+          <KPICard title="Total Capacity" value="285K sq ft" subtitle="Combined space" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Capacity Breakdown', items: [{ label: 'Used Space', value: '228K sq ft', detail: '80% utilized' }, { label: 'Available', value: '57K sq ft', detail: '20% free' }] }} />
+          <KPICard title="Avg Utilization" value="80%" subtitle="Space efficiency" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Utilization Analysis', items: [{ label: 'High (>85%)', value: '2', detail: 'Near capacity' }, { label: 'Optimal (70-85%)', value: '3', detail: 'Well balanced' }, { label: 'Low (<70%)', value: '1', detail: 'Underutilized' }] }} />
+          <KPICard title="Stock Value" value="£2.84M" subtitle="Inventory held" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Value Distribution', items: [{ label: 'Main Warehouse', value: '£1.45M', detail: '51%' }, { label: 'Distribution', value: '£0.89M', detail: '31%' }, { label: 'Regional', value: '£0.50M', detail: '18%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventorySuppliersManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Supplier Management</h2>
+            <p className="text-blue-900">Manage supplier relationships, orders, and performance</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowSupplierDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Add Supplier</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export List</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Active Suppliers" value="89" subtitle="Current partnerships" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Supplier Categories', items: [{ label: 'Raw Materials', value: '34', detail: '38%' }, { label: 'Components', value: '28', detail: '31%' }, { label: 'Services', value: '27', detail: '31%' }] }} />
+          <KPICard title="Total Spend" value="£1.85M" subtitle="This year" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Spend Analysis', items: [{ label: 'Top 10 Suppliers', value: '£1.25M', detail: '67.6%' }, { label: 'Others', value: '£0.60M', detail: '32.4%' }] }} />
+          <KPICard title="Avg Lead Time" value="12 days" subtitle="Order to delivery" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Lead Time Analysis', items: [{ label: 'Fast (<7 days)', value: '23', detail: '26%' }, { label: 'Standard (7-14)', value: '48', detail: '54%' }, { label: 'Slow (>14)', value: '18', detail: '20%' }] }} />
+          <KPICard title="On-Time Delivery" value="94%" subtitle="Performance rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Delivery Performance', items: [{ label: 'Excellent (>95%)', value: '56', detail: '63%' }, { label: 'Good (90-95%)', value: '21', detail: '24%' }, { label: 'Poor (<90%)', value: '12', detail: '13%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventoryPurchaseOrders() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Purchase Orders</h2>
+            <p className="text-blue-900">Create and track inventory purchase orders</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" onClick={() => setShowPurchaseOrderDialog(true)} className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Create PO</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export List</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Active POs" value="42" subtitle="In progress" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'PO Status', items: [{ label: 'Pending Approval', value: '8', detail: 'Need review' }, { label: 'Ordered', value: '23', detail: 'With suppliers' }, { label: 'In Transit', value: '11', detail: 'On the way' }] }} />
+          <KPICard title="Total Value" value="£345K" subtitle="Outstanding orders" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Value Breakdown', items: [{ label: 'Raw Materials', value: '£185K', detail: '53.6%' }, { label: 'Components', value: '£98K', detail: '28.4%' }, { label: 'Other', value: '£62K', detail: '18.0%' }] }} />
+          <KPICard title="Overdue POs" value="5" subtitle="Past due date" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Overdue Analysis', items: [{ label: '1-7 days late', value: '3', detail: 'Minor delay' }, { label: '8-14 days late', value: '1', detail: 'Moderate delay' }, { label: '>14 days late', value: '1', detail: 'Severe delay' }] }} />
+          <KPICard title="Avg Order Value" value="£8.2K" subtitle="Per purchase order" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Order Values', items: [{ label: 'Small (<£5K)', value: '18', detail: '43%' }, { label: 'Medium (£5-15K)', value: '17', detail: '40%' }, { label: 'Large (>£15K)', value: '7', detail: '17%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockMovements() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Movements</h2>
+            <p className="text-blue-900">Track all inventory movements and transfers</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" className="min-w-fit"><Plus className="h-4 w-4 mr-2" />Record Movement</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Report</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Today's Movements" value="87" subtitle="Transactions today" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Movement Types', items: [{ label: 'Goods In', value: '32', detail: '37%' }, { label: 'Goods Out', value: '41', detail: '47%' }, { label: 'Transfers', value: '14', detail: '16%' }] }} />
+          <KPICard title="This Month" value="1,847" subtitle="Total movements" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Monthly Breakdown', items: [{ label: 'Week 1', value: '412', detail: '22%' }, { label: 'Week 2', value: '498', detail: '27%' }, { label: 'Week 3', value: '456', detail: '25%' }, { label: 'Week 4', value: '481', detail: '26%' }] }} />
+          <KPICard title="Pending Transfers" value="12" subtitle="Between warehouses" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Transfer Status', items: [{ label: 'In Transit', value: '7', detail: 'On the way' }, { label: 'Awaiting Dispatch', value: '5', detail: 'Ready to ship' }] }} />
+          <KPICard title="Adjustments" value="23" subtitle="This month" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Adjustment Reasons', items: [{ label: 'Damaged Goods', value: '8', detail: '35%' }, { label: 'Stock Count', value: '12', detail: '52%' }, { label: 'Returns', value: '3', detail: '13%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockValuation() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Stock Valuation</h2>
+            <p className="text-blue-900">Monitor inventory value and cost analysis</p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" className="min-w-fit"><RefreshCw className="h-4 w-4 mr-2" />Recalculate</Button>
+            <Button className="min-w-fit"><Download className="h-4 w-4 mr-2" />Export Valuation</Button>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          <KPICard title="Total Stock Value" value="£2,845,670" subtitle="At cost price" valueColor="text-brisk-primary" onClick={() => {}} drillDownData={{ title: 'Valuation Method', items: [{ label: 'FIFO Value', value: '£2,845,670', detail: 'First-in-first-out' }, { label: 'LIFO Value', value: '£2,789,430', detail: 'Last-in-first-out' }, { label: 'Avg Cost', value: '£2,812,550', detail: 'Weighted average' }] }} />
+          <KPICard title="Retail Value" value="£4,123,580" subtitle="At selling price" valueColor="text-green-600" onClick={() => {}} drillDownData={{ title: 'Potential Profit', items: [{ label: 'Gross Profit', value: '£1,277,910', detail: 'If all sold' }, { label: 'Margin %', value: '45%', detail: 'Average margin' }] }} />
+          <KPICard title="Obsolete Stock" value="£67,450" subtitle="Aged inventory" valueColor="text-orange-600" onClick={() => {}} drillDownData={{ title: 'Age Analysis', items: [{ label: '>6 months', value: '£32,100', detail: 'Review pricing' }, { label: '>12 months', value: '£23,650', detail: 'Consider disposal' }, { label: '>24 months', value: '£11,700', detail: 'Write-off candidate' }] }} />
+          <KPICard title="Shrinkage" value="0.8%" subtitle="Loss rate" valueColor="text-purple-600" onClick={() => {}} drillDownData={{ title: 'Shrinkage Analysis', items: [{ label: 'Damaged', value: '£15,320', detail: '42%' }, { label: 'Theft', value: '£8,950', detail: '25%' }, { label: 'Admin Errors', value: '£12,080', detail: '33%' }] }} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
