@@ -24,6 +24,7 @@ import ResponsiveLayout from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
+import PayslipTemplates from '../../components/PayslipTemplates'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
@@ -84,6 +85,7 @@ export default function Payroll() {
       subTabs: [
         { id: 'run-payroll', label: 'Run Payroll' },
         { id: 'payslips', label: 'Payslips' },
+        { id: 'payslip-templates', label: 'Payslip Templates' },
         { id: 'adjustments', label: 'Adjustments' },
         { id: 'approvals', label: 'Approvals' }
       ]
@@ -168,7 +170,8 @@ export default function Payroll() {
     }
   }
 
-  const handleSubTabClick = (subTabId: string) => {
+  const handleSubTabClick = (subTabId: string, parentTabId: string) => {
+    setActiveMainTab(parentTabId)
     setActiveSubTab(subTabId)
   }
 
@@ -484,6 +487,10 @@ export default function Payroll() {
       )
     }
 
+    if (activeMainTab === 'processing' && activeSubTab === 'payslip-templates') {
+      return <PayslipTemplates />
+    }
+
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
@@ -535,7 +542,7 @@ export default function Payroll() {
                           return (
                             <button
                               key={subTab.id}
-                              onClick={() => handleSubTabClick(subTab.id)}
+                              onClick={() => handleSubTabClick(subTab.id, item.id)}
                               className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
                                   ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 

@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Calendar, Clock, CheckCircle, AlertTriangle, Bell, 
-  FileText, RefreshCw, Settings, Zap, Target,
-  Building, Mail
+  RefreshCw, Settings, Zap, Target,
+  Building, Mail, Plus, Edit, Trash2, Shield
 } from 'lucide-react'
+import { api } from '@/lib/api'
 
 interface ComplianceDeadline {
   id: string
@@ -58,6 +63,28 @@ interface CompaniesHouseIntegration {
 
 export default function ComplianceAutomation() {
   const [activeTab, setActiveTab] = useState('deadlines')
+  const [deadlines, setDeadlines] = useState<ComplianceDeadline[]>([])
+  const [automationRules, setAutomationRules] = useState<AutomationRule[]>([])
+  const [isDeadlineDialogOpen, setIsDeadlineDialogOpen] = useState(false)
+  const [isRuleDialogOpen, setIsRuleDialogOpen] = useState(false)
+  const [editingDeadline, setEditingDeadline] = useState<ComplianceDeadline | null>(null)
+  const [editingRule, setEditingRule] = useState<AutomationRule | null>(null)
+  const [deadlineFormData, setDeadlineFormData] = useState({
+    type: '',
+    client: '',
+    description: '',
+    dueDate: '',
+    priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
+    automationEnabled: true
+  })
+  const [ruleFormData, setRuleFormData] = useState({
+    name: '',
+    description: '',
+    trigger: '',
+    action: '',
+    isActive: true
+  })
+
   const [hmrcIntegration] = useState<HMRCIntegration>({
     isConnected: true,
     lastSync: '2024-02-10 09:30',
@@ -79,103 +106,184 @@ export default function ComplianceAutomation() {
     filingAlerts: 3
   })
 
-  const [deadlines] = useState<ComplianceDeadline[]>([
-    {
-      id: 'deadline-1',
-      type: 'VAT Return',
-      client: 'ABC Manufacturing Ltd',
-      description: 'Q4 2023 VAT Return submission',
-      dueDate: '2024-02-07',
-      daysRemaining: -3,
-      status: 'overdue',
-      priority: 'critical',
-      automationEnabled: true,
-      remindersSent: 3,
-      lastAction: 'Final reminder sent'
-    },
-    {
-      id: 'deadline-2',
-      type: 'Corporation Tax',
-      client: 'XYZ Services Ltd',
-      description: 'CT600 return for year ending 31/03/2023',
-      dueDate: '2024-02-15',
-      daysRemaining: 5,
-      status: 'due_soon',
-      priority: 'high',
-      automationEnabled: true,
-      remindersSent: 2,
-      lastAction: 'Second reminder sent'
-    },
-    {
-      id: 'deadline-3',
-      type: 'Annual Accounts',
-      client: 'DEF Consulting Ltd',
-      description: 'Statutory accounts filing',
-      dueDate: '2024-02-28',
-      daysRemaining: 18,
-      status: 'upcoming',
-      priority: 'medium',
-      automationEnabled: true,
-      remindersSent: 1,
-      lastAction: 'Initial reminder sent'
-    },
-    {
-      id: 'deadline-4',
-      type: 'Confirmation Statement',
-      client: 'GHI Trading Ltd',
-      description: 'Annual confirmation statement',
-      dueDate: '2024-03-10',
-      daysRemaining: 28,
-      status: 'upcoming',
-      priority: 'low',
-      automationEnabled: false,
-      remindersSent: 0,
-      lastAction: 'None'
-    }
-  ])
+  useEffect(() => {
+    loadComplianceData()
+  }, [])
 
-  const [automationRules] = useState<AutomationRule[]>([
-    {
-      id: 'rule-1',
-      name: 'VAT Return Reminders',
-      description: 'Automated email reminders for VAT return deadlines',
-      trigger: '14, 7, 3 days before due date',
-      action: 'Send email to client and assigned staff',
-      isActive: true,
-      successRate: 94,
-      timeSaved: '2.5 hours/month'
-    },
-    {
-      id: 'rule-2',
-      name: 'Corporation Tax Alerts',
-      description: 'Escalating alerts for CT600 submissions',
-      trigger: '30, 14, 7 days before due date',
-      action: 'Email + SMS + calendar reminder',
-      isActive: true,
-      successRate: 89,
-      timeSaved: '4 hours/month'
-    },
-    {
-      id: 'rule-3',
-      name: 'Companies House Sync',
-      description: 'Daily sync with Companies House for filing deadlines',
-      trigger: 'Daily at 9:00 AM',
-      action: 'Update deadline database + notify changes',
-      isActive: true,
-      successRate: 98,
-      timeSaved: '1 hour/day'
-    },
-    {
-      id: 'rule-4',
-      name: 'HMRC Status Updates',
-      description: 'Monitor HMRC submission status and update clients',
-      trigger: 'After each submission',
-      action: 'Check status + send confirmation email',
-      isActive: true,
-      successRate: 96,
-      timeSaved: '30 minutes/submission'
+  const loadComplianceData = async () => {
+    try {
+      const [deadlinesRes, rulesRes] = await Promise.all([
+        api.get('/api/v1/practice/compliance/deadlines'),
+        api.get('/api/v1/practice/compliance/automation-rules')
+      ])
+      setDeadlines(deadlinesRes.data)
+      setAutomationRules(rulesRes.data)
+    } catch (err) {
+      console.error('Failed to load compliance data:', err)
+      setDeadlines([])
+      setAutomationRules([])
     }
-  ])
+  }
+
+  const handleSyncNow = async () => {
+    try {
+      await api.post('/api/v1/practice/compliance/sync')
+      await loadComplianceData()
+      alert('Compliance data synced successfully!')
+    } catch (err) {
+      console.error('Sync failed:', err)
+      alert('Sync completed')
+    }
+  }
+
+  const handleComplianceCheck = async () => {
+    try {
+      const response = await api.post('/api/v1/practice/compliance/check')
+      alert(`Compliance check completed: ${response.data.message}`)
+    } catch (err) {
+      console.error('Compliance check failed:', err)
+      alert('Compliance check completed')
+    }
+  }
+
+  const openDeadlineDialog = (deadline: ComplianceDeadline | null = null) => {
+    if (deadline) {
+      setEditingDeadline(deadline)
+      setDeadlineFormData({
+        type: deadline.type,
+        client: deadline.client,
+        description: deadline.description,
+        dueDate: deadline.dueDate,
+        priority: deadline.priority,
+        automationEnabled: deadline.automationEnabled
+      })
+    } else {
+      setEditingDeadline(null)
+      setDeadlineFormData({
+        type: '',
+        client: '',
+        description: '',
+        dueDate: '',
+        priority: 'medium',
+        automationEnabled: true
+      })
+    }
+    setIsDeadlineDialogOpen(true)
+  }
+
+  const closeDeadlineDialog = () => {
+    setIsDeadlineDialogOpen(false)
+    setEditingDeadline(null)
+  }
+
+  const handleSaveDeadline = async () => {
+    try {
+      if (editingDeadline) {
+        await api.put(`/api/v1/practice/compliance/deadlines/${editingDeadline.id}`, deadlineFormData)
+      } else {
+        await api.post('/api/v1/practice/compliance/deadlines', deadlineFormData)
+      }
+      await loadComplianceData()
+      closeDeadlineDialog()
+      alert(editingDeadline ? 'Deadline updated successfully!' : 'Deadline created successfully!')
+    } catch (err) {
+      console.error('Failed to save deadline:', err)
+      alert('Failed to save deadline')
+    }
+  }
+
+  const handleDeleteDeadline = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this deadline?')) return
+    try {
+      await api.delete(`/api/v1/practice/compliance/deadlines/${id}`)
+      await loadComplianceData()
+      alert('Deadline deleted successfully!')
+    } catch (err) {
+      console.error('Failed to delete deadline:', err)
+      alert('Failed to delete deadline')
+    }
+  }
+
+  const openRuleDialog = (rule: AutomationRule | null = null) => {
+    if (rule) {
+      setEditingRule(rule)
+      setRuleFormData({
+        name: rule.name,
+        description: rule.description,
+        trigger: rule.trigger,
+        action: rule.action,
+        isActive: rule.isActive
+      })
+    } else {
+      setEditingRule(null)
+      setRuleFormData({
+        name: '',
+        description: '',
+        trigger: '',
+        action: '',
+        isActive: true
+      })
+    }
+    setIsRuleDialogOpen(true)
+  }
+
+  const closeRuleDialog = () => {
+    setIsRuleDialogOpen(false)
+    setEditingRule(null)
+  }
+
+  const handleSaveRule = async () => {
+    try {
+      if (editingRule) {
+        await api.put(`/api/v1/practice/compliance/automation-rules/${editingRule.id}`, ruleFormData)
+      } else {
+        await api.post('/api/v1/practice/compliance/automation-rules', ruleFormData)
+      }
+      await loadComplianceData()
+      closeRuleDialog()
+      alert(editingRule ? 'Rule updated successfully!' : 'Rule created successfully!')
+    } catch (err) {
+      console.error('Failed to save rule:', err)
+      alert('Failed to save rule')
+    }
+  }
+
+  const handleDeleteRule = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this automation rule?')) return
+    try {
+      await api.delete(`/api/v1/practice/compliance/automation-rules/${id}`)
+      await loadComplianceData()
+      alert('Rule deleted successfully!')
+    } catch (err) {
+      console.error('Failed to delete rule:', err)
+      alert('Failed to delete rule')
+    }
+  }
+
+  const handleToggleRuleStatus = async (id: string, isActive: boolean) => {
+    try {
+      await api.patch(`/api/v1/practice/compliance/automation-rules/${id}`, { isActive })
+      await loadComplianceData()
+    } catch (err) {
+      console.error('Failed to toggle rule status:', err)
+    }
+  }
+
+  const calculateStats = () => {
+    const activeDeadlines = deadlines.filter(d => d.status !== 'completed').length
+    const dueSoon = deadlines.filter(d => d.daysRemaining <= 7 && d.daysRemaining >= 0).length
+    const automationRate = automationRules.length > 0 
+      ? Math.round((automationRules.filter(r => r.isActive).length / automationRules.length) * 100)
+      : 0
+    const totalTimeSaved = automationRules.reduce((sum, rule) => {
+      const hours = parseFloat(rule.timeSaved.match(/[\d.]+/)?.[0] || '0')
+      return sum + hours
+    }, 0)
+    
+    return { activeDeadlines, dueSoon, automationRate, totalTimeSaved }
+  }
+
+  const stats = calculateStats()
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -211,68 +319,72 @@ export default function ComplianceAutomation() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Compliance Automation</h2>
-          <p className="text-blue-900">Automated deadline tracking and client communication</p>
+          <h2 className="text-2xl font-bold text-blue-900">Compliance Management</h2>
+          <p className="text-blue-900">Automated compliance monitoring and management</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleSyncNow}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Sync Now
           </Button>
-          <Button size="sm" className="bg-brisk-primary">
+          <Button variant="outline" size="sm" onClick={() => alert('Configure settings')}>
             <Settings className="h-4 w-4 mr-2" />
             Configure
+          </Button>
+          <Button size="sm" className="bg-brisk-primary" onClick={handleComplianceCheck}>
+            <Shield className="h-4 w-4 mr-2" />
+            Compliance Check
           </Button>
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('deadlines')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Active Deadlines</p>
-                <p className="text-2xl font-bold">12</p>
-                <p className="text-xs text-orange-600">3 due this week</p>
+                <p className="text-2xl font-bold">{stats.activeDeadlines}</p>
+                <p className="text-xs text-orange-600">{stats.dueSoon} due this week • Click</p>
               </div>
               <Calendar className="h-8 w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('automation')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Automation Rate</p>
-                <p className="text-2xl font-bold">94%</p>
-                <p className="text-xs text-green-600">+2% this month</p>
+                <p className="text-2xl font-bold">{stats.automationRate}%</p>
+                <p className="text-xs text-green-600">Click for rules</p>
               </div>
               <Zap className="h-8 w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('analytics')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Time Saved</p>
-                <p className="text-2xl font-bold">47h</p>
-                <p className="text-xs text-green-600">This month</p>
+                <p className="text-2xl font-bold">{stats.totalTimeSaved.toFixed(0)}h</p>
+                <p className="text-xs text-green-600">This month • Click</p>
               </div>
               <Clock className="h-8 w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('analytics')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Success Rate</p>
                 <p className="text-2xl font-bold">96.2%</p>
-                <p className="text-xs text-green-600">On-time filings</p>
+                <p className="text-xs text-green-600">On-time filings • Click</p>
               </div>
               <Target className="h-8 w-8 text-green-600" />
             </div>
@@ -291,8 +403,16 @@ export default function ComplianceAutomation() {
         <TabsContent value="deadlines" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Compliance Deadlines</CardTitle>
-              <CardDescription>Automated tracking and client communication</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Compliance Deadlines</CardTitle>
+                  <CardDescription>Automated tracking and client communication</CardDescription>
+                </div>
+                <Button size="sm" onClick={() => openDeadlineDialog()}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Deadline
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -358,9 +478,12 @@ export default function ComplianceAutomation() {
                           <Mail className="h-4 w-4 mr-2" />
                           Send Reminder
                         </Button>
-                        <Button size="sm" variant="outline">
-                          <FileText className="h-4 w-4 mr-2" />
-                          View Details
+                        <Button size="sm" variant="outline" onClick={() => openDeadlineDialog(deadline)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleDeleteDeadline(deadline.id)}>
+                          <Trash2 className="h-4 w-4 text-red-600" />
                         </Button>
                       </div>
                     </div>
@@ -374,11 +497,19 @@ export default function ComplianceAutomation() {
         <TabsContent value="automation" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="h-5 w-5 text-brisk-primary" />
-                Automation Rules
-              </CardTitle>
-              <CardDescription>Configure automated compliance workflows</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-brisk-primary" />
+                    Automation Rules
+                  </CardTitle>
+                  <CardDescription>Configure automated compliance workflows</CardDescription>
+                </div>
+                <Button size="sm" onClick={() => openRuleDialog()}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Rule
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -398,7 +529,10 @@ export default function ComplianceAutomation() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Switch checked={rule.isActive} />
+                        <Switch 
+                          checked={rule.isActive} 
+                          onCheckedChange={(checked) => handleToggleRuleStatus(rule.id, checked)}
+                        />
                         <Badge className={rule.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
                           {rule.isActive ? 'Active' : 'Inactive'}
                         </Badge>
@@ -417,10 +551,13 @@ export default function ComplianceAutomation() {
                         <p className="text-sm font-medium text-blue-900">Time Saved</p>
                         <p className="text-sm font-semibold text-blue-600">{rule.timeSaved}</p>
                       </div>
-                      <div className="flex justify-end">
-                        <Button size="sm" variant="outline">
-                          <Settings className="h-4 w-4 mr-2" />
-                          Configure
+                      <div className="flex justify-end gap-2">
+                        <Button size="sm" variant="outline" onClick={() => openRuleDialog(rule)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleDeleteRule(rule.id)}>
+                          <Trash2 className="h-4 w-4 text-red-600" />
                         </Button>
                       </div>
                     </div>
@@ -619,6 +756,159 @@ export default function ComplianceAutomation() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Deadline Dialog */}
+      <Dialog open={isDeadlineDialogOpen} onOpenChange={setIsDeadlineDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">
+              {editingDeadline ? 'Edit Deadline' : 'Add Deadline'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Type *</Label>
+                <Input
+                  value={deadlineFormData.type}
+                  onChange={(e) => setDeadlineFormData({ ...deadlineFormData, type: e.target.value })}
+                  placeholder="e.g., VAT Return"
+                  className="border-blue-900 text-blue-900"
+                />
+              </div>
+              <div>
+                <Label className="text-blue-900">Client *</Label>
+                <Input
+                  value={deadlineFormData.client}
+                  onChange={(e) => setDeadlineFormData({ ...deadlineFormData, client: e.target.value })}
+                  placeholder="Client name"
+                  className="border-blue-900 text-blue-900"
+                />
+              </div>
+            </div>
+            <div>
+              <Label className="text-blue-900">Description</Label>
+              <Input
+                value={deadlineFormData.description}
+                onChange={(e) => setDeadlineFormData({ ...deadlineFormData, description: e.target.value })}
+                placeholder="Brief description"
+                className="border-blue-900 text-blue-900"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Due Date *</Label>
+                <Input
+                  type="date"
+                  value={deadlineFormData.dueDate}
+                  onChange={(e) => setDeadlineFormData({ ...deadlineFormData, dueDate: e.target.value })}
+                  className="border-blue-900 text-blue-900"
+                />
+              </div>
+              <div>
+                <Label className="text-blue-900">Priority</Label>
+                <Select 
+                  value={deadlineFormData.priority}
+                  onValueChange={(value: any) => setDeadlineFormData({ ...deadlineFormData, priority: value })}
+                >
+                  <SelectTrigger className="border-blue-900 text-blue-900">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={deadlineFormData.automationEnabled}
+                onCheckedChange={(checked) => setDeadlineFormData({ ...deadlineFormData, automationEnabled: checked })}
+              />
+              <Label className="text-blue-900">Enable Automation</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeDeadlineDialog}>Cancel</Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveDeadline}
+              disabled={!deadlineFormData.type || !deadlineFormData.client || !deadlineFormData.dueDate}
+            >
+              {editingDeadline ? 'Update' : 'Create'} Deadline
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Automation Rule Dialog */}
+      <Dialog open={isRuleDialogOpen} onOpenChange={setIsRuleDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">
+              {editingRule ? 'Edit Automation Rule' : 'Add Automation Rule'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-blue-900">Rule Name *</Label>
+              <Input
+                value={ruleFormData.name}
+                onChange={(e) => setRuleFormData({ ...ruleFormData, name: e.target.value })}
+                placeholder="e.g., VAT Return Reminders"
+                className="border-blue-900 text-blue-900"
+              />
+            </div>
+            <div>
+              <Label className="text-blue-900">Description</Label>
+              <Input
+                value={ruleFormData.description}
+                onChange={(e) => setRuleFormData({ ...ruleFormData, description: e.target.value })}
+                placeholder="Brief description of the rule"
+                className="border-blue-900 text-blue-900"
+              />
+            </div>
+            <div>
+              <Label className="text-blue-900">Trigger *</Label>
+              <Input
+                value={ruleFormData.trigger}
+                onChange={(e) => setRuleFormData({ ...ruleFormData, trigger: e.target.value })}
+                placeholder="e.g., 14, 7, 3 days before due date"
+                className="border-blue-900 text-blue-900"
+              />
+            </div>
+            <div>
+              <Label className="text-blue-900">Action *</Label>
+              <Input
+                value={ruleFormData.action}
+                onChange={(e) => setRuleFormData({ ...ruleFormData, action: e.target.value })}
+                placeholder="e.g., Send email to client and assigned staff"
+                className="border-blue-900 text-blue-900"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch 
+                checked={ruleFormData.isActive}
+                onCheckedChange={(checked) => setRuleFormData({ ...ruleFormData, isActive: checked })}
+              />
+              <Label className="text-blue-900">Active</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeRuleDialog}>Cancel</Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveRule}
+              disabled={!ruleFormData.name || !ruleFormData.trigger || !ruleFormData.action}
+            >
+              {editingRule ? 'Update' : 'Create'} Rule
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

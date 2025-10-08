@@ -795,50 +795,116 @@ async def generate_departmental_report(
         "generated_at": datetime.now().isoformat()
     }
 
+payslip_templates_store = {}
+
 @router.get("/payslip-templates")
 def get_payslip_templates(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
     """Get all payslip templates for the tenant"""
-    templates = [
-        {
-            "id": "template-1",
-            "name": "Modern Professional",
-            "description": "Clean, modern payslip design with structured layout",
-            "template_type": "modern",
-            "is_default": True
-        },
-        {
-            "id": "template-2", 
-            "name": "Classic Business",
-            "description": "Traditional payslip format with formal styling",
-            "template_type": "classic",
-            "is_default": False
-        },
-        {
-            "id": "template-3",
-            "name": "Minimal Clean",
-            "description": "Minimalist payslip focusing on clarity",
-            "template_type": "minimal", 
-            "is_default": False
-        },
-        {
-            "id": "template-4",
-            "name": "Corporate Elite",
-            "description": "Premium corporate payslip template with sophisticated design",
-            "template_type": "corporate",
-            "is_default": False
-        },
-        {
-            "id": "template-5",
-            "name": "Creative Studio",
-            "description": "Creative and colorful payslip design for modern businesses",
-            "template_type": "creative",
-            "is_default": False
-        }
-    ]
-    return {"templates": templates}
+    if not payslip_templates_store:
+        default_templates = [
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Standard Monthly Payslip",
+                "description": "Default template for standard monthly payroll",
+                "category": "standard",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#3b82f6",
+                "fontFamily": "Arial",
+                "headerText": "Monthly Payslip",
+                "footerText": "Confidential - For recipient only",
+                "includeCompanyDetails": True,
+                "includeEmployeePhoto": False,
+                "showDeductionBreakdown": True,
+                "showYTDTotals": True,
+                "usageCount": 1234,
+                "lastUsed": "2024-01-15",
+                "createdAt": datetime.now().isoformat(),
+                "createdBy": "system"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Executive Payslip",
+                "description": "Premium template for executive-level employees",
+                "category": "executive",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#6366f1",
+                "fontFamily": "Georgia",
+                "headerText": "Executive Compensation Statement",
+                "footerText": "Private & Confidential",
+                "includeCompanyDetails": True,
+                "includeEmployeePhoto": True,
+                "showDeductionBreakdown": True,
+                "showYTDTotals": True,
+                "usageCount": 345,
+                "lastUsed": "2024-01-10",
+                "createdAt": datetime.now().isoformat(),
+                "createdBy": "system"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Detailed Breakdown",
+                "description": "Comprehensive payslip with full breakdown of all components",
+                "category": "detailed",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#3b82f6",
+                "fontFamily": "Calibri",
+                "headerText": "Detailed Pay Statement",
+                "footerText": "Contact HR for any queries",
+                "includeCompanyDetails": True,
+                "includeEmployeePhoto": False,
+                "showDeductionBreakdown": True,
+                "showYTDTotals": True,
+                "usageCount": 456,
+                "lastUsed": "2024-01-12",
+                "createdAt": datetime.now().isoformat(),
+                "createdBy": "system"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Simple Format",
+                "description": "Minimalist payslip with essential information only",
+                "category": "simple",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#3b82f6",
+                "fontFamily": "Verdana",
+                "headerText": "Pay Statement",
+                "footerText": "",
+                "includeCompanyDetails": False,
+                "includeEmployeePhoto": False,
+                "showDeductionBreakdown": False,
+                "showYTDTotals": False,
+                "usageCount": 678,
+                "lastUsed": "2024-01-14",
+                "createdAt": datetime.now().isoformat(),
+                "createdBy": "system"
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "International Template",
+                "description": "Multi-currency payslip template for international employees",
+                "category": "international",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#3b82f6",
+                "fontFamily": "Arial",
+                "headerText": "International Payslip",
+                "footerText": "All amounts in base currency unless stated",
+                "includeCompanyDetails": True,
+                "includeEmployeePhoto": False,
+                "showDeductionBreakdown": True,
+                "showYTDTotals": True,
+                "usageCount": 123,
+                "lastUsed": "2024-01-08",
+                "createdAt": datetime.now().isoformat(),
+                "createdBy": "system"
+            }
+        ]
+        for template in default_templates:
+            payslip_templates_store[template["id"]] = template
+    
+    return list(payslip_templates_store.values())
 
 @router.post("/payslip-templates")
 def create_payslip_template(
@@ -848,14 +914,75 @@ def create_payslip_template(
 ):
     """Create a new payslip template"""
     template_id = str(uuid.uuid4())
-    return {
-        "template_id": template_id,
-        "message": "Payslip template created successfully",
-        "template": {
-            **template_data,
-            "id": template_id,
-            "created_at": datetime.now().isoformat()
+    new_template = {
+        **template_data,
+        "id": template_id,
+        "usageCount": 0,
+        "createdAt": datetime.now().isoformat(),
+        "createdBy": "current_user"
+    }
+    payslip_templates_store[template_id] = new_template
+    return new_template
+
+@router.put("/payslip-templates/{template_id}")
+def update_payslip_template(
+    template_id: str,
+    template_data: Dict[str, Any],
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Update an existing payslip template"""
+    if template_id not in payslip_templates_store:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    existing = payslip_templates_store[template_id]
+    updated_template = {
+        **template_data,
+        "id": template_id,
+        "usageCount": existing.get("usageCount", 0),
+        "createdAt": existing.get("createdAt"),
+        "createdBy": existing.get("createdBy")
+    }
+    payslip_templates_store[template_id] = updated_template
+    return updated_template
+
+@router.delete("/payslip-templates/{template_id}")
+def delete_payslip_template(
+    template_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Delete a payslip template"""
+    if template_id not in payslip_templates_store:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    del payslip_templates_store[template_id]
+    return {"message": "Template deleted successfully"}
+
+@router.get("/payslip-metrics")
+def get_payslip_metrics(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    """Get payslip template metrics"""
+    templates = list(payslip_templates_store.values())
+    
+    if not templates:
+        return {
+            "totalTemplates": 0,
+            "totalPayslipsGenerated": 0,
+            "avgProcessingTime": "0s",
+            "mostUsedTemplate": "N/A"
         }
+    
+    total_usage = sum(t.get("usageCount", 0) for t in templates)
+    most_used = max(templates, key=lambda t: t.get("usageCount", 0))
+    
+    return {
+        "totalTemplates": len(templates),
+        "totalPayslipsGenerated": total_usage,
+        "avgProcessingTime": "1.2s",
+        "mostUsedTemplate": most_used.get("name", "N/A")
     }
 
 @router.get("/payslip-templates/{template_id}/preview")
@@ -866,6 +993,9 @@ def preview_payslip_template(
     db: Session = Depends(get_db)
 ):
     """Generate preview of payslip with template"""
+    if template_id not in payslip_templates_store:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
     return {
         "template_id": template_id,
         "payslip_id": payslip_id,

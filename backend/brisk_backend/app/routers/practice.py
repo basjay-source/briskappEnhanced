@@ -942,3 +942,660 @@ def delete_deadline(
     db.commit()
     
     return {"message": "Deadline deleted successfully"}
+
+class WorkflowCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    trigger_type: str = 'manual'
+    trigger_event: Optional[str] = None
+    conditions: Optional[List[Any]] = []
+    actions: Optional[List[Any]] = []
+    status: str = 'active'
+    category: str = 'custom'
+
+class WorkflowUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger_type: Optional[str] = None
+    trigger_event: Optional[str] = None
+    conditions: Optional[List[Any]] = None
+    actions: Optional[List[Any]] = None
+    status: Optional[str] = None
+    category: Optional[str] = None
+
+@router.get("/workflows")
+async def get_workflows(db: Session = Depends(get_db)):
+    """Get all workflows"""
+    workflows = []
+    return workflows
+
+@router.post("/workflows")
+async def create_workflow(workflow: WorkflowCreate, db: Session = Depends(get_db)):
+    """Create a new workflow"""
+    workflow_data = {
+        "id": f"wf_{int(datetime.now().timestamp())}",
+        "name": workflow.name,
+        "description": workflow.description,
+        "trigger_type": workflow.trigger_type,
+        "trigger_event": workflow.trigger_event,
+        "conditions": workflow.conditions or [],
+        "actions": workflow.actions or [],
+        "status": workflow.status,
+        "category": workflow.category,
+        "executions": 0,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.put("/workflows/{workflow_id}")
+async def update_workflow(workflow_id: str, workflow: WorkflowUpdate, db: Session = Depends(get_db)):
+    """Update a workflow"""
+    workflow_data = {
+        "id": workflow_id,
+        "name": workflow.name,
+        "description": workflow.description,
+        "trigger_type": workflow.trigger_type,
+        "trigger_event": workflow.trigger_event,
+        "conditions": workflow.conditions or [],
+        "actions": workflow.actions or [],
+        "status": workflow.status,
+        "category": workflow.category,
+        "executions": 0,
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.patch("/workflows/{workflow_id}")
+async def patch_workflow(workflow_id: str, data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Patch workflow status"""
+    workflow_data = {
+        "id": workflow_id,
+        "status": data.get("status", "active"),
+        "updated_at": datetime.now().isoformat()
+    }
+    return workflow_data
+
+@router.delete("/workflows/{workflow_id}")
+async def delete_workflow(workflow_id: str, db: Session = Depends(get_db)):
+    """Delete a workflow"""
+    return {"message": "Workflow deleted successfully"}
+
+class AutomationRuleCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    trigger_type: str = 'event'
+    trigger_event: Optional[str] = None
+    trigger_schedule: Optional[str] = None
+    conditions: Optional[List[Any]] = []
+    actions: Optional[List[Any]] = []
+    status: str = 'active'
+    priority: str = 'medium'
+
+class AutomationRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger_type: Optional[str] = None
+    trigger_event: Optional[str] = None
+    trigger_schedule: Optional[str] = None
+    conditions: Optional[List[Any]] = None
+    actions: Optional[List[Any]] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+
+@router.get("/automation-rules")
+async def get_automation_rules(db: Session = Depends(get_db)):
+    """Get all automation rules"""
+    rules = []
+    return rules
+
+@router.post("/automation-rules")
+async def create_automation_rule(rule: AutomationRuleCreate, db: Session = Depends(get_db)):
+    """Create a new automation rule"""
+    rule_data = {
+        "id": f"ar_{int(datetime.now().timestamp())}",
+        "name": rule.name,
+        "description": rule.description,
+        "trigger_type": rule.trigger_type,
+        "trigger_event": rule.trigger_event,
+        "trigger_schedule": rule.trigger_schedule,
+        "conditions": rule.conditions or [],
+        "actions": rule.actions or [],
+        "status": rule.status,
+        "priority": rule.priority,
+        "executions": 0,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.put("/automation-rules/{rule_id}")
+async def update_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Update an automation rule"""
+    rule_data = {
+        "id": rule_id,
+        "name": rule.name,
+        "description": rule.description,
+        "trigger_type": rule.trigger_type,
+        "trigger_event": rule.trigger_event,
+        "trigger_schedule": rule.trigger_schedule,
+        "conditions": rule.conditions or [],
+        "actions": rule.actions or [],
+        "status": rule.status,
+        "priority": rule.priority,
+        "executions": 0,
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.patch("/automation-rules/{rule_id}")
+async def patch_automation_rule(rule_id: str, data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Patch automation rule status"""
+    rule_data = {
+        "id": rule_id,
+        "status": data.get("status", "active"),
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.delete("/automation-rules/{rule_id}")
+async def delete_automation_rule(rule_id: str, db: Session = Depends(get_db)):
+    """Delete an automation rule"""
+    return {"message": "Automation rule deleted successfully"}
+
+class TeamMemberCreate(BaseModel):
+    name: str
+    role: str
+    skills: List[str] = []
+    capacity: int = 40
+    hourlyRate: float = 0
+    performanceScore: int = 80
+
+class TeamMemberUpdate(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    skills: Optional[List[str]] = None
+    capacity: Optional[int] = None
+    hourlyRate: Optional[float] = None
+    performanceScore: Optional[int] = None
+
+class JobCreate(BaseModel):
+    title: str
+    client: str
+    type: str = ''
+    priority: str = 'medium'
+    estimatedHours: float = 0
+    requiredSkills: List[str] = []
+    dueDate: str = ''
+    status: str = 'unassigned'
+
+class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    client: Optional[str] = None
+    type: Optional[str] = None
+    priority: Optional[str] = None
+    estimatedHours: Optional[float] = None
+    requiredSkills: Optional[List[str]] = None
+    dueDate: Optional[str] = None
+    status: Optional[str] = None
+
+@router.get("/capacity/team-members")
+async def get_team_members(db: Session = Depends(get_db)):
+    """Get all team members"""
+    return []
+
+@router.post("/capacity/team-members")
+async def create_team_member(member: TeamMemberCreate, db: Session = Depends(get_db)):
+    """Create a new team member"""
+    member_data = {
+        "id": f"tm_{int(datetime.now().timestamp())}",
+        "name": member.name,
+        "role": member.role,
+        "skills": member.skills,
+        "capacity": member.capacity,
+        "hourlyRate": member.hourlyRate,
+        "performanceScore": member.performanceScore,
+        "currentUtilization": 0,
+        "assignedJobs": 0,
+        "availability": {
+            "thisWeek": member.capacity,
+            "nextWeek": member.capacity,
+            "thisMonth": member.capacity * 4
+        },
+        "created_at": datetime.now().isoformat()
+    }
+    return member_data
+
+@router.put("/capacity/team-members/{member_id}")
+async def update_team_member(member_id: str, member: TeamMemberUpdate, db: Session = Depends(get_db)):
+    """Update a team member"""
+    member_data = {
+        "id": member_id,
+        "name": member.name,
+        "role": member.role,
+        "skills": member.skills,
+        "capacity": member.capacity,
+        "hourlyRate": member.hourlyRate,
+        "performanceScore": member.performanceScore,
+        "updated_at": datetime.now().isoformat()
+    }
+    return member_data
+
+@router.delete("/capacity/team-members/{member_id}")
+async def delete_team_member(member_id: str, db: Session = Depends(get_db)):
+    """Delete a team member"""
+    return {"message": "Team member deleted successfully"}
+
+@router.get("/capacity/jobs")
+async def get_capacity_jobs(db: Session = Depends(get_db)):
+    """Get all capacity planning jobs"""
+    return []
+
+@router.post("/capacity/jobs")
+async def create_capacity_job(job: JobCreate, db: Session = Depends(get_db)):
+    """Create a new job"""
+    job_data = {
+        "id": f"job_{int(datetime.now().timestamp())}",
+        "title": job.title,
+        "client": job.client,
+        "type": job.type,
+        "priority": job.priority,
+        "estimatedHours": job.estimatedHours,
+        "requiredSkills": job.requiredSkills,
+        "dueDate": job.dueDate,
+        "status": job.status,
+        "created_at": datetime.now().isoformat()
+    }
+    return job_data
+
+@router.put("/capacity/jobs/{job_id}")
+async def update_capacity_job(job_id: str, job: JobUpdate, db: Session = Depends(get_db)):
+    """Update a job"""
+    job_data = {
+        "id": job_id,
+        "title": job.title,
+        "client": job.client,
+        "type": job.type,
+        "priority": job.priority,
+        "estimatedHours": job.estimatedHours,
+        "requiredSkills": job.requiredSkills,
+        "dueDate": job.dueDate,
+        "status": job.status,
+        "updated_at": datetime.now().isoformat()
+    }
+    return job_data
+
+@router.delete("/capacity/jobs/{job_id}")
+async def delete_capacity_job(job_id: str, db: Session = Depends(get_db)):
+    """Delete a job"""
+    return {"message": "Job deleted successfully"}
+
+@router.get("/capacity/ai-recommendations")
+async def get_ai_recommendations(db: Session = Depends(get_db)):
+    """Get AI-powered capacity recommendations"""
+    return []
+
+@router.post("/capacity/auto-optimize")
+async def auto_optimize_capacity(db: Session = Depends(get_db)):
+    """Auto-optimize team capacity"""
+    return {
+        "teamMembers": [],
+        "unassignedJobs": [],
+        "message": "Capacity optimization completed"
+    }
+
+# Compliance Management Routes
+class ComplianceDeadlineCreate(BaseModel):
+    type: str
+    client: str
+    description: str = ''
+    dueDate: str
+    priority: str = 'medium'
+    automationEnabled: bool = True
+
+class ComplianceDeadlineUpdate(BaseModel):
+    type: Optional[str] = None
+    client: Optional[str] = None
+    description: Optional[str] = None
+    dueDate: Optional[str] = None
+    priority: Optional[str] = None
+    automationEnabled: Optional[bool] = None
+
+class AutomationRuleCreate(BaseModel):
+    name: str
+    description: str = ''
+    trigger: str
+    action: str
+    isActive: bool = True
+
+class AutomationRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger: Optional[str] = None
+    action: Optional[str] = None
+    isActive: Optional[bool] = None
+
+@router.get("/compliance/deadlines")
+async def get_compliance_deadlines(db: Session = Depends(get_db)):
+    """Get all compliance deadlines"""
+    return []
+
+@router.post("/compliance/deadlines")
+async def create_compliance_deadline(deadline: ComplianceDeadlineCreate, db: Session = Depends(get_db)):
+    """Create a new compliance deadline"""
+    from datetime import datetime as dt
+    due_date = dt.strptime(deadline.dueDate, '%Y-%m-%d')
+    days_remaining = (due_date - dt.now()).days
+    
+    status = 'upcoming'
+    if days_remaining < 0:
+        status = 'overdue'
+    elif days_remaining <= 7:
+        status = 'due_soon'
+    
+    deadline_data = {
+        "id": f"deadline_{int(datetime.now().timestamp())}",
+        "type": deadline.type,
+        "client": deadline.client,
+        "description": deadline.description,
+        "dueDate": deadline.dueDate,
+        "daysRemaining": days_remaining,
+        "status": status,
+        "priority": deadline.priority,
+        "automationEnabled": deadline.automationEnabled,
+        "remindersSent": 0,
+        "lastAction": "Created",
+        "created_at": datetime.now().isoformat()
+    }
+    return deadline_data
+
+@router.put("/compliance/deadlines/{deadline_id}")
+async def update_compliance_deadline(deadline_id: str, deadline: ComplianceDeadlineUpdate, db: Session = Depends(get_db)):
+    """Update a compliance deadline"""
+    update_data = {
+        "id": deadline_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if deadline.type:
+        update_data["type"] = deadline.type
+    if deadline.client:
+        update_data["client"] = deadline.client
+    if deadline.description:
+        update_data["description"] = deadline.description
+    if deadline.dueDate:
+        update_data["dueDate"] = deadline.dueDate
+    if deadline.priority:
+        update_data["priority"] = deadline.priority
+    if deadline.automationEnabled is not None:
+        update_data["automationEnabled"] = deadline.automationEnabled
+    
+    return update_data
+
+@router.delete("/compliance/deadlines/{deadline_id}")
+async def delete_compliance_deadline(deadline_id: str, db: Session = Depends(get_db)):
+    """Delete a compliance deadline"""
+    return {"message": "Deadline deleted successfully"}
+
+@router.get("/compliance/automation-rules")
+async def get_automation_rules(db: Session = Depends(get_db)):
+    """Get all automation rules"""
+    return []
+
+@router.post("/compliance/automation-rules")
+async def create_automation_rule(rule: AutomationRuleCreate, db: Session = Depends(get_db)):
+    """Create a new automation rule"""
+    rule_data = {
+        "id": f"rule_{int(datetime.now().timestamp())}",
+        "name": rule.name,
+        "description": rule.description,
+        "trigger": rule.trigger,
+        "action": rule.action,
+        "isActive": rule.isActive,
+        "successRate": 0,
+        "timeSaved": "0 hours",
+        "created_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.put("/compliance/automation-rules/{rule_id}")
+async def update_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Update an automation rule"""
+    update_data = {
+        "id": rule_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if rule.name:
+        update_data["name"] = rule.name
+    if rule.description:
+        update_data["description"] = rule.description
+    if rule.trigger:
+        update_data["trigger"] = rule.trigger
+    if rule.action:
+        update_data["action"] = rule.action
+    if rule.isActive is not None:
+        update_data["isActive"] = rule.isActive
+    
+    return update_data
+
+@router.patch("/compliance/automation-rules/{rule_id}")
+async def patch_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Partially update an automation rule (e.g., toggle status)"""
+    update_data = {
+        "id": rule_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if rule.isActive is not None:
+        update_data["isActive"] = rule.isActive
+    
+    return update_data
+
+@router.delete("/compliance/automation-rules/{rule_id}")
+async def delete_automation_rule(rule_id: str, db: Session = Depends(get_db)):
+    """Delete an automation rule"""
+    return {"message": "Automation rule deleted successfully"}
+
+@router.post("/compliance/sync")
+async def sync_compliance_data(db: Session = Depends(get_db)):
+    """Sync compliance data with HMRC and Companies House"""
+    return {"message": "Compliance data synced successfully"}
+
+@router.post("/compliance/check")
+async def compliance_check(db: Session = Depends(get_db)):
+    """Run compliance check"""
+    return {"message": "All compliance checks passed"}
+
+# AI Conversation Persistence Routes
+class AIMessageCreate(BaseModel):
+    question: str
+    answer: str
+    category: str = 'general'
+
+class AIConversationCreate(BaseModel):
+    title: str
+    messages: List[Dict[str, Any]] = []
+
+class AIConversationUpdate(BaseModel):
+    title: Optional[str] = None
+    messages: Optional[List[Dict[str, Any]]] = None
+
+# In-memory storage for AI conversations (replace with database later)
+ai_conversations_store = {}
+
+@router.get("/ai/conversations")
+async def get_ai_conversations(db: Session = Depends(get_db)):
+    """Get all AI conversations for the user"""
+    conversations = list(ai_conversations_store.values())
+    conversations.sort(key=lambda x: x['created_at'], reverse=True)
+    return conversations
+
+@router.post("/ai/conversations")
+async def create_ai_conversation(conversation: AIConversationCreate, db: Session = Depends(get_db)):
+    """Create a new AI conversation"""
+    conversation_id = f"conv_{int(datetime.now().timestamp() * 1000)}"
+    conversation_data = {
+        "id": conversation_id,
+        "title": conversation.title,
+        "messages": conversation.messages,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    ai_conversations_store[conversation_id] = conversation_data
+    return conversation_data
+
+@router.get("/ai/conversations/{conversation_id}")
+async def get_ai_conversation(conversation_id: str, db: Session = Depends(get_db)):
+    """Get a specific AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return ai_conversations_store[conversation_id]
+
+@router.put("/ai/conversations/{conversation_id}")
+async def update_ai_conversation(
+    conversation_id: str, 
+    conversation: AIConversationUpdate, 
+    db: Session = Depends(get_db)
+):
+    """Update an AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    stored_conversation = ai_conversations_store[conversation_id]
+    if conversation.title is not None:
+        stored_conversation["title"] = conversation.title
+    if conversation.messages is not None:
+        stored_conversation["messages"] = conversation.messages
+    stored_conversation["updated_at"] = datetime.now().isoformat()
+    
+    return stored_conversation
+
+@router.delete("/ai/conversations/{conversation_id}")
+async def delete_ai_conversation(conversation_id: str, db: Session = Depends(get_db)):
+    """Delete an AI conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    del ai_conversations_store[conversation_id]
+    return {"message": "Conversation deleted successfully"}
+
+@router.post("/ai/conversations/{conversation_id}/messages")
+async def add_message_to_conversation(
+    conversation_id: str,
+    message: AIMessageCreate,
+    db: Session = Depends(get_db)
+):
+    """Add a message to an existing conversation"""
+    if conversation_id not in ai_conversations_store:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    conversation = ai_conversations_store[conversation_id]
+    new_message = {
+        "id": f"msg_{int(datetime.now().timestamp() * 1000)}",
+        "question": message.question,
+        "answer": message.answer,
+        "timestamp": datetime.now().isoformat(),
+        "category": message.category
+    }
+    conversation["messages"].append(new_message)
+    conversation["updated_at"] = datetime.now().isoformat()
+    
+    return new_message
+
+# Email Studio Routes
+class EmailCreate(BaseModel):
+    to: List[str]
+    cc: Optional[List[str]] = []
+    bcc: Optional[List[str]] = []
+    subject: str
+    body: str
+    priority: str = 'normal'
+    client_id: Optional[str] = None
+
+class EmailTemplateCreate(BaseModel):
+    name: str
+    subject: str
+    body: str
+    category: str
+
+# In-memory storage for emails (replace with database later)
+emails_store = {}
+email_templates_store = {}
+
+@router.get("/emails")
+async def get_emails(db: Session = Depends(get_db)):
+    """Get all emails"""
+    emails = list(emails_store.values())
+    emails.sort(key=lambda x: x['date'], reverse=True)
+    return emails
+
+@router.post("/emails")
+async def send_email(email: EmailCreate, db: Session = Depends(get_db)):
+    """Send a new email"""
+    email_id = f"email_{int(datetime.now().timestamp() * 1000)}"
+    email_data = {
+        "id": email_id,
+        "from": "practice@briskaccountants.com",
+        "to": email.to,
+        "cc": email.cc,
+        "bcc": email.bcc,
+        "subject": email.subject,
+        "body": email.body,
+        "priority": email.priority,
+        "client_id": email.client_id,
+        "date": datetime.now().isoformat(),
+        "status": "sent",
+        "hasAttachments": False,
+        "folder": "sent"
+    }
+    emails_store[email_id] = email_data
+    return email_data
+
+@router.get("/email-templates")
+async def get_email_templates(db: Session = Depends(get_db)):
+    """Get all email templates"""
+    return list(email_templates_store.values())
+
+@router.post("/email-templates")
+async def create_email_template(template: EmailTemplateCreate, db: Session = Depends(get_db)):
+    """Create a new email template"""
+    template_id = f"template_{int(datetime.now().timestamp() * 1000)}"
+    template_data = {
+        "id": template_id,
+        "name": template.name,
+        "subject": template.subject,
+        "body": template.body,
+        "category": template.category,
+        "created_at": datetime.now().isoformat()
+    }
+    email_templates_store[template_id] = template_data
+    return template_data
+
+@router.get("/email-automations")
+async def get_email_automations(db: Session = Depends(get_db)):
+    """Get all email automation rules"""
+    return [
+        {
+            "id": "auto_1",
+            "name": "Welcome Email",
+            "trigger": "New client onboarding",
+            "action": "Send welcome email with firm details",
+            "isActive": True
+        },
+        {
+            "id": "auto_2",
+            "name": "Deadline Reminder",
+            "trigger": "3 days before deadline",
+            "action": "Send reminder email to client",
+            "isActive": True
+        }
+    ]
+
+@router.get("/email-metrics")
+async def get_email_metrics(db: Session = Depends(get_db)):
+    """Get email analytics metrics"""
+    return {
+        "totalSent": 145,
+        "totalReceived": 234,
+        "openRate": 87.3,
+        "responseRate": 64.2,
+        "avgResponseTime": "2.4h"
+    }

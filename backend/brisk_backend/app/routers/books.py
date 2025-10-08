@@ -676,3 +676,204 @@ def get_bank_transactions(
             "status": "reconciled" if txn.reference else "pending"
         } for txn in transactions
     ]
+
+invoice_templates_storage = {}
+
+class InvoiceTemplateCreate(BaseModel):
+    name: str
+    description: str
+    category: str
+    primaryColor: str
+    secondaryColor: str
+    fontFamily: str
+    headerText: str
+    footerText: str
+    includeCompanyDetails: bool
+    includeLogo: bool
+    showPaymentTerms: bool
+    showTaxBreakdown: bool
+
+@router.get("/invoice/templates")
+def get_invoice_templates(request: Request = None):
+    tenant_id = request.state.tenant_id if request else "default"
+    
+    if tenant_id not in invoice_templates_storage:
+        invoice_templates_storage[tenant_id] = [
+            {
+                "id": "inv-tpl-1",
+                "name": "Modern Professional Invoice",
+                "description": "Clean, modern invoice design with bold typography and structured layout",
+                "category": "modern",
+                "primaryColor": "#1e3a8a",
+                "secondaryColor": "#3b82f6",
+                "fontFamily": "Arial",
+                "headerText": "INVOICE",
+                "footerText": "Thank you for your business",
+                "includeCompanyDetails": True,
+                "includeLogo": True,
+                "showPaymentTerms": True,
+                "showTaxBreakdown": True,
+                "usageCount": 456,
+                "lastUsed": "2024-10-05",
+                "createdAt": "2024-01-15",
+                "createdBy": "System"
+            },
+            {
+                "id": "inv-tpl-2",
+                "name": "Classic Business Invoice",
+                "description": "Traditional business invoice with formal styling",
+                "category": "classic",
+                "primaryColor": "#059669",
+                "secondaryColor": "#047857",
+                "fontFamily": "Times New Roman",
+                "headerText": "Tax Invoice",
+                "footerText": "Payment due within 30 days",
+                "includeCompanyDetails": True,
+                "includeLogo": True,
+                "showPaymentTerms": True,
+                "showTaxBreakdown": True,
+                "usageCount": 234,
+                "lastUsed": "2024-10-04",
+                "createdAt": "2024-02-10",
+                "createdBy": "System"
+            },
+            {
+                "id": "inv-tpl-3",
+                "name": "Minimal Clean Invoice",
+                "description": "Minimalist invoice design focusing on clarity",
+                "category": "minimal",
+                "primaryColor": "#6B7280",
+                "secondaryColor": "#4B5563",
+                "fontFamily": "Calibri",
+                "headerText": "Invoice",
+                "footerText": "Please remit payment promptly",
+                "includeCompanyDetails": True,
+                "includeLogo": False,
+                "showPaymentTerms": True,
+                "showTaxBreakdown": False,
+                "usageCount": 178,
+                "lastUsed": "2024-10-03",
+                "createdAt": "2024-03-20",
+                "createdBy": "System"
+            },
+            {
+                "id": "inv-tpl-4",
+                "name": "Corporate Elite Invoice",
+                "description": "Professional corporate invoice template with premium styling",
+                "category": "professional",
+                "primaryColor": "#7C3AED",
+                "secondaryColor": "#8B5CF6",
+                "fontFamily": "Verdana",
+                "headerText": "Professional Invoice",
+                "footerText": "All amounts in GBP unless stated",
+                "includeCompanyDetails": True,
+                "includeLogo": True,
+                "showPaymentTerms": True,
+                "showTaxBreakdown": True,
+                "usageCount": 312,
+                "lastUsed": "2024-10-06",
+                "createdAt": "2024-04-05",
+                "createdBy": "System"
+            },
+            {
+                "id": "inv-tpl-5",
+                "name": "Creative Studio Invoice",
+                "description": "Creative and colorful invoice design",
+                "category": "creative",
+                "primaryColor": "#EC4899",
+                "secondaryColor": "#DB2777",
+                "fontFamily": "Georgia",
+                "headerText": "Invoice for Services",
+                "footerText": "We appreciate your business",
+                "includeCompanyDetails": True,
+                "includeLogo": True,
+                "showPaymentTerms": False,
+                "showTaxBreakdown": True,
+                "usageCount": 145,
+                "lastUsed": "2024-10-02",
+                "createdAt": "2024-05-12",
+                "createdBy": "System"
+            }
+        ]
+    
+    return {"data": invoice_templates_storage[tenant_id]}
+
+@router.post("/invoice/templates")
+def create_invoice_template(
+    template_data: InvoiceTemplateCreate,
+    request: Request = None
+):
+    tenant_id = request.state.tenant_id if request else "default"
+    
+    if tenant_id not in invoice_templates_storage:
+        invoice_templates_storage[tenant_id] = []
+    
+    new_template = {
+        "id": f"inv-tpl-{len(invoice_templates_storage[tenant_id]) + 1}",
+        **template_data.dict(),
+        "usageCount": 0,
+        "lastUsed": None,
+        "createdAt": datetime.now().isoformat(),
+        "createdBy": "User"
+    }
+    
+    invoice_templates_storage[tenant_id].append(new_template)
+    return {"data": new_template}
+
+@router.put("/invoice/templates/{template_id}")
+def update_invoice_template(
+    template_id: str,
+    template_data: InvoiceTemplateCreate,
+    request: Request = None
+):
+    tenant_id = request.state.tenant_id if request else "default"
+    
+    if tenant_id not in invoice_templates_storage:
+        raise HTTPException(status_code=404, detail="No templates found")
+    
+    templates = invoice_templates_storage[tenant_id]
+    for i, template in enumerate(templates):
+        if template["id"] == template_id:
+            templates[i] = {
+                **template,
+                **template_data.dict(),
+                "lastUsed": datetime.now().isoformat()
+            }
+            return {"data": templates[i]}
+    
+    raise HTTPException(status_code=404, detail="Template not found")
+
+@router.delete("/invoice/templates/{template_id}")
+def delete_invoice_template(
+    template_id: str,
+    request: Request = None
+):
+    tenant_id = request.state.tenant_id if request else "default"
+    
+    if tenant_id not in invoice_templates_storage:
+        raise HTTPException(status_code=404, detail="No templates found")
+    
+    templates = invoice_templates_storage[tenant_id]
+    invoice_templates_storage[tenant_id] = [t for t in templates if t["id"] != template_id]
+    
+    return {"message": "Template deleted successfully"}
+
+@router.get("/invoice/template-metrics")
+def get_invoice_template_metrics(request: Request = None):
+    tenant_id = request.state.tenant_id if request else "default"
+    
+    if tenant_id not in invoice_templates_storage:
+        invoice_templates_storage[tenant_id] = []
+    
+    templates = invoice_templates_storage[tenant_id]
+    total_invoices = sum(t.get("usageCount", 0) for t in templates)
+    most_used = max(templates, key=lambda t: t.get("usageCount", 0))["name"] if templates else "N/A"
+    
+    return {
+        "data": {
+            "totalTemplates": len(templates),
+            "totalInvoicesGenerated": total_invoices,
+            "avgProcessingTime": "1.8s",
+            "mostUsedTemplate": most_used
+        }
+    }

@@ -1308,59 +1308,56 @@ const CharityAccounts: React.FC = () => {
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
-          {Object.entries(menuStructure).map(([categoryKey, category]) => (
-            <div key={categoryKey}>
-              <button
-                onClick={() => toggleCategory(categoryKey)}
-                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-blue-900 hover:bg-gray-100 rounded-[2px]"
-              >
-                <div className="flex items-center gap-2">
-                  <category.icon className="h-4 w-4" />
-                  {category.label}
-                </div>
-                {expandedCategories.includes(categoryKey) ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
+          {Object.entries(menuStructure).map(([categoryKey, category]) => {
+            const isActive = activeMainTab === categoryKey
+            const isExpanded = expandedCategories.includes(categoryKey)
+            const Icon = category.icon
+            
+            return (
+              <div key={categoryKey}>
+                <button
+                  onClick={() => handleMainTabClick(categoryKey)}
+                  className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
+                    isActive 
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                      : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <Icon className="h-4 w-4 mr-2" />
+                    <span>{category.label}</span>
+                  </div>
+                  {category.hasSubTabs && (
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  )}
+                </button>
+                
+                {category.hasSubTabs && isExpanded && category.subTabs && (
+                  <div className="ml-4 mt-1 space-y-1">
+                    {Object.entries(category.subTabs).map(([subKey, subTab]) => {
+                      const SubIcon = subTab.icon
+                      const isSubActive = activeSubTab === subKey && activeMainTab === categoryKey
+                      
+                      return (
+                        <button
+                          key={subKey}
+                          onClick={() => handleSubTabClick(categoryKey, subKey)}
+                          className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
+                            isSubActive 
+                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                              : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
+                          }`}
+                        >
+                          <SubIcon className="h-4 w-4 mr-2" />
+                          <span>{subTab.label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
                 )}
-              </button>
-              
-              {expandedCategories.includes(categoryKey) && category.subTabs && (
-                <div className="ml-6 mt-1 space-y-1">
-                  {Object.entries(category.subTabs).map(([subKey, subTab]) => (
-                    <button
-                      key={subKey}
-                      onClick={() => {
-                        handleSubTabClick(categoryKey, subKey)
-                      }}
-                      className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
-                        activeMainTab === categoryKey && activeSubTab === subKey
-                          ? 'bg-brisk-primary text-white'
-                          : 'text-blue-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      {subTab.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-              
-              {!category.subTabs && (
-                <div className="ml-6 mt-1">
-                  <button
-                    onClick={() => handleMainTabClick(categoryKey)}
-                    className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
-                      activeMainTab === categoryKey
-                        ? 'bg-brisk-primary text-white'
-                        : 'text-blue-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    View {category.label}
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+              </div>
+            )
+          })}
         </nav>
       </div>
 

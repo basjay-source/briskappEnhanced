@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://app-lhktufoy.fly.dev/api/v1'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
 
 interface TrialBalanceEntry {
   code: string;
@@ -85,6 +85,14 @@ class ApiClient {
   async delete<T = any>(url: string): Promise<{ data: T }> {
     const result = await this.request<T>(url, {
       method: 'DELETE'
+    })
+    return { data: result }
+  }
+
+  async patch<T = any>(url: string, data?: any): Promise<{ data: T }> {
+    const result = await this.request<T>(url, {
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined
     })
     return { data: result }
   }
