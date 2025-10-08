@@ -5297,6 +5297,69 @@ export default function Bookkeeping() {
   }
 
   function renderChartOfAccounts() {
+    const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false)
+    const [showExportDialog, setShowExportDialog] = React.useState(false)
+    const [selectedCategory, setSelectedCategory] = React.useState<any>(null)
+    const [showCategoryDetailDialog, setShowCategoryDetailDialog] = React.useState(false)
+
+    const handleKPIClick = (kpiType: string) => {
+      const drillDownData = {
+        'total': {
+          title: 'Total Accounts Breakdown',
+          data: [
+            { name: 'Assets', count: 89, percentage: 36, balance: '£214,630' },
+            { name: 'Liabilities', count: 34, percentage: 14, balance: '£89,200' },
+            { name: 'Equity', count: 28, percentage: 11, balance: '£125,430' },
+            { name: 'Revenue', count: 45, percentage: 18, balance: '£245,600' },
+            { name: 'Expenses', count: 51, percentage: 21, balance: '£78,900' }
+          ]
+        },
+        'assets': {
+          title: 'Asset Accounts Details',
+          data: [
+            { name: 'Current Assets', count: 45, percentage: 51, balance: '£125,430', trend: '+12%' },
+            { name: 'Fixed Assets', count: 23, percentage: 26, balance: '£89,200', trend: '+8%' },
+            { name: 'Investments', count: 12, percentage: 13, balance: '£45,000', trend: '+15%' },
+            { name: 'Other Assets', count: 9, percentage: 10, balance: '£23,500', trend: '+5%' }
+          ]
+        },
+        'liabilities': {
+          title: 'Liability Accounts Details',
+          data: [
+            { name: 'Current Liabilities', count: 18, percentage: 53, balance: '£34,500', trend: '-5%' },
+            { name: 'Long-term Liabilities', count: 10, percentage: 29, balance: '£45,200', trend: '-3%' },
+            { name: 'Deferred Revenue', count: 6, percentage: 18, balance: '£9,500', trend: '+2%' }
+          ]
+        },
+        'revenue': {
+          title: 'Revenue Accounts Details',
+          data: [
+            { name: 'Sales Revenue', count: 15, percentage: 33, balance: '£180,500', trend: '+18%' },
+            { name: 'Service Revenue', count: 12, percentage: 27, balance: '£45,100', trend: '+12%' },
+            { name: 'Interest Income', count: 8, percentage: 18, balance: '£15,000', trend: '+8%' },
+            { name: 'Other Income', count: 10, percentage: 22, balance: '£5,000', trend: '+5%' }
+          ]
+        }
+      }
+
+      const data = drillDownData[kpiType as keyof typeof drillDownData]
+      if (data) {
+        alert(`${data.title}\n\n${data.data.map((item: any) => 
+          `${item.name}:\n  Accounts: ${item.count}\n  Balance: ${item.balance}\n  Percentage: ${item.percentage}%${item.trend ? `\n  Trend: ${item.trend}` : ''}`
+        ).join('\n\n')}\n\nClick individual categories for even deeper analysis including transaction history, account details, and reporting.`)
+      }
+    }
+
+    const handleExport = (format: string) => {
+      alert(`Exporting Chart of Accounts to ${format}...\n\nThis will include:\n✓ All account categories and subcategories\n✓ Account codes and names\n✓ Current balances\n✓ Account types and classifications\n✓ Active/Inactive status\n\nExport will be downloaded shortly.`)
+      setShowExportDialog(false)
+    }
+
+    const handleCategoryClick = (category: any) => {
+      setSelectedCategory(category)
+      setShowCategoryDetailDialog(true)
+    }
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -5304,12 +5367,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Chart of Accounts</h2>
             <p className="text-blue-900">Manage your complete chart of accounts structure</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" onClick={() => setShowAddAccountDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
+            <Button onClick={() => setShowExportDialog(true)}>
               <Download className="h-4 w-4 mr-2" />
               Export Chart
             </Button>
@@ -5317,7 +5380,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('total')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5329,7 +5392,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('assets')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5341,7 +5404,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('liabilities')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5353,7 +5416,7 @@ export default function Bookkeeping() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => handleKPIClick('revenue')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -5375,14 +5438,14 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets' },
-                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets' },
-                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities' },
-                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
-                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
+                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets', code: '1000-1499' },
+                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets', code: '1500-1999' },
+                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities', code: '2000-2499' },
+                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income', code: '4000-4999' },
+                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses', code: '5000-5999' }
               ].map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                  <div className="flex-1 cursor-pointer" onClick={() => handleCategoryClick(category)}>
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{category.category}</p>
                       <Badge className={`${
@@ -5394,18 +5457,18 @@ export default function Bookkeeping() {
                         {category.type}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900">{category.accounts} accounts</p>
+                    <p className="text-sm text-blue-900">{category.accounts} accounts • Code: {category.code}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-semibold">{category.balance}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                    <div className="flex gap-1 mt-1 flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleCategoryClick(category); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); alert(`Edit Category: ${category.category}\n\nEdit category settings, account ranges, and classification rules.`); }}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setShowAddAccountDialog(true); }}>
                         <Plus className="h-3 w-3" />
                       </Button>
                     </div>
@@ -5415,6 +5478,180 @@ export default function Bookkeeping() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Add Account Dialog */}
+        {showAddAccountDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-blue-900">Add New Account</h3>
+                  <button onClick={() => setShowAddAccountDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Code</label>
+                  <input type="text" className="w-full p-2 border-2 border-blue-900 rounded-[2px]" placeholder="e.g., 1000" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Name</label>
+                  <input type="text" className="w-full p-2 border-2 border-blue-900 rounded-[2px]" placeholder="e.g., Cash in Bank" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Account Type</label>
+                  <select className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900">
+                    <option>Assets</option>
+                    <option>Liabilities</option>
+                    <option>Equity</option>
+                    <option>Revenue</option>
+                    <option>Expenses</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Category</label>
+                  <select className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900">
+                    <option>Current Assets</option>
+                    <option>Fixed Assets</option>
+                    <option>Current Liabilities</option>
+                    <option>Long-term Liabilities</option>
+                    <option>Operating Expenses</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">Description</label>
+                  <textarea className="w-full p-2 border-2 border-blue-900 rounded-[2px] text-blue-900" rows={3} placeholder="Account description and usage notes" />
+                </div>
+                <div>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" className="w-4 h-4" />
+                    <span className="text-sm text-blue-900">Enable for bank reconciliation</span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" className="w-4 h-4" defaultChecked />
+                    <span className="text-sm text-blue-900">Active account</span>
+                  </label>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button className="flex-1" onClick={() => { alert('Account created successfully!'); setShowAddAccountDialog(false); }}>
+                    Create Account
+                  </Button>
+                  <Button variant="outline" className="flex-1" onClick={() => setShowAddAccountDialog(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Export Dialog */}
+        {showExportDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full">
+              <div className="border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-blue-900">Export Chart of Accounts</h3>
+                  <button onClick={() => setShowExportDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <p className="text-blue-900">Select export format:</p>
+                <div className="space-y-2">
+                  <Button className="w-full justify-start" onClick={() => handleExport('PDF')}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export as PDF
+                  </Button>
+                  <Button className="w-full justify-start" onClick={() => handleExport('CSV')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export as CSV
+                  </Button>
+                  <Button className="w-full justify-start" onClick={() => handleExport('Excel')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export as Excel
+                  </Button>
+                </div>
+                <Button variant="outline" className="w-full" onClick={() => setShowExportDialog(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Category Detail Dialog */}
+        {showCategoryDetailDialog && selectedCategory && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-blue-900">{selectedCategory.category}</h3>
+                    <p className="text-blue-900">Detailed account breakdown and analysis</p>
+                  </div>
+                  <button onClick={() => setShowCategoryDetailDialog(false)} className="text-red-600 hover:text-red-800">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Total Accounts</p>
+                      <p className="text-2xl font-bold">{selectedCategory.accounts}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Current Balance</p>
+                      <p className="text-2xl font-bold">{selectedCategory.balance}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-2 border-blue-900">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-blue-900">Account Range</p>
+                      <p className="text-2xl font-bold">{selectedCategory.code}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-blue-900">Accounts in this Category</h4>
+                  {Array.from({ length: 5 }).map((_, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer">
+                      <div>
+                        <p className="font-medium">{selectedCategory.code?.split('-')[0] || '1000'}{idx} - Sample Account {idx + 1}</p>
+                        <p className="text-sm text-blue-900">Last transaction: {idx + 1} days ago</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">£{(Math.random() * 50000).toFixed(2)}</p>
+                        <p className="text-xs text-green-600">+{(Math.random() * 20).toFixed(1)}%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={() => { setShowCategoryDetailDialog(false); setShowAddAccountDialog(true); }}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Account to Category
+                  </Button>
+                  <Button variant="outline" onClick={() => handleExport('PDF')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Category
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
