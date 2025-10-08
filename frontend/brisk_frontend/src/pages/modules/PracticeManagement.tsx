@@ -26,7 +26,13 @@ import {
   UserPlus,
   Upload,
   ImageIcon,
-  Eye
+  Eye,
+  Zap,
+  Play,
+  CheckSquare,
+  Bell,
+  RefreshCw,
+  Search
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -179,12 +185,30 @@ export default function PracticeManagement() {
     category: 'custom'
   })
 
+  const [automationRules, setAutomationRules] = useState<any[]>([])
+  const [isAutomationDialogOpen, setIsAutomationDialogOpen] = useState(false)
+  const [editingAutomation, setEditingAutomation] = useState<any | null>(null)
+  const [automationFormData, setAutomationFormData] = useState({
+    name: '',
+    description: '',
+    trigger_type: 'event',
+    trigger_event: '',
+    trigger_schedule: '',
+    conditions: [] as any[],
+    actions: [] as any[],
+    status: 'active',
+    priority: 'medium'
+  })
+  const [activeAutomationTab, setActiveAutomationTab] = useState('rules')
+  const [automationSearchTerm, setAutomationSearchTerm] = useState('')
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
     loadDeadlines()
     loadTimeEntries()
     loadWorkflows()
+    loadAutomationRules()
   }, [])
 
   const loadDashboardData = async () => {
@@ -672,6 +696,159 @@ export default function PracticeManagement() {
       console.error('Failed to toggle workflow status:', err)
       alert('Failed to toggle workflow status')
     }
+  }
+
+  const loadAutomationRules = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/automation-rules')
+      setAutomationRules(response.data)
+    } catch (err: any) {
+      console.error('Failed to load automation rules:', err)
+      setAutomationRules([])
+    }
+  }
+
+  const openAutomationDialog = (rule: any | null = null) => {
+    if (rule) {
+      setEditingAutomation(rule)
+      setAutomationFormData({
+        name: rule.name,
+        description: rule.description,
+        trigger_type: rule.trigger_type,
+        trigger_event: rule.trigger_event || '',
+        trigger_schedule: rule.trigger_schedule || '',
+        conditions: rule.conditions || [],
+        actions: rule.actions || [],
+        status: rule.status,
+        priority: rule.priority
+      })
+    } else {
+      setEditingAutomation(null)
+      setAutomationFormData({
+        name: '',
+        description: '',
+        trigger_type: 'event',
+        trigger_event: '',
+        trigger_schedule: '',
+        conditions: [],
+        actions: [],
+        status: 'active',
+        priority: 'medium'
+      })
+    }
+    setIsAutomationDialogOpen(true)
+  }
+
+  const closeAutomationDialog = () => {
+    setIsAutomationDialogOpen(false)
+    setEditingAutomation(null)
+    setAutomationFormData({
+      name: '',
+      description: '',
+      trigger_type: 'event',
+      trigger_event: '',
+      trigger_schedule: '',
+      conditions: [],
+      actions: [],
+      status: 'active',
+      priority: 'medium'
+    })
+  }
+
+  const handleCreateAutomation = async () => {
+    try {
+      const response = await api.post('/api/v1/practice/automation-rules', automationFormData)
+      setAutomationRules([...automationRules, response.data])
+      closeAutomationDialog()
+      alert('Automation rule created successfully!')
+    } catch (err: any) {
+      console.error('Failed to create automation:', err)
+      alert('Failed to create automation: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateAutomation = async () => {
+    if (!editingAutomation) return
+    try {
+      const response = await api.put(`/api/v1/practice/automation-rules/${editingAutomation.id}`, automationFormData)
+      setAutomationRules(automationRules.map(r => r.id === editingAutomation.id ? response.data : r))
+      closeAutomationDialog()
+      alert('Automation rule updated successfully!')
+    } catch (err: any) {
+      console.error('Failed to update automation:', err)
+      alert('Failed to update automation: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveAutomation = () => {
+    if (editingAutomation) {
+      handleUpdateAutomation()
+    } else {
+      handleCreateAutomation()
+    }
+  }
+
+  const handleDeleteAutomation = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this automation rule?')) return
+    try {
+      await api.delete(`/api/v1/practice/automation-rules/${id}`)
+      setAutomationRules(automationRules.filter(r => r.id !== id))
+      alert('Automation rule deleted successfully!')
+    } catch (err: any) {
+      console.error('Failed to delete automation:', err)
+      alert('Failed to delete automation')
+    }
+  }
+
+  const handleToggleAutomationStatus = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
+      const response = await api.patch(`/api/v1/practice/automation-rules/${id}`, { status: newStatus })
+      setAutomationRules(automationRules.map(r => r.id === id ? response.data : r))
+    } catch (err: any) {
+      console.error('Failed to toggle automation status:', err)
+      alert('Failed to toggle automation status')
+    }
+  }
+
+  const addCondition = () => {
+    setAutomationFormData({
+      ...automationFormData,
+      conditions: [...automationFormData.conditions, { field: '', operator: 'equals', value: '' }]
+    })
+  }
+
+  const removeCondition = (index: number) => {
+    setAutomationFormData({
+      ...automationFormData,
+      conditions: automationFormData.conditions.filter((_, i) => i !== index)
+    })
+  }
+
+  const updateCondition = (index: number, field: string, value: any) => {
+    const newConditions = [...automationFormData.conditions]
+    newConditions[index] = { ...newConditions[index], [field]: value }
+    setAutomationFormData({ ...automationFormData, conditions: newConditions })
+  }
+
+  const addAction = () => {
+    setAutomationFormData({
+      ...automationFormData,
+      actions: [...automationFormData.actions, { type: 'send_email', config: {} }]
+    })
+  }
+
+  const removeAction = (index: number) => {
+    setAutomationFormData({
+      ...automationFormData,
+      actions: automationFormData.actions.filter((_, i) => i !== index)
+    })
+  }
+
+  const updateAction = (index: number, field: string, value: any) => {
+    const newActions = [...automationFormData.actions]
+    newActions[index] = { ...newActions[index], [field]: value }
+    setAutomationFormData({ ...automationFormData, actions: newActions })
   }
 
   const statusOptions = [
@@ -2900,32 +3077,624 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderWorkflowAutomation = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
-          <p className="text-blue-900">Configure automated workflow triggers and actions</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Target className="h-4 w-4 mr-2" />
-            Automation Rules
-          </Button>
-        </div>
-      </div>
+  const renderWorkflowAutomation = () => {
+    const filteredRules = automationRules.filter(rule => 
+      rule.name.toLowerCase().includes(automationSearchTerm.toLowerCase()) ||
+      rule.description?.toLowerCase().includes(automationSearchTerm.toLowerCase())
+    )
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-blue-900">Automation Rules</CardTitle>
-          <CardDescription>Configure automated workflow triggers and actions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-blue-900">Workflow automation configuration will be implemented here.</p>
-        </CardContent>
-      </Card>
-    </div>
-  )
+    const automationStats = {
+      total: automationRules.length,
+      active: automationRules.filter(r => r.status === 'active').length,
+      inactive: automationRules.filter(r => r.status === 'inactive').length,
+      executions: automationRules.reduce((sum, r) => sum + (r.executions || 0), 0)
+    }
+
+    const triggerTypes = [
+      { value: 'event', label: 'Event Trigger', icon: Zap },
+      { value: 'schedule', label: 'Scheduled', icon: Clock },
+      { value: 'manual', label: 'Manual', icon: Play }
+    ]
+
+    const actionTypes = [
+      { value: 'send_email', label: 'Send Email', icon: Mail },
+      { value: 'create_task', label: 'Create Task', icon: CheckSquare },
+      { value: 'update_status', label: 'Update Status', icon: Activity },
+      { value: 'send_notification', label: 'Send Notification', icon: Bell },
+      { value: 'create_document', label: 'Create Document', icon: FileText },
+      { value: 'assign_user', label: 'Assign User', icon: Users }
+    ]
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
+            <p className="text-blue-900">Configure automated workflow triggers and actions</p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={() => openAutomationDialog()}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Rule
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => loadAutomationRules()}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex border-b border-blue-900">
+          {[
+            { id: 'rules', label: 'Automation Rules', icon: Zap },
+            { id: 'triggers', label: 'Trigger Types', icon: Target },
+            { id: 'actions', label: 'Action Types', icon: Activity },
+            { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveAutomationTab(tab.id)}
+              className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                activeAutomationTab === tab.id
+                  ? 'text-white bg-brisk-primary border-b-2 border-brisk-primary'
+                  : 'text-blue-900 hover:bg-blue-50'
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeAutomationTab === 'rules' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Total Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-900">{automationStats.total}</div>
+                  <p className="text-xs text-gray-500">All automation rules</p>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Active Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">{automationStats.active}</div>
+                  <p className="text-xs text-gray-500">Currently running</p>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Inactive Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-gray-600">{automationStats.inactive}</div>
+                  <p className="text-xs text-gray-500">Paused or disabled</p>
+                </CardContent>
+              </Card>
+
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Total Executions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-900">{automationStats.executions}</div>
+                  <p className="text-xs text-gray-500">All time runs</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-blue-900">Automation Rules</CardTitle>
+                  <div className="relative w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                    <Input
+                      placeholder="Search rules..."
+                      value={automationSearchTerm}
+                      onChange={(e) => setAutomationSearchTerm(e.target.value)}
+                      className="pl-10 border-blue-900 text-blue-900"
+                    />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {filteredRules.length === 0 ? (
+                  <div className="text-center py-8 text-blue-900">
+                    <Zap className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-lg font-medium">No automation rules found</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {automationSearchTerm ? 'Try adjusting your search' : 'Create your first automation rule to get started'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredRules.map((rule) => (
+                      <div
+                        key={rule.id}
+                        className="border border-blue-900 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-lg font-semibold text-blue-900">{rule.name}</h3>
+                              <span className={`px-2 py-1 text-xs font-medium rounded ${
+                                rule.status === 'active' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {rule.status}
+                              </span>
+                              <span className={`px-2 py-1 text-xs font-medium rounded ${
+                                rule.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                rule.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-blue-100 text-blue-800'
+                              }`}>
+                                {rule.priority}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1">{rule.description}</p>
+                            <div className="flex items-center gap-4 mt-3 text-sm text-blue-900">
+                              <span className="flex items-center gap-1">
+                                <Target className="h-4 w-4" />
+                                {rule.trigger_type === 'event' ? 'Event' : rule.trigger_type === 'schedule' ? 'Scheduled' : 'Manual'}
+                              </span>
+                              {rule.trigger_event && (
+                                <span className="flex items-center gap-1">
+                                  <Activity className="h-4 w-4" />
+                                  {rule.trigger_event}
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1">
+                                <CheckSquare className="h-4 w-4" />
+                                {rule.conditions?.length || 0} Conditions
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Zap className="h-4 w-4" />
+                                {rule.actions?.length || 0} Actions
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Play className="h-4 w-4" />
+                                {rule.executions || 0} Executions
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 ml-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleToggleAutomationStatus(rule.id, rule.status)}
+                            >
+                              {rule.status === 'active' ? (
+                                <>
+                                  <Pause className="h-4 w-4 mr-1" />
+                                  Pause
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="h-4 w-4 mr-1" />
+                                  Activate
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openAutomationDialog(rule)}
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteAutomation(rule.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'triggers' && (
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Available Trigger Types</CardTitle>
+                <CardDescription>Configure when automation rules should execute</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {triggerTypes.map((trigger) => (
+                    <div key={trigger.value} className="border border-blue-900 rounded-lg p-4">
+                      <trigger.icon className="h-8 w-8 text-brisk-primary mb-3" />
+                      <h3 className="font-semibold text-blue-900 mb-2">{trigger.label}</h3>
+                      <p className="text-sm text-gray-600">
+                        {trigger.value === 'event' && 'Trigger on specific system events like client creation, job completion, or deadline approach'}
+                        {trigger.value === 'schedule' && 'Run automation on a recurring schedule (daily, weekly, monthly)'}
+                        {trigger.value === 'manual' && 'Execute automation manually when needed'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'actions' && (
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Available Action Types</CardTitle>
+                <CardDescription>Actions that can be performed by automation rules</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {actionTypes.map((action) => (
+                    <div key={action.value} className="border border-blue-900 rounded-lg p-4">
+                      <action.icon className="h-8 w-8 text-brisk-primary mb-3" />
+                      <h3 className="font-semibold text-blue-900 mb-2">{action.label}</h3>
+                      <p className="text-sm text-gray-600">
+                        {action.value === 'send_email' && 'Send automated email notifications to clients or team members'}
+                        {action.value === 'create_task' && 'Automatically create tasks and assign to users'}
+                        {action.value === 'update_status' && 'Update job or deadline status based on conditions'}
+                        {action.value === 'send_notification' && 'Send in-app notifications to relevant users'}
+                        {action.value === 'create_document' && 'Generate documents from templates'}
+                        {action.value === 'assign_user' && 'Assign jobs or tasks to specific users'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'analytics' && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Execution Statistics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Total Executions</span>
+                      <span className="text-2xl font-bold text-blue-900">{automationStats.executions}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Active Rules</span>
+                      <span className="text-2xl font-bold text-green-600">{automationStats.active}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Average per Rule</span>
+                      <span className="text-2xl font-bold text-blue-900">
+                        {automationStats.total > 0 ? Math.round(automationStats.executions / automationStats.total) : 0}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Rule Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-blue-900">Active</span>
+                        <span className="text-blue-900">{automationStats.active}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-600 h-2 rounded-full" 
+                          style={{ width: `${automationStats.total > 0 ? (automationStats.active / automationStats.total) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-blue-900">Inactive</span>
+                        <span className="text-blue-900">{automationStats.inactive}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gray-600 h-2 rounded-full" 
+                          style={{ width: `${automationStats.total > 0 ? (automationStats.inactive / automationStats.total) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Top Performing Rules</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {automationRules.length === 0 ? (
+                  <p className="text-center text-blue-900 py-8">No automation rules to display</p>
+                ) : (
+                  <div className="space-y-3">
+                    {[...automationRules]
+                      .sort((a, b) => (b.executions || 0) - (a.executions || 0))
+                      .slice(0, 5)
+                      .map((rule) => (
+                        <div key={rule.id} className="flex justify-between items-center border-b border-blue-900 pb-2">
+                          <div>
+                            <p className="font-medium text-blue-900">{rule.name}</p>
+                            <p className="text-sm text-gray-500">{rule.trigger_type}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-blue-900">{rule.executions || 0}</p>
+                            <p className="text-xs text-gray-500">executions</p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <Dialog open={isAutomationDialogOpen} onOpenChange={setIsAutomationDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-blue-900">
+                {editingAutomation ? 'Edit Automation Rule' : 'Create Automation Rule'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900">Rule Name *</Label>
+                  <Input
+                    value={automationFormData.name}
+                    onChange={(e) => setAutomationFormData({ ...automationFormData, name: e.target.value })}
+                    placeholder="Enter rule name"
+                    className="border-blue-900 text-blue-900"
+                  />
+                </div>
+                <div>
+                  <Label className="text-blue-900">Priority</Label>
+                  <Select 
+                    value={automationFormData.priority}
+                    onValueChange={(value) => setAutomationFormData({ ...automationFormData, priority: value })}
+                  >
+                    <SelectTrigger className="border-blue-900 text-blue-900">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-blue-900">Description</Label>
+                <Textarea
+                  value={automationFormData.description}
+                  onChange={(e) => setAutomationFormData({ ...automationFormData, description: e.target.value })}
+                  placeholder="Describe what this rule does"
+                  rows={3}
+                  className="border-blue-900 text-blue-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900">Trigger Type *</Label>
+                  <Select 
+                    value={automationFormData.trigger_type}
+                    onValueChange={(value) => setAutomationFormData({ ...automationFormData, trigger_type: value })}
+                  >
+                    <SelectTrigger className="border-blue-900 text-blue-900">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="event">Event Trigger</SelectItem>
+                      <SelectItem value="schedule">Scheduled</SelectItem>
+                      <SelectItem value="manual">Manual</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {automationFormData.trigger_type === 'event' && (
+                  <div>
+                    <Label className="text-blue-900">Trigger Event</Label>
+                    <Input
+                      value={automationFormData.trigger_event}
+                      onChange={(e) => setAutomationFormData({ ...automationFormData, trigger_event: e.target.value })}
+                      placeholder="e.g., client_created, job_completed"
+                      className="border-blue-900 text-blue-900"
+                    />
+                  </div>
+                )}
+                {automationFormData.trigger_type === 'schedule' && (
+                  <div>
+                    <Label className="text-blue-900">Schedule</Label>
+                    <Input
+                      value={automationFormData.trigger_schedule}
+                      onChange={(e) => setAutomationFormData({ ...automationFormData, trigger_schedule: e.target.value })}
+                      placeholder="e.g., daily, weekly, monthly"
+                      className="border-blue-900 text-blue-900"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-blue-900">Conditions</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addCondition}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Condition
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {automationFormData.conditions.map((condition, index) => (
+                    <div key={index} className="flex gap-2 items-start border border-blue-900 rounded p-2">
+                      <Input
+                        placeholder="Field"
+                        value={condition.field || ''}
+                        onChange={(e) => updateCondition(index, 'field', e.target.value)}
+                        className="flex-1 border-blue-900 text-blue-900"
+                      />
+                      <Select
+                        value={condition.operator || 'equals'}
+                        onValueChange={(value) => updateCondition(index, 'operator', value)}
+                      >
+                        <SelectTrigger className="w-32 border-blue-900 text-blue-900">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="equals">Equals</SelectItem>
+                          <SelectItem value="not_equals">Not Equals</SelectItem>
+                          <SelectItem value="contains">Contains</SelectItem>
+                          <SelectItem value="greater_than">Greater Than</SelectItem>
+                          <SelectItem value="less_than">Less Than</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        placeholder="Value"
+                        value={condition.value || ''}
+                        onChange={(e) => updateCondition(index, 'value', e.target.value)}
+                        className="flex-1 border-blue-900 text-blue-900"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeCondition(index)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-blue-900">Actions</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addAction}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Action
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {automationFormData.actions.map((action, index) => (
+                    <div key={index} className="flex gap-2 items-center border border-blue-900 rounded p-2">
+                      <Select
+                        value={action.type || 'send_email'}
+                        onValueChange={(value) => updateAction(index, 'type', value)}
+                      >
+                        <SelectTrigger className="flex-1 border-blue-900 text-blue-900">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="send_email">Send Email</SelectItem>
+                          <SelectItem value="create_task">Create Task</SelectItem>
+                          <SelectItem value="update_status">Update Status</SelectItem>
+                          <SelectItem value="send_notification">Send Notification</SelectItem>
+                          <SelectItem value="create_document">Create Document</SelectItem>
+                          <SelectItem value="assign_user">Assign User</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeAction(index)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-blue-900">Status</Label>
+                <Select 
+                  value={automationFormData.status}
+                  onValueChange={(value) => setAutomationFormData({ ...automationFormData, status: value })}
+                >
+                  <SelectTrigger className="border-blue-900 text-blue-900">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={closeAutomationDialog}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-brisk-primary hover:bg-brisk-primary-600"
+                onClick={handleSaveAutomation}
+                disabled={!automationFormData.name}
+              >
+                {editingAutomation ? 'Update Rule' : 'Create Rule'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    )
+  }
 
   const renderCapacityPlanning = () => (
     <div className="space-y-6">

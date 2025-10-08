@@ -1020,3 +1020,85 @@ async def patch_workflow(workflow_id: str, data: Dict[str, Any], db: Session = D
 async def delete_workflow(workflow_id: str, db: Session = Depends(get_db)):
     """Delete a workflow"""
     return {"message": "Workflow deleted successfully"}
+
+class AutomationRuleCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    trigger_type: str = 'event'
+    trigger_event: Optional[str] = None
+    trigger_schedule: Optional[str] = None
+    conditions: Optional[List[Any]] = []
+    actions: Optional[List[Any]] = []
+    status: str = 'active'
+    priority: str = 'medium'
+
+class AutomationRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger_type: Optional[str] = None
+    trigger_event: Optional[str] = None
+    trigger_schedule: Optional[str] = None
+    conditions: Optional[List[Any]] = None
+    actions: Optional[List[Any]] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+
+@router.get("/automation-rules")
+async def get_automation_rules(db: Session = Depends(get_db)):
+    """Get all automation rules"""
+    rules = []
+    return rules
+
+@router.post("/automation-rules")
+async def create_automation_rule(rule: AutomationRuleCreate, db: Session = Depends(get_db)):
+    """Create a new automation rule"""
+    rule_data = {
+        "id": f"ar_{int(datetime.now().timestamp())}",
+        "name": rule.name,
+        "description": rule.description,
+        "trigger_type": rule.trigger_type,
+        "trigger_event": rule.trigger_event,
+        "trigger_schedule": rule.trigger_schedule,
+        "conditions": rule.conditions or [],
+        "actions": rule.actions or [],
+        "status": rule.status,
+        "priority": rule.priority,
+        "executions": 0,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.put("/automation-rules/{rule_id}")
+async def update_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Update an automation rule"""
+    rule_data = {
+        "id": rule_id,
+        "name": rule.name,
+        "description": rule.description,
+        "trigger_type": rule.trigger_type,
+        "trigger_event": rule.trigger_event,
+        "trigger_schedule": rule.trigger_schedule,
+        "conditions": rule.conditions or [],
+        "actions": rule.actions or [],
+        "status": rule.status,
+        "priority": rule.priority,
+        "executions": 0,
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.patch("/automation-rules/{rule_id}")
+async def patch_automation_rule(rule_id: str, data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Patch automation rule status"""
+    rule_data = {
+        "id": rule_id,
+        "status": data.get("status", "active"),
+        "updated_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.delete("/automation-rules/{rule_id}")
+async def delete_automation_rule(rule_id: str, db: Session = Depends(get_db)):
+    """Delete an automation rule"""
+    return {"message": "Automation rule deleted successfully"}
