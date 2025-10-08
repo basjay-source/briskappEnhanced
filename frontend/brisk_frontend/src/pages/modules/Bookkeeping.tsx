@@ -66,6 +66,12 @@ export default function Bookkeeping() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   
+  const [showCreateInvoiceDialog, setShowCreateInvoiceDialog] = useState(false)
+  const [showRecordExpenseDialog, setShowRecordExpenseDialog] = useState(false)
+  const [showReconciliationDialog, setShowReconciliationDialog] = useState(false)
+  const [showGenerateReportDialog, setShowGenerateReportDialog] = useState(false)
+  const [showExportDataDialog, setShowExportDataDialog] = useState(false)
+  
   const [reportsSearchTerm, setReportsSearchTerm] = useState('')
   const [reportsSelectedPeriod, setReportsSelectedPeriod] = useState('current')
   const [reportsSelectedClient, setReportsSelectedClient] = useState('all')
@@ -385,12 +391,12 @@ export default function Bookkeeping() {
             <h2 className="text-2xl font-bold text-blue-900">Bookkeeping Dashboard</h2>
             <p className="text-blue-900">Overview of your financial position and key metrics</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" onClick={() => setShowExportDataDialog(true)}>
               <Download className="h-4 w-4 mr-2" />
               Export Data
             </Button>
-            <Button>
+            <Button onClick={() => setShowGenerateReportDialog(true)}>
               <FileText className="h-4 w-4 mr-2" />
               Generate Report
             </Button>
@@ -529,16 +535,19 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
-                  <div className="flex-1">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] cursor-pointer hover:bg-blue-50 transition-colors"
+                  onClick={() => alert('Transaction Details\n\nFrom: ABC Corp\nInvoice: INV-001\nAmount: £2,500\nDate: Today, 2:30 PM\nStatus: Received\nPayment Method: Bank Transfer\nReference: REF-12345\n\nClick to view full transaction history and related documents.')}
+                >
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium">Payment from ABC Corp</p>
-                      <Badge className="bg-green-100 text-green-800">Received</Badge>
+                      <p className="font-medium truncate">Payment from ABC Corp</p>
+                      <Badge className="bg-green-100 text-green-800 flex-shrink-0">Received</Badge>
                     </div>
-                    <p className="text-sm text-blue-900">Invoice INV-001</p>
+                    <p className="text-sm text-blue-900 truncate">Invoice INV-001</p>
                     <p className="text-xs text-gray-500">Today, 2:30 PM</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="font-semibold text-green-600">+£2,500</p>
                   </div>
                 </div>
@@ -553,19 +562,35 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowCreateInvoiceDialog(true)}
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowRecordExpenseDialog(true)}
+                >
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowReconciliationDialog(true)}
+                >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button 
+                  variant="outline" 
+                  className="justify-start border-2 border-blue-900 rounded-lg"
+                  onClick={() => setShowGenerateReportDialog(true)}
+                >
                   <FileText className="h-4 w-4 mr-2" />
                   Generate Report
                 </Button>
