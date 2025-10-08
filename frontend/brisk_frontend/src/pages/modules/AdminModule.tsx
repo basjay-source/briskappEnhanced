@@ -5,7 +5,7 @@ import { Badge } from '../../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 import ResponsiveLayout from '../../components/ResponsiveLayout';
-import InvoiceTemplateManager from '../../components/InvoiceTemplateManager';
+import InvoiceTemplates from '../../components/InvoiceTemplates';
 import AIPromptSection from '../../components/AIPromptSection';
 import KPICard from '../../components/KPICard';
 import { SearchFilterHeader } from '../../components/SearchFilterHeader';
@@ -1317,17 +1317,7 @@ const AdminModule = () => {
   );
 
   const renderTemplates = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Templates & Branding</h1>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Template
-        </Button>
-      </div>
-
-      <InvoiceTemplateManager />
-    </div>
+    <InvoiceTemplates />
   );
 
   const renderContent = () => {
