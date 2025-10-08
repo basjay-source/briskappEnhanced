@@ -298,24 +298,24 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Revenue Sources</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Practice Management</span>
-                        <span className="font-semibold">£850,450</span>
+                        <span className="text-blue-900">Practice Management</span>
+                        <span className="font-semibold text-blue-900">£850,450</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Bookkeeping</span>
-                        <span className="font-semibold">£645,230</span>
+                        <span className="text-blue-900">Bookkeeping</span>
+                        <span className="font-semibold text-blue-900">£645,230</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Tax Services</span>
-                        <span className="font-semibold">£512,350</span>
+                        <span className="text-blue-900">Tax Services</span>
+                        <span className="font-semibold text-blue-900">£512,350</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>AML Services</span>
-                        <span className="font-semibold">£387,970</span>
+                        <span className="text-blue-900">AML Services</span>
+                        <span className="font-semibold text-blue-900">£387,970</span>
                       </div>
                     </div>
                   </div>
@@ -360,20 +360,20 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">Client Segments</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Enterprise</span>
-                        <span className="font-semibold">247</span>
+                        <span className="text-blue-900">Enterprise</span>
+                        <span className="font-semibold text-blue-900">247</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>SME</span>
-                        <span className="font-semibold">645</span>
+                        <span className="text-blue-900">SME</span>
+                        <span className="font-semibold text-blue-900">645</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Sole Traders</span>
-                        <span className="font-semibold">355</span>
+                        <span className="text-blue-900">Sole Traders</span>
+                        <span className="font-semibold text-blue-900">355</span>
                       </div>
                     </div>
                   </div>
@@ -418,24 +418,24 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">By Module</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Bookkeeping</span>
-                        <span className="font-semibold">96.8%</span>
+                        <span className="text-blue-900">Bookkeeping</span>
+                        <span className="font-semibold text-blue-900">96.8%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Tax Returns</span>
-                        <span className="font-semibold">94.2%</span>
+                        <span className="text-blue-900">Tax Returns</span>
+                        <span className="font-semibold text-blue-900">94.2%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Payroll</span>
-                        <span className="font-semibold">92.1%</span>
+                        <span className="text-blue-900">Payroll</span>
+                        <span className="font-semibold text-blue-900">92.1%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>AML Compliance</span>
-                        <span className="font-semibold">89.7%</span>
+                        <span className="text-blue-900">AML Compliance</span>
+                        <span className="font-semibold text-blue-900">89.7%</span>
                       </div>
                     </div>
                   </div>
@@ -480,24 +480,24 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
                     <h4 className="font-semibold text-blue-900">By Channel</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span>Email</span>
-                        <span className="font-semibold">1.8h</span>
+                        <span className="text-blue-900">Email</span>
+                        <span className="font-semibold text-blue-900">1.8h</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Phone</span>
-                        <span className="font-semibold">0.5h</span>
+                        <span className="text-blue-900">Phone</span>
+                        <span className="font-semibold text-blue-900">0.5h</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Portal</span>
-                        <span className="font-semibold">3.2h</span>
+                        <span className="text-blue-900">Portal</span>
+                        <span className="font-semibold text-blue-900">3.2h</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Chat</span>
-                        <span className="font-semibold">0.3h</span>
+                        <span className="text-blue-900">Chat</span>
+                        <span className="font-semibold text-blue-900">0.3h</span>
                       </div>
                     </div>
                   </div>
