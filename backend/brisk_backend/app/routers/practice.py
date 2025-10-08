@@ -948,8 +948,8 @@ class WorkflowCreate(BaseModel):
     description: Optional[str] = None
     trigger_type: str = 'manual'
     trigger_event: Optional[str] = None
-    conditions: Optional[List[Dict[str, Any]]] = []
-    actions: Optional[List[Dict[str, Any]]] = []
+    conditions: Optional[List[Any]] = []
+    actions: Optional[List[Any]] = []
     status: str = 'active'
     category: str = 'custom'
 
@@ -958,8 +958,8 @@ class WorkflowUpdate(BaseModel):
     description: Optional[str] = None
     trigger_type: Optional[str] = None
     trigger_event: Optional[str] = None
-    conditions: Optional[List[Dict[str, Any]]] = None
-    actions: Optional[List[Dict[str, Any]]] = None
+    conditions: Optional[List[Any]] = None
+    actions: Optional[List[Any]] = None
     status: Optional[str] = None
     category: Optional[str] = None
 
