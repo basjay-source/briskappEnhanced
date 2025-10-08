@@ -46,7 +46,9 @@ import {
   MapPin,
   Tag,
   Trash2,
-  X
+  X,
+  Split,
+  Minus
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -58,6 +60,8 @@ import AIPromptSection from '../../components/AIPromptSection'
 import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
+import { supportedCurrencies, exchangeRates, convertCurrency, formatCurrency } from '@/types/currency'
+import { globalVATRates, getVATRateByCountry, calculateVAT, addVAT } from '@/types/vat'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -4469,19 +4473,40 @@ export default function Bookkeeping() {
 
   function renderBillsManagement() {
     const [bills, setBills] = useState([
-      { id: 1, number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19', category: 'Office', approver: 'John Smith', paymentMethod: 'Bank Transfer' },
-      { id: 2, number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18', category: 'Equipment', approver: 'Sarah Johnson', paymentMethod: 'BACS' },
-      { id: 3, number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17', category: 'Utilities', approver: 'Mike Chen', paymentMethod: 'Direct Debit' },
-      { id: 4, number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01', category: 'Marketing', approver: 'Emma Wilson', paymentMethod: 'Bank Transfer' },
-      { id: 5, number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15', category: 'Professional', approver: 'David Brown', paymentMethod: 'Cheque' },
-      { id: 6, number: 'BILL-2024-006', supplier: 'Software Vendor', amount: 950, date: '2024-01-15', status: 'Approved', dueDate: '2024-02-14', category: 'Software', approver: 'John Smith', paymentMethod: 'Credit Card' },
-      { id: 7, number: 'BILL-2024-007', supplier: 'Cleaning Services', amount: 320, date: '2024-01-14', status: 'Paid', dueDate: '2024-02-13', category: 'Services', approver: 'Sarah Johnson', paymentMethod: 'Bank Transfer' },
-      { id: 8, number: 'BILL-2024-008', supplier: 'Insurance Provider', amount: 1850, date: '2024-01-13', status: 'Pending', dueDate: '2024-02-12', category: 'Insurance', approver: 'Mike Chen', paymentMethod: 'Direct Debit' }
+      { id: 1, number: 'BILL-2024-001', supplier: 'Office Supplies Ltd', amount: 450, date: '2024-01-20', status: 'Pending', dueDate: '2024-02-19', category: 'Office', approver: 'John Smith', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [] },
+      { id: 2, number: 'BILL-2024-002', supplier: 'Tech Equipment Co', amount: 2850, date: '2024-01-19', status: 'Approved', dueDate: '2024-02-18', category: 'Equipment', approver: 'Sarah Johnson', paymentMethod: 'BACS', currency: 'GBP', vatRate: 20, splits: [{ category: 'IT Equipment', amount: 2000, percentage: 70.2 }, { category: 'Office Equipment', amount: 850, percentage: 29.8 }] },
+      { id: 3, number: 'BILL-2024-003', supplier: 'Utilities Provider', amount: 185, date: '2024-01-18', status: 'Paid', dueDate: '2024-02-17', category: 'Utilities', approver: 'Mike Chen', paymentMethod: 'Direct Debit', currency: 'GBP', vatRate: 5, splits: [] },
+      { id: 4, number: 'BILL-2024-004', supplier: 'Marketing Agency', amount: 3200, date: '2024-01-17', status: 'Overdue', dueDate: '2024-02-01', category: 'Marketing', approver: 'Emma Wilson', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [{ category: 'Digital Marketing', amount: 2000, percentage: 62.5 }, { category: 'Print Advertising', amount: 800, percentage: 25 }, { category: 'Consultation', amount: 400, percentage: 12.5 }] },
+      { id: 5, number: 'BILL-2024-005', supplier: 'Legal Services', amount: 1450, date: '2024-01-16', status: 'Pending', dueDate: '2024-02-15', category: 'Professional', approver: 'David Brown', paymentMethod: 'Cheque', currency: 'GBP', vatRate: 20, splits: [] },
+      { id: 6, number: 'BILL-2024-006', supplier: 'Software Vendor', amount: 950, date: '2024-01-15', status: 'Approved', dueDate: '2024-02-14', category: 'Software', approver: 'John Smith', paymentMethod: 'Credit Card', currency: 'USD', vatRate: 0, splits: [] },
+      { id: 7, number: 'BILL-2024-007', supplier: 'Cleaning Services', amount: 320, date: '2024-01-14', status: 'Paid', dueDate: '2024-02-13', category: 'Services', approver: 'Sarah Johnson', paymentMethod: 'Bank Transfer', currency: 'GBP', vatRate: 20, splits: [] },
+      { id: 8, number: 'BILL-2024-008', supplier: 'Insurance Provider', amount: 1850, date: '2024-01-13', status: 'Pending', dueDate: '2024-02-12', category: 'Insurance', approver: 'Mike Chen', paymentMethod: 'Direct Debit', currency: 'EUR', vatRate: 0, splits: [] }
     ])
 
     const [billSearchTerm, setBillSearchTerm] = useState('')
     const [billStatusFilter, setBillStatusFilter] = useState('all')
     const [billCategoryFilter, setBillCategoryFilter] = useState('all')
+    const [showSplitDialog, setShowSplitDialog] = useState(false)
+    const [selectedBillForSplit, setSelectedBillForSplit] = useState<any>(null)
+    const [billSplits, setBillSplits] = useState<Array<{ category: string; amount: number; percentage: number }>>([])
+
+    const exchangeRates: { [key: string]: number } = {
+      'GBP': 1.0,
+      'USD': 0.79,
+      'EUR': 0.86,
+      'JPY': 0.0052,
+      'CHF': 0.91,
+      'CAD': 0.59,
+      'AUD': 0.52,
+      'CNY': 0.11,
+      'INR': 0.0096
+    }
+
+    const vatRates: { [key: string]: { [key: string]: number } } = {
+      'GBP': { 'Standard': 20, 'Reduced': 5, 'Zero': 0 },
+      'EUR': { 'Standard': 19, 'Reduced': 7, 'Zero': 0 },
+      'USD': { 'Standard': 0, 'State': 8.5, 'Zero': 0 }
+    }
 
     const filteredBills = bills.filter(bill => {
       const matchesSearch = bill.number.toLowerCase().includes(billSearchTerm.toLowerCase()) ||
@@ -4514,8 +4539,58 @@ export default function Bookkeeping() {
       setBills(bills.map(b => b.id === bill.id ? { ...b, status: 'Paid' } : b))
     }
 
+    const handleSplitBill = (bill: any) => {
+      setSelectedBillForSplit(bill)
+      if (bill.splits && bill.splits.length > 0) {
+        setBillSplits(bill.splits)
+      } else {
+        setBillSplits([{ category: bill.category, amount: bill.amount, percentage: 100 }])
+      }
+      setShowSplitDialog(true)
+    }
+
+    const handleAddSplit = () => {
+      setBillSplits([...billSplits, { category: '', amount: 0, percentage: 0 }])
+    }
+
+    const handleRemoveSplit = (index: number) => {
+      setBillSplits(billSplits.filter((_, i) => i !== index))
+    }
+
+    const handleSplitChange = (index: number, field: string, value: any) => {
+      const newSplits = [...billSplits]
+      if (field === 'amount') {
+        newSplits[index].amount = parseFloat(value) || 0
+        newSplits[index].percentage = (newSplits[index].amount / selectedBillForSplit.amount) * 100
+      } else if (field === 'percentage') {
+        newSplits[index].percentage = parseFloat(value) || 0
+        newSplits[index].amount = (selectedBillForSplit.amount * newSplits[index].percentage) / 100
+      } else if (field === 'category') {
+        newSplits[index].category = value
+      }
+      setBillSplits(newSplits)
+    }
+
+    const handleSaveSplits = () => {
+      setBills(bills.map(b => 
+        b.id === selectedBillForSplit.id 
+          ? { ...b, splits: billSplits } 
+          : b
+      ))
+      setShowSplitDialog(false)
+      setSelectedBillForSplit(null)
+      setBillSplits([])
+    }
+
     const handleExportBills = () => {
       console.log('Exporting bills')
+    }
+
+    const convertCurrency = (amount: number, fromCurrency: string, toCurrency: string = 'GBP') => {
+      if (fromCurrency === toCurrency) return amount
+      const fromRate = exchangeRates[fromCurrency] || 1
+      const toRate = exchangeRates[toCurrency] || 1
+      return (amount * fromRate) / toRate
     }
 
     return (
@@ -4693,6 +4768,9 @@ export default function Bookkeeping() {
                           <CreditCard className="h-4 w-4 text-blue-600" />
                         </Button>
                       )}
+                      <Button variant="ghost" size="sm" title="Split Bill" onClick={(e) => { e.stopPropagation(); handleSplitBill(bill); }}>
+                        <Split className="h-4 w-4 text-purple-600" />
+                      </Button>
                       <Button variant="ghost" size="sm" title="Email Bill" onClick={(e) => { e.stopPropagation(); }}>
                         <Mail className="h-4 w-4 text-blue-900" />
                       </Button>
@@ -4713,6 +4791,188 @@ export default function Bookkeeping() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Split Bill Payment Dialog */}
+        {showSplitDialog && selectedBillForSplit && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b-2 border-blue-900 p-6 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-blue-900">Split Bill Payment</h2>
+                  <p className="text-sm text-blue-700">Allocate {selectedBillForSplit.number} across multiple expense categories</p>
+                </div>
+                <button
+                  onClick={() => setShowSplitDialog(false)}
+                  className="text-red-600 hover:text-red-800 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Bill Summary */}
+                <div className="bg-blue-50 border-2 border-blue-900 rounded-[2px] p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Bill Number</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.number}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Supplier</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.supplier}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Total Amount</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.currency} {selectedBillForSplit.amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">VAT Rate</p>
+                      <p className="text-sm font-bold text-blue-900">{selectedBillForSplit.vatRate}%</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Split Allocations */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-bold text-blue-900">Category Allocations</h3>
+                    <Button onClick={handleAddSplit} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Split
+                    </Button>
+                  </div>
+
+                  {billSplits.map((split, index) => (
+                    <div key={index} className="border-2 border-blue-900 rounded-[2px] p-4">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Expense Category
+                            </label>
+                            <select
+                              value={split.category}
+                              onChange={(e) => handleSplitChange(index, 'category', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Category</option>
+                              <option value="Office">Office Supplies</option>
+                              <option value="IT Equipment">IT Equipment</option>
+                              <option value="Office Equipment">Office Equipment</option>
+                              <option value="Marketing">Marketing</option>
+                              <option value="Digital Marketing">Digital Marketing</option>
+                              <option value="Print Advertising">Print Advertising</option>
+                              <option value="Consultation">Consultation</option>
+                              <option value="Software">Software</option>
+                              <option value="Travel">Travel</option>
+                              <option value="Utilities">Utilities</option>
+                              <option value="Professional Services">Professional Services</option>
+                              <option value="Insurance">Insurance</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Amount ({selectedBillForSplit.currency})
+                            </label>
+                            <input
+                              type="number"
+                              value={split.amount || ''}
+                              onChange={(e) => handleSplitChange(index, 'amount', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="0.00"
+                              step="0.01"
+                              min="0"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-blue-900 mb-2">
+                              Percentage (%)
+                            </label>
+                            <input
+                              type="number"
+                              value={split.percentage ? split.percentage.toFixed(2) : ''}
+                              onChange={(e) => handleSplitChange(index, 'percentage', e.target.value)}
+                              className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px] text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="0.00"
+                              step="0.01"
+                              min="0"
+                              max="100"
+                            />
+                          </div>
+                        </div>
+
+                        {billSplits.length > 1 && (
+                          <button
+                            onClick={() => handleRemoveSplit(index)}
+                            className="mt-8 text-red-600 hover:text-red-800 transition-colors"
+                            title="Remove Split"
+                          >
+                            <Minus className="h-5 w-5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Split Summary */}
+                <div className="bg-gray-50 border-2 border-blue-900 rounded-[2px] p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Total Allocated</p>
+                      <p className="text-lg font-bold text-blue-900">
+                        {selectedBillForSplit.currency} {billSplits.reduce((sum, split) => sum + (split.amount || 0), 0).toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Percentage Allocated</p>
+                      <p className="text-lg font-bold text-blue-900">
+                        {billSplits.reduce((sum, split) => sum + (split.percentage || 0), 0).toFixed(2)}%
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">Remaining</p>
+                      <p className={`text-lg font-bold ${
+                        Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) < 0.01 
+                          ? 'text-green-600' 
+                          : 'text-red-600'
+                      }`}>
+                        {selectedBillForSplit.currency} {(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) > 0.01 && (
+                    <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded text-sm text-orange-800">
+                      <AlertCircle className="h-4 w-4 inline mr-2" />
+                      Warning: Total allocation must equal the bill amount to save splits.
+                    </div>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-3 pt-4 border-t-2 border-blue-900">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSplitDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSaveSplits}
+                    disabled={Math.abs(selectedBillForSplit.amount - billSplits.reduce((sum, split) => sum + (split.amount || 0), 0)) > 0.01}
+                    className="bg-blue-900 text-white hover:bg-blue-800"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Save Splits
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
