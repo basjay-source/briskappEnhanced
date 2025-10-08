@@ -47,11 +47,11 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
         <Dialog open={showDrillDown} onOpenChange={setShowDrillDown}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Icon className={`h-5 w-5 ${color}`} />
+              <DialogTitle className="flex items-center gap-2 text-blue-900">
+                <Icon className="h-5 w-5 text-blue-900" />
                 {drillDownData.title}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-blue-700">
                 {drillDownData.description}
               </DialogDescription>
             </DialogHeader>
