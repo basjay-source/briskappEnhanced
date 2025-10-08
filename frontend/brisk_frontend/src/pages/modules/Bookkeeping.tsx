@@ -191,7 +191,20 @@ export default function Bookkeeping() {
         expenses: { label: 'Expenses', icon: CreditCard }
       }
     },
-    banking: { 
+    inventory: {
+      label: 'Inventory',
+      icon: Package,
+      hasSubTabs: true,
+      subTabs: {
+        stock: { label: 'Stock Management', icon: Package },
+        warehouses: { label: 'Warehouses', icon: Building },
+        suppliers: { label: 'Suppliers', icon: Users },
+        orders: { label: 'Purchase Orders', icon: ShoppingCart },
+        movements: { label: 'Stock Movements', icon: TrendingUp },
+        valuation: { label: 'Stock Valuation', icon: PoundSterling }
+      }
+    },
+    banking: {
       label: 'Banking', 
       icon: CreditCard, 
       hasSubTabs: true,
@@ -276,19 +289,6 @@ export default function Bookkeeping() {
         orders: { label: 'Order Management', icon: Package },
         settlements: { label: 'Settlement Tracking', icon: CreditCard },
         analytics: { label: 'Sales Analytics', icon: BarChart3 }
-      }
-    },
-    inventory: {
-      label: 'Inventory',
-      icon: Package,
-      hasSubTabs: true,
-      subTabs: {
-        stock: { label: 'Stock Management', icon: Package },
-        warehouses: { label: 'Warehouses', icon: Building },
-        suppliers: { label: 'Suppliers', icon: Users },
-        orders: { label: 'Purchase Orders', icon: ShoppingCart },
-        movements: { label: 'Stock Movements', icon: TrendingUp },
-        valuation: { label: 'Stock Valuation', icon: PoundSterling }
       }
     },
     documents: { label: 'Documents', icon: Scan, hasSubTabs: false },
