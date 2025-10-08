@@ -3798,8 +3798,8 @@ export default function PracticeManagement() {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-orange-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
+                        <div className="bg-blue-50 p-4 rounded-[2px]">
+                          <h4 className="font-semibold text-blue-900">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>January</span>
@@ -3940,8 +3940,8 @@ export default function PracticeManagement() {
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-blue-900">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
-                  <div className="text-2xl font-bold text-orange-600">12.3</div>
+                <div className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+                  <div className="text-2xl font-bold text-blue-600">12.3</div>
                   <div className="text-sm text-blue-900">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
@@ -4055,9 +4055,9 @@ export default function PracticeManagement() {
                     <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
                     <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-[2px]">
-                    <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
-                    <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
+                    <p className="text-sm text-blue-900 font-medium">Resource Allocation</p>
+                    <p className="text-xs text-blue-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
                   </div>
                   <div className="p-3 bg-green-50 rounded-[2px]">
                     <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
@@ -4077,7 +4077,7 @@ export default function PracticeManagement() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
                       <p className="text-xs text-blue-900">12 agreements due for renewal</p>
@@ -4293,8 +4293,8 @@ export default function PracticeManagement() {
 
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-orange-600">👥</span>
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
+                    <span className="text-blue-600">👥</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Client Reports</h4>
