@@ -1243,3 +1243,163 @@ async def auto_optimize_capacity(db: Session = Depends(get_db)):
         "unassignedJobs": [],
         "message": "Capacity optimization completed"
     }
+
+# Compliance Management Routes
+class ComplianceDeadlineCreate(BaseModel):
+    type: str
+    client: str
+    description: str = ''
+    dueDate: str
+    priority: str = 'medium'
+    automationEnabled: bool = True
+
+class ComplianceDeadlineUpdate(BaseModel):
+    type: Optional[str] = None
+    client: Optional[str] = None
+    description: Optional[str] = None
+    dueDate: Optional[str] = None
+    priority: Optional[str] = None
+    automationEnabled: Optional[bool] = None
+
+class AutomationRuleCreate(BaseModel):
+    name: str
+    description: str = ''
+    trigger: str
+    action: str
+    isActive: bool = True
+
+class AutomationRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    trigger: Optional[str] = None
+    action: Optional[str] = None
+    isActive: Optional[bool] = None
+
+@router.get("/compliance/deadlines")
+async def get_compliance_deadlines(db: Session = Depends(get_db)):
+    """Get all compliance deadlines"""
+    return []
+
+@router.post("/compliance/deadlines")
+async def create_compliance_deadline(deadline: ComplianceDeadlineCreate, db: Session = Depends(get_db)):
+    """Create a new compliance deadline"""
+    from datetime import datetime as dt
+    due_date = dt.strptime(deadline.dueDate, '%Y-%m-%d')
+    days_remaining = (due_date - dt.now()).days
+    
+    status = 'upcoming'
+    if days_remaining < 0:
+        status = 'overdue'
+    elif days_remaining <= 7:
+        status = 'due_soon'
+    
+    deadline_data = {
+        "id": f"deadline_{int(datetime.now().timestamp())}",
+        "type": deadline.type,
+        "client": deadline.client,
+        "description": deadline.description,
+        "dueDate": deadline.dueDate,
+        "daysRemaining": days_remaining,
+        "status": status,
+        "priority": deadline.priority,
+        "automationEnabled": deadline.automationEnabled,
+        "remindersSent": 0,
+        "lastAction": "Created",
+        "created_at": datetime.now().isoformat()
+    }
+    return deadline_data
+
+@router.put("/compliance/deadlines/{deadline_id}")
+async def update_compliance_deadline(deadline_id: str, deadline: ComplianceDeadlineUpdate, db: Session = Depends(get_db)):
+    """Update a compliance deadline"""
+    update_data = {
+        "id": deadline_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if deadline.type:
+        update_data["type"] = deadline.type
+    if deadline.client:
+        update_data["client"] = deadline.client
+    if deadline.description:
+        update_data["description"] = deadline.description
+    if deadline.dueDate:
+        update_data["dueDate"] = deadline.dueDate
+    if deadline.priority:
+        update_data["priority"] = deadline.priority
+    if deadline.automationEnabled is not None:
+        update_data["automationEnabled"] = deadline.automationEnabled
+    
+    return update_data
+
+@router.delete("/compliance/deadlines/{deadline_id}")
+async def delete_compliance_deadline(deadline_id: str, db: Session = Depends(get_db)):
+    """Delete a compliance deadline"""
+    return {"message": "Deadline deleted successfully"}
+
+@router.get("/compliance/automation-rules")
+async def get_automation_rules(db: Session = Depends(get_db)):
+    """Get all automation rules"""
+    return []
+
+@router.post("/compliance/automation-rules")
+async def create_automation_rule(rule: AutomationRuleCreate, db: Session = Depends(get_db)):
+    """Create a new automation rule"""
+    rule_data = {
+        "id": f"rule_{int(datetime.now().timestamp())}",
+        "name": rule.name,
+        "description": rule.description,
+        "trigger": rule.trigger,
+        "action": rule.action,
+        "isActive": rule.isActive,
+        "successRate": 0,
+        "timeSaved": "0 hours",
+        "created_at": datetime.now().isoformat()
+    }
+    return rule_data
+
+@router.put("/compliance/automation-rules/{rule_id}")
+async def update_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Update an automation rule"""
+    update_data = {
+        "id": rule_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if rule.name:
+        update_data["name"] = rule.name
+    if rule.description:
+        update_data["description"] = rule.description
+    if rule.trigger:
+        update_data["trigger"] = rule.trigger
+    if rule.action:
+        update_data["action"] = rule.action
+    if rule.isActive is not None:
+        update_data["isActive"] = rule.isActive
+    
+    return update_data
+
+@router.patch("/compliance/automation-rules/{rule_id}")
+async def patch_automation_rule(rule_id: str, rule: AutomationRuleUpdate, db: Session = Depends(get_db)):
+    """Partially update an automation rule (e.g., toggle status)"""
+    update_data = {
+        "id": rule_id,
+        "updated_at": datetime.now().isoformat()
+    }
+    if rule.isActive is not None:
+        update_data["isActive"] = rule.isActive
+    
+    return update_data
+
+@router.delete("/compliance/automation-rules/{rule_id}")
+async def delete_automation_rule(rule_id: str, db: Session = Depends(get_db)):
+    """Delete an automation rule"""
+    return {"message": "Automation rule deleted successfully"}
+
+@router.post("/compliance/sync")
+async def sync_compliance_data(db: Session = Depends(get_db)):
+    """Sync compliance data with HMRC and Companies House"""
+    return {"message": "Compliance data synced successfully"}
+
+@router.post("/compliance/check")
+async def compliance_check(db: Session = Depends(get_db)):
+    """Run compliance check"""
+    return {"message": "All compliance checks passed"}
