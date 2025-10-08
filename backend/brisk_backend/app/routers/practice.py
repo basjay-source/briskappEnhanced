@@ -1599,3 +1599,108 @@ async def get_email_metrics(db: Session = Depends(get_db)):
         "responseRate": 64.2,
         "avgResponseTime": "2.4h"
     }
+
+class ReportGenerateRequest(BaseModel):
+    reportType: str
+    dateFrom: Optional[str] = None
+    dateTo: Optional[str] = None
+    format: str = 'pdf'
+    includeCharts: bool = True
+    includeDetails: bool = True
+
+class ReportScheduleRequest(BaseModel):
+    reportType: str
+    frequency: str
+    dayOfWeek: Optional[str] = None
+    recipients: List[str]
+    format: str = 'pdf'
+
+# In-memory storage for reports
+reports_store = {}
+
+@router.get("/reports")
+async def get_reports(db: Session = Depends(get_db)):
+    """Get all practice reports"""
+    return list(reports_store.values())
+
+@router.get("/report-metrics")
+async def get_report_metrics(db: Session = Depends(get_db)):
+    """Get report metrics"""
+    all_reports = list(reports_store.values())
+    scheduled = [r for r in all_reports if r.get('schedule')]
+    completed_this_month = [r for r in all_reports if r.get('status') == 'completed' and r.get('lastGenerated', '').startswith(datetime.now().strftime('%Y-%m'))]
+    
+    return {
+        "totalReports": len(all_reports),
+        "scheduledReports": len(scheduled),
+        "reportsThisMonth": len(completed_this_month),
+        "avgGenerationTime": "3.2s"
+    }
+
+@router.post("/reports/generate")
+async def generate_report(report: ReportGenerateRequest, db: Session = Depends(get_db)):
+    """Generate a practice report"""
+    report_id = f"report_{int(datetime.now().timestamp() * 1000)}"
+    
+    report_names = {
+        'performance': 'Performance Report',
+        'financial': 'Financial Report',
+        'client': 'Client Report',
+        'job': 'Job Completion Report',
+        'time': 'Time Tracking Report',
+        'revenue': 'Revenue Analytics'
+    }
+    
+    report_data = {
+        "id": report_id,
+        "name": report_names.get(report.reportType, 'Practice Report'),
+        "type": report.reportType,
+        "description": f"Generated {report_names.get(report.reportType, 'report')} for period {report.dateFrom or 'N/A'} to {report.dateTo or 'N/A'}",
+        "lastGenerated": datetime.now().strftime('%Y-%m-%d %H:%M'),
+        "format": report.format,
+        "status": "completed",
+        "dateFrom": report.dateFrom,
+        "dateTo": report.dateTo,
+        "includeCharts": report.includeCharts,
+        "includeDetails": report.includeDetails
+    }
+    
+    reports_store[report_id] = report_data
+    return report_data
+
+@router.post("/reports/schedule")
+async def schedule_report(schedule: ReportScheduleRequest, db: Session = Depends(get_db)):
+    """Schedule a recurring report"""
+    report_id = f"scheduled_{int(datetime.now().timestamp() * 1000)}"
+    
+    report_names = {
+        'performance': 'Performance Report',
+        'financial': 'Financial Report',
+        'client': 'Client Report',
+        'job': 'Job Completion Report',
+        'time': 'Time Tracking Report',
+        'revenue': 'Revenue Analytics'
+    }
+    
+    report_data = {
+        "id": report_id,
+        "name": f"Scheduled {report_names.get(schedule.reportType, 'Report')}",
+        "type": schedule.reportType,
+        "description": f"Automatically generated {schedule.frequency} on {schedule.dayOfWeek or 'schedule'}",
+        "schedule": f"{schedule.frequency} ({schedule.dayOfWeek or 'N/A'})",
+        "recipients": schedule.recipients,
+        "format": schedule.format,
+        "status": "scheduled",
+        "createdAt": datetime.now().isoformat()
+    }
+    
+    reports_store[report_id] = report_data
+    return report_data
+
+@router.delete("/reports/{report_id}")
+async def delete_report(report_id: str, db: Session = Depends(get_db)):
+    """Delete a report"""
+    if report_id in reports_store:
+        del reports_store[report_id]
+        return {"message": "Report deleted successfully"}
+    raise HTTPException(status_code=404, detail="Report not found")
