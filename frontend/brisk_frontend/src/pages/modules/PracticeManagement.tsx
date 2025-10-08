@@ -26,7 +26,16 @@ import {
   UserPlus,
   Upload,
   ImageIcon,
-  Eye
+  Eye,
+  Zap,
+  Play,
+  CheckSquare,
+  Bell,
+  RefreshCw,
+  Search,
+  Download,
+  X,
+  DollarSign
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -45,7 +54,6 @@ import NewEmailStudio from '@/components/NewEmailStudio'
 import PayslipTemplateManager from '../../components/PayslipTemplateManager'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
 import AIPromptSection from '../../components/AIPromptSection'
-import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
 import { api } from '@/lib/api'
@@ -164,12 +172,63 @@ export default function PracticeManagement() {
   const [selectedDeadlineStatus, setSelectedDeadlineStatus] = useState('all')
   const [selectedDeadlinePriority, setSelectedDeadlinePriority] = useState('all')
 
+  const [workflows, setWorkflows] = useState<any[]>([])
+  const [isWorkflowDialogOpen, setIsWorkflowDialogOpen] = useState(false)
+  const [editingWorkflow, setEditingWorkflow] = useState<any | null>(null)
+  const [activeWorkflowTab, setActiveWorkflowTab] = useState('builder')
+  const [workflowSearchTerm, setWorkflowSearchTerm] = useState('')
+  const [workflowFormData, setWorkflowFormData] = useState({
+    name: '',
+    description: '',
+    trigger_type: 'manual',
+    trigger_event: '',
+    conditions: [] as any[],
+    actions: [] as any[],
+    status: 'active',
+    category: 'custom'
+  })
+
+  const [automationRules, setAutomationRules] = useState<any[]>([])
+  const [isAutomationDialogOpen, setIsAutomationDialogOpen] = useState(false)
+  const [editingAutomation, setEditingAutomation] = useState<any | null>(null)
+  const [automationFormData, setAutomationFormData] = useState({
+    name: '',
+    description: '',
+    trigger_type: 'event',
+    trigger_event: '',
+    trigger_schedule: '',
+    conditions: [] as any[],
+    actions: [] as any[],
+    status: 'active',
+    priority: 'medium'
+  })
+  const [activeAutomationTab, setActiveAutomationTab] = useState('rules')
+  const [automationSearchTerm, setAutomationSearchTerm] = useState('')
+
+  const [aiQuestion, setAiQuestion] = useState('')
+  const [aiConversations, setAiConversations] = useState<any[]>([])
+  const [currentConversation, setCurrentConversation] = useState<any | null>(null)
+  const [showConversationHistory, setShowConversationHistory] = useState(false)
+  const [aiReports, setAiReports] = useState<any[]>([])
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
     loadDeadlines()
     loadTimeEntries()
+    loadWorkflows()
+    loadAutomationRules()
+    loadAIConversations()
   }, [])
+
+  const loadAIConversations = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/ai/conversations')
+      setAiConversations(response.data || [])
+    } catch (err: any) {
+      console.error('Error loading AI conversations:', err)
+    }
+  }
 
   const loadDashboardData = async () => {
     try {
@@ -263,15 +322,129 @@ export default function PracticeManagement() {
   }
 
   const handleAIQuestion = async (question: string) => {
+    if (!question.trim()) return
+    
     setIsAILoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      console.log('AI Question:', question)
+      const newMessage = {
+        id: Date.now().toString(),
+        question: question,
+        answer: `Based on your practice data, here's my analysis for "${question}":\n\n• Current performance metrics show strong client retention\n• Workflow efficiency can be improved by 23% with automation\n• Consider reallocating resources for optimal utilization\n\nWould you like a detailed report on any of these areas?`,
+        timestamp: new Date().toISOString(),
+        category: 'general'
+      }
+      
+      if (currentConversation) {
+        const updatedMessages = [...currentConversation.messages, newMessage]
+        const response = await api.put(`/api/v1/practice/ai/conversations/${currentConversation.id}`, {
+          messages: updatedMessages
+        })
+        
+        setCurrentConversation(response.data)
+        const updatedConversations = aiConversations.map(conv => 
+          conv.id === currentConversation.id ? response.data : conv
+        )
+        setAiConversations(updatedConversations)
+      } else {
+        const newConversation = {
+          title: question.substring(0, 50) + '...',
+          messages: [newMessage]
+        }
+        
+        const response = await api.post('/api/v1/practice/ai/conversations', newConversation)
+        setCurrentConversation(response.data)
+        setAiConversations([response.data, ...aiConversations])
+      }
+      
+      setAiQuestion('')
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error getting AI response:', error)
+      alert('Failed to get AI response. Please try again.')
     } finally {
       setIsAILoading(false)
     }
+  }
+
+  const handleNewConversation = () => {
+    setCurrentConversation(null)
+    setAiQuestion('')
+  }
+
+  const handleViewHistory = () => {
+    setShowConversationHistory(!showConversationHistory)
+  }
+
+  const handleSelectConversation = (conversation: any) => {
+    setCurrentConversation(conversation)
+    setShowConversationHistory(false)
+  }
+
+  const handleDeleteConversation = async (conversationId: string) => {
+    if (!confirm('Are you sure you want to delete this conversation?')) return
+    
+    try {
+      await api.delete(`/api/v1/practice/ai/conversations/${conversationId}`)
+      setAiConversations(aiConversations.filter(conv => conv.id !== conversationId))
+      if (currentConversation?.id === conversationId) {
+        setCurrentConversation(null)
+      }
+    } catch (error) {
+      console.error('Error deleting conversation:', error)
+      alert('Failed to delete conversation. Please try again.')
+    }
+  }
+
+  const handleGenerateFullReport = async () => {
+    setIsAILoading(true)
+    try {
+      const report = {
+        id: Date.now().toString(),
+        title: 'Comprehensive Practice Analysis Report',
+        generated_at: new Date().toISOString(),
+        sections: {
+          client_analysis: {
+            total_clients: 287,
+            retention_rate: 98.7,
+            satisfaction_score: 4.8,
+            at_risk_clients: 3,
+            high_value_clients: 45
+          },
+          workflow_efficiency: {
+            automation_opportunities: 23,
+            bottlenecks_identified: 5,
+            time_savings_potential: '127 hours/month'
+          },
+          billing_performance: {
+            total_revenue: '£847,230',
+            outstanding_invoices: '£45,320',
+            average_payment_time: '14.2 days',
+            collection_rate: 96.5
+          },
+          deadline_management: {
+            upcoming_deadlines: 24,
+            overdue_items: 2,
+            completion_rate: 94.2
+          },
+          team_performance: {
+            utilization_rate: 87.3,
+            billable_hours: 8281,
+            avg_project_completion: '12.3 days'
+          }
+        }
+      }
+      
+      setAiReports([report, ...aiReports])
+      alert('Full practice report generated successfully!\n\nKey Findings:\n• 98.7% client retention rate\n• 23% automation improvement potential\n• £45,320 in outstanding invoices\n• 94.2% deadline completion rate')
+    } catch (error) {
+      console.error('Error generating report:', error)
+      alert('Failed to generate report. Please try again.')
+    } finally {
+      setIsAILoading(false)
+    }
+  }
+
+  const handleQuickPrompt = (prompt: string) => {
+    setAiQuestion(prompt)
   }
 
   const openJobDialog = (job?: Job) => {
@@ -521,6 +694,294 @@ export default function PracticeManagement() {
     } else {
       handleCreateDeadline()
     }
+  }
+
+  const loadWorkflows = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/workflows')
+      setWorkflows(response.data)
+    } catch (err: any) {
+      console.error('Failed to load workflows:', err)
+      setWorkflows([])
+    }
+  }
+
+  const openWorkflowDialog = (workflow: any | null = null) => {
+    if (workflow) {
+      setEditingWorkflow(workflow)
+      setWorkflowFormData({
+        name: workflow.name,
+        description: workflow.description,
+        trigger_type: workflow.trigger_type,
+        trigger_event: workflow.trigger_event || '',
+        conditions: workflow.conditions || [],
+        actions: workflow.actions || [],
+        status: workflow.status,
+        category: workflow.category
+      })
+    } else {
+      setEditingWorkflow(null)
+      setWorkflowFormData({
+        name: '',
+        description: '',
+        trigger_type: 'manual',
+        trigger_event: '',
+        conditions: [],
+        actions: [],
+        status: 'active',
+        category: 'custom'
+      })
+    }
+    setIsWorkflowDialogOpen(true)
+  }
+
+  const closeWorkflowDialog = () => {
+    setIsWorkflowDialogOpen(false)
+    setEditingWorkflow(null)
+    setWorkflowFormData({
+      name: '',
+      description: '',
+      trigger_type: 'manual',
+      trigger_event: '',
+      conditions: [],
+      actions: [],
+      status: 'active',
+      category: 'custom'
+    })
+  }
+
+  const handleCreateWorkflow = async () => {
+    try {
+      const response = await api.post('/api/v1/practice/workflows', workflowFormData)
+      setWorkflows([...workflows, response.data])
+      closeWorkflowDialog()
+    } catch (err: any) {
+      console.error('Failed to create workflow:', err)
+      alert('Failed to create workflow: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateWorkflow = async () => {
+    if (!editingWorkflow) return
+    try {
+      const response = await api.put(`/api/v1/practice/workflows/${editingWorkflow.id}`, workflowFormData)
+      setWorkflows(workflows.map(w => w.id === editingWorkflow.id ? response.data : w))
+      closeWorkflowDialog()
+    } catch (err: any) {
+      console.error('Failed to update workflow:', err)
+      alert('Failed to update workflow: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveWorkflow = () => {
+    if (editingWorkflow) {
+      handleUpdateWorkflow()
+    } else {
+      handleCreateWorkflow()
+    }
+  }
+
+  const handleDeleteWorkflow = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this workflow?')) return
+    try {
+      await api.delete(`/api/v1/practice/workflows/${id}`)
+      setWorkflows(workflows.filter(w => w.id !== id))
+    } catch (err: any) {
+      console.error('Failed to delete workflow:', err)
+      alert('Failed to delete workflow')
+    }
+  }
+
+  const handleCloneWorkflow = async (workflow: any) => {
+    try {
+      console.log('Cloning workflow:', workflow)
+      const clonedData = {
+        name: workflow.name ? `${workflow.name} (Copy)` : 'New Workflow (Copy)',
+        description: workflow.description || '',
+        trigger_type: workflow.trigger_type || 'manual',
+        trigger_event: workflow.trigger_event || '',
+        conditions: workflow.conditions || [],
+        actions: workflow.actions || [],
+        status: 'active',
+        category: 'custom'
+      }
+      console.log('Sending cloned data:', clonedData)
+      const response = await api.post('/api/v1/practice/workflows', clonedData)
+      console.log('Clone response:', response)
+      setWorkflows([...workflows, response.data])
+      setActiveWorkflowTab('builder')
+      alert(`Successfully created "${response.data.name}" from template!`)
+      await loadWorkflows()
+    } catch (err: any) {
+      console.error('Failed to clone workflow - Full error:', err)
+      console.error('Error message:', err.message)
+      console.error('Error response:', err.response)
+      alert('Failed to clone workflow: ' + (err.message || err.toString()))
+    }
+  }
+
+  const handleToggleWorkflowStatus = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
+      const response = await api.patch(`/api/v1/practice/workflows/${id}`, { status: newStatus })
+      setWorkflows(workflows.map(w => w.id === id ? response.data : w))
+    } catch (err: any) {
+      console.error('Failed to toggle workflow status:', err)
+      alert('Failed to toggle workflow status')
+    }
+  }
+
+  const loadAutomationRules = async () => {
+    try {
+      const response = await api.get('/api/v1/practice/automation-rules')
+      setAutomationRules(response.data)
+    } catch (err: any) {
+      console.error('Failed to load automation rules:', err)
+      setAutomationRules([])
+    }
+  }
+
+  const openAutomationDialog = (rule: any | null = null) => {
+    if (rule) {
+      setEditingAutomation(rule)
+      setAutomationFormData({
+        name: rule.name,
+        description: rule.description,
+        trigger_type: rule.trigger_type,
+        trigger_event: rule.trigger_event || '',
+        trigger_schedule: rule.trigger_schedule || '',
+        conditions: rule.conditions || [],
+        actions: rule.actions || [],
+        status: rule.status,
+        priority: rule.priority
+      })
+    } else {
+      setEditingAutomation(null)
+      setAutomationFormData({
+        name: '',
+        description: '',
+        trigger_type: 'event',
+        trigger_event: '',
+        trigger_schedule: '',
+        conditions: [],
+        actions: [],
+        status: 'active',
+        priority: 'medium'
+      })
+    }
+    setIsAutomationDialogOpen(true)
+  }
+
+  const closeAutomationDialog = () => {
+    setIsAutomationDialogOpen(false)
+    setEditingAutomation(null)
+    setAutomationFormData({
+      name: '',
+      description: '',
+      trigger_type: 'event',
+      trigger_event: '',
+      trigger_schedule: '',
+      conditions: [],
+      actions: [],
+      status: 'active',
+      priority: 'medium'
+    })
+  }
+
+  const handleCreateAutomation = async () => {
+    try {
+      const response = await api.post('/api/v1/practice/automation-rules', automationFormData)
+      setAutomationRules([...automationRules, response.data])
+      closeAutomationDialog()
+      alert('Automation rule created successfully!')
+    } catch (err: any) {
+      console.error('Failed to create automation:', err)
+      alert('Failed to create automation: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleUpdateAutomation = async () => {
+    if (!editingAutomation) return
+    try {
+      const response = await api.put(`/api/v1/practice/automation-rules/${editingAutomation.id}`, automationFormData)
+      setAutomationRules(automationRules.map(r => r.id === editingAutomation.id ? response.data : r))
+      closeAutomationDialog()
+      alert('Automation rule updated successfully!')
+    } catch (err: any) {
+      console.error('Failed to update automation:', err)
+      alert('Failed to update automation: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleSaveAutomation = () => {
+    if (editingAutomation) {
+      handleUpdateAutomation()
+    } else {
+      handleCreateAutomation()
+    }
+  }
+
+  const handleDeleteAutomation = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this automation rule?')) return
+    try {
+      await api.delete(`/api/v1/practice/automation-rules/${id}`)
+      setAutomationRules(automationRules.filter(r => r.id !== id))
+      alert('Automation rule deleted successfully!')
+    } catch (err: any) {
+      console.error('Failed to delete automation:', err)
+      alert('Failed to delete automation')
+    }
+  }
+
+  const handleToggleAutomationStatus = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
+      const response = await api.patch(`/api/v1/practice/automation-rules/${id}`, { status: newStatus })
+      setAutomationRules(automationRules.map(r => r.id === id ? response.data : r))
+    } catch (err: any) {
+      console.error('Failed to toggle automation status:', err)
+      alert('Failed to toggle automation status')
+    }
+  }
+
+  const addCondition = () => {
+    setAutomationFormData({
+      ...automationFormData,
+      conditions: [...automationFormData.conditions, { field: '', operator: 'equals', value: '' }]
+    })
+  }
+
+  const removeCondition = (index: number) => {
+    setAutomationFormData({
+      ...automationFormData,
+      conditions: automationFormData.conditions.filter((_, i) => i !== index)
+    })
+  }
+
+  const updateCondition = (index: number, field: string, value: any) => {
+    const newConditions = [...automationFormData.conditions]
+    newConditions[index] = { ...newConditions[index], [field]: value }
+    setAutomationFormData({ ...automationFormData, conditions: newConditions })
+  }
+
+  const addAction = () => {
+    setAutomationFormData({
+      ...automationFormData,
+      actions: [...automationFormData.actions, { type: 'send_email', config: {} }]
+    })
+  }
+
+  const removeAction = (index: number) => {
+    setAutomationFormData({
+      ...automationFormData,
+      actions: automationFormData.actions.filter((_, i) => i !== index)
+    })
+  }
+
+  const updateAction = (index: number, field: string, value: any) => {
+    const newActions = [...automationFormData.actions]
+    newActions[index] = { ...newActions[index], [field]: value }
+    setAutomationFormData({ ...automationFormData, actions: newActions })
   }
 
   const statusOptions = [
@@ -2230,50 +2691,1143 @@ export default function PracticeManagement() {
     )
   }
 
-  const renderWorkflowBuilder = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  const renderWorkflowBuilder = () => {
+    const preBuiltTemplates = [
+      {
+        id: 'template-1',
+        name: 'Client Onboarding Workflow',
+        description: 'Automated workflow for new client setup',
+        trigger_type: 'event',
+        trigger_event: 'client_created',
+        actions: ['send_welcome_email', 'create_folder', 'assign_manager'],
+        category: 'template',
+        status: 'active',
+        executions: 24
+      },
+      {
+        id: 'template-2',
+        name: 'Tax Return Reminder',
+        description: 'Sends reminders for upcoming tax deadlines',
+        trigger_type: 'scheduled',
+        trigger_event: 'deadline_approaching',
+        actions: ['send_email', 'create_task'],
+        category: 'template',
+        status: 'active',
+        executions: 156
+      },
+      {
+        id: 'template-3',
+        name: 'Invoice Payment Follow-up',
+        description: 'Automated follow-up for overdue invoices',
+        trigger_type: 'scheduled',
+        trigger_event: 'invoice_overdue',
+        actions: ['send_reminder', 'notify_manager'],
+        category: 'template',
+        status: 'active',
+        executions: 89
+      },
+      {
+        id: 'template-4',
+        name: 'Document Review Approval',
+        description: 'Route documents for review and approval',
+        trigger_type: 'event',
+        trigger_event: 'document_uploaded',
+        actions: ['assign_reviewer', 'send_notification'],
+        category: 'template',
+        status: 'active',
+        executions: 45
+      }
+    ]
+
+    const customWorkflows = workflows.filter(w => w.category === 'custom')
+    const filteredWorkflows = customWorkflows.filter(w => 
+      w.name.toLowerCase().includes(workflowSearchTerm.toLowerCase()) ||
+      w.description?.toLowerCase().includes(workflowSearchTerm.toLowerCase())
+    )
+
+    const workflowStats = {
+      total: workflows.length,
+      active: workflows.filter(w => w.status === 'active').length,
+      inactive: workflows.filter(w => w.status === 'inactive').length,
+      executions: workflows.reduce((sum, w) => sum + (w.executions || 0), 0)
+    }
+
+    return (
+    <div className="space-y-6 w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
         <div>
           <h2 className="text-2xl font-bold text-blue-900">Workflow Builder</h2>
           <p className="text-blue-900">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Workflow className="h-4 w-4 mr-2" />
+          <Button 
+            variant="outline"
+            onClick={() => setActiveWorkflowTab('templates')}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Browse Templates
+          </Button>
+          <Button 
+            className="bg-brisk-primary hover:bg-brisk-primary-600"
+            onClick={() => openWorkflowDialog()}
+          >
+            <Plus className="h-4 w-4 mr-2" />
             New Workflow
           </Button>
         </div>
       </div>
-      <WorkflowBuilderAdvanced />
-    </div>
-  )
 
-  const renderWorkflowAutomation = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
-          <p className="text-blue-900">Configure automated workflow triggers and actions</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Target className="h-4 w-4 mr-2" />
-            Automation Rules
-          </Button>
-        </div>
+      {/* Workflow Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Workflows</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-900">{workflowStats.total}</div>
+            <p className="text-xs text-gray-500">All workflows • Click to view</p>
+          </CardContent>
+        </Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Active</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{workflowStats.active}</div>
+            <p className="text-xs text-gray-500">Currently running • Click to view</p>
+          </CardContent>
+        </Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('builder')
+            setWorkflowSearchTerm('')
+          }}
+        >
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Inactive</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-600">{workflowStats.inactive}</div>
+            <p className="text-xs text-gray-500">Paused workflows • Click to view</p>
+          </CardContent>
+        </Card>
+        <Card 
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => {
+            setActiveWorkflowTab('analytics')
+          }}
+        >
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-blue-900">Total Executions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">{workflowStats.executions}</div>
+            <p className="text-xs text-gray-500">All time • Click for analytics</p>
+          </CardContent>
+        </Card>
       </div>
 
-      <Card>
+      {/* Main Tabs */}
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-blue-900">Automation Rules</CardTitle>
-          <CardDescription>Configure automated workflow triggers and actions</CardDescription>
+          <div className="flex gap-2 border-b border-blue-900 pb-2 w-full overflow-x-auto">
+            <Button
+              variant={activeWorkflowTab === 'builder' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('builder')}
+              className={activeWorkflowTab === 'builder' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Builder
+            </Button>
+            <Button
+              variant={activeWorkflowTab === 'templates' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('templates')}
+              className={activeWorkflowTab === 'templates' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Templates
+            </Button>
+            <Button
+              variant={activeWorkflowTab === 'analytics' ? 'default' : 'ghost'}
+              onClick={() => setActiveWorkflowTab('analytics')}
+              className={activeWorkflowTab === 'analytics' ? 'bg-brisk-primary' : 'text-blue-900'}
+            >
+              Analytics
+            </Button>
+          </div>
         </CardHeader>
-        <CardContent>
-          <p className="text-blue-900">Workflow automation configuration will be implemented here.</p>
+        <CardContent className="w-full">
+          {activeWorkflowTab === 'builder' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <Input 
+                  placeholder="Search workflows..." 
+                  className="max-w-sm"
+                  value={workflowSearchTerm}
+                  onChange={(e) => setWorkflowSearchTerm(e.target.value)}
+                />
+                <Badge variant="outline" className="text-blue-900">
+                  {filteredWorkflows.length} Custom Workflows
+                </Badge>
+              </div>
+
+              {filteredWorkflows.length === 0 ? (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center py-8">
+                      <Workflow className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-blue-900 mb-4">No custom workflows yet</p>
+                      <p className="text-sm text-gray-500 mb-4">Create your first workflow or start from a template</p>
+                      <div className="flex gap-2 justify-center">
+                        <Button 
+                          className="bg-brisk-primary hover:bg-brisk-primary-600"
+                          onClick={() => openWorkflowDialog()}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Create Workflow
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          onClick={() => setActiveWorkflowTab('templates')}
+                        >
+                          Browse Templates
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                  {filteredWorkflows.map((workflow) => (
+                    <Card key={workflow.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <CardTitle className="text-blue-900">{workflow.name}</CardTitle>
+                            <CardDescription>{workflow.description}</CardDescription>
+                          </div>
+                          <Badge className={workflow.status === 'active' ? 'bg-green-500' : 'bg-gray-500'}>
+                            {workflow.status}
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Target className="h-4 w-4 text-blue-900" />
+                            <span className="text-blue-900">Trigger: {workflow.trigger_type}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <TrendingUp className="h-4 w-4 text-blue-900" />
+                            <span className="text-blue-900">Executions: {workflow.executions || 0}</span>
+                          </div>
+                          <div className="flex gap-2 pt-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => openWorkflowDialog(workflow)}
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleCloneWorkflow(workflow)}
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              Clone
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleToggleWorkflowStatus(workflow.id, workflow.status)}
+                            >
+                              {workflow.status === 'active' ? <Pause className="h-4 w-4 mr-1" /> : <CheckCircle className="h-4 w-4 mr-1" />}
+                              {workflow.status === 'active' ? 'Pause' : 'Activate'}
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleDeleteWorkflow(workflow.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeWorkflowTab === 'templates' && (
+            <div className="space-y-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <h3 className="text-lg font-semibold text-blue-900">Pre-built Workflow Templates</h3>
+                <Badge variant="outline" className="text-blue-900">
+                  {preBuiltTemplates.length} Templates Available
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                {preBuiltTemplates.map((template) => (
+                  <Card key={template.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className="text-blue-900">{template.name}</CardTitle>
+                          <CardDescription>{template.description}</CardDescription>
+                        </div>
+                        <Badge className="bg-blue-500">Template</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Target className="h-4 w-4 text-blue-900" />
+                          <span className="text-blue-900">Trigger: {template.trigger_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <TrendingUp className="h-4 w-4 text-blue-900" />
+                          <span className="text-blue-900">Used {template.executions} times</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1 pt-2">
+                          <span className="text-xs text-gray-500">Actions:</span>
+                          {template.actions.map((action, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">
+                              {action.replace(/_/g, ' ')}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                          <Button 
+                            size="sm" 
+                            className="bg-brisk-primary hover:bg-brisk-primary-600 flex-1"
+                            onClick={() => handleCloneWorkflow(template)}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Use Template
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openWorkflowDialog(template)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Preview
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeWorkflowTab === 'analytics' && (
+            <div className="space-y-6 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Success Rate</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-green-600">98.5%</div>
+                    <p className="text-sm text-gray-500">Successful executions</p>
+                    <Progress value={98.5} className="mt-2" />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Avg Execution Time</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-blue-900">2.3s</div>
+                    <p className="text-sm text-gray-500">Average duration</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-blue-900">Time Saved</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-purple-600">142hrs</div>
+                    <p className="text-sm text-gray-500">This month</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Top Performing Workflows</CardTitle>
+                  <CardDescription>Workflows with the highest execution count</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[...preBuiltTemplates].sort((a, b) => b.executions - a.executions).slice(0, 5).map((workflow, idx) => (
+                      <div key={workflow.id} className="flex items-center justify-between p-3 border border-blue-900 rounded">
+                        <div className="flex items-center gap-3">
+                          <div className="text-lg font-bold text-blue-900">#{idx + 1}</div>
+                          <div>
+                            <p className="font-medium text-blue-900">{workflow.name}</p>
+                            <p className="text-sm text-gray-500">{workflow.trigger_type} trigger</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-blue-900">{workflow.executions}</p>
+                          <p className="text-xs text-gray-500">executions</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Recent Activity</CardTitle>
+                  <CardDescription>Latest workflow executions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {workflows.length === 0 ? (
+                      <p className="text-center text-gray-500 py-4">No workflow activity yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-500">Workflow execution history will appear here</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Workflow Dialog */}
+      <Dialog open={isWorkflowDialogOpen} onOpenChange={setIsWorkflowDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">
+              {editingWorkflow ? 'Edit Workflow' : 'Create New Workflow'}
+            </DialogTitle>
+            <DialogDescription>
+              Configure your workflow triggers, conditions, and actions
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Workflow Name</Label>
+              <Input
+                value={workflowFormData.name}
+                onChange={(e) => setWorkflowFormData({...workflowFormData, name: e.target.value})}
+                placeholder="e.g., New Client Onboarding"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Description</Label>
+              <Textarea
+                value={workflowFormData.description}
+                onChange={(e) => setWorkflowFormData({...workflowFormData, description: e.target.value})}
+                placeholder="Describe what this workflow does..."
+                rows={3}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Trigger Type</Label>
+              <Select 
+                value={workflowFormData.trigger_type}
+                onValueChange={(value) => setWorkflowFormData({...workflowFormData, trigger_type: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="manual">Manual</SelectItem>
+                  <SelectItem value="event">Event-based</SelectItem>
+                  <SelectItem value="scheduled">Scheduled</SelectItem>
+                  <SelectItem value="conditional">Conditional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {workflowFormData.trigger_type !== 'manual' && (
+              <div className="grid gap-2">
+                <Label className="text-blue-900">Trigger Event</Label>
+                <Input
+                  value={workflowFormData.trigger_event}
+                  onChange={(e) => setWorkflowFormData({...workflowFormData, trigger_event: e.target.value})}
+                  placeholder="e.g., client_created, deadline_approaching"
+                />
+              </div>
+            )}
+            <div className="grid gap-2">
+              <Label className="text-blue-900">Status</Label>
+              <Select 
+                value={workflowFormData.status}
+                onValueChange={(value) => setWorkflowFormData({...workflowFormData, status: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeWorkflowDialog}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={handleSaveWorkflow}
+              disabled={!workflowFormData.name}
+            >
+              {editingWorkflow ? 'Update Workflow' : 'Create Workflow'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
-  )
+    )
+  }
+
+  const renderWorkflowAutomation = () => {
+    const filteredRules = automationRules.filter(rule => 
+      rule.name.toLowerCase().includes(automationSearchTerm.toLowerCase()) ||
+      rule.description?.toLowerCase().includes(automationSearchTerm.toLowerCase())
+    )
+
+    const automationStats = {
+      total: automationRules.length,
+      active: automationRules.filter(r => r.status === 'active').length,
+      inactive: automationRules.filter(r => r.status === 'inactive').length,
+      executions: automationRules.reduce((sum, r) => sum + (r.executions || 0), 0)
+    }
+
+    const triggerTypes = [
+      { value: 'event', label: 'Event Trigger', icon: Zap },
+      { value: 'schedule', label: 'Scheduled', icon: Clock },
+      { value: 'manual', label: 'Manual', icon: Play }
+    ]
+
+    const actionTypes = [
+      { value: 'send_email', label: 'Send Email', icon: Mail },
+      { value: 'create_task', label: 'Create Task', icon: CheckSquare },
+      { value: 'update_status', label: 'Update Status', icon: Activity },
+      { value: 'send_notification', label: 'Send Notification', icon: Bell },
+      { value: 'create_document', label: 'Create Document', icon: FileText },
+      { value: 'assign_user', label: 'Assign User', icon: Users }
+    ]
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">Workflow Automation</h2>
+            <p className="text-blue-900">Configure automated workflow triggers and actions</p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              onClick={() => openAutomationDialog()}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Rule
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => loadAutomationRules()}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex border-b border-blue-900">
+          {[
+            { id: 'rules', label: 'Automation Rules', icon: Zap },
+            { id: 'triggers', label: 'Trigger Types', icon: Target },
+            { id: 'actions', label: 'Action Types', icon: Activity },
+            { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveAutomationTab(tab.id)}
+              className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+                activeAutomationTab === tab.id
+                  ? 'text-white bg-brisk-primary border-b-2 border-brisk-primary'
+                  : 'text-blue-900 hover:bg-blue-50'
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeAutomationTab === 'rules' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Total Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-900">{automationStats.total}</div>
+                  <p className="text-xs text-gray-500">All automation rules</p>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Active Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">{automationStats.active}</div>
+                  <p className="text-xs text-gray-500">Currently running</p>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setAutomationSearchTerm('')}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Inactive Rules</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-gray-600">{automationStats.inactive}</div>
+                  <p className="text-xs text-gray-500">Paused or disabled</p>
+                </CardContent>
+              </Card>
+
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-blue-900">Total Executions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-900">{automationStats.executions}</div>
+                  <p className="text-xs text-gray-500">All time runs</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-blue-900">Automation Rules</CardTitle>
+                  <div className="relative w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-900" />
+                    <Input
+                      placeholder="Search rules..."
+                      value={automationSearchTerm}
+                      onChange={(e) => setAutomationSearchTerm(e.target.value)}
+                      className="pl-10 border-blue-900 text-blue-900"
+                    />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {filteredRules.length === 0 ? (
+                  <div className="text-center py-8 text-blue-900">
+                    <Zap className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-lg font-medium">No automation rules found</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {automationSearchTerm ? 'Try adjusting your search' : 'Create your first automation rule to get started'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredRules.map((rule) => (
+                      <div
+                        key={rule.id}
+                        className="border border-blue-900 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-lg font-semibold text-blue-900">{rule.name}</h3>
+                              <span className={`px-2 py-1 text-xs font-medium rounded ${
+                                rule.status === 'active' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {rule.status}
+                              </span>
+                              <span className={`px-2 py-1 text-xs font-medium rounded ${
+                                rule.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                rule.priority === 'medium' ? 'bg-blue-100 text-blue-800' :
+                                'bg-blue-100 text-blue-800'
+                              }`}>
+                                {rule.priority}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1">{rule.description}</p>
+                            <div className="flex items-center gap-4 mt-3 text-sm text-blue-900">
+                              <span className="flex items-center gap-1">
+                                <Target className="h-4 w-4" />
+                                {rule.trigger_type === 'event' ? 'Event' : rule.trigger_type === 'schedule' ? 'Scheduled' : 'Manual'}
+                              </span>
+                              {rule.trigger_event && (
+                                <span className="flex items-center gap-1">
+                                  <Activity className="h-4 w-4" />
+                                  {rule.trigger_event}
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1">
+                                <CheckSquare className="h-4 w-4" />
+                                {rule.conditions?.length || 0} Conditions
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Zap className="h-4 w-4" />
+                                {rule.actions?.length || 0} Actions
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Play className="h-4 w-4" />
+                                {rule.executions || 0} Executions
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 ml-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleToggleAutomationStatus(rule.id, rule.status)}
+                            >
+                              {rule.status === 'active' ? (
+                                <>
+                                  <Pause className="h-4 w-4 mr-1" />
+                                  Pause
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="h-4 w-4 mr-1" />
+                                  Activate
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openAutomationDialog(rule)}
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteAutomation(rule.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'triggers' && (
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Available Trigger Types</CardTitle>
+                <CardDescription>Configure when automation rules should execute</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {triggerTypes.map((trigger) => (
+                    <div key={trigger.value} className="border border-blue-900 rounded-lg p-4">
+                      <trigger.icon className="h-8 w-8 text-brisk-primary mb-3" />
+                      <h3 className="font-semibold text-blue-900 mb-2">{trigger.label}</h3>
+                      <p className="text-sm text-gray-600">
+                        {trigger.value === 'event' && 'Trigger on specific system events like client creation, job completion, or deadline approach'}
+                        {trigger.value === 'schedule' && 'Run automation on a recurring schedule (daily, weekly, monthly)'}
+                        {trigger.value === 'manual' && 'Execute automation manually when needed'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'actions' && (
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Available Action Types</CardTitle>
+                <CardDescription>Actions that can be performed by automation rules</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {actionTypes.map((action) => (
+                    <div key={action.value} className="border border-blue-900 rounded-lg p-4">
+                      <action.icon className="h-8 w-8 text-brisk-primary mb-3" />
+                      <h3 className="font-semibold text-blue-900 mb-2">{action.label}</h3>
+                      <p className="text-sm text-gray-600">
+                        {action.value === 'send_email' && 'Send automated email notifications to clients or team members'}
+                        {action.value === 'create_task' && 'Automatically create tasks and assign to users'}
+                        {action.value === 'update_status' && 'Update job or deadline status based on conditions'}
+                        {action.value === 'send_notification' && 'Send in-app notifications to relevant users'}
+                        {action.value === 'create_document' && 'Generate documents from templates'}
+                        {action.value === 'assign_user' && 'Assign jobs or tasks to specific users'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeAutomationTab === 'analytics' && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Execution Statistics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Total Executions</span>
+                      <span className="text-2xl font-bold text-blue-900">{automationStats.executions}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Active Rules</span>
+                      <span className="text-2xl font-bold text-green-600">{automationStats.active}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-900">Average per Rule</span>
+                      <span className="text-2xl font-bold text-blue-900">
+                        {automationStats.total > 0 ? Math.round(automationStats.executions / automationStats.total) : 0}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-blue-900">Rule Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-blue-900">Active</span>
+                        <span className="text-blue-900">{automationStats.active}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-600 h-2 rounded-full" 
+                          style={{ width: `${automationStats.total > 0 ? (automationStats.active / automationStats.total) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-blue-900">Inactive</span>
+                        <span className="text-blue-900">{automationStats.inactive}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gray-600 h-2 rounded-full" 
+                          style={{ width: `${automationStats.total > 0 ? (automationStats.inactive / automationStats.total) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-blue-900">Top Performing Rules</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {automationRules.length === 0 ? (
+                  <p className="text-center text-blue-900 py-8">No automation rules to display</p>
+                ) : (
+                  <div className="space-y-3">
+                    {[...automationRules]
+                      .sort((a, b) => (b.executions || 0) - (a.executions || 0))
+                      .slice(0, 5)
+                      .map((rule) => (
+                        <div key={rule.id} className="flex justify-between items-center border-b border-blue-900 pb-2">
+                          <div>
+                            <p className="font-medium text-blue-900">{rule.name}</p>
+                            <p className="text-sm text-gray-500">{rule.trigger_type}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-blue-900">{rule.executions || 0}</p>
+                            <p className="text-xs text-gray-500">executions</p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <Dialog open={isAutomationDialogOpen} onOpenChange={setIsAutomationDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-blue-900">
+                {editingAutomation ? 'Edit Automation Rule' : 'Create Automation Rule'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900">Rule Name *</Label>
+                  <Input
+                    value={automationFormData.name}
+                    onChange={(e) => setAutomationFormData({ ...automationFormData, name: e.target.value })}
+                    placeholder="Enter rule name"
+                    className="border-blue-900 text-blue-900"
+                  />
+                </div>
+                <div>
+                  <Label className="text-blue-900">Priority</Label>
+                  <Select 
+                    value={automationFormData.priority}
+                    onValueChange={(value) => setAutomationFormData({ ...automationFormData, priority: value })}
+                  >
+                    <SelectTrigger className="border-blue-900 text-blue-900">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-blue-900">Description</Label>
+                <Textarea
+                  value={automationFormData.description}
+                  onChange={(e) => setAutomationFormData({ ...automationFormData, description: e.target.value })}
+                  placeholder="Describe what this rule does"
+                  rows={3}
+                  className="border-blue-900 text-blue-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900">Trigger Type *</Label>
+                  <Select 
+                    value={automationFormData.trigger_type}
+                    onValueChange={(value) => setAutomationFormData({ ...automationFormData, trigger_type: value })}
+                  >
+                    <SelectTrigger className="border-blue-900 text-blue-900">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="event">Event Trigger</SelectItem>
+                      <SelectItem value="schedule">Scheduled</SelectItem>
+                      <SelectItem value="manual">Manual</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {automationFormData.trigger_type === 'event' && (
+                  <div>
+                    <Label className="text-blue-900">Trigger Event</Label>
+                    <Input
+                      value={automationFormData.trigger_event}
+                      onChange={(e) => setAutomationFormData({ ...automationFormData, trigger_event: e.target.value })}
+                      placeholder="e.g., client_created, job_completed"
+                      className="border-blue-900 text-blue-900"
+                    />
+                  </div>
+                )}
+                {automationFormData.trigger_type === 'schedule' && (
+                  <div>
+                    <Label className="text-blue-900">Schedule</Label>
+                    <Input
+                      value={automationFormData.trigger_schedule}
+                      onChange={(e) => setAutomationFormData({ ...automationFormData, trigger_schedule: e.target.value })}
+                      placeholder="e.g., daily, weekly, monthly"
+                      className="border-blue-900 text-blue-900"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-blue-900">Conditions</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addCondition}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Condition
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {automationFormData.conditions.map((condition, index) => (
+                    <div key={index} className="flex gap-2 items-start border border-blue-900 rounded p-2">
+                      <Input
+                        placeholder="Field"
+                        value={condition.field || ''}
+                        onChange={(e) => updateCondition(index, 'field', e.target.value)}
+                        className="flex-1 border-blue-900 text-blue-900"
+                      />
+                      <Select
+                        value={condition.operator || 'equals'}
+                        onValueChange={(value) => updateCondition(index, 'operator', value)}
+                      >
+                        <SelectTrigger className="w-32 border-blue-900 text-blue-900">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="equals">Equals</SelectItem>
+                          <SelectItem value="not_equals">Not Equals</SelectItem>
+                          <SelectItem value="contains">Contains</SelectItem>
+                          <SelectItem value="greater_than">Greater Than</SelectItem>
+                          <SelectItem value="less_than">Less Than</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        placeholder="Value"
+                        value={condition.value || ''}
+                        onChange={(e) => updateCondition(index, 'value', e.target.value)}
+                        className="flex-1 border-blue-900 text-blue-900"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeCondition(index)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-blue-900">Actions</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addAction}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Action
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {automationFormData.actions.map((action, index) => (
+                    <div key={index} className="flex gap-2 items-center border border-blue-900 rounded p-2">
+                      <Select
+                        value={action.type || 'send_email'}
+                        onValueChange={(value) => updateAction(index, 'type', value)}
+                      >
+                        <SelectTrigger className="flex-1 border-blue-900 text-blue-900">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="send_email">Send Email</SelectItem>
+                          <SelectItem value="create_task">Create Task</SelectItem>
+                          <SelectItem value="update_status">Update Status</SelectItem>
+                          <SelectItem value="send_notification">Send Notification</SelectItem>
+                          <SelectItem value="create_document">Create Document</SelectItem>
+                          <SelectItem value="assign_user">Assign User</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeAction(index)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-blue-900">Status</Label>
+                <Select 
+                  value={automationFormData.status}
+                  onValueChange={(value) => setAutomationFormData({ ...automationFormData, status: value })}
+                >
+                  <SelectTrigger className="border-blue-900 text-blue-900">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={closeAutomationDialog}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-brisk-primary hover:bg-brisk-primary-600"
+                onClick={handleSaveAutomation}
+                disabled={!automationFormData.name}
+              >
+                {editingAutomation ? 'Update Rule' : 'Create Rule'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    )
+  }
 
   const renderCapacityPlanning = () => (
     <div className="space-y-6">
@@ -2319,9 +3873,17 @@ export default function PracticeManagement() {
           <p className="text-blue-900">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => alert('Generating report...')}>
             <TrendingUp className="h-4 w-4 mr-2" />
             Generate Report
+          </Button>
+          <Button variant="outline" onClick={() => alert('Exporting report...')}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
+          <Button variant="outline" onClick={() => alert('Schedule report dialog...')}>
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule Report
           </Button>
         </div>
       </div>
@@ -2333,17 +3895,6 @@ export default function PracticeManagement() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-blue-900">Practice Analytics</h3>
-              <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  Export Report
-                </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
-                  Schedule Report
-                </button>
-              </div>
-            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <KPICard
@@ -2359,38 +3910,38 @@ export default function PracticeManagement() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-blue-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900">Revenue by Service</h4>
+                          <h4 className="font-semibold text-blue-900 mb-3">Revenue by Service</h4>
                           <div className="mt-2 space-y-2">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Advisory Services - £345,120\n\nBreakdown:\n• Tax Advisory: £145,000\n• Business Strategy: £98,500\n• Financial Planning: £101,620')}>
                               <span>Advisory Services</span>
                               <span className="font-semibold">£345,120</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Compliance - £234,560\n\nBreakdown:\n• Annual Accounts: £124,300\n• Tax Returns: £78,900\n• Statutory Filing: £31,360')}>
                               <span>Compliance</span>
                               <span className="font-semibold">£234,560</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Project Work - £167,890\n\nBreakdown:\n• M&A Support: £89,400\n• Due Diligence: £45,200\n• Special Projects: £33,290')}>
                               <span>Project Work</span>
                               <span className="font-semibold">£167,890</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Retainer Fees - £99,660\n\nBreakdown:\n• Monthly Retainers: £67,800\n• Quarterly Reviews: £21,400\n• On-Call Support: £10,460')}>
                               <span>Retainer Fees</span>
                               <span className="font-semibold">£99,660</span>
                             </div>
                           </div>
                         </div>
-                        <div className="bg-orange-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
+                        <div className="bg-blue-50 p-4 rounded-[2px]">
+                          <h4 className="font-semibold text-blue-900 mb-3">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: January Revenue - £78,450\n\nBreakdown:\n• Week 1: £18,200\n• Week 2: £19,800\n• Week 3: £21,150\n• Week 4: £19,300')}>
                               <span>January</span>
                               <span className="font-semibold">£78,450</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: February Revenue - £82,340\n\nBreakdown:\n• Week 1: £20,100\n• Week 2: £21,450\n• Week 3: £19,890\n• Week 4: £20,900')}>
                               <span>February</span>
                               <span className="font-semibold">£82,340</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: March Revenue - £89,120\n\nBreakdown:\n• Week 1: £22,800\n• Week 2: £23,150\n• Week 3: £21,670\n• Week 4: £21,500')}>
                               <span>March</span>
                               <span className="font-semibold">£89,120</span>
                             </div>
@@ -2413,17 +3964,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Satisfaction Breakdown</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Satisfaction Breakdown</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Service Quality - 4.9/5\n\nClient Feedback:\n• Technical Expertise: 5.0/5\n• Professionalism: 4.9/5\n• Accuracy: 4.8/5\n• Communication: 4.9/5')}>
                             <span>Service Quality</span>
                             <span className="font-semibold">4.9/5</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Response Time - 4.7/5\n\nMetrics:\n• Email Response: 4.8/5 (avg 2.1 hours)\n• Phone Response: 4.9/5 (avg 15 mins)\n• Query Resolution: 4.5/5 (avg 1.2 days)')}>
                             <span>Response Time</span>
                             <span className="font-semibold">4.7/5</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Value for Money - 4.6/5\n\nClient Perception:\n• Pricing Transparency: 4.7/5\n• Service vs Cost: 4.6/5\n• Additional Value: 4.5/5')}>
                             <span>Value for Money</span>
                             <span className="font-semibold">4.6/5</span>
                           </div>
@@ -2445,17 +3996,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Utilization by Role</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Utilization by Role</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Senior Partners - 92.1%\n\n5 Staff Members:\n• Billable Hours: 1,840h (92.1%)\n• Non-billable: 158h\n• Chargeable Rate: £285/hr\n• Total Revenue: £524,400')}>
                             <span>Senior Partners</span>
                             <span className="font-semibold">92.1%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Managers - 89.4%\n\n8 Staff Members:\n• Billable Hours: 2,863h (89.4%)\n• Non-billable: 339h\n• Chargeable Rate: £175/hr\n• Total Revenue: £501,025')}>
                             <span>Managers</span>
                             <span className="font-semibold">89.4%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Associates - 84.7%\n\n15 Staff Members:\n• Billable Hours: 4,578h (84.7%)\n• Non-billable: 827h\n• Chargeable Rate: £95/hr\n• Total Revenue: £434,910')}>
                             <span>Associates</span>
                             <span className="font-semibold">84.7%</span>
                           </div>
@@ -2477,17 +4028,17 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Completion by Type</h4>
+                        <h4 className="font-semibold text-blue-900 mb-3">Completion by Type</h4>
                         <div className="mt-2 space-y-2">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Tax Projects - 96.8%\n\nCompletion Details:\n• On Time: 89 projects (94.7%)\n• Early: 2 projects (2.1%)\n• Late: 3 projects (3.2%)\n• Avg Days to Complete: 8.3')}>
                             <span>Tax Projects</span>
                             <span className="font-semibold">96.8%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Advisory Projects - 93.2%\n\nCompletion Details:\n• On Time: 43 projects (87.8%)\n• Early: 3 projects (6.1%)\n• Late: 3 projects (6.1%)\n• Avg Days to Complete: 14.7')}>
                             <span>Advisory Projects</span>
                             <span className="font-semibold">93.2%</span>
                           </div>
-                          <div className="flex justify-between">
+                          <div className="flex justify-between p-2 hover:bg-blue-100 rounded cursor-pointer transition-colors" onClick={() => alert('Drill down: Compliance Projects - 91.7%\n\nCompletion Details:\n• On Time: 55 projects (91.7%)\n• Early: 0 projects (0%)\n• Late: 5 projects (8.3%)\n• Avg Days to Complete: 12.1')}>
                             <span>Compliance Projects</span>
                             <span className="font-semibold">91.7%</span>
                           </div>
@@ -2500,32 +4051,41 @@ export default function PracticeManagement() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Revenue Trends</h4>
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+                <h4 className="text-lg font-semibold mb-4 text-blue-900">Revenue Trends</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500">Revenue Chart Placeholder</span>
+                  <span className="text-blue-900">Revenue Chart Placeholder</span>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Client Growth</h4>
+              <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+                <h4 className="text-lg font-semibold mb-4 text-blue-900">Client Growth</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500">Client Growth Chart Placeholder</span>
+                  <span className="text-blue-900">Client Growth Chart Placeholder</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-              <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
+            <div className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900">
+              <h4 className="text-lg font-semibold mb-4 text-blue-900">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-[2px]">
+                <div 
+                  className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Average Project Value - £2,847\n\nDetailed Breakdown:\n\n• Small Projects (<£1,000): £685 avg\n  127 projects, £87,045 total\n\n• Medium Projects (£1,000-£5,000): £2,340 avg\n  89 projects, £208,260 total\n\n• Large Projects (>£5,000): £8,950 avg\n  34 projects, £304,300 total\n\n• Year-over-year: +8.3%\n• Quarterly trend: Increasing\n• Top service type: Advisory (£3,840 avg)')}
+                >
                   <div className="text-2xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-blue-900">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-[2px]">
-                  <div className="text-2xl font-bold text-orange-600">12.3</div>
+                <div 
+                  className="text-center p-4 bg-blue-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Days Average Completion - 12.3 days\n\nDetailed Breakdown:\n\n• Fast Track (<7 days): 5.2 days\n  78 projects (31%)\n\n• Standard (7-14 days): 10.8 days\n  124 projects (50%)\n\n• Extended (>14 days): 21.4 days\n  48 projects (19%)\n\n• Year-over-year: -2.1 days (improved)\n• On-time completion: 92.8%\n• Client satisfaction impact: +0.3 rating')}
+                >
+                  <div className="text-2xl font-bold text-blue-600">12.3</div>
                   <div className="text-sm text-blue-900">Days Average Completion</div>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-[2px]">
+                <div 
+                  className="text-center p-4 bg-green-50 rounded-[2px] border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => alert('Client Retention Rate - 98.7%\n\nDetailed Analysis:\n\n• Active Clients: 287\n• Clients Retained: 283\n• New Clients This Year: 47\n• Clients Lost: 4\n\n• Retention by Segment:\n  - Premium: 99.2% (121/122)\n  - Standard: 98.5% (132/134)\n  - Basic: 97.4% (30/31)\n\n• Average client tenure: 4.7 years\n• Lifetime value per client: £34,200')}
+                >
                   <div className="text-2xl font-bold text-green-600">98.7%</div>
                   <div className="text-sm text-blue-900">Client Retention Rate</div>
                 </div>
@@ -2545,33 +4105,92 @@ export default function PracticeManagement() {
           <p className="text-blue-900">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button 
+            variant="outline"
+            onClick={handleGenerateFullReport}
+            disabled={isAILoading}
+          >
             <Award className="h-4 w-4 mr-2" />
-            AI Insights
+            Generate Full Report
           </Button>
         </div>
       </div>
 
+      {showConversationHistory && (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-blue-900">Conversation History</CardTitle>
+              <Button variant="ghost" onClick={handleViewHistory}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {aiConversations.length === 0 ? (
+              <p className="text-blue-900 text-center py-8">No conversation history yet</p>
+            ) : (
+              <div className="space-y-3">
+                {aiConversations.map((conv) => (
+                  <div 
+                    key={conv.id}
+                    className="p-4 border-2 border-blue-900 rounded-[2px] cursor-pointer hover:bg-blue-50 transition-colors"
+                    onClick={() => handleSelectConversation(conv)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-blue-900">{conv.title}</h4>
+                        <p className="text-sm text-blue-700">
+                          {new Date(conv.created_at).toLocaleString()} • {conv.messages.length} messages
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteConversation(conv.id)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">AI Recommendations</CardTitle>
+          <CardTitle className="text-blue-900">Ask your Practice Manager</CardTitle>
           <CardDescription>Get intelligent insights for practice optimization</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-blue-900">Ask your Practice Manager</h3>
+              <h3 className="text-xl font-bold text-blue-900">
+                {currentConversation ? `Conversation: ${currentConversation.title}` : 'New Conversation'}
+              </h3>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button 
+                  onClick={handleNewConversation}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
                   New Conversation
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
-                  View History
+                <button 
+                  onClick={handleViewHistory}
+                  className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300"
+                >
+                  View History ({aiConversations.length})
                 </button>
               </div>
             </div>
 
-            <div className="bg-white rounded-[2px] shadow-sm border p-6">
+            <div className="bg-white rounded-[2px] shadow-sm border-2 border-blue-900 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold">AI</span>
@@ -2582,94 +4201,236 @@ export default function PracticeManagement() {
                 </div>
               </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="bg-blue-50 p-4 rounded-[2px]">
-                  <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• Practice workflow optimization and automation strategies</li>
-                    <li>• Client onboarding and relationship management best practices</li>
-                    <li>• Resource allocation and team utilization analysis</li>
-                    <li>• Business development and growth planning</li>
-                    <li>• Compliance and risk management frameworks</li>
-                    <li>• Performance metrics and KPI tracking</li>
-                  </ul>
+              {currentConversation && currentConversation.messages.length > 0 && (
+                <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+                  {currentConversation.messages.map((msg: any) => (
+                    <div key={msg.id} className="space-y-3">
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-blue-900 text-sm">You</span>
+                        </div>
+                        <div className="flex-1 bg-gray-100 p-3 rounded-[2px]">
+                          <p className="text-blue-900">{msg.question}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-sm">AI</span>
+                        </div>
+                        <div className="flex-1 bg-blue-50 p-3 rounded-[2px]">
+                          <p className="text-blue-900 whitespace-pre-line">{msg.answer}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
+
+              {!currentConversation && (
+                <div className="space-y-4 mb-6">
+                  <div className="bg-blue-50 p-4 rounded-[2px]">
+                    <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>• Practice workflow optimization and automation strategies</li>
+                      <li>• Client onboarding and relationship management best practices</li>
+                      <li>• Resource allocation and team utilization analysis</li>
+                      <li>• Business development and growth planning</li>
+                      <li>• Compliance and risk management frameworks</li>
+                      <li>• Performance metrics and KPI tracking</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-blue-900 text-sm">You</span>
                   </div>
                   <div className="flex-1">
                     <textarea
-                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none"
+                      value={aiQuestion}
+                      onChange={(e) => setAiQuestion(e.target.value)}
+                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none text-blue-900"
                       rows={3}
                       placeholder="Ask me anything about practice management, client relationships, workflow optimization, or business strategy..."
+                      disabled={isAILoading}
                     />
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                  <div className="flex gap-2 flex-wrap">
+                    <button 
+                      onClick={() => handleQuickPrompt('How can I optimize my workflow automation?')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Workflow Analysis
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button 
+                      onClick={() => handleQuickPrompt('What client retention strategies should I implement?')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Client Strategy
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button 
+                      onClick={() => handleQuickPrompt('Review my practice performance metrics')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
                       Performance Review
                     </button>
+                    <button 
+                      onClick={() => handleQuickPrompt('Analyze my billing and invoicing efficiency')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
+                      Billing Analysis
+                    </button>
+                    <button 
+                      onClick={() => handleQuickPrompt('Review my deadline management approach')}
+                      className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200"
+                      disabled={isAILoading}
+                    >
+                      Deadline Review
+                    </button>
                   </div>
-                  <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Send
+                  <button 
+                    onClick={() => handleAIQuestion(aiQuestion)}
+                    className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isAILoading || !aiQuestion.trim()}
+                  >
+                    {isAILoading ? 'Analyzing...' : 'Send'}
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
-                <div className="space-y-3">
-                  <div className="p-3 bg-blue-50 rounded-[2px]">
-                    <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
-                    <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Client Analysis Deep Dive\n\n• Total Active Clients: 287\n• Client Retention Rate: 98.7%\n• Average Client Tenure: 4.7 years\n• Client Satisfaction Score: 4.8/5.0\n\nTop Performing Segments:\n• Premium Tier: 122 clients (£4.2M revenue)\n• Standard Tier: 134 clients (£2.8M revenue)\n• Basic Tier: 31 clients (£420K revenue)\n\nAt-Risk Clients (3):\n1. ABC Corp - 45 days overdue\n2. XYZ Ltd - Low engagement score\n3. DEF Inc - Service complaints\n\nRecommendations:\n• Implement quarterly business reviews for premium clients\n• Create automated check-in workflows\n• Develop targeted retention campaigns')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Users className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Client Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Comprehensive client relationship analysis and retention strategies</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Total Clients</span>
+                    <span className="text-xs font-bold text-blue-900">287</span>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-[2px]">
-                    <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
-                    <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Retention Rate</span>
+                    <span className="text-xs font-bold text-green-600">98.7%</span>
                   </div>
-                  <div className="p-3 bg-green-50 rounded-[2px]">
-                    <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
-                    <p className="text-xs text-green-700 mt-1">Implementing weekly check-ins could increase client satisfaction scores by 15%.</p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">At Risk</span>
+                    <span className="text-xs font-bold text-red-600">3</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className="text-lg font-semibold mb-4">Recommended Actions</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Review high-risk client accounts</p>
-                      <p className="text-xs text-blue-900">3 clients showing payment delays</p>
-                    </div>
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Workflow Optimization Analysis\n\n• Current Efficiency Score: 77%\n• Automation Potential: 23% improvement\n• Process Bottlenecks: 5 identified\n• Time Savings Opportunity: 127 hours/month\n\nKey Findings:\n\n1. Client Onboarding (32% time savings)\n   - Automate document collection\n   - Implement e-signature workflows\n   - Create standardized checklists\n\n2. Job Assignment (18% improvement)\n   - AI-powered workload balancing\n   - Skill-based auto-assignment\n   - Real-time capacity monitoring\n\n3. Communication (15% efficiency gain)\n   - Template library expansion\n   - Automated status updates\n   - Client portal adoption\n\nEstimated ROI: £45,600/year')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Activity className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Workflow Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Process optimization and automation opportunities</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Efficiency Score</span>
+                    <span className="text-xs font-bold text-blue-900">77%</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Update service agreements</p>
-                      <p className="text-xs text-blue-900">12 agreements due for renewal</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Time Savings</span>
+                    <span className="text-xs font-bold text-green-600">127 hrs/mo</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Schedule team training</p>
-                      <p className="text-xs text-blue-900">New compliance requirements</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Bottlenecks</span>
+                    <span className="text-xs font-bold text-orange-600">5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Billing & Invoicing Performance\n\n• Total Revenue (YTD): £847,230\n• Outstanding Invoices: £45,320 (5.3%)\n• Average Payment Time: 14.2 days\n• Collection Rate: 96.5%\n\nRevenue Breakdown:\n• Recurring Services: £612,450 (72%)\n• Project Work: £189,780 (22%)\n• Additional Services: £45,000 (5%)\n\nAging Analysis:\n• Current (0-30 days): £38,240\n• 31-60 days: £5,680\n• 61-90 days: £980\n• 90+ days: £420\n\nRecommendations:\n• Implement automated payment reminders\n• Offer early payment discounts (2% net 10)\n• Review pricing for underperforming services\n• Convert more clients to direct debit')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <DollarSign className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Billing Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Revenue performance and invoicing efficiency</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Total Revenue</span>
+                    <span className="text-xs font-bold text-blue-900">£847,230</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Outstanding</span>
+                    <span className="text-xs font-bold text-orange-600">£45,320</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Collection Rate</span>
+                    <span className="text-xs font-bold text-green-600">96.5%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Deadline Management Analysis\n\n• Total Active Deadlines: 24\n• Overdue Items: 2 (8.3%)\n• Completion Rate: 94.2%\n• Average Lead Time: 8.7 days\n\nDeadline Distribution:\n• Tax Returns: 12 deadlines\n• Companies House: 7 deadlines\n• Compliance: 3 deadlines\n• Internal: 2 deadlines\n\nCritical Items:\n1. VAT Return - ABC Corp (Due: Tomorrow)\n2. Annual Accounts - XYZ Ltd (2 days overdue)\n3. Corporation Tax - DEF Inc (Due: 3 days)\n\nRecommendations:\n• Set earlier internal deadlines (5-7 day buffer)\n• Implement automated client reminders\n• Create escalation protocols for at-risk deadlines\n• Use workflow automation for routine filings')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Deadline Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Deadline tracking and compliance management</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Active Deadlines</span>
+                    <span className="text-xs font-bold text-blue-900">24</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Overdue</span>
+                    <span className="text-xs font-bold text-red-600">2</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Completion Rate</span>
+                    <span className="text-xs font-bold text-green-600">94.2%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div 
+                className="bg-white p-6 rounded-[2px] shadow-sm border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => alert('Team Performance Matrix\n\n• Overall Utilization: 87.3%\n• Total Billable Hours: 8,281\n• Average Project Time: 12.3 days\n• Team Efficiency Score: 8.4/10\n\nTeam Breakdown:\n• Senior Staff: 92% utilization (3 members)\n• Mid-level: 88% utilization (5 members)\n• Junior Staff: 79% utilization (4 members)\n\nTop Performers:\n1. Sarah Johnson - 94% util, 4.9 client rating\n2. Mike Chen - 91% util, 4.8 client rating\n3. Emma Davis - 89% util, 4.7 client rating\n\nDevelopment Areas:\n• Redistribute workload for junior staff\n• Implement mentorship programs\n• Cross-training for skill diversification\n• Consider hiring mid-level accountant')}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <TrendingUp className="h-6 w-6 text-blue-600" />
+                  <h4 className="text-lg font-semibold text-blue-900">Performance Insights</h4>
+                </div>
+                <p className="text-sm text-blue-700 mb-4">Team productivity and utilization metrics</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Utilization</span>
+                    <span className="text-xs font-bold text-blue-900">87.3%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Billable Hours</span>
+                    <span className="text-xs font-bold text-green-600">8,281</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-blue-900">Efficiency Score</span>
+                    <span className="text-xs font-bold text-blue-900">8.4/10</span>
                   </div>
                 </div>
               </div>
@@ -2874,8 +4635,8 @@ export default function PracticeManagement() {
 
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-orange-600">👥</span>
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
+                    <span className="text-blue-600">👥</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Client Reports</h4>

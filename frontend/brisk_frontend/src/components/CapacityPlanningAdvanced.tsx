@@ -232,7 +232,7 @@ export default function CapacityPlanningAdvanced() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Advanced Capacity Planning</h2>
+          <h2 className="text-2xl font-bold text-blue-900">Advanced Capacity Planning</h2>
           <p className="text-blue-900">AI-powered resource optimization and forecasting</p>
         </div>
         <div className="flex gap-2">
