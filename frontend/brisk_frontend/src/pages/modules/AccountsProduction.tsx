@@ -2129,6 +2129,142 @@ const AccountsProduction: React.FC = () => {
     </div>
   )
 
+
+  const renderClosingEntriesContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Year-End Closing Entries</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Automated Closing Process</CardTitle></CardHeader>
+      <CardContent><Button onClick={() => handleDrilldown({ title: "Generate Closing Entries", data: {} })}>Generate Entries</Button></CardContent></Card>
+    </div>
+  )
+
+  const renderRetainedEarningsContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Retained Earnings</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Retained Earnings Statement</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Track changes in retained earnings</p></CardContent></Card>
+    </div>
+  )
+
+  const renderOpeningBalancesContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Opening Balances</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">New Period Opening Balances</CardTitle></CardHeader>
+      <CardContent><Button onClick={() => handleDrilldown({ title: "Create Opening Balances", data: {} })}>Generate Balances</Button></CardContent></Card>
+    </div>
+  )
+
+  const renderPeriodLockContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Period Lock</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Lock Accounting Periods</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Prevent changes to closed periods</p></CardContent></Card>
+    </div>
+  )
+
+  const renderYearEndChecklistContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Year-End Checklist</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Year-End Closing Checklist</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Track progress through year-end procedures</p></CardContent></Card>
+    </div>
+  )
+
+  const renderHMRCConnectionContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">HMRC Connection</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">HMRC Gateway Connection</CardTitle></CardHeader>
+      <CardContent><Button onClick={() => handleDrilldown({ title: "Connect to HMRC", data: {} })}>Connect to HMRC</Button></CardContent></Card>
+    </div>
+  )
+
+  const renderCorporationTaxContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Corporation Tax Submission</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">CT600 Filing</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Submit corporation tax returns to HMRC</p></CardContent></Card>
+    </div>
+  )
+
+  const renderVATFilingContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">VAT Filing</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">MTD VAT Returns</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Submit VAT returns via Making Tax Digital</p></CardContent></Card>
+    </div>
+  )
+
+  const renderPAYEFilingContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">PAYE Filing</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">RTI Submissions</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Submit PAYE information via RTI</p></CardContent></Card>
+    </div>
+  )
+
+  const renderSubmissionHistoryContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Submission History</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">HMRC Submission History</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">View all submissions to HMRC</p></CardContent></Card>
+    </div>
+  )
+
+  const renderCompaniesHouseConnectionContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Companies House Connection</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Companies House Authentication</CardTitle></CardHeader>
+      <CardContent><Button onClick={() => handleDrilldown({ title: "Connect to Companies House", data: {} })}>Connect</Button></CardContent></Card>
+    </div>
+  )
+
+  const renderAnnualAccountsFilingContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Annual Accounts Filing</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">File Annual Accounts</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Submit annual accounts to Companies House</p></CardContent></Card>
+    </div>
+  )
+
+  const renderConfirmationStatementContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Confirmation Statement</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">File Confirmation Statement</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Submit annual confirmation statement</p></CardContent></Card>
+    </div>
+  )
+
+  const renderCompaniesHouseFormsContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Companies House Forms</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Other Statutory Forms</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">File other Companies House forms</p></CardContent></Card>
+    </div>
+  )
+
+  const renderFilingHistoryContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Filing History</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Companies House Filing History</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">View all Companies House filings</p></CardContent></Card>
+    </div>
+  )
+
+  const renderEntityTemplatesContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Entity Templates</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Accounting Framework Templates</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">Select templates for different entity types and accounting frameworks</p></CardContent></Card>
+    </div>
+  )
+
+  const renderAuditTrailContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Audit Trail</h2>
+      <Card><CardHeader><CardTitle className="text-[#001f3f]">Complete Audit Trail</CardTitle></CardHeader>
+      <CardContent><p className="text-[#001f3f]">View all system activities and changes</p></CardContent></Card>
+    </div>
+  )
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
