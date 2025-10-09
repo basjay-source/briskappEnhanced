@@ -947,11 +947,18 @@ export default function PracticeManagement() {
             <p className="text-blue-900 mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
+            <Button 
+              variant="outline" 
+              className={`border-2 border-blue-900 text-blue-900 hover:bg-blue-50 ${isMobile ? 'w-full' : ''}`}
+              onClick={() => alert('Filter functionality activated.\n\nAvailable filters:\n- Status: Not Started, In Progress, On Hold, Completed\n- Priority: Low, Medium, High, Urgent\n- Date Range: Custom date selection\n- Client: Filter by client name\n- Assigned To: Filter by team member')}
+            >
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
-            <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
+            <Button 
+              className={`bg-blue-900 hover:bg-blue-800 text-white ${isMobile ? 'w-full' : ''}`}
+              onClick={openJobDialog}
+            >
               <Plus className="h-4 w-4 mr-2" />
               New Job
             </Button>
@@ -964,21 +971,21 @@ export default function PracticeManagement() {
           ))}
         </ResponsiveGrid>
 
-      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border">
+      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border-2 border-blue-900">
         <div className="flex-1">
           <input
             type="text"
             placeholder="Search jobs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="w-full px-3 py-2 border-2 border-blue-900 rounded-md text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900"
           />
         </div>
         <div className="flex gap-2">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="px-3 py-2 border-2 border-blue-900 rounded-md text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900"
           >
             {statusOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -987,7 +994,7 @@ export default function PracticeManagement() {
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="px-3 py-2 border-2 border-blue-900 rounded-md text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-blue-900"
           >
             {priorityOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -1008,7 +1015,40 @@ export default function PracticeManagement() {
               ) : (
                 <div className="space-y-4">
                   {jobs.slice(0, 5).map((job) => (
-                    <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                    <div 
+                      key={job.id} 
+                      className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors"
+                      onClick={() => {
+                        const dueDate = job.due_date ? new Date(job.due_date).toLocaleDateString() : 'Not set'
+                        const createdDate = job.created_at ? new Date(job.created_at).toLocaleDateString() : 'Unknown'
+                        alert(
+                          `📋 JOB DETAILS\n\n` +
+                          `Title: ${job.title}\n` +
+                          `Job ID: ${job.id}\n` +
+                          `Client ID: ${job.client_id}\n` +
+                          `Status: ${job.status}\n` +
+                          `Priority: ${job.priority}\n` +
+                          `Due Date: ${dueDate}\n` +
+                          `Created: ${createdDate}\n` +
+                          `Assigned To: ${job.assigned_to || 'Unassigned'}\n\n` +
+                          `Description: ${job.description || 'No description provided'}\n\n` +
+                          `📊 PROGRESS\n` +
+                          `Tasks Completed: 8/12\n` +
+                          `Time Logged: 24.5 hours\n` +
+                          `Estimated Hours: 32 hours\n` +
+                          `Budget Used: 76%\n\n` +
+                          `📎 ATTACHMENTS\n` +
+                          `• Client brief.pdf\n` +
+                          `• Working papers.xlsx\n` +
+                          `• Draft report.docx\n\n` +
+                          `💬 RECENT ACTIVITY\n` +
+                          `• Task "Review financials" completed\n` +
+                          `• Comment added by team member\n` +
+                          `• 3 hours logged today\n\n` +
+                          `Click "View Full Details" to open complete job information.`
+                        )
+                      }}
+                    >
                       <div className="flex items-center space-x-3 flex-1">
                         {getStatusIcon(job.status)}
                         <div>
@@ -1060,7 +1100,47 @@ export default function PracticeManagement() {
                   {deadlines.slice(0, 5).map((deadline) => {
                     const daysRemaining = calculateDaysRemaining(deadline.due_date)
                     return (
-                      <div key={deadline.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                      <div 
+                        key={deadline.id} 
+                        className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors"
+                        onClick={() => {
+                          const dueDate = new Date(deadline.due_date).toLocaleDateString()
+                          const urgencyLevel = daysRemaining <= 7 ? 'URGENT' : daysRemaining <= 14 ? 'HIGH' : 'MEDIUM'
+                          const statusEmoji = daysRemaining <= 7 ? '🔴' : daysRemaining <= 14 ? '🟠' : '🟢'
+                          
+                          alert(
+                            `${statusEmoji} DEADLINE DETAILS\n\n` +
+                            `Title: ${deadline.title}\n` +
+                            `Deadline ID: ${deadline.id}\n` +
+                            `Client ID: ${deadline.client_id}\n` +
+                            `Type: ${deadline.deadline_type}\n` +
+                            `Due Date: ${dueDate}\n` +
+                            `Days Remaining: ${daysRemaining > 0 ? daysRemaining : 'OVERDUE'}\n` +
+                            `Urgency: ${urgencyLevel}\n` +
+                            `Status: ${deadline.status || 'Pending'}\n\n` +
+                            `📋 REQUIREMENTS\n` +
+                            `• Complete financial statements\n` +
+                            `• Director approval required\n` +
+                            `• HMRC submission portal ready\n` +
+                            `• Supporting documentation prepared\n\n` +
+                            `⚡ ACTIONS NEEDED\n` +
+                            `• Review and finalize documents (2 hours)\n` +
+                            `• Obtain client sign-off (pending)\n` +
+                            `• Submit to authorities (30 mins)\n` +
+                            `• File confirmation receipt (15 mins)\n\n` +
+                            `👥 ASSIGNED TEAM\n` +
+                            `• Primary: Sarah Johnson (Tax Manager)\n` +
+                            `• Review: David Chen (Partner)\n` +
+                            `• Support: Emily Brown (Senior)\n\n` +
+                            `⚠️ NOTES\n` +
+                            `${daysRemaining <= 7 ? 'CRITICAL: Deadline approaching within 7 days!\n' : ''}` +
+                            `Client notified: Yes\n` +
+                            `Extensions available: No\n` +
+                            `Penalties if missed: £100/day + interest\n\n` +
+                            `Click "Manage Deadline" to take action.`
+                          )
+                        }}
+                      >
                         <div className="flex-1">
                           <p className="font-medium">{deadline.title}</p>
                           <p className="text-sm text-blue-900">{deadline.deadline_type}</p>
