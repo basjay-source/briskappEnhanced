@@ -68,7 +68,7 @@ export default function FormWizard({
           <div className="flex items-center space-x-4">
             {logoComponent}
             <div>
-              <h2 className="text-xl font-bold">{title}</h2>
+              <h2 className=" text-[#001f3f] text-xl font-bold">{title}</h2>
               <p className={textAccentColor}>Complete all sections to submit your application</p>
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function FormWizard({
       )}
       
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{pages[currentPage].title}</h3>
+        <h3 className=" text-[#001f3f] text-lg font-semibold">{pages[currentPage].title}</h3>
         <div className="text-sm text-gray-500">
           Page {currentPage + 1} of {pages.length}
         </div>

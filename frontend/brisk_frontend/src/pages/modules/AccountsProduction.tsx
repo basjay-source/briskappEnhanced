@@ -174,7 +174,7 @@ const AccountsProduction: React.FC = () => {
   const renderTrialBalanceContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Trial Balance</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">Trial Balance</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Upload className="h-4 w-4 mr-2" />
@@ -217,7 +217,7 @@ const AccountsProduction: React.FC = () => {
   const renderAdjustmentsContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Adjustments</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">Adjustments</h2>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           New Adjustment
@@ -241,7 +241,7 @@ const AccountsProduction: React.FC = () => {
   const renderStatementsContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Financial Statements</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">Financial Statements</h2>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           Generate Statements
@@ -281,7 +281,7 @@ const AccountsProduction: React.FC = () => {
   const renderConsolidationContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Consolidation</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">Consolidation</h2>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           New Consolidation
@@ -305,7 +305,7 @@ const AccountsProduction: React.FC = () => {
   const renderReportsContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Financial Reports</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">Financial Reports</h2>
         <ExportButton
           data={[
             ['Report Type', 'Description', 'Status'],
@@ -364,7 +364,7 @@ const AccountsProduction: React.FC = () => {
   const renderIXBRLContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">iXBRL Generation</h2>
+        <h2 className=" text-[#001f3f] text-xl font-semibold">iXBRL Generation</h2>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           Generate iXBRL

@@ -190,19 +190,19 @@ export default function Payroll() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Development</span>
-                    <span className="font-semibold">89 employees</span>
+                    <span className="font-semibold text-[#001f3f]">89 employees</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Marketing</span>
-                    <span className="font-semibold">45 employees</span>
+                    <span className="font-semibold text-[#001f3f]">45 employees</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Finance</span>
-                    <span className="font-semibold">32 employees</span>
+                    <span className="font-semibold text-[#001f3f]">32 employees</span>
                   </div>
                   <div className="flex justify-between">
                     <span>HR</span>
-                    <span className="font-semibold">18 employees</span>
+                    <span className="font-semibold text-[#001f3f]">18 employees</span>
                   </div>
                 </div>
               </div>
@@ -211,15 +211,15 @@ export default function Payroll() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Full-time</span>
-                    <span className="font-semibold">198 employees</span>
+                    <span className="font-semibold text-[#001f3f]">198 employees</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Part-time</span>
-                    <span className="font-semibold">34 employees</span>
+                    <span className="font-semibold text-[#001f3f]">34 employees</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Contract</span>
-                    <span className="font-semibold">15 employees</span>
+                    <span className="font-semibold text-[#001f3f]">15 employees</span>
                   </div>
                 </div>
               </div>
@@ -244,15 +244,15 @@ export default function Payroll() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Gross Pay</span>
-                  <span className="font-semibold">£980,000</span>
+                  <span className="font-semibold text-[#001f3f]">£980,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Employer NI</span>
-                  <span className="font-semibold">£135,000</span>
+                  <span className="font-semibold text-[#001f3f]">£135,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Pension Contributions</span>
-                  <span className="font-semibold">£85,000</span>
+                  <span className="font-semibold text-[#001f3f]">£85,000</span>
                 </div>
               </div>
             </div>
@@ -359,14 +359,14 @@ export default function Payroll() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
-                      <p className="font-medium">Monthly Payroll</p>
+                      <p className="font-medium text-[#001f3f]">Monthly Payroll</p>
                       <p className="text-sm text-[#001f3f]">December 2024</p>
                     </div>
                     <Badge variant="outline">Due: 28 Dec</Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-[2px]">
                     <div>
-                      <p className="font-medium">RTI Submission</p>
+                      <p className="font-medium text-[#001f3f]">RTI Submission</p>
                       <p className="text-sm text-[#001f3f]">FPS December</p>
                     </div>
                     <Badge variant="secondary">Due: 19 Jan</Badge>
@@ -387,21 +387,21 @@ export default function Payroll() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Average Monthly Cost</span>
-                      <span className="font-semibold">£1.15M</span>
+                      <span className="font-semibold text-[#001f3f]">£1.15M</span>
                     </div>
                     <Progress value={85} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Employee Satisfaction</span>
-                      <span className="font-semibold">94%</span>
+                      <span className="font-semibold text-[#001f3f]">94%</span>
                     </div>
                     <Progress value={94} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Compliance Score</span>
-                      <span className="font-semibold">98%</span>
+                      <span className="font-semibold text-[#001f3f]">98%</span>
                     </div>
                     <Progress value={98} className="h-2" />
                   </div>
@@ -417,7 +417,7 @@ export default function Payroll() {
       return (
         <div className="text-center py-8">
           <Calculator className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Select a Payroll Processing Option</h3>
+          <h3 className=" text-[#001f3f] text-lg font-semibold mb-2">Select a Payroll Processing Option</h3>
           <p className="text-[#001f3f]">Choose from the sub-menu to access payroll processing features</p>
         </div>
       )
@@ -427,7 +427,7 @@ export default function Payroll() {
       return (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold">Run Payroll</h3>
+            <h3 className=" text-[#001f3f] text-xl font-semibold">Run Payroll</h3>
             <Button>
               <Play className="h-4 w-4 mr-2" />
               Start Payroll Run
@@ -444,11 +444,11 @@ export default function Payroll() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span>Employees to Process</span>
-                    <span className="font-semibold">247</span>
+                    <span className="font-semibold text-[#001f3f]">247</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Estimated Gross Pay</span>
-                    <span className="font-semibold">£980,000</span>
+                    <span className="font-semibold text-[#001f3f]">£980,000</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Status</span>
@@ -466,15 +466,15 @@ export default function Payroll() {
                 <div className="space-y-3">
                   <div className="flex items-center">
                     <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                    <span className="text-sm">Timesheets approved</span>
+                    <span className="text-sm text-[#001f3f]">Timesheets approved</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-                    <span className="text-sm">Expenses processed</span>
+                    <span className="text-sm text-[#001f3f]">Expenses processed</span>
                   </div>
                   <div className="flex items-center">
                     <Clock className="h-4 w-4 text-orange-600 mr-2" />
-                    <span className="text-sm">Salary adjustments pending</span>
+                    <span className="text-sm text-[#001f3f]">Salary adjustments pending</span>
                   </div>
                 </div>
               </CardContent>
@@ -486,7 +486,7 @@ export default function Payroll() {
 
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
+        <h3 className=" text-[#001f3f] text-lg font-semibold mb-2">Content Coming Soon</h3>
         <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )

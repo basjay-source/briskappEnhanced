@@ -74,7 +74,7 @@ export default function ClientPortal() {
         <div className="flex items-center gap-2">
           <User className="h-8 w-8 text-gray-400" />
           <div className="text-right">
-            <p className="font-medium">ABC Manufacturing Ltd</p>
+            <p className="font-medium text-[#001f3f]">ABC Manufacturing Ltd</p>
             <p className="text-sm text-[#001f3f]">Client ID: CLI001</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function ClientPortal() {
                 {jobs.map((job) => (
                   <div key={job.id} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{job.title}</h4>
+                      <h4 className=" text-[#001f3f] font-medium">{job.title}</h4>
                       <Badge className={
                         job.status === 'completed' ? 'bg-green-100 text-green-800' :
                         job.status === 'in_progress' ? 'bg-blue-100 text-[#001f3f]' :
@@ -180,7 +180,7 @@ export default function ClientPortal() {
                       <p className="font-medium text-sm">{msg.from}</p>
                       <p className="text-xs text-gray-500">{msg.timestamp}</p>
                     </div>
-                    <p className="text-sm">{msg.message}</p>
+                    <p className="text-sm text-[#001f3f]">{msg.message}</p>
                   </div>
                 ))}
                 

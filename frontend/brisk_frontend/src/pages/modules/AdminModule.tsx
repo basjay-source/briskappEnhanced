@@ -235,15 +235,15 @@ const AdminModule = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subscriptions</span>
-                  <span className="font-semibold">£789,450</span>
+                  <span className="font-semibold text-[#001f3f]">£789,450</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Usage Overages</span>
-                  <span className="font-semibold">£45,230</span>
+                  <span className="font-semibold text-[#001f3f]">£45,230</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Add-ons</span>
-                  <span className="font-semibold">£12,550</span>
+                  <span className="font-semibold text-[#001f3f]">£12,550</span>
                 </div>
               </div>
             </div>
@@ -252,15 +252,15 @@ const AdminModule = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>New MRR</span>
-                  <span className="font-semibold text-green-600">+£23,450</span>
+                  <span className="font-semibold text-green-600 text-[#001f3f]">+£23,450</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Expansion MRR</span>
-                  <span className="font-semibold text-green-600">+£15,230</span>
+                  <span className="font-semibold text-green-600 text-[#001f3f]">+£15,230</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Churn MRR</span>
-                  <span className="font-semibold text-red-600">-£8,920</span>
+                  <span className="font-semibold text-red-600 text-[#001f3f]">-£8,920</span>
                 </div>
               </div>
             </div>
@@ -310,7 +310,7 @@ const AdminModule = () => {
                 {auditLogs.slice(0, 5).map((log) => (
                   <div key={log.id} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div>
-                      <p className="font-medium">{log.action}</p>
+                      <p className="font-medium text-[#001f3f]">{log.action}</p>
                       <p className="text-sm text-[#001f3f]">{log.actor}</p>
                     </div>
                     <Badge variant="outline">{new Date(log.timestamp).toLocaleTimeString()}</Badge>
@@ -413,7 +413,7 @@ const AdminModule = () => {
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
                         <span>{plan.name}</span>
-                        <span className="font-semibold">{plan.tenants} tenants</span>
+                        <span className="font-semibold text-[#001f3f]">{plan.tenants} tenants</span>
                       </div>
                     ))}
                   </div>
@@ -422,7 +422,7 @@ const AdminModule = () => {
                     {plans.map(plan => (
                       <div key={plan.id} className="flex justify-between py-1">
                         <span>{plan.name}</span>
-                        <span className="font-semibold">£{plan.mrr.toLocaleString()}</span>
+                        <span className="font-semibold text-[#001f3f]">£{plan.mrr.toLocaleString()}</span>
                       </div>
                     ))}
                   </div>

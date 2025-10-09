@@ -181,7 +181,7 @@ export default function WorkflowBuilder() {
                         <Input
                           value={step.name}
                           onChange={(e) => updateStep(step.id, 'name', e.target.value)}
-                          className="font-medium"
+                          className="font-medium text-[#001f3f]"
                         />
                       </div>
                       <div className="flex items-center gap-2">
@@ -323,16 +323,16 @@ export default function WorkflowBuilder() {
             <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm">Total Steps</span>
-                  <span className="font-medium">{template.steps.length}</span>
+                  <span className="text-sm text-[#001f3f]">Total Steps</span>
+                  <span className="font-medium text-[#001f3f]">{template.steps.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm">Estimated Hours</span>
-                  <span className="font-medium">{totalHours}h</span>
+                  <span className="text-sm text-[#001f3f]">Estimated Hours</span>
+                  <span className="font-medium text-[#001f3f]">{totalHours}h</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm">Checklist Items</span>
-                  <span className="font-medium">
+                  <span className="text-sm text-[#001f3f]">Checklist Items</span>
+                  <span className="font-medium text-[#001f3f]">
                     {template.steps.reduce((sum, step) => sum + step.checklist.length, 0)}
                   </span>
                 </div>

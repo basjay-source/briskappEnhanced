@@ -484,7 +484,7 @@ export default function EmailSystem() {
       <div className="h-full flex flex-col bg-white">
         <div className="border-b p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Email</h2>
+            <h2 className=" text-[#001f3f] text-xl font-semibold">Email</h2>
             <Button onClick={handleCompose} size="sm" className="bg-brisk-primary">
               <Mail className="h-4 w-4 mr-2" />
               Compose
@@ -531,7 +531,7 @@ export default function EmailSystem() {
         {isComposing && (
           <div className="fixed inset-0 bg-white z-50 flex flex-col">
             <div className="border-b p-4 flex items-center justify-between">
-              <h3 className="font-semibold">New Message</h3>
+              <h3 className=" text-[#001f3f] font-semibold">New Message</h3>
               <div className="flex items-center gap-2">
                 <Button onClick={handleSend} size="sm" className="bg-brisk-primary">
                   <Send className="h-4 w-4 mr-2" />
@@ -580,7 +580,7 @@ export default function EmailSystem() {
           {showAccountSettings ? (
             <div className="p-4 space-y-4">
               <div className="border-b pb-3">
-                <h3 className="font-medium text-sm mb-2">Connected Accounts</h3>
+                <h3 className=" text-[#001f3f] font-medium text-sm mb-2">Connected Accounts</h3>
                 <div className="space-y-2">
                   {connectedAccounts.map((account) => (
                     <div key={account.id} className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded-[2px]">
@@ -621,7 +621,7 @@ export default function EmailSystem() {
               </div>
               
               <div>
-                <h3 className="font-medium text-sm mb-2">Add Account</h3>
+                <h3 className=" text-[#001f3f] font-medium text-sm mb-2">Add Account</h3>
                 <div className="space-y-2">
                   <Button 
                     variant="outline" 
@@ -672,10 +672,10 @@ export default function EmailSystem() {
                   >
                     <div className="flex items-center gap-3">
                       <Icon className="h-4 w-4" />
-                      <span className="text-sm">{folder.name}</span>
+                      <span className="text-sm text-[#001f3f]">{folder.name}</span>
                     </div>
                     {folder.count > 0 && (
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary" className="text-xs text-[#001f3f]">
                         {folder.count}
                       </Badge>
                     )}
@@ -690,7 +690,7 @@ export default function EmailSystem() {
       <div className="flex-1 flex flex-col">
         <div className="border-b p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold capitalize">{selectedFolder}</h2>
+            <h2 className=" text-[#001f3f] text-xl font-semibold capitalize">{selectedFolder}</h2>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => setShowFilters(!showFilters)}>
                 <Filter className="h-4 w-4" />
@@ -729,7 +729,7 @@ export default function EmailSystem() {
                       {thread.participants.join(', ')}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 text-[#001f3f]">
                     {formatTimestamp(thread.lastActivity)}
                   </span>
                 </div>
@@ -740,12 +740,12 @@ export default function EmailSystem() {
                 
                 <div className="flex items-center gap-2">
                   {thread.clientId && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs text-[#001f3f]">
                       Client: ABC Ltd
                     </Badge>
                   )}
                   {thread.jobId && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs text-[#001f3f]">
                       Job: VAT Return
                     </Badge>
                   )}
@@ -759,7 +759,7 @@ export default function EmailSystem() {
               <>
                 <div className="border-b p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">{selectedThread.subject}</h3>
+                    <h3 className=" text-[#001f3f] font-semibold">{selectedThread.subject}</h3>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm">
                         <Archive className="h-4 w-4" />
@@ -785,7 +785,7 @@ export default function EmailSystem() {
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-brisk-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
+                            <div className="w-8 h-8 bg-brisk-primary rounded-full flex items-center justify-center text-white text-sm font-medium text-[#001f3f]">>
                               {email.from.charAt(0).toUpperCase()}
                             </div>
                             <div>
@@ -796,7 +796,7 @@ export default function EmailSystem() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 text-[#001f3f]">
                               {formatTimestamp(email.timestamp)}
                             </span>
                             {email.isStarred && <Star className="h-4 w-4 text-brisk-primary fill-current" />}
@@ -811,7 +811,7 @@ export default function EmailSystem() {
                           <div className="mt-4 p-3 bg-gray-50 rounded-[2px]">
                             <div className="flex items-center gap-2 text-sm">
                               <Paperclip className="h-4 w-4" />
-                              <span className="font-medium">3 attachments</span>
+                              <span className="font-medium text-[#001f3f]">3 attachments</span>
                             </div>
                           </div>
                         )}
@@ -852,7 +852,7 @@ export default function EmailSystem() {
       {isComposing && (
         <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border-2 border-[#001f3f] rounded-t-lg shadow-lg z-50 flex flex-col`}>
           <div className="flex items-center justify-between p-3 border-b bg-gray-50 rounded-t-lg">
-            <h4 className="font-medium text-sm">New Message</h4>
+            <h4 className=" text-[#001f3f] font-medium text-sm">New Message</h4>
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
@@ -875,7 +875,7 @@ export default function EmailSystem() {
             <>
               <div className="p-3 space-y-2 border-b">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium w-12">To:</span>
+                  <span className="text-sm font-medium w-12 text-[#001f3f]">To:</span>
                   <Input
                     placeholder="Enter recipients"
                     value={composeData.to}
@@ -884,7 +884,7 @@ export default function EmailSystem() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium w-12">Client:</span>
+                  <span className="text-sm font-medium w-12 text-[#001f3f]">Client:</span>
                   <select
                     onChange={(e) => {
                       if (e.target.value) {
@@ -902,7 +902,7 @@ export default function EmailSystem() {
                   </select>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium w-12">Subject:</span>
+                  <span className="text-sm font-medium w-12 text-[#001f3f]">Subject:</span>
                   <Input
                     placeholder="Enter subject"
                     value={replaceTemplateVariables(composeData.subject, clientTemplateData)}

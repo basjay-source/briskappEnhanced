@@ -35,9 +35,9 @@ export default function CurrencySwitcher() {
             onClick={() => changeCurrency(currency.code)}
             className={selectedCurrency.code === currency.code ? 'bg-blue-50' : ''}
           >
-            <span className="mr-2">{currency.flag}</span>
-            <span className="font-medium">{currency.code}</span>
-            <span className="ml-2 text-gray-500">{currency.name}</span>
+            <span className="mr-2 text-[#001f3f]">{currency.flag}</span>
+            <span className="font-medium text-[#001f3f]">{currency.code}</span>
+            <span className="ml-2 text-gray-500 text-[#001f3f]">{currency.name}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

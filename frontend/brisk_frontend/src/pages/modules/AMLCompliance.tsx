@@ -214,7 +214,7 @@ export default function AMLCompliance() {
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
                             <span>Overall Score</span>
-                            <span className="text-green-600">96%</span>
+                            <span className="text-green-600 text-[#001f3f]">96%</span>
                           </div>
                           <Progress value={96} className="h-2" />
                         </div>
@@ -227,15 +227,15 @@ export default function AMLCompliance() {
                         <div className="space-y-2">
                           <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>Low Risk</span>
-                            <span className="font-semibold">15 cases (65%)</span>
+                            <span className="font-semibold text-[#001f3f]">15 cases (65%)</span>
                           </div>
                           <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>Medium Risk</span>
-                            <span className="font-semibold">6 cases (26%)</span>
+                            <span className="font-semibold text-[#001f3f]">6 cases (26%)</span>
                           </div>
                           <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>High Risk</span>
-                            <span className="font-semibold">2 cases (9%)</span>
+                            <span className="font-semibold text-[#001f3f]">2 cases (9%)</span>
                           </div>
                         </div>
                       </div>
@@ -302,21 +302,21 @@ export default function AMLCompliance() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Risk Assessment Completion</span>
-                      <span className="font-semibold">92%</span>
+                      <span className="font-semibold text-[#001f3f]">92%</span>
                     </div>
                     <Progress value={92} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>KYC Documentation</span>
-                      <span className="font-semibold">88%</span>
+                      <span className="font-semibold text-[#001f3f]">88%</span>
                     </div>
                     <Progress value={88} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Training Compliance</span>
-                      <span className="font-semibold">96%</span>
+                      <span className="font-semibold text-[#001f3f]">96%</span>
                     </div>
                     <Progress value={96} className="h-2" />
                   </div>
@@ -330,7 +330,7 @@ export default function AMLCompliance() {
 
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
+        <h3 className=" text-[#001f3f] text-lg font-semibold mb-2">Content Coming Soon</h3>
         <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )

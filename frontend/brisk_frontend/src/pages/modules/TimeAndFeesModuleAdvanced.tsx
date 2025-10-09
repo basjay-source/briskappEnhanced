@@ -314,7 +314,7 @@ export default function TimeAndFeesModuleAdvanced() {
                         <p className="text-sm text-gray-500">{entry.description}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">{entry.hours}h</p>
+                        <p className="font-medium text-[#001f3f]">{entry.hours}h</p>
                         <p className="text-sm text-gray-500">{entry.employeeName}</p>
                         <p className="text-sm text-green-600">£{(entry.hours * entry.hourlyRate).toFixed(2)}</p>
                       </div>
@@ -383,7 +383,7 @@ export default function TimeAndFeesModuleAdvanced() {
               <CardContent>
                 <div className="space-y-6">
                   <div className="text-center">
-                    <div className="text-6xl font-mono font-bold text-[#001f3f] mb-4">
+                    <div className="text-6xl font-mono font-bold text-[#001f3f] mb-4 text-[#001f3f]">>
                       {formatTime(currentTime)}
                     </div>
                     <div className="flex justify-center gap-4">

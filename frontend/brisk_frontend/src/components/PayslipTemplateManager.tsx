@@ -251,7 +251,7 @@ export default function PayslipTemplateManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold">Payslip Templates</h2>
+          <h2 className=" text-[#001f3f] text-xl font-bold">Payslip Templates</h2>
           <p className="text-[#001f3f]">Customize payslip templates and branding for your organization</p>
         </div>
         <div className="flex gap-2">
@@ -333,7 +333,7 @@ export default function PayslipTemplateManager() {
               <Card key={template.id} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{template.name}</CardTitle>
+                    <CardTitle className="text-lg text-[#001f3f]">{template.name}</CardTitle>
                     <div className="flex gap-1">
                       {template.is_default && (
                         <Badge variant="secondary">Default</Badge>
@@ -414,7 +414,7 @@ export default function PayslipTemplateManager() {
                     >
                       {branding.custom_branding?.company_name || 'Your Company Name'}
                     </h3>
-                    <h4 className="text-lg font-medium mb-4">
+                    <h4 className=" text-[#001f3f] text-lg font-medium mb-4">
                       {selectedTemplate?.name || 'Payslip Template Preview'}
                     </h4>
                   </div>
@@ -423,19 +423,19 @@ export default function PayslipTemplateManager() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Employee Name</p>
-                        <p className="font-medium">John Smith</p>
+                        <p className="font-medium text-[#001f3f]">John Smith</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Employee Number</p>
-                        <p className="font-medium">EMP001</p>
+                        <p className="font-medium text-[#001f3f]">EMP001</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Pay Period</p>
-                        <p className="font-medium">January 2024</p>
+                        <p className="font-medium text-[#001f3f]">January 2024</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Pay Date</p>
-                        <p className="font-medium">31/01/2024</p>
+                        <p className="font-medium text-[#001f3f]">31/01/2024</p>
                       </div>
                     </div>
 
@@ -450,7 +450,7 @@ export default function PayslipTemplateManager() {
                           <span>Overtime</span>
                           <span>£200.00</span>
                         </div>
-                        <div className="flex justify-between font-medium border-t pt-1">
+                        <div className="flex justify-between font-medium border-t pt-1 text-[#001f3f]">>
                           <span>Gross Pay</span>
                           <span>£3,200.00</span>
                         </div>
@@ -472,7 +472,7 @@ export default function PayslipTemplateManager() {
                           <span>Pension</span>
                           <span>£96.00</span>
                         </div>
-                        <div className="flex justify-between font-medium border-t pt-1">
+                        <div className="flex justify-between font-medium border-t pt-1 text-[#001f3f]">>
                           <span>Total Deductions</span>
                           <span>£832.00</span>
                         </div>
@@ -483,7 +483,7 @@ export default function PayslipTemplateManager() {
                       className="border-t pt-4 p-3 rounded"
                       style={{ backgroundColor: `${branding.theme_colors?.primary}10` }}
                     >
-                      <div className="flex justify-between text-lg font-bold">
+                      <div className="flex justify-between text-lg font-bold text-[#001f3f]">>
                         <span>Net Pay</span>
                         <span style={{ color: branding.theme_colors?.primary }}>£2,368.00</span>
                       </div>

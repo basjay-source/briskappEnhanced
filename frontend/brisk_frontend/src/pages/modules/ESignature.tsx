@@ -226,7 +226,7 @@ export default function DocuSignage() {
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
                             <span>Overall Score</span>
-                            <span className="text-green-600">94%</span>
+                            <span className="text-green-600 text-[#001f3f]">94%</span>
                           </div>
                           <Progress value={94} className="h-2" />
                         </div>
@@ -303,21 +303,21 @@ export default function DocuSignage() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Completion Rate</span>
-                      <span className="font-semibold">94%</span>
+                      <span className="font-semibold text-[#001f3f]">94%</span>
                     </div>
                     <Progress value={94} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Template Usage</span>
-                      <span className="font-semibold">87%</span>
+                      <span className="font-semibold text-[#001f3f]">87%</span>
                     </div>
                     <Progress value={87} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>User Adoption</span>
-                      <span className="font-semibold">92%</span>
+                      <span className="font-semibold text-[#001f3f]">92%</span>
                     </div>
                     <Progress value={92} className="h-2" />
                   </div>
@@ -331,7 +331,7 @@ export default function DocuSignage() {
 
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
+        <h3 className=" text-[#001f3f] text-lg font-semibold mb-2">Content Coming Soon</h3>
         <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )

@@ -208,7 +208,7 @@ export default function ClientPortalAdvanced({
                         <div key={job.id} className="flex items-center gap-4 p-4 border-2 border-[#001f3f] rounded-[2px]">
                           {getStatusIcon(job.status)}
                           <div className="flex-1">
-                            <h4 className="font-medium">{job.title}</h4>
+                            <h4 className=" text-[#001f3f] font-medium">{job.title}</h4>
                             <p className="text-sm text-[#001f3f]">{job.type}</p>
                             <div className="flex items-center gap-2 mt-2">
                               <Progress value={job.progress} className="flex-1 h-2" />
@@ -270,7 +270,7 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-center gap-3">
                           {getStatusIcon(job.status)}
                           <div>
-                            <h3 className="font-semibold">{job.title}</h3>
+                            <h3 className=" text-[#001f3f] font-semibold">{job.title}</h3>
                             <p className="text-sm text-[#001f3f]">{job.type}</p>
                           </div>
                         </div>
@@ -295,7 +295,7 @@ export default function ClientPortalAdvanced({
 
                       <div className="flex items-center justify-between">
                         <p className="text-sm text-[#001f3f]">
-                          Assigned to: <span className="font-medium">{job.assignedTo}</span>
+                          Assigned to: <span className="font-medium text-[#001f3f]">{job.assignedTo}</span>
                         </p>
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline">
@@ -329,7 +329,7 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-center gap-3">
                           <FileText className="h-8 w-8 text-[#001f3f]" />
                           <div>
-                            <h4 className="font-medium">{doc.name}</h4>
+                            <h4 className=" text-[#001f3f] font-medium">{doc.name}</h4>
                             <p className="text-sm text-[#001f3f]">
                               {job.title} • {doc.size} • {doc.uploaded}
                             </p>
@@ -367,9 +367,9 @@ export default function ClientPortalAdvanced({
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4 text-[#001f3f]" />
-                            <span className="font-medium">{message.from}</span>
+                            <span className="font-medium text-[#001f3f]">{message.from}</span>
                           </div>
-                          <span className="text-xs text-gray-500">{message.time}</span>
+                          <span className="text-xs text-gray-500 text-[#001f3f]">{message.time}</span>
                         </div>
                         <p className="text-sm text-[#001f3f] mb-2">{message.message}</p>
                         <p className="text-xs text-gray-500">Re: {job.title}</p>

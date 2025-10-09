@@ -568,7 +568,7 @@ export default function NewEmailStudio() {
                     onClick={() => loadTemplate(template)}
                     className="w-full text-left p-2 rounded-[2px] border-2 border-[#001f3f] hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
-                    <div className="font-medium text-sm">{template.name}</div>
+                    <div className="font-medium text-sm text-[#001f3f]">>{template.name}</div>
                     <div className="text-xs text-gray-500">{template.category}</div>
                   </button>
                 ))}
@@ -591,7 +591,7 @@ export default function NewEmailStudio() {
                         onClick={() => insertVariable(variable.key)}
                         className="w-full text-left p-2 rounded-[2px] border-2 border-[#001f3f] hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       >
-                        <div className="font-medium text-sm">{variable.label}</div>
+                        <div className="font-medium text-sm text-[#001f3f]">>{variable.label}</div>
                         <div className="text-xs text-gray-500">{variable.description}</div>
                         {templateData && (
                           <div className="text-xs text-[#001f3f] mt-1">

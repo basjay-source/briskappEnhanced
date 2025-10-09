@@ -387,16 +387,16 @@ export default function TimeAndFeesModule() {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Sarah Johnson</span>
+                        <span className="text-sm font-medium text-[#001f3f]">Sarah Johnson</span>
                         <div className="flex items-center gap-2">
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div className="bg-green-500 h-2 rounded-full" style={{ width: '95%' }}></div>
                           </div>
-                          <span className="text-xs text-green-600">95%</span>
+                          <span className="text-xs text-green-600 text-[#001f3f]">95%</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Mike Chen</span>
+                        <span className="text-sm font-medium text-[#001f3f]">Mike Chen</span>
                         <div className="flex items-center gap-2">
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div className="bg-blue-500 h-2 rounded-full" style={{ width: '87%' }}></div>
@@ -405,12 +405,12 @@ export default function TimeAndFeesModule() {
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Emma Wilson</span>
+                        <span className="text-sm font-medium text-[#001f3f]">Emma Wilson</span>
                         <div className="flex items-center gap-2">
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div className="bg-orange-500 h-2 rounded-full" style={{ width: '78%' }}></div>
                           </div>
-                          <span className="text-xs text-orange-600">78%</span>
+                          <span className="text-xs text-orange-600 text-[#001f3f]">78%</span>
                         </div>
                       </div>
                     </div>
@@ -426,19 +426,19 @@ export default function TimeAndFeesModule() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm text-[#001f3f]">Billable Hours</span>
-                        <span className="text-sm font-medium">324.5h</span>
+                        <span className="text-sm font-medium text-[#001f3f]">324.5h</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-[#001f3f]">Average Rate</span>
-                        <span className="text-sm font-medium">£85/hr</span>
+                        <span className="text-sm font-medium text-[#001f3f]">£85/hr</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-[#001f3f]">Total Revenue</span>
-                        <span className="text-sm font-medium">£27,582</span>
+                        <span className="text-sm font-medium text-[#001f3f]">£27,582</span>
                       </div>
                       <div className="flex justify-between border-t pt-2">
-                        <span className="text-sm font-medium">Projected Monthly</span>
-                        <span className="text-sm font-bold text-green-600">£45,200</span>
+                        <span className="text-sm font-medium text-[#001f3f]">Projected Monthly</span>
+                        <span className="text-sm font-bold text-green-600 text-[#001f3f]">£45,200</span>
                       </div>
                     </div>
                   </CardContent>
@@ -457,7 +457,7 @@ export default function TimeAndFeesModule() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="text-center">
-                  <div className="text-6xl font-mono font-bold text-brisk-primary mb-4">
+                  <div className="text-6xl font-mono font-bold text-brisk-primary mb-4 text-[#001f3f]">>
                     {formatTime(currentTime)}
                   </div>
                   <div className="text-sm text-[#001f3f] mb-6">
@@ -532,7 +532,7 @@ export default function TimeAndFeesModule() {
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="checkbox" id="billable" defaultChecked />
-                  <label htmlFor="billable" className="text-sm">Billable time</label>
+                  <label htmlFor="billable" className="text-sm text-[#001f3f]">Billable time</label>
                 </div>
               </CardContent>
             </Card>
@@ -571,7 +571,7 @@ export default function TimeAndFeesModule() {
                         <p className="text-sm text-[#001f3f]">{entry.clientName}</p>
                         <p className="text-xs text-gray-500">{entry.description}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs text-[#001f3f]">
                             {entry.billable ? 'Billable' : 'Non-billable'}
                           </Badge>
                           <Badge className={`text-xs ${getStatusColor(entry.status)}`}>
@@ -627,7 +627,7 @@ export default function TimeAndFeesModule() {
                           <p className="text-sm text-[#001f3f]">{entry.clientName}</p>
                           <p className="text-xs text-gray-500">{entry.description}</p>
                           <div className="flex items-center gap-2 mt-2">
-                            <span className="text-sm font-medium">{entry.hours}h</span>
+                            <span className="text-sm font-medium text-[#001f3f]">{entry.hours}h</span>
                             <span className="text-sm text-[#001f3f]">by {entry.employeeName}</span>
                             <Badge className="text-xs bg-blue-100 text-[#001f3f]">
                               £{(entry.hours * entry.hourlyRate).toFixed(2)}
@@ -660,19 +660,19 @@ export default function TimeAndFeesModule() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm text-[#001f3f]">Pending</span>
-                      <span className="text-sm font-medium">3 entries</span>
+                      <span className="text-sm font-medium text-[#001f3f]">3 entries</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-[#001f3f]">Approved</span>
-                      <span className="text-sm font-medium">24 entries</span>
+                      <span className="text-sm font-medium text-[#001f3f]">24 entries</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-[#001f3f]">Rejected</span>
-                      <span className="text-sm font-medium">1 entry</span>
+                      <span className="text-sm font-medium text-[#001f3f]">1 entry</span>
                     </div>
                     <div className="flex justify-between border-t pt-2">
-                      <span className="text-sm font-medium">Total Value</span>
-                      <span className="text-sm font-bold">£12,450</span>
+                      <span className="text-sm font-medium text-[#001f3f]">Total Value</span>
+                      <span className="text-sm font-bold text-[#001f3f]">£12,450</span>
                     </div>
                   </div>
                 </CardContent>

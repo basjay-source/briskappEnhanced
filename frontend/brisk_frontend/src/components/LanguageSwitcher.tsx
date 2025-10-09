@@ -35,7 +35,7 @@ export default function LanguageSwitcher() {
             onClick={() => changeLanguage(language.code)}
             className={i18n.language === language.code ? 'bg-blue-50' : ''}
           >
-            <span className="mr-2">{language.flag}</span>
+            <span className="mr-2 text-[#001f3f]">{language.flag}</span>
             {language.name}
           </DropdownMenuItem>
         ))}
