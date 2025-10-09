@@ -81,13 +81,54 @@ const AccountsProduction: React.FC = () => {
   const [isAILoading, setIsAILoading] = useState(false)
 
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
-    { id: '1', accountCode: '1000', accountName: 'Cash at Bank', debit: 45000, credit: 0, category: 'Asset' },
-    { id: '2', accountCode: '1100', accountName: 'Accounts Receivable', debit: 28500, credit: 0, category: 'Asset' },
-    { id: '3', accountCode: '1500', accountName: 'Fixed Assets', debit: 135000, credit: 0, category: 'Asset' },
-    { id: '4', accountCode: '2000', accountName: 'Accounts Payable', debit: 0, credit: 18500, category: 'Liability' },
-    { id: '5', accountCode: '2100', accountName: 'Long-term Debt', debit: 0, credit: 66000, category: 'Liability' },
-    { id: '6', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
-    { id: '7', accountCode: '3100', accountName: 'Retained Earnings', debit: 0, credit: 24000, category: 'Equity' },
+    { id: '1', accountCode: '1000', accountName: 'Cash at Bank - Current Account', debit: 45000, credit: 0, category: 'Asset' },
+    { id: '2', accountCode: '1010', accountName: 'Cash at Bank - Savings Account', debit: 25000, credit: 0, category: 'Asset' },
+    { id: '3', accountCode: '1020', accountName: 'Petty Cash', debit: 500, credit: 0, category: 'Asset' },
+    { id: '4', accountCode: '1100', accountName: 'Accounts Receivable', debit: 28500, credit: 0, category: 'Asset' },
+    { id: '5', accountCode: '1110', accountName: 'Allowance for Doubtful Debts', debit: 0, credit: 1500, category: 'Asset' },
+    { id: '6', accountCode: '1200', accountName: 'Inventory - Raw Materials', debit: 18000, credit: 0, category: 'Asset' },
+    { id: '7', accountCode: '1210', accountName: 'Inventory - Finished Goods', debit: 22500, credit: 0, category: 'Asset' },
+    { id: '8', accountCode: '1300', accountName: 'Prepaid Expenses', debit: 3500, credit: 0, category: 'Asset' },
+    { id: '9', accountCode: '1310', accountName: 'Prepaid Insurance', debit: 4200, credit: 0, category: 'Asset' },
+    { id: '10', accountCode: '1500', accountName: 'Land and Buildings', debit: 250000, credit: 0, category: 'Asset' },
+    { id: '11', accountCode: '1510', accountName: 'Plant and Machinery', debit: 85000, credit: 0, category: 'Asset' },
+    { id: '12', accountCode: '1520', accountName: 'Office Equipment', debit: 15000, credit: 0, category: 'Asset' },
+    { id: '13', accountCode: '1530', accountName: 'Motor Vehicles', debit: 35000, credit: 0, category: 'Asset' },
+    { id: '14', accountCode: '1550', accountName: 'Accumulated Depreciation', debit: 0, credit: 45000, category: 'Asset' },
+    { id: '15', accountCode: '1600', accountName: 'Intangible Assets - Goodwill', debit: 50000, credit: 0, category: 'Asset' },
+    
+    { id: '16', accountCode: '2000', accountName: 'Accounts Payable', debit: 0, credit: 18500, category: 'Liability' },
+    { id: '17', accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 5200, category: 'Liability' },
+    { id: '18', accountCode: '2020', accountName: 'VAT Payable', debit: 0, credit: 8750, category: 'Liability' },
+    { id: '19', accountCode: '2030', accountName: 'PAYE/NIC Payable', debit: 0, credit: 6800, category: 'Liability' },
+    { id: '20', accountCode: '2100', accountName: 'Bank Loan - Long Term', debit: 0, credit: 66000, category: 'Liability' },
+    { id: '21', accountCode: '2110', accountName: 'Bank Loan - Current Portion', debit: 0, credit: 12000, category: 'Liability' },
+    { id: '22', accountCode: '2200', accountName: 'Directors Loan Account', debit: 0, credit: 15000, category: 'Liability' },
+    { id: '23', accountCode: '2300', accountName: 'Deferred Tax Liability', debit: 0, credit: 8500, category: 'Liability' },
+    
+    { id: '24', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
+    { id: '25', accountCode: '3100', accountName: 'Retained Earnings', debit: 0, credit: 24000, category: 'Equity' },
+    { id: '26', accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 45200, category: 'Equity' },
+    
+    { id: '27', accountCode: '4000', accountName: 'Sales Revenue - Products', debit: 0, credit: 285000, category: 'Revenue' },
+    { id: '28', accountCode: '4010', accountName: 'Sales Revenue - Services', debit: 0, credit: 125000, category: 'Revenue' },
+    { id: '29', accountCode: '4100', accountName: 'Other Income', debit: 0, credit: 8500, category: 'Revenue' },
+    { id: '30', accountCode: '4110', accountName: 'Interest Income', debit: 0, credit: 1200, category: 'Revenue' },
+    
+    { id: '31', accountCode: '5000', accountName: 'Cost of Goods Sold', debit: 145000, credit: 0, category: 'Expense' },
+    { id: '32', accountCode: '5100', accountName: 'Salaries and Wages', debit: 95000, credit: 0, category: 'Expense' },
+    { id: '33', accountCode: '5110', accountName: 'Employers NIC', debit: 12500, credit: 0, category: 'Expense' },
+    { id: '34', accountCode: '5120', accountName: 'Pension Contributions', debit: 8200, credit: 0, category: 'Expense' },
+    { id: '35', accountCode: '5200', accountName: 'Rent and Rates', debit: 24000, credit: 0, category: 'Expense' },
+    { id: '36', accountCode: '5210', accountName: 'Utilities', debit: 6500, credit: 0, category: 'Expense' },
+    { id: '37', accountCode: '5300', accountName: 'Marketing and Advertising', debit: 15000, credit: 0, category: 'Expense' },
+    { id: '38', accountCode: '5310', accountName: 'Professional Fees', debit: 12000, credit: 0, category: 'Expense' },
+    { id: '39', accountCode: '5400', accountName: 'Depreciation Expense', debit: 18500, credit: 0, category: 'Expense' },
+    { id: '40', accountCode: '5500', accountName: 'Bank Charges and Interest', debit: 3200, credit: 0, category: 'Expense' },
+    { id: '41', accountCode: '5600', accountName: 'Insurance', debit: 8400, credit: 0, category: 'Expense' },
+    { id: '42', accountCode: '5700', accountName: 'Motor Vehicle Expenses', debit: 7800, credit: 0, category: 'Expense' },
+    { id: '43', accountCode: '5800', accountName: 'Office Expenses', debit: 5600, credit: 0, category: 'Expense' },
+    { id: '44', accountCode: '5900', accountName: 'Telecommunications', debit: 3400, credit: 0, category: 'Expense' },
   ])
   const [isTrialBalanceDialogOpen, setIsTrialBalanceDialogOpen] = useState(false)
   const [editingTBEntry, setEditingTBEntry] = useState<TrialBalanceEntry | null>(null)
@@ -97,21 +138,140 @@ const AccountsProduction: React.FC = () => {
       id: '1',
       date: '2024-12-15',
       reference: 'JE001',
-      description: 'Depreciation adjustment',
+      description: 'Monthly depreciation adjustment',
       entries: [
-        { accountCode: '5000', accountName: 'Depreciation Expense', debit: 2500, credit: 0 },
+        { accountCode: '5400', accountName: 'Depreciation Expense', debit: 2500, credit: 0 },
         { accountCode: '1550', accountName: 'Accumulated Depreciation', debit: 0, credit: 2500 }
       ],
-      status: 'approved',
+      status: 'posted',
       createdBy: 'John Smith'
+    },
+    {
+      id: '2',
+      date: '2024-12-18',
+      reference: 'JE002',
+      description: 'Accrued expenses adjustment',
+      entries: [
+        { accountCode: '5310', accountName: 'Professional Fees', debit: 1200, credit: 0 },
+        { accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 1200 }
+      ],
+      status: 'approved',
+      createdBy: 'Sarah Johnson'
+    },
+    {
+      id: '3',
+      date: '2024-12-20',
+      reference: 'JE003',
+      description: 'Bad debt write-off',
+      entries: [
+        { accountCode: '1110', accountName: 'Allowance for Doubtful Debts', debit: 500, credit: 0 },
+        { accountCode: '1100', accountName: 'Accounts Receivable', debit: 0, credit: 500 }
+      ],
+      status: 'approved',
+      createdBy: 'Michael Brown'
+    },
+    {
+      id: '4',
+      date: '2024-12-22',
+      reference: 'JE004',
+      description: 'Prepaid insurance adjustment',
+      entries: [
+        { accountCode: '5600', accountName: 'Insurance', debit: 700, credit: 0 },
+        { accountCode: '1310', accountName: 'Prepaid Insurance', debit: 0, credit: 700 }
+      ],
+      status: 'draft',
+      createdBy: 'Emily Davis'
+    },
+    {
+      id: '5',
+      date: '2024-12-23',
+      reference: 'JE005',
+      description: 'Inventory revaluation',
+      entries: [
+        { accountCode: '5000', accountName: 'Cost of Goods Sold', debit: 1500, credit: 0 },
+        { accountCode: '1210', accountName: 'Inventory - Finished Goods', debit: 0, credit: 1500 }
+      ],
+      status: 'draft',
+      createdBy: 'David Wilson'
+    },
+    {
+      id: '6',
+      date: '2024-12-24',
+      reference: 'JE006',
+      description: 'Reclassify loan current portion',
+      entries: [
+        { accountCode: '2100', accountName: 'Bank Loan - Long Term', debit: 12000, credit: 0 },
+        { accountCode: '2110', accountName: 'Bank Loan - Current Portion', debit: 0, credit: 12000 }
+      ],
+      status: 'posted',
+      createdBy: 'John Smith'
+    },
+    {
+      id: '7',
+      date: '2024-12-26',
+      reference: 'JE007',
+      description: 'Deferred tax adjustment',
+      entries: [
+        { accountCode: '2300', accountName: 'Deferred Tax Liability', debit: 850, credit: 0 },
+        { accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 850 }
+      ],
+      status: 'approved',
+      createdBy: 'Sarah Johnson'
+    },
+    {
+      id: '8',
+      date: '2024-12-28',
+      reference: 'JE008',
+      description: 'Correct VAT posting error',
+      entries: [
+        { accountCode: '5800', accountName: 'Office Expenses', debit: 200, credit: 0 },
+        { accountCode: '2020', accountName: 'VAT Payable', debit: 0, credit: 200 }
+      ],
+      status: 'draft',
+      createdBy: 'Michael Brown'
+    },
+    {
+      id: '9',
+      date: '2024-12-29',
+      reference: 'JE009',
+      description: 'Year-end closing entry - Revenue',
+      entries: [
+        { accountCode: '4000', accountName: 'Sales Revenue - Products', debit: 285000, credit: 0 },
+        { accountCode: '4010', accountName: 'Sales Revenue - Services', debit: 125000, credit: 0 },
+        { accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 410000 }
+      ],
+      status: 'draft',
+      createdBy: 'John Smith'
+    },
+    {
+      id: '10',
+      date: '2024-12-30',
+      reference: 'JE010',
+      description: 'Accrue pension contributions',
+      entries: [
+        { accountCode: '5120', accountName: 'Pension Contributions', debit: 850, credit: 0 },
+        { accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 850 }
+      ],
+      status: 'approved',
+      createdBy: 'Emily Davis'
     }
   ])
   const [isJournalDialogOpen, setIsJournalDialogOpen] = useState(false)
   const [editingJournal, setEditingJournal] = useState<JournalEntry | null>(null)
 
   const [financialStatements, setFinancialStatements] = useState<FinancialStatement[]>([
-    { id: '1', type: 'balance-sheet', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'draft' },
-    { id: '2', type: 'profit-loss', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'draft' }
+    { id: '1', type: 'balance-sheet', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
+    { id: '2', type: 'profit-loss', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
+    { id: '3', type: 'cash-flow', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
+    { id: '4', type: 'balance-sheet', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
+    { id: '5', type: 'profit-loss', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
+    { id: '6', type: 'cash-flow', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
+    { id: '7', type: 'balance-sheet', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
+    { id: '8', type: 'profit-loss', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
+    { id: '9', type: 'cash-flow', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
+    { id: '10', type: 'balance-sheet', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' },
+    { id: '11', type: 'profit-loss', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' },
+    { id: '12', type: 'cash-flow', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' }
   ])
   const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
   const [isStatementDialogOpen, setIsStatementDialogOpen] = useState(false)
@@ -821,88 +981,211 @@ const AccountsProduction: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-[#001f3f]">Journal Entries</CardTitle>
-          <CardDescription>All journal entries and adjustments</CardDescription>
+          <CardDescription>
+            Showing {filteredAndSortedJEEntries.length} of {journalEntries.length} entries
+            {selectedJEEntries.length > 0 && ` • ${selectedJEEntries.length} selected`}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {journalEntries.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[#001f3f]">Reference</TableHead>
-                  <TableHead className="text-[#001f3f]">Date</TableHead>
-                  <TableHead className="text-[#001f3f]">Description</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
-                  <TableHead className="text-[#001f3f]">Created By</TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {journalEntries.map((journal) => (
-                  <TableRow 
-                    key={journal.id}
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleDrilldown({
-                      title: `Journal Entry ${journal.reference}`,
-                      data: journal
-                    })}
-                  >
-                    <TableCell className="text-[#001f3f]">{journal.reference}</TableCell>
-                    <TableCell className="text-[#001f3f]">{journal.date}</TableCell>
-                    <TableCell className="text-[#001f3f]">{journal.description}</TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={
-                          journal.status === 'posted' ? 'default' : 
-                          journal.status === 'approved' ? 'secondary' : 
-                          'outline'
-                        }
-                      >
-                        {journal.status.toUpperCase()}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{journal.createdBy}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditJournal(journal)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        {journal.status === 'draft' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleApproveJournal(journal.id)}
-                          >
-                            <Check className="h-4 w-4 text-green-600" />
-                          </Button>
+            <div className="space-y-4">
+              <div className="flex gap-4 items-center">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input
+                      placeholder="Search by reference or description..."
+                      value={jeSearchTerm}
+                      onChange={(e) => setJeSearchTerm(e.target.value)}
+                      className="pl-8"
+                    />
+                  </div>
+                </div>
+                <Select value={jeStatusFilter} onValueChange={setJeStatusFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="posted">Posted</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="relative">
+                  <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input
+                    type="month"
+                    value={jeDateFilter}
+                    onChange={(e) => setJeDateFilter(e.target.value)}
+                    className="pl-8 w-[180px]"
+                    placeholder="Filter by month"
+                  />
+                </div>
+                {selectedJEEntries.length > 0 && (
+                  <>
+                    <Button variant="default" size="sm" onClick={handleBulkApproveJE}>
+                      <Check className="h-4 w-4 mr-2" />
+                      Approve Selected ({selectedJEEntries.length})
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={handleBulkDeleteJE}>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Selected ({selectedJEEntries.length})
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12">
+                      <input
+                        type="checkbox"
+                        checked={selectedJEEntries.length === filteredAndSortedJEEntries.length && filteredAndSortedJEEntries.length > 0}
+                        onChange={(e) => handleSelectAllJE(e.target.checked)}
+                        className="rounded border-gray-300"
+                      />
+                    </TableHead>
+                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('reference')}>
+                      <div className="flex items-center gap-2">
+                        Reference
+                        {jeSortField === 'reference' && (
+                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
                         )}
-                        {journal.status === 'approved' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handlePostJournal(journal.id)}
-                          >
-                            <Send className="h-4 w-4 text-blue-600" />
-                          </Button>
-                        )}
-                        {journal.status === 'draft' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteJournal(journal.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        )}
+                        {jeSortField !== 'reference' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
                       </div>
-                    </TableCell>
+                    </TableHead>
+                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('date')}>
+                      <div className="flex items-center gap-2">
+                        Date
+                        {jeSortField === 'date' && (
+                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                        )}
+                        {jeSortField !== 'date' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('description')}>
+                      <div className="flex items-center gap-2">
+                        Description
+                        {jeSortField === 'description' && (
+                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                        )}
+                        {jeSortField !== 'description' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('status')}>
+                      <div className="flex items-center gap-2">
+                        Status
+                        {jeSortField === 'status' && (
+                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                        )}
+                        {jeSortField !== 'status' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('createdBy')}>
+                      <div className="flex items-center gap-2">
+                        Created By
+                        {jeSortField === 'createdBy' && (
+                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                        )}
+                        {jeSortField !== 'createdBy' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredAndSortedJEEntries.map((journal) => (
+                    <TableRow 
+                      key={journal.id}
+                      className={`cursor-pointer hover:bg-gray-50 ${selectedJEEntries.includes(journal.id) ? 'bg-blue-50' : ''}`}
+                      onClick={() => handleDrilldown({
+                        title: `Journal Entry ${journal.reference}`,
+                        data: journal
+                      })}
+                    >
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={selectedJEEntries.includes(journal.id)}
+                          onChange={(e) => handleSelectJEEntry(journal.id, e.target.checked)}
+                          className="rounded border-gray-300"
+                        />
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{journal.reference}</TableCell>
+                      <TableCell className="text-[#001f3f]">{journal.date}</TableCell>
+                      <TableCell className="text-[#001f3f]">{journal.description}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={
+                            journal.status === 'posted' ? 'default' : 
+                            journal.status === 'approved' ? 'secondary' : 
+                            'outline'
+                          }
+                        >
+                          {journal.status.toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{journal.createdBy}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditJournal(journal)}
+                            title="View Entry"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          {journal.status === 'draft' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleApproveJournal(journal.id)}
+                              title="Approve Entry"
+                            >
+                              <Check className="h-4 w-4 text-green-600" />
+                            </Button>
+                          )}
+                          {journal.status === 'approved' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handlePostJournal(journal.id)}
+                              title="Post to Trial Balance"
+                            >
+                              <Send className="h-4 w-4 text-blue-600" />
+                            </Button>
+                          )}
+                          {journal.status === 'draft' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteJournal(journal.id)}
+                              title="Delete Entry"
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDrilldown({
+                              title: `${journal.reference} - Full Details`,
+                              data: journal
+                            })}
+                            title="View Details"
+                          >
+                            <FileCheck className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           ) : (
             <div className="text-center py-8">
               <p className="text-gray-500">No journal entries recorded for this period</p>
