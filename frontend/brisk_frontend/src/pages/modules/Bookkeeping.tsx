@@ -3246,10 +3246,17 @@ export default function Bookkeeping() {
               <BarChart3 className="h-4 w-4 mr-2" />
               Generate Analysis
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Category', 'Budget', 'Actual', 'Variance', 'Variance %'],
+                ['Sales', '£200,000', '£195,000', '-£5,000', '-2.5%'],
+                ['COGS', '£80,000', '£78,000', '-£2,000', '-2.5%'],
+                ['Operating Expenses', '£60,000', '£65,000', '+£5,000', '+8.3%'],
+                ['Net Profit', '£60,000', '£52,000', '-£8,000', '-13.3%']
+              ]}
+              filename={`variance-analysis-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
