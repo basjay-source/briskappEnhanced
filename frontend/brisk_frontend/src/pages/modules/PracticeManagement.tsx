@@ -3425,8 +3425,7 @@ export default function PracticeManagement() {
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >
-                              <SubIcon className="h-4 w-4 mr-3" />
-                              <span>{subConfig.label}</span>
+                              {subConfig.label}
                             </button>
                           )
                         })}
