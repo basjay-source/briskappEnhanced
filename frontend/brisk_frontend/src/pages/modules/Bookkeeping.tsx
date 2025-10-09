@@ -812,14 +812,29 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Overview of your financial position and key metrics</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Data
-            </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Metric', 'Value', 'Change'],
+                ['Total Revenue', '£125,430', '+12%'],
+                ['Total Expenses', '£87,650', '+8%'],
+                ['Net Profit', '£37,780', '+15%'],
+                ['Outstanding Invoices', '£23,450', '-5%']
+              ]}
+              filename={`bookkeeping-dashboard-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Data"
+              variant="outline"
+            />
+            <ExportButton
+              data={[
+                ['Report Section', 'Details'],
+                ['Financial Overview', 'Summary of income and expenses'],
+                ['Bank Accounts', 'Account balances and transactions'],
+                ['VAT Summary', 'VAT returns and compliance'],
+                ['Profit & Loss', 'Revenue vs expenses analysis']
+              ]}
+              filename={`financial-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Generate Report"
+            />
           </div>
         </div>
 
