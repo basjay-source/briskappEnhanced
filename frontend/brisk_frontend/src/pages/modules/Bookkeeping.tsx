@@ -137,6 +137,25 @@ export default function Bookkeeping() {
     status: 'Active'
   })
 
+  const [bankFeeds, setBankFeeds] = useState<any[]>([
+    { id: 1, bank: 'Barclays Business', account: '****1234', status: 'Active', lastSync: '2 hours ago', frequency: 'Every 4 hours', transactions: 156, accountId: 'ACC-001' },
+    { id: 2, bank: 'HSBC Business', account: '****5678', status: 'Active', lastSync: '1 hour ago', frequency: 'Every 2 hours', transactions: 89, accountId: 'ACC-002' },
+    { id: 3, bank: 'Lloyds Payroll', account: '****9012', status: 'Active', lastSync: '3 hours ago', frequency: 'Daily', transactions: 23, accountId: 'ACC-003' },
+    { id: 4, bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5, accountId: 'ACC-004' },
+    { id: 5, bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0, accountId: 'ACC-005' }
+  ])
+  const [isAddFeedOpen, setIsAddFeedOpen] = useState(false)
+  const [isEditFeedOpen, setIsEditFeedOpen] = useState(false)
+  const [isViewFeedOpen, setIsViewFeedOpen] = useState(false)
+  const [selectedFeed, setSelectedFeed] = useState<any>(null)
+  const [feedFormData, setFeedFormData] = useState<any>({
+    bank: '',
+    account: '',
+    accountId: '',
+    frequency: 'Every 4 hours',
+    status: 'Active'
+  })
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -293,6 +312,97 @@ export default function Bookkeeping() {
     if (confirm('Are you sure you want to delete this banking rule?')) {
       setBankingRules(bankingRules.filter(rule => rule.id !== ruleId))
       alert('✅ Successfully deleted banking rule!')
+    }
+  }
+
+  const handleViewFeed = (feed: any) => {
+    setSelectedFeed(feed)
+    setIsViewFeedOpen(true)
+  }
+
+  const handleEditFeed = (feed: any) => {
+    setSelectedFeed(feed)
+    setFeedFormData({ ...feed })
+    setIsEditFeedOpen(true)
+  }
+
+  const handleAddFeed = () => {
+    setIsAddFeedOpen(true)
+  }
+
+  const handleSaveFeed = () => {
+    console.log('Saving feed:', feedFormData)
+    if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      return
+    }
+    const updatedFeed = {
+      ...selectedFeed,
+      ...feedFormData,
+      lastSync: 'Just now',
+      transactions: selectedFeed?.transactions || 0
+    }
+    setBankFeeds(bankFeeds.map(f => f.id === selectedFeed.id ? updatedFeed : f))
+    alert(`✅ Successfully updated ${feedFormData.bank}!\n\nBank feed has been updated.`)
+    setIsEditFeedOpen(false)
+  }
+
+  const handleSaveAddFeed = () => {
+    console.log('Adding feed:', feedFormData)
+    if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      return
+    }
+    const newFeed = {
+      id: bankFeeds.length + 1,
+      ...feedFormData,
+      lastSync: 'Never',
+      transactions: 0,
+      status: 'Active'
+    }
+    setBankFeeds([...bankFeeds, newFeed])
+    alert(`✅ Successfully added ${feedFormData.bank}!\n\nNew bank feed has been created.`)
+    setIsAddFeedOpen(false)
+    setFeedFormData({
+      bank: '',
+      account: '',
+      accountId: '',
+      frequency: 'Every 4 hours',
+      status: 'Active'
+    })
+  }
+
+  const handleSyncFeed = (feed: any) => {
+    console.log('Syncing feed:', feed)
+    const now = new Date()
+    const randomTransactions = Math.floor(Math.random() * 50) + 1
+    const updatedFeed = {
+      ...feed,
+      lastSync: 'Just now',
+      transactions: feed.transactions + randomTransactions,
+      status: 'Active'
+    }
+    setBankFeeds(bankFeeds.map(f => f.id === feed.id ? updatedFeed : f))
+    alert(`✅ Successfully synced ${feed.bank}!\n\n${randomTransactions} new transactions imported.`)
+  }
+
+  const handleSyncAll = () => {
+    console.log('Syncing all feeds')
+    const updatedFeeds = bankFeeds.map(feed => ({
+      ...feed,
+      lastSync: 'Just now',
+      transactions: feed.transactions + Math.floor(Math.random() * 20) + 1,
+      status: 'Active'
+    }))
+    setBankFeeds(updatedFeeds)
+    const totalNew = updatedFeeds.reduce((sum, f, i) => sum + (updatedFeeds[i].transactions - bankFeeds[i].transactions), 0)
+    alert(`✅ Successfully synced all bank feeds!\n\n${totalNew} new transactions imported across ${bankFeeds.length} feeds.`)
+  }
+
+  const handleDeleteFeed = (feed: any) => {
+    if (confirm(`Are you sure you want to delete ${feed.bank}?\n\nThis will stop automatic synchronization for this account.`)) {
+      setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
+      alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
     }
   }
 
@@ -5215,6 +5325,11 @@ export default function Bookkeeping() {
   }
 
   function renderBankFeedsManagement() {
+    const activeFeeds = bankFeeds.filter(f => f.status === 'Active').length
+    const totalTransactions = bankFeeds.reduce((sum, f) => sum + f.transactions, 0)
+    const avgTransactionsPerFeed = bankFeeds.length > 0 ? Math.round(totalTransactions / bankFeeds.length) : 0
+    const successRate = bankFeeds.filter(f => f.status === 'Active').length / bankFeeds.length * 100
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -5223,11 +5338,11 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Manage automatic bank feed connections and data synchronization</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleAddFeed}>
               <Plus className="h-4 w-4 mr-2" />
               Add Feed
             </Button>
-            <Button>
+            <Button onClick={handleSyncAll}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Sync All
             </Button>
@@ -5235,39 +5350,56 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const activeList = bankFeeds.filter(f => f.status === 'Active')
+            alert(`✅ Active Bank Feeds (${activeFeeds})\n\n${activeList.map(f => `• ${f.bank}\n  ${f.account}\n  ${f.transactions} transactions`).join('\n\n')}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Active Feeds</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-green-600">8</div>
+              <div className="text-xl font-bold text-green-600">{activeFeeds}</div>
               <p className="text-sm text-blue-900">Connected banks</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const recentSync = bankFeeds.sort((a, b) => {
+              const timeA = a.lastSync.includes('hour') ? parseInt(a.lastSync) : (a.lastSync.includes('day') ? parseInt(a.lastSync) * 24 : 0)
+              const timeB = b.lastSync.includes('hour') ? parseInt(b.lastSync) : (b.lastSync.includes('day') ? parseInt(b.lastSync) * 24 : 0)
+              return timeA - timeB
+            })[0]
+            alert(`🕐 Last Sync Information\n\nMost Recent: ${recentSync.bank}\n${recentSync.lastSync}\n\nAll Feeds:\n${bankFeeds.map(f => `• ${f.bank}: ${f.lastSync}`).join('\n')}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Last Sync</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-brisk-primary">2 hrs</div>
+              <div className="text-xl font-bold text-brisk-primary">{bankFeeds[0]?.lastSync.split(' ')[0] || '0'} {bankFeeds[0]?.lastSync.split(' ')[1] || 'hrs'}</div>
               <p className="text-sm text-blue-900">Ago</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            alert(`📊 Total Transactions\n\nAcross All Feeds: ${totalTransactions}\n\nBreakdown:\n${bankFeeds.map(f => `• ${f.bank}: ${f.transactions} transactions`).join('\n')}\n\nAverage per Feed: ${avgTransactionsPerFeed}`)
+          }}>
             <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New Transactions</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Transactions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">45</div>
-              <p className="text-sm text-blue-900">Since last sync</p>
+              <div className="text-xl font-bold text-blue-600">{totalTransactions}</div>
+              <p className="text-sm text-blue-900">Across all feeds</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const active = bankFeeds.filter(f => f.status === 'Active').length
+            const warning = bankFeeds.filter(f => f.status === 'Warning').length
+            const error = bankFeeds.filter(f => f.status === 'Error').length
+            alert(`📈 Sync Success Rate\n\nSuccess Rate: ${successRate.toFixed(1)}%\n\nStatus Breakdown:\n• Active: ${active} feeds\n• Warning: ${warning} feeds\n• Error: ${error} feeds\n\nTotal Feeds: ${bankFeeds.length}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Sync Success</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-orange-600">99.2%</div>
+              <div className="text-xl font-bold text-orange-600">{successRate.toFixed(1)}%</div>
               <p className="text-sm text-blue-900">Success rate</p>
             </CardContent>
           </Card>
@@ -5276,18 +5408,12 @@ export default function Bookkeeping() {
         <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-blue-900">Bank Feed Status</CardTitle>
-            <CardDescription>Status and configuration of all bank feed connections</CardDescription>
+            <CardDescription className="text-blue-900">Status and configuration of all bank feed connections</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { bank: 'Barclays Business', account: '****1234', status: 'Active', lastSync: '2 hours ago', frequency: 'Every 4 hours', transactions: 156 },
-                { bank: 'HSBC Business', account: '****5678', status: 'Active', lastSync: '1 hour ago', frequency: 'Every 2 hours', transactions: 89 },
-                { bank: 'Lloyds Payroll', account: '****9012', status: 'Active', lastSync: '3 hours ago', frequency: 'Daily', transactions: 23 },
-                { bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5 },
-                { bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0 }
-              ].map((feed, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+              {bankFeeds.map((feed) => (
+                <div key={feed.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewFeed(feed)}>
                   <div className="flex items-center gap-4">
                     <Link className={`h-6 w-6 ${
                       feed.status === 'Active' ? 'text-green-600' : 
@@ -5295,7 +5421,7 @@ export default function Bookkeeping() {
                       'text-red-600'
                     }`} />
                     <div>
-                      <p className="font-medium">{feed.bank}</p>
+                      <p className="font-medium text-blue-900">{feed.bank}</p>
                       <p className="text-sm text-blue-900">{feed.account} • {feed.frequency}</p>
                       <div className="flex gap-2 mt-1">
                         <Badge className={`${
@@ -5309,17 +5435,20 @@ export default function Bookkeeping() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">{feed.transactions} transactions</p>
+                    <p className="font-semibold text-blue-900">{feed.transactions} transactions</p>
                     <p className="text-sm text-blue-900">Last sync: {feed.lastSync}</p>
                     <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleViewFeed(feed); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleEditFeed(feed); }}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleSyncFeed(feed); }}>
                         <RefreshCw className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteFeed(feed); }}>
+                        <Trash2 className="h-3 w-3 text-red-600" />
                       </Button>
                     </div>
                   </div>
@@ -6774,6 +6903,178 @@ export default function Bookkeeping() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddRuleOpen(false)}>Cancel</Button>
             <Button onClick={handleSaveRule}>Create Rule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isViewFeedOpen} onOpenChange={setIsViewFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Bank Feed Details</DialogTitle>
+            <DialogDescription className="text-blue-900">View complete information for this bank feed</DialogDescription>
+          </DialogHeader>
+          {selectedFeed && (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Bank Name</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.bank}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account Number</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.account}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account ID</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.accountId}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Status</Label>
+                  <Badge className={`mt-1 ${
+                    selectedFeed.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                    selectedFeed.status === 'Warning' ? 'bg-orange-100 text-orange-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>{selectedFeed.status}</Badge>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Frequency</Label>
+                  <p className="text-sm text-blue-900">{selectedFeed.frequency}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Last Sync</Label>
+                  <p className="text-sm text-blue-900">{selectedFeed.lastSync}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Transactions</Label>
+                  <p className="text-sm font-semibold text-blue-900">{selectedFeed.transactions}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewFeedOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditFeedOpen} onOpenChange={setIsEditFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Edit Bank Feed</DialogTitle>
+            <DialogDescription className="text-blue-900">Update bank feed configuration</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="feed-bank" className="text-blue-900">Bank Name *</Label>
+              <Input
+                id="feed-bank"
+                value={feedFormData.bank || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, bank: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-account" className="text-blue-900">Account Number *</Label>
+              <Input
+                id="feed-account"
+                value={feedFormData.account || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, account: e.target.value})}
+                placeholder="e.g., ****1234"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-accountId" className="text-blue-900">Account ID *</Label>
+              <Input
+                id="feed-accountId"
+                value={feedFormData.accountId || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, accountId: e.target.value})}
+                placeholder="e.g., ACC-001"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-frequency" className="text-blue-900">Sync Frequency</Label>
+              <select
+                id="feed-frequency"
+                value={feedFormData.frequency || 'Every 4 hours'}
+                onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="Every 2 hours">Every 2 hours</option>
+                <option value="Every 4 hours">Every 4 hours</option>
+                <option value="Every 6 hours">Every 6 hours</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditFeedOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveFeed}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddFeedOpen} onOpenChange={setIsAddFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Add Bank Feed</DialogTitle>
+            <DialogDescription className="text-blue-900">Connect a new bank feed for automatic transaction synchronization</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-bank" className="text-blue-900">Bank Name *</Label>
+              <Input
+                id="add-feed-bank"
+                value={feedFormData.bank}
+                onChange={(e) => setFeedFormData({...feedFormData, bank: e.target.value})}
+                placeholder="e.g., Barclays Business"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-account" className="text-blue-900">Account Number *</Label>
+              <Input
+                id="add-feed-account"
+                value={feedFormData.account}
+                onChange={(e) => setFeedFormData({...feedFormData, account: e.target.value})}
+                placeholder="e.g., ****1234"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-accountId" className="text-blue-900">Account ID *</Label>
+              <Input
+                id="add-feed-accountId"
+                value={feedFormData.accountId}
+                onChange={(e) => setFeedFormData({...feedFormData, accountId: e.target.value})}
+                placeholder="e.g., ACC-001"
+                className="border-2 border-blue-900"
+              />
+              <p className="text-xs text-blue-900">The account ID from your bank's API</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-frequency" className="text-blue-900">Sync Frequency</Label>
+              <select
+                id="add-feed-frequency"
+                value={feedFormData.frequency}
+                onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="Every 2 hours">Every 2 hours</option>
+                <option value="Every 4 hours">Every 4 hours</option>
+                <option value="Every 6 hours">Every 6 hours</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddFeedOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveAddFeed}>Add Bank Feed</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
