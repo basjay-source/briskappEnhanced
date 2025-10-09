@@ -5186,10 +5186,17 @@ export default function Bookkeeping() {
               <Tags className="h-4 w-4 mr-2" />
               Cash Coding
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+            <ExportButton
+              data={[
+                ['Date', 'Description', 'Amount', 'Category', 'Status'],
+                ['2024-01-15', 'Payment from Client A', '£2,500', 'Income', 'Categorized'],
+                ['2024-01-14', 'Office Supplies', '£156', 'Expenses', 'Categorized'],
+                ['2024-01-13', 'Software Subscription', '£89', 'IT', 'Categorized'],
+                ['2024-01-12', 'Bank Transfer', '£500', 'Uncategorized', 'Uncategorized']
+              ]}
+              filename={`bank-transactions-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export"
+            />
           </div>
         </div>
 
