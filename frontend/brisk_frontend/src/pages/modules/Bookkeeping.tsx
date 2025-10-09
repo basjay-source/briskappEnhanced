@@ -42,7 +42,14 @@ import {
   Calendar,
   ArrowLeftRight,
   Tags,
-  Trash2
+  Trash2,
+  Warehouse,
+  Box,
+  ClipboardList,
+  Bell,
+  BarChart,
+  Layers,
+  Hash
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -156,6 +163,52 @@ export default function Bookkeeping() {
     status: 'Active'
   })
 
+  const [stockItems, _setStockItems] = useState<any[]>([
+    { id: 1, sku: 'PRD-001', name: 'Office Chair - Executive', category: 'Furniture', quantity: 45, reorderLevel: 10, reorderQuantity: 20, cost: 145.00, sellPrice: 249.99, warehouse: 'Main Warehouse', location: 'A-12-03', status: 'In Stock', lastUpdated: '2024-01-15' },
+    { id: 2, sku: 'PRD-002', name: 'Laptop - Dell XPS 15', category: 'Electronics', quantity: 8, reorderLevel: 5, reorderQuantity: 10, cost: 1250.00, sellPrice: 1899.99, warehouse: 'Main Warehouse', location: 'B-05-01', status: 'Low Stock', lastUpdated: '2024-01-14' },
+    { id: 3, sku: 'PRD-003', name: 'Printer Toner - HP 85A', category: 'Supplies', quantity: 125, reorderLevel: 30, reorderQuantity: 50, cost: 45.50, sellPrice: 79.99, warehouse: 'Main Warehouse', location: 'C-08-15', status: 'In Stock', lastUpdated: '2024-01-16' },
+    { id: 4, sku: 'PRD-004', name: 'Standing Desk', category: 'Furniture', quantity: 3, reorderLevel: 5, reorderQuantity: 10, cost: 285.00, sellPrice: 499.99, warehouse: 'Secondary Warehouse', location: 'D-01-02', status: 'Critical', lastUpdated: '2024-01-13' },
+    { id: 5, sku: 'PRD-005', name: 'Conference Phone', category: 'Electronics', quantity: 15, reorderLevel: 8, reorderQuantity: 12, cost: 195.00, sellPrice: 349.99, warehouse: 'Main Warehouse', location: 'B-10-05', status: 'In Stock', lastUpdated: '2024-01-15' }
+  ])
+  const [warehouses, _setWarehouses] = useState<any[]>([
+    { id: 1, name: 'Main Warehouse', location: 'London, UK', capacity: 10000, used: 6500, status: 'Active', manager: 'John Smith', contact: '+44 20 7123 4567' },
+    { id: 2, name: 'Secondary Warehouse', location: 'Manchester, UK', capacity: 5000, used: 2800, status: 'Active', manager: 'Sarah Johnson', contact: '+44 161 234 5678' },
+    { id: 3, name: 'Distribution Center', location: 'Birmingham, UK', capacity: 8000, used: 4200, status: 'Active', manager: 'Michael Brown', contact: '+44 121 345 6789' }
+  ])
+  const [stockAdjustments, _setStockAdjustments] = useState<any[]>([
+    { id: 1, date: '2024-01-15', sku: 'PRD-001', productName: 'Office Chair - Executive', type: 'Increase', quantity: 10, reason: 'Stock Replenishment', notes: 'Received from Supplier ABC', adjustedBy: 'Admin User' },
+    { id: 2, date: '2024-01-14', sku: 'PRD-002', productName: 'Laptop - Dell XPS 15', type: 'Decrease', quantity: 2, reason: 'Damaged', notes: 'Found damaged during inspection', adjustedBy: 'Warehouse Manager' },
+    { id: 3, date: '2024-01-13', sku: 'PRD-003', productName: 'Printer Toner - HP 85A', type: 'Increase', quantity: 50, reason: 'Purchase Order', notes: 'PO-2024-0156', adjustedBy: 'Admin User' }
+  ])
+  const [reorderAlerts, _setReorderAlerts] = useState<any[]>([
+    { id: 1, sku: 'PRD-004', productName: 'Standing Desk', currentStock: 3, reorderLevel: 5, reorderQuantity: 10, suggestedOrder: 10, priority: 'High', estimatedCost: 2850.00, supplier: 'Furniture Direct Ltd', leadTime: '7 days' },
+    { id: 2, sku: 'PRD-002', productName: 'Laptop - Dell XPS 15', currentStock: 8, reorderLevel: 5, reorderQuantity: 10, suggestedOrder: 10, priority: 'Medium', estimatedCost: 12500.00, supplier: 'Tech Supplies UK', leadTime: '5 days' }
+  ])
+  const [stockTakes, _setStockTakes] = useState<any[]>([
+    { id: 1, date: '2024-01-10', warehouse: 'Main Warehouse', status: 'Completed', itemsChecked: 156, discrepancies: 3, variance: -125.50, performedBy: 'Warehouse Team', completedDate: '2024-01-10' },
+    { id: 2, date: '2024-01-08', warehouse: 'Secondary Warehouse', status: 'Completed', itemsChecked: 89, discrepancies: 1, variance: 45.00, performedBy: 'Sarah Johnson', completedDate: '2024-01-08' },
+    { id: 3, date: '2024-01-20', warehouse: 'Distribution Center', status: 'Planned', itemsChecked: 0, discrepancies: 0, variance: 0, performedBy: 'TBD', completedDate: null }
+  ])
+  const [_isStockDialogOpen, _setIsStockDialogOpen] = useState(false)
+  const [_isStockEditOpen, _setIsStockEditOpen] = useState(false)
+  const [_isStockAddOpen, _setIsStockAddOpen] = useState(false)
+  const [_selectedStockItem, _setSelectedStockItem] = useState<any>(null)
+  const [_stockFormData, _setStockFormData] = useState<any>({
+    sku: '',
+    name: '',
+    category: '',
+    quantity: 0,
+    reorderLevel: 0,
+    reorderQuantity: 0,
+    cost: 0,
+    sellPrice: 0,
+    warehouse: '',
+    location: '',
+    status: 'In Stock'
+  })
+  const [_editingStock, setEditingStock] = useState<any>(null)
+  const [_showStockForm, setShowStockForm] = useState(false)
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -166,8 +219,8 @@ export default function Bookkeeping() {
     } finally {
       setIsAILoading(false)
     }
-  }
 
+  }
   const handleViewAccount = (account: any) => {
     setSelectedAccount(account)
     setIsViewDialogOpen(true)
@@ -349,8 +402,8 @@ export default function Bookkeeping() {
       setBankingRules(bankingRules.filter(rule => rule.id !== ruleId))
       alert('✅ Successfully deleted banking rule!')
     }
-  }
 
+  }
   const handleViewFeed = (feed: any) => {
     setSelectedFeed(feed)
     setIsViewFeedOpen(true)
@@ -439,6 +492,11 @@ export default function Bookkeeping() {
       setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
       alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
     }
+
+  }
+  const handleCreateReorder = (alert: any) => {
+    console.log('Creating purchase order for:', alert)
+    alert(`✅ Purchase Order Created!\n\nProduct: ${alert.productName}\nQuantity: ${alert.suggestedOrder}\nEstimated Cost: £${alert.estimatedCost.toLocaleString()}\nSupplier: ${alert.supplier}`)
   }
 
 
@@ -506,7 +564,23 @@ export default function Bookkeeping() {
         expenses: { label: 'Expenses', icon: CreditCard }
       }
     },
-    banking: { 
+    inventory: { 
+      label: 'Inventory', 
+      icon: Warehouse, 
+      hasSubTabs: true,
+      subTabs: {
+        dashboard: { label: 'Inventory Dashboard', icon: Activity },
+        stock: { label: 'Stock Management', icon: Box },
+        warehouses: { label: 'Warehouse Management', icon: Warehouse },
+        adjustments: { label: 'Stock Adjustments', icon: ClipboardList },
+        reorder: { label: 'Reorder Management', icon: Bell },
+        valuation: { label: 'Inventory Valuation', icon: BarChart },
+        stocktake: { label: 'Stock Take', icon: Layers },
+        serialbatch: { label: 'Serial/Batch Tracking', icon: Hash },
+        reports: { label: 'Inventory Reports', icon: FileText }
+      }
+    },
+    banking: {
       label: 'Banking', 
       icon: CreditCard, 
       hasSubTabs: true,
@@ -617,9 +691,9 @@ export default function Bookkeeping() {
     } else {
       setActiveSubTab('')
     }
+
+
   }
-
-
   const handleSubTabClick = (subTab: string, mainTab: string) => {
     setActiveSubTab(subTab)
     setActiveMainTab(mainTab)
@@ -677,6 +751,17 @@ export default function Bookkeeping() {
       if (activeSubTab === 'suppliers') return renderSuppliersManagement()
       if (activeSubTab === 'expenses') return renderExpensesManagement()
       return renderPurchasesContent()
+    } else if (activeMainTab === 'inventory') {
+      if (activeSubTab === 'dashboard') return renderInventoryDashboard()
+      if (activeSubTab === 'stock') return renderStockManagement()
+      if (activeSubTab === 'warehouses') return renderWarehouseManagement()
+      if (activeSubTab === 'adjustments') return renderStockAdjustments()
+      if (activeSubTab === 'reorder') return renderReorderManagement()
+      if (activeSubTab === 'valuation') return renderInventoryValuation()
+      if (activeSubTab === 'stocktake') return renderStockTake()
+      if (activeSubTab === 'serialbatch') return renderSerialBatchTracking()
+      if (activeSubTab === 'reports') return renderInventoryReports()
+      return renderInventoryDashboard()
     } else if (activeMainTab === 'banking') {
       if (activeSubTab === 'bankaccounts') return renderBankAccountsManagement()
       if (activeSubTab === 'transactions') return renderBankTransactionsManagement()
@@ -6699,6 +6784,245 @@ export default function Bookkeeping() {
       </div>
     )
   }
+
+  // Inventory Management Handlers
+  const handleAddStock = () => {
+    setEditingStock(null)
+    setShowStockForm(true)
+  }
+
+  const handleViewStock = (item: any) => {
+    alert(`Stock Item Details\n\nSKU: ${item.sku}\nName: ${item.name}\nCategory: ${item.category}\nQuantity: ${item.quantity}\nCost: £${item.cost}\nReorder Level: ${item.reorderLevel}\nWarehouse: ${item.warehouse}\nLocation: ${item.location}`)
+  }
+
+  function renderInventoryDashboard() {
+    const totalStockValue = stockItems.reduce((sum, item) => sum + (item.quantity * item.cost), 0)
+    const lowStockItems = stockItems.filter(item => item.quantity <= item.reorderLevel).length
+    const totalItems = stockItems.length
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Inventory Dashboard</h2>
+            <p className="text-blue-900">Overview of inventory levels, stock valuation, and key metrics</p>
+          </div>
+        </div>
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <KPICard title="Total Stock Value" value={`£${totalStockValue.toLocaleString()}`} change="+8.3%" icon={PoundSterling} color="text-green-600" />
+          <KPICard title="Total Items" value={totalItems.toString()} change="+12" icon={Box} color="text-blue-600" />
+          <KPICard title="Low Stock Alerts" value={lowStockItems.toString()} change="-2" icon={Bell} color="text-orange-600" />
+          <KPICard title="Avg Turnover" value="45 days" change="-5 days" icon={RefreshCw} color="text-purple-600" />
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Stock Management</h2>
+            <p className="text-blue-900">Manage inventory items, quantities, and stock levels</p>
+          </div>
+          <Button onClick={handleAddStock}><Plus className="h-4 w-4 mr-2" />Add Stock Item</Button>
+        </div>
+        <div className="grid gap-4">
+          {stockItems.map((item, index) => (
+            <Card key={index} className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleViewStock(item)}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-blue-900">{item.name}</h3>
+                    <p className="text-sm text-blue-900">SKU: {item.sku} | {item.category}</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-blue-900">{item.quantity} units</p>
+                      <p className="text-sm text-blue-900">£{item.cost.toFixed(2)}</p>
+                    </div>
+                    <Badge variant={item.status === 'Critical' ? 'destructive' : 'outline'}>{item.status}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderWarehouseManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Warehouse Management</h2>
+            <p className="text-blue-900">Manage warehouse locations and stock transfers</p>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {warehouses.map((warehouse, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardHeader>
+                <CardTitle className="text-blue-900">{warehouse.name}</CardTitle>
+                <CardDescription>{warehouse.location}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-blue-900">Manager: {warehouse.manager}</p>
+                <p className="text-sm text-blue-900">Capacity: {warehouse.used}/{warehouse.capacity} sqft</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockAdjustments() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Stock Adjustments</h2>
+            <p className="text-blue-900">Track inventory adjustments with full audit trail</p>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {stockAdjustments.map((adj, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-blue-900">{adj.productName}</h3>
+                <p className="text-sm text-blue-900">{adj.type}: {adj.quantity} units - {adj.reason}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderReorderManagement() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Reorder Management</h2>
+            <p className="text-blue-900">Automated reorder alerts and purchase suggestions</p>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {reorderAlerts.map((alert, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-blue-900">{alert.productName}</h3>
+                <p className="text-sm text-blue-900">Current: {alert.currentStock} | Suggested: {alert.suggestedOrder} units</p>
+                <Button className="mt-2" onClick={() => handleCreateReorder(alert)}>Create PO</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventoryValuation() {
+    const totalValue = stockItems.reduce((sum, item) => sum + (item.quantity * item.cost), 0)
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Inventory Valuation</h2>
+            <p className="text-blue-900">Calculate inventory value using different methods</p>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="border-2 border-blue-900">
+            <CardHeader><CardTitle className="text-blue-900">FIFO Method</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-blue-900">£{totalValue.toLocaleString()}</p></CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900">
+            <CardHeader><CardTitle className="text-blue-900">LIFO Method</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-blue-900">£{totalValue.toLocaleString()}</p></CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900">
+            <CardHeader><CardTitle className="text-blue-900">Weighted Average</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-blue-900">£{totalValue.toLocaleString()}</p></CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  function renderStockTake() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Stock Take Management</h2>
+            <p className="text-blue-900">Physical inventory counts and variance analysis</p>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {stockTakes.map((take, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-blue-900">{take.warehouse}</h3>
+                <p className="text-sm text-blue-900">Items: {take.itemsChecked} | Discrepancies: {take.discrepancies}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderSerialBatchTracking() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Serial & Batch Tracking</h2>
+            <p className="text-blue-900">Complete traceability for serialized inventory</p>
+          </div>
+        </div>
+        <div className="grid gap-4">
+          {stockItems.filter(item => item.category === 'Electronics').map((item, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-blue-900">{item.name}</h3>
+                <p className="text-sm text-blue-900">Tracked Units: {item.quantity}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderInventoryReports() {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-blue-900">Inventory Reports</h2>
+            <p className="text-blue-900">Comprehensive inventory reporting and analytics</p>
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {['Stock Valuation', 'Stock Movement', 'Reorder Report', 'Stock Take', 'Warehouse Utilization', 'Slow Moving Stock'].map((report, index) => (
+            <Card key={index} className="border-2 border-blue-900">
+              <CardHeader><CardTitle className="text-blue-900">{report}</CardTitle></CardHeader>
+              <CardContent><Button className="w-full">Generate Report</Button></CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+
 
   return (
     <ResponsiveLayout>
