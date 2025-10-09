@@ -159,11 +159,11 @@ const CharityAccounts: React.FC = () => {
   }
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    )
+    if (expandedCategories.includes(category)) {
+      setExpandedCategories([])
+    } else {
+      setExpandedCategories([category])
+    }
   }
 
   const handleMainTabClick = (tabKey: string) => {
@@ -172,11 +172,10 @@ const CharityAccounts: React.FC = () => {
     if (tabConfig && tabConfig.hasSubTabs && tabConfig.subTabs) {
       const firstSubTab = Object.keys(tabConfig.subTabs)[0]
       setActiveSubTab(firstSubTab || '')
-      if (!expandedCategories.includes(tabKey)) {
-        toggleCategory(tabKey)
-      }
+      setExpandedCategories([tabKey])
     } else {
       setActiveSubTab('')
+      setExpandedCategories([])
     }
   }
 

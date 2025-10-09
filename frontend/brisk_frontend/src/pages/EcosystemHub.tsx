@@ -176,7 +176,7 @@ export default function EcosystemHub() {
       color: 'bg-teal-500'
     },
     {
-      name: 'Charity & Academy Accounts',
+      name: 'Charity/Academy A/cs',
       path: '/app/charity',
       icon: Heart,
       description: 'SORP compliance, fund accounting',
