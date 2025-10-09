@@ -1342,8 +1342,8 @@ const CharityAccounts: React.FC = () => {
                       }}
                       className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
                         activeMainTab === categoryKey && activeSubTab === subKey
-                          ? 'bg-brisk-primary text-white'
-                          : 'text-[#001f3f] hover:bg-gray-100'
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
                       }`}
                     >
                       {subTab.label}
@@ -1358,8 +1358,8 @@ const CharityAccounts: React.FC = () => {
                     onClick={() => handleMainTabClick(categoryKey)}
                     className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
                       activeMainTab === categoryKey
-                        ? 'bg-brisk-primary text-white'
-                        : 'text-[#001f3f] hover:bg-gray-100'
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
                     }`}
                   >
                     View {category.label}
