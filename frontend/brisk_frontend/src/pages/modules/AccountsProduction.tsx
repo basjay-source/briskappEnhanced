@@ -728,15 +728,15 @@ const AccountsProduction: React.FC = () => {
     })
   }, [journalEntries, jeSearchTerm, jeStatusFilter, jeDateFilter, jeSortField, jeSortDirection])
 
-  const filteredFinancialStatements = useMemo(() => {
-    return financialStatements.filter(statement => {
-      const matchesSearch = !fsSearchTerm || 
-        statement.period.toLowerCase().includes(fsSearchTerm.toLowerCase())
-      const matchesType = fsTypeFilter === 'all' || statement.type === fsTypeFilter
-      const matchesStatus = fsStatusFilter === 'all' || statement.status === fsStatusFilter
-      return matchesSearch && matchesType && matchesStatus
-    })
-  }, [financialStatements, fsSearchTerm, fsTypeFilter, fsStatusFilter])
+  // const filteredFinancialStatements = useMemo(() => {
+  //   return financialStatements.filter(statement => {
+  //     const matchesSearch = !fsSearchTerm || 
+  //       statement.period.toLowerCase().includes(fsSearchTerm.toLowerCase())
+  //     const matchesType = fsTypeFilter === 'all' || statement.type === fsTypeFilter
+  //     const matchesStatus = fsStatusFilter === 'all' || statement.status === fsStatusFilter
+  //     return matchesSearch && matchesType && matchesStatus
+  //   })
+  // }, [financialStatements, fsSearchTerm, fsTypeFilter, fsStatusFilter])
 
   const totalDebits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.debit, 0)
   const totalCredits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.credit, 0)
