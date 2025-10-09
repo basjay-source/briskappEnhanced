@@ -99,7 +99,7 @@ export default function FormWizard({
                 ? `${activePageColor} text-white`
                 : index < currentPage
                 ? 'bg-green-100 text-green-800'
-                : 'bg-gray-100 text-blue-900'
+                : 'bg-gray-100 text-[#001f3f]'
             }`}
           >
             {index + 1}

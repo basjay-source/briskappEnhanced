@@ -10,7 +10,8 @@ import {
   Zap,
   Target,
   BarChart3,
-  Clock
+  Clock,
+  ChevronDown
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +22,7 @@ import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['computation'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
@@ -272,8 +273,8 @@ export default function CorporationTax() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-blue-900">Corporation Tax Dashboard</h2>
-            <p className="text-blue-900 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
+            <h2 className="text-xl font-bold text-[#001f3f]">Corporation Tax Dashboard</h2>
+            <p className="text-[#001f3f] mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline">
@@ -308,13 +309,13 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-xl font-bold text-blue-900">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -366,7 +367,7 @@ export default function CorporationTax() {
             </CardHeader>
             <CardContent className="space-y-4">
               {rdClaims.map((claim, index) => (
-                <div key={index} className="p-3 border-2 border-blue-900 rounded-[2px]">
+                <div key={index} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-sm">{claim.project}</span>
                     <Badge variant={
@@ -376,7 +377,7 @@ export default function CorporationTax() {
                       {claim.status}
                     </Badge>
                   </div>
-                  <div className="text-xs text-blue-900 space-y-1">
+                  <div className="text-xs text-[#001f3f] space-y-1">
                     <div>Expenditure: £{claim.expenditure.toLocaleString()}</div>
                     <div>Relief: £{claim.relief.toLocaleString()}</div>
                   </div>
@@ -402,11 +403,11 @@ export default function CorporationTax() {
           </CardHeader>
           <CardContent className="space-y-4">
             {aiRecommendations.map((rec, index) => (
-              <div key={index} className="p-4 border-2 border-blue-900 rounded-[2px]">
+              <div key={index} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
-                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-blue-600" />}
+                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-[#001f3f]" />}
                     {rec.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
                     {rec.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
                     {rec.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
@@ -417,7 +418,7 @@ export default function CorporationTax() {
                     <Badge className="bg-green-100 text-green-800">{rec.impact}</Badge>
                   </div>
                 </div>
-                <p className="text-sm text-blue-900 mb-2">{rec.description}</p>
+                <p className="text-sm text-[#001f3f] mb-2">{rec.description}</p>
                 <p className="text-xs font-medium text-brisk-primary">{rec.action}</p>
               </div>
             ))}
@@ -489,7 +490,7 @@ export default function CorporationTax() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Corporation Tax Computation</CardTitle>
+              <CardTitle className="text-[#001f3f]">Corporation Tax Computation</CardTitle>
               <CardDescription>Automated CT600 computation with real-time calculations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -502,13 +503,13 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-xl font-bold text-blue-900">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
@@ -530,7 +531,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Tax Adjustments</h2>
-        <p className="text-blue-900">Manage corporation tax adjustments and corrections</p>
+        <p className="text-[#001f3f]">Manage corporation tax adjustments and corrections</p>
       </div>
     )
   }
@@ -539,7 +540,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Supporting Schedules</h2>
-        <p className="text-blue-900">CT600 supporting schedules and computations</p>
+        <p className="text-[#001f3f]">CT600 supporting schedules and computations</p>
       </div>
     )
   }
@@ -548,7 +549,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Validation</h2>
-        <p className="text-blue-900">Validate CT600 computation and check for errors</p>
+        <p className="text-[#001f3f]">Validate CT600 computation and check for errors</p>
       </div>
     )
   }
@@ -594,8 +595,8 @@ export default function CorporationTax() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-blue-900">{claim.project}</h3>
-                      <p className="text-sm text-blue-900">
+                      <h3 className="font-semibold text-[#001f3f]">{claim.project}</h3>
+                      <p className="text-sm text-[#001f3f]">
                         Expenditure: £{claim.expenditure.toLocaleString()} | 
                         Relief: £{claim.relief.toLocaleString()}
                       </p>
@@ -620,7 +621,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Reliefs & Credits</h2>
-        <p className="text-blue-900">Manage corporation tax reliefs and credits</p>
+        <p className="text-[#001f3f]">Manage corporation tax reliefs and credits</p>
       </div>
     )
   }
@@ -629,7 +630,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Group Relief</h2>
-        <p className="text-blue-900">Group relief elections and surrenders</p>
+        <p className="text-[#001f3f]">Group relief elections and surrenders</p>
       </div>
     )
   }
@@ -638,7 +639,7 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Quarterly Payments</h2>
-        <p className="text-blue-900">Quarterly instalment payments and planning</p>
+        <p className="text-[#001f3f]">Quarterly instalment payments and planning</p>
       </div>
     )
   }
@@ -647,21 +648,21 @@ export default function CorporationTax() {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-bold">Filing</h2>
-        <p className="text-blue-900">CT600 filing and HMRC submissions</p>
+        <p className="text-[#001f3f]">CT600 filing and HMRC submissions</p>
       </div>
     )
   }
 
   return (
     <div className="flex min-h-screen bg-blue-50">
-      <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-        <div className="p-4 border-b-2 border-blue-900">
-          <h1 className="text-lg font-semibold text-blue-900">Corporation Tax</h1>
-          <p className="text-sm text-blue-900">CT600 & R&D Claims</p>
+      <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+        <div className="p-4 border-b-2 border-[#001f3f]">
+          <h1 className="text-lg font-semibold text-[#001f3f]">Corporation Tax</h1>
+          <p className="text-sm text-[#001f3f]">CT600 & R&D Claims</p>
         </div>
         
         <div className="flex-1 overflow-y-auto p-2">
-          <nav className="space-y-1">
+          <nav className="space-y-0.5">
             {menuStructure.map((item) => {
               const Icon = item.icon
               const isActive = activeMainTab === item.id
@@ -682,14 +683,14 @@ export default function CorporationTax() {
                       {item.label}
                     </div>
                     {item.hasSubTabs && (
-                      <div className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
-                        ▶
-                      </div>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`} />
                     )}
                   </button>
                   
                   {item.hasSubTabs && isExpanded && (
-                    <div className="ml-4 mt-1 space-y-1">
+                    <div className="ml-0.5 mt-0.5 space-y-0.5">
                       {item.subTabs?.map((subTab) => {
                         const isSubActive = activeSubTab === subTab.id
                         return (
@@ -698,7 +699,7 @@ export default function CorporationTax() {
                             onClick={() => handleSubTabClick(subTab.id)}
                             className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                               isSubActive 
-                                ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                 : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                             }`}
                           >

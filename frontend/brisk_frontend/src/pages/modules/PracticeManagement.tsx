@@ -108,7 +108,7 @@ export default function PracticeManagement() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['jobs'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
@@ -122,6 +122,14 @@ export default function PracticeManagement() {
   const [error, setError] = useState<string | null>(null)
   
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false)
+
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [notificationData, setNotificationData] = useState<{title: string, message: string, type?: 'success' | 'error' | 'info'}>({title: '', message: '', type: 'info'})
+  
+  const showNotification = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setNotificationData({ title, message, type })
+    setIsNotificationOpen(true)
+  }
   const [editingJob, setEditingJob] = useState<Job | null>(null)
   const [jobFormData, setJobFormData] = useState({
     client_id: '',
@@ -246,7 +254,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting job:', err)
-      alert('Failed to delete job')
+      showNotification('Error', 'Failed to delete job', 'error')
     }
   }
 
@@ -259,7 +267,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting deadline:', err)
-      alert('Failed to delete deadline')
+      showNotification('Error', 'Failed to delete deadline', 'error')
     }
   }
 
@@ -327,7 +335,7 @@ export default function PracticeManagement() {
       closeJobDialog()
     } catch (err: any) {
       console.error('Error creating job:', err)
-      alert('Failed to create job: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create job: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -341,7 +349,7 @@ export default function PracticeManagement() {
       closeJobDialog()
     } catch (err: any) {
       console.error('Error updating job:', err)
-      alert('Failed to update job: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update job: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -406,7 +414,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error creating time entry:', err)
-      alert('Failed to create time entry: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create time entry: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -424,7 +432,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error updating time entry:', err)
-      alert('Failed to update time entry: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update time entry: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -437,7 +445,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting time entry:', err)
-      alert('Failed to delete time entry')
+      showNotification('Error', 'Failed to delete time entry', 'error')
     }
   }
 
@@ -498,7 +506,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error creating deadline:', err)
-      alert('Failed to create deadline: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create deadline: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -512,7 +520,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error updating deadline:', err)
-      alert('Failed to update deadline: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update deadline: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -552,7 +560,7 @@ export default function PracticeManagement() {
       case 'completed':
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'in_progress':
-        return <Circle className="h-4 w-4 text-blue-600" />
+        return <Circle className="h-4 w-4 text-[#001f3f]" />
       case 'on_hold':
         return <Pause className="h-4 w-4 text-[#001f3f]" />
       default:
@@ -565,7 +573,7 @@ export default function PracticeManagement() {
       case 'high':
         return 'bg-red-100 text-red-800'
       case 'medium':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-[#001f3f]'
       default:
         return 'bg-green-100 text-green-800'
     }
@@ -702,19 +710,19 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Revenue by Module</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Practice Management Revenue: £850,450\nJobs Completed: 145\nAvg Job Value: £5,865')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Practice Management Revenue: £850,450\nJobs Completed: 145\nAvg Job Value: £5,865', 'info')}>
                       <span className="text-[#001f3f]">Practice Management</span>
                       <span className="font-semibold text-[#001f3f]">£850,450</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Services Revenue: £645,230\nReturns Filed: 289\nAvg Fee: £2,232')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Tax Services Revenue: £645,230\nReturns Filed: 289\nAvg Fee: £2,232', 'info')}>
                       <span className="text-[#001f3f]">Tax Services</span>
                       <span className="font-semibold text-[#001f3f]">£645,230</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Bookkeeping Revenue: £512,350\nActive Clients: 234\nMonthly Recurring: £425,000')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Bookkeeping Revenue: £512,350\nActive Clients: 234\nMonthly Recurring: £425,000', 'info')}>
                       <span className="text-[#001f3f]">Bookkeeping</span>
                       <span className="font-semibold text-[#001f3f]">£512,350</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Payroll Services Revenue: £391,970\nPayroll Runs: 456\nEmployees Processed: 3,450')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Payroll Services Revenue: £391,970\nPayroll Runs: 456\nEmployees Processed: 3,450', 'info')}>
                       <span className="text-[#001f3f]">Payroll Services</span>
                       <span className="font-semibold text-[#001f3f]">£391,970</span>
                     </div>
@@ -723,15 +731,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Growth Metrics</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%', 'info')}>
                       <span className="text-[#001f3f]">MRR</span>
                       <span className="font-semibold text-green-600">+£1.2M</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67', 'info')}>
                       <span className="text-[#001f3f]">YoY Growth</span>
                       <span className="font-semibold text-green-600">+12.5%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450', 'info')}>
                       <span className="text-[#001f3f]">ARPC</span>
                       <span className="font-semibold text-[#001f3f]">£1,924</span>
                     </div>
@@ -739,10 +747,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening comprehensive revenue analytics dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening comprehensive revenue analytics dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Detailed Report
                 </button>
-                <button onClick={() => alert('Exporting revenue data to Excel...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Exporting revenue data to Excel...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Export Data
                 </button>
               </div>
@@ -764,15 +772,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Client Segments</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Enterprise Clients: 247\nAvg Revenue: £8,945/mo\nRetention: 96.8%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Enterprise Clients: 247\nAvg Revenue: £8,945/mo\nRetention: 96.8%', 'info')}>
                       <span className="text-[#001f3f]">Enterprise</span>
                       <span className="font-semibold text-[#001f3f]">247</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('SME Clients: 645\nAvg Revenue: £2,340/mo\nRetention: 94.2%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'SME Clients: 645\nAvg Revenue: £2,340/mo\nRetention: 94.2%', 'info')}>
                       <span className="text-[#001f3f]">SME</span>
                       <span className="font-semibold text-[#001f3f]">645</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Sole Traders: 355\nAvg Revenue: £890/mo\nRetention: 91.5%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Sole Traders: 355\nAvg Revenue: £890/mo\nRetention: 91.5%', 'info')}>
                       <span className="text-[#001f3f]">Sole Traders</span>
                       <span className="font-semibold text-[#001f3f]">355</span>
                     </div>
@@ -781,15 +789,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Client Health</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5', 'info')}>
                       <span className="text-[#001f3f]">Healthy</span>
                       <span className="font-semibold text-green-600">1,089</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38', 'info')}>
                       <span className="text-[#001f3f]">At Risk</span>
-                      <span className="font-semibold text-orange-600">127</span>
+                      <span className="font-semibold text-[#001f3f]">127</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8', 'info')}>
                       <span className="text-[#001f3f]">Churned</span>
                       <span className="font-semibold text-red-600">31</span>
                     </div>
@@ -797,7 +805,7 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening client management dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Client List
                 </button>
                 <ExportButton
@@ -829,15 +837,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">By Department</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Department: 96.8%\nCompleted: 1,788\nOverdue: 17')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Tax Department: 96.8%\nCompleted: 1,788\nOverdue: 17', 'info')}>
                       <span className="text-[#001f3f]">Tax Department</span>
                       <span className="font-semibold text-[#001f3f]">96.8%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Audit: 94.2%\nCompleted: 840\nOverdue: 14')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Audit: 94.2%\nCompleted: 840\nOverdue: 14', 'info')}>
                       <span className="text-[#001f3f]">Audit</span>
                       <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Advisory: 92.1%\nCompleted: 1,137\nOverdue: 30')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Advisory: 92.1%\nCompleted: 1,137\nOverdue: 30', 'info')}>
                       <span className="text-[#001f3f]">Advisory</span>
                       <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
@@ -846,15 +854,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Performance Trends</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('This Week: 94.2%\nCompleted: 847\nIn Progress: 67')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'This Week: 94.2%\nCompleted: 847\nIn Progress: 67', 'info')}>
                       <span className="text-[#001f3f]">This Week</span>
                       <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Last Week: 92.1%\nCompleted: 823\nImprovement: +2.1%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Last Week: 92.1%\nCompleted: 823\nImprovement: +2.1%', 'info')}>
                       <span className="text-[#001f3f]">Last Week</span>
                       <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Avg: 93.5%\nTarget: 95%\nGap: -1.5%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Monthly Avg: 93.5%\nTarget: 95%\nGap: -1.5%', 'info')}>
                       <span className="text-[#001f3f]">Monthly Avg</span>
                       <span className="font-semibold text-[#001f3f]">93.5%</span>
                     </div>
@@ -862,10 +870,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening task performance dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening task performance dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Task Details
                 </button>
-                <button onClick={() => alert('Generating performance report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Generating performance report...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Performance Report
                 </button>
               </div>
@@ -887,15 +895,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">By Channel</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Email: 1.8h avg\nTotal Queries: 2,847/mo\nSLA Compliance: 87%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Email: 1.8h avg\nTotal Queries: 2,847/mo\nSLA Compliance: 87%', 'info')}>
                       <span className="text-[#001f3f]">Email</span>
                       <span className="font-semibold text-[#001f3f]">1.8h</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Phone: 0.5h avg\nTotal Calls: 1,234/mo\nSLA Compliance: 96%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Phone: 0.5h avg\nTotal Calls: 1,234/mo\nSLA Compliance: 96%', 'info')}>
                       <span className="text-[#001f3f]">Phone</span>
                       <span className="font-semibold text-[#001f3f]">0.5h</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Portal: 3.2h avg\nTotal Tickets: 1,567/mo\nSLA Compliance: 82%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Portal: 3.2h avg\nTotal Tickets: 1,567/mo\nSLA Compliance: 82%', 'info')}>
                       <span className="text-[#001f3f]">Portal</span>
                       <span className="font-semibold text-[#001f3f]">3.2h</span>
                     </div>
@@ -904,15 +912,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">SLA Performance</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 1h: 45%\nTotal: 2,145\nTarget: 50%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 1h: 45%\nTotal: 2,145\nTarget: 50%', 'info')}>
                       <span className="text-[#001f3f]">Within 1h</span>
                       <span className="font-semibold text-green-600">45%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 4h: 78%\nTotal: 3,714\nTarget: 80%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 4h: 78%\nTotal: 3,714\nTarget: 80%', 'info')}>
                       <span className="text-[#001f3f]">Within 4h</span>
                       <span className="font-semibold text-green-600">78%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 24h: 94%\nTotal: 4,476\nTarget: 95%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 24h: 94%\nTotal: 4,476\nTarget: 95%', 'info')}>
                       <span className="text-[#001f3f]">Within 24h</span>
                       <span className="font-semibold text-green-600">94%</span>
                     </div>
@@ -920,10 +928,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening response time log...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening response time log...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Response Log
                 </button>
-                <button onClick={() => alert('Generating SLA report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Generating SLA report...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   SLA Report
                 </button>
               </div>
@@ -937,11 +945,11 @@ export default function PracticeManagement() {
       <div className="space-y-6">
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
-            <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
+            <h1 className={`font-bold text-[#001f3f] ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
             <p className="text-[#001f3f] mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''} onClick={() => alert('Filter functionality: You can filter jobs by status, priority, client, date range, etc.')}>
+            <Button variant="outline" className={isMobile ? 'w-full' : ''} onClick={() => showNotification('Information', 'Filter functionality: You can filter jobs by status, priority, client, date range, etc.', 'info')}>
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
@@ -1071,7 +1079,7 @@ export default function PracticeManagement() {
                         <div className="text-right flex items-center gap-2">
                           <div>
                             <p className="text-sm font-medium text-[#001f3f]">{new Date(deadline.due_date).toLocaleDateString()}</p>
-                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-orange-600' : 'text-[#001f3f]'}`}>
+                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-[#001f3f]' : 'text-[#001f3f]'}`}>
                               {daysRemaining > 0 ? `${daysRemaining} days` : 'Overdue'}
                             </p>
                           </div>
@@ -1154,7 +1162,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{jobStats.highPriority}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{jobStats.highPriority}</div>
             <p className="text-xs text-gray-500">Urgent attention needed</p>
           </CardContent>
         </Card>
@@ -1298,7 +1306,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openJobDialog(job)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit job"
                           >
                             <Edit className="h-4 w-4" />
@@ -1329,13 +1337,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingJob ? 'Edit Job' : 'Create New Job'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingJob ? 'Update job details below' : 'Fill in the details to create a new job'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="client_id">Client ID *</Label>
+              <Label htmlFor="client_id" className="text-[#001f3f]">Client ID *</Label>
               <Input
                 id="client_id"
                 value={jobFormData.client_id}
@@ -1344,7 +1352,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="title">Job Title *</Label>
+              <Label htmlFor="title" className="text-[#001f3f]">Job Title *</Label>
               <Input
                 id="title"
                 value={jobFormData.title}
@@ -1353,7 +1361,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="description"
                 value={jobFormData.description}
@@ -1364,7 +1372,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status" className="text-[#001f3f]">Status</Label>
                 <Select value={jobFormData.status} onValueChange={(value) => setJobFormData({ ...jobFormData, status: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -1378,7 +1386,7 @@ export default function PracticeManagement() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="priority">Priority</Label>
+                <Label htmlFor="priority" className="text-[#001f3f]">Priority</Label>
                 <Select value={jobFormData.priority} onValueChange={(value) => setJobFormData({ ...jobFormData, priority: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -1394,7 +1402,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="assigned_to">Assigned To</Label>
+                <Label htmlFor="assigned_to" className="text-[#001f3f]">Assigned To</Label>
                 <Input
                   id="assigned_to"
                   value={jobFormData.assigned_to}
@@ -1403,7 +1411,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="due_date">Due Date</Label>
+                <Label htmlFor="due_date" className="text-[#001f3f]">Due Date</Label>
                 <Input
                   id="due_date"
                   type="date"
@@ -1483,7 +1491,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Billable Hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{timeStats.billableHours.toFixed(1)}h</div>
+            <div className="text-xl font-bold text-[#001f3f]">{timeStats.billableHours.toFixed(1)}h</div>
             <p className="text-xs text-gray-500">Client billable</p>
           </CardContent>
         </Card>
@@ -1607,7 +1615,7 @@ export default function PracticeManagement() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openTimeEntryDialog(entry)}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                          className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                           title="Edit time entry"
                         >
                           <Edit className="h-4 w-4" />
@@ -1637,13 +1645,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingTimeEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingTimeEntry ? 'Update time entry details below' : 'Record time spent on a job or task'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="time_job_id">Job *</Label>
+              <Label htmlFor="time_job_id" className="text-[#001f3f]">Job *</Label>
               <Select value={timeEntryFormData.job_id} onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, job_id: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a job" />
@@ -1656,7 +1664,7 @@ export default function PracticeManagement() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="time_description">Description</Label>
+              <Label htmlFor="time_description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="time_description"
                 value={timeEntryFormData.description}
@@ -1667,7 +1675,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="time_hours">Hours *</Label>
+                <Label htmlFor="time_hours" className="text-[#001f3f]">Hours *</Label>
                 <Input
                   id="time_hours"
                   type="number"
@@ -1679,7 +1687,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="time_date">Date *</Label>
+                <Label htmlFor="time_date" className="text-[#001f3f]">Date *</Label>
                 <Input
                   id="time_date"
                   type="date"
@@ -1690,7 +1698,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="time_hourly_rate">Hourly Rate (£)</Label>
+                <Label htmlFor="time_hourly_rate" className="text-[#001f3f]">Hourly Rate (£)</Label>
                 <Input
                   id="time_hourly_rate"
                   type="number"
@@ -1702,7 +1710,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="time_billable">Billable</Label>
+                <Label htmlFor="time_billable" className="text-[#001f3f]">Billable</Label>
                 <Select 
                   value={timeEntryFormData.billable ? 'true' : 'false'} 
                   onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, billable: value === 'true' })}
@@ -1821,7 +1829,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-600">{deadlineStats.pending}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.pending}</div>
             <p className="text-xs text-gray-500">Not completed • Click to filter</p>
           </CardContent>
         </Card>
@@ -1853,7 +1861,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{deadlineStats.dueThisWeek}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.dueThisWeek}</div>
             <p className="text-xs text-gray-500">Due in 7 days • Click to filter</p>
           </CardContent>
         </Card>
@@ -1981,7 +1989,7 @@ export default function PracticeManagement() {
                             <div className={`flex items-center gap-1 font-medium ${
                               daysRemaining < 0 ? 'text-red-700' : 
                               daysRemaining <= 7 ? 'text-red-600' : 
-                              daysRemaining <= 14 ? 'text-orange-600' : 
+                              daysRemaining <= 14 ? 'text-[#001f3f]' : 
                               'text-blue-600'
                             }`}>
                               <Clock className="h-3 w-3" />
@@ -2011,7 +2019,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openDeadlineDialog(deadline)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit deadline"
                           >
                             <Edit className="h-4 w-4" />
@@ -2041,13 +2049,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingDeadline ? 'Edit Deadline' : 'Add Deadline'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingDeadline ? 'Update deadline details below' : 'Create a new compliance deadline'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="deadline_client_id">Client ID *</Label>
+              <Label htmlFor="deadline_client_id" className="text-[#001f3f]">Client ID *</Label>
               <Input
                 id="deadline_client_id"
                 value={deadlineFormData.client_id}
@@ -2056,7 +2064,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_title">Title *</Label>
+              <Label htmlFor="deadline_title" className="text-[#001f3f]">Title *</Label>
               <Input
                 id="deadline_title"
                 value={deadlineFormData.title}
@@ -2065,7 +2073,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_type">Deadline Type *</Label>
+              <Label htmlFor="deadline_type" className="text-[#001f3f]">Deadline Type *</Label>
               <Select value={deadlineFormData.deadline_type} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, deadline_type: value })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -2078,7 +2086,7 @@ export default function PracticeManagement() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_description">Description</Label>
+              <Label htmlFor="deadline_description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="deadline_description"
                 value={deadlineFormData.description}
@@ -2089,7 +2097,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="deadline_due_date">Due Date *</Label>
+                <Label htmlFor="deadline_due_date" className="text-[#001f3f]">Due Date *</Label>
                 <Input
                   id="deadline_due_date"
                   type="date"
@@ -2098,7 +2106,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="deadline_priority">Priority *</Label>
+                <Label htmlFor="deadline_priority" className="text-[#001f3f]">Priority *</Label>
                 <Select value={deadlineFormData.priority} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, priority: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -2112,7 +2120,7 @@ export default function PracticeManagement() {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_status">Status *</Label>
+              <Label htmlFor="deadline_status" className="text-[#001f3f]">Status *</Label>
               <Select value={deadlineFormData.status} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -2190,7 +2198,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending Signatures</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">0</div>
+            <div className="text-xl font-bold text-[#001f3f]">0</div>
             <p className="text-xs text-gray-500">Awaiting e-signature</p>
           </CardContent>
         </Card>
@@ -2392,14 +2400,14 @@ export default function PracticeManagement() {
                   <CardDescription>Configure portal security and access controls</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Two-Factor Authentication</p>
                       <p className="text-sm text-gray-500">Require 2FA for all client logins</p>
                     </div>
                     <Badge className="bg-green-500">Enabled</Badge>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Session Timeout</p>
                       <p className="text-sm text-gray-500">Auto-logout after inactivity</p>
@@ -2416,14 +2424,14 @@ export default function PracticeManagement() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">IP Whitelist</p>
                       <p className="text-sm text-gray-500">Restrict access to specific IPs</p>
                     </div>
                     <Button variant="outline" size="sm">Configure</Button>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Password Policy</p>
                       <p className="text-sm text-gray-500">Minimum password requirements</p>
@@ -2607,8 +2615,8 @@ export default function PracticeManagement() {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-orange-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
+                        <div className="bg-blue-50 p-4 rounded-[2px]">
+                          <h4 className="font-semibold text-[#001f3f]">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>January</span>
@@ -2746,11 +2754,11 @@ export default function PracticeManagement() {
               <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-blue-600">£2,847</div>
+                  <div className="text-xl font-bold text-[#001f3f]">£2,847</div>
                   <div className="text-sm text-[#001f3f]">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-orange-600">12.3</div>
+                <div className="text-center p-4 bg-blue-50 rounded-[2px]">
+                  <div className="text-xl font-bold text-[#001f3f]">12.3</div>
                   <div className="text-sm text-[#001f3f]">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px]">
@@ -2813,7 +2821,7 @@ export default function PracticeManagement() {
               <div className="space-y-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-[2px]">
                   <h5 className="font-semibold text-[#001f3f] mb-2">What I can help you with:</h5>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <ul className="text-sm text-[#001f3f] space-y-1">
                     <li>• Practice workflow optimization and automation strategies</li>
                     <li>• Client onboarding and relationship management best practices</li>
                     <li>• Resource allocation and team utilization analysis</li>
@@ -2862,11 +2870,11 @@ export default function PracticeManagement() {
                 <div className="space-y-3">
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <p className="text-sm text-[#001f3f] font-medium">Workflow Optimization</p>
-                    <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-[2px]">
-                    <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
-                    <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
+                    <p className="text-sm text-[#001f3f] font-medium">Resource Allocation</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
                   </div>
                   <div className="p-3 bg-green-50 rounded-[2px]">
                     <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
@@ -2886,7 +2894,7 @@ export default function PracticeManagement() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
                       <p className="text-xs text-[#001f3f]">12 agreements due for renewal</p>
@@ -3081,7 +3089,7 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-blue-600">📊</span>
+                    <span className="text-[#001f3f]">📊</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Financial Reports</h4>
@@ -3091,27 +3099,27 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Monthly P&L</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Cash Flow Report</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Budget vs Actual</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Fee Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
 
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-orange-600">👥</span>
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
+                    <span className="text-[#001f3f]">👥</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Client Reports</h4>
@@ -3121,19 +3129,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Client Portfolio</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Satisfaction Survey</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Retention Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Service Utilization</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3151,19 +3159,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Team Utilization</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Project Completion</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Time Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Quality Metrics</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3181,19 +3189,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>AML Compliance</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>GDPR Audit</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Professional Standards</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Risk Assessment</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3211,19 +3219,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Market Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Competitive Benchmarking</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Growth Opportunities</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Trend Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3241,19 +3249,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Report Builder</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Open</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Open</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Saved Templates</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">View</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">View</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Data Export</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Configure</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Configure</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>API Access</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Setup</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Setup</span>
                   </div>
                 </div>
               </div>
@@ -3281,8 +3289,8 @@ export default function PracticeManagement() {
                         <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
-                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
-                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                        <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
+                        <button className="text-[#001f3f] hover:underline text-sm">Download</button>
                       </td>
                     </tr>
                     <tr className="border-b">
@@ -3293,8 +3301,8 @@ export default function PracticeManagement() {
                         <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
-                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
-                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                        <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
+                        <button className="text-[#001f3f] hover:underline text-sm">Download</button>
                       </td>
                     </tr>
                     <tr className="border-b">
@@ -3302,7 +3310,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Performance</td>
                       <td className="py-2">2024-03-13</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Processing</span>
+                        <span className="px-2 py-1 bg-blue-100 text-[#001f3f] rounded text-xs">Processing</span>
                       </td>
                       <td className="py-2">
                         <button className="text-gray-400 text-sm mr-2">View</button>
@@ -3373,15 +3381,15 @@ export default function PracticeManagement() {
             <h2 className="text-lg font-semibold text-[#001f3f]">Practice Management</h2>
           </div>
           
-          <div className="flex-1 overflow-y-auto">
-            <nav className="p-2">
+          <div className="flex-1 overflow-y-auto p-2">
+            <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => {
                 const Icon = config.icon
                 const isExpanded = expandedCategories.includes(key)
                 const isActive = activeMainTab === key
                 
                 return (
-                  <div key={key} className="mb-1">
+                  <div key={key}>
                     <button
                       onClick={() => handleMainTabClick(key)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
@@ -3402,7 +3410,7 @@ export default function PracticeManagement() {
                     </button>
                     
                     {config.hasSubTabs && isExpanded && 'subTabs' in config && config.subTabs && (
-                      <div className="ml-4 mt-1 space-y-1">
+                      <div className="ml-0.5 mt-0.5 space-y-0.5">
                         {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
                           const SubIcon = subConfig.icon
                           const isSubActive = activeSubTab === subKey && activeMainTab === key
@@ -3413,12 +3421,11 @@ export default function PracticeManagement() {
                               onClick={() => handleSubTabClick(subKey, key)}
                               className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >
-                              <SubIcon className="h-4 w-4 mr-3" />
-                              <span>{subConfig.label}</span>
+                              {subConfig.label}
                             </button>
                           )
                         })}
@@ -3450,6 +3457,22 @@ export default function PracticeManagement() {
           </div>
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <Dialog open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">{notificationData.title}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-[#001f3f] whitespace-pre-line">{notificationData.message}</p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsNotificationOpen(false)}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </ResponsiveLayout>
   )
 }

@@ -71,7 +71,7 @@ const modules = [
     description: 'Bank feeds, VAT MTD'
   },
   {
-    name: 'Charity & Academy Accounts',
+    name: 'Charity/Academy A/cs',
     path: '/app/charity',
     icon: Heart,
     description: 'SORP compliance, fund accounting'

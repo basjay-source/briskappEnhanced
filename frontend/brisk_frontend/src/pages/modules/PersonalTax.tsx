@@ -44,7 +44,7 @@ export default function PersonalTax() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['returns', 'planning'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
@@ -273,7 +273,7 @@ export default function PersonalTax() {
       case 'review':
         return <AlertCircle className="h-4 w-4 text-orange-600" />
       case 'in_progress':
-        return <Clock className="h-4 w-4 text-blue-600" />
+        return <Clock className="h-4 w-4 text-[#001f3f]" />
       default:
         return <Clock className="h-4 w-4 text-gray-400" />
     }
@@ -286,9 +286,9 @@ export default function PersonalTax() {
       case 'review':
         return 'bg-orange-100 text-orange-800'
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-[#001f3f]'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
     }
   }
 
@@ -324,8 +324,8 @@ export default function PersonalTax() {
       <div className="space-y-6">
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
-            <h2 className={`font-bold text-gray-900 ${isMobile ? 'text-xl' : 'text-2xl'}`}>Personal Tax Dashboard</h2>
-            <p className="text-blue-900 mt-2">SA returns, CGT optimization, and personal tax planning</p>
+            <h2 className={`font-bold text-[#001f3f] ${isMobile ? 'text-xl' : 'text-2xl'}`}>Personal Tax Dashboard</h2>
+            <p className="text-[#001f3f] mt-2">SA returns, CGT optimization, and personal tax planning</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
@@ -348,19 +348,19 @@ export default function PersonalTax() {
               content: (
                 <div className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-3 border-2 border-blue-900 rounded-[2px]">
-                      <div className="text-sm text-blue-900">Current Period</div>
+                    <div className="p-3 border-2 border-[#001f3f] rounded-[2px]">
+                      <div className="text-sm text-[#001f3f]">Current Period</div>
                       <div className="text-lg font-semibold">{kpi.value}</div>
                       <div className="text-xs text-green-600">{kpi.change}</div>
                     </div>
-                    <div className="p-3 border-2 border-blue-900 rounded-[2px]">
-                      <div className="text-sm text-blue-900">Previous Period</div>
+                    <div className="p-3 border-2 border-[#001f3f] rounded-[2px]">
+                      <div className="text-sm text-[#001f3f]">Previous Period</div>
                       <div className="text-lg font-semibold">£125,000</div>
                       <div className="text-xs text-green-600">+8%</div>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900 mb-2">Key Insights</h4>
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Key Insights</h4>
                     <ul className="text-sm space-y-1">
                       <li>• Strong performance in Q2 with 15% growth</li>
                       <li>• Seasonal trends showing consistent improvement</li>
@@ -397,7 +397,7 @@ export default function PersonalTax() {
               <div className="space-y-3">
                 {saReturns.map((saReturn, index) => {
                   return (
-                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(saReturn.status)}
                         <div>
@@ -428,12 +428,12 @@ export default function PersonalTax() {
             <CardContent>
               <div className="space-y-3">
                 {optimizationOpportunities.map((opportunity, index) => (
-                  <div key={index} className="p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={index} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">{opportunity.opportunity}</div>
                       <Badge variant="outline">£{opportunity.potentialSaving}</Badge>
                     </div>
-                    <div className="text-sm text-blue-900 mb-2">{opportunity.description}</div>
+                    <div className="text-sm text-[#001f3f] mb-2">{opportunity.description}</div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">Priority: {opportunity.priority}</span>
                       <Button size="sm" variant="outline">
@@ -456,14 +456,14 @@ export default function PersonalTax() {
                   content: (
                     <div className="space-y-6">
                       <div className="grid gap-4 md:grid-cols-2">
-                        <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900 mb-2">Current Period</h4>
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                          <h4 className="font-semibold text-[#001f3f] mb-2">Current Period</h4>
                           <p className="text-xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
-                        <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900 mb-2">Tax Efficiency</h4>
-                          <p className="text-sm text-blue-900">Personal tax optimization</p>
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                          <h4 className="font-semibold text-[#001f3f] mb-2">Tax Efficiency</h4>
+                          <p className="text-sm text-[#001f3f]">Personal tax optimization</p>
                           <div className="mt-2">
                             <div className="flex justify-between text-xs">
                               <span>Efficiency Score</span>
@@ -476,17 +476,17 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'Active SA Returns' && (
                         <div>
-                          <h4 className="font-semibold text-blue-900 mb-3">Return Breakdown</h4>
+                          <h4 className="font-semibold text-[#001f3f] mb-3">Return Breakdown</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>In Progress</span>
                               <span className="font-semibold">8 returns</span>
                             </div>
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Ready for Review</span>
                               <span className="font-semibold">3 returns</span>
                             </div>
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Submitted</span>
                               <span className="font-semibold">1 return</span>
                             </div>
@@ -496,17 +496,17 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'Tax Saved (YTD)' && (
                         <div>
-                          <h4 className="font-semibold text-blue-900 mb-3">Savings Breakdown</h4>
+                          <h4 className="font-semibold text-[#001f3f] mb-3">Savings Breakdown</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Pension Contributions</span>
                               <span className="font-semibold">£18,500</span>
                             </div>
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>CGT Optimization</span>
                               <span className="font-semibold">£15,200</span>
                             </div>
-                            <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Allowance Utilization</span>
                               <span className="font-semibold">£11,500</span>
                             </div>
@@ -516,17 +516,17 @@ export default function PersonalTax() {
                       
                       {kpi.title === 'CGT Optimization' && (
                         <div>
-                          <h4 className="font-semibold text-blue-900 mb-3">CGT Opportunities</h4>
+                          <h4 className="font-semibold text-[#001f3f] mb-3">CGT Opportunities</h4>
                           <div className="space-y-2">
-                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                               <span>Timing Optimization</span>
                               <Badge variant="default">£4,200</Badge>
                             </div>
-                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                               <span>Annual Exemption</span>
                               <Badge variant="secondary">£2,800</Badge>
                             </div>
-                            <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                               <span>Loss Harvesting</span>
                               <Badge variant="outline">£1,500</Badge>
                             </div>
@@ -559,18 +559,18 @@ export default function PersonalTax() {
               <div className={isMobile ? '' : 'lg:col-span-2'}>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-blue-900">Recent SA Returns</CardTitle>
+                    <CardTitle className="text-[#001f3f]">Recent SA Returns</CardTitle>
                     <CardDescription>Current tax year progress</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {saReturns.map((saReturn) => (
-                        <div key={saReturn.id} className={`p-4 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                        <div key={saReturn.id} className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                           <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                             {getStatusIcon(saReturn.status)}
                             <div className="flex-1">
-                              <h4 className="font-medium text-blue-900">{saReturn.client}</h4>
-                              <p className="text-sm text-blue-900">Tax Year: {saReturn.taxYear}</p>
+                              <h4 className="font-medium text-[#001f3f]">{saReturn.client}</h4>
+                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
                               <div className="flex items-center gap-2 mt-1">
                                 <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
@@ -589,7 +589,7 @@ export default function PersonalTax() {
                                     style={{ width: `${saReturn.progress}%` }}
                                   ></div>
                                 </div>
-                                <span className="text-xs text-blue-900">{saReturn.progress}%</span>
+                                <span className="text-xs text-[#001f3f]">{saReturn.progress}%</span>
                               </div>
                             </div>
                           </div>
@@ -612,8 +612,8 @@ export default function PersonalTax() {
                   <CardContent>
                     <div className="space-y-3">
                       <div className="p-3 bg-blue-50 rounded-[2px]">
-                        <p className="text-sm font-medium text-blue-900">Pension Optimization</p>
-                        <p className="text-xs text-blue-700">3 clients could save £4,200 with increased contributions</p>
+                        <p className="text-sm font-medium text-[#001f3f]">Pension Optimization</p>
+                        <p className="text-xs text-[#001f3f]">3 clients could save £4,200 with increased contributions</p>
                       </div>
                       <div className="p-3 bg-green-50 rounded-[2px]">
                         <p className="text-sm font-medium text-green-900">CGT Planning</p>
@@ -652,28 +652,28 @@ export default function PersonalTax() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
+                    <CardTitle className="text-[#001f3f]">Upcoming Deadlines</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">SA100 Filing</p>
-                          <p className="text-xs text-blue-900">12 returns pending</p>
+                          <p className="text-xs text-[#001f3f]">12 returns pending</p>
                         </div>
                         <Badge className="bg-red-100 text-red-800">7 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">Payment on Account</p>
-                          <p className="text-xs text-blue-900">8 clients affected</p>
+                          <p className="text-xs text-[#001f3f]">8 clients affected</p>
                         </div>
                         <Badge className="bg-orange-100 text-orange-800">14 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="font-medium text-sm">CGT Annual Exemption</p>
-                          <p className="text-xs text-blue-900">Planning required</p>
+                          <p className="text-xs text-[#001f3f]">Planning required</p>
                         </div>
                         <Badge className="bg-brisk-primary-50 text-brisk-primary">45 days</Badge>
                       </div>
@@ -693,7 +693,7 @@ export default function PersonalTax() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-blue-900">SA100 Returns Management</CardTitle>
+                    <CardTitle className="text-[#001f3f]">SA100 Returns Management</CardTitle>
                     <CardDescription>Create and manage Self Assessment returns</CardDescription>
                   </div>
                   <Button>
@@ -765,8 +765,8 @@ export default function PersonalTax() {
                             <div className="flex items-center gap-4">
                               {getStatusIcon(saReturn.status)}
                               <div>
-                                <h3 className="font-semibold text-blue-900">{saReturn.client}</h3>
-                                <p className="text-sm text-blue-900">Tax Year: {saReturn.taxYear}</p>
+                                <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                                <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
                                 <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
                                 </Badge>
@@ -775,7 +775,7 @@ export default function PersonalTax() {
                             <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
                               <div>
                                 <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
-                                <p className="text-sm text-blue-900">Estimated Tax</p>
+                                <p className="text-sm text-[#001f3f]">Estimated Tax</p>
                                 <p className="text-xs text-gray-500">Due: {saReturn.dueDate}</p>
                               </div>
                               <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
@@ -800,26 +800,26 @@ export default function PersonalTax() {
       <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-blue-900">Capital Gains Tax Calculator</CardTitle>
+                <CardTitle className="text-[#001f3f]">Capital Gains Tax Calculator</CardTitle>
                 <CardDescription>Calculate CGT liability and optimization opportunities</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="disposal-proceeds">Disposal Proceeds</Label>
+                      <Label htmlFor="disposal-proceeds" className="text-[#001f3f]">Disposal Proceeds</Label>
                       <Input id="disposal-proceeds" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="acquisition-cost">Acquisition Cost</Label>
+                      <Label htmlFor="acquisition-cost" className="text-[#001f3f]">Acquisition Cost</Label>
                       <Input id="acquisition-cost" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="improvement-costs">Improvement Costs</Label>
+                      <Label htmlFor="improvement-costs" className="text-[#001f3f]">Improvement Costs</Label>
                       <Input id="improvement-costs" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="disposal-costs">Disposal Costs</Label>
+                      <Label htmlFor="disposal-costs" className="text-[#001f3f]">Disposal Costs</Label>
                       <Input id="disposal-costs" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -830,7 +830,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">CGT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">CGT Calculation</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -866,7 +866,7 @@ export default function PersonalTax() {
       <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-blue-900">Tax Optimization Opportunities</CardTitle>
+                <CardTitle className="text-[#001f3f]">Tax Optimization Opportunities</CardTitle>
                 <CardDescription>AI-powered recommendations for tax savings</CardDescription>
               </CardHeader>
               <CardContent>
@@ -876,14 +876,14 @@ export default function PersonalTax() {
                       <CardContent className="p-4">
                         <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                           <div>
-                            <h3 className="font-semibold text-blue-900">{opportunity.client}</h3>
+                            <h3 className="font-semibold text-[#001f3f]">{opportunity.client}</h3>
                             <p className="text-sm font-medium text-brisk-primary">{opportunity.opportunity}</p>
-                            <p className="text-sm text-blue-900">{opportunity.description}</p>
+                            <p className="text-sm text-[#001f3f]">{opportunity.description}</p>
                           </div>
                           <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                             <div>
                               <p className="text-lg font-bold text-green-600">£{opportunity.potentialSaving}</p>
-                              <p className="text-sm text-blue-900">Potential Saving</p>
+                              <p className="text-sm text-[#001f3f]">Potential Saving</p>
                             </div>
                             <Button size="sm" className={isMobile ? '' : 'ml-4'}>
                               Apply
@@ -915,19 +915,19 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="estate-value">Total Estate Value</Label>
+                      <Label htmlFor="estate-value" className="text-[#001f3f]">Total Estate Value</Label>
                       <Input id="estate-value" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="nil-rate-band">Nil Rate Band Available</Label>
+                      <Label htmlFor="nil-rate-band" className="text-[#001f3f]">Nil Rate Band Available</Label>
                       <Input id="nil-rate-band" value="£325,000" readOnly />
                     </div>
                     <div>
-                      <Label htmlFor="residence-nil-rate">Residence Nil Rate Band</Label>
+                      <Label htmlFor="residence-nil-rate" className="text-[#001f3f]">Residence Nil Rate Band</Label>
                       <Input id="residence-nil-rate" value="£175,000" readOnly />
                     </div>
                     <div>
-                      <Label htmlFor="gifts-made">Gifts Made (Last 7 Years)</Label>
+                      <Label htmlFor="gifts-made" className="text-[#001f3f]">Gifts Made (Last 7 Years)</Label>
                       <Input id="gifts-made" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -938,7 +938,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">IHT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">IHT Calculation</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -963,7 +963,7 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">Gift Planning</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Gift Planning</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
@@ -976,10 +976,10 @@ export default function PersonalTax() {
                           </div>
                           <div className="p-3 bg-blue-50 rounded-[2px]">
                             <div className="flex items-center gap-2">
-                              <Home className="h-4 w-4 text-blue-600" />
+                              <Home className="h-4 w-4 text-[#001f3f]" />
                               <span className="text-sm font-medium">Potentially Exempt Transfers</span>
                             </div>
-                            <p className="text-xs text-blue-700">7-year rule applies</p>
+                            <p className="text-xs text-[#001f3f]">7-year rule applies</p>
                           </div>
                         </div>
                       </CardContent>
@@ -1007,19 +1007,19 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="annual-income">Annual Income</Label>
+                      <Label htmlFor="annual-income" className="text-[#001f3f]">Annual Income</Label>
                       <Input id="annual-income" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="current-contributions">Current Pension Contributions</Label>
+                      <Label htmlFor="current-contributions" className="text-[#001f3f]">Current Pension Contributions</Label>
                       <Input id="current-contributions" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="pension-value">Current Pension Value</Label>
+                      <Label htmlFor="pension-value" className="text-[#001f3f]">Current Pension Value</Label>
                       <Input id="pension-value" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="unused-allowance">Unused Allowance (3 years)</Label>
+                      <Label htmlFor="unused-allowance" className="text-[#001f3f]">Unused Allowance (3 years)</Label>
                       <Input id="unused-allowance" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -1030,7 +1030,7 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">Annual Allowance</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Annual Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -1055,7 +1055,7 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">Lifetime Allowance</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Lifetime Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -1102,16 +1102,16 @@ export default function PersonalTax() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">Marriage Allowance</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Marriage Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
                           <div>
-                            <Label htmlFor="spouse1-income">Spouse 1 Income</Label>
+                            <Label htmlFor="spouse1-income" className="text-[#001f3f]">Spouse 1 Income</Label>
                             <Input id="spouse1-income" placeholder="£0.00" />
                           </div>
                           <div>
-                            <Label htmlFor="spouse2-income">Spouse 2 Income</Label>
+                            <Label htmlFor="spouse2-income" className="text-[#001f3f]">Spouse 2 Income</Label>
                             <Input id="spouse2-income" placeholder="£0.00" />
                           </div>
                           <Button className="w-full" variant="outline">
@@ -1126,16 +1126,16 @@ export default function PersonalTax() {
                     </Card>
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-blue-900">Child Benefit</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Child Benefit</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
                           <div>
-                            <Label htmlFor="children-count">Number of Children</Label>
+                            <Label htmlFor="children-count" className="text-[#001f3f]">Number of Children</Label>
                             <Input id="children-count" type="number" placeholder="0" />
                           </div>
                           <div>
-                            <Label htmlFor="high-earner-income">High Earner Income</Label>
+                            <Label htmlFor="high-earner-income" className="text-[#001f3f]">High Earner Income</Label>
                             <Input id="high-earner-income" placeholder="£0.00" />
                           </div>
                           <Button className="w-full" variant="outline">
@@ -1151,32 +1151,32 @@ export default function PersonalTax() {
                   </div>
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg text-blue-900">Family Investment Planning</CardTitle>
+                      <CardTitle className="text-lg text-[#001f3f]">Family Investment Planning</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-4 md:grid-cols-3">
-                        <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
-                            <Banknote className="h-4 w-4 text-blue-600" />
+                            <Banknote className="h-4 w-4 text-[#001f3f]" />
                             <span className="font-medium">Junior ISAs</span>
                           </div>
-                          <p className="text-sm text-blue-900">£9,000 annual allowance per child</p>
+                          <p className="text-sm text-[#001f3f]">£9,000 annual allowance per child</p>
                           <Button size="sm" className="mt-2" variant="outline">Setup</Button>
                         </div>
-                        <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
                             <Shield className="h-4 w-4 text-green-600" />
                             <span className="font-medium">Education Planning</span>
                           </div>
-                          <p className="text-sm text-blue-900">Tax-efficient education funding</p>
+                          <p className="text-sm text-[#001f3f]">Tax-efficient education funding</p>
                           <Button size="sm" className="mt-2" variant="outline">Plan</Button>
                         </div>
-                        <div className="p-4 border-2 border-blue-900 rounded-[2px]">
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-4 w-4 text-purple-600" />
                             <span className="font-medium">Income Splitting</span>
                           </div>
-                          <p className="text-sm text-blue-900">Optimize family income distribution</p>
+                          <p className="text-sm text-[#001f3f]">Optimize family income distribution</p>
                           <Button size="sm" className="mt-2" variant="outline">Analyze</Button>
                         </div>
                       </div>
@@ -1194,27 +1194,27 @@ export default function PersonalTax() {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">HMRC Filing and Submissions</CardTitle>
+            <CardTitle className="text-[#001f3f]">HMRC Filing and Submissions</CardTitle>
             <CardDescription>Submit returns and track filing status</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="p-4 bg-blue-50 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900 text-blue-900">Ready for Filing</h3>
-                <p className="text-sm text-blue-700">3 SA returns completed and ready for HMRC submission</p>
+                <h3 className="font-semibold text-[#001f3f] text-[#001f3f]">Ready for Filing</h3>
+                <p className="text-sm text-[#001f3f]">3 SA returns completed and ready for HMRC submission</p>
                 <Button className="mt-2" size="sm">
                   Submit to HMRC
                 </Button>
               </div>
               <div className="p-4 bg-green-50 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900 text-green-900">Successfully Filed</h3>
+                <h3 className="font-semibold text-[#001f3f] text-green-900">Successfully Filed</h3>
                 <p className="text-sm text-green-700">8 returns filed this month with confirmation receipts</p>
                 <Button variant="outline" className="mt-2" size="sm">
                   View Receipts
                 </Button>
               </div>
               <div className="p-4 bg-orange-50 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900 text-orange-900">Pending Review</h3>
+                <h3 className="font-semibold text-[#001f3f] text-orange-900">Pending Review</h3>
                 <p className="text-sm text-orange-700">2 returns require client approval before filing</p>
                 <Button variant="outline" className="mt-2" size="sm">
                   Send for Approval
@@ -1231,10 +1231,10 @@ export default function PersonalTax() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
-          <div className="p-4">
-            <h2 className="text-lg font-semibold text-blue-900 mb-4">Personal Tax</h2>
-            <nav className="space-y-1">
+        <div className="w-64 bg-white border-r border-[#001f3f] flex-shrink-0">
+          <div className="p-2">
+            <h2 className="text-lg font-semibold text-[#001f3f] mb-4">Personal Tax</h2>
+            <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>
                   <button
@@ -1257,14 +1257,14 @@ export default function PersonalTax() {
                   </button>
                   
                   {config.hasSubTabs && expandedCategories.includes(key) && config.subTabs && (
-                    <div className="ml-4 mt-1 space-y-1">
+                    <div className="ml-0.5 mt-0.5 space-y-0.5">
                       {Object.entries(config.subTabs).map(([subKey, subConfig]) => (
                         <button
                           key={subKey}
                           onClick={() => handleSubTabClick(subKey, key)}
                           className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                             activeSubTab === subKey 
-                              ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                               : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                           }`}
                         >

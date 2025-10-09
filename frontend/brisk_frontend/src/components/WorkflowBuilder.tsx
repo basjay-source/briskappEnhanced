@@ -139,8 +139,8 @@ export default function WorkflowBuilder() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Workflow Builder</h1>
-          <p className="text-blue-900 mt-2">Create and customize workflow templates</p>
+          <h1 className="text-xl font-bold text-[#001f3f]">Workflow Builder</h1>
+          <p className="text-[#001f3f] mt-2">Create and customize workflow templates</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline">
@@ -174,7 +174,7 @@ export default function WorkflowBuilder() {
             <CardContent>
               <div className="space-y-4">
                 {template.steps.map((step, index) => (
-                  <div key={step.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
+                  <div key={step.id} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <Badge variant="outline">Step {index + 1}</Badge>
@@ -303,7 +303,7 @@ export default function WorkflowBuilder() {
                   <select
                     value={template.jobType}
                     onChange={(e) => setTemplate({ ...template, jobType: e.target.value })}
-                    className="w-full p-2 border-2 border-blue-900 rounded-[2px]-md"
+                    className="w-full p-2 border-2 border-[#001f3f] rounded-[2px]-md"
                   >
                     <option value="vat_return">VAT Return</option>
                     <option value="year_end">Year End Accounts</option>

@@ -57,11 +57,11 @@ export default function LandingPage() {
 
       <main className="container mx-auto px-6">
         <section className="text-center py-20">
-          <h1 className="text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-6xl font-bold text-[#001f3f] mb-6">
             All-in-one accounting software
             <span className="text-brisk-primary"> with AI assistants</span>
           </h1>
-          <p className="text-xl text-blue-900 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-[#001f3f] mb-8 max-w-3xl mx-auto">
             Cloud-native, multilingual, ultra-fast platform for accounting firms and businesses. 
             Complete with AI advisers, advanced integrations, and enterprise security.
           </p>
@@ -101,7 +101,7 @@ export default function LandingPage() {
         <section className="py-20">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Complete Module Suite</h2>
-            <p className="text-xl text-blue-900">Everything you need in one integrated platform</p>
+            <p className="text-xl text-[#001f3f]">Everything you need in one integrated platform</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {modules.map((module, index) => (
@@ -134,7 +134,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <BriskLogo className="h-8 w-8" showText={true} />
           </div>
-          <p className="text-blue-900">© 2024 Brisk Accountants Ltd. All rights reserved.</p>
+          <p className="text-[#001f3f]">© 2024 Brisk Accountants Ltd. All rights reserved.</p>
         </div>
       </footer>
     </div>

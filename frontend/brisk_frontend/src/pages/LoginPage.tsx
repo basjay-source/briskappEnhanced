@@ -73,13 +73,13 @@ export default function LoginPage() {
         <div className="w-full max-w-md my-auto">
           
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
-            <p className="text-blue-900">Welcome back! Please enter your details.</p>
+            <h2 className="text-xl font-bold text-[#001f3f] mb-2">Sign in to your account</h2>
+            <p className="text-[#001f3f]">Welcome back! Please enter your details.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-blue-900">
+              <Label htmlFor="email" className="text-sm font-medium text-[#001f3f]">
                 Email address
               </Label>
               <Input
@@ -95,10 +95,10 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium text-blue-900">
+                <Label htmlFor="password" className="text-sm font-medium text-[#001f3f]">
                   Password
                 </Label>
-                <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 hover:underline">
+                <Link to="/forgot-password" className="text-sm text-[#001f3f] hover:text-[#001f3f] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -121,7 +121,7 @@ export default function LoginPage() {
               />
               <label
                 htmlFor="remember"
-                className="text-sm text-blue-900 cursor-pointer"
+                className="text-sm text-[#001f3f] cursor-pointer"
               >
                 Remember me for 30 days
               </label>
@@ -138,7 +138,7 @@ export default function LoginPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-[#001f3f]"></div>
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">Or continue with</span>
@@ -164,9 +164,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="mt-8 text-center text-sm text-blue-900">
+          <p className="mt-8 text-center text-sm text-[#001f3f]">
             Don't have an account?{' '}
-            <Link to="/" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
+            <Link to="/" className="font-medium text-[#001f3f] hover:text-[#001f3f] hover:underline">
               Start free trial
             </Link>
           </p>

@@ -549,7 +549,7 @@ export default function EmailSystem() {
                 placeholder="Type your message..."
                 value={composeData.body}
                 onChange={(e) => setComposeData({...composeData, body: e.target.value})}
-                className="w-full h-64 p-3 border-2 border-blue-900 rounded-[2px]-md resize-none"
+                className="w-full h-64 p-3 border-2 border-[#001f3f] rounded-[2px]-md resize-none"
               />
             </div>
           </div>
@@ -583,7 +583,7 @@ export default function EmailSystem() {
                 <h3 className="font-medium text-sm mb-2">Connected Accounts</h3>
                 <div className="space-y-2">
                   {connectedAccounts.map((account) => (
-                    <div key={account.id} className="flex items-center justify-between p-2 border-2 border-blue-900 rounded-[2px]">
+                    <div key={account.id} className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded-[2px]">
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${
                           account.status === 'connected' ? 'bg-green-500' :
@@ -773,7 +773,7 @@ export default function EmailSystem() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 text-sm text-blue-900">
+                  <div className="flex items-center gap-4 text-sm text-[#001f3f]">
                     <span>{selectedThread.emails.length} messages</span>
                     <span>{selectedThread.participants.length} participants</span>
                   </div>
@@ -850,7 +850,7 @@ export default function EmailSystem() {
       </div>
 
       {isComposing && (
-        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border border-gray-300 rounded-t-lg shadow-lg z-50 flex flex-col`}>
+        <div className={`fixed ${isMinimized ? 'bottom-0 right-4 w-80 h-12' : 'bottom-0 right-4 w-[900px] h-[700px]'} bg-white border-2 border-[#001f3f] rounded-t-lg shadow-lg z-50 flex flex-col`}>
           <div className="flex items-center justify-between p-3 border-b bg-gray-50 rounded-t-lg">
             <h4 className="font-medium text-sm">New Message</h4>
             <div className="flex items-center gap-1">
@@ -891,7 +891,7 @@ export default function EmailSystem() {
                         fetchClientTemplateData(e.target.value)
                       }
                     }}
-                    className="flex-1 px-2 py-1 border-2 border-blue-900 rounded-[2px] text-sm h-8"
+                    className="flex-1 px-2 py-1 border-2 border-[#001f3f] rounded-[2px] text-sm h-8"
                   >
                     <option value="">Select client for template data...</option>
                     {availableClients.map(client => (

@@ -18,7 +18,7 @@ import ResponsiveLayout from '@/components/ResponsiveLayout'
 const Reports: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('financial')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['financial'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [searchValue, setSearchValue] = useState('')
   const [selectedPeriod, setSelectedPeriod] = useState('')
   const [selectedClient, setSelectedClient] = useState('')
@@ -243,17 +243,17 @@ const Reports: React.FC = () => {
         <div key={index} className="bg-white rounded-[2px] border shadow-sm hover:shadow-lg transition-shadow">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <report.icon className="h-8 w-8 text-blue-600" />
+              <report.icon className="h-8 w-8 text-[#001f3f]" />
               <span 
                 className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  report.status === 'ready' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  report.status === 'ready' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-[#001f3f]'
                 }`}
               >
                 {report.status}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">{report.name}</h3>
-            <p className="text-sm text-blue-900 mb-4">{report.description}</p>
+            <h3 className="text-lg font-semibold text-[#001f3f] mb-2">{report.name}</h3>
+            <p className="text-sm text-[#001f3f] mb-4">{report.description}</p>
             <div className="space-y-4">
               <div className="text-sm text-gray-500">
                 Last generated: {report.lastGenerated}
@@ -263,7 +263,7 @@ const Reports: React.FC = () => {
                   <Download className="h-4 w-4 mr-2" />
                   Generate
                 </button>
-                <button className="border border-gray-300 px-3 py-2 rounded-[2px] hover:bg-gray-50 transition-colors">
+                <button className="border-2 border-[#001f3f] px-3 py-2 rounded-[2px] hover:bg-gray-50 transition-colors">
                   <Eye className="h-4 w-4" />
                 </button>
               </div>
@@ -278,12 +278,12 @@ const Reports: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-white rounded-[2px] border shadow-sm">
         <div className="p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">Report Builder</h3>
-          <p className="text-sm text-blue-900 mb-4">Create custom reports with your preferred data and formatting</p>
+          <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Report Builder</h3>
+          <p className="text-sm text-[#001f3f] mb-4">Create custom reports with your preferred data and formatting</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Report Type</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-[2px] px-3 py-2">
+              <select className="mt-1 block w-full border-2 border-[#001f3f] rounded-[2px] px-3 py-2">
                 <option value="">Select report type</option>
                 <option value="financial">Financial Statement</option>
                 <option value="management">Management Report</option>
@@ -293,7 +293,7 @@ const Reports: React.FC = () => {
             </div>
             <div>
               <label className="text-sm font-medium">Data Source</label>
-              <select className="mt-1 block w-full border border-gray-300 rounded-[2px] px-3 py-2">
+              <select className="mt-1 block w-full border-2 border-[#001f3f] rounded-[2px] px-3 py-2">
                 <option value="">Select data source</option>
                 <option value="trial-balance">Trial Balance</option>
                 <option value="transactions">Transaction Data</option>
@@ -314,15 +314,15 @@ const Reports: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-[2px] border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">Saved Templates</h3>
+            <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Saved Templates</h3>
             <div className="space-y-2">
-              <div className="p-2 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 cursor-pointer">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
                 Monthly Board Pack
               </div>
-              <div className="p-2 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 cursor-pointer">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
                 Quarterly Review
               </div>
-              <div className="p-2 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 cursor-pointer">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
                 Year-end Package
               </div>
             </div>
@@ -331,13 +331,13 @@ const Reports: React.FC = () => {
 
         <div className="bg-white rounded-[2px] border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">Recent Reports</h3>
+            <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Recent Reports</h3>
             <div className="space-y-2">
-              <div className="p-2 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 cursor-pointer">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
                 <div className="font-medium">Q4 Analysis</div>
                 <div className="text-sm text-gray-500">Generated 2 days ago</div>
               </div>
-              <div className="p-2 border-2 border-blue-900 rounded-[2px] hover:bg-gray-50 cursor-pointer">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
                 <div className="font-medium">Budget Review</div>
                 <div className="text-sm text-gray-500">Generated 1 week ago</div>
               </div>
@@ -347,13 +347,13 @@ const Reports: React.FC = () => {
 
         <div className="bg-white rounded-[2px] border shadow-sm">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">Scheduled Reports</h3>
+            <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Scheduled Reports</h3>
             <div className="space-y-2">
-              <div className="p-2 border-2 border-blue-900 rounded-[2px]">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="font-medium">Monthly P&L</div>
                 <div className="text-sm text-gray-500">Next: 1st of month</div>
               </div>
-              <div className="p-2 border-2 border-blue-900 rounded-[2px]">
+              <div className="p-2 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="font-medium">Weekly Cash Flow</div>
                 <div className="text-sm text-gray-500">Next: Monday</div>
               </div>
@@ -385,8 +385,8 @@ const Reports: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-blue-900 mb-2">Reports Dashboard</h2>
-          <p className="text-blue-900">Generate comprehensive financial and management reports</p>
+          <h2 className="text-xl font-bold text-[#001f3f] mb-2">Reports Dashboard</h2>
+          <p className="text-[#001f3f]">Generate comprehensive financial and management reports</p>
         </div>
         {renderReportGrid(financialReports)}
       </div>
@@ -396,9 +396,9 @@ const Reports: React.FC = () => {
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h2 className="text-lg font-semibold text-blue-900">Reports</h2>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h2 className="text-lg font-semibold text-[#001f3f]">Reports</h2>
           </div>
           
           <div className="flex-1 overflow-y-auto">
@@ -430,7 +430,7 @@ const Reports: React.FC = () => {
                     </button>
                     
                     {config.hasSubTabs && isExpanded && config.subTabs && (
-                      <div className="ml-4 mt-1 space-y-1">
+                      <div className="ml-0.5 mt-0.5 space-y-1">
                         {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
                           const SubIcon = subConfig.icon
                           const isSubActive = activeSubTab === subKey && activeMainTab === key
@@ -441,7 +441,7 @@ const Reports: React.FC = () => {
                               onClick={() => handleSubTabClick(subKey, key)}
                               className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >
