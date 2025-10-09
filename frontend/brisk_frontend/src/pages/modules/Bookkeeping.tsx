@@ -4963,10 +4963,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Date', 'Category', 'Description', 'Amount', 'Status'],
+                ['2024-01-15', 'Office Supplies', 'Stationery', '£150', 'Approved'],
+                ['2024-01-14', 'Travel', 'Client Meeting', '£280', 'Pending'],
+                ['2024-01-13', 'Software', 'Subscriptions', '£420', 'Approved']
+              ]}
+              filename={`expenses-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
