@@ -4947,7 +4947,26 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
+            <Button onClick={() => {
+              const csvContent = [
+                ['Account Name', 'Bank', 'Account Number', 'Balance', 'Type', 'Status'],
+                ['Business Current Account', 'Barclays', '****1234', '45230', 'Current', 'Active'],
+                ['Business Savings Account', 'HSBC', '****5678', '32100', 'Savings', 'Active'],
+                ['Payroll Account', 'Lloyds', '****9012', '28900', 'Current', 'Active'],
+                ['Tax Reserve Account', 'NatWest', '****3456', '12800', 'Savings', 'Active'],
+                ['Petty Cash Account', 'Santander', '****7890', '6400', 'Current', 'Active']
+              ].map(row => row.join(',')).join('\n')
+              
+              const blob = new Blob([csvContent], { type: 'text/csv' })
+              const url = window.URL.createObjectURL(blob)
+              const link = document.createElement('a')
+              link.href = url
+              link.download = `bank-accounts-report-${new Date().toISOString().split('T')[0]}.csv`
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+              window.URL.revokeObjectURL(url)
+            }}>
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
@@ -4981,7 +5000,10 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('accounts')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Total Balance</CardTitle>
             </CardHeader>
@@ -4990,7 +5012,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Across all accounts</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('accounts')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Active Accounts</CardTitle>
             </CardHeader>
@@ -4999,7 +5024,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Connected accounts</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('transactions')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Monthly Inflow</CardTitle>
             </CardHeader>
@@ -5008,7 +5036,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('transactions')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Monthly Outflow</CardTitle>
             </CardHeader>
