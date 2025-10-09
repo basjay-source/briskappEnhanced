@@ -103,7 +103,7 @@ const CharityAccounts: React.FC = () => {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['accounts', 'reports'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isAILoading, setIsAILoading] = useState(false)
 
@@ -1355,7 +1355,7 @@ const CharityAccounts: React.FC = () => {
                 </div>
               )}
               
-              {!category.subTabs && (
+              {expandedCategories.includes(categoryKey) && !category.subTabs && (
                 <div className="ml-6 mt-1">
                   <button
                     onClick={() => handleMainTabClick(categoryKey)}
