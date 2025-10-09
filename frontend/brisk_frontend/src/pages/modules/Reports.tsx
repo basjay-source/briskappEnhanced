@@ -243,7 +243,7 @@ const Reports: React.FC = () => {
         <div key={index} className="bg-white rounded-[2px] border shadow-sm hover:shadow-lg transition-shadow">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <report.icon className="h-8 w-8 text-blue-600" />
+              <report.icon className="h-8 w-8 text-[#001f3f]" />
               <span 
                 className={`px-2 py-1 rounded-full text-xs font-medium ${
                   report.status === 'ready' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-[#001f3f]'

@@ -1126,9 +1126,9 @@ export default function Bookkeeping() {
                 <div>
                   <p className="text-sm font-medium text-[#001f3f]">Active Customers</p>
                   <p className="text-xl font-bold">156</p>
-                  <p className="text-xs text-blue-600">+8 new</p>
+                  <p className="text-xs text-[#001f3f]">+8 new</p>
                 </div>
-                <Users className="h-8 w-8 text-blue-600" />
+                <Users className="h-8 w-8 text-[#001f3f]" />
               </div>
             </CardContent>
           </Card>
@@ -1274,9 +1274,9 @@ export default function Bookkeeping() {
                 <div>
                   <p className="text-sm font-medium text-[#001f3f]">Active Suppliers</p>
                   <p className="text-xl font-bold">89</p>
-                  <p className="text-xs text-blue-600">+3 new</p>
+                  <p className="text-xs text-[#001f3f]">+3 new</p>
                 </div>
-                <Building className="h-8 w-8 text-blue-600" />
+                <Building className="h-8 w-8 text-[#001f3f]" />
               </div>
             </CardContent>
           </Card>
@@ -1436,7 +1436,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="flex items-center gap-4">
-                  <CreditCard className="h-8 w-8 text-blue-600" />
+                  <CreditCard className="h-8 w-8 text-[#001f3f]" />
                   <div>
                     <p className="font-medium">Barclays Business Current</p>
                     <p className="text-sm text-[#001f3f]">****1234</p>
@@ -1528,7 +1528,7 @@ export default function Bookkeeping() {
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="p-4 bg-blue-50 rounded-[2px]">
-                <p className="text-sm font-medium text-blue-600">VAT on Sales</p>
+                <p className="text-sm font-medium text-[#001f3f]">VAT on Sales</p>
                 <p className="text-xl font-bold text-[#001f3f]">£5,700</p>
               </div>
               <div className="p-4 bg-green-50 rounded-[2px]">
@@ -1733,7 +1733,7 @@ export default function Bookkeeping() {
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded bg-blue-50">
                           <span>Net Worth</span>
-                          <span className="font-semibold text-blue-600">£156,260</span>
+                          <span className="font-semibold text-[#001f3f]">£156,260</span>
                         </div>
                       </div>
                     </div>
@@ -1950,7 +1950,7 @@ export default function Bookkeeping() {
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Cost Control</span>
-                          <span className="font-semibold text-blue-600">-3.2%</span>
+                          <span className="font-semibold text-[#001f3f]">-3.2%</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Customer Satisfaction</span>
@@ -2383,7 +2383,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="flex items-center gap-4">
-                  <Building className="h-8 w-8 text-blue-600" />
+                  <Building className="h-8 w-8 text-[#001f3f]" />
                   <div>
                     <p className="font-medium">123 Main Street</p>
                     <p className="text-sm text-[#001f3f]">2 bed apartment</p>
@@ -2478,7 +2478,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="flex items-center gap-3">
-                  <FileText className="h-6 w-6 text-blue-600" />
+                  <FileText className="h-6 w-6 text-[#001f3f]" />
                   <div>
                     <p className="font-medium">Office Supplies Receipt</p>
                     <p className="text-sm text-[#001f3f]">Uploaded today</p>
@@ -2530,7 +2530,7 @@ export default function Bookkeeping() {
               <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
-                    <Database className="h-6 w-6 text-blue-600" />
+                    <Database className="h-6 w-6 text-[#001f3f]" />
                   </div>
                   <div>
                     <p className="font-medium">Xero</p>
@@ -4251,7 +4251,7 @@ export default function Bookkeeping() {
               <CardTitle className="text-lg text-[#001f3f]">Pending Quotes</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">15</div>
+              <div className="text-xl font-bold text-[#001f3f]">15</div>
               <p className="text-sm text-[#001f3f]">Awaiting response</p>
             </CardContent>
           </Card>
@@ -4780,7 +4780,7 @@ export default function Bookkeeping() {
               <CardTitle className="text-lg text-[#001f3f]">Active POs</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">12</div>
+              <div className="text-xl font-bold text-[#001f3f]">12</div>
               <p className="text-sm text-[#001f3f]">In progress</p>
             </CardContent>
           </Card>
@@ -5034,7 +5034,7 @@ export default function Bookkeeping() {
               <CardTitle className="text-lg text-[#001f3f]">Reimbursable</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">£1,650</div>
+              <div className="text-xl font-bold text-[#001f3f]">£1,650</div>
               <p className="text-sm text-[#001f3f]">Employee expenses</p>
             </CardContent>
           </Card>
@@ -5254,7 +5254,7 @@ export default function Bookkeeping() {
               <CardTitle className="text-lg text-[#001f3f]">Monthly Inflow</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">£45,230</div>
+              <div className="text-xl font-bold text-[#001f3f]">£45,230</div>
               <p className="text-sm text-[#001f3f]">This month</p>
             </CardContent>
           </Card>
@@ -5686,7 +5686,7 @@ export default function Bookkeeping() {
               <CardTitle className="text-lg text-[#001f3f]">Total Transactions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">{totalTransactions}</div>
+              <div className="text-xl font-bold text-[#001f3f]">{totalTransactions}</div>
               <p className="text-sm text-[#001f3f]">Across all feeds</p>
             </CardContent>
           </Card>
@@ -5956,9 +5956,9 @@ export default function Bookkeeping() {
                 <div>
                   <p className="text-sm font-medium text-[#001f3f]">Total Accounts</p>
                   <p className="text-xl font-bold">247</p>
-                  <p className="text-xs text-blue-600">Active accounts</p>
+                  <p className="text-xs text-[#001f3f]">Active accounts</p>
                 </div>
-                <Database className="h-8 w-8 text-blue-600" />
+                <Database className="h-8 w-8 text-[#001f3f]" />
               </div>
             </CardContent>
           </Card>
@@ -6079,9 +6079,9 @@ export default function Bookkeeping() {
                 <div>
                   <p className="text-sm font-medium text-[#001f3f]">Total Entries</p>
                   <p className="text-xl font-bold">1,247</p>
-                  <p className="text-xs text-blue-600">This period</p>
+                  <p className="text-xs text-[#001f3f]">This period</p>
                 </div>
-                <BookOpen className="h-8 w-8 text-blue-600" />
+                <BookOpen className="h-8 w-8 text-[#001f3f]" />
               </div>
             </CardContent>
           </Card>
@@ -6366,9 +6366,9 @@ export default function Bookkeeping() {
                 <div>
                   <p className="text-sm font-medium text-[#001f3f]">Current Period</p>
                   <p className="text-xl font-bold">Q1 2024</p>
-                  <p className="text-xs text-blue-600">Due: 7 May 2024</p>
+                  <p className="text-xs text-[#001f3f]">Due: 7 May 2024</p>
                 </div>
-                <Calendar className="h-8 w-8 text-blue-600" />
+                <Calendar className="h-8 w-8 text-[#001f3f]" />
               </div>
             </CardContent>
           </Card>
@@ -6778,7 +6778,7 @@ export default function Bookkeeping() {
                     ) : alert.type === 'success' ? (
                       <CheckCircle className="h-4 w-4 text-green-600" />
                     ) : (
-                      <ExternalLink className="h-4 w-4 text-blue-600" />
+                      <ExternalLink className="h-4 w-4 text-[#001f3f]" />
                     )}
                   </div>
                   <div className="flex-1">

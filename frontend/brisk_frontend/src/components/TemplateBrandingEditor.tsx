@@ -51,7 +51,7 @@ export default function TemplateBrandingEditor({
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
             <div>
-              <Label htmlFor="company-name">Company Name</Label>
+              <Label htmlFor="company-name" className="text-[#001f3f]">Company Name</Label>
               <Input
                 id="company-name"
                 value={branding.custom_branding?.company_name || ''}
@@ -67,7 +67,7 @@ export default function TemplateBrandingEditor({
             </div>
             
             <div>
-              <Label htmlFor="primary-color">Primary Color</Label>
+              <Label htmlFor="primary-color" className="text-[#001f3f]">Primary Color</Label>
               <div className="flex gap-2">
                 <Input
                   id="primary-color"
@@ -97,7 +97,7 @@ export default function TemplateBrandingEditor({
             </div>
 
             <div>
-              <Label htmlFor="secondary-color">Secondary Color</Label>
+              <Label htmlFor="secondary-color" className="text-[#001f3f]">Secondary Color</Label>
               <div className="flex gap-2">
                 <Input
                   id="secondary-color"
@@ -127,7 +127,7 @@ export default function TemplateBrandingEditor({
             </div>
 
             <div>
-              <Label htmlFor="font-family">Font Family</Label>
+              <Label htmlFor="font-family" className="text-[#001f3f]">Font Family</Label>
               <Select 
                 value={branding.font_family || 'Inter'} 
                 onValueChange={(value) => onBrandingChange({

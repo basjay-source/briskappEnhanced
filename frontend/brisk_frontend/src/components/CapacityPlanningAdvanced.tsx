@@ -295,9 +295,9 @@ export default function CapacityPlanningAdvanced() {
               <div>
                 <p className="text-sm font-medium text-[#001f3f]">Efficiency Score</p>
                 <p className="text-xl font-bold">87%</p>
-                <p className="text-xs text-blue-600">+3% this month</p>
+                <p className="text-xs text-[#001f3f]">+3% this month</p>
               </div>
-              <Target className="h-8 w-8 text-blue-600" />
+              <Target className="h-8 w-8 text-[#001f3f]" />
             </div>
           </CardContent>
         </Card>
@@ -538,7 +538,7 @@ export default function CapacityPlanningAdvanced() {
                 <div className="space-y-4">
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="h-4 w-4 text-blue-600" />
+                      <TrendingUp className="h-4 w-4 text-[#001f3f]" />
                       <span className="font-medium text-[#001f3f]">High Demand Period</span>
                     </div>
                     <p className="text-sm text-[#001f3f]">
@@ -606,7 +606,7 @@ export default function CapacityPlanningAdvanced() {
                         <p>{rec.impact}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-blue-600">Effort:</span>
+                        <span className="font-medium text-[#001f3f]">Effort:</span>
                         <p>{rec.effort}</p>
                       </div>
                       <div>

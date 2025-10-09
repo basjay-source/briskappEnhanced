@@ -560,7 +560,7 @@ export default function PracticeManagement() {
       case 'completed':
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'in_progress':
-        return <Circle className="h-4 w-4 text-blue-600" />
+        return <Circle className="h-4 w-4 text-[#001f3f]" />
       case 'on_hold':
         return <Pause className="h-4 w-4 text-[#001f3f]" />
       default:
@@ -1306,7 +1306,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openJobDialog(job)}
-                            className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
+                            className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit job"
                           >
                             <Edit className="h-4 w-4" />
@@ -1337,13 +1337,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingJob ? 'Edit Job' : 'Create New Job'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingJob ? 'Update job details below' : 'Fill in the details to create a new job'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="client_id">Client ID *</Label>
+              <Label htmlFor="client_id" className="text-[#001f3f]">Client ID *</Label>
               <Input
                 id="client_id"
                 value={jobFormData.client_id}
@@ -1352,7 +1352,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="title">Job Title *</Label>
+              <Label htmlFor="title" className="text-[#001f3f]">Job Title *</Label>
               <Input
                 id="title"
                 value={jobFormData.title}
@@ -1361,7 +1361,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="description"
                 value={jobFormData.description}
@@ -1372,7 +1372,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status" className="text-[#001f3f]">Status</Label>
                 <Select value={jobFormData.status} onValueChange={(value) => setJobFormData({ ...jobFormData, status: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -1386,7 +1386,7 @@ export default function PracticeManagement() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="priority">Priority</Label>
+                <Label htmlFor="priority" className="text-[#001f3f]">Priority</Label>
                 <Select value={jobFormData.priority} onValueChange={(value) => setJobFormData({ ...jobFormData, priority: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -1402,7 +1402,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="assigned_to">Assigned To</Label>
+                <Label htmlFor="assigned_to" className="text-[#001f3f]">Assigned To</Label>
                 <Input
                   id="assigned_to"
                   value={jobFormData.assigned_to}
@@ -1411,7 +1411,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="due_date">Due Date</Label>
+                <Label htmlFor="due_date" className="text-[#001f3f]">Due Date</Label>
                 <Input
                   id="due_date"
                   type="date"
@@ -1615,7 +1615,7 @@ export default function PracticeManagement() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openTimeEntryDialog(entry)}
-                          className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
+                          className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                           title="Edit time entry"
                         >
                           <Edit className="h-4 w-4" />
@@ -1645,13 +1645,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingTimeEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingTimeEntry ? 'Update time entry details below' : 'Record time spent on a job or task'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="time_job_id">Job *</Label>
+              <Label htmlFor="time_job_id" className="text-[#001f3f]">Job *</Label>
               <Select value={timeEntryFormData.job_id} onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, job_id: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a job" />
@@ -1664,7 +1664,7 @@ export default function PracticeManagement() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="time_description">Description</Label>
+              <Label htmlFor="time_description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="time_description"
                 value={timeEntryFormData.description}
@@ -1675,7 +1675,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="time_hours">Hours *</Label>
+                <Label htmlFor="time_hours" className="text-[#001f3f]">Hours *</Label>
                 <Input
                   id="time_hours"
                   type="number"
@@ -1687,7 +1687,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="time_date">Date *</Label>
+                <Label htmlFor="time_date" className="text-[#001f3f]">Date *</Label>
                 <Input
                   id="time_date"
                   type="date"
@@ -1698,7 +1698,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="time_hourly_rate">Hourly Rate (£)</Label>
+                <Label htmlFor="time_hourly_rate" className="text-[#001f3f]">Hourly Rate (£)</Label>
                 <Input
                   id="time_hourly_rate"
                   type="number"
@@ -1710,7 +1710,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="time_billable">Billable</Label>
+                <Label htmlFor="time_billable" className="text-[#001f3f]">Billable</Label>
                 <Select 
                   value={timeEntryFormData.billable ? 'true' : 'false'} 
                   onValueChange={(value) => setTimeEntryFormData({ ...timeEntryFormData, billable: value === 'true' })}
@@ -1829,7 +1829,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-600">{deadlineStats.pending}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.pending}</div>
             <p className="text-xs text-gray-500">Not completed • Click to filter</p>
           </CardContent>
         </Card>
@@ -2019,7 +2019,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openDeadlineDialog(deadline)}
-                            className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
+                            className="text-[#001f3f] hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit deadline"
                           >
                             <Edit className="h-4 w-4" />
@@ -2049,13 +2049,13 @@ export default function PracticeManagement() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">{editingDeadline ? 'Edit Deadline' : 'Add Deadline'}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-[#001f3f]">
               {editingDeadline ? 'Update deadline details below' : 'Create a new compliance deadline'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="deadline_client_id">Client ID *</Label>
+              <Label htmlFor="deadline_client_id" className="text-[#001f3f]">Client ID *</Label>
               <Input
                 id="deadline_client_id"
                 value={deadlineFormData.client_id}
@@ -2064,7 +2064,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_title">Title *</Label>
+              <Label htmlFor="deadline_title" className="text-[#001f3f]">Title *</Label>
               <Input
                 id="deadline_title"
                 value={deadlineFormData.title}
@@ -2073,7 +2073,7 @@ export default function PracticeManagement() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_type">Deadline Type *</Label>
+              <Label htmlFor="deadline_type" className="text-[#001f3f]">Deadline Type *</Label>
               <Select value={deadlineFormData.deadline_type} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, deadline_type: value })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -2086,7 +2086,7 @@ export default function PracticeManagement() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_description">Description</Label>
+              <Label htmlFor="deadline_description" className="text-[#001f3f]">Description</Label>
               <Textarea
                 id="deadline_description"
                 value={deadlineFormData.description}
@@ -2097,7 +2097,7 @@ export default function PracticeManagement() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="deadline_due_date">Due Date *</Label>
+                <Label htmlFor="deadline_due_date" className="text-[#001f3f]">Due Date *</Label>
                 <Input
                   id="deadline_due_date"
                   type="date"
@@ -2106,7 +2106,7 @@ export default function PracticeManagement() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="deadline_priority">Priority *</Label>
+                <Label htmlFor="deadline_priority" className="text-[#001f3f]">Priority *</Label>
                 <Select value={deadlineFormData.priority} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, priority: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -2120,7 +2120,7 @@ export default function PracticeManagement() {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="deadline_status">Status *</Label>
+              <Label htmlFor="deadline_status" className="text-[#001f3f]">Status *</Label>
               <Select value={deadlineFormData.status} onValueChange={(value) => setDeadlineFormData({ ...deadlineFormData, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -2754,7 +2754,7 @@ export default function PracticeManagement() {
               <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-blue-600">£2,847</div>
+                  <div className="text-xl font-bold text-[#001f3f]">£2,847</div>
                   <div className="text-sm text-[#001f3f]">Average Project Value</div>
                 </div>
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
@@ -3089,7 +3089,7 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-blue-600">📊</span>
+                    <span className="text-[#001f3f]">📊</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Financial Reports</h4>
@@ -3099,19 +3099,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Monthly P&L</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Cash Flow Report</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Budget vs Actual</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Fee Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3129,19 +3129,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Client Portfolio</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Satisfaction Survey</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Retention Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Service Utilization</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3159,19 +3159,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Team Utilization</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Project Completion</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Time Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Quality Metrics</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3189,19 +3189,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>AML Compliance</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>GDPR Audit</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Professional Standards</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Risk Assessment</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3219,19 +3219,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Market Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Competitive Benchmarking</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Growth Opportunities</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Trend Analysis</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3249,19 +3249,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Report Builder</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Open</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Open</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Saved Templates</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">View</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">View</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Data Export</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Configure</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Configure</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>API Access</span>
-                    <span className="text-blue-600 hover:underline cursor-pointer">Setup</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Setup</span>
                   </div>
                 </div>
               </div>
@@ -3289,8 +3289,8 @@ export default function PracticeManagement() {
                         <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
-                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
-                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                        <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
+                        <button className="text-[#001f3f] hover:underline text-sm">Download</button>
                       </td>
                     </tr>
                     <tr className="border-b">
@@ -3301,8 +3301,8 @@ export default function PracticeManagement() {
                         <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
-                        <button className="text-blue-600 hover:underline text-sm mr-2">View</button>
-                        <button className="text-blue-600 hover:underline text-sm">Download</button>
+                        <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
+                        <button className="text-[#001f3f] hover:underline text-sm">Download</button>
                       </td>
                     </tr>
                     <tr className="border-b">

@@ -78,7 +78,7 @@ export default function ClientPortalAdvanced({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />
-      case 'in_progress': return <Clock className="h-4 w-4 text-blue-600" />
+      case 'in_progress': return <Clock className="h-4 w-4 text-[#001f3f]" />
       case 'pending': return <AlertTriangle className="h-4 w-4 text-[#001f3f]" />
       default: return <Clock className="h-4 w-4 text-[#001f3f]" />
     }
@@ -148,9 +148,9 @@ export default function ClientPortalAdvanced({
                     <div>
                       <p className="text-sm font-medium text-[#001f3f]">Active Jobs</p>
                       <p className="text-xl font-bold">2</p>
-                      <p className="text-xs text-blue-600">1 due this month</p>
+                      <p className="text-xs text-[#001f3f]">1 due this month</p>
                     </div>
-                    <Clock className="h-8 w-8 text-blue-600" />
+                    <Clock className="h-8 w-8 text-[#001f3f]" />
                   </div>
                 </CardContent>
               </Card>
@@ -327,7 +327,7 @@ export default function ClientPortalAdvanced({
                     job.documents.map(doc => (
                       <div key={`${job.id}-${doc.name}`} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                         <div className="flex items-center gap-3">
-                          <FileText className="h-8 w-8 text-blue-600" />
+                          <FileText className="h-8 w-8 text-[#001f3f]" />
                           <div>
                             <h4 className="font-medium">{doc.name}</h4>
                             <p className="text-sm text-[#001f3f]">

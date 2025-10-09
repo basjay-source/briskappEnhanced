@@ -98,7 +98,7 @@ export default function LoginPage() {
                 <Label htmlFor="password" className="text-sm font-medium text-[#001f3f]">
                   Password
                 </Label>
-                <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-[#001f3f] hover:underline">
+                <Link to="/forgot-password" className="text-sm text-[#001f3f] hover:text-[#001f3f] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
 
           <p className="mt-8 text-center text-sm text-[#001f3f]">
             Don't have an account?{' '}
-            <Link to="/" className="font-medium text-blue-600 hover:text-[#001f3f] hover:underline">
+            <Link to="/" className="font-medium text-[#001f3f] hover:text-[#001f3f] hover:underline">
               Start free trial
             </Link>
           </p>

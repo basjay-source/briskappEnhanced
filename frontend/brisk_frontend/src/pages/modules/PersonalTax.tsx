@@ -273,7 +273,7 @@ export default function PersonalTax() {
       case 'review':
         return <AlertCircle className="h-4 w-4 text-orange-600" />
       case 'in_progress':
-        return <Clock className="h-4 w-4 text-blue-600" />
+        return <Clock className="h-4 w-4 text-[#001f3f]" />
       default:
         return <Clock className="h-4 w-4 text-gray-400" />
     }
@@ -807,19 +807,19 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="disposal-proceeds">Disposal Proceeds</Label>
+                      <Label htmlFor="disposal-proceeds" className="text-[#001f3f]">Disposal Proceeds</Label>
                       <Input id="disposal-proceeds" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="acquisition-cost">Acquisition Cost</Label>
+                      <Label htmlFor="acquisition-cost" className="text-[#001f3f]">Acquisition Cost</Label>
                       <Input id="acquisition-cost" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="improvement-costs">Improvement Costs</Label>
+                      <Label htmlFor="improvement-costs" className="text-[#001f3f]">Improvement Costs</Label>
                       <Input id="improvement-costs" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="disposal-costs">Disposal Costs</Label>
+                      <Label htmlFor="disposal-costs" className="text-[#001f3f]">Disposal Costs</Label>
                       <Input id="disposal-costs" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -915,19 +915,19 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="estate-value">Total Estate Value</Label>
+                      <Label htmlFor="estate-value" className="text-[#001f3f]">Total Estate Value</Label>
                       <Input id="estate-value" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="nil-rate-band">Nil Rate Band Available</Label>
+                      <Label htmlFor="nil-rate-band" className="text-[#001f3f]">Nil Rate Band Available</Label>
                       <Input id="nil-rate-band" value="£325,000" readOnly />
                     </div>
                     <div>
-                      <Label htmlFor="residence-nil-rate">Residence Nil Rate Band</Label>
+                      <Label htmlFor="residence-nil-rate" className="text-[#001f3f]">Residence Nil Rate Band</Label>
                       <Input id="residence-nil-rate" value="£175,000" readOnly />
                     </div>
                     <div>
-                      <Label htmlFor="gifts-made">Gifts Made (Last 7 Years)</Label>
+                      <Label htmlFor="gifts-made" className="text-[#001f3f]">Gifts Made (Last 7 Years)</Label>
                       <Input id="gifts-made" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -976,7 +976,7 @@ export default function PersonalTax() {
                           </div>
                           <div className="p-3 bg-blue-50 rounded-[2px]">
                             <div className="flex items-center gap-2">
-                              <Home className="h-4 w-4 text-blue-600" />
+                              <Home className="h-4 w-4 text-[#001f3f]" />
                               <span className="text-sm font-medium">Potentially Exempt Transfers</span>
                             </div>
                             <p className="text-xs text-[#001f3f]">7-year rule applies</p>
@@ -1007,19 +1007,19 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="annual-income">Annual Income</Label>
+                      <Label htmlFor="annual-income" className="text-[#001f3f]">Annual Income</Label>
                       <Input id="annual-income" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="current-contributions">Current Pension Contributions</Label>
+                      <Label htmlFor="current-contributions" className="text-[#001f3f]">Current Pension Contributions</Label>
                       <Input id="current-contributions" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="pension-value">Current Pension Value</Label>
+                      <Label htmlFor="pension-value" className="text-[#001f3f]">Current Pension Value</Label>
                       <Input id="pension-value" placeholder="£0.00" />
                     </div>
                     <div>
-                      <Label htmlFor="unused-allowance">Unused Allowance (3 years)</Label>
+                      <Label htmlFor="unused-allowance" className="text-[#001f3f]">Unused Allowance (3 years)</Label>
                       <Input id="unused-allowance" placeholder="£0.00" />
                     </div>
                     <Button className="w-full">
@@ -1107,11 +1107,11 @@ export default function PersonalTax() {
                       <CardContent>
                         <div className="space-y-3">
                           <div>
-                            <Label htmlFor="spouse1-income">Spouse 1 Income</Label>
+                            <Label htmlFor="spouse1-income" className="text-[#001f3f]">Spouse 1 Income</Label>
                             <Input id="spouse1-income" placeholder="£0.00" />
                           </div>
                           <div>
-                            <Label htmlFor="spouse2-income">Spouse 2 Income</Label>
+                            <Label htmlFor="spouse2-income" className="text-[#001f3f]">Spouse 2 Income</Label>
                             <Input id="spouse2-income" placeholder="£0.00" />
                           </div>
                           <Button className="w-full" variant="outline">
@@ -1131,11 +1131,11 @@ export default function PersonalTax() {
                       <CardContent>
                         <div className="space-y-3">
                           <div>
-                            <Label htmlFor="children-count">Number of Children</Label>
+                            <Label htmlFor="children-count" className="text-[#001f3f]">Number of Children</Label>
                             <Input id="children-count" type="number" placeholder="0" />
                           </div>
                           <div>
-                            <Label htmlFor="high-earner-income">High Earner Income</Label>
+                            <Label htmlFor="high-earner-income" className="text-[#001f3f]">High Earner Income</Label>
                             <Input id="high-earner-income" placeholder="£0.00" />
                           </div>
                           <Button className="w-full" variant="outline">
@@ -1157,7 +1157,7 @@ export default function PersonalTax() {
                       <div className="grid gap-4 md:grid-cols-3">
                         <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
-                            <Banknote className="h-4 w-4 text-blue-600" />
+                            <Banknote className="h-4 w-4 text-[#001f3f]" />
                             <span className="font-medium">Junior ISAs</span>
                           </div>
                           <p className="text-sm text-[#001f3f]">£9,000 annual allowance per child</p>

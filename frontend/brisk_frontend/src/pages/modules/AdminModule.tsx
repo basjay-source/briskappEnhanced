@@ -351,8 +351,8 @@ const AdminModule = () => {
         <Dialog open={showApprovalDialog} onOpenChange={setShowApprovalDialog}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Pending Approval Requests</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-[#001f3f]">Pending Approval Requests</DialogTitle>
+              <DialogDescription className="text-[#001f3f]">
                 Review and approve high-risk administrative actions
               </DialogDescription>
             </DialogHeader>

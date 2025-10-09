@@ -263,14 +263,14 @@ export default function InvoiceTemplateManager() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create New Invoice Template</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-[#001f3f]">Create New Invoice Template</DialogTitle>
+                <DialogDescription className="text-[#001f3f]">
                   Create a custom invoice template for your business
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="template-name">Template Name</Label>
+                  <Label htmlFor="template-name" className="text-[#001f3f]">Template Name</Label>
                   <Input
                     id="template-name"
                     value={newTemplate.name}
@@ -279,7 +279,7 @@ export default function InvoiceTemplateManager() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="template-description">Description</Label>
+                  <Label htmlFor="template-description" className="text-[#001f3f]">Description</Label>
                   <Input
                     id="template-description"
                     value={newTemplate.description}
@@ -288,7 +288,7 @@ export default function InvoiceTemplateManager() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="template-type">Template Type</Label>
+                  <Label htmlFor="template-type" className="text-[#001f3f]">Template Type</Label>
                   <Select 
                     value={newTemplate.template_type} 
                     onValueChange={(value) => setNewTemplate({ ...newTemplate, template_type: value as InvoiceTemplate['template_type'] })}

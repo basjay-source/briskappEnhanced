@@ -70,7 +70,7 @@ export default function AIPromptSection({
                   {recentQuestions.map((q, index) => (
                     <button 
                       key={index}
-                      className="text-sm text-blue-600 hover:underline block"
+                      className="text-sm text-[#001f3f] hover:underline block"
                       onClick={() => handleQuestionClick(q)}
                     >
                       {q}

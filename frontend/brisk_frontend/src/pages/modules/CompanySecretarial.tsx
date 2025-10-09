@@ -269,7 +269,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="companyName">Proposed company name</Label>
+                <Label htmlFor="companyName" className="text-[#001f3f]">Proposed company name</Label>
                 <Input 
                   id="companyName" 
                   placeholder="Enter company name"
@@ -278,7 +278,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="companyType">Company type</Label>
+                <Label htmlFor="companyType" className="text-[#001f3f]">Company type</Label>
                 <Select value={in01FormData.companyType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, companyType: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select company type" />
@@ -292,7 +292,7 @@ export default function CompanySecretarial() {
               </div>
             </div>
             <div>
-              <Label htmlFor="registeredOffice">Registered office address</Label>
+              <Label htmlFor="registeredOffice" className="text-[#001f3f]">Registered office address</Label>
               <Textarea 
                 id="registeredOffice" 
                 placeholder="Enter full registered office address"
@@ -309,7 +309,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="shareCapital">Share capital</Label>
+                <Label htmlFor="shareCapital" className="text-[#001f3f]">Share capital</Label>
                 <Input 
                   id="shareCapital" 
                   placeholder="£100"
@@ -318,7 +318,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="shareClass">Share class</Label>
+                <Label htmlFor="shareClass" className="text-[#001f3f]">Share class</Label>
                 <Select value={in01FormData.shareClass || ''} onValueChange={(value) => setIn01FormData({...in01FormData, shareClass: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select share class" />
@@ -332,7 +332,7 @@ export default function CompanySecretarial() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="numberOfShares">Number of shares</Label>
+                <Label htmlFor="numberOfShares" className="text-[#001f3f]">Number of shares</Label>
                 <Input 
                   id="numberOfShares" 
                   placeholder="100"
@@ -341,7 +341,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="nominalValue">Nominal value per share</Label>
+                <Label htmlFor="nominalValue" className="text-[#001f3f]">Nominal value per share</Label>
                 <Input 
                   id="nominalValue" 
                   placeholder="£1.00"
@@ -359,7 +359,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="directorName">Director full name</Label>
+                <Label htmlFor="directorName" className="text-[#001f3f]">Director full name</Label>
                 <Input 
                   id="directorName" 
                   placeholder="Enter director's full name"
@@ -368,7 +368,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="directorDOB">Date of birth</Label>
+                <Label htmlFor="directorDOB" className="text-[#001f3f]">Date of birth</Label>
                 <Input 
                   id="directorDOB" 
                   type="date"
@@ -378,7 +378,7 @@ export default function CompanySecretarial() {
               </div>
             </div>
             <div>
-              <Label htmlFor="directorAddress">Director's service address</Label>
+              <Label htmlFor="directorAddress" className="text-[#001f3f]">Director's service address</Label>
               <Textarea 
                 id="directorAddress" 
                 placeholder="Enter director's service address"
@@ -388,7 +388,7 @@ export default function CompanySecretarial() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="directorNationality">Nationality</Label>
+                <Label htmlFor="directorNationality" className="text-[#001f3f]">Nationality</Label>
                 <Input 
                   id="directorNationality" 
                   placeholder="British"
@@ -397,7 +397,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="directorOccupation">Occupation</Label>
+                <Label htmlFor="directorOccupation" className="text-[#001f3f]">Occupation</Label>
                 <Input 
                   id="directorOccupation" 
                   placeholder="Director"
@@ -415,7 +415,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="secretaryName">Secretary name</Label>
+                <Label htmlFor="secretaryName" className="text-[#001f3f]">Secretary name</Label>
                 <Input 
                   id="secretaryName" 
                   placeholder="Enter secretary's name"
@@ -424,7 +424,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="secretaryType">Secretary type</Label>
+                <Label htmlFor="secretaryType" className="text-[#001f3f]">Secretary type</Label>
                 <Select value={in01FormData.secretaryType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, secretaryType: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
@@ -437,7 +437,7 @@ export default function CompanySecretarial() {
               </div>
             </div>
             <div>
-              <Label htmlFor="secretaryAddress">Secretary's service address</Label>
+              <Label htmlFor="secretaryAddress" className="text-[#001f3f]">Secretary's service address</Label>
               <Textarea 
                 id="secretaryAddress" 
                 placeholder="Enter secretary's service address"
@@ -454,7 +454,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="shareholderName">Shareholder name</Label>
+                <Label htmlFor="shareholderName" className="text-[#001f3f]">Shareholder name</Label>
                 <Input 
                   id="shareholderName" 
                   placeholder="Enter shareholder's name"
@@ -463,7 +463,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="shareholderShares">Number of shares</Label>
+                <Label htmlFor="shareholderShares" className="text-[#001f3f]">Number of shares</Label>
                 <Input 
                   id="shareholderShares" 
                   placeholder="100"
@@ -473,7 +473,7 @@ export default function CompanySecretarial() {
               </div>
             </div>
             <div>
-              <Label htmlFor="shareholderAddress">Shareholder address</Label>
+              <Label htmlFor="shareholderAddress" className="text-[#001f3f]">Shareholder address</Label>
               <Textarea 
                 id="shareholderAddress" 
                 placeholder="Enter shareholder's address"
@@ -490,7 +490,7 @@ export default function CompanySecretarial() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="pscName">PSC name</Label>
+                <Label htmlFor="pscName" className="text-[#001f3f]">PSC name</Label>
                 <Input 
                   id="pscName" 
                   placeholder="Enter PSC's name"
@@ -499,7 +499,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="pscDOB">Date of birth</Label>
+                <Label htmlFor="pscDOB" className="text-[#001f3f]">Date of birth</Label>
                 <Input 
                   id="pscDOB" 
                   type="date"
@@ -509,7 +509,7 @@ export default function CompanySecretarial() {
               </div>
             </div>
             <div>
-              <Label htmlFor="pscAddress">PSC address</Label>
+              <Label htmlFor="pscAddress" className="text-[#001f3f]">PSC address</Label>
               <Textarea 
                 id="pscAddress" 
                 placeholder="Enter PSC's address"
@@ -518,7 +518,7 @@ export default function CompanySecretarial() {
               />
             </div>
             <div>
-              <Label htmlFor="pscNature">Nature of control</Label>
+              <Label htmlFor="pscNature" className="text-[#001f3f]">Nature of control</Label>
               <Textarea 
                 id="pscNature" 
                 placeholder="Describe the nature of control"
@@ -534,7 +534,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="articlesType">Articles type</Label>
+              <Label htmlFor="articlesType" className="text-[#001f3f]">Articles type</Label>
               <Select value={in01FormData.articlesType || ''} onValueChange={(value) => setIn01FormData({...in01FormData, articlesType: value})}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select articles type" />
@@ -546,7 +546,7 @@ export default function CompanySecretarial() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="articlesRestrictions">Share transfer restrictions</Label>
+              <Label htmlFor="articlesRestrictions" className="text-[#001f3f]">Share transfer restrictions</Label>
               <Textarea 
                 id="articlesRestrictions" 
                 placeholder="Enter any restrictions on share transfers"
@@ -569,7 +569,7 @@ export default function CompanySecretarial() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="declarantName">Declarant name</Label>
+                <Label htmlFor="declarantName" className="text-[#001f3f]">Declarant name</Label>
                 <Input 
                   id="declarantName" 
                   placeholder="Enter your full name"
@@ -578,7 +578,7 @@ export default function CompanySecretarial() {
                 />
               </div>
               <div>
-                <Label htmlFor="declarantCapacity">Capacity</Label>
+                <Label htmlFor="declarantCapacity" className="text-[#001f3f]">Capacity</Label>
                 <Select value={in01FormData.declarantCapacity || ''} onValueChange={(value) => setIn01FormData({...in01FormData, declarantCapacity: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select capacity" />
@@ -3342,7 +3342,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="utr">Unique Taxpayer Reference (UTR)</Label>
+                    <Label htmlFor="utr" className="text-[#001f3f]">Unique Taxpayer Reference (UTR)</Label>
                     <Input 
                       id="utr" 
                       defaultValue="" 
@@ -3350,7 +3350,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxYear">Tax year</Label>
+                    <Label htmlFor="taxYear" className="text-[#001f3f]">Tax year</Label>
                     <Select>
                       <SelectTrigger>
                         <SelectValue placeholder="Select tax year" />
@@ -3363,7 +3363,7 @@ export default function CompanySecretarial() {
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="niNumber">National Insurance Number</Label>
+                    <Label htmlFor="niNumber" className="text-[#001f3f]">National Insurance Number</Label>
                     <Input 
                       id="niNumber"
                       defaultValue="" 
@@ -3371,7 +3371,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="dateOfBirth">Date of birth</Label>
+                    <Label htmlFor="dateOfBirth" className="text-[#001f3f]">Date of birth</Label>
                     <Input 
                       id="dateOfBirth"
                       type="date"
@@ -3388,7 +3388,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="employmentPay">Pay from employment</Label>
+                    <Label htmlFor="employmentPay" className="text-[#001f3f]">Pay from employment</Label>
                     <Input 
                       id="employmentPay"
                       value={formData.employmentPay || ''} 
@@ -3397,7 +3397,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxDeducted">UK tax deducted</Label>
+                    <Label htmlFor="taxDeducted" className="text-[#001f3f]">UK tax deducted</Label>
                     <Input 
                       id="taxDeducted"
                       value={formData.taxDeducted || ''} 
@@ -3406,7 +3406,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="tipsPayments">Tips and other payments</Label>
+                    <Label htmlFor="tipsPayments" className="text-[#001f3f]">Tips and other payments</Label>
                     <Input 
                       id="tipsPayments"
                       value={formData.tipsPayments || ''} 
@@ -3415,7 +3415,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="employmentBenefits">Benefits from employment</Label>
+                    <Label htmlFor="employmentBenefits" className="text-[#001f3f]">Benefits from employment</Label>
                     <Input 
                       id="employmentBenefits"
                       value={formData.employmentBenefits || ''} 
@@ -3433,7 +3433,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="businessName">Business name</Label>
+                    <Label htmlFor="businessName" className="text-[#001f3f]">Business name</Label>
                     <Input 
                       id="businessName"
                       value={formData.businessName || ''} 
@@ -3442,7 +3442,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="businessDescription">Business description</Label>
+                    <Label htmlFor="businessDescription" className="text-[#001f3f]">Business description</Label>
                     <Input 
                       id="businessDescription"
                       value={formData.businessDescription || ''} 
@@ -3451,7 +3451,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="businessIncome">Business income</Label>
+                    <Label htmlFor="businessIncome" className="text-[#001f3f]">Business income</Label>
                     <Input 
                       id="businessIncome"
                       value={formData.businessIncome || ''} 
@@ -3460,7 +3460,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="businessExpenses">Business expenses</Label>
+                    <Label htmlFor="businessExpenses" className="text-[#001f3f]">Business expenses</Label>
                     <Input 
                       id="businessExpenses"
                       value={formData.businessExpenses || ''} 
@@ -3478,7 +3478,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="propertyIncome">UK property income</Label>
+                    <Label htmlFor="propertyIncome" className="text-[#001f3f]">UK property income</Label>
                     <Input 
                       id="propertyIncome"
                       value={formData.propertyIncome || ''} 
@@ -3487,7 +3487,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="dividends">UK dividends</Label>
+                    <Label htmlFor="dividends" className="text-[#001f3f]">UK dividends</Label>
                     <Input 
                       id="dividends"
                       value={formData.dividends || ''} 
@@ -3496,7 +3496,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="interest">UK interest</Label>
+                    <Label htmlFor="interest" className="text-[#001f3f]">UK interest</Label>
                     <Input 
                       id="interest"
                       value={formData.interest || ''} 
@@ -3505,7 +3505,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="otherIncome">Other UK income</Label>
+                    <Label htmlFor="otherIncome" className="text-[#001f3f]">Other UK income</Label>
                     <Input 
                       id="otherIncome"
                       value={formData.otherIncome || ''} 
@@ -3523,7 +3523,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="totalIncome">Total income</Label>
+                    <Label htmlFor="totalIncome" className="text-[#001f3f]">Total income</Label>
                     <Input 
                       id="totalIncome"
                       value={formData.totalIncome || ''} 
@@ -3532,7 +3532,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxDue">Tax due</Label>
+                    <Label htmlFor="taxDue" className="text-[#001f3f]">Tax due</Label>
                     <Input 
                       id="taxDue"
                       value={formData.taxDue || ''} 
@@ -3541,7 +3541,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxPaid">Tax already paid</Label>
+                    <Label htmlFor="taxPaid" className="text-[#001f3f]">Tax already paid</Label>
                     <Input 
                       id="taxPaid"
                       value={formData.taxPaid || ''} 
@@ -3550,7 +3550,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxBalance">Tax to pay or refund</Label>
+                    <Label htmlFor="taxBalance" className="text-[#001f3f]">Tax to pay or refund</Label>
                     <Input 
                       id="taxBalance"
                       value={formData.taxBalance || ''} 
@@ -3591,7 +3591,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="companyName">Company name</Label>
+                    <Label htmlFor="companyName" className="text-[#001f3f]">Company name</Label>
                     <Input 
                       id="companyName"
                       value={formData.companyName || ''} 
@@ -3600,7 +3600,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="companyNumber">Company registration number</Label>
+                    <Label htmlFor="companyNumber" className="text-[#001f3f]">Company registration number</Label>
                     <Input 
                       id="companyNumber"
                       value={formData.companyNumber || ''} 
@@ -3609,7 +3609,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="ctReference">Corporation Tax reference</Label>
+                    <Label htmlFor="ctReference" className="text-[#001f3f]">Corporation Tax reference</Label>
                     <Input 
                       id="ctReference"
                       value={formData.ctReference || ''} 
@@ -3618,7 +3618,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="periodEndDate">Accounting period end date</Label>
+                    <Label htmlFor="periodEndDate" className="text-[#001f3f]">Accounting period end date</Label>
                     <Input 
                       id="periodEndDate"
                       type="date"
@@ -3636,7 +3636,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="turnover">Turnover</Label>
+                    <Label htmlFor="turnover" className="text-[#001f3f]">Turnover</Label>
                     <Input 
                       id="turnover"
                       value={formData.turnover || ''} 
@@ -3645,7 +3645,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="totalExpenses">Total expenses</Label>
+                    <Label htmlFor="totalExpenses" className="text-[#001f3f]">Total expenses</Label>
                     <Input 
                       id="totalExpenses"
                       value={formData.totalExpenses || ''} 
@@ -3654,7 +3654,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="netProfit">Net profit before tax</Label>
+                    <Label htmlFor="netProfit" className="text-[#001f3f]">Net profit before tax</Label>
                     <Input 
                       id="netProfit"
                       value={formData.netProfit || ''} 
@@ -3663,7 +3663,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="taxAdjustments">Tax adjustments</Label>
+                    <Label htmlFor="taxAdjustments" className="text-[#001f3f]">Tax adjustments</Label>
                     <Input 
                       id="taxAdjustments"
                       value={formData.taxAdjustments || ''} 
@@ -3681,7 +3681,7 @@ export default function CompanySecretarial() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="taxableProfit">Taxable profit</Label>
+                    <Label htmlFor="taxableProfit" className="text-[#001f3f]">Taxable profit</Label>
                     <Input 
                       id="taxableProfit"
                       value={formData.taxableProfit || ''} 
@@ -3690,7 +3690,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="corporationTaxDue">Corporation tax due</Label>
+                    <Label htmlFor="corporationTaxDue" className="text-[#001f3f]">Corporation tax due</Label>
                     <Input 
                       id="corporationTaxDue"
                       value={formData.corporationTaxDue || ''} 
@@ -3699,7 +3699,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="corporationTaxPaid">Tax already paid</Label>
+                    <Label htmlFor="corporationTaxPaid" className="text-[#001f3f]">Tax already paid</Label>
                     <Input 
                       id="corporationTaxPaid"
                       value={formData.corporationTaxPaid || ''} 
@@ -3708,7 +3708,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="corporationTaxPayable">Tax payable</Label>
+                    <Label htmlFor="corporationTaxPayable" className="text-[#001f3f]">Tax payable</Label>
                     <Input 
                       id="corporationTaxPayable"
                       value={formData.corporationTaxPayable || ''} 
@@ -7345,7 +7345,7 @@ export default function CompanySecretarial() {
               {companies.map((company) => (
                 <div key={company.id} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                   <div className="flex items-center space-x-4">
-                    <Building className="h-8 w-8 text-blue-600" />
+                    <Building className="h-8 w-8 text-[#001f3f]" />
                     <div>
                       <p className="font-medium">{company.name}</p>
                       <p className="text-sm text-gray-500">Company No: {company.number}</p>
@@ -7748,7 +7748,7 @@ export default function CompanySecretarial() {
                     <Calendar className="h-4 w-4 text-blue-500" />
                     <span className="text-sm font-medium text-[#001f3f]">Annual Return</span>
                   </div>
-                  <span className="text-xs text-blue-600">Due in 2 weeks</span>
+                  <span className="text-xs text-[#001f3f]">Due in 2 weeks</span>
                 </div>
               </div>
             </CardContent>

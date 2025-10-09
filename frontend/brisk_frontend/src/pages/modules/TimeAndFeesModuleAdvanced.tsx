@@ -192,7 +192,7 @@ export default function TimeAndFeesModuleAdvanced() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'approved': return <CheckCircle className="h-4 w-4 text-green-600" />
-      case 'submitted': return <Clock className="h-4 w-4 text-blue-600" />
+      case 'submitted': return <Clock className="h-4 w-4 text-[#001f3f]" />
       case 'draft': return <Circle className="h-4 w-4 text-gray-400" />
       default: return <Circle className="h-4 w-4 text-gray-400" />
     }
@@ -211,7 +211,7 @@ export default function TimeAndFeesModuleAdvanced() {
     switch (type) {
       case 'optimization': return <TrendingUp className="h-4 w-4 text-green-600" />
       case 'warning': return <AlertTriangle className="h-4 w-4 text-orange-600" />
-      case 'opportunity': return <Lightbulb className="h-4 w-4 text-blue-600" />
+      case 'opportunity': return <Lightbulb className="h-4 w-4 text-[#001f3f]" />
       default: return <Brain className="h-4 w-4 text-[#001f3f]" />
     }
   }
@@ -293,7 +293,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-blue-600" />
+                  <Clock className="h-5 w-5 text-[#001f3f]" />
                   Recent Time Entries
                 </CardTitle>
                 <CardDescription>Latest time tracking activity</CardDescription>
@@ -375,7 +375,7 @@ export default function TimeAndFeesModuleAdvanced() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Timer className="h-5 w-5 text-blue-600" />
+                  <Timer className="h-5 w-5 text-[#001f3f]" />
                   Smart Timer
                 </CardTitle>
                 <CardDescription>AI-powered time tracking with automatic job detection</CardDescription>

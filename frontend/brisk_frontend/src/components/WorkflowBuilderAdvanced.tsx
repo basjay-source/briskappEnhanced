@@ -530,7 +530,7 @@ export default function WorkflowBuilderAdvanced() {
                               <p className="text-xs text-[#001f3f] mb-2">{step.description}</p>
                             )}
                             {step.assignedTo && (
-                              <p className="text-xs text-blue-600">→ {step.assignedTo}</p>
+                              <p className="text-xs text-[#001f3f]">→ {step.assignedTo}</p>
                             )}
                             {step.dueInDays && (
                               <p className="text-xs text-[#001f3f]">Due: {step.dueInDays} days</p>
@@ -613,7 +613,7 @@ export default function WorkflowBuilderAdvanced() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label htmlFor="workflow-name">Name</Label>
+                      <Label htmlFor="workflow-name" className="text-[#001f3f]">Name</Label>
                       <Input
                         id="workflow-name"
                         value={selectedTemplate.name}
@@ -624,7 +624,7 @@ export default function WorkflowBuilderAdvanced() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="workflow-description">Description</Label>
+                      <Label htmlFor="workflow-description" className="text-[#001f3f]">Description</Label>
                       <Input
                         id="workflow-description"
                         value={selectedTemplate.description}
@@ -635,7 +635,7 @@ export default function WorkflowBuilderAdvanced() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="job-type">Job Type</Label>
+                      <Label htmlFor="job-type" className="text-[#001f3f]">Job Type</Label>
                       <Select
                         value={selectedTemplate.jobType}
                         onValueChange={(value) => setSelectedTemplate({
@@ -685,7 +685,7 @@ export default function WorkflowBuilderAdvanced() {
                     <p className="text-xl font-bold">12</p>
                     <p className="text-xs text-green-600">+2 this month</p>
                   </div>
-                  <Workflow className="h-8 w-8 text-blue-600" />
+                  <Workflow className="h-8 w-8 text-[#001f3f]" />
                 </div>
               </CardContent>
             </Card>

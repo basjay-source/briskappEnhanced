@@ -594,7 +594,7 @@ export default function NewEmailStudio() {
                         <div className="font-medium text-sm">{variable.label}</div>
                         <div className="text-xs text-gray-500">{variable.description}</div>
                         {templateData && (
-                          <div className="text-xs text-blue-600 mt-1">
+                          <div className="text-xs text-[#001f3f] mt-1">
                             {templateData[variable.key as keyof TemplateData]}
                           </div>
                         )}

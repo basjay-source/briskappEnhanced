@@ -182,15 +182,15 @@ export default function VAT() {
                 <CardContent>
                   <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} mb-4`}>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">Net Sales</Label>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">Net Sales</Label>
                       <p className="font-semibold">£{vatReturn.netSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">VAT on Sales</Label>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">VAT on Sales</Label>
                       <p className="font-semibold">£{vatReturn.vatOnSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">VAT on Purchases</Label>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">VAT on Purchases</Label>
                       <p className="font-semibold">£{vatReturn.vatOnPurchases.toLocaleString()}</p>
                     </div>
                   </div>
@@ -243,7 +243,7 @@ export default function VAT() {
                 <CardContent>
                   {scheme.rate && (
                     <div className="mb-4">
-                      <Label className="text-sm text-[#001f3f]">Rate</Label>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">Rate</Label>
                       <p className="text-xl font-bold text-brisk-primary">{scheme.rate}%</p>
                     </div>
                   )}

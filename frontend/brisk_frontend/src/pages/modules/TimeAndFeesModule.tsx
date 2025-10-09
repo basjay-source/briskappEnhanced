@@ -186,7 +186,7 @@ export default function TimeAndFeesModule() {
       case 'approved':
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'submitted':
-        return <Clock className="h-4 w-4 text-blue-600" />
+        return <Clock className="h-4 w-4 text-[#001f3f]" />
       case 'rejected':
         return <Circle className="h-4 w-4 text-red-600" />
       default:
@@ -401,7 +401,7 @@ export default function TimeAndFeesModule() {
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div className="bg-blue-500 h-2 rounded-full" style={{ width: '87%' }}></div>
                           </div>
-                          <span className="text-xs text-blue-600">87%</span>
+                          <span className="text-xs text-[#001f3f]">87%</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">

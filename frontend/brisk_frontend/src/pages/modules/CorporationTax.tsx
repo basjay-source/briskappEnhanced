@@ -308,7 +308,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>
@@ -406,7 +406,7 @@ export default function CorporationTax() {
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
-                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-blue-600" />}
+                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-[#001f3f]" />}
                     {rec.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
                     {rec.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
                     {rec.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
@@ -502,7 +502,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-[#001f3f]">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>

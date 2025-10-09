@@ -519,7 +519,7 @@ const CharityAccounts: React.FC = () => {
                     <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                       <h4 className="font-semibold text-[#001f3f] mb-2">Total Net Assets</h4>
                       <p className="text-xl font-bold">{formatCurrency(charities.reduce((sum, c) => sum + c.netAssets, 0))}</p>
-                      <p className="text-sm text-blue-600">Stable</p>
+                      <p className="text-sm text-[#001f3f]">Stable</p>
                     </div>
                     <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                       <h4 className="font-semibold text-[#001f3f] mb-2">Asset Utilization</h4>
@@ -527,7 +527,7 @@ const CharityAccounts: React.FC = () => {
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Utilization Rate</span>
-                          <span className="text-blue-600">78%</span>
+                          <span className="text-[#001f3f]">78%</span>
                         </div>
                         <Progress value={78} className="h-2" />
                       </div>
@@ -789,7 +789,7 @@ const CharityAccounts: React.FC = () => {
                   <div key={fund.id} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#001f3f]">{fund.name}</h4>
-                      <span className="font-semibold text-blue-600">{formatCurrency(fund.balance)}</span>
+                      <span className="font-semibold text-[#001f3f]">{formatCurrency(fund.balance)}</span>
                     </div>
                     <p className="text-sm text-[#001f3f] mt-1">{fund.purpose}</p>
                     <p className="text-xs text-red-600 mt-1">Restrictions: {fund.restrictions}</p>

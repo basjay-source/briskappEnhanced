@@ -200,7 +200,7 @@ export default function ComplianceAutomation() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />
-      case 'upcoming': return <Clock className="h-4 w-4 text-blue-600" />
+      case 'upcoming': return <Clock className="h-4 w-4 text-[#001f3f]" />
       case 'due_soon': return <AlertTriangle className="h-4 w-4 text-[#001f3f]" />
       case 'overdue': return <AlertTriangle className="h-4 w-4 text-red-600" />
       default: return <Clock className="h-4 w-4 text-[#001f3f]" />
@@ -235,7 +235,7 @@ export default function ComplianceAutomation() {
                 <p className="text-xl font-bold">12</p>
                 <p className="text-xs text-[#001f3f]">3 due this week</p>
               </div>
-              <Calendar className="h-8 w-8 text-blue-600" />
+              <Calendar className="h-8 w-8 text-[#001f3f]" />
             </div>
           </CardContent>
         </Card>
@@ -415,7 +415,7 @@ export default function ComplianceAutomation() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Time Saved</p>
-                        <p className="text-sm font-semibold text-blue-600">{rule.timeSaved}</p>
+                        <p className="text-sm font-semibold text-[#001f3f]">{rule.timeSaved}</p>
                       </div>
                       <div className="flex justify-end">
                         <Button size="sm" variant="outline">
@@ -486,7 +486,7 @@ export default function ComplianceAutomation() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Building className="h-5 w-5 text-blue-600" />
+                  <Building className="h-5 w-5 text-[#001f3f]" />
                   Companies House Integration
                 </CardTitle>
                 <CardDescription>Automated filing deadline sync</CardDescription>
@@ -520,7 +520,7 @@ export default function ComplianceAutomation() {
 
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
-                      <Bell className="h-4 w-4 text-blue-600" />
+                      <Bell className="h-4 w-4 text-[#001f3f]" />
                       <span className="font-medium text-[#001f3f]">Auto-Sync Features</span>
                     </div>
                     <ul className="text-sm text-[#001f3f] space-y-1">
@@ -599,11 +599,11 @@ export default function ComplianceAutomation() {
                   </div>
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
-                      <Target className="h-4 w-4 text-blue-600" />
+                      <Target className="h-4 w-4 text-[#001f3f]" />
                       <span className="font-medium text-[#001f3f]">Cost Savings</span>
                     </div>
                     <p className="text-xl font-bold text-[#001f3f]">£3,760</p>
-                    <p className="text-sm text-blue-600">This month</p>
+                    <p className="text-sm text-[#001f3f]">This month</p>
                   </div>
                   <div className="p-3 bg-purple-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
