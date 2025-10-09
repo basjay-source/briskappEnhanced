@@ -3147,10 +3147,17 @@ export default function Bookkeeping() {
               <LineChart className="h-4 w-4 mr-2" />
               Run Forecast
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Forecast
-            </Button>
+            <ExportButton
+              data={[
+                ['Period', 'Revenue Forecast', 'Expense Forecast', 'Net Profit', 'Confidence'],
+                ['Q1 2024', '£175,000', '£95,000', '£80,000', '85%'],
+                ['Q2 2024', '£185,000', '£98,000', '£87,000', '80%'],
+                ['Q3 2024', '£195,000', '£102,000', '£93,000', '75%'],
+                ['Q4 2024', '£205,000', '£105,000', '£100,000', '70%']
+              ]}
+              filename={`financial-forecast-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Forecast"
+            />
           </div>
         </div>
 
