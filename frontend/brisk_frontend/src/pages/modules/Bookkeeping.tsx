@@ -4318,10 +4318,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Customer
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Customer Name', 'Email', 'Phone', 'Total Sales', 'Status'],
+                ['Customer A', 'customerA@email.com', '020 1234 5678', '£12,500', 'Active'],
+                ['Customer B', 'customerB@email.com', '020 9876 5432', '£8,200', 'Active'],
+                ['Customer C', 'customerC@email.com', '020 5555 1234', '£15,800', 'Active']
+              ]}
+              filename={`customers-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
