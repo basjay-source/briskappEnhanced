@@ -3,7 +3,6 @@ import {
   FileText, 
   Calculator, 
   TrendingUp, 
-  Download, 
   Upload, 
   Eye,
   BarChart3,
@@ -13,7 +12,6 @@ import {
   Edit,
   Trash2,
   Check,
-  X,
   Save,
   RefreshCw,
   Send,
@@ -22,13 +20,11 @@ import {
   TrendingDown,
   AlertCircle,
   Search,
-  Filter,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
   Calendar,
   FileUp,
-  MessageSquare,
   History,
   Copy,
   FileCheck
@@ -71,7 +67,7 @@ interface FinancialStatement {
   type: 'balance-sheet' | 'profit-loss' | 'cash-flow'
   period: string
   generatedDate: string
-  status: 'draft' | 'final'
+  status: 'draft' | 'final' | 'finalized'
 }
 
 const AccountsProduction: React.FC = () => {
@@ -292,9 +288,9 @@ const AccountsProduction: React.FC = () => {
   const [jeSortDirection, setJeSortDirection] = useState<'asc' | 'desc'>('asc')
   const [selectedJEEntries, setSelectedJEEntries] = useState<string[]>([])
 
-  const [fsSearchTerm, setFsSearchTerm] = useState('')
-  const [fsTypeFilter, setFsTypeFilter] = useState<string>('all')
-  const [fsStatusFilter, setFsStatusFilter] = useState<string>('all')
+  const [fsSearchTerm] = useState('')
+  const [fsTypeFilter] = useState<string>('all')
+  const [fsStatusFilter] = useState<string>('all')
 
   const menuStructure = [
     {
@@ -1678,7 +1674,7 @@ const AccountsProduction: React.FC = () => {
             <Check className="h-4 w-4 mr-2" />
             Validate
           </Button>
-          <ExportButton data={[]} filename="ixbrl-document" />
+          <ExportButton data={[[]]} filename="ixbrl-document" />
         </div>
       </div>
 
