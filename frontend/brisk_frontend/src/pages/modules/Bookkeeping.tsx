@@ -1598,10 +1598,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Generate comprehensive financial statements and reports</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export All
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Name', 'Type', 'Period', 'Status'],
+                ['Profit & Loss', 'Financial', 'Current Month', 'Ready'],
+                ['Balance Sheet', 'Financial', 'Current Month', 'Ready'],
+                ['Cash Flow Statement', 'Financial', 'Current Month', 'Ready'],
+                ['Trial Balance', 'Financial', 'Current Month', 'Ready']
+              ]}
+              filename={`financial-reports-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export All"
+              variant="outline"
+            />
             <Button>
               <FileText className="h-4 w-4 mr-2" />
               Schedule Reports
