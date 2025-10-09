@@ -4436,10 +4436,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Catalog
-            </Button>
+            <ExportButton
+              data={[
+                ['Product Name', 'SKU', 'Category', 'Price', 'Stock'],
+                ['Product A', 'SKU-001', 'Services', '£150', 'N/A'],
+                ['Product B', 'SKU-002', 'Goods', '£250', '50'],
+                ['Product C', 'SKU-003', 'Services', '£350', 'N/A']
+              ]}
+              filename={`products-catalog-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Catalog"
+            />
           </div>
         </div>
 
