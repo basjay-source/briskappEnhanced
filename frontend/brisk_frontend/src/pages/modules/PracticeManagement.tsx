@@ -3412,7 +3412,7 @@ export default function PracticeManagement() {
                     {config.hasSubTabs && isExpanded && 'subTabs' in config && config.subTabs && (
                       <div className="ml-0.5 mt-0.5 space-y-0.5">
                         {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
-                          const SubIcon = subConfig.icon
+                          // const SubIcon = subConfig.icon  // Available for future use
                           const isSubActive = activeSubTab === subKey && activeMainTab === key
                           
                           return (

@@ -29,7 +29,6 @@ import {
   Heart,
   FileCheck,
   ChevronDown,
-  ChevronRight,
   Search,
   Gift,
   Link
