@@ -3381,15 +3381,15 @@ export default function PracticeManagement() {
             <h2 className="text-lg font-semibold text-[#001f3f]">Practice Management</h2>
           </div>
           
-          <div className="flex-1 overflow-y-auto">
-            <nav className="p-2">
+          <div className="flex-1 overflow-y-auto p-2">
+            <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => {
                 const Icon = config.icon
                 const isExpanded = expandedCategories.includes(key)
                 const isActive = activeMainTab === key
                 
                 return (
-                  <div key={key} className="mb-1">
+                  <div key={key}>
                     <button
                       onClick={() => handleMainTabClick(key)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
