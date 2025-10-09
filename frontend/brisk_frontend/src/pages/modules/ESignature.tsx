@@ -18,6 +18,7 @@ import { Badge } from '../../components/ui/badge'
 import { Progress } from '../../components/ui/progress'
 import { useIsMobile } from '../../hooks/use-mobile'
 import KPICard from '../../components/KPICard'
+import { ExportButton } from '@/components/ExportButton'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
@@ -233,7 +234,16 @@ export default function DocuSignage() {
                     </div>
                     
                     <div className="flex gap-2 pt-4">
-                      <Button variant="outline">Export Report</Button>
+                      <ExportButton
+                        data={[
+                          ['Metric', 'Value', 'Change'],
+                          [kpi.title, kpi.value, kpi.change],
+                          ['Overall Score', '94%', '+2.1%']
+                        ]}
+                        filename={`esignature-${kpi.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}`}
+                        buttonText="Export Report"
+                        variant="outline"
+                      />
                       <Button>Create Template</Button>
                     </div>
                   </div>
