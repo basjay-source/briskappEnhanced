@@ -1834,10 +1834,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Strategic insights and performance analytics for decision making</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Pack
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Name', 'Type', 'Period', 'Status'],
+                ['Departmental Performance', 'Management', 'Current Month', 'Ready'],
+                ['Budget vs Actual', 'Management', 'Current Month', 'Ready'],
+                ['KPI Dashboard', 'Management', 'Current Month', 'Ready'],
+                ['Resource Allocation', 'Management', 'Current Month', 'Ready']
+              ]}
+              filename={`management-reports-pack-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Pack"
+              variant="outline"
+            />
             <Button>
               <Target className="h-4 w-4 mr-2" />
               Create Dashboard
@@ -2057,10 +2065,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Advanced analytics and business intelligence for strategic planning</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Analytics
-            </Button>
+            <ExportButton
+              data={[
+                ['Metric', 'Analysis Type', 'Value', 'Trend'],
+                ['Revenue Growth', 'Ratio Analysis', '15%', 'Up'],
+                ['Profit Margin', 'Ratio Analysis', '28%', 'Stable'],
+                ['Cash Flow Ratio', 'Liquidity Analysis', '1.8', 'Up'],
+                ['ROI', 'Performance Metrics', '22%', 'Up']
+              ]}
+              filename={`analytics-insights-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Analytics"
+              variant="outline"
+            />
             <Button>
               <BarChart3 className="h-4 w-4 mr-2" />
               Create Dashboard
