@@ -7130,19 +7130,19 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Account Name</Label>
-                <p className="text-sm">{selectedAccount.name}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.name}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Bank</Label>
-                <p className="text-sm">{selectedAccount.bank}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.bank}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Account Number</Label>
-                <p className="text-sm">{selectedAccount.accountNumber}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.accountNumber}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Balance</Label>
-                <p className="text-xl font-bold text-green-600">£{selectedAccount.balance?.toLocaleString()}</p>
+                <p className="text-xl font-bold text-blue-900">£{selectedAccount.balance?.toLocaleString()}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
