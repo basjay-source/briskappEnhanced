@@ -7691,19 +7691,31 @@ export default function CompanySecretarial() {
               <CardDescription>Common company secretarial tasks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                setActiveMainTab('forms')
+                setActiveSubTab('incorporation')
+              }}>
                 <Plus className="h-4 w-4 mr-2" />
                 Register New Company
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                setActiveMainTab('forms')
+                setActiveSubTab('directors')
+              }}>
                 <Users className="h-4 w-4 mr-2" />
                 Appoint Director
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                setActiveMainTab('forms')
+                setActiveSubTab('confirmation')
+              }}>
                 <FileText className="h-4 w-4 mr-2" />
                 File Confirmation Statement
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+                setActiveMainTab('forms')
+                setActiveSubTab('addresschange')
+              }}>
                 <MapPin className="h-4 w-4 mr-2" />
                 Change Registered Address
               </Button>
