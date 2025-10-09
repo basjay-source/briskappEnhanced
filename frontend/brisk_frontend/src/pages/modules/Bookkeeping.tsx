@@ -873,15 +873,15 @@ export default function Bookkeeping() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                       <h4 className="font-semibold text-[#001f3f] mb-2">Current Value</h4>
-                      <p className="text-xl font-bold">{kpi.value}</p>
+                      <p className="text-xl font-bold text-[#001f3f]">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
                     <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                       <h4 className="font-semibold text-[#001f3f] mb-2">Monthly Trend</h4>
                       <p className="text-sm text-[#001f3f]">Performance over time</p>
                       <div className="mt-2">
-                        <div className="flex justify-between text-xs">
-                          <span>Last 6 months</span>
+                        <div className="flex justify-between text-xs text-[#001f3f]">
+                          <span className="text-[#001f3f]">Last 6 months</span>
                           <span className="text-green-600">+18%</span>
                         </div>
                         <Progress value={72} className="mt-1" />
@@ -894,16 +894,16 @@ export default function Bookkeeping() {
                       <h4 className="font-semibold text-[#001f3f] mb-3">Revenue Breakdown</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                          <span>Product Sales</span>
-                          <span className="font-semibold">£89,200 (71%)</span>
+                          <span className="text-[#001f3f]">Product Sales</span>
+                          <span className="font-semibold text-[#001f3f]">£89,200 (71%)</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                          <span>Services</span>
-                          <span className="font-semibold">£28,430 (23%)</span>
+                          <span className="text-[#001f3f]">Services</span>
+                          <span className="font-semibold text-[#001f3f]">£28,430 (23%)</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                          <span>Other Income</span>
-                          <span className="font-semibold">£7,800 (6%)</span>
+                          <span className="text-[#001f3f]">Other Income</span>
+                          <span className="font-semibold text-[#001f3f]">£7,800 (6%)</span>
                         </div>
                       </div>
                     </div>
@@ -914,15 +914,15 @@ export default function Bookkeeping() {
                       <h4 className="font-semibold text-[#001f3f] mb-3">Outstanding Invoice Details</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>INV-001 - ABC Corp</span>
+                          <span className="text-[#001f3f]">INV-001 - ABC Corp</span>
                           <Badge variant="destructive">£12,500 (15 days)</Badge>
                         </div>
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>INV-002 - XYZ Ltd</span>
+                          <span className="text-[#001f3f]">INV-002 - XYZ Ltd</span>
                           <Badge variant="secondary">£8,950 (5 days)</Badge>
                         </div>
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>INV-003 - DEF Services</span>
+                          <span className="text-[#001f3f]">INV-003 - DEF Services</span>
                           <Badge variant="outline">£2,000 (current)</Badge>
                         </div>
                       </div>
@@ -934,12 +934,12 @@ export default function Bookkeeping() {
                       <h4 className="font-semibold text-[#001f3f] mb-3">Account Balances</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                          <span>Current Account</span>
-                          <span className="font-semibold">£32,450</span>
+                          <span className="text-[#001f3f]">Current Account</span>
+                          <span className="font-semibold text-[#001f3f]">£32,450</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                          <span>Savings Account</span>
-                          <span className="font-semibold">£12,780</span>
+                          <span className="text-[#001f3f]">Savings Account</span>
+                          <span className="font-semibold text-[#001f3f]">£12,780</span>
                         </div>
                       </div>
                     </div>
@@ -950,15 +950,15 @@ export default function Bookkeeping() {
                       <h4 className="font-semibold text-[#001f3f] mb-3">Expense Categories</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>Office Rent - £8,500</span>
+                          <span className="text-[#001f3f]">Office Rent - £8,500</span>
                           <Badge variant="default">On Budget</Badge>
                         </div>
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>Utilities - £2,420</span>
+                          <span className="text-[#001f3f]">Utilities - £2,420</span>
                           <Badge variant="destructive">+£420 over</Badge>
                         </div>
                         <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                          <span>Marketing - £4,200</span>
+                          <span className="text-[#001f3f]">Marketing - £4,200</span>
                           <Badge variant="default">-£800 under</Badge>
                         </div>
                       </div>
