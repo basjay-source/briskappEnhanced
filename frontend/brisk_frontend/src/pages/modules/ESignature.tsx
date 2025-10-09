@@ -360,7 +360,7 @@ export default function DocuSignage() {
                       onClick={() => handleMainTabClick(item.id)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                         isActive 
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                          ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white shadow-md transform scale-[0.98] font-semibold' 
                           : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                       }`}
                     >
@@ -383,7 +383,7 @@ export default function DocuSignage() {
                               onClick={() => handleSubTabClick(subTab.id)}
                               className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                                 isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                                  ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white border-l-2 border-[#001f3f] shadow-md font-semibold' 
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                               }`}
                             >

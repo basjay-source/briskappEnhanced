@@ -698,7 +698,7 @@ const CharityAccounts: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="p-4 bg-orange-50 rounded-[2px] border-l-4 border-orange-500">
+                <div className="p-4 bg-orange-50 rounded-[2px] border-l-4 border-[#001f3f]">
                   <div className="flex items-start gap-3">
                     <Zap className="h-5 w-5 text-orange-500 mt-0.5" />
                     <div>
@@ -999,7 +999,7 @@ const CharityAccounts: React.FC = () => {
                     <Badge className="bg-red-100 text-red-800">14 days</Badge>
                   </div>
                 </div>
-                <div className="p-3 border-l-4 border-orange-500 bg-orange-50 rounded-r-lg">
+                <div className="p-3 border-l-4 border-[#001f3f] bg-orange-50 rounded-r-lg">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-orange-900">Accounts Filing</p>
