@@ -950,7 +950,7 @@ export default function PracticeManagement() {
           ))}
         </ResponsiveGrid>
 
-      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border">
+      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white rounded-[2px] border-2 border-[#001f3f]">
         <div className="flex-1">
           <input
             type="text"
