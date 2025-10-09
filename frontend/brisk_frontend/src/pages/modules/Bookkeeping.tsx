@@ -224,23 +224,35 @@ export default function Bookkeeping() {
     
     switch(action) {
       case 'Create Invoice':
-        handleMainTabClick('Sales')
-        handleSubTabClick('Invoices')
+        setActiveMainTab('sales')
+        setActiveSubTab('invoices')
+        if (!expandedCategories.includes('sales')) {
+          toggleCategory('sales')
+        }
         alert('📄 Create Invoice\n\nNavigated to Sales > Invoices section.\nClick "Add Invoice" button to create a new invoice.')
         break
       case 'Record Expense':
-        handleMainTabClick('Purchases')
-        handleSubTabClick('Expenses')
+        setActiveMainTab('purchases')
+        setActiveSubTab('expenses')
+        if (!expandedCategories.includes('purchases')) {
+          toggleCategory('purchases')
+        }
         alert('💰 Record Expense\n\nNavigated to Purchases > Expenses section.\nClick "Add Expense" button to record a new expense.')
         break
       case 'Bank Reconciliation':
-        handleMainTabClick('Banking')
-        handleSubTabClick('Reconciliation')
+        setActiveMainTab('banking')
+        setActiveSubTab('reconciliation')
+        if (!expandedCategories.includes('banking')) {
+          toggleCategory('banking')
+        }
         alert('🏦 Bank Reconciliation\n\nNavigated to Banking > Reconciliation section.\nYou can now match transactions and reconcile your accounts.')
         break
       case 'Generate Report':
-        handleMainTabClick('Reports')
-        handleSubTabClick('Financial Reports')
+        setActiveMainTab('reports')
+        setActiveSubTab('financial')
+        if (!expandedCategories.includes('reports')) {
+          toggleCategory('reports')
+        }
         alert('📊 Generate Report\n\nNavigated to Reports > Financial Reports section.\nSelect a report type to generate.')
         break
       default:
