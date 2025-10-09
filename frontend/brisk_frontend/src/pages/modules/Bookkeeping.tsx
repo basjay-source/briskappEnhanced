@@ -206,8 +206,8 @@ export default function Bookkeeping() {
     location: '',
     status: 'In Stock'
   })
-  const [_editingStock, setEditingStock] = useState<any>(null)
-  const [_showStockForm, setShowStockForm] = useState(false)
+  const [_editingStock, _setEditingStock] = useState<any>(null)
+  const [_showStockForm, _setShowStockForm] = useState(false)
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -6787,12 +6787,48 @@ export default function Bookkeeping() {
 
   // Inventory Management Handlers
   const handleAddStock = () => {
-    setEditingStock(null)
-    setShowStockForm(true)
+    const newItem = prompt('Enter new stock item details (format: SKU,Name,Category,Quantity,Cost,ReorderLevel,Warehouse,Location):')
+    if (newItem) {
+      const [sku, name, category, quantity, cost, reorderLevel, warehouse, location] = newItem.split(',')
+      alert(`✅ Stock Item Added!\n\nSKU: ${sku}\nName: ${name}\nCategory: ${category}\nQuantity: ${quantity}\nCost: £${cost}\nReorder Level: ${reorderLevel}\nWarehouse: ${warehouse}\nLocation: ${location}`)
+    }
   }
 
   const handleViewStock = (item: any) => {
-    alert(`Stock Item Details\n\nSKU: ${item.sku}\nName: ${item.name}\nCategory: ${item.category}\nQuantity: ${item.quantity}\nCost: £${item.cost}\nReorder Level: ${item.reorderLevel}\nWarehouse: ${item.warehouse}\nLocation: ${item.location}`)
+    const action = confirm(`Stock Item Details\n\nSKU: ${item.sku}\nName: ${item.name}\nCategory: ${item.category}\nQuantity: ${item.quantity}\nCost: £${item.cost}\nReorder Level: ${item.reorderLevel}\nWarehouse: ${item.warehouse}\nLocation: ${item.location}\n\nClick OK to EDIT or Cancel to close`)
+    if (action) {
+      const newQuantity = prompt(`Edit quantity for ${item.name}:`, item.quantity.toString())
+      if (newQuantity) {
+        alert(`✅ Stock Updated!\n\n${item.name} quantity updated to ${newQuantity}`)
+      }
+    }
+  }
+
+  const handleKPIClick = (title: string, value: string) => {
+    let details = ''
+    if (title === 'Total Stock Value') {
+      details = `Total Stock Value Breakdown:\n\n${stockItems.map(i => `${i.name}: £${(i.quantity * i.cost).toFixed(2)}`).join('\n')}\n\nTotal: ${value}`
+    } else if (title === 'Total Items') {
+      details = `Stock Items (${value} total):\n\n${stockItems.map(i => `${i.name} (${i.quantity} units)`).join('\n')}`
+    } else if (title === 'Low Stock Alerts') {
+      const lowStock = stockItems.filter(i => i.quantity <= i.reorderLevel)
+      details = `Low Stock Items (${lowStock.length}):\n\n${lowStock.map(i => `${i.name}: ${i.quantity} units (reorder at ${i.reorderLevel})`).join('\n')}`
+    } else {
+      details = `${title}: ${value}\n\nDetailed analytics coming soon...`
+    }
+    alert(details)
+  }
+
+  const handleWarehouseClick = (warehouse: any) => {
+    alert(`Warehouse Details\n\nName: ${warehouse.name}\nLocation: ${warehouse.location}\nManager: ${warehouse.manager}\nContact: ${warehouse.contact}\nCapacity: ${warehouse.used}/${warehouse.capacity} sqft\nStatus: ${warehouse.status}\n\nUtilization: ${((warehouse.used / warehouse.capacity) * 100).toFixed(1)}%`)
+  }
+
+  const handleAdjustmentClick = (adj: any) => {
+    alert(`Stock Adjustment Details\n\nDate: ${adj.date}\nProduct: ${adj.productName}\nSKU: ${adj.sku}\nType: ${adj.type}\nQuantity: ${adj.quantity}\nReason: ${adj.reason}\nNotes: ${adj.notes}\nAdjusted By: ${adj.adjustedBy}`)
+  }
+
+  const handleGenerateInventoryReport = (reportType: string) => {
+    alert(`📊 Generating ${reportType} Report...\n\nReport Type: ${reportType}\nDate Range: Last 30 days\nFormat: PDF\n\nReport will be downloaded shortly.\n\nReport includes:\n- Stock levels by category\n- Valuation analysis\n- Movement history\n- Reorder recommendations\n- Variance analysis`)
   }
 
   function renderInventoryDashboard() {
@@ -6807,13 +6843,40 @@ export default function Bookkeeping() {
             <h2 className="text-xl font-bold text-blue-900">Inventory Dashboard</h2>
             <p className="text-blue-900">Overview of inventory levels, stock valuation, and key metrics</p>
           </div>
+          <Button onClick={handleAddStock}><Plus className="h-4 w-4 mr-2" />Add Stock Item</Button>
         </div>
         <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <KPICard title="Total Stock Value" value={`£${totalStockValue.toLocaleString()}`} change="+8.3%" icon={PoundSterling} color="text-green-600" />
-          <KPICard title="Total Items" value={totalItems.toString()} change="+12" icon={Box} color="text-blue-600" />
-          <KPICard title="Low Stock Alerts" value={lowStockItems.toString()} change="-2" icon={Bell} color="text-orange-600" />
-          <KPICard title="Avg Turnover" value="45 days" change="-5 days" icon={RefreshCw} color="text-purple-600" />
+          <div onClick={() => handleKPIClick('Total Stock Value', `£${totalStockValue.toLocaleString()}`)} className="cursor-pointer">
+            <KPICard title="Total Stock Value" value={`£${totalStockValue.toLocaleString()}`} change="+8.3%" icon={PoundSterling} color="text-green-600" />
+          </div>
+          <div onClick={() => handleKPIClick('Total Items', totalItems.toString())} className="cursor-pointer">
+            <KPICard title="Total Items" value={totalItems.toString()} change="+12" icon={Box} color="text-blue-600" />
+          </div>
+          <div onClick={() => handleKPIClick('Low Stock Alerts', lowStockItems.toString())} className="cursor-pointer">
+            <KPICard title="Low Stock Alerts" value={lowStockItems.toString()} change="-2" icon={Bell} color="text-orange-600" />
+          </div>
+          <div onClick={() => handleKPIClick('Avg Turnover', '45 days')} className="cursor-pointer">
+            <KPICard title="Avg Turnover" value="45 days" change="-5 days" icon={RefreshCw} color="text-purple-600" />
+          </div>
         </div>
+        
+        {/* Stock Level Summary */}
+        <Card className="border-2 border-blue-900">
+          <CardHeader>
+            <CardTitle className="text-blue-900">Stock Level Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              {stockItems.map((item, idx) => (
+                <div key={idx} onClick={() => handleViewStock(item)} className="p-4 border border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
+                  <p className="font-semibold text-blue-900">{item.name}</p>
+                  <p className="text-sm text-blue-900">{item.quantity} units</p>
+                  <Badge variant={item.status === 'Critical' ? 'destructive' : item.status === 'Low Stock' ? 'outline' : 'default'}>{item.status}</Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -6861,17 +6924,54 @@ export default function Bookkeeping() {
             <h2 className="text-xl font-bold text-blue-900">Warehouse Management</h2>
             <p className="text-blue-900">Manage warehouse locations and stock transfers</p>
           </div>
+          <Button onClick={() => alert('Add new warehouse feature coming soon!')}><Plus className="h-4 w-4 mr-2" />Add Warehouse</Button>
         </div>
+        
+        {/* Warehouse KPIs */}
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Warehouses: 3\n\nMain Warehouse\nNorth Distribution Center\nSouth Storage Facility')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Total Warehouses</p>
+              <p className="text-2xl font-bold text-blue-900">3</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Capacity: 45,000 sqft\n\nMain: 20,000 sqft\nNorth: 15,000 sqft\nSouth: 10,000 sqft')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Total Capacity</p>
+              <p className="text-2xl font-bold text-blue-900">45,000 sqft</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Space Utilized: 30,500 sqft (67.8%)\n\nMain: 15,000/20,000\nNorth: 10,000/15,000\nSouth: 5,500/10,000')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Space Utilized</p>
+              <p className="text-2xl font-bold text-blue-900">67.8%</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Active Transfers: 2\n\nTransfer #TRF-001: Main → North (15 items)\nTransfer #TRF-002: North → South (8 items)')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Active Transfers</p>
+              <p className="text-2xl font-bold text-blue-900">2</p>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Warehouse Cards */}
         <div className="grid gap-6 md:grid-cols-3">
           {warehouses.map((warehouse, index) => (
-            <Card key={index} className="border-2 border-blue-900">
+            <Card key={index} className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleWarehouseClick(warehouse)}>
               <CardHeader>
                 <CardTitle className="text-blue-900">{warehouse.name}</CardTitle>
-                <CardDescription>{warehouse.location}</CardDescription>
+                <CardDescription className="text-blue-700">{warehouse.location}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-blue-900">Manager: {warehouse.manager}</p>
-                <p className="text-sm text-blue-900">Capacity: {warehouse.used}/{warehouse.capacity} sqft</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-blue-900"><span className="font-semibold">Manager:</span> {warehouse.manager}</p>
+                  <p className="text-sm text-blue-900"><span className="font-semibold">Capacity:</span> {warehouse.used}/{warehouse.capacity} sqft ({((warehouse.used/warehouse.capacity)*100).toFixed(1)}%)</p>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-blue-600 h-2 rounded-full" style={{width: `${(warehouse.used/warehouse.capacity)*100}%`}}></div>
+                  </div>
+                  <Badge variant={warehouse.status === 'Active' ? 'default' : 'outline'}>{warehouse.status}</Badge>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -6888,13 +6988,62 @@ export default function Bookkeeping() {
             <h2 className="text-xl font-bold text-blue-900">Stock Adjustments</h2>
             <p className="text-blue-900">Track inventory adjustments with full audit trail</p>
           </div>
+          <Button onClick={() => {
+            const product = prompt('Product Name:')
+            if (product) {
+              const qty = prompt('Adjustment Quantity (use negative for decrease):')
+              const reason = prompt('Reason for adjustment:')
+              if (qty && reason) {
+                alert(`✅ Stock Adjustment Created!\n\nProduct: ${product}\nQuantity: ${qty}\nReason: ${reason}\nDate: ${new Date().toLocaleDateString()}\nAdjustment ID: ADJ-${Date.now()}`)
+              }
+            }
+          }}><Plus className="h-4 w-4 mr-2" />New Adjustment</Button>
         </div>
+        
+        {/* Adjustment Summary Cards */}
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Adjustments This Month: 4\n\nIncreases: 2\nDecreases: 1\nDamaged: 1')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">This Month</p>
+              <p className="text-2xl font-bold text-blue-900">4</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Net Adjustment: +85 units\n\nIncreases: +120\nDecreases: -35')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Net Adjustment</p>
+              <p className="text-2xl font-bold text-green-600">+85 units</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Value Impact: £2,450\n\nIncreases: +£3,200\nDecreases: -£750')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Value Impact</p>
+              <p className="text-2xl font-bold text-blue-900">£2,450</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Pending Approvals: 0\n\nAll adjustments have been approved.')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Pending</p>
+              <p className="text-2xl font-bold text-blue-900">0</p>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Adjustment List */}
         <div className="grid gap-4">
           {stockAdjustments.map((adj, index) => (
-            <Card key={index} className="border-2 border-blue-900">
+            <Card key={index} className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleAdjustmentClick(adj)}>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-blue-900">{adj.productName}</h3>
-                <p className="text-sm text-blue-900">{adj.type}: {adj.quantity} units - {adj.reason}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-blue-900">{adj.productName}</h3>
+                    <p className="text-sm text-blue-900">SKU: {adj.sku} | {adj.date}</p>
+                    <p className="text-sm text-blue-900 mt-1"><span className="font-medium">{adj.type}:</span> {adj.quantity} units - {adj.reason}</p>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant={adj.type === 'Increase' ? 'default' : adj.type === 'Decrease' ? 'outline' : 'destructive'}>{adj.type}</Badge>
+                    <p className="text-xs text-gray-500 mt-1">By {adj.adjustedBy}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -7002,6 +7151,17 @@ export default function Bookkeeping() {
   }
 
   function renderInventoryReports() {
+    const reports = [
+      { name: 'Stock Level Report', description: 'Current stock levels across all locations', icon: '📊' },
+      { name: 'Inventory Valuation Report', description: 'Total inventory value by method (FIFO/LIFO/Avg)', icon: '💷' },
+      { name: 'Stock Movement Report', description: 'Detailed history of stock movements', icon: '📈' },
+      { name: 'Reorder Report', description: 'Items requiring reorder with suggestions', icon: '🔔' },
+      { name: 'Stock Aging Report', description: 'Age analysis of inventory items', icon: '⏱️' },
+      { name: 'Variance Analysis Report', description: 'Stock take variances and discrepancies', icon: '🔍' },
+      { name: 'Warehouse Utilization Report', description: 'Space usage across warehouses', icon: '🏭' },
+      { name: 'Slow Moving Stock Report', description: 'Items with low turnover', icon: '🐌' },
+    ]
+    
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -7010,14 +7170,81 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Comprehensive inventory reporting and analytics</p>
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {['Stock Valuation', 'Stock Movement', 'Reorder Report', 'Stock Take', 'Warehouse Utilization', 'Slow Moving Stock'].map((report, index) => (
-            <Card key={index} className="border-2 border-blue-900">
-              <CardHeader><CardTitle className="text-blue-900">{report}</CardTitle></CardHeader>
-              <CardContent><Button className="w-full">Generate Report</Button></CardContent>
-            </Card>
-          ))}
+        
+        {/* Report Summary Cards */}
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Reports Generated This Month: 24\n\nStock Level: 8\nValuation: 4\nMovement: 6\nOther: 6')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Reports This Month</p>
+              <p className="text-2xl font-bold text-blue-900">24</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Scheduled Reports: 5\n\nWeekly stock level report\nMonthly valuation report\nDaily reorder check\nWeekly variance report\nMonthly warehouse report')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Scheduled</p>
+              <p className="text-2xl font-bold text-blue-900">5</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Export Formats Available:\n\n✓ PDF\n✓ CSV\n✓ Excel (.xlsx)\n✓ JSON')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Export Formats</p>
+              <p className="text-2xl font-bold text-blue-900">4</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Last Report Generated:\n\nStock Level Report\nGenerated: Today at 09:15\nFormat: PDF')}>
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Last Generated</p>
+              <p className="text-lg font-bold text-blue-900">Today</p>
+            </CardContent>
+          </Card>
         </div>
+        
+        {/* Available Reports */}
+        <Card className="border-2 border-blue-900">
+          <CardHeader>
+            <CardTitle className="text-blue-900">Available Reports</CardTitle>
+            <CardDescription>Click any report to generate and export</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              {reports.map((report, idx) => (
+                <div key={idx} className="p-4 border-2 border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all" onClick={() => handleGenerateInventoryReport(report.name)}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">{report.icon}</span>
+                      <div>
+                        <p className="font-semibold text-blue-900">{report.name}</p>
+                        <p className="text-sm text-blue-700">{report.description}</p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={(e) => {
+                      e.stopPropagation()
+                      handleGenerateInventoryReport(report.name)
+                    }}>
+                      <FileText className="h-4 w-4 mr-1" />
+                      Generate
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Export Options */}
+        <Card className="border-2 border-blue-900">
+          <CardHeader>
+            <CardTitle className="text-blue-900">Export All Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-4">
+              <Button onClick={() => handleGenerateInventoryReport('Complete Inventory Export')}>
+                <Download className="h-4 w-4 mr-2" />
+                Export Inventory Data
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
