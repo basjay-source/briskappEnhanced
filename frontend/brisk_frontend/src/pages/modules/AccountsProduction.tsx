@@ -288,9 +288,6 @@ const AccountsProduction: React.FC = () => {
   const [jeSortDirection, setJeSortDirection] = useState<'asc' | 'desc'>('asc')
   const [selectedJEEntries, setSelectedJEEntries] = useState<string[]>([])
 
-  const [fsSearchTerm] = useState('')
-  const [fsTypeFilter] = useState<string>('all')
-  const [fsStatusFilter] = useState<string>('all')
 
   const menuStructure = [
     {
