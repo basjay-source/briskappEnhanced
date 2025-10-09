@@ -4554,10 +4554,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Bill
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Bill #', 'Supplier', 'Date', 'Amount', 'Status'],
+                ['BILL-001', 'Supplier A', '2024-01-15', '£1,500', 'Pending'],
+                ['BILL-002', 'Supplier B', '2024-01-14', '£2,800', 'Approved'],
+                ['BILL-003', 'Supplier C', '2024-01-13', '£1,200', 'Paid']
+              ]}
+              filename={`bills-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
