@@ -2525,10 +2525,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Project
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Project', 'Client', 'Budget', 'Spent', 'Status'],
+                ['Website Redesign', 'Client A', '£15,000', '£12,500', 'In Progress'],
+                ['Tax Compliance', 'Client B', '£8,000', '£7,200', 'In Progress'],
+                ['Audit Support', 'Client C', '£12,000', '£11,000', 'In Progress']
+              ]}
+              filename={`project-overview-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
