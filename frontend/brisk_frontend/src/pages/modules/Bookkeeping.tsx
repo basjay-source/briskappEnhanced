@@ -209,6 +209,22 @@ export default function Bookkeeping() {
   const [_editingStock, _setEditingStock] = useState<any>(null)
   const [_showStockForm, _setShowStockForm] = useState(false)
 
+  // Inventory modal states
+  const [isKPIDrilldownOpen, setIsKPIDrilldownOpen] = useState(false)
+  const [kpiDrilldownData, setKpiDrilldownData] = useState<any>(null)
+  const [isStockDetailOpen, setIsStockDetailOpen] = useState(false)
+  const [selectedStockItem, setSelectedStockItem] = useState<any>(null)
+  const [isStockFormOpen, setIsStockFormOpen] = useState(false)
+  const [isWarehouseDetailOpen, setIsWarehouseDetailOpen] = useState(false)
+  const [selectedWarehouse, setSelectedWarehouse] = useState<any>(null)
+  const [isAdjustmentDetailOpen, setIsAdjustmentDetailOpen] = useState(false)
+  const [selectedAdjustment, setSelectedAdjustment] = useState<any>(null)
+  const [isReorderDetailOpen, setIsReorderDetailOpen] = useState(false)
+  const [selectedReorderAlert, setSelectedReorderAlert] = useState<any>(null)
+  const [isStockTakeDetailOpen, setIsStockTakeDetailOpen] = useState(false)
+  const [selectedStockTake, setSelectedStockTake] = useState<any>(null)
+  const [isStockTakeFormOpen, setIsStockTakeFormOpen] = useState(false)
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -492,13 +508,7 @@ export default function Bookkeeping() {
       setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
       alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
     }
-
   }
-  const handleCreateReorder = (alert: any) => {
-    console.log('Creating purchase order for:', alert)
-    alert(`✅ Purchase Order Created!\n\nProduct: ${alert.productName}\nQuantity: ${alert.suggestedOrder}\nEstimated Cost: £${alert.estimatedCost.toLocaleString()}\nSupplier: ${alert.supplier}`)
-  }
-
 
   const statusOptions = [
     { label: 'All Statuses', value: 'all' },
@@ -6787,44 +6797,70 @@ export default function Bookkeeping() {
 
   // Inventory Management Handlers
   const handleAddStock = () => {
-    const newItem = prompt('Enter new stock item details (format: SKU,Name,Category,Quantity,Cost,ReorderLevel,Warehouse,Location):')
-    if (newItem) {
-      const [sku, name, category, quantity, cost, reorderLevel, warehouse, location] = newItem.split(',')
-      alert(`✅ Stock Item Added!\n\nSKU: ${sku}\nName: ${name}\nCategory: ${category}\nQuantity: ${quantity}\nCost: £${cost}\nReorder Level: ${reorderLevel}\nWarehouse: ${warehouse}\nLocation: ${location}`)
-    }
+    setSelectedStockItem(null)
+    setIsStockFormOpen(true)
   }
 
   const handleViewStock = (item: any) => {
-    const action = confirm(`Stock Item Details\n\nSKU: ${item.sku}\nName: ${item.name}\nCategory: ${item.category}\nQuantity: ${item.quantity}\nCost: £${item.cost}\nReorder Level: ${item.reorderLevel}\nWarehouse: ${item.warehouse}\nLocation: ${item.location}\n\nClick OK to EDIT or Cancel to close`)
-    if (action) {
-      const newQuantity = prompt(`Edit quantity for ${item.name}:`, item.quantity.toString())
-      if (newQuantity) {
-        alert(`✅ Stock Updated!\n\n${item.name} quantity updated to ${newQuantity}`)
-      }
-    }
+    setSelectedStockItem(item)
+    setIsStockDetailOpen(true)
   }
 
   const handleKPIClick = (title: string, value: string) => {
-    let details = ''
+    let data: any = { title, value, items: [] }
+    
     if (title === 'Total Stock Value') {
-      details = `Total Stock Value Breakdown:\n\n${stockItems.map(i => `${i.name}: £${(i.quantity * i.cost).toFixed(2)}`).join('\n')}\n\nTotal: ${value}`
+      data.items = stockItems.map(i => ({
+        name: i.name,
+        value: `£${(i.quantity * i.cost).toFixed(2)}`,
+        quantity: i.quantity,
+        cost: i.cost
+      }))
     } else if (title === 'Total Items') {
-      details = `Stock Items (${value} total):\n\n${stockItems.map(i => `${i.name} (${i.quantity} units)`).join('\n')}`
+      data.items = stockItems.map(i => ({
+        name: i.name,
+        quantity: i.quantity,
+        status: i.status
+      }))
     } else if (title === 'Low Stock Alerts') {
       const lowStock = stockItems.filter(i => i.quantity <= i.reorderLevel)
-      details = `Low Stock Items (${lowStock.length}):\n\n${lowStock.map(i => `${i.name}: ${i.quantity} units (reorder at ${i.reorderLevel})`).join('\n')}`
+      data.items = lowStock.map(i => ({
+        name: i.name,
+        current: i.quantity,
+        reorderLevel: i.reorderLevel,
+        status: i.status
+      }))
     } else {
-      details = `${title}: ${value}\n\nDetailed analytics coming soon...`
+      data.description = 'Detailed analytics for ' + title
     }
-    alert(details)
+    
+    setKpiDrilldownData(data)
+    setIsKPIDrilldownOpen(true)
   }
 
   const handleWarehouseClick = (warehouse: any) => {
-    alert(`Warehouse Details\n\nName: ${warehouse.name}\nLocation: ${warehouse.location}\nManager: ${warehouse.manager}\nContact: ${warehouse.contact}\nCapacity: ${warehouse.used}/${warehouse.capacity} sqft\nStatus: ${warehouse.status}\n\nUtilization: ${((warehouse.used / warehouse.capacity) * 100).toFixed(1)}%`)
+    setSelectedWarehouse(warehouse)
+    setIsWarehouseDetailOpen(true)
   }
 
   const handleAdjustmentClick = (adj: any) => {
-    alert(`Stock Adjustment Details\n\nDate: ${adj.date}\nProduct: ${adj.productName}\nSKU: ${adj.sku}\nType: ${adj.type}\nQuantity: ${adj.quantity}\nReason: ${adj.reason}\nNotes: ${adj.notes}\nAdjusted By: ${adj.adjustedBy}`)
+    setSelectedAdjustment(adj)
+    setIsAdjustmentDetailOpen(true)
+  }
+
+  const handleReorderAlertClick = (alert: any) => {
+    setSelectedReorderAlert(alert)
+    setIsReorderDetailOpen(true)
+  }
+
+  const handleStockTakeClick = (take: any) => {
+    setSelectedStockTake(take)
+    setIsStockTakeDetailOpen(true)
+  }
+
+  const handleRecordStockTake = () => {
+    setSelectedStockTake(null)
+    setIsStockTakeFormOpen(true)
   }
 
   const handleGenerateInventoryReport = (reportType: string) => {
@@ -7053,6 +7089,9 @@ export default function Bookkeeping() {
   }
 
   function renderReorderManagement() {
+    const criticalAlerts = reorderAlerts.filter(a => a.priority === 'Critical').length
+    const highAlerts = reorderAlerts.filter(a => a.priority === 'High').length
+    
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -7061,13 +7100,53 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Automated reorder alerts and purchase suggestions</p>
           </div>
         </div>
+        
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="border-2 border-red-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Critical Alerts</p>
+              <p className="text-2xl font-bold text-red-600">{criticalAlerts}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-orange-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">High Priority</p>
+              <p className="text-2xl font-bold text-orange-600">{highAlerts}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Suggested Orders</p>
+              <p className="text-2xl font-bold text-blue-900">3</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Est. Cost</p>
+              <p className="text-2xl font-bold text-blue-900">£12,450</p>
+            </CardContent>
+          </Card>
+        </div>
+        
         <div className="grid gap-4">
           {reorderAlerts.map((alert, index) => (
-            <Card key={index} className="border-2 border-blue-900">
+            <Card key={index} className={`border-2 ${alert.priority === 'Critical' ? 'border-red-500' : 'border-orange-500'} cursor-pointer hover:shadow-lg transition-shadow`} onClick={() => handleReorderAlertClick(alert)}>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-blue-900">{alert.productName}</h3>
-                <p className="text-sm text-blue-900">Current: {alert.currentStock} | Suggested: {alert.suggestedOrder} units</p>
-                <Button className="mt-2" onClick={() => handleCreateReorder(alert)}>Create PO</Button>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-blue-900">{alert.productName}</h3>
+                      <Badge variant={alert.priority === 'Critical' ? 'destructive' : 'default'}>{alert.priority}</Badge>
+                    </div>
+                    <p className="text-sm text-blue-900 mt-1">SKU: {alert.sku}</p>
+                    <p className="text-sm text-blue-900">Current: {alert.currentStock} | Reorder Level: {alert.reorderLevel}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-blue-900">Suggested Order</p>
+                    <p className="text-xl font-bold text-blue-900">{alert.suggestedOrder} units</p>
+                    <p className="text-sm text-blue-900">£{alert.estimatedCost.toLocaleString()}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -7112,13 +7191,56 @@ export default function Bookkeeping() {
             <h2 className="text-xl font-bold text-blue-900">Stock Take Management</h2>
             <p className="text-blue-900">Physical inventory counts and variance analysis</p>
           </div>
+          <Button onClick={handleRecordStockTake}><Plus className="h-4 w-4 mr-2" />Record Stock Take</Button>
         </div>
+        
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">This Year</p>
+              <p className="text-2xl font-bold text-blue-900">12</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Completed</p>
+              <p className="text-2xl font-bold text-green-600">10</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Discrepancies</p>
+              <p className="text-2xl font-bold text-orange-600">28</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-900 font-medium">Total Variance</p>
+              <p className="text-2xl font-bold text-blue-900">£1,250</p>
+            </CardContent>
+          </Card>
+        </div>
+        
         <div className="grid gap-4">
           {stockTakes.map((take, index) => (
-            <Card key={index} className="border-2 border-blue-900">
+            <Card key={index} className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleStockTakeClick(take)}>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-blue-900">{take.warehouse}</h3>
-                <p className="text-sm text-blue-900">Items: {take.itemsChecked} | Discrepancies: {take.discrepancies}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-blue-900">{take.warehouse} - Stock Take</h3>
+                      <Badge variant={take.status === 'Completed' ? 'default' : 'outline'}>{take.status}</Badge>
+                    </div>
+                    <p className="text-sm text-blue-900 mt-1">Date: {take.date}</p>
+                    <p className="text-sm text-blue-900">Items Checked: {take.itemsChecked} | Discrepancies: {take.discrepancies}</p>
+                    <p className="text-sm text-blue-900">Performed By: {take.performedBy}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-blue-900">Variance</p>
+                    <p className={`text-xl font-bold ${take.variance < 0 ? 'text-red-600' : 'text-green-600'}`}>£{Math.abs(take.variance).toFixed(2)}</p>
+                    {take.completedDate && <p className="text-xs text-gray-500 mt-1">Completed: {take.completedDate}</p>}
+                  </div>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -8000,6 +8122,418 @@ export default function Bookkeeping() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Inventory KPI Drilldown Modal */}
+      <Dialog open={isKPIDrilldownOpen} onOpenChange={setIsKPIDrilldownOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{kpiDrilldownData?.title}</DialogTitle>
+            <DialogDescription className="text-blue-900">
+              {kpiDrilldownData?.value} - Detailed Breakdown
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 max-h-[400px] overflow-y-auto">
+            {kpiDrilldownData?.items?.map((item: any, idx: number) => (
+              <Card key={idx} className="border-2 border-blue-300">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-blue-900">{item.name}</p>
+                      {item.quantity && <p className="text-sm text-blue-700">Quantity: {item.quantity}</p>}
+                      {item.current && <p className="text-sm text-blue-700">Current: {item.current} / Reorder: {item.reorderLevel}</p>}
+                    </div>
+                    <div className="text-right">
+                      {item.value && <p className="text-lg font-bold text-blue-900">{item.value}</p>}
+                      {item.status && <Badge variant={item.status === 'Critical' ? 'destructive' : 'outline'}>{item.status}</Badge>}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {kpiDrilldownData?.description && (
+              <p className="text-blue-900">{kpiDrilldownData.description}</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsKPIDrilldownOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Item Detail Modal */}
+      <Dialog open={isStockDetailOpen} onOpenChange={setIsStockDetailOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{selectedStockItem?.name}</DialogTitle>
+            <DialogDescription className="text-blue-900">Stock Item Details</DialogDescription>
+          </DialogHeader>
+          {selectedStockItem && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">SKU</Label>
+                  <p className="text-blue-900">{selectedStockItem.sku}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Category</Label>
+                  <p className="text-blue-900">{selectedStockItem.category}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Quantity</Label>
+                  <p className="text-2xl font-bold text-blue-900">{selectedStockItem.quantity} units</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Cost</Label>
+                  <p className="text-2xl font-bold text-blue-900">£{selectedStockItem.cost?.toFixed(2)}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Reorder Level</Label>
+                  <p className="text-blue-900">{selectedStockItem.reorderLevel} units</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Status</Label>
+                  <Badge variant={selectedStockItem.status === 'Critical' ? 'destructive' : 'outline'}>{selectedStockItem.status}</Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Warehouse</Label>
+                  <p className="text-blue-900">{selectedStockItem.warehouse}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Location</Label>
+                  <p className="text-blue-900">{selectedStockItem.location}</p>
+                </div>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Total Value</Label>
+                <p className="text-xl font-bold text-blue-900">£{(selectedStockItem.quantity * selectedStockItem.cost).toFixed(2)}</p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockDetailOpen(false)}>Close</Button>
+            <Button onClick={() => {
+              setIsStockDetailOpen(false)
+              setIsStockFormOpen(true)
+            }}>Edit Stock</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Form Modal (Add/Edit) */}
+      <Dialog open={isStockFormOpen} onOpenChange={setIsStockFormOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{selectedStockItem ? 'Edit' : 'Add'} Stock Item</DialogTitle>
+            <DialogDescription className="text-blue-900">
+              {selectedStockItem ? 'Update stock item details' : 'Add a new stock item to inventory'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 max-h-[500px] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">SKU</Label>
+                <Input defaultValue={selectedStockItem?.sku || ''} className="border-2 border-blue-900" />
+              </div>
+              <div>
+                <Label className="text-blue-900">Name</Label>
+                <Input defaultValue={selectedStockItem?.name || ''} className="border-2 border-blue-900" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Category</Label>
+                <Input defaultValue={selectedStockItem?.category || ''} className="border-2 border-blue-900" />
+              </div>
+              <div>
+                <Label className="text-blue-900">Quantity</Label>
+                <Input type="number" defaultValue={selectedStockItem?.quantity || 0} className="border-2 border-blue-900" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Cost (£)</Label>
+                <Input type="number" step="0.01" defaultValue={selectedStockItem?.cost || 0} className="border-2 border-blue-900" />
+              </div>
+              <div>
+                <Label className="text-blue-900">Reorder Level</Label>
+                <Input type="number" defaultValue={selectedStockItem?.reorderLevel || 0} className="border-2 border-blue-900" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Warehouse</Label>
+                <Input defaultValue={selectedStockItem?.warehouse || ''} className="border-2 border-blue-900" />
+              </div>
+              <div>
+                <Label className="text-blue-900">Location</Label>
+                <Input defaultValue={selectedStockItem?.location || ''} className="border-2 border-blue-900" />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockFormOpen(false)}>Cancel</Button>
+            <Button onClick={() => {
+              setIsStockFormOpen(false)
+              alert('Stock item saved successfully!')
+            }}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Warehouse Detail Modal */}
+      <Dialog open={isWarehouseDetailOpen} onOpenChange={setIsWarehouseDetailOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{selectedWarehouse?.name}</DialogTitle>
+            <DialogDescription className="text-blue-900">Warehouse Details</DialogDescription>
+          </DialogHeader>
+          {selectedWarehouse && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Location</Label>
+                  <p className="text-blue-900">{selectedWarehouse.location}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Manager</Label>
+                  <p className="text-blue-900">{selectedWarehouse.manager}</p>
+                </div>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Contact</Label>
+                <p className="text-blue-900">{selectedWarehouse.contact}</p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Capacity</Label>
+                <p className="text-blue-900">{selectedWarehouse.used} / {selectedWarehouse.capacity} sqft</p>
+                <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
+                  <div 
+                    className="bg-blue-600 h-3 rounded-full" 
+                    style={{width: `${(selectedWarehouse.used/selectedWarehouse.capacity)*100}%`}}
+                  ></div>
+                </div>
+                <p className="text-sm text-blue-700 mt-1">
+                  {((selectedWarehouse.used/selectedWarehouse.capacity)*100).toFixed(1)}% Utilized
+                </p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Status</Label>
+                <Badge variant="default">{selectedWarehouse.status}</Badge>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsWarehouseDetailOpen(false)}>Close</Button>
+            <Button>Manage Warehouse</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Adjustment Detail Modal */}
+      <Dialog open={isAdjustmentDetailOpen} onOpenChange={setIsAdjustmentDetailOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Stock Adjustment Details</DialogTitle>
+            <DialogDescription className="text-blue-900">{selectedAdjustment?.productName}</DialogDescription>
+          </DialogHeader>
+          {selectedAdjustment && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Date</Label>
+                  <p className="text-blue-900">{selectedAdjustment.date}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">SKU</Label>
+                  <p className="text-blue-900">{selectedAdjustment.sku}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Type</Label>
+                  <Badge variant={selectedAdjustment.type === 'Increase' ? 'default' : 'destructive'}>{selectedAdjustment.type}</Badge>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Quantity</Label>
+                  <p className="text-2xl font-bold text-blue-900">{selectedAdjustment.quantity} units</p>
+                </div>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Reason</Label>
+                <p className="text-blue-900">{selectedAdjustment.reason}</p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Notes</Label>
+                <p className="text-blue-900">{selectedAdjustment.notes}</p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Adjusted By</Label>
+                <p className="text-blue-900">{selectedAdjustment.adjustedBy}</p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => setIsAdjustmentDetailOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reorder Alert Modal */}
+      <Dialog open={isReorderDetailOpen} onOpenChange={setIsReorderDetailOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Reorder Alert</DialogTitle>
+            <DialogDescription className="text-blue-900">{selectedReorderAlert?.productName}</DialogDescription>
+          </DialogHeader>
+          {selectedReorderAlert && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">SKU</Label>
+                  <p className="text-blue-900">{selectedReorderAlert.sku}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Priority</Label>
+                  <Badge variant={selectedReorderAlert.priority === 'Critical' ? 'destructive' : 'default'}>{selectedReorderAlert.priority}</Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Current Stock</Label>
+                  <p className="text-2xl font-bold text-red-600">{selectedReorderAlert.currentStock} units</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Reorder Level</Label>
+                  <p className="text-2xl font-bold text-blue-900">{selectedReorderAlert.reorderLevel} units</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Suggested Order</Label>
+                  <p className="text-xl font-bold text-green-600">{selectedReorderAlert.suggestedOrder} units</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Estimated Cost</Label>
+                  <p className="text-xl font-bold text-blue-900">£{selectedReorderAlert.estimatedCost?.toLocaleString()}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Supplier</Label>
+                  <p className="text-blue-900">{selectedReorderAlert.supplier}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Lead Time</Label>
+                  <p className="text-blue-900">{selectedReorderAlert.leadTime}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsReorderDetailOpen(false)}>Close</Button>
+            <Button onClick={() => {
+              setIsReorderDetailOpen(false)
+              alert(`Purchase Order PO-${Date.now()} created for ${selectedReorderAlert?.productName}`)
+            }}>Create Purchase Order</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Take Detail Modal */}
+      <Dialog open={isStockTakeDetailOpen} onOpenChange={setIsStockTakeDetailOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Stock Take Details</DialogTitle>
+            <DialogDescription className="text-blue-900">{selectedStockTake?.warehouse}</DialogDescription>
+          </DialogHeader>
+          {selectedStockTake && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Date</Label>
+                  <p className="text-blue-900">{selectedStockTake.date}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Status</Label>
+                  <Badge variant={selectedStockTake.status === 'Completed' ? 'default' : 'outline'}>{selectedStockTake.status}</Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Items Checked</Label>
+                  <p className="text-2xl font-bold text-blue-900">{selectedStockTake.itemsChecked}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Discrepancies</Label>
+                  <p className="text-2xl font-bold text-orange-600">{selectedStockTake.discrepancies}</p>
+                </div>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Variance</Label>
+                <p className={`text-xl font-bold ${selectedStockTake.variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  £{Math.abs(selectedStockTake.variance).toFixed(2)}
+                </p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold">Performed By</Label>
+                <p className="text-blue-900">{selectedStockTake.performedBy}</p>
+              </div>
+              {selectedStockTake.completedDate && (
+                <div>
+                  <Label className="text-blue-900 font-semibold">Completed Date</Label>
+                  <p className="text-blue-900">{selectedStockTake.completedDate}</p>
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => setIsStockTakeDetailOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Take Form Modal */}
+      <Dialog open={isStockTakeFormOpen} onOpenChange={setIsStockTakeFormOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Record Stock Take</DialogTitle>
+            <DialogDescription className="text-blue-900">Record a new physical stock count</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-blue-900">Warehouse</Label>
+              <Input placeholder="Enter warehouse name" className="border-2 border-blue-900" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-blue-900">Items Checked</Label>
+                <Input type="number" placeholder="0" className="border-2 border-blue-900" />
+              </div>
+              <div>
+                <Label className="text-blue-900">Discrepancies Found</Label>
+                <Input type="number" placeholder="0" className="border-2 border-blue-900" />
+              </div>
+            </div>
+            <div>
+              <Label className="text-blue-900">Notes</Label>
+              <Input placeholder="Any observations or notes..." className="border-2 border-blue-900" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockTakeFormOpen(false)}>Cancel</Button>
+            <Button onClick={() => {
+              setIsStockTakeFormOpen(false)
+              alert('Stock take recorded successfully!')
+            }}>Save Stock Take</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </ResponsiveLayout>
   )
 }
