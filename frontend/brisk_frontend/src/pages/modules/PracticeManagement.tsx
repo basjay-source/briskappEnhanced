@@ -174,7 +174,7 @@ export default function PracticeManagement() {
   const loadDashboardData = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/api/v1/practice/dashboard')
+      const response = await api.get('/practice/dashboard')
       setDashboardData(response.data)
       setError(null)
     } catch (err: any) {
@@ -206,21 +206,21 @@ export default function PracticeManagement() {
       if (selectedPriority !== 'all') params.priority = selectedPriority
       if (searchTerm) params.search = searchTerm
       
-      const response = await api.get('/api/v1/practice/jobs', { params })
+      const response = await api.get('/practice/jobs', { params })
       setJobs(response.data.jobs || [])
     } catch (err: any) {
       console.error('Error loading jobs:', err)
-      setError(err.message || 'Failed to load jobs')
+      setJobs([])
     }
   }
 
   const loadDeadlines = async () => {
     try {
-      const response = await api.get('/api/v1/practice/compliance/deadlines')
+      const response = await api.get('/practice/compliance/deadlines')
       setDeadlines(response.data.deadlines || [])
     } catch (err: any) {
       console.error('Error loading deadlines:', err)
-      setError(err.message || 'Failed to load deadlines')
+      setDeadlines([])
     }
   }
 
@@ -230,11 +230,11 @@ export default function PracticeManagement() {
       if (selectedJobFilter !== 'all') params.job_id = selectedJobFilter
       if (timeSearchTerm) params.search = timeSearchTerm
       
-      const response = await api.get('/api/v1/practice/time-entries', { params })
+      const response = await api.get('/practice/time-entries', { params })
       setTimeEntries(Array.isArray(response.data) ? response.data : [])
     } catch (err: any) {
       console.error('Error loading time entries:', err)
-      setError(err.message || 'Failed to load time entries')
+      setTimeEntries([])
     }
   }
 
