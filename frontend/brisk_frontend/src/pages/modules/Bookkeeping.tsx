@@ -4044,10 +4044,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Invoice
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Invoice #', 'Customer', 'Date', 'Amount', 'Status'],
+                ['INV-001', 'Customer A', '2024-01-15', '£2,500', 'Paid'],
+                ['INV-002', 'Customer B', '2024-01-14', '£1,800', 'Pending'],
+                ['INV-003', 'Customer C', '2024-01-13', '£3,200', 'Overdue']
+              ]}
+              filename={`invoices-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
