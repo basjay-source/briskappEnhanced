@@ -40,7 +40,10 @@ import {
   Search,
   Settings,
   Calendar,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Tags,
+  Trash2,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -110,6 +113,30 @@ export default function Bookkeeping() {
     status: 'Active'
   })
 
+  const [isTransactionDetailOpen, setIsTransactionDetailOpen] = useState(false)
+  const [isTransactionEditOpen, setIsTransactionEditOpen] = useState(false)
+  const [isCashCodingOpen, setIsCashCodingOpen] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null)
+  const [transactionFormData, setTransactionFormData] = useState<any>({})
+
+  const [isMatchTransactionOpen, setIsMatchTransactionOpen] = useState(false)
+  const [isBankingRulesOpen, setIsBankingRulesOpen] = useState(false)
+  const [isAddRuleOpen, setIsAddRuleOpen] = useState(false)
+  const [selectedReconciliationItem, setSelectedReconciliationItem] = useState<any>(null)
+  const [matchCandidates, setMatchCandidates] = useState<any[]>([])
+  const [bankingRules, setBankingRules] = useState<any[]>([
+    { id: 1, name: 'Auto-categorize Office Rent', condition: 'Description contains "Rent"', category: 'Rent', autoMatch: true, status: 'Active' },
+    { id: 2, name: 'Supplier Payments', condition: 'Description contains "Supplier" OR "Tech Co"', category: 'Purchases', autoMatch: true, status: 'Active' },
+    { id: 3, name: 'Customer Receipts', condition: 'Amount > 1000 AND Type = Credit', category: 'Sales', autoMatch: false, status: 'Active' }
+  ])
+  const [ruleFormData, setRuleFormData] = useState<any>({
+    name: '',
+    condition: '',
+    category: '',
+    autoMatch: true,
+    status: 'Active'
+  })
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -171,6 +198,102 @@ export default function Bookkeeping() {
   const handleQuickAction = (action: string) => {
     console.log('Quick action:', action)
     alert(`${action} functionality will be implemented`)
+  }
+
+  const handleViewTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setIsTransactionDetailOpen(true)
+  }
+
+  const handleEditTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setTransactionFormData({ ...transaction })
+    setIsTransactionEditOpen(true)
+  }
+
+  const handleCashCoding = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setTransactionFormData({ ...transaction })
+    setIsCashCodingOpen(true)
+  }
+
+  const handleSaveTransactionEdit = () => {
+    console.log('Saving transaction:', transactionFormData)
+    alert(`✅ Successfully updated transaction!\n\nChanges saved to the system.`)
+    setIsTransactionEditOpen(false)
+  }
+
+  const handleSaveCashCoding = () => {
+    console.log('Saving cash coding:', transactionFormData)
+    if (!transactionFormData.category) {
+      alert('⚠️ Please select a category for this transaction')
+      return
+    }
+    alert(`✅ Successfully coded transaction!\n\nCategory: ${transactionFormData.category}`)
+    setIsCashCodingOpen(false)
+  }
+
+  const handleMatchTransaction = (item: any) => {
+    setSelectedReconciliationItem(item)
+    const candidates = [
+      { id: 1, date: '2024-01-18', description: 'Customer Invoice Payment - INV-001', amount: 1500, type: 'Invoice', matchScore: 95 },
+      { id: 2, date: '2024-01-17', description: 'Client Deposit', amount: 1500, type: 'Receipt', matchScore: 85 },
+      { id: 3, date: '2024-01-16', description: 'Payment Received', amount: 1485, type: 'Receipt', matchScore: 75 }
+    ]
+    setMatchCandidates(candidates)
+    setIsMatchTransactionOpen(true)
+  }
+
+  const handleConfirmMatch = (candidateId: number) => {
+    const candidate = matchCandidates.find(c => c.id === candidateId)
+    console.log('Matching transaction:', selectedReconciliationItem, 'with', candidate)
+    alert(`✅ Successfully matched transaction!\n\nReconciliation item matched with ${candidate?.description}`)
+    setIsMatchTransactionOpen(false)
+  }
+
+  const handleOpenBankingRules = () => {
+    setIsBankingRulesOpen(true)
+  }
+
+  const handleAddRule = () => {
+    setIsAddRuleOpen(true)
+  }
+
+  const handleSaveRule = () => {
+    console.log('Saving banking rule:', ruleFormData)
+    if (!ruleFormData.name || !ruleFormData.condition || !ruleFormData.category) {
+      alert('⚠️ Please fill in all required fields: Name, Condition, and Category')
+      return
+    }
+    const newRule = {
+      id: bankingRules.length + 1,
+      ...ruleFormData
+    }
+    setBankingRules([...bankingRules, newRule])
+    alert(`✅ Successfully created banking rule!\n\nRule: ${ruleFormData.name}`)
+    setIsAddRuleOpen(false)
+    setRuleFormData({
+      name: '',
+      condition: '',
+      category: '',
+      autoMatch: true,
+      status: 'Active'
+    })
+  }
+
+  const handleToggleRule = (ruleId: number) => {
+    setBankingRules(bankingRules.map(rule => 
+      rule.id === ruleId 
+        ? { ...rule, status: rule.status === 'Active' ? 'Inactive' : 'Active' }
+        : rule
+    ))
+  }
+
+  const handleDeleteRule = (ruleId: number) => {
+    if (confirm('Are you sure you want to delete this banking rule?')) {
+      setBankingRules(bankingRules.filter(rule => rule.id !== ruleId))
+      alert('✅ Successfully deleted banking rule!')
+    }
   }
 
   const statusOptions = [
@@ -4803,9 +4926,13 @@ export default function Bookkeeping() {
             <p className="text-blue-900">View, categorize, and manage all bank transactions</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
+            <Button variant="outline" onClick={handleOpenBankingRules}>
+              <Settings className="h-4 w-4 mr-2" />
+              Banking Rules
+            </Button>
+            <Button onClick={() => handleCashCoding({ description: 'Select a transaction first' })}>
+              <Tags className="h-4 w-4 mr-2" />
+              Cash Coding
             </Button>
             <Button>
               <Download className="h-4 w-4 mr-2" />
@@ -4821,15 +4948,23 @@ export default function Bookkeeping() {
           filters={[
             {
               label: 'Status',
-              options: statusOptions,
+              options: [
+                { label: 'All Statuses', value: 'all' },
+                { label: 'Categorized', value: 'categorized' },
+                { label: 'Uncategorized', value: 'uncategorized' }
+              ],
               value: selectedStatus,
               onChange: setSelectedStatus
             },
             {
               label: 'Type',
-              options: typeOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
+              options: [
+                { label: 'All Types', value: 'all' },
+                { label: 'Credit', value: 'credit' },
+                { label: 'Debit', value: 'debit' }
+              ],
+              value: selectedType,
+              onChange: setSelectedType
             }
           ]}
           dateRange={{
@@ -4841,7 +4976,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Viewing all transactions this month\n\nTotal: 1,245 transactions')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
@@ -4850,7 +4985,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Total transactions</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Uncategorized Transactions\n\n23 transactions need categorization')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Uncategorized</CardTitle>
             </CardHeader>
@@ -4859,7 +4994,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Need attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('💰 Income Transactions\n\n£45,230 received this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Income</CardTitle>
             </CardHeader>
@@ -4868,7 +5003,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('💸 Expense Transactions\n\n£32,180 spent this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Expenses</CardTitle>
             </CardHeader>
@@ -4882,7 +5017,7 @@ export default function Bookkeeping() {
         <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-blue-900">Recent Transactions</CardTitle>
-            <CardDescription>Latest bank transactions across all accounts</CardDescription>
+            <CardDescription className="text-blue-900">Latest bank transactions across all accounts</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -4893,7 +5028,7 @@ export default function Bookkeeping() {
                 { date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', amount: 5000, type: 'Credit', category: '', status: 'Uncategorized' },
                 { date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', amount: -185, type: 'Debit', category: 'Utilities', status: 'Categorized' }
               ].map((transaction, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewTransaction(transaction)}>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{transaction.description}</p>
@@ -4915,11 +5050,14 @@ export default function Bookkeeping() {
                     </p>
                     <p className="text-sm text-blue-900">{transaction.type}</p>
                     <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleViewTransaction(transaction); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleEditTransaction(transaction); }}>
                         <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleCashCoding(transaction); }}>
+                        <Tags className="h-3 w-3" />
                       </Button>
                     </div>
                   </div>
@@ -4941,11 +5079,15 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Reconcile bank statements with your accounting records</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleOpenBankingRules}>
+              <Settings className="h-4 w-4 mr-2" />
+              Banking Rules
+            </Button>
+            <Button variant="outline" onClick={() => alert('📥 Import Statement\n\nSelect a bank statement file to import')}>
               <Upload className="h-4 w-4 mr-2" />
               Import Statement
             </Button>
-            <Button>
+            <Button onClick={() => alert('🔄 Auto Reconcile\n\nAutomatically matching transactions...')}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Auto Reconcile
             </Button>
@@ -4953,7 +5095,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('✅ Reconciled Transactions\n\n£123,450 reconciled this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Reconciled</CardTitle>
             </CardHeader>
@@ -4962,7 +5104,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Outstanding Items\n\n£2,850 needs reconciliation')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
             </CardHeader>
@@ -4971,7 +5113,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Needs attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('❌ Discrepancies Found\n\n3 items need review')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Discrepancies</CardTitle>
             </CardHeader>
@@ -4980,7 +5122,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Items to review</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Auto-Match Rate\n\n97.8% of transactions auto-matched')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Match Rate</CardTitle>
             </CardHeader>
@@ -5034,7 +5176,7 @@ export default function Bookkeeping() {
           <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-blue-900">Outstanding Items</CardTitle>
-              <CardDescription>Items requiring manual reconciliation</CardDescription>
+              <CardDescription className="text-blue-900">Items requiring manual reconciliation</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -5044,7 +5186,7 @@ export default function Bookkeeping() {
                   { description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit' },
                   { description: 'Unknown Transfer', amount: -200, date: '2024-01-15', type: 'Debit' }
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
                     <div className="flex-1">
                       <p className="font-medium">{item.description}</p>
                       <p className="text-sm text-blue-900">{item.date}</p>
@@ -5054,10 +5196,10 @@ export default function Bookkeeping() {
                         {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount)}
                       </p>
                       <div className="flex gap-1 mt-1">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => alert(`📋 Transaction Details\n\n${item.description}\nAmount: £${Math.abs(item.amount)}\nDate: ${item.date}`)}>
                           <Eye className="h-3 w-3" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleMatchTransaction(item)}>
                           <UserCheck className="h-3 w-3" />
                         </Button>
                       </div>
@@ -6308,6 +6450,333 @@ export default function Bookkeeping() {
           </div>
         </div>
       </div>
+
+      <Dialog open={isTransactionDetailOpen} onOpenChange={setIsTransactionDetailOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Transaction Details</DialogTitle>
+            <DialogDescription className="text-blue-900">View complete information for this transaction</DialogDescription>
+          </DialogHeader>
+          {selectedTransaction && (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Description</Label>
+                <p className="text-sm">{selectedTransaction.description}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Amount</Label>
+                <p className={`text-xl font-bold ${selectedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedTransaction.amount > 0 ? '+' : ''}£{Math.abs(selectedTransaction.amount)}
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Date</Label>
+                  <p className="text-sm">{selectedTransaction.date}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Type</Label>
+                  <Badge className="mt-1 bg-blue-100 text-blue-800">{selectedTransaction.type}</Badge>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account</Label>
+                <p className="text-sm">{selectedTransaction.account}</p>
+              </div>
+              {selectedTransaction.category && (
+                <div className="grid gap-2">
+                  <Label className="text-blue-900 font-semibold">Category</Label>
+                  <Badge className="bg-green-100 text-green-800">{selectedTransaction.category}</Badge>
+                </div>
+              )}
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Status</Label>
+                <Badge className={selectedTransaction.status === 'Categorized' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}>
+                  {selectedTransaction.status}
+                </Badge>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTransactionDetailOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTransactionEditOpen} onOpenChange={setIsTransactionEditOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Edit Transaction</DialogTitle>
+            <DialogDescription className="text-blue-900">Update transaction information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="trans-desc" className="text-blue-900">Description</Label>
+              <Input
+                id="trans-desc"
+                value={transactionFormData.description || ''}
+                onChange={(e) => setTransactionFormData({...transactionFormData, description: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="trans-amount" className="text-blue-900">Amount</Label>
+              <Input
+                id="trans-amount"
+                type="number"
+                value={transactionFormData.amount || 0}
+                onChange={(e) => setTransactionFormData({...transactionFormData, amount: parseFloat(e.target.value)})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="trans-category" className="text-blue-900">Category</Label>
+              <select
+                id="trans-category"
+                value={transactionFormData.category || ''}
+                onChange={(e) => setTransactionFormData({...transactionFormData, category: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="">Select Category</option>
+                <option value="Sales">Sales</option>
+                <option value="Purchases">Purchases</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTransactionEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveTransactionEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isCashCodingOpen} onOpenChange={setIsCashCodingOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Cash Coding</DialogTitle>
+            <DialogDescription className="text-blue-900">Assign category and tax code to this transaction</DialogDescription>
+          </DialogHeader>
+          {selectedTransaction && (
+            <div className="space-y-4">
+              <div className="p-3 bg-blue-50 rounded-md border-2 border-blue-900">
+                <p className="font-medium">{selectedTransaction.description}</p>
+                <p className={`text-lg font-bold ${selectedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedTransaction.amount > 0 ? '+' : ''}£{Math.abs(selectedTransaction.amount)}
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cash-category" className="text-blue-900">Category *</Label>
+                <select
+                  id="cash-category"
+                  value={transactionFormData.category || ''}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, category: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2"
+                >
+                  <option value="">Select Category</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Purchases">Purchases</option>
+                  <option value="Rent">Rent</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Salaries">Salaries</option>
+                  <option value="Banking Fees">Banking Fees</option>
+                  <option value="Interest">Interest</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="tax-code" className="text-blue-900">Tax Code</Label>
+                <select
+                  id="tax-code"
+                  value={transactionFormData.taxCode || 'T0'}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, taxCode: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2"
+                >
+                  <option value="T0">T0 - No VAT</option>
+                  <option value="T1">T1 - Standard Rate (20%)</option>
+                  <option value="T2">T2 - Exempt</option>
+                  <option value="T4">T4 - Reduced Rate (5%)</option>
+                  <option value="T9">T9 - Zero Rated</option>
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="notes" className="text-blue-900">Notes</Label>
+                <textarea
+                  id="notes"
+                  value={transactionFormData.notes || ''}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, notes: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2 min-h-[80px]"
+                  placeholder="Add any additional notes..."
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCashCodingOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveCashCoding}>Save Coding</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isMatchTransactionOpen} onOpenChange={setIsMatchTransactionOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Match Transaction</DialogTitle>
+            <DialogDescription className="text-blue-900">Find and match this item with existing transactions</DialogDescription>
+          </DialogHeader>
+          {selectedReconciliationItem && (
+            <div className="space-y-4">
+              <div className="p-3 bg-blue-50 rounded-md border-2 border-blue-900">
+                <p className="font-medium">{selectedReconciliationItem.description}</p>
+                <p className={`text-lg font-bold ${selectedReconciliationItem.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedReconciliationItem.amount > 0 ? '+' : ''}£{Math.abs(selectedReconciliationItem.amount)}
+                </p>
+                <p className="text-sm text-blue-900">{selectedReconciliationItem.date}</p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold mb-2 block">Suggested Matches</Label>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {matchCandidates.map((candidate) => (
+                    <div key={candidate.id} className="p-3 border-2 border-blue-900 rounded-md hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleConfirmMatch(candidate.id)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-medium">{candidate.description}</p>
+                          <p className="text-sm text-blue-900">{candidate.date} • {candidate.type}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">£{candidate.amount}</p>
+                          <Badge className={
+                            candidate.matchScore >= 90 ? 'bg-green-100 text-green-800' :
+                            candidate.matchScore >= 75 ? 'bg-orange-100 text-orange-800' :
+                            'bg-blue-100 text-blue-800'
+                          }>
+                            {candidate.matchScore}% Match
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsMatchTransactionOpen(false)}>Cancel</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isBankingRulesOpen} onOpenChange={setIsBankingRulesOpen}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Banking Rules</DialogTitle>
+            <DialogDescription className="text-blue-900">Manage automatic categorization and matching rules</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Button onClick={handleAddRule} className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Add New Rule
+            </Button>
+            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+              {bankingRules.map((rule) => (
+                <div key={rule.id} className="p-3 border-2 border-blue-900 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">{rule.name}</p>
+                      <p className="text-sm text-blue-900">{rule.condition}</p>
+                      <div className="flex gap-2 mt-2">
+                        <Badge className="bg-blue-100 text-blue-800">{rule.category}</Badge>
+                        {rule.autoMatch && <Badge className="bg-green-100 text-green-800">Auto-Match</Badge>}
+                        <Badge className={rule.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                          {rule.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="flex gap-1 ml-4">
+                      <Button variant="ghost" size="sm" onClick={() => handleToggleRule(rule.id)}>
+                        {rule.status === 'Active' ? <Eye className="h-4 w-4" /> : <Eye className="h-4 w-4 opacity-50" />}
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteRule(rule.id)}>
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBankingRulesOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddRuleOpen} onOpenChange={setIsAddRuleOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Add Banking Rule</DialogTitle>
+            <DialogDescription className="text-blue-900">Create a new rule for automatic transaction categorization</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="rule-name" className="text-blue-900">Rule Name *</Label>
+              <Input
+                id="rule-name"
+                value={ruleFormData.name}
+                onChange={(e) => setRuleFormData({...ruleFormData, name: e.target.value})}
+                placeholder="e.g., Auto-categorize Office Rent"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="rule-condition" className="text-blue-900">Condition *</Label>
+              <Input
+                id="rule-condition"
+                value={ruleFormData.condition}
+                onChange={(e) => setRuleFormData({...ruleFormData, condition: e.target.value})}
+                placeholder='e.g., Description contains "Rent"'
+                className="border-2 border-blue-900"
+              />
+              <p className="text-xs text-blue-900">Use operators: contains, equals, greater than, less than</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="rule-category" className="text-blue-900">Category *</Label>
+              <select
+                id="rule-category"
+                value={ruleFormData.category}
+                onChange={(e) => setRuleFormData({...ruleFormData, category: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="">Select Category</option>
+                <option value="Sales">Sales</option>
+                <option value="Purchases">Purchases</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Banking Fees">Banking Fees</option>
+                <option value="Interest">Interest</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="auto-match"
+                checked={ruleFormData.autoMatch}
+                onChange={(e) => setRuleFormData({...ruleFormData, autoMatch: e.target.checked})}
+                className="h-4 w-4"
+              />
+              <Label htmlFor="auto-match" className="text-blue-900">Enable auto-matching</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddRuleOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveRule}>Create Rule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
