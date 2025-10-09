@@ -304,33 +304,148 @@ const AccountsProduction: React.FC = () => {
       hasSubTabs: false
     },
     {
-      id: 'accounts',
-      label: 'Accounts Production',
+      id: 'trial-balance',
+      label: 'Trial Balance',
+      icon: Calculator,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'tb-overview', label: 'Overview' },
+        { id: 'tb-mapping', label: 'Account Mapping' },
+        { id: 'tb-reconciliation', label: 'Reconciliation' },
+        { id: 'tb-import', label: 'Data Import' },
+        { id: 'tb-history', label: 'History & Audit Trail' }
+      ]
+    },
+    {
+      id: 'adjustments',
+      label: 'Adjustments',
+      icon: Edit,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'journal-entries', label: 'Journal Entries' },
+        { id: 'prepayments', label: 'Prepayments' },
+        { id: 'accruals', label: 'Accruals' },
+        { id: 'depreciation', label: 'Depreciation' },
+        { id: 'provisions', label: 'Provisions' },
+        { id: 'reclassifications', label: 'Reclassifications' }
+      ]
+    },
+    {
+      id: 'statements',
+      label: 'Financial Statements',
       icon: FileText,
       hasSubTabs: true,
       subTabs: [
-        { id: 'trial-balance', label: 'Trial Balance' },
-        { id: 'adjustments', label: 'Adjustments' },
-        { id: 'statements', label: 'Financial Statements' },
-        { id: 'consolidation', label: 'Consolidation' }
+        { id: 'balance-sheet', label: 'Balance Sheet' },
+        { id: 'profit-loss', label: 'Profit & Loss' },
+        { id: 'cash-flow', label: 'Cash Flow' },
+        { id: 'notes', label: 'Notes to Accounts' },
+        { id: 'directors-report', label: "Directors' Report" },
+        { id: 'templates', label: 'Statement Templates' }
+      ]
+    },
+    {
+      id: 'year-end',
+      label: 'Year-End Processing',
+      icon: Calendar,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'closing-entries', label: 'Closing Entries' },
+        { id: 'retained-earnings', label: 'Retained Earnings' },
+        { id: 'opening-balances', label: 'Opening Balances' },
+        { id: 'period-lock', label: 'Period Lock' },
+        { id: 'year-end-checklist', label: 'Year-End Checklist' }
+      ]
+    },
+    {
+      id: 'consolidation',
+      label: 'Group Consolidation',
+      icon: Copy,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'group-structure', label: 'Group Structure' },
+        { id: 'intercompany', label: 'Intercompany Eliminations' },
+        { id: 'consolidated-accounts', label: 'Consolidated Accounts' },
+        { id: 'minority-interests', label: 'Minority Interests' }
+      ]
+    },
+    {
+      id: 'ixbrl',
+      label: 'iXBRL Tagging',
+      icon: Globe,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'auto-tagging', label: 'Auto Tagging' },
+        { id: 'manual-tagging', label: 'Manual Tagging' },
+        { id: 'validation', label: 'Validation' },
+        { id: 'preview', label: 'Preview & Submit' }
+      ]
+    },
+    {
+      id: 'hmrc',
+      label: 'HMRC Integration',
+      icon: Send,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'hmrc-connect', label: 'HMRC Connection' },
+        { id: 'corporation-tax', label: 'Corporation Tax' },
+        { id: 'vat-filing', label: 'VAT Filing' },
+        { id: 'paye-filing', label: 'PAYE Filing' },
+        { id: 'submission-history', label: 'Submission History' }
+      ]
+    },
+    {
+      id: 'companies-house',
+      label: 'Companies House',
+      icon: FileUp,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'ch-connect', label: 'Connection Setup' },
+        { id: 'annual-accounts', label: 'Annual Accounts Filing' },
+        { id: 'confirmation-statement', label: 'Confirmation Statement' },
+        { id: 'forms', label: 'Other Forms' },
+        { id: 'filing-history', label: 'Filing History' }
+      ]
+    },
+    {
+      id: 'entity-templates',
+      label: 'Entity Templates',
+      icon: FileSpreadsheet,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'limited-company', label: 'Limited Company' },
+        { id: 'llp', label: 'LLP' },
+        { id: 'sole-trader', label: 'Sole Trader' },
+        { id: 'partnership', label: 'Partnership' },
+        { id: 'charity', label: 'Charity' },
+        { id: 'academy', label: 'Academy' }
       ]
     },
     {
       id: 'reports',
-      label: 'Reports',
+      label: 'Reports & Analytics',
       icon: TrendingUp,
       hasSubTabs: true,
       subTabs: [
         { id: 'financial-reports', label: 'Financial Reports' },
         { id: 'management-accounts', label: 'Management Accounts' },
-        { id: 'analysis', label: 'Analysis' }
+        { id: 'variance-analysis', label: 'Variance Analysis' },
+        { id: 'ratio-analysis', label: 'Ratio Analysis' },
+        { id: 'trend-analysis', label: 'Trend Analysis' },
+        { id: 'custom-reports', label: 'Custom Reports' }
       ]
     },
     {
-      id: 'ixbrl',
-      label: 'iXBRL',
-      icon: Globe,
-      hasSubTabs: false
+      id: 'audit',
+      label: 'Audit Trail',
+      icon: History,
+      hasSubTabs: true,
+      subTabs: [
+        { id: 'activity-log', label: 'Activity Log' },
+        { id: 'change-history', label: 'Change History' },
+        { id: 'user-actions', label: 'User Actions' },
+        { id: 'approval-workflow', label: 'Approval Workflow' }
+      ]
     }
   ]
 
@@ -644,20 +759,107 @@ const AccountsProduction: React.FC = () => {
     switch (tabId) {
       case 'dashboard':
         return renderDashboardContent()
-      case 'trial-balance':
+      
+      case 'tb-overview':
         return renderTrialBalanceContent()
-      case 'adjustments':
+      case 'tb-mapping':
+        return renderAccountMappingContent()
+      case 'tb-reconciliation':
+        return renderReconciliationContent()
+      case 'tb-import':
+        return renderDataImportContent()
+      case 'tb-history':
+        return renderHistoryContent()
+      
+      case 'journal-entries':
         return renderAdjustmentsContent()
-      case 'statements':
+      case 'prepayments':
+        return renderPrepaymentsContent()
+      case 'accruals':
+        return renderAccrualsContent()
+      case 'depreciation':
+        return renderDepreciationContent()
+      case 'provisions':
+        return renderProvisionsContent()
+      case 'reclassifications':
+        return renderReclassificationsContent()
+      
+      case 'balance-sheet':
+      case 'profit-loss':
+      case 'cash-flow':
+      case 'notes':
+      case 'directors-report':
+      case 'templates':
         return renderStatementsContent()
-      case 'consolidation':
+      
+      case 'closing-entries':
+        return renderClosingEntriesContent()
+      case 'retained-earnings':
+        return renderRetainedEarningsContent()
+      case 'opening-balances':
+        return renderOpeningBalancesContent()
+      case 'period-lock':
+        return renderPeriodLockContent()
+      case 'year-end-checklist':
+        return renderYearEndChecklistContent()
+      
+      // Consolidation
+      case 'group-structure':
+      case 'intercompany':
+      case 'consolidated-accounts':
+      case 'minority-interests':
         return renderConsolidationContent()
+      
+      case 'auto-tagging':
+      case 'manual-tagging':
+      case 'validation':
+      case 'preview':
+        return renderIXBRLContent()
+      
+      case 'hmrc-connect':
+        return renderHMRCConnectionContent()
+      case 'corporation-tax':
+        return renderCorporationTaxContent()
+      case 'vat-filing':
+        return renderVATFilingContent()
+      case 'paye-filing':
+        return renderPAYEFilingContent()
+      case 'submission-history':
+        return renderSubmissionHistoryContent()
+      
+      case 'ch-connect':
+        return renderCompaniesHouseConnectionContent()
+      case 'annual-accounts':
+        return renderAnnualAccountsFilingContent()
+      case 'confirmation-statement':
+        return renderConfirmationStatementContent()
+      case 'forms':
+        return renderCompaniesHouseFormsContent()
+      case 'filing-history':
+        return renderFilingHistoryContent()
+      
+      case 'limited-company':
+      case 'llp':
+      case 'sole-trader':
+      case 'partnership':
+      case 'charity':
+      case 'academy':
+        return renderEntityTemplatesContent()
+      
       case 'financial-reports':
       case 'management-accounts':
-      case 'analysis':
+      case 'variance-analysis':
+      case 'ratio-analysis':
+      case 'trend-analysis':
+      case 'custom-reports':
         return renderReportsContent()
-      case 'ixbrl':
-        return renderIXBRLContent()
+      
+      case 'activity-log':
+      case 'change-history':
+      case 'user-actions':
+      case 'approval-workflow':
+        return renderAuditTrailContent()
+      
       default:
         return renderDashboardContent()
     }
@@ -1466,21 +1668,461 @@ const AccountsProduction: React.FC = () => {
   const renderIXBRLContent = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">iXBRL Generation</h2>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Generate iXBRL
-        </Button>
+        <h2 className="text-xl font-semibold text-[#001f3f]">iXBRL Tagging & Validation</h2>
+        <div className="flex gap-2">
+          <Button onClick={() => handleDrilldown({ title: 'Auto-Tag All', data: {} })}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Auto-Tag All
+          </Button>
+          <Button onClick={() => handleDrilldown({ title: 'Validate Tags', data: {} })}>
+            <Check className="h-4 w-4 mr-2" />
+            Validate
+          </Button>
+          <ExportButton data={[]} filename="ixbrl-document" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <KPICard
+          title="Tagged Items"
+          value="847"
+          change="+12.5%"
+          icon={Globe}
+          color="text-green-600"
+          drillDownData={{ title: 'Tagged Items Details', description: 'View all tagged items', content: <div>Tagged items list</div> }}
+        />
+        <KPICard
+          title="Untagged Items"
+          value="23"
+          change="-45%"
+          icon={AlertCircle}
+          color="text-orange-600"
+          drillDownData={{ title: 'Untagged Items', description: 'Items requiring tagging', content: <div>Untagged items list</div> }}
+        />
+        <KPICard
+          title="Validation Errors"
+          value="0"
+          change="-100%"
+          icon={Check}
+          color="text-green-600"
+          drillDownData={{ title: 'Validation Status', description: 'Validation details', content: <div>All validations passed</div> }}
+        />
+        <KPICard
+          title="Completion"
+          value="97.4%"
+          change="+8.2%"
+          icon={TrendingUp}
+          color="text-blue-600"
+          drillDownData={{ title: 'Tagging Progress', description: 'Overall progress', content: <div>Progress details</div> }}
+        />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#001f3f]">iXBRL Documents</CardTitle>
-          <CardDescription>Interactive XBRL document generation</CardDescription>
+          <CardTitle className="text-[#001f3f]">iXBRL Document Preview</CardTitle>
+          <CardDescription>Preview and validate iXBRL tags before submission to Companies House</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f] mb-2">Document Information</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-[#001f3f]">Entity:</span>
+                    <span className="font-semibold text-[#001f3f]">ABC Limited</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#001f3f]">Period End:</span>
+                    <span className="font-semibold text-[#001f3f]">31 Dec 2024</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#001f3f]">Framework:</span>
+                    <span className="font-semibold text-[#001f3f]">FRS 102</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#001f3f]">Taxonomy:</span>
+                    <span className="font-semibold text-[#001f3f]">UK GAAP 2024</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f] mb-2">Validation Status</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-[#001f3f]">Schema Validation</span>
+                    <Badge variant="default">Passed</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-[#001f3f]">Business Rules</span>
+                    <Badge variant="default">Passed</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-[#001f3f]">Completeness Check</span>
+                    <Badge variant="default">Passed</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-[#001f3f]">HMRC Validation</span>
+                    <Badge variant="default">Ready</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => handleDrilldown({ title: 'Edit Tags', data: {} })}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Tags
+              </Button>
+              <Button onClick={() => handleDrilldown({ title: 'Submit to Companies House', data: {} })}>
+                <Send className="h-4 w-4 mr-2" />
+                Submit to Companies House
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderAccountMappingContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Account Mapping</h2>
+        <Button onClick={() => handleDrilldown({ title: 'Create Mapping Rule', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Mapping Rule
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Chart of Accounts Mapping</CardTitle>
+          <CardDescription>Map bookkeeping accounts to financial statement categories</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-gray-500">No iXBRL documents generated</p>
+            <p className="text-[#001f3f] mb-4">Automated account mapping with AI-powered suggestions</p>
+            <Button onClick={() => handleDrilldown({ title: 'Configure Mappings', data: {} })}>Configure Mappings</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderReconciliationContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Account Reconciliation</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <KPICard
+          title="Reconciled Accounts"
+          value="42"
+          change="+5"
+          icon={Check}
+          color="text-green-600"
+          drillDownData={{ title: 'Reconciled Accounts', description: 'View reconciled accounts', content: <div>List of reconciled accounts</div> }}
+        />
+        <KPICard
+          title="Pending Reconciliation"
+          value="8"
+          change="-2"
+          icon={AlertCircle}
+          color="text-orange-600"
+          drillDownData={{ title: 'Pending Items', description: 'Accounts awaiting reconciliation', content: <div>Pending reconciliation list</div> }}
+        />
+        <KPICard
+          title="Reconciliation Rate"
+          value="84%"
+          change="+3%"
+          icon={TrendingUp}
+          color="text-blue-600"
+          drillDownData={{ title: 'Reconciliation Progress', description: 'Overall progress', content: <div>Progress details</div> }}
+        />
+      </div>
+    </div>
+  )
+
+  const renderDataImportContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">Data Import</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Import Trial Balance</CardTitle>
+          <CardDescription>Import from Xero, QuickBooks, Sage, or CSV file</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Button variant="outline" onClick={() => handleImportTB()}>
+                <Upload className="h-4 w-4 mr-2" />
+                Xero
+              </Button>
+              <Button variant="outline" onClick={() => handleImportTB()}>
+                <Upload className="h-4 w-4 mr-2" />
+                QuickBooks
+              </Button>
+              <Button variant="outline" onClick={() => handleImportTB()}>
+                <Upload className="h-4 w-4 mr-2" />
+                Sage
+              </Button>
+              <Button variant="outline" onClick={() => handleImportTB()}>
+                <Upload className="h-4 w-4 mr-2" />
+                CSV File
+              </Button>
+            </div>
+            <div className="text-sm text-[#001f3f]">
+              <p>Supported formats: CSV, Excel, QBO, Sage XML</p>
+              <p>Automatic mapping and validation included</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderHistoryContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-[#001f3f]">History & Audit Trail</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Trial Balance Changes</CardTitle>
+          <CardDescription>Complete audit trail of all changes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-3 border-2 border-[#001f3f] rounded-[2px] cursor-pointer hover:bg-gray-50"
+                onClick={() => handleDrilldown({ title: `Change Details #${i}`, data: {} })}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold text-[#001f3f]">Trial Balance Adjustment</p>
+                    <p className="text-sm text-[#001f3f]">Modified by John Smith - 2 days ago</p>
+                  </div>
+                  <Badge variant="outline">Modified</Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderPrepaymentsContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Prepayments</h2>
+        <Button onClick={() => handleDrilldown({ title: 'New Prepayment', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Prepayment
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Prepayment Schedule</CardTitle>
+          <CardDescription>Track and amortize prepaid expenses</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-[#001f3f]">Description</TableHead>
+                <TableHead className="text-[#001f3f]">Total Amount</TableHead>
+                <TableHead className="text-[#001f3f]">Period</TableHead>
+                <TableHead className="text-[#001f3f]">Monthly Amount</TableHead>
+                <TableHead className="text-[#001f3f]">Remaining</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Insurance Prepayment Details', data: {} })}>
+                <TableCell className="text-[#001f3f]">Insurance Premium</TableCell>
+                <TableCell className="text-[#001f3f]">£12,000</TableCell>
+                <TableCell className="text-[#001f3f]">12 months</TableCell>
+                <TableCell className="text-[#001f3f]">£1,000</TableCell>
+                <TableCell className="text-[#001f3f]">£8,000</TableCell>
+              </TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Rent Prepayment Details', data: {} })}>
+                <TableCell className="text-[#001f3f]">Office Rent</TableCell>
+                <TableCell className="text-[#001f3f]">£18,000</TableCell>
+                <TableCell className="text-[#001f3f]">6 months</TableCell>
+                <TableCell className="text-[#001f3f]">£3,000</TableCell>
+                <TableCell className="text-[#001f3f]">£12,000</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderAccrualsContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Accruals</h2>
+        <Button onClick={() => handleDrilldown({ title: 'New Accrual', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Accrual
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Accrued Expenses</CardTitle>
+          <CardDescription>Track expenses incurred but not yet paid</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-[#001f3f]">Description</TableHead>
+                <TableHead className="text-[#001f3f]">Amount</TableHead>
+                <TableHead className="text-[#001f3f]">Period</TableHead>
+                <TableHead className="text-[#001f3f]">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Utilities Accrual Details', data: {} })}>
+                <TableCell className="text-[#001f3f]">Utilities Expense</TableCell>
+                <TableCell className="text-[#001f3f]">£1,250</TableCell>
+                <TableCell className="text-[#001f3f]">Dec 2024</TableCell>
+                <TableCell><Badge variant="default">Active</Badge></TableCell>
+              </TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Professional Fees Accrual Details', data: {} })}>
+                <TableCell className="text-[#001f3f]">Professional Fees</TableCell>
+                <TableCell className="text-[#001f3f]">£3,500</TableCell>
+                <TableCell className="text-[#001f3f]">Dec 2024</TableCell>
+                <TableCell><Badge variant="default">Active</Badge></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderDepreciationContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Depreciation Calculator</h2>
+        <Button onClick={() => handleDrilldown({ title: 'New Asset', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Fixed Asset
+        </Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <KPICard
+          title="Total Fixed Assets"
+          value="£385,000"
+          change="+5.2%"
+          icon={FileSpreadsheet}
+          color="text-blue-600"
+          drillDownData={{ title: 'Fixed Assets Register', description: 'All fixed assets', content: <div>Fixed assets list</div> }}
+        />
+        <KPICard
+          title="Accumulated Depreciation"
+          value="£45,000"
+          change="+12%"
+          icon={TrendingDown}
+          color="text-orange-600"
+          drillDownData={{ title: 'Depreciation History', description: 'Cumulative depreciation', content: <div>Depreciation details</div> }}
+        />
+        <KPICard
+          title="Net Book Value"
+          value="£340,000"
+          change="+2.8%"
+          icon={Calculator}
+          color="text-green-600"
+          drillDownData={{ title: 'NBV Analysis', description: 'Net book value breakdown', content: <div>NBV details</div> }}
+        />
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Fixed Assets Register</CardTitle>
+          <CardDescription>Calculate depreciation using straight-line, reducing balance, or units of production methods</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-[#001f3f]">Asset</TableHead>
+                <TableHead className="text-[#001f3f]">Cost</TableHead>
+                <TableHead className="text-[#001f3f]">Method</TableHead>
+                <TableHead className="text-[#001f3f]">Rate</TableHead>
+                <TableHead className="text-[#001f3f]">Depreciation (Annual)</TableHead>
+                <TableHead className="text-[#001f3f]">NBV</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Building Depreciation Schedule', data: {} })}>
+                <TableCell className="text-[#001f3f]">Building</TableCell>
+                <TableCell className="text-[#001f3f]">£250,000</TableCell>
+                <TableCell className="text-[#001f3f]">Straight Line</TableCell>
+                <TableCell className="text-[#001f3f]">2%</TableCell>
+                <TableCell className="text-[#001f3f]">£5,000</TableCell>
+                <TableCell className="text-[#001f3f]">£225,000</TableCell>
+              </TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Machinery Depreciation Schedule', data: {} })}>
+                <TableCell className="text-[#001f3f]">Machinery</TableCell>
+                <TableCell className="text-[#001f3f]">£85,000</TableCell>
+                <TableCell className="text-[#001f3f]">Reducing Balance</TableCell>
+                <TableCell className="text-[#001f3f]">25%</TableCell>
+                <TableCell className="text-[#001f3f]">£18,500</TableCell>
+                <TableCell className="text-[#001f3f]">£66,500</TableCell>
+              </TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Vehicles Depreciation Schedule', data: {} })}>
+                <TableCell className="text-[#001f3f]">Motor Vehicles</TableCell>
+                <TableCell className="text-[#001f3f]">£35,000</TableCell>
+                <TableCell className="text-[#001f3f]">Straight Line</TableCell>
+                <TableCell className="text-[#001f3f]">20%</TableCell>
+                <TableCell className="text-[#001f3f]">£7,000</TableCell>
+                <TableCell className="text-[#001f3f]">£28,000</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderProvisionsContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Provisions</h2>
+        <Button onClick={() => handleDrilldown({ title: 'New Provision', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Provision
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Provisions Register</CardTitle>
+          <CardDescription>Track provisions for liabilities and contingencies</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-[#001f3f] mb-4">Manage provisions for warranties, restructuring, legal claims, and other contingencies</p>
+            <Button onClick={() => handleDrilldown({ title: 'Provision Calculator', data: {} })}>Calculate Provision</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderReclassificationsContent = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-[#001f3f]">Reclassifications</h2>
+        <Button onClick={() => handleDrilldown({ title: 'New Reclassification', data: {} })}>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Reclassification
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#001f3f]">Account Reclassifications</CardTitle>
+          <CardDescription>Reclassify accounts between balance sheet and P&L categories</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-[#001f3f] mb-4">Move items between categories for correct financial statement presentation</p>
+            <Button onClick={() => handleDrilldown({ title: 'Reclassification Journal', data: {} })}>View Reclassifications</Button>
           </div>
         </CardContent>
       </Card>
