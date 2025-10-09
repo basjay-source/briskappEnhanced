@@ -272,7 +272,7 @@ export default function CorporationTax() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900">Corporation Tax Dashboard</h2>
+            <h2 className="text-xl font-bold text-blue-900">Corporation Tax Dashboard</h2>
             <p className="text-blue-900 mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
           </div>
           <div className="flex items-center gap-3">
@@ -302,25 +302,25 @@ export default function CorporationTax() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Profit Before Tax</label>
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-xl font-bold text-green-600">
                     £{taxData.profitBeforeTax.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-blue-600">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-blue-900">
+                  <div className="text-xl font-bold text-blue-900">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Corporation Tax</label>
-                  <div className="text-2xl font-bold text-red-600">
+                  <div className="text-xl font-bold text-red-600">
                     £{taxData.corporationTax.toLocaleString()}
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export default function CorporationTax() {
                 </div>
                 <div className="flex items-center justify-between mt-2 pt-2 border-t">
                   <span className="font-bold">Optimized Tax Liability</span>
-                  <span className="text-2xl font-bold text-brisk-primary">
+                  <span className="text-xl font-bold text-brisk-primary">
                     £{taxData.optimizedTax.toLocaleString()}
                   </span>
                 </div>
@@ -449,7 +449,7 @@ export default function CorporationTax() {
   function renderCT600() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">CT600 Computation</h2>
+        <h2 className="text-xl font-bold">CT600 Computation</h2>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">CT600 Computation</h3>
@@ -496,25 +496,25 @@ export default function CorporationTax() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Profit Before Tax</label>
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-xl font-bold text-green-600">
                     £{taxData.profitBeforeTax.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-xl font-bold text-blue-600">
                     £{taxData.adjustments.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-2xl font-bold text-blue-900">
+                  <div className="text-xl font-bold text-blue-900">
                     £{taxData.taxableProfit.toLocaleString()}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Corporation Tax</label>
-                  <div className="text-2xl font-bold text-red-600">
+                  <div className="text-xl font-bold text-red-600">
                     £{taxData.corporationTax.toLocaleString()}
                   </div>
                 </div>
@@ -529,7 +529,7 @@ export default function CorporationTax() {
   function renderAdjustments() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Tax Adjustments</h2>
+        <h2 className="text-xl font-bold">Tax Adjustments</h2>
         <p className="text-blue-900">Manage corporation tax adjustments and corrections</p>
       </div>
     )
@@ -538,7 +538,7 @@ export default function CorporationTax() {
   function renderSchedules() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Supporting Schedules</h2>
+        <h2 className="text-xl font-bold">Supporting Schedules</h2>
         <p className="text-blue-900">CT600 supporting schedules and computations</p>
       </div>
     )
@@ -547,7 +547,7 @@ export default function CorporationTax() {
   function renderValidation() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Validation</h2>
+        <h2 className="text-xl font-bold">Validation</h2>
         <p className="text-blue-900">Validate CT600 computation and check for errors</p>
       </div>
     )
@@ -556,7 +556,7 @@ export default function CorporationTax() {
   function renderRDClaims() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">R&D Claims</h2>
+        <h2 className="text-xl font-bold">R&D Claims</h2>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">R&D Claims Management</h3>
@@ -619,7 +619,7 @@ export default function CorporationTax() {
   function renderReliefs() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Reliefs & Credits</h2>
+        <h2 className="text-xl font-bold">Reliefs & Credits</h2>
         <p className="text-blue-900">Manage corporation tax reliefs and credits</p>
       </div>
     )
@@ -628,7 +628,7 @@ export default function CorporationTax() {
   function renderGroupRelief() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Group Relief</h2>
+        <h2 className="text-xl font-bold">Group Relief</h2>
         <p className="text-blue-900">Group relief elections and surrenders</p>
       </div>
     )
@@ -637,7 +637,7 @@ export default function CorporationTax() {
   function renderQuarterly() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Quarterly Payments</h2>
+        <h2 className="text-xl font-bold">Quarterly Payments</h2>
         <p className="text-blue-900">Quarterly instalment payments and planning</p>
       </div>
     )
@@ -646,7 +646,7 @@ export default function CorporationTax() {
   function renderFiling() {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Filing</h2>
+        <h2 className="text-xl font-bold">Filing</h2>
         <p className="text-blue-900">CT600 filing and HMRC submissions</p>
       </div>
     )

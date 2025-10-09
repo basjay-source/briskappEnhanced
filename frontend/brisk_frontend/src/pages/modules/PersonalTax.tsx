@@ -458,7 +458,7 @@ export default function PersonalTax() {
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                           <h4 className="font-semibold text-blue-900 mb-2">Current Period</h4>
-                          <p className="text-2xl font-bold">{kpi.value}</p>
+                          <p className="text-xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                         </div>
                         <div className="p-4 border-2 border-blue-900 rounded-[2px]">

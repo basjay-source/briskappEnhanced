@@ -39,7 +39,7 @@ export default function LandingPage() {
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <BriskLogo className="h-10 w-10" animated />
-            <span className="text-2xl font-bold text-brisk-primary">Brisk Practice Suite</span>
+            <span className="text-xl font-bold text-brisk-primary">Brisk Practice Suite</span>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/login">

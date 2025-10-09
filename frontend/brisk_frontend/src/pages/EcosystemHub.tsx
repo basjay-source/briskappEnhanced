@@ -275,7 +275,7 @@ export default function EcosystemHub() {
     <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-blue-900">Ecosystem Hub</h1>
+          <h1 className="text-xl font-bold text-blue-900">Ecosystem Hub</h1>
           <p className="text-blue-900 mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
@@ -535,7 +535,7 @@ export default function EcosystemHub() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold mb-6 text-blue-900">Modules</h2>
+          <h2 className="text-xl font-bold mb-6 text-blue-900">Modules</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {modules.map((module, index) => {
               const Icon = module.icon
@@ -564,7 +564,7 @@ export default function EcosystemHub() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold mb-6 text-blue-900">Recent Activity</h2>
+          <h2 className="text-xl font-bold mb-6 text-blue-900">Recent Activity</h2>
           <Card className="border-2 border-blue-900">
             <CardContent className="p-6">
               {recentActivity.length > 0 ? (

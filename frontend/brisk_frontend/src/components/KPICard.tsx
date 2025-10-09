@@ -35,7 +35,7 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-blue-900">{title}</p>
-              <p className="text-2xl font-bold">{value}</p>
+              <p className="text-xl font-bold">{value}</p>
               <p className={`text-sm ${color}`}>{change}</p>
             </div>
             <Icon className={`h-8 w-8 ${color}`} />

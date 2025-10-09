@@ -317,7 +317,7 @@ export default function TimeAndFeesModule() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium text-blue-900">{kpi.title}</p>
-                          <p className="text-2xl font-bold">{kpi.value}</p>
+                          <p className="text-xl font-bold">{kpi.value}</p>
                           <p className={`text-sm ${kpi.color}`}>{kpi.change} from last week</p>
                         </div>
                         <Icon className={`h-8 w-8 ${kpi.color}`} />
@@ -745,7 +745,7 @@ export default function TimeAndFeesModule() {
                 <CardContent>
                   <div className="text-center">
                     <PieChart className="h-16 w-16 mx-auto text-brisk-primary mb-4" />
-                    <p className="text-2xl font-bold">87%</p>
+                    <p className="text-xl font-bold">87%</p>
                     <p className="text-sm text-blue-900">Average utilization</p>
                   </div>
                 </CardContent>
@@ -759,7 +759,7 @@ export default function TimeAndFeesModule() {
                 <CardContent>
                   <div className="text-center">
                     <TrendingUp className="h-16 w-16 mx-auto text-green-600 mb-4" />
-                    <p className="text-2xl font-bold">£45,200</p>
+                    <p className="text-xl font-bold">£45,200</p>
                     <p className="text-sm text-blue-900">This month</p>
                   </div>
                 </CardContent>
@@ -773,7 +773,7 @@ export default function TimeAndFeesModule() {
                 <CardContent>
                   <div className="text-center">
                     <Target className="h-16 w-16 mx-auto text-purple-600 mb-4" />
-                    <p className="text-2xl font-bold">94%</p>
+                    <p className="text-xl font-bold">94%</p>
                     <p className="text-sm text-blue-900">On-time delivery</p>
                   </div>
                 </CardContent>

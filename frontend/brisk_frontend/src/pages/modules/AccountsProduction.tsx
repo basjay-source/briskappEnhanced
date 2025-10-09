@@ -196,15 +196,15 @@ const AccountsProduction: React.FC = () => {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h3 className="font-semibold text-blue-900">Total Debits</h3>
-                <p className="text-2xl font-bold text-blue-600">£208,500</p>
+                <p className="text-xl font-bold text-blue-600">£208,500</p>
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h3 className="font-semibold text-blue-900">Total Credits</h3>
-                <p className="text-2xl font-bold text-green-600">£208,500</p>
+                <p className="text-xl font-bold text-green-600">£208,500</p>
               </div>
               <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                 <h3 className="font-semibold text-blue-900">Balance</h3>
-                <p className="text-2xl font-bold text-blue-900">£0.00</p>
+                <p className="text-xl font-bold text-blue-900">£0.00</p>
               </div>
             </div>
           </div>

@@ -251,7 +251,7 @@ export default function PayslipTemplateManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Payslip Templates</h2>
+          <h2 className="text-xl font-bold">Payslip Templates</h2>
           <p className="text-blue-900">Customize payslip templates and branding for your organization</p>
         </div>
         <div className="flex gap-2">
