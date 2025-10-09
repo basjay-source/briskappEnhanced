@@ -177,7 +177,7 @@ export default function EmailRibbon({
       <Separator orientation="vertical" className="h-8" />
 
       <div className="flex items-center gap-1">
-        <span className="text-sm font-medium text-[#001f3f]">Style:</span>
+        <span className="text-sm font-medium">Style:</span>
         <Select onValueChange={(value) => onFormatAction('textStyle', value)}>
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Normal" />
@@ -383,7 +383,7 @@ export default function EmailRibbon({
       <Separator orientation="vertical" className="h-8" />
 
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-[#001f3f]">Priority:</span>
+        <span className="text-sm font-medium">Priority:</span>
         <Select 
           value={composeData.priority} 
           onValueChange={(value) => onComposeDataChange({...composeData, priority: value as 'low' | 'normal' | 'high'})}

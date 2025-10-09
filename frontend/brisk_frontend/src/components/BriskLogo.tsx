@@ -23,7 +23,7 @@ export default function BriskLogo({ className, animated = false, showText = true
         <div className="absolute inset-0 bg-brisk-primary rounded-[2px] -z-10" />
       </div>
       {showText && (
-        <span className="text-lg font-semibold text-brisk-primary hidden sm:inline text-[#001f3f]">
+        <span className="text-lg font-semibold text-brisk-primary hidden sm:inline">
           Brisk Practice
         </span>
       )}

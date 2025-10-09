@@ -24,7 +24,7 @@ export default function MobileNavigation() {
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-background md:hidden">
           <div className="flex items-center justify-between p-4 border-b">
-            <h2 className=" text-[#001f3f] text-lg font-semibold">Navigation</h2>
+            <h2 className="text-lg font-semibold">Navigation</h2>
             <Button
               variant="ghost"
               size="icon"

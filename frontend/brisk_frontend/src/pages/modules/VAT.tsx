@@ -143,7 +143,7 @@ export default function VAT() {
 
         <TabsContent value="returns" className="space-y-4 mt-6">
           <div className="flex items-center justify-between">
-            <h2 className=" text-[#001f3f] text-xl font-semibold">VAT Returns</h2>
+            <h2 className="text-xl font-semibold">VAT Returns</h2>
             <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -175,23 +175,23 @@ export default function VAT() {
                     </div>
                     <div className="flex items-center gap-2">
                       {getStatusBadge(vatReturn.status)}
-                      <span className="text-lg font-semibold text-[#001f3f]">£{vatReturn.totalVAT.toLocaleString()}</span>
+                      <span className="text-lg font-semibold">£{vatReturn.totalVAT.toLocaleString()}</span>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} mb-4`}>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">Net Sales</Label>
-                      <p className="font-semibold text-[#001f3f]">£{vatReturn.netSales.toLocaleString()}</p>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">Net Sales</Label>
+                      <p className="font-semibold">£{vatReturn.netSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">VAT on Sales</Label>
-                      <p className="font-semibold text-[#001f3f]">£{vatReturn.vatOnSales.toLocaleString()}</p>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">VAT on Sales</Label>
+                      <p className="font-semibold">£{vatReturn.vatOnSales.toLocaleString()}</p>
                     </div>
                     <div>
-                      <Label className="text-sm text-[#001f3f]">VAT on Purchases</Label>
-                      <p className="font-semibold text-[#001f3f]">£{vatReturn.vatOnPurchases.toLocaleString()}</p>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">VAT on Purchases</Label>
+                      <p className="font-semibold">£{vatReturn.vatOnPurchases.toLocaleString()}</p>
                     </div>
                   </div>
                   <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-2'}`}>
@@ -218,7 +218,7 @@ export default function VAT() {
 
         <TabsContent value="schemes" className="space-y-4 mt-6">
           <div className="flex items-center justify-between">
-            <h2 className=" text-[#001f3f] text-xl font-semibold">VAT Schemes</h2>
+            <h2 className="text-xl font-semibold">VAT Schemes</h2>
             <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
               <Plus className="h-4 w-4 mr-2" />
               Add Scheme
@@ -243,7 +243,7 @@ export default function VAT() {
                 <CardContent>
                   {scheme.rate && (
                     <div className="mb-4">
-                      <Label className="text-sm text-[#001f3f]">Rate</Label>
+                      <Label className="text-sm text-[#001f3f] text-[#001f3f]">Rate</Label>
                       <p className="text-xl font-bold text-brisk-primary">{scheme.rate}%</p>
                     </div>
                   )}
@@ -266,7 +266,7 @@ export default function VAT() {
 
         <TabsContent value="analytics" className="space-y-4 mt-6">
           <div className="flex items-center justify-between">
-            <h2 className=" text-[#001f3f] text-xl font-semibold">VAT Analytics & Reports</h2>
+            <h2 className="text-xl font-semibold">VAT Analytics & Reports</h2>
             <ExportButton
               data={[
                 ['Report Type', 'Description'],
@@ -333,7 +333,7 @@ export default function VAT() {
 
         <TabsContent value="compliance" className="space-y-4 mt-6">
           <div className="flex items-center justify-between">
-            <h2 className=" text-[#001f3f] text-xl font-semibold">VAT Compliance & Audit Trail</h2>
+            <h2 className="text-xl font-semibold">VAT Compliance & Audit Trail</h2>
             <Button variant="outline">
               <Download className="h-4 w-4 mr-2" />
               Compliance Report
@@ -351,28 +351,28 @@ export default function VAT() {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
-                      <p className="font-semibold text-[#001f3f]">Digital Records</p>
+                      <p className="font-semibold">Digital Records</p>
                       <p className="text-sm text-[#001f3f]">Compliant</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
-                      <p className="font-semibold text-[#001f3f]">Software Integration</p>
+                      <p className="font-semibold">Software Integration</p>
                       <p className="text-sm text-[#001f3f]">Active</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-blue-500" />
                     <div>
-                      <p className="font-semibold text-[#001f3f]">Quarterly Submissions</p>
+                      <p className="font-semibold">Quarterly Submissions</p>
                       <p className="text-sm text-[#001f3f]">1 Overdue</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <div>
-                      <p className="font-semibold text-[#001f3f]">API Connection</p>
+                      <p className="font-semibold">API Connection</p>
                       <p className="text-sm text-[#001f3f]">Connected</p>
                     </div>
                   </div>
@@ -390,26 +390,26 @@ export default function VAT() {
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <Upload className="h-4 w-4 text-blue-500" />
                     <div className="flex-1">
-                      <p className="font-semibold text-[#001f3f]">VAT Return Q4 2024 Submitted</p>
+                      <p className="font-semibold">VAT Return Q4 2024 Submitted</p>
                       <p className="text-sm text-[#001f3f]">Submitted to HMRC on 28 Jan 2025</p>
                     </div>
-                    <span className="text-sm text-gray-500 text-[#001f3f]">2 days ago</span>
+                    <span className="text-sm text-gray-500">2 days ago</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <Edit className="h-4 w-4 text-green-500" />
                     <div className="flex-1">
-                      <p className="font-semibold text-[#001f3f]">VAT Scheme Updated</p>
+                      <p className="font-semibold">VAT Scheme Updated</p>
                       <p className="text-sm text-[#001f3f]">Changed to Standard VAT scheme</p>
                     </div>
-                    <span className="text-sm text-gray-500 text-[#001f3f]">1 week ago</span>
+                    <span className="text-sm text-gray-500">1 week ago</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <AlertCircle className="h-4 w-4 text-red-500" />
                     <div className="flex-1">
-                      <p className="font-semibold text-[#001f3f]">Overdue Return Detected</p>
+                      <p className="font-semibold">Overdue Return Detected</p>
                       <p className="text-sm text-[#001f3f]">Q3 2024 return is overdue</p>
                     </div>
-                    <span className="text-sm text-gray-500 text-[#001f3f]">2 weeks ago</span>
+                    <span className="text-sm text-gray-500">2 weeks ago</span>
                   </div>
                 </div>
               </CardContent>

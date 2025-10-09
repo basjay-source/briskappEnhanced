@@ -232,7 +232,7 @@ export default function CapacityPlanningAdvanced() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className=" text-[#001f3f] text-xl font-bold">Advanced Capacity Planning</h2>
+          <h2 className="text-xl font-bold">Advanced Capacity Planning</h2>
           <p className="text-[#001f3f]">AI-powered resource optimization and forecasting</p>
         </div>
         <div className="flex gap-2">
@@ -327,7 +327,7 @@ export default function CapacityPlanningAdvanced() {
                           <User className="h-5 w-5 text-brisk-primary" />
                         </div>
                         <div>
-                          <h4 className=" text-[#001f3f] font-medium">{member.name}</h4>
+                          <h4 className="font-medium">{member.name}</h4>
                           <p className="text-sm text-[#001f3f]">{member.role}</p>
                         </div>
                       </div>
@@ -368,12 +368,12 @@ export default function CapacityPlanningAdvanced() {
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-1">
                         {member.skills.slice(0, 3).map((skill) => (
-                          <Badge key={skill} variant="outline" className="text-xs text-[#001f3f]">
+                          <Badge key={skill} variant="outline" className="text-xs">
                             {skill}
                           </Badge>
                         ))}
                         {member.skills.length > 3 && (
-                          <Badge variant="outline" className="text-xs text-[#001f3f]">
+                          <Badge variant="outline" className="text-xs">
                             +{member.skills.length - 3} more
                           </Badge>
                         )}
@@ -411,7 +411,7 @@ export default function CapacityPlanningAdvanced() {
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h4 className=" text-[#001f3f] font-medium text-sm">{job.title}</h4>
+                          <h4 className="font-medium text-sm">{job.title}</h4>
                           <p className="text-xs text-[#001f3f]">{job.client}</p>
                         </div>
                         <Badge className={getPriorityColor(job.priority)}>
@@ -424,7 +424,7 @@ export default function CapacityPlanningAdvanced() {
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {job.requiredSkills.map((skill) => (
-                          <Badge key={skill} variant="outline" className="text-xs text-[#001f3f]">
+                          <Badge key={skill} variant="outline" className="text-xs">
                             {skill}
                           </Badge>
                         ))}
@@ -455,7 +455,7 @@ export default function CapacityPlanningAdvanced() {
                             <User className="h-4 w-4 text-brisk-primary" />
                           </div>
                           <div>
-                            <h4 className=" text-[#001f3f] font-medium">{member.name}</h4>
+                            <h4 className="font-medium">{member.name}</h4>
                             <p className="text-sm text-[#001f3f]">{member.role}</p>
                           </div>
                         </div>
@@ -515,7 +515,7 @@ export default function CapacityPlanningAdvanced() {
                     const utilization = [92, 87, 95, 78][index]
                     return (
                       <div key={week} className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-[#001f3f]">{week}</span>
+                        <span className="text-sm font-medium">{week}</span>
                         <div className="flex items-center gap-2 flex-1 ml-4">
                           <Progress value={utilization} className="flex-1" />
                           <span className={`text-sm font-medium ${getUtilizationColor(utilization)}`}>
@@ -548,7 +548,7 @@ export default function CapacityPlanningAdvanced() {
                   <div className="p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="h-4 w-4 text-green-600" />
-                      <span className="font-medium text-green-900 text-[#001f3f]">Optimal Scheduling</span>
+                      <span className="font-medium text-green-900">Optimal Scheduling</span>
                     </div>
                     <p className="text-sm text-green-700">
                       Week 4: Lower demand period. Good time for training and development.
@@ -598,11 +598,11 @@ export default function CapacityPlanningAdvanced() {
                         Apply
                       </Button>
                     </div>
-                    <h4 className=" text-[#001f3f] font-medium mb-2">{rec.title}</h4>
+                    <h4 className="font-medium mb-2">{rec.title}</h4>
                     <p className="text-sm text-[#001f3f] mb-3">{rec.description}</p>
                     <div className="grid gap-2 md:grid-cols-3 text-xs">
                       <div>
-                        <span className="font-medium text-green-600 text-[#001f3f]">Impact:</span>
+                        <span className="font-medium text-green-600">Impact:</span>
                         <p>{rec.impact}</p>
                       </div>
                       <div>
@@ -610,7 +610,7 @@ export default function CapacityPlanningAdvanced() {
                         <p>{rec.effort}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-purple-600 text-[#001f3f]">Savings:</span>
+                        <span className="font-medium text-purple-600">Savings:</span>
                         <p>{rec.savings}</p>
                       </div>
                     </div>

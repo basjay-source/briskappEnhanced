@@ -784,7 +784,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Annual accounts must be filed within 9 months of the accounting period end date</li>
                   <li>• Late filing penalties apply for overdue accounts</li>
@@ -816,7 +816,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the accounts comply with the requirements of the Companies Act 2006 and give a true and fair view of the company's affairs.
                 </p>
@@ -856,7 +856,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Annual accounts (AA01)</h2>
+              <h2 className="text-xl font-bold">Annual accounts (AA01)</h2>
               <p className="text-blue-100">File annual accounts with Companies House</p>
             </div>
           </div>
@@ -949,7 +949,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Registered Office Address</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   The registered office address is where official documents will be sent. 
                   This must be a physical address in the same country as your company registration.
@@ -1092,7 +1092,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Annual returns must be filed within 28 days of the made up to date</li>
                   <li>• Late filing penalties apply for overdue returns</li>
@@ -1130,7 +1130,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this annual return is true to the best of my knowledge and belief.
                 </p>
@@ -1170,7 +1170,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Annual return (AR01)</h2>
+              <h2 className="text-xl font-bold">Annual return (AR01)</h2>
               <p className="text-blue-100">File annual return with Companies House</p>
             </div>
           </div>
@@ -1268,7 +1268,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Person Being Terminated</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   Provide the full details of the director or company secretary whose appointment is being terminated.
                   All information must match the details currently held at Companies House.
@@ -1436,7 +1436,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Termination forms must be filed within 14 days of the termination date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
@@ -1474,7 +1474,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this termination form is true to the best of my knowledge and belief.
                 </p>
@@ -1514,7 +1514,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Termination of appointment (TM01)</h2>
+              <h2 className="text-xl font-bold">Termination of appointment (TM01)</h2>
               <p className="text-blue-100">Terminate appointment of director or secretary</p>
             </div>
           </div>
@@ -1612,7 +1612,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Secretary Type Selection</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   A company secretary can be either an individual person or a corporate entity (another company).
                   Choose the appropriate type and provide the required information.
@@ -1785,7 +1785,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Service Address Details</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Service Address Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Service Address Information</h4>
                 <p className="text-sm text-[#001f3f]">
                   The service address is where correspondence will be sent. This can be the same as the residential address
                   or a different business address. For corporate secretaries, this should be the registered office address.
@@ -1884,7 +1884,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Secretary appointments must be filed within 14 days of the appointment date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
@@ -1922,7 +1922,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this appointment form is true to the best of my knowledge and belief.
                 </p>
@@ -1966,7 +1966,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Appointment of secretary (CH01)</h2>
+              <h2 className="text-xl font-bold">Appointment of secretary (CH01)</h2>
               <p className="text-blue-100">Appoint a new company secretary</p>
             </div>
           </div>
@@ -2064,7 +2064,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">PSC Type Selection</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   A person with significant control (PSC) can be an individual, corporate entity, or legal entity.
                   Choose the appropriate type based on the nature of the controlling party.
@@ -2252,7 +2252,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Nature and Extent of Control</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Control Thresholds</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Control Thresholds</h4>
                 <p className="text-sm text-[#001f3f]">
                   Specify the exact percentages and nature of control. PSC thresholds are typically 25%, 50%, and 75%.
                   Provide accurate information about shareholdings, voting rights, and other forms of control.
@@ -2350,7 +2350,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Service Address Details</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Service Address Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Service Address Information</h4>
                 <p className="text-sm text-[#001f3f]">
                   The service address is where correspondence will be sent. This can be the same as the residential address
                   or a different business address. For corporate PSCs, this should be the registered office address.
@@ -2449,7 +2449,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• PSC notifications must be filed within 14 days of the relevant date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
@@ -2488,7 +2488,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this PSC notification is true to the best of my knowledge and belief.
                 </p>
@@ -2532,7 +2532,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">PSC notification (PSC01)</h2>
+              <h2 className="text-xl font-bold">PSC notification (PSC01)</h2>
               <p className="text-blue-100">Notify of person with significant control</p>
             </div>
           </div>
@@ -2630,7 +2630,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Address Change Information</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   The registered office address change must be notified to Companies House within 14 days of the change.
                   The new address must be a physical address where documents can be delivered during business hours.
@@ -2723,7 +2723,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">New Registered Office Address</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Address Requirements</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Address Requirements</h4>
                 <p className="text-sm text-[#001f3f]">
                   The new registered office address must be a physical address in England, Wales, Scotland, or Northern Ireland.
                   It cannot be a PO Box and must be accessible during business hours for document delivery.
@@ -2834,7 +2834,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Address changes must be filed within 14 days of the change</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
@@ -2873,7 +2873,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this address change form is true to the best of my knowledge and belief.
                 </p>
@@ -2917,7 +2917,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Change of registered office address (AD01)</h2>
+              <h2 className="text-xl font-bold">Change of registered office address (AD01)</h2>
               <p className="text-blue-100">Change your company's registered office address</p>
             </div>
           </div>
@@ -3015,7 +3015,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">New Company Name Information</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
                 <p className="text-sm text-[#001f3f]">
                   The new company name must be available and comply with Companies House naming rules.
                   A special resolution is required to change the company name, and the change must be notified within 15 days.
@@ -3118,7 +3118,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Name Availability and Compliance</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Name Requirements</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Name Requirements</h4>
                 <p className="text-sm text-[#001f3f]">
                   The new company name must not be the same as an existing company name and must comply with
                   Companies House naming rules. Certain words require approval from relevant authorities.
@@ -3218,7 +3218,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Name changes must be filed within 15 days of the resolution</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
@@ -3258,7 +3258,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this name change form is true to the best of my knowledge and belief.
                 </p>
@@ -3302,7 +3302,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Change of company name (NM01)</h2>
+              <h2 className="text-xl font-bold">Change of company name (NM01)</h2>
               <p className="text-blue-100">Change your company's name</p>
             </div>
           </div>
@@ -3740,7 +3740,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
-              <h3 className=" text-[#001f3f] text-lg font-semibold text-green-900 mb-2">P11D - Expenses and benefits</h3>
+              <h3 className="text-lg font-semibold text-green-900 mb-2">P11D - Expenses and benefits</h3>
               <p className="text-green-800 text-sm">Annual return of expenses payments and benefits for the tax year ending 5 April 2024</p>
             </div>
 
@@ -3847,7 +3847,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
-              <h3 className=" text-[#001f3f] text-lg font-semibold text-green-900 mb-2">Section A: Cars and car fuel</h3>
+              <h3 className="text-lg font-semibold text-green-900 mb-2">Section A: Cars and car fuel</h3>
               <p className="text-green-800 text-sm">Company cars available for private use and fuel provided</p>
             </div>
 
@@ -3886,7 +3886,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="carListPrice" className="text-sm font-medium text-[#001f3f]">List price when new</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="carListPrice" 
                         placeholder="0.00"
@@ -3947,7 +3947,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="carCashEquivalent" className="text-sm font-medium text-[#001f3f]">Cash equivalent of car benefit</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="carCashEquivalent" 
                         placeholder="0.00"
@@ -3961,7 +3961,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="carFuelBenefit" className="text-sm font-medium text-[#001f3f]">Cash equivalent of fuel benefit</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="carFuelBenefit" 
                         placeholder="0.00"
@@ -3994,7 +3994,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
-              <h3 className=" text-[#001f3f] text-lg font-semibold text-green-900 mb-2">Section B: Medical treatment and insurance</h3>
+              <h3 className="text-lg font-semibold text-green-900 mb-2">Section B: Medical treatment and insurance</h3>
               <p className="text-green-800 text-sm">Medical insurance premiums and treatment provided</p>
             </div>
 
@@ -4012,7 +4012,7 @@ export default function CompanySecretarial() {
                 <div>
                   <Label htmlFor="medicalInsurance" className="text-sm font-medium text-[#001f3f]">Medical insurance premiums</Label>
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
                       id="medicalInsurance" 
                       placeholder="0.00"
@@ -4026,7 +4026,7 @@ export default function CompanySecretarial() {
                 <div>
                   <Label htmlFor="medicalTreatment" className="text-sm font-medium text-[#001f3f]">Medical treatment</Label>
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
                       id="medicalTreatment" 
                       placeholder="0.00"
@@ -4043,7 +4043,7 @@ export default function CompanySecretarial() {
                 <div>
                   <Label htmlFor="dentalTreatment" className="text-sm font-medium text-[#001f3f]">Dental treatment</Label>
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
                       id="dentalTreatment" 
                       placeholder="0.00"
@@ -4057,7 +4057,7 @@ export default function CompanySecretarial() {
                 <div>
                   <Label htmlFor="opticalTreatment" className="text-sm font-medium text-[#001f3f]">Optical treatment</Label>
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
                       id="opticalTreatment" 
                       placeholder="0.00"
@@ -4088,7 +4088,7 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-6">
             <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
-              <h3 className=" text-[#001f3f] text-lg font-semibold text-green-900 mb-2">Section C: Other benefits</h3>
+              <h3 className="text-lg font-semibold text-green-900 mb-2">Section C: Other benefits</h3>
               <p className="text-green-800 text-sm">Accommodation, loans, and other benefits in kind</p>
             </div>
 
@@ -4108,7 +4108,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="accommodationValue" className="text-sm font-medium text-[#001f3f]">Cash equivalent of accommodation</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="accommodationValue" 
                         placeholder="0.00"
@@ -4146,7 +4146,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="loanAmount" className="text-sm font-medium text-[#001f3f]">Maximum amount of loan outstanding</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="loanAmount" 
                         placeholder="0.00"
@@ -4160,7 +4160,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="loanBenefit" className="text-sm font-medium text-[#001f3f]">Cash equivalent of loan benefit</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="loanBenefit" 
                         placeholder="0.00"
@@ -4180,7 +4180,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="otherBenefits" className="text-sm font-medium text-[#001f3f]">Other benefits (total cash equivalent)</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="otherBenefits" 
                         placeholder="0.00"
@@ -4194,7 +4194,7 @@ export default function CompanySecretarial() {
                   <div>
                     <Label htmlFor="expensesPayments" className="text-sm font-medium text-[#001f3f]">Expenses payments</Label>
                     <div className="relative mt-1">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-[#001f3f]">£</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
                         id="expensesPayments" 
                         placeholder="0.00"
@@ -4231,7 +4231,7 @@ export default function CompanySecretarial() {
               <FileText className="h-8 w-8 text-[#00703c]" />
             </div>
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">HM Revenue & Customs</h2>
+              <h2 className="text-xl font-bold">HM Revenue & Customs</h2>
               <p className="text-green-100">Expenses and benefits annual return (P11D)</p>
             </div>
           </div>
@@ -4449,7 +4449,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Employment (SA102)</h2>
+              <h2 className="text-xl font-bold">Employment (SA102)</h2>
               <p className="text-green-100">Report employment income and benefits</p>
             </div>
           </div>
@@ -4677,7 +4677,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Self-employment (short) (SA103S)</h2>
+              <h2 className="text-xl font-bold">Self-employment (short) (SA103S)</h2>
               <p className="text-green-100">Report self-employment income - short version</p>
             </div>
           </div>
@@ -4894,7 +4894,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Partnership (short) (SA104S)</h2>
+              <h2 className="text-xl font-bold">Partnership (short) (SA104S)</h2>
               <p className="text-green-100">Report partnership income - short version</p>
             </div>
           </div>
@@ -5161,7 +5161,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">UK property (SA105)</h2>
+              <h2 className="text-xl font-bold">UK property (SA105)</h2>
               <p className="text-green-100">Report UK property income</p>
             </div>
           </div>
@@ -5420,7 +5420,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Foreign (SA106)</h2>
+              <h2 className="text-xl font-bold">Foreign (SA106)</h2>
               <p className="text-green-100">Report foreign income</p>
             </div>
           </div>
@@ -5698,7 +5698,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Capital gains (SA108)</h2>
+              <h2 className="text-xl font-bold">Capital gains (SA108)</h2>
               <p className="text-green-100">Report capital gains and losses</p>
             </div>
           </div>
@@ -5962,7 +5962,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Residence, remittance basis etc (SA109)</h2>
+              <h2 className="text-xl font-bold">Residence, remittance basis etc (SA109)</h2>
               <p className="text-green-100">Report residence and remittance basis claims</p>
             </div>
           </div>
@@ -6142,7 +6142,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• You must submit your CIS300 return by the 19th of the month following the return period</li>
                   <li>• Late returns may result in penalties</li>
@@ -6174,7 +6174,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
                 </p>
@@ -6206,7 +6206,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Monthly return for contractors (CIS300)</h2>
+              <h2 className="text-xl font-bold">Monthly return for contractors (CIS300)</h2>
               <p className="text-green-100">Submit monthly CIS return</p>
             </div>
           </div>
@@ -6401,7 +6401,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• You must submit your P35 return by 19 May following the end of the tax year</li>
                   <li>• You must also provide P60s to all employees by 31 May</li>
@@ -6444,7 +6444,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
                 </p>
@@ -6480,7 +6480,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Employer Annual Return (P35)</h2>
+              <h2 className="text-xl font-bold">Employer Annual Return (P35)</h2>
               <p className="text-green-100">Submit end of year employer return</p>
             </div>
           </div>
@@ -6766,7 +6766,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Application to register for VAT (VAT1)</h2>
+              <h2 className="text-xl font-bold">Application to register for VAT (VAT1)</h2>
               <p className="text-green-100">Register your business for VAT</p>
             </div>
           </div>
@@ -6887,7 +6887,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">VAT Group Member Companies</h3>
               
               <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Group Eligibility Requirements</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Group Eligibility Requirements</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• All companies must be UK established</li>
                   <li>• Companies must be closely bound by financial, economic and organisational links</li>
@@ -6908,7 +6908,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Member Company 1 (excluding representative member)</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Member Company 1 (excluding representative member)</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
@@ -6932,7 +6932,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Member Company 2</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Member Company 2</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name</label>
@@ -6993,7 +6993,7 @@ export default function CompanySecretarial() {
               <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
               <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-[#001f3f] mb-2">Important Information</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
                 <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• VAT group registration takes effect from the date specified in your application</li>
                   <li>• All group members become jointly and severally liable for VAT</li>
@@ -7042,7 +7042,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
-                <h4 className="font-semibold text-[#001f3f] mb-3">Declaration</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
                 <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this application is correct and complete to the best of my knowledge and belief. I understand that giving false information may lead to prosecution.
                 </p>
@@ -7082,7 +7082,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className=" text-[#001f3f] text-xl font-bold">Application for VAT group registration (VAT2)</h2>
+              <h2 className="text-xl font-bold">Application for VAT group registration (VAT2)</h2>
               <p className="text-green-100">Register companies as a VAT group</p>
             </div>
           </div>
@@ -7167,7 +7167,7 @@ export default function CompanySecretarial() {
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Overall Score</span>
-                          <span className="text-green-600 text-[#001f3f]">94%</span>
+                          <span className="text-green-600">94%</span>
                         </div>
                         <Progress value={94} className="h-2" />
                       </div>
@@ -7180,15 +7180,15 @@ export default function CompanySecretarial() {
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Private Limited</span>
-                          <span className="font-semibold text-[#001f3f]">20 companies</span>
+                          <span className="font-semibold">20 companies</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Public Limited</span>
-                          <span className="font-semibold text-[#001f3f]">3 companies</span>
+                          <span className="font-semibold">3 companies</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>LLP</span>
-                          <span className="font-semibold text-[#001f3f]">1 company</span>
+                          <span className="font-semibold">1 company</span>
                         </div>
                       </div>
                     </div>
@@ -7220,15 +7220,15 @@ export default function CompanySecretarial() {
                       <div className="space-y-2">
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Up to Date</span>
-                          <span className="font-semibold text-[#001f3f]">20 companies</span>
+                          <span className="font-semibold">20 companies</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Pending Updates</span>
-                          <span className="font-semibold text-[#001f3f]">3 companies</span>
+                          <span className="font-semibold">3 companies</span>
                         </div>
                         <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Verification Required</span>
-                          <span className="font-semibold text-[#001f3f]">1 company</span>
+                          <span className="font-semibold">1 company</span>
                         </div>
                       </div>
                     </div>
@@ -7268,7 +7268,7 @@ export default function CompanySecretarial() {
                     <div className="flex items-center space-x-3">
                       {getStatusIcon(filing.status)}
                       <div>
-                        <p className="font-medium text-[#001f3f]">{filing.company}</p>
+                        <p className="font-medium">{filing.company}</p>
                         <p className="text-sm text-gray-500">{filing.type} - Due: {filing.dueDate}</p>
                       </div>
                     </div>
@@ -7289,7 +7289,7 @@ export default function CompanySecretarial() {
                 {companies.slice(0, 5).map((company) => (
                   <div key={company.id} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div>
-                      <p className="font-medium text-[#001f3f]">{company.name}</p>
+                      <p className="font-medium">{company.name}</p>
                       <p className="text-sm text-gray-500">{company.filingType}</p>
                     </div>
                     <div className="text-right">
@@ -7347,7 +7347,7 @@ export default function CompanySecretarial() {
                   <div className="flex items-center space-x-4">
                     <Building className="h-8 w-8 text-[#001f3f]" />
                     <div>
-                      <p className="font-medium text-[#001f3f]">{company.name}</p>
+                      <p className="font-medium">{company.name}</p>
                       <p className="text-sm text-gray-500">Company No: {company.number}</p>
                       <p className="text-sm text-gray-500">Incorporated: {company.incorporationDate}</p>
                     </div>
@@ -7478,7 +7478,7 @@ export default function CompanySecretarial() {
                   <div className="flex items-center space-x-4">
                     <Users className="h-8 w-8 text-purple-600" />
                     <div>
-                      <p className="font-medium text-[#001f3f]">{psc.name}</p>
+                      <p className="font-medium">{psc.name}</p>
                       <p className="text-sm text-gray-500">{psc.type} - {psc.company}</p>
                       <p className="text-sm text-gray-500">Appointed: {psc.appointed}</p>
                     </div>
@@ -7734,14 +7734,14 @@ export default function CompanySecretarial() {
                     <AlertTriangle className="h-4 w-4 text-red-500" />
                     <span className="text-sm font-medium text-[#001f3f]">Overdue Filing</span>
                   </div>
-                  <span className="text-xs text-red-600 text-[#001f3f]">2 days overdue</span>
+                  <span className="text-xs text-red-600">2 days overdue</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-orange-50 rounded-[2px]">
                   <div className="flex items-center space-x-2">
                     <Clock className="h-4 w-4 text-orange-500" />
                     <span className="text-sm font-medium text-[#001f3f]">CS01 Due</span>
                   </div>
-                  <span className="text-xs text-orange-600 text-[#001f3f]">Due in 5 days</span>
+                  <span className="text-xs text-orange-600">Due in 5 days</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-blue-50 rounded-[2px]">
                   <div className="flex items-center space-x-2">

@@ -118,8 +118,8 @@ export default function ModuleNavigation() {
           >
             <Icon className="h-4 w-4" />
             <div className="flex flex-col items-start">
-              <span className="font-medium text-[#001f3f]">{module.name}</span>
-              <span className="text-xs opacity-90 text-[#001f3f]">{module.description}</span>
+              <span className="font-medium">{module.name}</span>
+              <span className="text-xs opacity-90">{module.description}</span>
             </div>
           </Link>
         )

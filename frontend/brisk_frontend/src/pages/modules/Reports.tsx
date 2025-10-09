@@ -334,11 +334,11 @@ const Reports: React.FC = () => {
             <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Recent Reports</h3>
             <div className="space-y-2">
               <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
-                <div className="font-medium text-[#001f3f]">>Q4 Analysis</div>
+                <div className="font-medium">Q4 Analysis</div>
                 <div className="text-sm text-gray-500">Generated 2 days ago</div>
               </div>
               <div className="p-2 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 cursor-pointer">
-                <div className="font-medium text-[#001f3f]">>Budget Review</div>
+                <div className="font-medium">Budget Review</div>
                 <div className="text-sm text-gray-500">Generated 1 week ago</div>
               </div>
             </div>
@@ -350,11 +350,11 @@ const Reports: React.FC = () => {
             <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Scheduled Reports</h3>
             <div className="space-y-2">
               <div className="p-2 border-2 border-[#001f3f] rounded-[2px]">
-                <div className="font-medium text-[#001f3f]">>Monthly P&L</div>
+                <div className="font-medium">Monthly P&L</div>
                 <div className="text-sm text-gray-500">Next: 1st of month</div>
               </div>
               <div className="p-2 border-2 border-[#001f3f] rounded-[2px]">
-                <div className="font-medium text-[#001f3f]">>Weekly Cash Flow</div>
+                <div className="font-medium">Weekly Cash Flow</div>
                 <div className="text-sm text-gray-500">Next: Monday</div>
               </div>
             </div>

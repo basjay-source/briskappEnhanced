@@ -250,7 +250,7 @@ export default function InvoiceTemplateManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className=" text-[#001f3f] text-xl font-bold">Invoice Templates</h2>
+          <h2 className="text-xl font-bold">Invoice Templates</h2>
           <p className="text-[#001f3f]">Customize invoice templates and branding for your business</p>
         </div>
         <div className="flex gap-2">
@@ -332,7 +332,7 @@ export default function InvoiceTemplateManager() {
               <Card key={template.id} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg text-[#001f3f]">{template.name}</CardTitle>
+                    <CardTitle className="text-lg">{template.name}</CardTitle>
                     <div className="flex gap-1">
                       {template.is_default && (
                         <Badge variant="secondary">Default</Badge>
@@ -433,14 +433,14 @@ export default function InvoiceTemplateManager() {
 
                   <div className="grid grid-cols-2 gap-8">
                     <div>
-                      <h4 className=" text-[#001f3f] font-semibold mb-2">Bill To:</h4>
-                      <p className="font-medium text-[#001f3f]">ABC Client Ltd</p>
+                      <h4 className="font-semibold mb-2">Bill To:</h4>
+                      <p className="font-medium">ABC Client Ltd</p>
                       <p className="text-[#001f3f]">456 Client Avenue</p>
                       <p className="text-[#001f3f]">London, UK</p>
                       <p className="text-[#001f3f]">client@example.com</p>
                     </div>
                     <div>
-                      <h4 className=" text-[#001f3f] font-semibold mb-2">Payment Terms:</h4>
+                      <h4 className="font-semibold mb-2">Payment Terms:</h4>
                       <p className="text-[#001f3f]">Net 30 days</p>
                       <p className="text-[#001f3f]">Bank transfer preferred</p>
                     </div>
@@ -453,38 +453,38 @@ export default function InvoiceTemplateManager() {
                     >
                       <div className="grid grid-cols-4 gap-4">
                         <span>Description</span>
-                        <span className="text-center text-[#001f3f]">Quantity</span>
-                        <span className="text-center text-[#001f3f]">Rate</span>
-                        <span className="text-right text-[#001f3f]">Amount</span>
+                        <span className="text-center">Quantity</span>
+                        <span className="text-center">Rate</span>
+                        <span className="text-right">Amount</span>
                       </div>
                     </div>
                     <div className="px-4 py-3 border-b">
                       <div className="grid grid-cols-4 gap-4">
                         <span>Professional Services</span>
-                        <span className="text-center text-[#001f3f]">10</span>
-                        <span className="text-center text-[#001f3f]">£150.00</span>
-                        <span className="text-right text-[#001f3f]">£1,500.00</span>
+                        <span className="text-center">10</span>
+                        <span className="text-center">£150.00</span>
+                        <span className="text-right">£1,500.00</span>
                       </div>
                     </div>
                     <div className="px-4 py-3 border-b">
                       <div className="grid grid-cols-4 gap-4">
                         <span>Consultation</span>
-                        <span className="text-center text-[#001f3f]">5</span>
-                        <span className="text-center text-[#001f3f]">£200.00</span>
-                        <span className="text-right text-[#001f3f]">£1,000.00</span>
+                        <span className="text-center">5</span>
+                        <span className="text-center">£200.00</span>
+                        <span className="text-right">£1,000.00</span>
                       </div>
                     </div>
                     <div className="px-4 py-3 bg-gray-50">
                       <div className="grid grid-cols-4 gap-4">
-                        <span className="col-span-3 text-right font-semibold text-[#001f3f]">Subtotal:</span>
-                        <span className="text-right font-semibold text-[#001f3f]">£2,500.00</span>
+                        <span className="col-span-3 text-right font-semibold">Subtotal:</span>
+                        <span className="text-right font-semibold">£2,500.00</span>
                       </div>
                       <div className="grid grid-cols-4 gap-4 mt-1">
-                        <span className="col-span-3 text-right text-[#001f3f]">VAT (20%):</span>
-                        <span className="text-right text-[#001f3f]">£500.00</span>
+                        <span className="col-span-3 text-right">VAT (20%):</span>
+                        <span className="text-right">£500.00</span>
                       </div>
                       <div className="grid grid-cols-4 gap-4 mt-2 pt-2 border-t">
-                        <span className="col-span-3 text-right text-lg font-bold text-[#001f3f]">Total:</span>
+                        <span className="col-span-3 text-right text-lg font-bold">Total:</span>
                         <span 
                           className="text-right text-lg font-bold"
                           style={{ color: branding.theme_colors?.primary }}

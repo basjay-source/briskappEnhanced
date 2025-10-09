@@ -733,11 +733,11 @@ export default function PracticeManagement() {
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%', 'info')}>
                       <span className="text-[#001f3f]">MRR</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">+£1.2M</span>
+                      <span className="font-semibold text-green-600">+£1.2M</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67', 'info')}>
                       <span className="text-[#001f3f]">YoY Growth</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">+12.5%</span>
+                      <span className="font-semibold text-green-600">+12.5%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450', 'info')}>
                       <span className="text-[#001f3f]">ARPC</span>
@@ -791,7 +791,7 @@ export default function PracticeManagement() {
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5', 'info')}>
                       <span className="text-[#001f3f]">Healthy</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">1,089</span>
+                      <span className="font-semibold text-green-600">1,089</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38', 'info')}>
                       <span className="text-[#001f3f]">At Risk</span>
@@ -799,7 +799,7 @@ export default function PracticeManagement() {
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8', 'info')}>
                       <span className="text-[#001f3f]">Churned</span>
-                      <span className="font-semibold text-red-600 text-[#001f3f]">31</span>
+                      <span className="font-semibold text-red-600">31</span>
                     </div>
                   </div>
                 </div>
@@ -914,15 +914,15 @@ export default function PracticeManagement() {
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 1h: 45%\nTotal: 2,145\nTarget: 50%', 'info')}>
                       <span className="text-[#001f3f]">Within 1h</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">45%</span>
+                      <span className="font-semibold text-green-600">45%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 4h: 78%\nTotal: 3,714\nTarget: 80%', 'info')}>
                       <span className="text-[#001f3f]">Within 4h</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">78%</span>
+                      <span className="font-semibold text-green-600">78%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 24h: 94%\nTotal: 4,476\nTarget: 95%', 'info')}>
                       <span className="text-[#001f3f]">Within 24h</span>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">94%</span>
+                      <span className="font-semibold text-green-600">94%</span>
                     </div>
                   </div>
                 </div>
@@ -1144,7 +1144,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Total Jobs</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{jobStats.total}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{jobStats.total}</div>
             <p className="text-xs text-gray-500">All active jobs</p>
           </CardContent>
         </Card>
@@ -1153,7 +1153,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">In Progress</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-green-600 text-[#001f3f]">>{jobStats.inProgress}</div>
+            <div className="text-xl font-bold text-green-600">{jobStats.inProgress}</div>
             <p className="text-xs text-gray-500">Currently working</p>
           </CardContent>
         </Card>
@@ -1162,7 +1162,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{jobStats.highPriority}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{jobStats.highPriority}</div>
             <p className="text-xs text-gray-500">Urgent attention needed</p>
           </CardContent>
         </Card>
@@ -1171,7 +1171,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Overdue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-red-600 text-[#001f3f]">>{jobStats.overdue}</div>
+            <div className="text-xl font-bold text-red-600">{jobStats.overdue}</div>
             <p className="text-xs text-gray-500">Past due date</p>
           </CardContent>
         </Card>
@@ -1270,7 +1270,7 @@ export default function PracticeManagement() {
                                 <Calendar className="h-3 w-3" />
                                 <span>Due: {new Date(job.due_date).toLocaleDateString()}</span>
                                 {daysUntilDue !== null && !isOverdue && (
-                                  <span className="text-[#001f3f] font-medium text-[#001f3f]">({daysUntilDue} days)</span>
+                                  <span className="text-[#001f3f] font-medium">({daysUntilDue} days)</span>
                                 )}
                               </div>
                             )}
@@ -1290,7 +1290,7 @@ export default function PracticeManagement() {
                             {job.priority.toUpperCase()}
                           </Badge>
                           {job.assigned_to && (
-                            <div className="text-sm text-[#001f3f]">
+                            <div className="text-sm">
                               <p className="text-xs text-gray-500">Assigned to</p>
                               <p className="text-[#001f3f] font-medium">{job.assigned_to}</p>
                             </div>
@@ -1473,7 +1473,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Total Entries</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{timeStats.entriesCount}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{timeStats.entriesCount}</div>
             <p className="text-xs text-gray-500">Time records</p>
           </CardContent>
         </Card>
@@ -1482,7 +1482,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Total Hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-green-600 text-[#001f3f]">>{timeStats.totalHours.toFixed(1)}h</div>
+            <div className="text-xl font-bold text-green-600">{timeStats.totalHours.toFixed(1)}h</div>
             <p className="text-xs text-gray-500">All time logged</p>
           </CardContent>
         </Card>
@@ -1491,7 +1491,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Billable Hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{timeStats.billableHours.toFixed(1)}h</div>
+            <div className="text-xl font-bold text-[#001f3f]">{timeStats.billableHours.toFixed(1)}h</div>
             <p className="text-xs text-gray-500">Client billable</p>
           </CardContent>
         </Card>
@@ -1500,7 +1500,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-purple-600 text-[#001f3f]">>£{timeStats.totalRevenue.toFixed(2)}</div>
+            <div className="text-xl font-bold text-purple-600">£{timeStats.totalRevenue.toFixed(2)}</div>
             <p className="text-xs text-gray-500">Billable amount</p>
           </CardContent>
         </Card>
@@ -1813,7 +1813,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Total Deadlines</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{deadlineStats.total}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.total}</div>
             <p className="text-xs text-gray-500">All deadlines</p>
           </CardContent>
         </Card>
@@ -1829,7 +1829,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{deadlineStats.pending}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.pending}</div>
             <p className="text-xs text-gray-500">Not completed • Click to filter</p>
           </CardContent>
         </Card>
@@ -1845,7 +1845,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Overdue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-red-600 text-[#001f3f]">>{deadlineStats.overdue}</div>
+            <div className="text-xl font-bold text-red-600">{deadlineStats.overdue}</div>
             <p className="text-xs text-gray-500">Past due date • Click to filter</p>
           </CardContent>
         </Card>
@@ -1861,7 +1861,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>{deadlineStats.dueThisWeek}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.dueThisWeek}</div>
             <p className="text-xs text-gray-500">Due in 7 days • Click to filter</p>
           </CardContent>
         </Card>
@@ -1877,7 +1877,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-purple-600 text-[#001f3f]">>{deadlineStats.highPriority}</div>
+            <div className="text-xl font-bold text-purple-600">{deadlineStats.highPriority}</div>
             <p className="text-xs text-gray-500">Urgent items • Click to filter</p>
           </CardContent>
         </Card>
@@ -2180,7 +2180,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Active Clients</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>0</div>
+            <div className="text-xl font-bold text-[#001f3f]">0</div>
             <p className="text-xs text-gray-500">Portal access enabled</p>
           </CardContent>
         </Card>
@@ -2189,7 +2189,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Documents Shared</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-green-600 text-[#001f3f]">>0</div>
+            <div className="text-xl font-bold text-green-600">0</div>
             <p className="text-xs text-gray-500">Available to clients</p>
           </CardContent>
         </Card>
@@ -2198,7 +2198,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending Signatures</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-[#001f3f]">>0</div>
+            <div className="text-xl font-bold text-[#001f3f]">0</div>
             <p className="text-xs text-gray-500">Awaiting e-signature</p>
           </CardContent>
         </Card>
@@ -2207,7 +2207,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Client Messages</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-purple-600 text-[#001f3f]">>0</div>
+            <div className="text-xl font-bold text-purple-600">0</div>
             <p className="text-xs text-gray-500">Unread messages</p>
           </CardContent>
         </Card>
@@ -2599,19 +2599,19 @@ export default function PracticeManagement() {
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>Advisory Services</span>
-                              <span className="font-semibold text-[#001f3f]">£345,120</span>
+                              <span className="font-semibold">£345,120</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Compliance</span>
-                              <span className="font-semibold text-[#001f3f]">£234,560</span>
+                              <span className="font-semibold">£234,560</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Project Work</span>
-                              <span className="font-semibold text-[#001f3f]">£167,890</span>
+                              <span className="font-semibold">£167,890</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Retainer Fees</span>
-                              <span className="font-semibold text-[#001f3f]">£99,660</span>
+                              <span className="font-semibold">£99,660</span>
                             </div>
                           </div>
                         </div>
@@ -2620,15 +2620,15 @@ export default function PracticeManagement() {
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>January</span>
-                              <span className="font-semibold text-[#001f3f]">£78,450</span>
+                              <span className="font-semibold">£78,450</span>
                             </div>
                             <div className="flex justify-between">
                               <span>February</span>
-                              <span className="font-semibold text-[#001f3f]">£82,340</span>
+                              <span className="font-semibold">£82,340</span>
                             </div>
                             <div className="flex justify-between">
                               <span>March</span>
-                              <span className="font-semibold text-[#001f3f]">£89,120</span>
+                              <span className="font-semibold">£89,120</span>
                             </div>
                           </div>
                         </div>
@@ -2653,15 +2653,15 @@ export default function PracticeManagement() {
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Service Quality</span>
-                            <span className="font-semibold text-[#001f3f]">4.9/5</span>
+                            <span className="font-semibold">4.9/5</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Response Time</span>
-                            <span className="font-semibold text-[#001f3f]">4.7/5</span>
+                            <span className="font-semibold">4.7/5</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Value for Money</span>
-                            <span className="font-semibold text-[#001f3f]">4.6/5</span>
+                            <span className="font-semibold">4.6/5</span>
                           </div>
                         </div>
                       </div>
@@ -2685,15 +2685,15 @@ export default function PracticeManagement() {
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Senior Partners</span>
-                            <span className="font-semibold text-[#001f3f]">92.1%</span>
+                            <span className="font-semibold">92.1%</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Managers</span>
-                            <span className="font-semibold text-[#001f3f]">89.4%</span>
+                            <span className="font-semibold">89.4%</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Associates</span>
-                            <span className="font-semibold text-[#001f3f]">84.7%</span>
+                            <span className="font-semibold">84.7%</span>
                           </div>
                         </div>
                       </div>
@@ -2717,15 +2717,15 @@ export default function PracticeManagement() {
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Tax Projects</span>
-                            <span className="font-semibold text-[#001f3f]">96.8%</span>
+                            <span className="font-semibold">96.8%</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Advisory Projects</span>
-                            <span className="font-semibold text-[#001f3f]">93.2%</span>
+                            <span className="font-semibold">93.2%</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Compliance Projects</span>
-                            <span className="font-semibold text-[#001f3f]">91.7%</span>
+                            <span className="font-semibold">91.7%</span>
                           </div>
                         </div>
                       </div>
@@ -2737,32 +2737,32 @@ export default function PracticeManagement() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Revenue Trends</h4>
+                <h4 className="text-lg font-semibold mb-4">Revenue Trends</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500 text-[#001f3f]">Revenue Chart Placeholder</span>
+                  <span className="text-gray-500">Revenue Chart Placeholder</span>
                 </div>
               </div>
               <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Client Growth</h4>
+                <h4 className="text-lg font-semibold mb-4">Client Growth</h4>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <span className="text-gray-500 text-[#001f3f]">Client Growth Chart Placeholder</span>
+                  <span className="text-gray-500">Client Growth Chart Placeholder</span>
                 </div>
               </div>
             </div>
 
             <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-              <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Key Performance Indicators</h4>
+              <h4 className="text-lg font-semibold mb-4">Key Performance Indicators</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-[#001f3f]">>£2,847</div>
+                  <div className="text-xl font-bold text-[#001f3f]">£2,847</div>
                   <div className="text-sm text-[#001f3f]">Average Project Value</div>
                 </div>
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-[#001f3f]">>12.3</div>
+                  <div className="text-xl font-bold text-[#001f3f]">12.3</div>
                   <div className="text-sm text-[#001f3f]">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-green-600 text-[#001f3f]">>98.7%</div>
+                  <div className="text-xl font-bold text-green-600">98.7%</div>
                   <div className="text-sm text-[#001f3f]">Client Retention Rate</div>
                 </div>
               </div>
@@ -2810,7 +2810,7 @@ export default function PracticeManagement() {
             <div className="bg-white rounded-[2px] shadow-sm border p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-[#001f3f]">AI</span>
+                  <span className="text-white font-semibold">AI</span>
                 </div>
                 <div>
                   <h4 className="font-semibold text-[#001f3f]">Practice Management AI Adviser</h4>
@@ -2835,7 +2835,7 @@ export default function PracticeManagement() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-[#001f3f] text-sm text-[#001f3f]">You</span>
+                    <span className="text-[#001f3f] text-sm">You</span>
                   </div>
                   <div className="flex-1">
                     <textarea
@@ -2866,7 +2866,7 @@ export default function PracticeManagement() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Recent Insights</h4>
+                <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
                 <div className="space-y-3">
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <p className="text-sm text-[#001f3f] font-medium">Workflow Optimization</p>
@@ -2884,7 +2884,7 @@ export default function PracticeManagement() {
               </div>
 
               <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-                <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Recommended Actions</h4>
+                <h4 className="text-lg font-semibold mb-4">Recommended Actions</h4>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
@@ -3015,7 +3015,7 @@ export default function PracticeManagement() {
                 <CardTitle className="text-sm text-[#001f3f]">Templates Created</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold text-[#001f3f]">>24</div>
+                <div className="text-xl font-bold">24</div>
                 <p className="text-xs text-[#001f3f]">+3 this month</p>
               </CardContent>
             </Card>
@@ -3024,7 +3024,7 @@ export default function PracticeManagement() {
                 <CardTitle className="text-sm text-[#001f3f]">Templates Used</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold text-[#001f3f]">>156</div>
+                <div className="text-xl font-bold">156</div>
                 <p className="text-xs text-[#001f3f]">+12 this week</p>
               </CardContent>
             </Card>
@@ -3033,7 +3033,7 @@ export default function PracticeManagement() {
                 <CardTitle className="text-sm text-[#001f3f]">Time Saved</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold text-[#001f3f]">>42h</div>
+                <div className="text-xl font-bold">42h</div>
                 <p className="text-xs text-[#001f3f]">This month</p>
               </CardContent>
             </Card>
@@ -3099,19 +3099,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Monthly P&L</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Cash Flow Report</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Budget vs Actual</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Fee Analysis</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3129,19 +3129,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Client Portfolio</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Satisfaction Survey</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Retention Analysis</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Service Utilization</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3149,7 +3149,7 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-green-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-green-600 text-[#001f3f]">⚡</span>
+                    <span className="text-green-600">⚡</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Performance Reports</h4>
@@ -3159,19 +3159,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Team Utilization</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Project Completion</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Time Analysis</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Quality Metrics</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3179,7 +3179,7 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-purple-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-purple-600 text-[#001f3f]">📋</span>
+                    <span className="text-purple-600">📋</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Compliance Reports</h4>
@@ -3189,19 +3189,19 @@ export default function PracticeManagement() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>AML Compliance</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>GDPR Audit</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Professional Standards</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Risk Assessment</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3209,29 +3209,29 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-indigo-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-indigo-600 text-[#001f3f]">📈</span>
+                    <span className="text-indigo-600">📈</span>
                   </div>
                   <div>
-                    <h4 className=" text-[#001f3f] font-semibold">Business Intelligence</h4>
+                    <h4 className="font-semibold">Business Intelligence</h4>
                     <p className="text-sm text-[#001f3f]">Strategic insights and analytics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Market Analysis</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Competitive Benchmarking</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Growth Opportunities</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Trend Analysis</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Generate</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Generate</span>
                   </div>
                 </div>
               </div>
@@ -3239,36 +3239,36 @@ export default function PracticeManagement() {
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-red-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-red-600 text-[#001f3f]">🎯</span>
+                    <span className="text-red-600">🎯</span>
                   </div>
                   <div>
-                    <h4 className=" text-[#001f3f] font-semibold">Custom Reports</h4>
+                    <h4 className="font-semibold">Custom Reports</h4>
                     <p className="text-sm text-[#001f3f]">Build your own reports and dashboards</p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Report Builder</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Open</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Open</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Saved Templates</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">View</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">View</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Data Export</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Configure</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Configure</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>API Access</span>
-                    <span className="text-[#001f3f] hover:underline cursor-pointer text-[#001f3f]">Setup</span>
+                    <span className="text-[#001f3f] hover:underline cursor-pointer">Setup</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-white p-6 rounded-[2px] shadow-sm border">
-              <h4 className=" text-[#001f3f] text-lg font-semibold mb-4">Recent Reports</h4>
+              <h4 className="text-lg font-semibold mb-4">Recent Reports</h4>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -3286,7 +3286,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Financial</td>
                       <td className="py-2">2024-03-15</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs text-[#001f3f]">Complete</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
                         <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
@@ -3298,7 +3298,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Client</td>
                       <td className="py-2">2024-03-14</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs text-[#001f3f]">Complete</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Complete</span>
                       </td>
                       <td className="py-2">
                         <button className="text-[#001f3f] hover:underline text-sm mr-2">View</button>
@@ -3310,7 +3310,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Performance</td>
                       <td className="py-2">2024-03-13</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-blue-100 text-[#001f3f] rounded text-xs text-[#001f3f]">Processing</span>
+                        <span className="px-2 py-1 bg-blue-100 text-[#001f3f] rounded text-xs">Processing</span>
                       </td>
                       <td className="py-2">
                         <button className="text-gray-400 text-sm mr-2">View</button>

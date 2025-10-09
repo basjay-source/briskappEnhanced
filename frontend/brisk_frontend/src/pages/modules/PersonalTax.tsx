@@ -350,12 +350,12 @@ export default function PersonalTax() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                       <div className="text-sm text-[#001f3f]">Current Period</div>
-                      <div className="text-lg font-semibold text-[#001f3f]">>{kpi.value}</div>
+                      <div className="text-lg font-semibold">{kpi.value}</div>
                       <div className="text-xs text-green-600">{kpi.change}</div>
                     </div>
                     <div className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                       <div className="text-sm text-[#001f3f]">Previous Period</div>
-                      <div className="text-lg font-semibold text-[#001f3f]">>£125,000</div>
+                      <div className="text-lg font-semibold">£125,000</div>
                       <div className="text-xs text-green-600">+8%</div>
                     </div>
                   </div>
@@ -401,12 +401,12 @@ export default function PersonalTax() {
                       <div className="flex items-center gap-3">
                         {getStatusIcon(saReturn.status)}
                         <div>
-                          <div className="font-medium text-[#001f3f]">>{saReturn.client}</div>
+                          <div className="font-medium">{saReturn.client}</div>
                           <div className="text-sm text-gray-500">Tax Year: {saReturn.taxYear}</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-medium text-[#001f3f]">>£{saReturn.estimatedTax.toLocaleString()}</div>
+                        <div className="font-medium">£{saReturn.estimatedTax.toLocaleString()}</div>
                         <Badge variant={saReturn.status === 'submitted' ? 'default' : 'secondary'}>
                           {saReturn.status}
                         </Badge>
@@ -430,12 +430,12 @@ export default function PersonalTax() {
                 {optimizationOpportunities.map((opportunity, index) => (
                   <div key={index} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium text-[#001f3f]">>{opportunity.opportunity}</div>
+                      <div className="font-medium">{opportunity.opportunity}</div>
                       <Badge variant="outline">£{opportunity.potentialSaving}</Badge>
                     </div>
                     <div className="text-sm text-[#001f3f] mb-2">{opportunity.description}</div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500 text-[#001f3f]">Priority: {opportunity.priority}</span>
+                      <span className="text-xs text-gray-500">Priority: {opportunity.priority}</span>
                       <Button size="sm" variant="outline">
                         <Eye className="h-3 w-3 mr-1" />
                         Review
@@ -467,7 +467,7 @@ export default function PersonalTax() {
                           <div className="mt-2">
                             <div className="flex justify-between text-xs">
                               <span>Efficiency Score</span>
-                              <span className="text-green-600 text-[#001f3f]">88%</span>
+                              <span className="text-green-600">88%</span>
                             </div>
                             <Progress value={88} className="h-2" />
                           </div>
@@ -480,15 +480,15 @@ export default function PersonalTax() {
                           <div className="space-y-2">
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>In Progress</span>
-                              <span className="font-semibold text-[#001f3f]">8 returns</span>
+                              <span className="font-semibold">8 returns</span>
                             </div>
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Ready for Review</span>
-                              <span className="font-semibold text-[#001f3f]">3 returns</span>
+                              <span className="font-semibold">3 returns</span>
                             </div>
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Submitted</span>
-                              <span className="font-semibold text-[#001f3f]">1 return</span>
+                              <span className="font-semibold">1 return</span>
                             </div>
                           </div>
                         </div>
@@ -500,15 +500,15 @@ export default function PersonalTax() {
                           <div className="space-y-2">
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Pension Contributions</span>
-                              <span className="font-semibold text-[#001f3f]">£18,500</span>
+                              <span className="font-semibold">£18,500</span>
                             </div>
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>CGT Optimization</span>
-                              <span className="font-semibold text-[#001f3f]">£15,200</span>
+                              <span className="font-semibold">£15,200</span>
                             </div>
                             <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                               <span>Allowance Utilization</span>
-                              <span className="font-semibold text-[#001f3f]">£11,500</span>
+                              <span className="font-semibold">£11,500</span>
                             </div>
                           </div>
                         </div>
@@ -575,7 +575,7 @@ export default function PersonalTax() {
                                 <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
                                   {saReturn.status.replace('_', ' ')}
                                 </Badge>
-                                <span className="text-xs text-gray-500 text-[#001f3f]">Due: {saReturn.dueDate}</span>
+                                <span className="text-xs text-gray-500">Due: {saReturn.dueDate}</span>
                               </div>
                             </div>
                           </div>
@@ -774,7 +774,7 @@ export default function PersonalTax() {
                             </div>
                             <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
                               <div>
-                                <p className="font-semibold text-[#001f3f]">£{saReturn.estimatedTax.toLocaleString()}</p>
+                                <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
                                 <p className="text-sm text-[#001f3f]">Estimated Tax</p>
                                 <p className="text-xs text-gray-500">Due: {saReturn.dueDate}</p>
                               </div>
@@ -836,7 +836,7 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Capital Gain</span>
-                            <span className="font-semibold text-[#001f3f]">£0.00</span>
+                            <span className="font-semibold">£0.00</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Annual Exemption</span>
@@ -844,11 +844,11 @@ export default function PersonalTax() {
                           </div>
                           <div className="flex justify-between">
                             <span>Taxable Gain</span>
-                            <span className="font-semibold text-[#001f3f]">£0.00</span>
+                            <span className="font-semibold">£0.00</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>CGT Due</span>
-                            <span className="font-bold text-lg text-[#001f3f]">£0.00</span>
+                            <span className="font-bold text-lg">£0.00</span>
                           </div>
                         </div>
                       </CardContent>
@@ -944,7 +944,7 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Estate Value</span>
-                            <span className="font-semibold text-[#001f3f]">£0.00</span>
+                            <span className="font-semibold">£0.00</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Total Nil Rate Bands</span>
@@ -952,11 +952,11 @@ export default function PersonalTax() {
                           </div>
                           <div className="flex justify-between">
                             <span>Taxable Estate</span>
-                            <span className="font-semibold text-[#001f3f]">£0.00</span>
+                            <span className="font-semibold">£0.00</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>IHT Due (40%)</span>
-                            <span className="font-bold text-lg text-[#001f3f]">£0.00</span>
+                            <span className="font-bold text-lg">£0.00</span>
                           </div>
                         </div>
                       </CardContent>
@@ -970,14 +970,14 @@ export default function PersonalTax() {
                           <div className="p-3 bg-green-50 rounded-[2px]">
                             <div className="flex items-center gap-2">
                               <Gift className="h-4 w-4 text-green-600" />
-                              <span className="text-sm font-medium text-[#001f3f]">Annual Exemption</span>
+                              <span className="text-sm font-medium">Annual Exemption</span>
                             </div>
                             <p className="text-xs text-green-700">£3,000 per year available</p>
                           </div>
                           <div className="p-3 bg-blue-50 rounded-[2px]">
                             <div className="flex items-center gap-2">
                               <Home className="h-4 w-4 text-[#001f3f]" />
-                              <span className="text-sm font-medium text-[#001f3f]">Potentially Exempt Transfers</span>
+                              <span className="text-sm font-medium">Potentially Exempt Transfers</span>
                             </div>
                             <p className="text-xs text-[#001f3f]">7-year rule applies</p>
                           </div>
@@ -1040,7 +1040,7 @@ export default function PersonalTax() {
                           </div>
                           <div className="flex justify-between">
                             <span>Tapered Allowance</span>
-                            <span className="font-semibold text-[#001f3f]">£40,000</span>
+                            <span className="font-semibold">£40,000</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Used This Year</span>
@@ -1048,7 +1048,7 @@ export default function PersonalTax() {
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Allowance</span>
-                            <span className="font-bold text-lg text-[#001f3f]">£40,000</span>
+                            <span className="font-bold text-lg">£40,000</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1069,11 +1069,11 @@ export default function PersonalTax() {
                           </div>
                           <div className="flex justify-between">
                             <span>Utilization</span>
-                            <span className="font-semibold text-[#001f3f]">0%</span>
+                            <span className="font-semibold">0%</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Capacity</span>
-                            <span className="font-bold text-lg text-[#001f3f]">£1,073,100</span>
+                            <span className="font-bold text-lg">£1,073,100</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1158,7 +1158,7 @@ export default function PersonalTax() {
                         <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
                             <Banknote className="h-4 w-4 text-[#001f3f]" />
-                            <span className="font-medium text-[#001f3f]">Junior ISAs</span>
+                            <span className="font-medium">Junior ISAs</span>
                           </div>
                           <p className="text-sm text-[#001f3f]">£9,000 annual allowance per child</p>
                           <Button size="sm" className="mt-2" variant="outline">Setup</Button>
@@ -1166,7 +1166,7 @@ export default function PersonalTax() {
                         <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
                             <Shield className="h-4 w-4 text-green-600" />
-                            <span className="font-medium text-[#001f3f]">Education Planning</span>
+                            <span className="font-medium">Education Planning</span>
                           </div>
                           <p className="text-sm text-[#001f3f]">Tax-efficient education funding</p>
                           <Button size="sm" className="mt-2" variant="outline">Plan</Button>
@@ -1174,7 +1174,7 @@ export default function PersonalTax() {
                         <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-4 w-4 text-purple-600" />
-                            <span className="font-medium text-[#001f3f]">Income Splitting</span>
+                            <span className="font-medium">Income Splitting</span>
                           </div>
                           <p className="text-sm text-[#001f3f]">Optimize family income distribution</p>
                           <Button size="sm" className="mt-2" variant="outline">Analyze</Button>
@@ -1200,7 +1200,7 @@ export default function PersonalTax() {
           <CardContent>
             <div className="space-y-4">
               <div className="p-4 bg-blue-50 rounded-[2px]">
-                <h3 className="font-semibold text-[#001f3f]">Ready for Filing</h3>
+                <h3 className="font-semibold text-[#001f3f] text-[#001f3f]">Ready for Filing</h3>
                 <p className="text-sm text-[#001f3f]">3 SA returns completed and ready for HMRC submission</p>
                 <Button className="mt-2" size="sm">
                   Submit to HMRC

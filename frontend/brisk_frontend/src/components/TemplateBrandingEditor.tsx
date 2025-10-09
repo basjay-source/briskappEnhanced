@@ -218,7 +218,7 @@ export default function TemplateBrandingEditor({
             </div>
 
             <div className="p-4 bg-gray-50 rounded-[2px]">
-              <h4 className=" text-[#001f3f] font-medium mb-2">Branding Preview</h4>
+              <h4 className="font-medium mb-2">Branding Preview</h4>
               <div 
                 className="p-4 bg-white rounded border"
                 style={{ 
@@ -234,7 +234,7 @@ export default function TemplateBrandingEditor({
                   />
                 )}
                 <h5 
-                  className="font-semibold text-[#001f3f]"
+                  className="font-semibold"
                   style={{ color: branding.theme_colors?.primary || '#0B5FFF' }}
                 >
                   {branding.custom_branding?.company_name || 'Your Company Name'}

@@ -373,7 +373,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Dashboard</h2>
+            <h2 className="text-xl font-bold">Dashboard</h2>
             <p className="text-[#001f3f]">Overview of your charity accounts</p>
           </div>
           <div className="flex gap-2">
@@ -413,7 +413,7 @@ const CharityAccounts: React.FC = () => {
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Annual Growth</span>
-                          <span className="text-green-600 text-[#001f3f]">12%</span>
+                          <span className="text-green-600">12%</span>
                         </div>
                         <Progress value={12} className="h-2" />
                       </div>
@@ -425,15 +425,15 @@ const CharityAccounts: React.FC = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Registered Charities</span>
-                        <span className="font-semibold text-[#001f3f]">{charities.filter(c => c.type === 'charity').length}</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'charity').length}</span>
                       </div>
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Academy Trusts</span>
-                        <span className="font-semibold text-[#001f3f]">{charities.filter(c => c.type === 'academy').length}</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'academy').length}</span>
                       </div>
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Other Trusts</span>
-                        <span className="font-semibold text-[#001f3f]">{charities.filter(c => c.type === 'trust').length}</span>
+                        <span className="font-semibold">{charities.filter(c => c.type === 'trust').length}</span>
                       </div>
                     </div>
                   </div>
@@ -470,7 +470,7 @@ const CharityAccounts: React.FC = () => {
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Growth Rate</span>
-                          <span className="text-green-600 text-[#001f3f]">15%</span>
+                          <span className="text-green-600">15%</span>
                         </div>
                         <Progress value={15} className="h-2" />
                       </div>
@@ -539,15 +539,15 @@ const CharityAccounts: React.FC = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Unrestricted Funds</span>
-                        <span className="font-semibold text-[#001f3f]">£4.2M</span>
+                        <span className="font-semibold">£4.2M</span>
                       </div>
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Restricted Funds</span>
-                        <span className="font-semibold text-[#001f3f]">£2.8M</span>
+                        <span className="font-semibold">£2.8M</span>
                       </div>
                       <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                         <span>Endowment Funds</span>
-                        <span className="font-semibold text-[#001f3f]">£1.5M</span>
+                        <span className="font-semibold">£1.5M</span>
                       </div>
                     </div>
                   </div>
@@ -584,7 +584,7 @@ const CharityAccounts: React.FC = () => {
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Improvement</span>
-                          <span className="text-green-600 text-[#001f3f]">+8%</span>
+                          <span className="text-green-600">+8%</span>
                         </div>
                         <Progress value={95} className="h-2" />
                       </div>
@@ -651,7 +651,7 @@ const CharityAccounts: React.FC = () => {
                         <p className="text-sm text-[#001f3f]">Year End: {charity.yearEnd}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-[#001f3f]">{formatCurrency(charity.totalIncome)}</p>
+                        <p className="font-semibold">{formatCurrency(charity.totalIncome)}</p>
                         <p className="text-sm text-[#001f3f]">Income</p>
                         <Badge className={getComplianceColor(charity.complianceScore)}>
                           {charity.complianceScore}% Compliant
@@ -678,7 +678,7 @@ const CharityAccounts: React.FC = () => {
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
                     <div>
-                      <h4 className="font-medium text-[#001f3f]">Upcoming Deadline</h4>
+                      <h4 className="font-medium text-[#001f3f] text-[#001f3f]">Upcoming Deadline</h4>
                       <p className="text-sm text-[#001f3f]">
                         Annual return for Hope Foundation due in 14 days
                       </p>
@@ -735,7 +735,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Fund Accounting</h2>
+            <h2 className="text-xl font-bold">Fund Accounting</h2>
             <p className="text-[#001f3f]">Manage unrestricted, restricted, and endowment funds</p>
           </div>
           <div className="flex gap-2">
@@ -766,7 +766,7 @@ const CharityAccounts: React.FC = () => {
                   <div key={fund.id} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#001f3f]">{fund.name}</h4>
-                      <span className="font-semibold text-green-600 text-[#001f3f]">{formatCurrency(fund.balance)}</span>
+                      <span className="font-semibold text-green-600">{formatCurrency(fund.balance)}</span>
                     </div>
                     <p className="text-sm text-[#001f3f] mt-1">{fund.purpose}</p>
                   </div>
@@ -813,7 +813,7 @@ const CharityAccounts: React.FC = () => {
                   <div key={fund.id} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#001f3f]">{fund.name}</h4>
-                      <span className="font-semibold text-purple-600 text-[#001f3f]">{formatCurrency(fund.balance)}</span>
+                      <span className="font-semibold text-purple-600">{formatCurrency(fund.balance)}</span>
                     </div>
                     <p className="text-sm text-[#001f3f] mt-1">{fund.purpose}</p>
                     <p className="text-xs text-purple-600 mt-1">Capital preserved</p>
@@ -832,7 +832,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Statement of Financial Activities (SOFA)</h2>
+            <h2 className="text-xl font-bold">Statement of Financial Activities (SOFA)</h2>
             <p className="text-[#001f3f]">SORP-compliant financial statement</p>
           </div>
           <div className="flex gap-2">
@@ -892,7 +892,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Trustee Management</h2>
+            <h2 className="text-xl font-bold">Trustee Management</h2>
             <p className="text-[#001f3f]">Manage trustee appointments and records</p>
           </div>
           <div className="flex gap-2">
@@ -947,7 +947,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">SORP Compliance</h2>
+            <h2 className="text-xl font-bold">SORP Compliance</h2>
             <p className="text-[#001f3f]">Ensure compliance with charity accounting standards</p>
           </div>
         </div>
@@ -1021,7 +1021,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Grants Management</h2>
+            <h2 className="text-xl font-bold">Grants Management</h2>
             <p className="text-[#001f3f]">Track and manage grant applications</p>
           </div>
           <div className="flex gap-2">
@@ -1069,7 +1069,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Annual Reports</h2>
+            <h2 className="text-xl font-bold">Annual Reports</h2>
             <p className="text-[#001f3f]">Generate comprehensive annual reports</p>
           </div>
         </div>
@@ -1120,7 +1120,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Financial Reports</h2>
+            <h2 className="text-xl font-bold">Financial Reports</h2>
             <p className="text-[#001f3f]">Financial statements and analysis</p>
           </div>
         </div>
@@ -1171,7 +1171,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Compliance Reports</h2>
+            <h2 className="text-xl font-bold">Compliance Reports</h2>
             <p className="text-[#001f3f]">SORP compliance and regulatory reports</p>
           </div>
         </div>
@@ -1222,7 +1222,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Analytics & Insights</h2>
+            <h2 className="text-xl font-bold">Analytics & Insights</h2>
             <p className="text-[#001f3f]">Performance analytics and benchmarking</p>
           </div>
         </div>
@@ -1273,7 +1273,7 @@ const CharityAccounts: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className=" text-[#001f3f] text-xl font-bold">Integrations</h2>
+            <h2 className="text-xl font-bold">Integrations</h2>
             <p className="text-[#001f3f]">Connect with external systems</p>
           </div>
           <div className="flex gap-2">

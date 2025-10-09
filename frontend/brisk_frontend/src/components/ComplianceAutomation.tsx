@@ -211,7 +211,7 @@ export default function ComplianceAutomation() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className=" text-[#001f3f] text-xl font-bold">Compliance Automation</h2>
+          <h2 className="text-xl font-bold">Compliance Automation</h2>
           <p className="text-[#001f3f]">Automated deadline tracking and client communication</p>
         </div>
         <div className="flex gap-2">
@@ -302,7 +302,7 @@ export default function ComplianceAutomation() {
                       <div className="flex items-center gap-3">
                         {getStatusIcon(deadline.status)}
                         <div>
-                          <h4 className=" text-[#001f3f] font-medium">{deadline.type}</h4>
+                          <h4 className="font-medium">{deadline.type}</h4>
                           <p className="text-sm text-[#001f3f]">{deadline.client}</p>
                           <p className="text-xs text-gray-500">{deadline.description}</p>
                         </div>
@@ -320,7 +320,7 @@ export default function ComplianceAutomation() {
                     <div className="grid gap-4 md:grid-cols-4 mb-3">
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Due Date</p>
-                        <p className="text-sm text-[#001f3f]">{deadline.dueDate}</p>
+                        <p className="text-sm">{deadline.dueDate}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Days Remaining</p>
@@ -334,7 +334,7 @@ export default function ComplianceAutomation() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Reminders Sent</p>
-                        <p className="text-sm text-[#001f3f]">{deadline.remindersSent}</p>
+                        <p className="text-sm">{deadline.remindersSent}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[#001f3f]">Automation</p>
@@ -386,14 +386,14 @@ export default function ComplianceAutomation() {
                   <div key={rule.id} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className=" text-[#001f3f] font-medium">{rule.name}</h4>
+                        <h4 className="font-medium">{rule.name}</h4>
                         <p className="text-sm text-[#001f3f] mb-2">{rule.description}</p>
                         <div className="grid gap-2 md:grid-cols-2 text-xs text-gray-500">
                           <div>
-                            <span className="font-medium text-[#001f3f]">Trigger:</span> {rule.trigger}
+                            <span className="font-medium">Trigger:</span> {rule.trigger}
                           </div>
                           <div>
-                            <span className="font-medium text-[#001f3f]">Action:</span> {rule.action}
+                            <span className="font-medium">Action:</span> {rule.action}
                           </div>
                         </div>
                       </div>
@@ -410,7 +410,7 @@ export default function ComplianceAutomation() {
                         <p className="text-sm font-medium text-[#001f3f] mb-1">Success Rate</p>
                         <div className="flex items-center gap-2">
                           <Progress value={rule.successRate} className="flex-1" />
-                          <span className="text-sm font-medium text-green-600 text-[#001f3f]">{rule.successRate}%</span>
+                          <span className="text-sm font-medium text-green-600">{rule.successRate}%</span>
                         </div>
                       </div>
                       <div>
@@ -446,7 +446,7 @@ export default function ComplianceAutomation() {
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="font-medium text-green-900 text-[#001f3f]">Connected</span>
+                      <span className="font-medium text-green-900">Connected</span>
                     </div>
                     <Badge className="bg-green-100 text-green-800">Active</Badge>
                   </div>
@@ -454,20 +454,20 @@ export default function ComplianceAutomation() {
                   <div className="grid gap-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-[#001f3f]">Last Sync:</span>
-                      <span className="font-medium text-[#001f3f]">{hmrcIntegration.lastSync}</span>
+                      <span className="font-medium">{hmrcIntegration.lastSync}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#001f3f]">Next Sync:</span>
-                      <span className="font-medium text-[#001f3f]">{hmrcIntegration.nextSync}</span>
+                      <span className="font-medium">{hmrcIntegration.nextSync}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className=" text-[#001f3f] font-medium">Services</h4>
+                    <h4 className="font-medium">Services</h4>
                     {hmrcIntegration.services.map((service) => (
                       <div key={service.name} className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded-[2px]">
                         <div>
-                          <span className="text-sm font-medium text-[#001f3f]">{service.name}</span>
+                          <span className="text-sm font-medium">{service.name}</span>
                           <p className="text-xs text-gray-500">Last update: {service.lastUpdate}</p>
                         </div>
                         <Switch checked={service.enabled} />
@@ -496,7 +496,7 @@ export default function ComplianceAutomation() {
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="font-medium text-green-900 text-[#001f3f]">Connected</span>
+                      <span className="font-medium text-green-900">Connected</span>
                     </div>
                     <Badge className="bg-green-100 text-green-800">Active</Badge>
                   </div>
@@ -504,11 +504,11 @@ export default function ComplianceAutomation() {
                   <div className="grid gap-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-[#001f3f]">Last Sync:</span>
-                      <span className="font-medium text-[#001f3f]">{companiesHouseIntegration.lastSync}</span>
+                      <span className="font-medium">{companiesHouseIntegration.lastSync}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#001f3f]">Next Sync:</span>
-                      <span className="font-medium text-[#001f3f]">{companiesHouseIntegration.nextSync}</span>
+                      <span className="font-medium">{companiesHouseIntegration.nextSync}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#001f3f]">Filing Alerts:</span>
@@ -551,31 +551,31 @@ export default function ComplianceAutomation() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#001f3f]">VAT Returns</span>
+                    <span className="text-sm font-medium">VAT Returns</span>
                     <div className="flex items-center gap-2">
                       <Progress value={96} className="w-20" />
-                      <span className="text-sm font-medium text-green-600 text-[#001f3f]">96%</span>
+                      <span className="text-sm font-medium text-green-600">96%</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#001f3f]">Corporation Tax</span>
+                    <span className="text-sm font-medium">Corporation Tax</span>
                     <div className="flex items-center gap-2">
                       <Progress value={94} className="w-20" />
-                      <span className="text-sm font-medium text-green-600 text-[#001f3f]">94%</span>
+                      <span className="text-sm font-medium text-green-600">94%</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#001f3f]">Annual Accounts</span>
+                    <span className="text-sm font-medium">Annual Accounts</span>
                     <div className="flex items-center gap-2">
                       <Progress value={98} className="w-20" />
-                      <span className="text-sm font-medium text-green-600 text-[#001f3f]">98%</span>
+                      <span className="text-sm font-medium text-green-600">98%</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#001f3f]">Payroll RTI</span>
+                    <span className="text-sm font-medium">Payroll RTI</span>
                     <div className="flex items-center gap-2">
                       <Progress value={100} className="w-20" />
-                      <span className="text-sm font-medium text-green-600 text-[#001f3f]">100%</span>
+                      <span className="text-sm font-medium text-green-600">100%</span>
                     </div>
                   </div>
                 </div>
@@ -592,7 +592,7 @@ export default function ComplianceAutomation() {
                   <div className="p-3 bg-green-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="h-4 w-4 text-green-600" />
-                      <span className="font-medium text-green-900 text-[#001f3f]">Time Savings</span>
+                      <span className="font-medium text-green-900">Time Savings</span>
                     </div>
                     <p className="text-xl font-bold text-green-700">47 hours</p>
                     <p className="text-sm text-green-600">This month</p>
@@ -608,7 +608,7 @@ export default function ComplianceAutomation() {
                   <div className="p-3 bg-purple-50 rounded-[2px]">
                     <div className="flex items-center gap-2 mb-2">
                       <Zap className="h-4 w-4 text-purple-600" />
-                      <span className="font-medium text-purple-900 text-[#001f3f]">Efficiency Gain</span>
+                      <span className="font-medium text-purple-900">Efficiency Gain</span>
                     </div>
                     <p className="text-xl font-bold text-purple-700">34%</p>
                     <p className="text-sm text-purple-600">vs manual process</p>

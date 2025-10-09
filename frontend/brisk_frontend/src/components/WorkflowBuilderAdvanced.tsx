@@ -335,7 +335,7 @@ export default function WorkflowBuilderAdvanced() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className=" text-[#001f3f] text-xl font-bold">Workflow Automation</h2>
+          <h2 className="text-xl font-bold">Workflow Automation</h2>
           <p className="text-[#001f3f]">Create and manage intelligent workflow templates</p>
         </div>
         <Button onClick={createNewWorkflow} className="bg-brisk-primary hover:bg-brisk-primary-600">
@@ -367,7 +367,7 @@ export default function WorkflowBuilderAdvanced() {
                     <div key={template.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50">
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h4 className=" text-[#001f3f] font-medium">{template.name}</h4>
+                          <h4 className="font-medium">{template.name}</h4>
                           <p className="text-sm text-[#001f3f]">{template.description}</p>
                         </div>
                         <Badge className="bg-green-100 text-green-800">
@@ -377,7 +377,7 @@ export default function WorkflowBuilderAdvanced() {
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">{template.jobType.replace('_', ' ')}</Badge>
-                          <span className="text-xs text-gray-500 text-[#001f3f]">{template.steps.length} steps</span>
+                          <span className="text-xs text-gray-500">{template.steps.length} steps</span>
                         </div>
                         <div className="flex gap-2">
                           <Button 
@@ -427,7 +427,7 @@ export default function WorkflowBuilderAdvanced() {
                       <div key={template.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <h4 className=" text-[#001f3f] font-medium">{template.name}</h4>
+                            <h4 className="font-medium">{template.name}</h4>
                             <p className="text-sm text-[#001f3f]">{template.description}</p>
                           </div>
                           <Badge className={template.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-[#001f3f]"}>
@@ -437,7 +437,7 @@ export default function WorkflowBuilderAdvanced() {
                         <div className="flex items-center justify-between mt-3">
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{template.jobType}</Badge>
-                            <span className="text-xs text-gray-500 text-[#001f3f]">{template.steps.length} steps</span>
+                            <span className="text-xs text-gray-500">{template.steps.length} steps</span>
                           </div>
                           <div className="flex gap-2">
                             <Button 
@@ -525,7 +525,7 @@ export default function WorkflowBuilderAdvanced() {
                                 <Trash2 className="h-3 w-3" />
                               </Button>
                             </div>
-                            <h4 className=" text-[#001f3f] font-medium text-sm mb-1">{step.title}</h4>
+                            <h4 className="font-medium text-sm mb-1">{step.title}</h4>
                             {step.description && (
                               <p className="text-xs text-[#001f3f] mb-2">{step.description}</p>
                             )}
@@ -664,7 +664,7 @@ export default function WorkflowBuilderAdvanced() {
             <Card>
               <CardContent className="text-center py-12">
                 <Workflow className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className=" text-[#001f3f] text-lg font-medium mb-2">No Workflow Selected</h3>
+                <h3 className="text-lg font-medium mb-2">No Workflow Selected</h3>
                 <p className="text-[#001f3f] mb-4">Select a template to edit or create a new workflow</p>
                 <Button onClick={createNewWorkflow} className="bg-brisk-primary">
                   <Plus className="h-4 w-4 mr-2" />
@@ -740,7 +740,7 @@ export default function WorkflowBuilderAdvanced() {
                 {prebuiltTemplates.map((template) => (
                   <div key={template.id} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                     <div>
-                      <h4 className=" text-[#001f3f] font-medium">{template.name}</h4>
+                      <h4 className="font-medium">{template.name}</h4>
                       <p className="text-sm text-[#001f3f]">{template.jobType.replace('_', ' ')}</p>
                     </div>
                     <div className="flex items-center gap-6">
