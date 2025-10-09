@@ -2556,9 +2556,17 @@ export default function PracticeManagement() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold text-[#001f3f]">Practice Analytics</h3>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  Export Report
-                </button>
+                <ExportButton
+                  data={[
+                    ['Metric', 'Value', 'Change'],
+                    ['Practice Revenue', '£847,230', '+12.5%'],
+                    ['Billable Hours', '3,847', '+8.3%'],
+                    ['Client Satisfaction', '94.5%', '+2.1%'],
+                    ['Efficiency Rate', '87.2%', '+5.4%']
+                  ]}
+                  filename={`practice-analytics-${new Date().toISOString().split('T')[0]}`}
+                  buttonText="Export Report"
+                />
                 <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   Schedule Report
                 </button>
