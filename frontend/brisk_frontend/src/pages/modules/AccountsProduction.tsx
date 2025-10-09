@@ -422,7 +422,7 @@ const AccountsProduction: React.FC = () => {
                     </button>
                     
                     {item.hasSubTabs && isExpanded && (
-                      <div className="ml-0.5 mt-0.5 space-y-1">
+                      <div className="ml-0.5 mt-0.5 space-y-0.5">
                         {item.subTabs?.map((subTab) => {
                           const isSubActive = activeSubTab === subTab.id
                           return (
