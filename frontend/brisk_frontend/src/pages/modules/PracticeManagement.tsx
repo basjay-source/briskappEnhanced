@@ -795,7 +795,7 @@ export default function PracticeManagement() {
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38', 'info')}>
                       <span className="text-[#001f3f]">At Risk</span>
-                      <span className="font-semibold text-orange-600">127</span>
+                      <span className="font-semibold text-[#001f3f]">127</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8', 'info')}>
                       <span className="text-[#001f3f]">Churned</span>
@@ -1079,7 +1079,7 @@ export default function PracticeManagement() {
                         <div className="text-right flex items-center gap-2">
                           <div>
                             <p className="text-sm font-medium text-[#001f3f]">{new Date(deadline.due_date).toLocaleDateString()}</p>
-                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-orange-600' : 'text-[#001f3f]'}`}>
+                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-[#001f3f]' : 'text-[#001f3f]'}`}>
                               {daysRemaining > 0 ? `${daysRemaining} days` : 'Overdue'}
                             </p>
                           </div>
@@ -1162,7 +1162,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{jobStats.highPriority}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{jobStats.highPriority}</div>
             <p className="text-xs text-gray-500">Urgent attention needed</p>
           </CardContent>
         </Card>
@@ -1491,7 +1491,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Billable Hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{timeStats.billableHours.toFixed(1)}h</div>
+            <div className="text-xl font-bold text-[#001f3f]">{timeStats.billableHours.toFixed(1)}h</div>
             <p className="text-xs text-gray-500">Client billable</p>
           </CardContent>
         </Card>
@@ -1861,7 +1861,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">{deadlineStats.dueThisWeek}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.dueThisWeek}</div>
             <p className="text-xs text-gray-500">Due in 7 days • Click to filter</p>
           </CardContent>
         </Card>
@@ -1989,7 +1989,7 @@ export default function PracticeManagement() {
                             <div className={`flex items-center gap-1 font-medium ${
                               daysRemaining < 0 ? 'text-red-700' : 
                               daysRemaining <= 7 ? 'text-red-600' : 
-                              daysRemaining <= 14 ? 'text-orange-600' : 
+                              daysRemaining <= 14 ? 'text-[#001f3f]' : 
                               'text-blue-600'
                             }`}>
                               <Clock className="h-3 w-3" />
@@ -2198,7 +2198,7 @@ export default function PracticeManagement() {
             <CardTitle className="text-sm text-[#001f3f]">Pending Signatures</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-orange-600">0</div>
+            <div className="text-xl font-bold text-[#001f3f]">0</div>
             <p className="text-xs text-gray-500">Awaiting e-signature</p>
           </CardContent>
         </Card>
@@ -2615,8 +2615,8 @@ export default function PracticeManagement() {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-orange-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-orange-900">Monthly Trends</h4>
+                        <div className="bg-blue-50 p-4 rounded-[2px]">
+                          <h4 className="font-semibold text-[#001f3f]">Monthly Trends</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>January</span>
@@ -2757,8 +2757,8 @@ export default function PracticeManagement() {
                   <div className="text-xl font-bold text-blue-600">£2,847</div>
                   <div className="text-sm text-[#001f3f]">Average Project Value</div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-[2px]">
-                  <div className="text-xl font-bold text-orange-600">12.3</div>
+                <div className="text-center p-4 bg-blue-50 rounded-[2px]">
+                  <div className="text-xl font-bold text-[#001f3f]">12.3</div>
                   <div className="text-sm text-[#001f3f]">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px]">
@@ -2872,9 +2872,9 @@ export default function PracticeManagement() {
                     <p className="text-sm text-[#001f3f] font-medium">Workflow Optimization</p>
                     <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
-                  <div className="p-3 bg-orange-50 rounded-[2px]">
-                    <p className="text-sm text-orange-900 font-medium">Resource Allocation</p>
-                    <p className="text-xs text-orange-700 mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
+                  <div className="p-3 bg-blue-50 rounded-[2px]">
+                    <p className="text-sm text-[#001f3f] font-medium">Resource Allocation</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Consider redistributing junior staff workload to improve utilization rates across teams.</p>
                   </div>
                   <div className="p-3 bg-green-50 rounded-[2px]">
                     <p className="text-sm text-green-900 font-medium">Client Satisfaction</p>
@@ -2894,7 +2894,7 @@ export default function PracticeManagement() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
                       <p className="text-xs text-[#001f3f]">12 agreements due for renewal</p>
@@ -3118,8 +3118,8 @@ export default function PracticeManagement() {
 
               <div className="bg-white p-6 rounded-[2px] shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-[2px] flex items-center justify-center">
-                    <span className="text-orange-600">👥</span>
+                  <div className="w-10 h-10 bg-blue-100 rounded-[2px] flex items-center justify-center">
+                    <span className="text-[#001f3f]">👥</span>
                   </div>
                   <div>
                     <h4 className="font-semibold text-[#001f3f]">Client Reports</h4>
