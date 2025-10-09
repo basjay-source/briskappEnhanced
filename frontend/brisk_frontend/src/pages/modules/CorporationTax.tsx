@@ -690,7 +690,7 @@ export default function CorporationTax() {
                   </button>
                   
                   {item.hasSubTabs && isExpanded && (
-                    <div className="ml-4 mt-0.5 space-y-0.5">
+                    <div className="ml-0.5 mt-0.5 space-y-0.5">
                       {item.subTabs?.map((subTab) => {
                         const isSubActive = activeSubTab === subTab.id
                         return (

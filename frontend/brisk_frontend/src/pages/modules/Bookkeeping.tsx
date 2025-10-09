@@ -7410,7 +7410,7 @@ export default function Bookkeeping() {
                     </button>
                     
                     {config.hasSubTabs && isExpanded && config.subTabs && (
-                      <div className="ml-4 mt-0.5 space-y-0.5">
+                      <div className="ml-0.5 mt-0.5 space-y-0.5">
                         {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
                           const SubIcon = subConfig.icon
                           const isSubActive = activeSubTab === subKey && activeMainTab === key

@@ -1334,7 +1334,7 @@ const CharityAccounts: React.FC = () => {
               </button>
               
               {expandedCategories.includes(categoryKey) && category.subTabs && (
-                <div className="ml-4 mt-0.5 space-y-0.5">
+                <div className="ml-0.5 mt-0.5 space-y-0.5">
                   {Object.entries(category.subTabs).map(([subKey, subTab]) => (
                     <button
                       key={subKey}
@@ -1354,7 +1354,7 @@ const CharityAccounts: React.FC = () => {
               )}
               
               {expandedCategories.includes(categoryKey) && !category.subTabs && (
-                <div className="ml-4 mt-0.5">
+                <div className="ml-0.5 mt-0.5">
                   <button
                     onClick={() => handleMainTabClick(categoryKey)}
                     className={`w-full text-left p-2 text-sm rounded-[2px] transition-colors ${
