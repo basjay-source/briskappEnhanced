@@ -203,14 +203,14 @@ export default function AMLCompliance() {
                 content: (
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
+                      <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                        <h4 className="font-semibold text-[#001f3f] mb-2">Current Status</h4>
                         <p className="text-xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
-                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900 mb-2">Compliance Score</h4>
-                        <p className="text-sm text-blue-900">AML regulatory compliance</p>
+                      <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                        <h4 className="font-semibold text-[#001f3f] mb-2">Compliance Score</h4>
+                        <p className="text-sm text-[#001f3f]">AML regulatory compliance</p>
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
                             <span>Overall Score</span>
@@ -223,17 +223,17 @@ export default function AMLCompliance() {
                     
                     {kpi.title === 'Active Cases' && (
                       <div>
-                        <h4 className="font-semibold text-blue-900 mb-3">Case Risk Profile</h4>
+                        <h4 className="font-semibold text-[#001f3f] mb-3">Case Risk Profile</h4>
                         <div className="space-y-2">
-                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                          <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>Low Risk</span>
                             <span className="font-semibold">15 cases (65%)</span>
                           </div>
-                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                          <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>Medium Risk</span>
                             <span className="font-semibold">6 cases (26%)</span>
                           </div>
-                          <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                          <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                             <span>High Risk</span>
                             <span className="font-semibold">2 cases (9%)</span>
                           </div>
@@ -331,7 +331,7 @@ export default function AMLCompliance() {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-blue-900">This section is under development</p>
+        <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )
   }
@@ -340,10 +340,10 @@ export default function AMLCompliance() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h1 className="text-xl font-bold text-gray-900">AML Compliance</h1>
-            <p className="text-sm text-blue-900 mt-1">Anti-Money Laundering & KYC</p>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h1 className="text-xl font-bold text-[#001f3f]">AML Compliance</h1>
+            <p className="text-sm text-[#001f3f] mt-1">Anti-Money Laundering & KYC</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
@@ -401,7 +401,7 @@ export default function AMLCompliance() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900 bg-white">
+          <div className="p-4 border-b-2 border-[#001f3f] bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search clients, cases, or transactions..."
               searchValue={searchTerm}

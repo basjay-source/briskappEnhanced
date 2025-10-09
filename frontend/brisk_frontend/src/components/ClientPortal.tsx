@@ -68,14 +68,14 @@ export default function ClientPortal() {
     <div className={`${isMobile ? 'p-4' : 'p-6'} space-y-6`}>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Client Portal</h1>
-          <p className="text-blue-900 mt-2">Track your jobs, documents, and communications</p>
+          <h1 className={`font-bold text-[#001f3f] ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Client Portal</h1>
+          <p className="text-[#001f3f] mt-2">Track your jobs, documents, and communications</p>
         </div>
         <div className="flex items-center gap-2">
           <User className="h-8 w-8 text-gray-400" />
           <div className="text-right">
             <p className="font-medium">ABC Manufacturing Ltd</p>
-            <p className="text-sm text-blue-900">Client ID: CLI001</p>
+            <p className="text-sm text-[#001f3f]">Client ID: CLI001</p>
           </div>
         </div>
       </div>
@@ -90,18 +90,18 @@ export default function ClientPortal() {
             <CardContent>
               <div className="space-y-4">
                 {jobs.map((job) => (
-                  <div key={job.id} className="p-4 border-2 border-blue-900 rounded-[2px]">
+                  <div key={job.id} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">{job.title}</h4>
                       <Badge className={
                         job.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        job.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
+                        job.status === 'in_progress' ? 'bg-blue-100 text-[#001f3f]' :
+                        'bg-gray-100 text-[#001f3f]'
                       }>
                         {job.status === 'in_progress' ? 'In Progress' : 'Completed'}
                       </Badge>
                     </div>
-                    <p className="text-sm text-blue-900 mb-3">{job.description}</p>
+                    <p className="text-sm text-[#001f3f] mb-3">{job.description}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-20 bg-gray-200 rounded-full h-2">
@@ -110,9 +110,9 @@ export default function ClientPortal() {
                             style={{ width: `${job.progress}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs text-blue-900">{job.progress}%</span>
+                        <span className="text-xs text-[#001f3f]">{job.progress}%</span>
                       </div>
-                      <p className="text-sm text-blue-900">Due: {job.dueDate}</p>
+                      <p className="text-sm text-[#001f3f]">Due: {job.dueDate}</p>
                     </div>
                   </div>
                 ))}
@@ -127,9 +127,9 @@ export default function ClientPortal() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-[2px] p-6 text-center">
+                <div className="border-2 border-dashed border-[#001f3f] rounded-[2px] p-6 text-center">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-blue-900">Drag and drop files here or click to browse</p>
+                  <p className="text-sm text-[#001f3f]">Drag and drop files here or click to browse</p>
                   <Button variant="outline" className="mt-2">
                     Choose Files
                   </Button>
@@ -137,12 +137,12 @@ export default function ClientPortal() {
                 
                 <div className="space-y-3">
                   {documents.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                    <div key={index} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-gray-400" />
                         <div>
                           <p className="font-medium text-sm">{doc.name}</p>
-                          <p className="text-xs text-blue-900">{doc.type} • {doc.uploadDate}</p>
+                          <p className="text-xs text-[#001f3f]">{doc.type} • {doc.uploadDate}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">

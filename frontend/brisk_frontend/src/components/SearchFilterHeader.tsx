@@ -123,7 +123,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500 text-black"
+          className="pl-10 h-10 border-[#001f3f] focus:border-blue-500 focus:ring-blue-500 text-black"
         />
       </div>
 
@@ -133,7 +133,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
+                className="h-10 px-4 border-[#001f3f] hover:border-blue-500 text-black hover:text-black"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 {filter.label}
@@ -160,7 +160,7 @@ export const SearchFilterHeader: React.FC<SearchFilterHeaderProps> = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-10 px-4 border-gray-200 hover:border-blue-500 text-black hover:text-black"
+                  className="h-10 px-4 border-[#001f3f] hover:border-blue-500 text-black hover:text-black"
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   Date Range

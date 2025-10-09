@@ -146,22 +146,22 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Recent Activity</CardTitle>
+          <CardTitle className="text-[#001f3f]">Recent Activity</CardTitle>
           <CardDescription>Latest accounts production activities</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+            <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
               <div>
-                <h3 className="font-semibold text-blue-900">Trial Balance Updated</h3>
-                <p className="text-sm text-blue-900">Client: ABC Ltd - Period: Dec 2024</p>
+                <h3 className="font-semibold text-[#001f3f]">Trial Balance Updated</h3>
+                <p className="text-sm text-[#001f3f]">Client: ABC Ltd - Period: Dec 2024</p>
               </div>
               <Badge variant="default">Completed</Badge>
             </div>
-            <div className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+            <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
               <div>
-                <h3 className="font-semibold text-blue-900">Financial Statements Generated</h3>
-                <p className="text-sm text-blue-900">Client: XYZ Corp - Period: Q4 2024</p>
+                <h3 className="font-semibold text-[#001f3f]">Financial Statements Generated</h3>
+                <p className="text-sm text-[#001f3f]">Client: XYZ Corp - Period: Q4 2024</p>
               </div>
               <Badge variant="secondary">In Progress</Badge>
             </div>
@@ -189,23 +189,23 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Trial Balance Summary</CardTitle>
+          <CardTitle className="text-[#001f3f]">Trial Balance Summary</CardTitle>
           <CardDescription>Current period trial balance data</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900">Total Debits</h3>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f]">Total Debits</h3>
                 <p className="text-xl font-bold text-blue-600">£208,500</p>
               </div>
-              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900">Total Credits</h3>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f]">Total Credits</h3>
                 <p className="text-xl font-bold text-green-600">£208,500</p>
               </div>
-              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h3 className="font-semibold text-blue-900">Balance</h3>
-                <p className="text-xl font-bold text-blue-900">£0.00</p>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f]">Balance</h3>
+                <p className="text-xl font-bold text-[#001f3f]">£0.00</p>
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Adjustment Entries</CardTitle>
+          <CardTitle className="text-[#001f3f]">Adjustment Entries</CardTitle>
           <CardDescription>Year-end and period adjustments</CardDescription>
         </CardHeader>
         <CardContent>
@@ -251,7 +251,7 @@ const AccountsProduction: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Balance Sheet</CardTitle>
+            <CardTitle className="text-[#001f3f]">Balance Sheet</CardTitle>
             <CardDescription>Statement of financial position</CardDescription>
           </CardHeader>
           <CardContent>
@@ -264,7 +264,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Profit & Loss</CardTitle>
+            <CardTitle className="text-[#001f3f]">Profit & Loss</CardTitle>
             <CardDescription>Income statement</CardDescription>
           </CardHeader>
           <CardContent>
@@ -290,7 +290,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Group Consolidation</CardTitle>
+          <CardTitle className="text-[#001f3f]">Group Consolidation</CardTitle>
           <CardDescription>Multi-entity financial consolidation</CardDescription>
         </CardHeader>
         <CardContent>
@@ -321,7 +321,7 @@ const AccountsProduction: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Management Accounts</CardTitle>
+            <CardTitle className="text-[#001f3f]">Management Accounts</CardTitle>
             <CardDescription>Monthly management reporting</CardDescription>
           </CardHeader>
           <CardContent>
@@ -334,7 +334,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Financial Analysis</CardTitle>
+            <CardTitle className="text-[#001f3f]">Financial Analysis</CardTitle>
             <CardDescription>Ratio and trend analysis</CardDescription>
           </CardHeader>
           <CardContent>
@@ -347,7 +347,7 @@ const AccountsProduction: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Variance Reports</CardTitle>
+            <CardTitle className="text-[#001f3f]">Variance Reports</CardTitle>
             <CardDescription>Budget vs actual analysis</CardDescription>
           </CardHeader>
           <CardContent>
@@ -373,7 +373,7 @@ const AccountsProduction: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">iXBRL Documents</CardTitle>
+          <CardTitle className="text-[#001f3f]">iXBRL Documents</CardTitle>
           <CardDescription>Interactive XBRL document generation</CardDescription>
         </CardHeader>
         <CardContent>
@@ -389,10 +389,10 @@ const AccountsProduction: React.FC = () => {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h1 className="text-xl font-bold text-gray-900">Accounts Production</h1>
-            <p className="text-sm text-blue-900 mt-1">Financial Statement Preparation</p>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h1 className="text-xl font-bold text-[#001f3f]">Accounts Production</h1>
+            <p className="text-sm text-[#001f3f] mt-1">Financial Statement Preparation</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">

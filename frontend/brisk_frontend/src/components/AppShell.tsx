@@ -77,7 +77,7 @@ export default function AppShell() {
   if (isMobile) {
     return (
       <div className="flex flex-col h-full w-full bg-background">
-        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 py-3 flex-shrink-0">
+        <header className="flex items-center justify-between border-b-2 border-[#001f3f] bg-background px-4 py-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <MobileNavigation />
             <BriskLogo className="h-6 w-6" showText={false} />
@@ -86,10 +86,10 @@ export default function AppShell() {
             <LanguageSwitcher />
             <CurrencySwitcher />
             <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Search className="h-4 w-4 text-blue-900" />
+              <Search className="h-4 w-4 text-[#001f3f]" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Bell className="h-4 w-4 text-blue-900" />
+              <Bell className="h-4 w-4 text-[#001f3f]" />
             </Button>
           </div>
         </header>
@@ -116,21 +116,21 @@ export default function AppShell() {
       </Sidebar>
 
       <SidebarInset className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="flex items-center justify-between border-b-2 border-blue-900 bg-background px-4 md:px-6 py-3 flex-shrink-0">
+        <header className="flex items-center justify-between border-b-2 border-[#001f3f] bg-background px-4 md:px-6 py-3 flex-shrink-0">
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <SidebarTrigger />
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-900 cursor-pointer" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#001f3f] cursor-pointer" />
               <Input
                 placeholder="Search..."
-                className="w-full pl-10 text-sm md:text-base border-2 border-blue-900"
+                className="w-full pl-10 text-sm md:text-base border-2 border-[#001f3f]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
               />
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2px] shadow-lg z-50 max-h-[60vh] overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border-2 border-[#001f3f] dark:border-gray-700 rounded-[2px] shadow-lg z-50 max-h-[60vh] overflow-y-auto">
                   <div className="p-2 border-b flex items-center justify-between">
                     <span className="text-sm font-medium">Search Results</span>
                     <Button 
@@ -176,10 +176,10 @@ export default function AppShell() {
             <LanguageSwitcher />
             <CurrencySwitcher />
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
-              <Bell className="h-4 w-4 text-blue-900" />
+              <Bell className="h-4 w-4 text-[#001f3f]" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex">
-              <HelpCircle className="h-4 w-4 text-blue-900" />
+              <HelpCircle className="h-4 w-4 text-[#001f3f]" />
             </Button>
             <Button 
               variant="ghost" 
@@ -187,10 +187,10 @@ export default function AppShell() {
               className="h-9 w-9 md:h-10 md:w-10 hidden sm:flex"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              <Settings className="h-4 w-4 text-blue-900" />
+              <Settings className="h-4 w-4 text-[#001f3f]" />
             </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
-              <User className="h-4 w-4 text-blue-900" />
+              <User className="h-4 w-4 text-[#001f3f]" />
             </Button>
           </div>
         </header>

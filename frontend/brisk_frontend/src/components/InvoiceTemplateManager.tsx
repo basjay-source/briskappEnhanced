@@ -228,17 +228,17 @@ export default function InvoiceTemplateManager() {
   const getTemplateTypeColor = (type: string) => {
     switch (type) {
       case 'modern':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-[#001f3f]'
       case 'classic':
         return 'bg-green-100 text-green-800'
       case 'minimal':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
       case 'professional':
         return 'bg-purple-100 text-purple-800'
       case 'creative':
         return 'bg-pink-100 text-pink-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
     }
   }
 
@@ -251,7 +251,7 @@ export default function InvoiceTemplateManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold">Invoice Templates</h2>
-          <p className="text-blue-900">Customize invoice templates and branding for your business</p>
+          <p className="text-[#001f3f]">Customize invoice templates and branding for your business</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -391,7 +391,7 @@ export default function InvoiceTemplateManager() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border-2 border-blue-900 rounded-[2px] p-6 bg-white min-h-[400px]">
+              <div className="border-2 border-[#001f3f] rounded-[2px] p-6 bg-white min-h-[400px]">
                 <div className="space-y-6">
                   <div className="flex justify-between items-start">
                     <div>
@@ -411,10 +411,10 @@ export default function InvoiceTemplateManager() {
                       >
                         {branding.custom_branding?.company_name || 'Your Company Name'}
                       </h3>
-                      <p className="text-blue-900">
+                      <p className="text-[#001f3f]">
                         {branding.custom_branding?.address || '123 Business Street, City, Country'}
                       </p>
-                      <p className="text-blue-900">
+                      <p className="text-[#001f3f]">
                         {branding.custom_branding?.phone || '+44 20 1234 5678'} | {branding.custom_branding?.email || 'info@company.com'}
                       </p>
                     </div>
@@ -425,9 +425,9 @@ export default function InvoiceTemplateManager() {
                       >
                         INVOICE
                       </h2>
-                      <p className="text-blue-900">Invoice #: INV-001</p>
-                      <p className="text-blue-900">Date: {new Date().toLocaleDateString()}</p>
-                      <p className="text-blue-900">Due Date: {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</p>
+                      <p className="text-[#001f3f]">Invoice #: INV-001</p>
+                      <p className="text-[#001f3f]">Date: {new Date().toLocaleDateString()}</p>
+                      <p className="text-[#001f3f]">Due Date: {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString()}</p>
                     </div>
                   </div>
 
@@ -435,18 +435,18 @@ export default function InvoiceTemplateManager() {
                     <div>
                       <h4 className="font-semibold mb-2">Bill To:</h4>
                       <p className="font-medium">ABC Client Ltd</p>
-                      <p className="text-blue-900">456 Client Avenue</p>
-                      <p className="text-blue-900">London, UK</p>
-                      <p className="text-blue-900">client@example.com</p>
+                      <p className="text-[#001f3f]">456 Client Avenue</p>
+                      <p className="text-[#001f3f]">London, UK</p>
+                      <p className="text-[#001f3f]">client@example.com</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Payment Terms:</h4>
-                      <p className="text-blue-900">Net 30 days</p>
-                      <p className="text-blue-900">Bank transfer preferred</p>
+                      <p className="text-[#001f3f]">Net 30 days</p>
+                      <p className="text-[#001f3f]">Bank transfer preferred</p>
                     </div>
                   </div>
 
-                  <div className="border-2 border-blue-900 rounded-[2px] overflow-hidden">
+                  <div className="border-2 border-[#001f3f] rounded-[2px] overflow-hidden">
                     <div 
                       className="px-4 py-3 font-semibold text-white"
                       style={{ backgroundColor: branding.theme_colors?.primary }}
@@ -495,7 +495,7 @@ export default function InvoiceTemplateManager() {
                     </div>
                   </div>
 
-                  <div className="text-center text-blue-900 text-sm">
+                  <div className="text-center text-[#001f3f] text-sm">
                     <p>Thank you for your business!</p>
                     <p>Payment is due within 30 days of invoice date.</p>
                   </div>

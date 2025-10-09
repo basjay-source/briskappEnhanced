@@ -53,7 +53,7 @@ export default function EmailRibbon({
   const tabs = [
     { id: 'home', label: 'Home', color: 'bg-blue-500 hover:bg-blue-600' },
     { id: 'insert', label: 'Insert', color: 'bg-green-500 hover:bg-green-600' },
-    { id: 'format', label: 'Format', color: 'bg-orange-500 hover:bg-orange-600' },
+    { id: 'format', label: 'Format', color: 'bg-blue-500 hover:bg-orange-600' },
     { id: 'templates', label: 'Templates', color: 'bg-purple-500 hover:bg-purple-600' },
     { id: 'send', label: 'Send', color: 'bg-red-500 hover:bg-red-600' }
   ]
@@ -200,7 +200,7 @@ export default function EmailRibbon({
         {/* Left side - Service Templates */}
         <div className="space-y-3">
           <div className="flex items-center gap-1 flex-wrap">
-            <span className="text-sm font-medium text-blue-700">Service Templates:</span>
+            <span className="text-sm font-medium text-[#001f3f]">Service Templates:</span>
             <Button variant="ghost" size="sm" onClick={() => onFormatAction('loadTemplate', 'professional')}>
               <FileText className="h-4 w-4 mr-2" />
               Professional
@@ -288,7 +288,7 @@ export default function EmailRibbon({
         {/* Right side - Template Variables */}
         <div className="space-y-2 border-l pl-6">
           <div className="flex items-center gap-1 flex-wrap">
-            <span className="text-sm font-medium text-blue-700">Client Data:</span>
+            <span className="text-sm font-medium text-[#001f3f]">Client Data:</span>
             <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'client_name')}>
               Client Name
             </Button>
@@ -313,7 +313,7 @@ export default function EmailRibbon({
           </div>
           
           <div className="flex items-center gap-1 flex-wrap">
-            <span className="text-sm font-medium text-blue-700">Financial Data:</span>
+            <span className="text-sm font-medium text-[#001f3f]">Financial Data:</span>
             <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'turnover')}>
               Turnover
             </Button>
@@ -341,7 +341,7 @@ export default function EmailRibbon({
           </div>
           
           <div className="flex items-center gap-1 flex-wrap">
-            <span className="text-sm font-medium text-blue-700">Services and Other:</span>
+            <span className="text-sm font-medium text-[#001f3f]">Services and Other:</span>
             <Button variant="outline" size="sm" onClick={() => onFormatAction('insertVariable', 'services')}>
               Services
             </Button>
@@ -424,8 +424,8 @@ export default function EmailRibbon({
   }
 
   return (
-    <div className="border border-gray-200 rounded-t-lg bg-gray-50">
-      <div className="flex border-b border-gray-200">
+    <div className="border-2 border-[#001f3f] rounded-t-lg bg-gray-50">
+      <div className="flex border-b border-[#001f3f]">
         {tabs.map(tab => (
           <button
             key={tab.id}

@@ -248,7 +248,7 @@ export default function CompanySecretarial() {
       case 'Dissolved':
         return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
     }
   }
 
@@ -562,8 +562,8 @@ export default function CompanySecretarial() {
         component: (
           <div className="space-y-4">
             <div className="bg-blue-50 p-4 rounded-[2px]">
-              <h4 className="font-semibold text-blue-900 mb-2">Declaration</h4>
-              <p className="text-sm text-blue-900">
+              <h4 className="font-semibold text-[#001f3f] mb-2">Declaration</h4>
+              <p className="text-sm text-[#001f3f]">
                 I confirm that the information provided in this application is true to the best of my knowledge and belief.
               </p>
             </div>
@@ -622,54 +622,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Details - Confirm your company information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -680,7 +680,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Company status</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Company status</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -704,28 +704,28 @@ export default function CompanySecretarial() {
         title: "Step 2: Accounts Period - Specify the accounting period for these accounts",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Accounting Period Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Accounting Period Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounting period start date *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounting period start date *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounting period end date *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounting period end date *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Length of accounting period (months)</label>
-                  <input type="number" min="1" max="18" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Length of accounting period (months)</label>
+                  <input type="number" min="1" max="18" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Type of accounts *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Type of accounts *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select accounts type</option>
                     <option value="full">Full accounts</option>
                     <option value="abbreviated">Abbreviated accounts</option>
@@ -737,17 +737,17 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounts preparation date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounts preparation date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounts approval date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounts approval date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Accounts characteristics</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Accounts characteristics</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -769,8 +769,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Reason for period length (if not 12 months)</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Explain why the accounting period is not 12 months"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for period length (if not 12 months)</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Explain why the accounting period is not 12 months"></textarea>
               </div>
             </div>
           </div>
@@ -780,12 +780,12 @@ export default function CompanySecretarial() {
         title: "Step 3: Declaration and Submission - Review and submit your annual accounts",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Annual accounts must be filed within 9 months of the accounting period end date</li>
                   <li>• Late filing penalties apply for overdue accounts</li>
                   <li>• Accounts must be approved by the board of directors before filing</li>
@@ -795,54 +795,54 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Director approving accounts</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter director name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Director approving accounts</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter director name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Director's signature date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Director's signature date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company secretary (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter secretary name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company secretary (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter secretary name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Auditor name (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter auditor name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Auditor name (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter auditor name" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the accounts comply with the requirements of the Companies Act 2006 and give a true and fair view of the company's affairs.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The accounts have been approved by the board of directors</span>
+                    <span className="text-sm text-[#001f3f]">The accounts have been approved by the board of directors</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file these accounts on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file these accounts on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All required supporting documents are attached</span>
+                    <span className="text-sm text-[#001f3f]">All required supporting documents are attached</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about these accounts"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about these accounts"></textarea>
               </div>
             </div>
           </div>
@@ -886,45 +886,45 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details for the annual return",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Annual return made up to date *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Principal business activity *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter SIC code or description" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Annual return made up to date *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">SIC code</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345" maxLength={5} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Principal business activity *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter SIC code or description" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">SIC code</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345" maxLength={5} />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Company type</label>
-                <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Company type</label>
+                <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <option value="">Select company type</option>
                   <option value="private-limited">Private company limited by shares</option>
                   <option value="public-limited">Public limited company</option>
@@ -934,8 +934,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Description of principal business activity</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Describe your company's main business activity"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Description of principal business activity</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Describe your company's main business activity"></textarea>
               </div>
             </div>
           </div>
@@ -945,12 +945,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Registered Office - Confirm the registered office address",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Registered Office Address</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Registered Office Address</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   The registered office address is where official documents will be sent. 
                   This must be a physical address in the same country as your company registration.
                 </p>
@@ -958,34 +958,34 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select country</option>
                     <option value="england">England</option>
                     <option value="wales">Wales</option>
@@ -994,13 +994,13 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of change (if address changed)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of change (if address changed)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Address status</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Address status</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="radio" name="addressStatus" className="mr-2" />
@@ -1024,24 +1024,24 @@ export default function CompanySecretarial() {
         title: "Step 3: Share Capital - Provide details of the company's share capital",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Share Capital Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Share Capital Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total number of shares *</label>
-                  <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="100" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total number of shares *</label>
+                  <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="100" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total aggregate nominal value *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="£100" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total aggregate nominal value *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="£100" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Currency</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Currency</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="GBP">GBP - British Pound</option>
                     <option value="EUR">EUR - Euro</option>
                     <option value="USD">USD - US Dollar</option>
@@ -1049,13 +1049,13 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Share class</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ordinary" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Share class</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ordinary" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Share capital changes</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Share capital changes</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -1077,8 +1077,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of share capital changes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide details of any changes to share capital"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of share capital changes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide details of any changes to share capital"></textarea>
               </div>
             </div>
           </div>
@@ -1088,12 +1088,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Declaration and Submission - Review and submit your annual return",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Annual returns must be filed within 28 days of the made up to date</li>
                   <li>• Late filing penalties apply for overdue returns</li>
                   <li>• The information provided must be accurate as of the made up to date</li>
@@ -1103,12 +1103,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -1120,43 +1120,43 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this annual return is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this annual return on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this annual return on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All information is accurate as of the made up to date</span>
+                    <span className="text-sm text-[#001f3f]">All information is accurate as of the made up to date</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I understand the penalties for providing false information</span>
+                    <span className="text-sm text-[#001f3f]">I understand the penalties for providing false information</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this annual return"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this annual return"></textarea>
               </div>
             </div>
           </div>
@@ -1200,54 +1200,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -1264,12 +1264,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Person Details - Provide details of the person whose appointment is being terminated",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Person Being Terminated</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Person Being Terminated</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   Provide the full details of the director or company secretary whose appointment is being terminated.
                   All information must match the details currently held at Companies House.
                 </p>
@@ -1277,8 +1277,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position being terminated *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position being terminated *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -1286,15 +1286,15 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of termination *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of termination *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Title</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Title</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select title</option>
                     <option value="mr">Mr</option>
                     <option value="mrs">Mrs</option>
@@ -1308,40 +1308,40 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">First name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">First name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Middle names</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Last name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Former names</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Middle names</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of birth</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Last name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Nationality</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Former names</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of birth</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Nationality</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Occupation</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter occupation" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Occupation</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter occupation" />
               </div>
             </div>
           </div>
@@ -1351,13 +1351,13 @@ export default function CompanySecretarial() {
         title: "Step 3: Termination Details - Specify the reason and circumstances of termination",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Termination Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Termination Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reason for termination *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for termination *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select reason</option>
                     <option value="resignation">Resignation</option>
                     <option value="removal">Removal by company</option>
@@ -1370,13 +1370,13 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date appointment started</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date appointment started</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Termination circumstances</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Termination circumstances</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -1410,18 +1410,18 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional details (if other reason selected)</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide additional details about the termination"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional details (if other reason selected)</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide additional details about the termination"></textarea>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Notice period (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 3 months" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Notice period (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 3 months" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Effective date of notice</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Effective date of notice</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
             </div>
@@ -1432,12 +1432,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Declaration and Submission - Review and submit the termination form",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Termination forms must be filed within 14 days of the termination date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -1447,12 +1447,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -1464,43 +1464,43 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this termination form is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this termination on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this termination on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The termination has been properly authorized by the company</span>
+                    <span className="text-sm text-[#001f3f]">The termination has been properly authorized by the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All required procedures have been followed</span>
+                    <span className="text-sm text-[#001f3f]">All required procedures have been followed</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this termination"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this termination"></textarea>
               </div>
             </div>
           </div>
@@ -1544,54 +1544,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -1608,12 +1608,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Secretary Type - Specify whether the secretary is an individual or corporate entity",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Secretary Type Selection</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Secretary Type Selection</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   A company secretary can be either an individual person or a corporate entity (another company).
                   Choose the appropriate type and provide the required information.
                 </p>
@@ -1621,21 +1621,21 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Secretary type *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Secretary type *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select secretary type</option>
                     <option value="individual">Individual person</option>
                     <option value="corporate">Corporate entity</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of appointment *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of appointment *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Appointment details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Appointment details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -1658,8 +1658,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reason for appointment</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for appointment</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select reason</option>
                     <option value="new-company">New company formation</option>
                     <option value="replacement">Replacement of previous secretary</option>
@@ -1669,14 +1669,14 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Previous secretary (if replacement)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter previous secretary name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Previous secretary (if replacement)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter previous secretary name" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this appointment"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this appointment"></textarea>
               </div>
             </div>
           </div>
@@ -1686,13 +1686,13 @@ export default function CompanySecretarial() {
         title: "Step 3: Secretary Details - Provide complete details of the secretary being appointed",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Secretary Personal/Corporate Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Secretary Personal/Corporate Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Title (if individual)</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Title (if individual)</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select title</option>
                     <option value="mr">Mr</option>
                     <option value="mrs">Mrs</option>
@@ -1706,50 +1706,50 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">First name / Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name or company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">First name / Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name or company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Middle names</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Last name / Company registration number</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name or registration number" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Former names (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Middle names</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of birth (if individual)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Last name / Company registration number</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name or registration number" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Nationality (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Former names (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Occupation (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter occupation" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of birth (if individual)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country of incorporation (if corporate)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Nationality (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Occupation (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter occupation" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country of incorporation (if corporate)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Secretary qualifications (if applicable)</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Secretary qualifications (if applicable)</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -1781,12 +1781,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Service Address - Provide the service address for correspondence",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Service Address Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Service Address Details</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Service Address Information</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Service Address Information</h4>
+                <p className="text-sm text-[#001f3f]">
                   The service address is where correspondence will be sent. This can be the same as the residential address
                   or a different business address. For corporate secretaries, this should be the registered office address.
                 </p>
@@ -1794,34 +1794,34 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Service address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Service address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Service address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Service address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select country</option>
                     <option value="england">England</option>
                     <option value="wales">Wales</option>
@@ -1830,19 +1830,19 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Email address</label>
-                  <input type="email" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="secretary@company.com" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Email address</label>
+                  <input type="email" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="secretary@company.com" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Preferred contact method</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Preferred contact method</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select method</option>
                     <option value="post">Post</option>
                     <option value="email">Email</option>
@@ -1852,7 +1852,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Address options</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Address options</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -1880,12 +1880,12 @@ export default function CompanySecretarial() {
         title: "Step 5: Declaration and Submission - Review and submit the secretary appointment",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Secretary appointments must be filed within 14 days of the appointment date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -1895,12 +1895,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -1912,47 +1912,47 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this appointment form is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this appointment on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this appointment on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The appointment has been properly authorized by the company</span>
+                    <span className="text-sm text-[#001f3f]">The appointment has been properly authorized by the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The secretary has consented to the appointment</span>
+                    <span className="text-sm text-[#001f3f]">The secretary has consented to the appointment</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All required procedures have been followed</span>
+                    <span className="text-sm text-[#001f3f]">All required procedures have been followed</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this appointment"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this appointment"></textarea>
               </div>
             </div>
           </div>
@@ -1996,54 +1996,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -2060,12 +2060,12 @@ export default function CompanySecretarial() {
         title: "Step 2: PSC Type - Specify the type of person with significant control",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">PSC Type Selection</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">PSC Type Selection</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   A person with significant control (PSC) can be an individual, corporate entity, or legal entity.
                   Choose the appropriate type based on the nature of the controlling party.
                 </p>
@@ -2073,8 +2073,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">PSC type *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">PSC type *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select PSC type</option>
                     <option value="individual">Individual person</option>
                     <option value="corporate">Corporate entity</option>
@@ -2083,13 +2083,13 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date became PSC *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date became PSC *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Nature of control (select all that apply)</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Nature of control (select all that apply)</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2120,8 +2120,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Notification type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Notification type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select notification type</option>
                     <option value="new">New PSC notification</option>
                     <option value="change">Change to existing PSC</option>
@@ -2129,14 +2129,14 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of change (if applicable)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of change (if applicable)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this PSC notification"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this PSC notification"></textarea>
               </div>
             </div>
           </div>
@@ -2146,13 +2146,13 @@ export default function CompanySecretarial() {
         title: "Step 3: PSC Details - Provide complete details of the person with significant control",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">PSC Personal/Corporate Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">PSC Personal/Corporate Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Title (if individual)</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Title (if individual)</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select title</option>
                     <option value="mr">Mr</option>
                     <option value="mrs">Mrs</option>
@@ -2166,61 +2166,61 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">First name / Entity name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name or entity name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">First name / Entity name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter first name or entity name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Middle names</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Last name / Registration number</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name or registration number" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Former names (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Middle names</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter middle names" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of birth (if individual)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Last name / Registration number</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter last name or registration number" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Nationality (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country of residence (if individual)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country of incorporation (if entity)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Former names (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter any former names" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Legal form (if entity)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Limited company, Partnership" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of birth (if individual)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Governing law (if entity)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter governing law" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Nationality (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter nationality" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country of residence (if individual)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country of incorporation (if entity)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter country" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Legal form (if entity)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Limited company, Partnership" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Governing law (if entity)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter governing law" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">PSC status</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">PSC status</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2248,12 +2248,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Control Details - Specify the exact nature and extent of control",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Nature and Extent of Control</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Nature and Extent of Control</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Control Thresholds</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Control Thresholds</h4>
+                <p className="text-sm text-[#001f3f]">
                   Specify the exact percentages and nature of control. PSC thresholds are typically 25%, 50%, and 75%.
                   Provide accurate information about shareholdings, voting rights, and other forms of control.
                 </p>
@@ -2261,8 +2261,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Shares held (%) *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Shares held (%) *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select percentage range</option>
                     <option value="25-50">More than 25% but not more than 50%</option>
                     <option value="50-75">More than 50% but not more than 75%</option>
@@ -2270,8 +2270,8 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Voting rights (%) *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Voting rights (%) *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select percentage range</option>
                     <option value="25-50">More than 25% but not more than 50%</option>
                     <option value="50-75">More than 50% but not more than 75%</option>
@@ -2282,17 +2282,17 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Exact number of shares held</label>
-                  <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter number of shares" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Exact number of shares held</label>
+                  <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter number of shares" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total number of shares in issue</label>
-                  <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter total shares" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total number of shares in issue</label>
+                  <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter total shares" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Types of control exercised</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Types of control exercised</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2319,12 +2319,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Class of shares</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Ordinary, Preference" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Class of shares</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Ordinary, Preference" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Currency of shares</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Currency of shares</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select currency</option>
                     <option value="GBP">GBP - British Pound</option>
                     <option value="EUR">EUR - Euro</option>
@@ -2335,8 +2335,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Description of control</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide detailed description of how control is exercised"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Description of control</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide detailed description of how control is exercised"></textarea>
               </div>
             </div>
           </div>
@@ -2346,12 +2346,12 @@ export default function CompanySecretarial() {
         title: "Step 5: Service Address - Provide the service address for correspondence",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Service Address Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Service Address Details</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Service Address Information</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Service Address Information</h4>
+                <p className="text-sm text-[#001f3f]">
                   The service address is where correspondence will be sent. This can be the same as the residential address
                   or a different business address. For corporate PSCs, this should be the registered office address.
                 </p>
@@ -2359,34 +2359,34 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Service address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Service address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Service address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Service address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select country</option>
                     <option value="england">England</option>
                     <option value="wales">Wales</option>
@@ -2395,19 +2395,19 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Email address</label>
-                  <input type="email" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="psc@company.com" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Email address</label>
+                  <input type="email" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="psc@company.com" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Preferred contact method</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Preferred contact method</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select method</option>
                     <option value="post">Post</option>
                     <option value="email">Email</option>
@@ -2417,7 +2417,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Address options</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Address options</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2445,12 +2445,12 @@ export default function CompanySecretarial() {
         title: "Step 6: Declaration and Submission - Review and submit the PSC notification",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• PSC notifications must be filed within 14 days of the relevant date</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2461,12 +2461,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -2478,47 +2478,47 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this PSC notification is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this notification on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this notification on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The PSC has been properly identified and verified</span>
+                    <span className="text-sm text-[#001f3f]">The PSC has been properly identified and verified</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All control thresholds have been accurately calculated</span>
+                    <span className="text-sm text-[#001f3f]">All control thresholds have been accurately calculated</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The PSC has been notified of this filing</span>
+                    <span className="text-sm text-[#001f3f]">The PSC has been notified of this filing</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this PSC notification"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this PSC notification"></textarea>
               </div>
             </div>
           </div>
@@ -2562,54 +2562,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current address" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current address" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current address" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current address" readOnly />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current town/city" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current town/city" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current county</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current county" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current county</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current county" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" readOnly />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -2626,12 +2626,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Change Details - Specify the reason and date for the address change",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Address Change Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Address Change Information</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   The registered office address change must be notified to Companies House within 14 days of the change.
                   The new address must be a physical address where documents can be delivered during business hours.
                 </p>
@@ -2639,12 +2639,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of address change *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of address change *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reason for change</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for change</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select reason</option>
                     <option value="business-relocation">Business relocation</option>
                     <option value="lease-expiry">Lease expiry</option>
@@ -2657,7 +2657,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Change circumstances</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Change circumstances</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2684,8 +2684,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Effective time of change</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Effective time of change</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select time</option>
                     <option value="00:01">00:01 (Start of day)</option>
                     <option value="09:00">09:00 (Business hours)</option>
@@ -2695,8 +2695,8 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Notice period given</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Notice period given</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select period</option>
                     <option value="immediate">Immediate</option>
                     <option value="1-week">1 week</option>
@@ -2708,8 +2708,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional details</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this address change"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional details</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this address change"></textarea>
               </div>
             </div>
           </div>
@@ -2719,12 +2719,12 @@ export default function CompanySecretarial() {
         title: "Step 3: New Address - Provide the complete new registered office address",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">New Registered Office Address</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">New Registered Office Address</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Address Requirements</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Address Requirements</h4>
+                <p className="text-sm text-[#001f3f]">
                   The new registered office address must be a physical address in England, Wales, Scotland, or Northern Ireland.
                   It cannot be a PO Box and must be accessible during business hours for document delivery.
                 </p>
@@ -2732,34 +2732,34 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New county</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New county</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select country</option>
                     <option value="england">England</option>
                     <option value="wales">Wales</option>
@@ -2768,8 +2768,8 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Property type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Property type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select property type</option>
                     <option value="office">Office building</option>
                     <option value="residential">Residential property</option>
@@ -2783,17 +2783,17 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Email address</label>
-                  <input type="email" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="office@company.com" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Email address</label>
+                  <input type="email" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="office@company.com" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Address characteristics</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Address characteristics</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -2819,8 +2819,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Building access instructions</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide any special instructions for accessing the building or delivering documents"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Building access instructions</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Provide any special instructions for accessing the building or delivering documents"></textarea>
               </div>
             </div>
           </div>
@@ -2830,12 +2830,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Declaration and Submission - Review and submit the address change",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Address changes must be filed within 14 days of the change</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -2846,12 +2846,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -2863,47 +2863,47 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this address change form is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this change on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this change on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The address change has been properly authorized by the company</span>
+                    <span className="text-sm text-[#001f3f]">The address change has been properly authorized by the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The new address is suitable for receiving legal documents</span>
+                    <span className="text-sm text-[#001f3f]">The new address is suitable for receiving legal documents</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All required procedures have been followed</span>
+                    <span className="text-sm text-[#001f3f]">All required procedures have been followed</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this address change"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this address change"></textarea>
               </div>
             </div>
           </div>
@@ -2947,54 +2947,54 @@ export default function CompanySecretarial() {
         title: "Step 1: Company Information - Confirm your company details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Company Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Company Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Current company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current company name" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Current company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter current company name" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12345678" maxLength={8} readOnly />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter address" readOnly />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter town/city" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter county" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="SW1A 1AA" readOnly />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readOnly />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
                     <option value="">Select company type</option>
                     <option value="private-limited">Private company limited by shares</option>
                     <option value="public-limited">Public limited company</option>
@@ -3011,12 +3011,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Name Change Details - Specify the new company name and resolution details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">New Company Name Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">New Company Name Information</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Important</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important</h4>
+                <p className="text-sm text-[#001f3f]">
                   The new company name must be available and comply with Companies House naming rules.
                   A special resolution is required to change the company name, and the change must be notified within 15 days.
                 </p>
@@ -3024,12 +3024,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">New company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">New company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter new company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company ending</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company ending</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select ending</option>
                     <option value="limited">Limited</option>
                     <option value="ltd">Ltd</option>
@@ -3043,12 +3043,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of resolution *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of resolution *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Type of resolution *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Type of resolution *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select resolution type</option>
                     <option value="special">Special resolution</option>
                     <option value="ordinary">Ordinary resolution</option>
@@ -3058,7 +3058,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Name change circumstances</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Name change circumstances</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -3085,8 +3085,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reason for name change</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for name change</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select reason</option>
                     <option value="business-rebrand">Business rebrand</option>
                     <option value="merger-acquisition">Merger or acquisition</option>
@@ -3097,14 +3097,14 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Effective date of name change</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Effective date of name change</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional details</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this name change"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional details</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this name change"></textarea>
               </div>
             </div>
           </div>
@@ -3114,12 +3114,12 @@ export default function CompanySecretarial() {
         title: "Step 3: Name Availability - Confirm name availability and compliance",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Name Availability and Compliance</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Name Availability and Compliance</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Name Requirements</h4>
-                <p className="text-sm text-blue-700">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Name Requirements</h4>
+                <p className="text-sm text-[#001f3f]">
                   The new company name must not be the same as an existing company name and must comply with
                   Companies House naming rules. Certain words require approval from relevant authorities.
                 </p>
@@ -3127,8 +3127,8 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Name availability check</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Name availability check</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select status</option>
                     <option value="available">Name is available</option>
                     <option value="similar">Similar name exists</option>
@@ -3137,13 +3137,13 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of name check</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of name check</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Name compliance checks</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Name compliance checks</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -3170,19 +3170,19 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Sensitive words requiring approval</label>
-                  <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={2} placeholder="List any sensitive words in the proposed name"></textarea>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Sensitive words requiring approval</label>
+                  <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={2} placeholder="List any sensitive words in the proposed name"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Approval reference (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter approval reference" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Approval reference (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter approval reference" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Trademark search conducted</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Trademark search conducted</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select status</option>
                     <option value="yes">Yes, search conducted</option>
                     <option value="no">No search conducted</option>
@@ -3191,8 +3191,8 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Domain name availability</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Domain name availability</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select status</option>
                     <option value="available">Domain available</option>
                     <option value="unavailable">Domain unavailable</option>
@@ -3203,8 +3203,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Name compliance notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional notes about name compliance or approval requirements"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Name compliance notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional notes about name compliance or approval requirements"></textarea>
               </div>
             </div>
           </div>
@@ -3214,12 +3214,12 @@ export default function CompanySecretarial() {
         title: "Step 4: Declaration and Submission - Review and submit the name change",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• Name changes must be filed within 15 days of the resolution</li>
                   <li>• Late filing penalties may apply for overdue notifications</li>
                   <li>• The information provided must be accurate and complete</li>
@@ -3231,12 +3231,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Person authorizing filing</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Person authorizing filing</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Position in company</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in company</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Select position</option>
                     <option value="director">Director</option>
                     <option value="secretary">Company Secretary</option>
@@ -3248,47 +3248,47 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of authorization</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of authorization</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="01234 567890" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I confirm that the information given in this name change form is true to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to file this change on behalf of the company</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to file this change on behalf of the company</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The name change has been properly authorized by special resolution</span>
+                    <span className="text-sm text-[#001f3f]">The name change has been properly authorized by special resolution</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">The new name complies with Companies House naming rules</span>
+                    <span className="text-sm text-[#001f3f]">The new name complies with Companies House naming rules</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All required approvals have been obtained</span>
+                    <span className="text-sm text-[#001f3f]">All required approvals have been obtained</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional notes</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this name change"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional notes</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows={3} placeholder="Any additional information about this name change"></textarea>
               </div>
             </div>
           </div>
@@ -3739,16 +3739,16 @@ export default function CompanySecretarial() {
         title: "Step 1: Employee Details - Enter employee personal and employment information",
         component: (
           <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 p-4 rounded">
+            <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
               <h3 className="text-lg font-semibold text-green-900 mb-2">P11D - Expenses and benefits</h3>
               <p className="text-green-800 text-sm">Annual return of expenses payments and benefits for the tax year ending 5 April 2024</p>
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-md font-semibold text-gray-900">Employee details</h4>
+              <h4 className="text-md font-semibold text-[#001f3f]">Employee details</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="employeeTitle" className="text-sm font-medium text-blue-900">Title</Label>
+                  <Label htmlFor="employeeTitle" className="text-sm font-medium text-[#001f3f]">Title</Label>
                   <Select>
                     <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select title" />
@@ -3763,7 +3763,7 @@ export default function CompanySecretarial() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="employeeForename" className="text-sm font-medium text-blue-900">Forename *</Label>
+                  <Label htmlFor="employeeForename" className="text-sm font-medium text-[#001f3f]">Forename *</Label>
                   <Input 
                     id="employeeForename" 
                     placeholder="First name"
@@ -3775,7 +3775,7 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="employeeSurname" className="text-sm font-medium text-blue-900">Surname *</Label>
+                  <Label htmlFor="employeeSurname" className="text-sm font-medium text-[#001f3f]">Surname *</Label>
                   <Input 
                     id="employeeSurname" 
                     placeholder="Last name"
@@ -3784,7 +3784,7 @@ export default function CompanySecretarial() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="employeeNI" className="text-sm font-medium text-blue-900">National Insurance number *</Label>
+                  <Label htmlFor="employeeNI" className="text-sm font-medium text-[#001f3f]">National Insurance number *</Label>
                   <Input 
                     id="employeeNI" 
                     placeholder="AB123456C"
@@ -3797,7 +3797,7 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="employeeAddress" className="text-sm font-medium text-blue-900">Employee's address</Label>
+                  <Label htmlFor="employeeAddress" className="text-sm font-medium text-[#001f3f]">Employee's address</Label>
                   <Textarea 
                     id="employeeAddress" 
                     placeholder="Full address"
@@ -3806,7 +3806,7 @@ export default function CompanySecretarial() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="payrollNumber" className="text-sm font-medium text-blue-900">Payroll number</Label>
+                  <Label htmlFor="payrollNumber" className="text-sm font-medium text-[#001f3f]">Payroll number</Label>
                   <Input 
                     id="payrollNumber" 
                     placeholder="Employee payroll number"
@@ -3817,20 +3817,20 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="directorStatus" className="text-sm font-medium text-blue-900">Director status</Label>
+                  <Label htmlFor="directorStatus" className="text-sm font-medium text-[#001f3f]">Director status</Label>
                   <div className="mt-2 space-y-2">
                     <div className="flex items-center">
                       <input type="radio" id="director" name="directorStatus" value="director" className="h-4 w-4 text-green-600" />
-                      <Label htmlFor="director" className="ml-2 text-sm text-blue-900">Director</Label>
+                      <Label htmlFor="director" className="ml-2 text-sm text-[#001f3f]">Director</Label>
                     </div>
                     <div className="flex items-center">
                       <input type="radio" id="employee" name="directorStatus" value="employee" className="h-4 w-4 text-green-600" />
-                      <Label htmlFor="employee" className="ml-2 text-sm text-blue-900">Employee (not director)</Label>
+                      <Label htmlFor="employee" className="ml-2 text-sm text-[#001f3f]">Employee (not director)</Label>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="employmentDate" className="text-sm font-medium text-blue-900">Date employment started</Label>
+                  <Label htmlFor="employmentDate" className="text-sm font-medium text-[#001f3f]">Date employment started</Label>
                   <Input 
                     id="employmentDate" 
                     type="date"
@@ -3846,7 +3846,7 @@ export default function CompanySecretarial() {
         title: "Step 2: Cars and car fuel - Enter company car and fuel benefit details for employees",
         component: (
           <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 p-4 rounded">
+            <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
               <h3 className="text-lg font-semibold text-green-900 mb-2">Section A: Cars and car fuel</h3>
               <p className="text-green-800 text-sm">Company cars available for private use and fuel provided</p>
             </div>
@@ -3856,16 +3856,16 @@ export default function CompanySecretarial() {
                 <input 
                   type="checkbox" 
                   id="hasCompanyCar"
-                  className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                  className="h-4 w-4 text-green-600 border-[#001f3f] rounded"
                 />
-                <Label htmlFor="hasCompanyCar" className="text-sm font-medium text-blue-900">Employee had use of company car(s)</Label>
+                <Label htmlFor="hasCompanyCar" className="text-sm font-medium text-[#001f3f]">Employee had use of company car(s)</Label>
               </div>
 
-              <div className="border-2 border-blue-900 rounded-[2px] p-4">
-                <h4 className="text-md font-semibold text-gray-900 mb-4">Car 1 details</h4>
+              <div className="border-2 border-[#001f3f] rounded-[2px] p-4">
+                <h4 className="text-md font-semibold text-[#001f3f] mb-4">Car 1 details</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="carMake" className="text-sm font-medium text-blue-900">Make and model</Label>
+                    <Label htmlFor="carMake" className="text-sm font-medium text-[#001f3f]">Make and model</Label>
                     <Input 
                       id="carMake" 
                       placeholder="e.g. Ford Focus"
@@ -3873,7 +3873,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="carRegistration" className="text-sm font-medium text-blue-900">Registration number</Label>
+                    <Label htmlFor="carRegistration" className="text-sm font-medium text-[#001f3f]">Registration number</Label>
                     <Input 
                       id="carRegistration" 
                       placeholder="AB12 CDE"
@@ -3884,7 +3884,7 @@ export default function CompanySecretarial() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <div>
-                    <Label htmlFor="carListPrice" className="text-sm font-medium text-blue-900">List price when new</Label>
+                    <Label htmlFor="carListPrice" className="text-sm font-medium text-[#001f3f]">List price when new</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -3895,20 +3895,20 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box A1</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box A1</p>
                   </div>
                   <div>
-                    <Label htmlFor="carCO2Emissions" className="text-sm font-medium text-blue-900">CO2 emissions (g/km)</Label>
+                    <Label htmlFor="carCO2Emissions" className="text-sm font-medium text-[#001f3f]">CO2 emissions (g/km)</Label>
                     <Input 
                       id="carCO2Emissions" 
                       placeholder="120"
                       type="number"
                       className="mt-1"
                     />
-                    <p className="text-xs text-blue-900 mt-1">Box A2</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box A2</p>
                   </div>
                   <div>
-                    <Label htmlFor="carFuelType" className="text-sm font-medium text-blue-900">Fuel type</Label>
+                    <Label htmlFor="carFuelType" className="text-sm font-medium text-[#001f3f]">Fuel type</Label>
                     <Select>
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select fuel type" />
@@ -3926,7 +3926,7 @@ export default function CompanySecretarial() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <Label htmlFor="carAvailableFrom" className="text-sm font-medium text-blue-900">Date car first made available</Label>
+                    <Label htmlFor="carAvailableFrom" className="text-sm font-medium text-[#001f3f]">Date car first made available</Label>
                     <Input 
                       id="carAvailableFrom" 
                       type="date"
@@ -3934,7 +3934,7 @@ export default function CompanySecretarial() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="carAvailableTo" className="text-sm font-medium text-blue-900">Date car withdrawn (if applicable)</Label>
+                    <Label htmlFor="carAvailableTo" className="text-sm font-medium text-[#001f3f]">Date car withdrawn (if applicable)</Label>
                     <Input 
                       id="carAvailableTo" 
                       type="date"
@@ -3945,7 +3945,7 @@ export default function CompanySecretarial() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <Label htmlFor="carCashEquivalent" className="text-sm font-medium text-blue-900">Cash equivalent of car benefit</Label>
+                    <Label htmlFor="carCashEquivalent" className="text-sm font-medium text-[#001f3f]">Cash equivalent of car benefit</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -3956,10 +3956,10 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box A3</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box A3</p>
                   </div>
                   <div>
-                    <Label htmlFor="carFuelBenefit" className="text-sm font-medium text-blue-900">Cash equivalent of fuel benefit</Label>
+                    <Label htmlFor="carFuelBenefit" className="text-sm font-medium text-[#001f3f]">Cash equivalent of fuel benefit</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -3970,7 +3970,7 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box A4</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box A4</p>
                   </div>
                 </div>
 
@@ -3979,9 +3979,9 @@ export default function CompanySecretarial() {
                     <input 
                       type="checkbox" 
                       id="carUnavailable"
-                      className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                      className="h-4 w-4 text-green-600 border-[#001f3f] rounded"
                     />
-                    <Label htmlFor="carUnavailable" className="text-sm text-blue-900">Car was unavailable for 30 consecutive days or more</Label>
+                    <Label htmlFor="carUnavailable" className="text-sm text-[#001f3f]">Car was unavailable for 30 consecutive days or more</Label>
                   </div>
                 </div>
               </div>
@@ -3993,7 +3993,7 @@ export default function CompanySecretarial() {
         title: "Step 3: Medical treatment and insurance - Enter medical benefits and private health insurance provided to employees",
         component: (
           <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 p-4 rounded">
+            <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
               <h3 className="text-lg font-semibold text-green-900 mb-2">Section B: Medical treatment and insurance</h3>
               <p className="text-green-800 text-sm">Medical insurance premiums and treatment provided</p>
             </div>
@@ -4003,14 +4003,14 @@ export default function CompanySecretarial() {
                 <input 
                   type="checkbox" 
                   id="hasMedicalBenefits"
-                  className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                  className="h-4 w-4 text-green-600 border-[#001f3f] rounded"
                 />
-                <Label htmlFor="hasMedicalBenefits" className="text-sm font-medium text-blue-900">Employee received medical benefits</Label>
+                <Label htmlFor="hasMedicalBenefits" className="text-sm font-medium text-[#001f3f]">Employee received medical benefits</Label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="medicalInsurance" className="text-sm font-medium text-blue-900">Medical insurance premiums</Label>
+                  <Label htmlFor="medicalInsurance" className="text-sm font-medium text-[#001f3f]">Medical insurance premiums</Label>
                   <div className="relative mt-1">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
@@ -4021,10 +4021,10 @@ export default function CompanySecretarial() {
                       className="pl-8"
                     />
                   </div>
-                  <p className="text-xs text-blue-900 mt-1">Box B1</p>
+                  <p className="text-xs text-[#001f3f] mt-1">Box B1</p>
                 </div>
                 <div>
-                  <Label htmlFor="medicalTreatment" className="text-sm font-medium text-blue-900">Medical treatment</Label>
+                  <Label htmlFor="medicalTreatment" className="text-sm font-medium text-[#001f3f]">Medical treatment</Label>
                   <div className="relative mt-1">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
@@ -4035,13 +4035,13 @@ export default function CompanySecretarial() {
                       className="pl-8"
                     />
                   </div>
-                  <p className="text-xs text-blue-900 mt-1">Box B2</p>
+                  <p className="text-xs text-[#001f3f] mt-1">Box B2</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="dentalTreatment" className="text-sm font-medium text-blue-900">Dental treatment</Label>
+                  <Label htmlFor="dentalTreatment" className="text-sm font-medium text-[#001f3f]">Dental treatment</Label>
                   <div className="relative mt-1">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
@@ -4052,10 +4052,10 @@ export default function CompanySecretarial() {
                       className="pl-8"
                     />
                   </div>
-                  <p className="text-xs text-blue-900 mt-1">Box B3</p>
+                  <p className="text-xs text-[#001f3f] mt-1">Box B3</p>
                 </div>
                 <div>
-                  <Label htmlFor="opticalTreatment" className="text-sm font-medium text-blue-900">Optical treatment</Label>
+                  <Label htmlFor="opticalTreatment" className="text-sm font-medium text-[#001f3f]">Optical treatment</Label>
                   <div className="relative mt-1">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                     <Input 
@@ -4066,12 +4066,12 @@ export default function CompanySecretarial() {
                       className="pl-8"
                     />
                   </div>
-                  <p className="text-xs text-blue-900 mt-1">Box B4</p>
+                  <p className="text-xs text-[#001f3f] mt-1">Box B4</p>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="medicalDetails" className="text-sm font-medium text-blue-900">Details of medical benefits</Label>
+                <Label htmlFor="medicalDetails" className="text-sm font-medium text-[#001f3f]">Details of medical benefits</Label>
                 <Textarea 
                   id="medicalDetails" 
                   placeholder="Describe the medical benefits provided"
@@ -4087,26 +4087,26 @@ export default function CompanySecretarial() {
         title: "Step 4: Other benefits - Enter other taxable benefits and expenses provided to employees",
         component: (
           <div className="space-y-6">
-            <div className="bg-green-50 border border-green-200 p-4 rounded">
+            <div className="bg-green-50 border-2 border-green-200 p-4 rounded">
               <h3 className="text-lg font-semibold text-green-900 mb-2">Section C: Other benefits</h3>
               <p className="text-green-800 text-sm">Accommodation, loans, and other benefits in kind</p>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-gray-900">Living accommodation</h4>
+                <h4 className="text-md font-semibold text-[#001f3f]">Living accommodation</h4>
                 <div className="flex items-center space-x-2">
                   <input 
                     type="checkbox" 
                     id="hasAccommodation"
-                    className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-green-600 border-[#001f3f] rounded"
                   />
-                  <Label htmlFor="hasAccommodation" className="text-sm font-medium text-blue-900">Employee provided with living accommodation</Label>
+                  <Label htmlFor="hasAccommodation" className="text-sm font-medium text-[#001f3f]">Employee provided with living accommodation</Label>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="accommodationValue" className="text-sm font-medium text-blue-900">Cash equivalent of accommodation</Label>
+                    <Label htmlFor="accommodationValue" className="text-sm font-medium text-[#001f3f]">Cash equivalent of accommodation</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -4117,10 +4117,10 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box C1</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box C1</p>
                   </div>
                   <div>
-                    <Label htmlFor="accommodationAddress" className="text-sm font-medium text-blue-900">Address of accommodation</Label>
+                    <Label htmlFor="accommodationAddress" className="text-sm font-medium text-[#001f3f]">Address of accommodation</Label>
                     <Textarea 
                       id="accommodationAddress" 
                       placeholder="Full address"
@@ -4132,19 +4132,19 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-gray-900">Loans</h4>
+                <h4 className="text-md font-semibold text-[#001f3f]">Loans</h4>
                 <div className="flex items-center space-x-2">
                   <input 
                     type="checkbox" 
                     id="hasLoans"
-                    className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-green-600 border-[#001f3f] rounded"
                   />
-                  <Label htmlFor="hasLoans" className="text-sm font-medium text-blue-900">Employee provided with loans</Label>
+                  <Label htmlFor="hasLoans" className="text-sm font-medium text-[#001f3f]">Employee provided with loans</Label>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="loanAmount" className="text-sm font-medium text-blue-900">Maximum amount of loan outstanding</Label>
+                    <Label htmlFor="loanAmount" className="text-sm font-medium text-[#001f3f]">Maximum amount of loan outstanding</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -4155,10 +4155,10 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box C2</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box C2</p>
                   </div>
                   <div>
-                    <Label htmlFor="loanBenefit" className="text-sm font-medium text-blue-900">Cash equivalent of loan benefit</Label>
+                    <Label htmlFor="loanBenefit" className="text-sm font-medium text-[#001f3f]">Cash equivalent of loan benefit</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -4169,16 +4169,16 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box C3</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box C3</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-gray-900">Other benefits in kind</h4>
+                <h4 className="text-md font-semibold text-[#001f3f]">Other benefits in kind</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="otherBenefits" className="text-sm font-medium text-blue-900">Other benefits (total cash equivalent)</Label>
+                    <Label htmlFor="otherBenefits" className="text-sm font-medium text-[#001f3f]">Other benefits (total cash equivalent)</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -4189,10 +4189,10 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box C4</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box C4</p>
                   </div>
                   <div>
-                    <Label htmlFor="expensesPayments" className="text-sm font-medium text-blue-900">Expenses payments</Label>
+                    <Label htmlFor="expensesPayments" className="text-sm font-medium text-[#001f3f]">Expenses payments</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                       <Input 
@@ -4203,12 +4203,12 @@ export default function CompanySecretarial() {
                         className="pl-8"
                       />
                     </div>
-                    <p className="text-xs text-blue-900 mt-1">Box C5</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Box C5</p>
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="benefitsDescription" className="text-sm font-medium text-blue-900">Description of other benefits</Label>
+                  <Label htmlFor="benefitsDescription" className="text-sm font-medium text-[#001f3f]">Description of other benefits</Label>
                   <Textarea 
                     id="benefitsDescription" 
                     placeholder="Describe any other benefits provided"
@@ -4261,45 +4261,45 @@ export default function CompanySecretarial() {
         title: "Step 1: Employment Details - Enter employer and employment information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employment Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Employment Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employer name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter employer name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employer name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter employer name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">PAYE reference *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 123/AB12345" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">PAYE reference *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 123/AB12345" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Employer address</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Employer address</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employment start date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employment start date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employment end date (if applicable)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employment end date (if applicable)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Payroll number</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter payroll number" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Payroll number</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter payroll number" />
               </div>
             </div>
           </div>
@@ -4309,44 +4309,44 @@ export default function CompanySecretarial() {
         title: "Step 2: Income & Tax - Enter employment income, tax deducted and National Insurance contributions",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Income and Tax Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Income and Tax Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Pay from employment (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Pay from employment (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">UK tax deducted (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tips and other payments (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Benefits from employment (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">UK tax deducted (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Student loan deductions (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tips and other payments (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postgraduate loan deductions (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Benefits from employment (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Student loan deductions (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postgraduate loan deductions (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Did you receive any of the following benefits?</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Did you receive any of the following benefits?</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4386,38 +4386,38 @@ export default function CompanySecretarial() {
         title: "Step 3: Expenses & Deductions - Enter allowable employment expenses and tax deductions",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employment Expenses and Deductions</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Employment Expenses and Deductions</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business travel and subsistence (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business travel and subsistence (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Fixed deductions for expenses (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Fixed deductions for expenses (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Professional fees and subscriptions (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Professional fees and subscriptions (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other expenses and capital allowances (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other expenses and capital allowances (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of other expenses</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other employment expenses"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of other expenses</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other employment expenses"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Do any of these apply to you?</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Do any of these apply to you?</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4479,44 +4479,44 @@ export default function CompanySecretarial() {
         title: "Step 1: Business Details - Enter your business information and self-employment details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Business Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter business name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter business name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business description *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe your business activity" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business description *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe your business activity" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business start date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business start date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounting period end date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounting period end date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Business address</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Business type</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Business type</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="radio" name="businessType" className="mr-2" />
@@ -4540,67 +4540,67 @@ export default function CompanySecretarial() {
         title: "Step 2: Income & Expenses - Enter business income and expense information for self-employment",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Income and Expenses</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Business Income and Expenses</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total business income (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total business income (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Cost of goods sold (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Office costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Travel costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Cost of goods sold (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Premises costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Office costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Repairs and renewals (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">General administrative costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business entertainment costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Travel costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Interest on bank and other loans (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Premises costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other business expenses (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Repairs and renewals (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">General administrative costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business entertainment costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Interest on bank and other loans (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other business expenses (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of other business expenses</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other business expenses"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of other business expenses</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other business expenses"></textarea>
               </div>
             </div>
           </div>
@@ -4610,33 +4610,33 @@ export default function CompanySecretarial() {
         title: "Step 3: Capital Allowances & Adjustments - Enter capital allowances and business adjustments for tax calculations",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Allowances and Adjustments</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Capital Allowances and Adjustments</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Capital allowances (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Capital allowances (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Goods and services for your own use (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Goods and services for your own use (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Vehicle expenses (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Vehicle expenses (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other adjustments (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other adjustments (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Do any of these apply to your business?</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Do any of these apply to your business?</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4662,8 +4662,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your business"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your business"></textarea>
               </div>
             </div>
           </div>
@@ -4707,50 +4707,50 @@ export default function CompanySecretarial() {
         title: "Step 1: Partnership Details - Enter partnership business information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Partnership Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Partnership Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Partnership name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter partnership name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Partnership name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter partnership name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Partnership UTR *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Partnership UTR *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Partnership start date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Partnership start date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounting period end date</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounting period end date</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Partnership address</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Partnership address</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Your percentage share of partnership (%)</label>
-                  <input type="number" step="0.01" min="0" max="100" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Your percentage share of partnership (%)</label>
+                  <input type="number" step="0.01" min="0" max="100" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Nature of trade or profession</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe the business activity" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Nature of trade or profession</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe the business activity" />
                 </div>
               </div>
             </div>
@@ -4761,44 +4761,44 @@ export default function CompanySecretarial() {
         title: "Step 2: Partnership Income - Enter partnership profit share and income details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Your Share of Partnership Income</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Your Share of Partnership Income</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Your share of partnership profit (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Your share of partnership profit (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Your share of partnership loss (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Partnership charges (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Profit share received (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Your share of partnership loss (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tax taken off trading income (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Partnership charges (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">CIS deductions made by contractors (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Profit share received (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tax taken off trading income (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">CIS deductions made by contractors (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Partnership details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Partnership details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4826,38 +4826,38 @@ export default function CompanySecretarial() {
         title: "Step 3: Adjustments & Additional Information - Enter partnership adjustments and additional income details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Adjustments and Additional Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Adjustments and Additional Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Losses brought forward (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Losses brought forward (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Loss relief claimed (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Loss relief claimed (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Capital allowances (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Capital allowances (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Balancing charges (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Balancing charges (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of any adjustments</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any adjustments to partnership income"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of any adjustments</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any adjustments to partnership income"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Additional partnership information</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Additional partnership information</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4879,8 +4879,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your partnership income"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your partnership income"></textarea>
               </div>
             </div>
           </div>
@@ -4924,17 +4924,17 @@ export default function CompanySecretarial() {
         title: "Step 1: Property Details - Enter UK property income information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">UK Property Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">UK Property Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of properties *</label>
-                  <input type="number" min="1" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of properties *</label>
+                  <input type="number" min="1" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Property type</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Property type</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select property type</option>
                     <option value="residential">Residential</option>
                     <option value="commercial">Commercial</option>
@@ -4945,29 +4945,29 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Property address</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Property address</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date property first let</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date property first let</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date property last let (if applicable)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date property last let (if applicable)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Property letting details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Property letting details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -4995,49 +4995,49 @@ export default function CompanySecretarial() {
         title: "Step 2: Property Income - Enter UK property rental income and allowable expenses",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Property Income Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Property Income Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Rent received (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Rent received (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Rent a room relief (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Rent a room relief (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Premiums for the grant of a lease (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Premiums for the grant of a lease (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reverse premiums and inducements (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reverse premiums and inducements (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other property income (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other property income (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tax taken off any income (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tax taken off any income (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of other property income</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other property income"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of other property income</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other property income"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Income details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Income details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5065,71 +5065,71 @@ export default function CompanySecretarial() {
         title: "Step 3: Property Expenses - Enter property rental expenses and allowable deductions",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Property Expenses and Allowances</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Property Expenses and Allowances</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Rent, rates, insurance, ground rents etc (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Rent, rates, insurance, ground rents etc (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Property management (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Repairs, maintenance and renewals (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Finance costs, including interest (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Property management (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Legal, management and other professional fees (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Repairs, maintenance and renewals (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Costs of services provided, including wages (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other allowable property expenses (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Private use adjustment (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Finance costs, including interest (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Balancing charges (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Legal, management and other professional fees (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Capital allowances (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Costs of services provided, including wages (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other allowable property expenses (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Private use adjustment (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Balancing charges (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Capital allowances (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of other allowable expenses</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other allowable property expenses"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of other allowable expenses</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other allowable property expenses"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Expense details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Expense details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5191,17 +5191,17 @@ export default function CompanySecretarial() {
         title: "Step 1: Foreign Income Details - Enter foreign income sources and tax credit information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Foreign Income Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Foreign Income Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country or territory *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country or territory *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Currency</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Currency</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select currency</option>
                     <option value="USD">US Dollar (USD)</option>
                     <option value="EUR">Euro (EUR)</option>
@@ -5216,39 +5216,39 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employment income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employment income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employment income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Self-employment income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Self-employment income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employment income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Property income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Self-employment income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Property income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Self-employment income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Property income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Property income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Income type details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Income type details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5276,55 +5276,55 @@ export default function CompanySecretarial() {
         title: "Step 2: Foreign Tax & Relief - Enter foreign tax credits and relief information for overseas income",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Foreign Tax and Relief Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Foreign Tax and Relief Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on employment income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on employment income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on employment income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on self-employment income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on self-employment income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on employment income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on property income (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on self-employment income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign tax paid on property income (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on self-employment income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Special withholding tax (foreign currency)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on property income (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Special withholding tax (£ sterling)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign tax paid on property income (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Special withholding tax (foreign currency)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Special withholding tax (£ sterling)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Tax relief claims</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Tax relief claims</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5352,38 +5352,38 @@ export default function CompanySecretarial() {
         title: "Step 2: Additional Information - Enter foreign tax credits and additional foreign income details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Additional Foreign Income Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Additional Foreign Income Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Exchange rate used</label>
-                  <input type="number" step="0.0001" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1.0000" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Exchange rate used</label>
+                  <input type="number" step="0.0001" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1.0000" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of exchange rate</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of exchange rate</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Overseas pension income (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Overseas pension income (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Other foreign income (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Other foreign income (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of other foreign income</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other foreign income"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of other foreign income</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of any other foreign income"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Additional details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Additional details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5405,8 +5405,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your foreign income"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your foreign income"></textarea>
               </div>
             </div>
           </div>
@@ -5450,44 +5450,44 @@ export default function CompanySecretarial() {
         title: "Step 1: Asset Disposals - Identifying your disposals",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Asset Disposal Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Asset Disposal Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Description of asset disposed of *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. Shares in ABC Ltd" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Description of asset disposed of *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. Shares in ABC Ltd" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of disposal *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Disposal proceeds (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Allowable costs (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of disposal *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of acquisition</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Disposal proceeds (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Cost or value at acquisition (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Allowable costs (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of acquisition</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Cost or value at acquisition (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Type of disposal</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Type of disposal</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="radio" name="disposalType" className="mr-2" />
@@ -5509,7 +5509,7 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Additional disposal details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Additional disposal details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5537,55 +5537,55 @@ export default function CompanySecretarial() {
         title: "Step 2: Gains and Losses Calculation - Working out your gain or loss",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Gains Calculation</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Capital Gains Calculation</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Disposal proceeds (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Disposal proceeds (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Incidental costs of disposal (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Cost or value at acquisition (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Incidental costs of acquisition (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Incidental costs of disposal (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Enhancement expenditure (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Cost or value at acquisition (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Indexation allowance (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Incidental costs of acquisition (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Taper relief (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Enhancement expenditure (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Gain or loss (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Indexation allowance (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Taper relief (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Gain or loss (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Relief claims</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Relief claims</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5613,55 +5613,55 @@ export default function CompanySecretarial() {
         title: "Step 3: Summary and Tax Calculation - Deducting losses and calculating tax",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Capital Gains Tax Summary</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Capital Gains Tax Summary</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total gains for the year (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total gains for the year (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total losses for the year (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Losses brought forward from earlier years (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Losses used this year (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total losses for the year (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Annual exempt amount (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12300.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Losses brought forward from earlier years (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Taxable gains (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Losses used this year (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Capital gains tax due (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Annual exempt amount (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12300.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tax already paid (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Taxable gains (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Capital gains tax due (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tax already paid (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Additional information</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Additional information</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5683,8 +5683,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your capital gains"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your capital gains"></textarea>
               </div>
             </div>
           </div>
@@ -5728,13 +5728,13 @@ export default function CompanySecretarial() {
         title: "Step 1: Residence Status - Your residence status for tax purposes",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">UK Residence Status</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">UK Residence Status</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tax year *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tax year *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select tax year</option>
                     <option value="2023-24">2023-24</option>
                     <option value="2022-23">2022-23</option>
@@ -5742,8 +5742,8 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Your residence status *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Your residence status *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select status</option>
                     <option value="uk-resident">UK resident</option>
                     <option value="non-uk-resident">Non-UK resident</option>
@@ -5754,17 +5754,17 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date you became UK resident (if applicable)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date you became UK resident (if applicable)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date you ceased to be UK resident (if applicable)</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date you ceased to be UK resident (if applicable)</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Residence details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Residence details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5786,13 +5786,13 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Country of residence (if not UK)</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Country of residence (if not UK)</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Details of residence status</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of your residence status and any changes during the year"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Details of residence status</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Provide details of your residence status and any changes during the year"></textarea>
               </div>
             </div>
           </div>
@@ -5802,21 +5802,21 @@ export default function CompanySecretarial() {
         title: "Step 2: Remittance Basis - Claiming the remittance basis",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Remittance Basis Claim</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Remittance Basis Claim</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Are you claiming the remittance basis? *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Are you claiming the remittance basis? *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select option</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Remittance basis charge (£)</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Remittance basis charge (£)</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select charge</option>
                     <option value="0">£0 (qualifying conditions met)</option>
                     <option value="30000">£30,000</option>
@@ -5827,28 +5827,28 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign income arising (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign income arising (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign income remitted to UK (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign income remitted to UK (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign gains arising (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign gains arising (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Foreign gains remitted to UK (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Foreign gains remitted to UK (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Remittance basis conditions</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Remittance basis conditions</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5876,13 +5876,13 @@ export default function CompanySecretarial() {
         title: "Step 3: Additional Information - Other residence and domicile matters",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Additional Residence Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Additional Residence Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Your domicile status</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Your domicile status</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select domicile status</option>
                     <option value="uk-domiciled">UK domiciled</option>
                     <option value="non-uk-domiciled">Non-UK domiciled</option>
@@ -5890,24 +5890,24 @@ export default function CompanySecretarial() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Country of domicile (if not UK)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Country of domicile (if not UK)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter country name" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of days in UK during tax year</label>
-                  <input type="number" min="0" max="366" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of days in UK during tax year</label>
+                  <input type="number" min="0" max="366" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of years UK resident in last 20 years</label>
-                  <input type="number" min="0" max="20" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of years UK resident in last 20 years</label>
+                  <input type="number" min="0" max="20" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Additional circumstances</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Additional circumstances</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5929,12 +5929,12 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your residence, domicile or remittance basis claim"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about your residence, domicile or remittance basis claim"></textarea>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Professional advice</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Professional advice</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -5992,59 +5992,59 @@ export default function CompanySecretarial() {
         title: "Step 1: Contractor Details - Your business information",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Contractor Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Contractor Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contractor name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter contractor name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contractor name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter contractor name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Unique Taxpayer Reference (UTR) *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounts Office reference *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123PA00000000" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Return period *</label>
-                  <input type="month" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Unique Taxpayer Reference (UTR) *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounts Office reference *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123PA00000000" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Return period *</label>
+                  <input type="month" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Return type</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Return type</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="radio" name="returnType" className="mr-2" />
@@ -6068,44 +6068,44 @@ export default function CompanySecretarial() {
         title: "Step 2: Subcontractor Payments - Payments made to subcontractors",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Subcontractor Payment Details</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Subcontractor Payment Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total payments made to subcontractors (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total payments made to subcontractors (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total deductions made (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Cost of materials included (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">VAT included in payments (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total deductions made (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of subcontractors paid</label>
-                  <input type="number" min="0" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Cost of materials included (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of CIS25 vouchers issued</label>
-                  <input type="number" min="0" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">VAT included in payments (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of subcontractors paid</label>
+                  <input type="number" min="0" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of CIS25 vouchers issued</label>
+                  <input type="number" min="0" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Payment details</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Payment details</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -6127,8 +6127,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional payment information</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about payments made"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional payment information</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about payments made"></textarea>
               </div>
             </div>
           </div>
@@ -6138,12 +6138,12 @@ export default function CompanySecretarial() {
         title: "Step 3: Declaration and Submission - Review and submit your return",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• You must submit your CIS300 return by the 19th of the month following the return period</li>
                   <li>• Late returns may result in penalties</li>
                   <li>• You must keep records of all payments and deductions for at least 3 years</li>
@@ -6153,46 +6153,46 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Return prepared by</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Return prepared by</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of preparation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of preparation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Agent reference (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Agent reference (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to make this declaration on behalf of the contractor</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to make this declaration on behalf of the contractor</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional comments</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional comments or information"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional comments</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional comments or information"></textarea>
               </div>
             </div>
           </div>
@@ -6236,28 +6236,28 @@ export default function CompanySecretarial() {
         title: "Step 1: Employer Details - Your business information for the tax year",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employer Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Employer Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Employer name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter employer name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Employer name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter employer name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">PAYE reference *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123/AB12345" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">PAYE reference *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123/AB12345" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Accounts Office reference *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123PA00000000" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Accounts Office reference *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="123PA00000000" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Tax year ending *</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Tax year ending *</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select tax year</option>
                     <option value="2024-04-05">5 April 2024</option>
                     <option value="2023-04-05">5 April 2023</option>
@@ -6268,32 +6268,32 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Employer type</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Employer type</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="radio" name="employerType" className="mr-2" />
@@ -6321,55 +6321,55 @@ export default function CompanySecretarial() {
         title: "Step 2: Employee Summary - Summary of employees and payments",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Employee and Payment Summary</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Employee and Payment Summary</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total number of employees during the year *</label>
-                  <input type="number" min="0" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total number of employees during the year *</label>
+                  <input type="number" min="0" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Number of employees at year end</label>
-                  <input type="number" min="0" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total pay for all employees (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total PAYE tax deducted (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of employees at year end</label>
+                  <input type="number" min="0" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total employee National Insurance (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total pay for all employees (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total employer National Insurance (£) *</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total PAYE tax deducted (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Student loan deductions (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total employee National Insurance (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Statutory payments made (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total employer National Insurance (£) *</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Student loan deductions (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Statutory payments made (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Employee categories</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Employee categories</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -6397,12 +6397,12 @@ export default function CompanySecretarial() {
         title: "Step 3: Declaration and Submission - Review and submit your annual return",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• You must submit your P35 return by 19 May following the end of the tax year</li>
                   <li>• You must also provide P60s to all employees by 31 May</li>
                   <li>• Late returns may result in penalties</li>
@@ -6412,61 +6412,61 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Return prepared by</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Return prepared by</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of preparation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of preparation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Agent reference (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Agent reference (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total amount due to HMRC (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total amount due to HMRC (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Amount already paid (£)</label>
-                  <input type="number" step="0.01" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Amount already paid (£)</label>
+                  <input type="number" step="0.01" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this return is correct and complete to the best of my knowledge and belief.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to make this declaration on behalf of the employer</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to make this declaration on behalf of the employer</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All P60s have been issued to employees</span>
+                    <span className="text-sm text-[#001f3f]">All P60s have been issued to employees</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional comments</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional comments or information"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional comments</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional comments or information"></textarea>
               </div>
             </div>
           </div>
@@ -6510,34 +6510,34 @@ export default function CompanySecretarial() {
         title: "Step 1: Business Details - Enter your business information and VAT registration details",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Business Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Business name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter business name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Business name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter business name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Trading name (if different)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter trading name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Trading name (if different)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter trading name" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Business address *</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Business address *</label>
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 1" />
+                <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2" placeholder="Address line 2 (optional)" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Town/City" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="County" />
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Postcode" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Business type *</label>
-                <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Business type *</label>
+                <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                   <option value="">Select business type</option>
                   <option value="sole-trader">Sole trader</option>
                   <option value="partnership">Partnership</option>
@@ -6550,12 +6550,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company registration number</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 12345678" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company registration number</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 12345678" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
               </div>
             </div>
@@ -6566,12 +6566,12 @@ export default function CompanySecretarial() {
         title: "Step 2: VAT Liability - Enter VAT liability and registration information for your business",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">VAT Liability Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">VAT Liability Information</h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Reason for registration *</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Reason for registration *</label>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input type="radio" name="registration_reason" value="liable" className="mr-2" />
@@ -6594,22 +6594,22 @@ export default function CompanySecretarial() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Date liable to register</label>
-                    <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Date liable to register</label>
+                    <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Date business started</label>
-                    <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Date business started</label>
+                    <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Expected annual taxable turnover (£)</label>
-                  <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Expected annual taxable turnover (£)</label>
+                  <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Do you make zero-rated or exempt supplies?</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Do you make zero-rated or exempt supplies?</label>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input type="radio" name="zero_rated" value="yes" className="mr-2" />
@@ -6630,33 +6630,33 @@ export default function CompanySecretarial() {
         title: "Step 3: Business Activities - Enter business activities and VAT scheme details for registration",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Business Activities</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Business Activities</h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Main business activity *</label>
-                  <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Describe your main business activity"></textarea>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Main business activity *</label>
+                  <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Describe your main business activity"></textarea>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">SIC code (if known)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 12345" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">SIC code (if known)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 12345" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Number of employees</label>
-                    <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Number of employees</label>
+                    <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Annual payroll (£)</label>
-                    <input type="number" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Annual payroll (£)</label>
+                    <input type="number" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="0.00" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Do you sell goods or services online?</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Do you sell goods or services online?</label>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input type="radio" name="online_sales" value="yes" className="mr-2" />
@@ -6670,7 +6670,7 @@ export default function CompanySecretarial() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Do you import or export goods?</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Do you import or export goods?</label>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input type="checkbox" name="import_export" value="import" className="mr-2" />
@@ -6695,39 +6695,39 @@ export default function CompanySecretarial() {
         title: "Step 2: Contact Details - Enter business contact information and correspondence address",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Contact Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Contact Information</h3>
               
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Contact name *</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Full name" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact name *</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Full name" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Position in business</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. Director, Owner" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Position in business</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. Director, Owner" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Telephone number *</label>
-                    <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 01234 567890" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Telephone number *</label>
+                    <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 01234 567890" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Mobile number</label>
-                    <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 07123 456789" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Mobile number</label>
+                    <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="e.g. 07123 456789" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Email address *</label>
-                  <input type="email" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="example@email.com" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Email address *</label>
+                  <input type="email" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="example@email.com" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Preferred method of contact</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Preferred method of contact</label>
                   <div className="space-y-2">
                     <label className="flex items-center">
                       <input type="radio" name="contact_method" value="email" className="mr-2" />
@@ -6745,11 +6745,11 @@ export default function CompanySecretarial() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-3">Declaration</label>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-3">Declaration</label>
                   <div className="bg-gray-50 p-4 rounded-[2px]">
                     <label className="flex items-start">
                       <input type="checkbox" className="mr-2 mt-1" required />
-                      <span className="text-sm text-blue-900">I declare that the information I have given on this form is true and complete. I understand that if I give false information I may be liable to prosecution and/or a financial penalty.</span>
+                      <span className="text-sm text-[#001f3f]">I declare that the information I have given on this form is true and complete. I understand that if I give false information I may be liable to prosecution and/or a financial penalty.</span>
                     </label>
                   </div>
                 </div>
@@ -6796,70 +6796,70 @@ export default function CompanySecretarial() {
         title: "Step 1: Representative Member - Details of the representative member company",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Representative Member Information</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Representative Member Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Company registration number *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">VAT registration number (if already registered)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Corporation Tax UTR *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Company registration number *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 1 *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">VAT registration number (if already registered)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Registered office address line 2</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Corporation Tax UTR *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 1 *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Registered office address line 2</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter address" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Town/City *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Town/City *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter town/city" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">County</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">County</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter county" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Postcode *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Postcode *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="SW1A 1AA" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Date of incorporation</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Date of incorporation</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Nature of business *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe main business activity" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Nature of business *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Describe main business activity" />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Representative member status</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Representative member status</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -6883,12 +6883,12 @@ export default function CompanySecretarial() {
         title: "Step 2: Group Members - Details of all companies to be included in the VAT group",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">VAT Group Member Companies</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">VAT Group Member Companies</h3>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-800 mb-2">Group Eligibility Requirements</h4>
-                <ul className="text-sm text-blue-700 space-y-1">
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Group Eligibility Requirements</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• All companies must be UK established</li>
                   <li>• Companies must be closely bound by financial, economic and organisational links</li>
                   <li>• At least one company must be liable to register for VAT</li>
@@ -6898,65 +6898,65 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Total number of companies in group *</label>
-                  <input type="number" min="2" max="99" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="2" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Total number of companies in group *</label>
+                  <input type="number" min="2" max="99" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Proposed VAT group name *</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter group name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Proposed VAT group name *</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter group name" />
                 </div>
               </div>
 
               <div className="mt-6">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Member Company 1 (excluding representative member)</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Member Company 1 (excluding representative member)</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Company name *</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name *</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Company registration number *</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Company registration number *</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">VAT registration number (if registered)</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">VAT registration number (if registered)</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Corporation Tax UTR</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Corporation Tax UTR</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
                   </div>
                 </div>
               </div>
 
               <div className="mt-6">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Member Company 2</h4>
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Member Company 2</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Company name</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Company name</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter company name" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Company registration number</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Company registration number</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="12345678" maxLength={8} />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">VAT registration number (if registered)</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">VAT registration number (if registered)</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="GB123456789" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">Corporation Tax UTR</label>
-                    <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Corporation Tax UTR</label>
+                    <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="1234567890" maxLength={10} />
                   </div>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-3">Group structure and relationships</label>
+                <label className="block text-sm font-medium text-[#001f3f] mb-3">Group structure and relationships</label>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
@@ -6978,8 +6978,8 @@ export default function CompanySecretarial() {
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional member companies (if more than 3 total)</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={4} placeholder="List additional companies with their registration numbers and VAT numbers if applicable"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional member companies (if more than 3 total)</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={4} placeholder="List additional companies with their registration numbers and VAT numbers if applicable"></textarea>
               </div>
             </div>
           </div>
@@ -6989,12 +6989,12 @@ export default function CompanySecretarial() {
         title: "Step 3: Declaration and Submission - Review group details and submit application",
         component: (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-[2px] p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Declaration and Submission</h3>
+            <div className="bg-white border-2 border-[#001f3f] rounded-[2px] p-6">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Declaration and Submission</h3>
               
-              <div className="bg-blue-50 border border-blue-900 rounded-[2px] p-4 mb-4">
-                <h4 className="font-semibold text-blue-900 text-blue-900 mb-2">Important Information</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="bg-blue-50 border-2 border-[#001f3f] rounded-[2px] p-4 mb-4">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-2">Important Information</h4>
+                <ul className="text-sm text-[#001f3f] space-y-1">
                   <li>• VAT group registration takes effect from the date specified in your application</li>
                   <li>• All group members become jointly and severally liable for VAT</li>
                   <li>• Supplies between group members are disregarded for VAT purposes</li>
@@ -7004,12 +7004,12 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Proposed effective date of group registration *</label>
-                  <input type="date" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Proposed effective date of group registration *</label>
+                  <input type="date" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Reason for group registration</label>
-                  <select className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Reason for group registration</label>
+                  <select className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Select reason</option>
                     <option value="administrative-efficiency">Administrative efficiency</option>
                     <option value="cash-flow-benefits">Cash flow benefits</option>
@@ -7021,54 +7021,54 @@ export default function CompanySecretarial() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact person for this application</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact person for this application</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact telephone number</label>
-                  <input type="tel" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact telephone number</label>
+                  <input type="tel" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="01234 567890" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Contact email address</label>
-                  <input type="email" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="contact@company.com" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Contact email address</label>
+                  <input type="email" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="contact@company.com" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-blue-900 mb-1">Agent reference (if applicable)</label>
-                  <input type="text" className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
+                  <label className="block text-sm font-medium text-[#001f3f] mb-1">Agent reference (if applicable)</label>
+                  <input type="text" className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter agent reference" />
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 text-gray-900 mb-3">Declaration</h4>
-                <p className="text-sm text-blue-900 mb-4">
+              <div className="mt-6 p-4 bg-gray-50 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] text-[#001f3f] mb-3">Declaration</h4>
+                <p className="text-sm text-[#001f3f] mb-4">
                   I declare that the information I have given on this application is correct and complete to the best of my knowledge and belief. I understand that giving false information may lead to prosecution.
                 </p>
                 <div className="space-y-2">
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" required />
-                    <span className="text-sm text-blue-900">I confirm that I have read and understood the declaration above *</span>
+                    <span className="text-sm text-[#001f3f]">I confirm that I have read and understood the declaration above *</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I am authorized to make this declaration on behalf of all group members</span>
+                    <span className="text-sm text-[#001f3f]">I am authorized to make this declaration on behalf of all group members</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">All group members consent to this VAT group registration</span>
+                    <span className="text-sm text-[#001f3f]">All group members consent to this VAT group registration</span>
                   </label>
                   <label className="flex items-center">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-blue-900">I understand the joint and several liability implications</span>
+                    <span className="text-sm text-[#001f3f]">I understand the joint and several liability implications</span>
                   </label>
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-blue-900 mb-1">Additional information or comments</label>
-                <textarea className="w-full p-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about the VAT group application"></textarea>
+                <label className="block text-sm font-medium text-[#001f3f] mb-1">Additional information or comments</label>
+                <textarea className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] focus:ring-2 focus:ring-green-500 focus:border-green-500" rows={3} placeholder="Any additional information about the VAT group application"></textarea>
               </div>
             </div>
           </div>
@@ -7156,14 +7156,14 @@ export default function CompanySecretarial() {
               content: (
                 <div className="space-y-6">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
+                    <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                      <h4 className="font-semibold text-[#001f3f] mb-2">Current Status</h4>
                       <p className="text-xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
-                    <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                      <h4 className="font-semibold text-blue-900 mb-2">Compliance Score</h4>
-                      <p className="text-sm text-blue-900">Companies House compliance</p>
+                    <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                      <h4 className="font-semibold text-[#001f3f] mb-2">Compliance Score</h4>
+                      <p className="text-sm text-[#001f3f]">Companies House compliance</p>
                       <div className="mt-2">
                         <div className="flex justify-between text-xs">
                           <span>Overall Score</span>
@@ -7176,17 +7176,17 @@ export default function CompanySecretarial() {
                   
                   {kpi.title === 'Active Companies' && (
                     <div>
-                      <h4 className="font-semibold text-blue-900 mb-3">Company Breakdown</h4>
+                      <h4 className="font-semibold text-[#001f3f] mb-3">Company Breakdown</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Private Limited</span>
                           <span className="font-semibold">20 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Public Limited</span>
                           <span className="font-semibold">3 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>LLP</span>
                           <span className="font-semibold">1 company</span>
                         </div>
@@ -7196,17 +7196,17 @@ export default function CompanySecretarial() {
                   
                   {kpi.title === 'Pending Filings' && (
                     <div>
-                      <h4 className="font-semibold text-blue-900 mb-3">Filing Status</h4>
+                      <h4 className="font-semibold text-[#001f3f] mb-3">Filing Status</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                           <span>Confirmation Statements - 5 filings</span>
                           <Badge variant="default">Due Soon</Badge>
                         </div>
-                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                           <span>Annual Returns - 2 filings</span>
                           <Badge variant="secondary">In Progress</Badge>
                         </div>
-                        <div className="flex justify-between items-center p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
                           <span>Overdue - 1 filing</span>
                           <Badge variant="destructive">Urgent</Badge>
                         </div>
@@ -7216,17 +7216,17 @@ export default function CompanySecretarial() {
                   
                   {kpi.title === 'PSC Updates' && (
                     <div>
-                      <h4 className="font-semibold text-blue-900 mb-3">PSC Register Status</h4>
+                      <h4 className="font-semibold text-[#001f3f] mb-3">PSC Register Status</h4>
                       <div className="space-y-2">
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Up to Date</span>
                           <span className="font-semibold">20 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Pending Updates</span>
                           <span className="font-semibold">3 companies</span>
                         </div>
-                        <div className="flex justify-between p-2 border-2 border-blue-900 rounded">
+                        <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
                           <span>Verification Required</span>
                           <span className="font-semibold">1 company</span>
                         </div>
@@ -7258,13 +7258,13 @@ export default function CompanySecretarial() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Recent Filings</CardTitle>
+              <CardTitle className="text-[#001f3f]">Recent Filings</CardTitle>
               <CardDescription>Latest filing activities</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {filings.slice(0, 5).map((filing) => (
-                  <div key={filing.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={filing.id} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div className="flex items-center space-x-3">
                       {getStatusIcon(filing.status)}
                       <div>
@@ -7281,19 +7281,19 @@ export default function CompanySecretarial() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
+              <CardTitle className="text-[#001f3f]">Upcoming Deadlines</CardTitle>
               <CardDescription>Important dates to remember</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {companies.slice(0, 5).map((company) => (
-                  <div key={company.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={company.id} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
                     <div>
                       <p className="font-medium">{company.name}</p>
                       <p className="text-sm text-gray-500">{company.filingType}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-blue-900">{company.nextFiling}</p>
+                      <p className="text-sm font-medium text-[#001f3f]">{company.nextFiling}</p>
                       <Badge className={getStatusColor(company.status)}>{company.status}</Badge>
                     </div>
                   </div>
@@ -7337,13 +7337,13 @@ export default function CompanySecretarial() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">Company Portfolio</CardTitle>
+            <CardTitle className="text-[#001f3f]">Company Portfolio</CardTitle>
             <CardDescription>Manage your company registrations</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {companies.map((company) => (
-                <div key={company.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+                <div key={company.id} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                   <div className="flex items-center space-x-4">
                     <Building className="h-8 w-8 text-blue-600" />
                     <div>
@@ -7468,13 +7468,13 @@ export default function CompanySecretarial() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">People with Significant Control</CardTitle>
+            <CardTitle className="text-[#001f3f]">People with Significant Control</CardTitle>
             <CardDescription>Manage your PSC register</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {pscRegister.map((psc) => (
-                <div key={psc.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+                <div key={psc.id} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
                   <div className="flex items-center space-x-4">
                     <Users className="h-8 w-8 text-purple-600" />
                     <div>
@@ -7485,8 +7485,8 @@ export default function CompanySecretarial() {
                   </div>
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
-                      <p className="text-sm text-blue-900">Shares: {psc.shares}</p>
-                      <p className="text-sm text-blue-900">Voting: {psc.voting}</p>
+                      <p className="text-sm text-[#001f3f]">Shares: {psc.shares}</p>
+                      <p className="text-sm text-[#001f3f]">Voting: {psc.voting}</p>
                       <Badge className={getStatusColor(psc.status)}>{psc.status}</Badge>
                     </div>
                     <div className="flex space-x-2">
@@ -7687,7 +7687,7 @@ export default function CompanySecretarial() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Quick Actions</CardTitle>
+              <CardTitle className="text-[#001f3f]">Quick Actions</CardTitle>
               <CardDescription>Common company secretarial tasks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -7724,7 +7724,7 @@ export default function CompanySecretarial() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Compliance Calendar</CardTitle>
+              <CardTitle className="text-[#001f3f]">Compliance Calendar</CardTitle>
               <CardDescription>Upcoming deadlines and reminders</CardDescription>
             </CardHeader>
             <CardContent>
@@ -7732,21 +7732,21 @@ export default function CompanySecretarial() {
                 <div className="flex items-center justify-between p-3 bg-red-50 rounded-[2px]">
                   <div className="flex items-center space-x-2">
                     <AlertTriangle className="h-4 w-4 text-red-500" />
-                    <span className="text-sm font-medium text-blue-900">Overdue Filing</span>
+                    <span className="text-sm font-medium text-[#001f3f]">Overdue Filing</span>
                   </div>
                   <span className="text-xs text-red-600">2 days overdue</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-orange-50 rounded-[2px]">
                   <div className="flex items-center space-x-2">
                     <Clock className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm font-medium text-blue-900">CS01 Due</span>
+                    <span className="text-sm font-medium text-[#001f3f]">CS01 Due</span>
                   </div>
                   <span className="text-xs text-orange-600">Due in 5 days</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-blue-50 rounded-[2px]">
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm font-medium text-blue-900">Annual Return</span>
+                    <span className="text-sm font-medium text-[#001f3f]">Annual Return</span>
                   </div>
                   <span className="text-xs text-blue-600">Due in 2 weeks</span>
                 </div>
@@ -7762,9 +7762,9 @@ export default function CompanySecretarial() {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r border-gray-200 min-h-screen">
+        <div className="w-64 bg-white border-r border-[#001f3f] min-h-screen">
           <div className="p-4">
-            <h2 className="text-lg font-semibold text-blue-900 mb-4">Company Secretarial</h2>
+            <h2 className="text-lg font-semibold text-[#001f3f] mb-4">Company Secretarial</h2>
             <nav className="space-y-2">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>

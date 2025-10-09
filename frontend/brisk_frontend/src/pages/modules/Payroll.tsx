@@ -185,8 +185,8 @@ export default function Payroll() {
         content: (
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 mb-2">Department Breakdown</h4>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] mb-2">Department Breakdown</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Development</span>
@@ -206,8 +206,8 @@ export default function Payroll() {
                   </div>
                 </div>
               </div>
-              <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                <h4 className="font-semibold text-blue-900 mb-2">Employment Status</h4>
+              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                <h4 className="font-semibold text-[#001f3f] mb-2">Employment Status</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Full-time</span>
@@ -239,8 +239,8 @@ export default function Payroll() {
         description: 'Monthly payroll breakdown and trends',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold text-blue-900 mb-2">Cost Breakdown</h4>
+            <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+              <h4 className="font-semibold text-[#001f3f] mb-2">Cost Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Gross Pay</span>
@@ -271,8 +271,8 @@ export default function Payroll() {
         description: 'Real Time Information submission status',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold text-blue-900 mb-2">Submission History</h4>
+            <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+              <h4 className="font-semibold text-[#001f3f] mb-2">Submission History</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span>December 2024</span>
@@ -303,8 +303,8 @@ export default function Payroll() {
         description: 'Outstanding payroll tasks requiring attention',
         content: (
           <div className="space-y-4">
-            <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-              <h4 className="font-semibold text-blue-900 mb-2">Action Items</h4>
+            <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+              <h4 className="font-semibold text-[#001f3f] mb-2">Action Items</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span>New starter forms</span>
@@ -360,14 +360,14 @@ export default function Payroll() {
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">Monthly Payroll</p>
-                      <p className="text-sm text-blue-900">December 2024</p>
+                      <p className="text-sm text-[#001f3f]">December 2024</p>
                     </div>
                     <Badge variant="outline">Due: 28 Dec</Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-[2px]">
                     <div>
                       <p className="font-medium">RTI Submission</p>
-                      <p className="text-sm text-blue-900">FPS December</p>
+                      <p className="text-sm text-[#001f3f]">FPS December</p>
                     </div>
                     <Badge variant="secondary">Due: 19 Jan</Badge>
                   </div>
@@ -418,7 +418,7 @@ export default function Payroll() {
         <div className="text-center py-8">
           <Calculator className="h-12 w-12 mx-auto text-gray-400 mb-4" />
           <h3 className="text-lg font-semibold mb-2">Select a Payroll Processing Option</h3>
-          <p className="text-blue-900">Choose from the sub-menu to access payroll processing features</p>
+          <p className="text-[#001f3f]">Choose from the sub-menu to access payroll processing features</p>
         </div>
       )
     }
@@ -437,7 +437,7 @@ export default function Payroll() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="text-blue-900">Current Pay Period</CardTitle>
+                <CardTitle className="text-[#001f3f]">Current Pay Period</CardTitle>
                 <CardDescription>December 2024 - Monthly</CardDescription>
               </CardHeader>
               <CardContent>
@@ -460,7 +460,7 @@ export default function Payroll() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-blue-900">Payroll Checklist</CardTitle>
+                <CardTitle className="text-[#001f3f]">Payroll Checklist</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -487,7 +487,7 @@ export default function Payroll() {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-blue-900">This section is under development</p>
+        <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )
   }
@@ -496,10 +496,10 @@ export default function Payroll() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h1 className="text-xl font-bold text-gray-900">Payroll</h1>
-            <p className="text-sm text-blue-900 mt-1">Comprehensive payroll management</p>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h1 className="text-xl font-bold text-[#001f3f]">Payroll</h1>
+            <p className="text-sm text-[#001f3f] mt-1">Comprehensive payroll management</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
@@ -557,7 +557,7 @@ export default function Payroll() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900 bg-white">
+          <div className="p-4 border-b-2 border-[#001f3f] bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search employees, payslips, or submissions..."
               searchValue={searchTerm}

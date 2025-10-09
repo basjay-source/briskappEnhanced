@@ -215,14 +215,14 @@ export default function DocuSignage() {
                 content: (
                   <div className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
+                      <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                        <h4 className="font-semibold text-[#001f3f] mb-2">Current Status</h4>
                         <p className="text-xl font-bold">{kpi.value}</p>
                         <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                       </div>
-                      <div className="p-4 border-2 border-blue-900 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900 mb-2">Performance Score</h4>
-                        <p className="text-sm text-blue-900">E-signature efficiency</p>
+                      <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                        <h4 className="font-semibold text-[#001f3f] mb-2">Performance Score</h4>
+                        <p className="text-sm text-[#001f3f]">E-signature efficiency</p>
                         <div className="mt-2">
                           <div className="flex justify-between text-xs">
                             <span>Overall Score</span>
@@ -275,8 +275,8 @@ export default function DocuSignage() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-[2px]">
                     <div>
-                      <p className="font-medium text-blue-900">Contract Signed</p>
-                      <p className="text-sm text-blue-700">Employment Agreement - John Smith</p>
+                      <p className="font-medium text-[#001f3f]">Contract Signed</p>
+                      <p className="text-sm text-[#001f3f]">Employment Agreement - John Smith</p>
                     </div>
                     <Badge variant="default">Completed</Badge>
                   </div>
@@ -332,7 +332,7 @@ export default function DocuSignage() {
     return (
       <div className="text-center py-8">
         <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-blue-900">This section is under development</p>
+        <p className="text-[#001f3f]">This section is under development</p>
       </div>
     )
   }
@@ -341,10 +341,10 @@ export default function DocuSignage() {
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
         {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h1 className="text-xl font-bold text-gray-900">DocuSignage</h1>
-            <p className="text-sm text-blue-900 mt-1">Digital Document Signing</p>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h1 className="text-xl font-bold text-[#001f3f]">DocuSignage</h1>
+            <p className="text-sm text-[#001f3f] mt-1">Digital Document Signing</p>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4">
@@ -402,7 +402,7 @@ export default function DocuSignage() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900 bg-white">
+          <div className="p-4 border-b-2 border-[#001f3f] bg-white">
             <SearchFilterHeader
               searchPlaceholder="Search envelopes, templates, or signers..."
               searchValue={searchTerm}

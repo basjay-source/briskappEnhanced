@@ -141,7 +141,7 @@ export default function EcosystemHub() {
       icon: BarChart3,
       description: 'SA returns, CGT optimization',
       status: 'active',
-      color: 'bg-orange-500'
+      color: 'bg-blue-500'
     },
     {
       name: 'Payroll',
@@ -226,7 +226,7 @@ export default function EcosystemHub() {
       case 'opportunity':
         return 'bg-green-50 text-green-900'
       default:
-        return 'bg-blue-50 text-blue-900'
+        return 'bg-blue-50 text-[#001f3f]'
     }
   }
 
@@ -238,7 +238,7 @@ export default function EcosystemHub() {
       case 'opportunity':
         return 'text-green-700'
       default:
-        return 'text-blue-700'
+        return 'text-[#001f3f]'
     }
   }
 
@@ -248,7 +248,7 @@ export default function EcosystemHub() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brisk-primary mx-auto"></div>
-            <p className="mt-4 text-blue-900">Loading dashboard...</p>
+            <p className="mt-4 text-[#001f3f]">Loading dashboard...</p>
           </div>
         </div>
       </div>
@@ -261,7 +261,7 @@ export default function EcosystemHub() {
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
-            <p className="mt-4 text-blue-900">Error loading dashboard: {error}</p>
+            <p className="mt-4 text-[#001f3f]">Error loading dashboard: {error}</p>
             <Button onClick={loadDashboardData} className="mt-4">
               Retry
             </Button>
@@ -275,8 +275,8 @@ export default function EcosystemHub() {
     <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-blue-900">Ecosystem Hub</h1>
-          <p className="text-blue-900 mt-2">Welcome to your all-in-one practice management suite</p>
+          <h1 className="text-xl font-bold text-[#001f3f]">Ecosystem Hub</h1>
+          <p className="text-[#001f3f] mt-2">Welcome to your all-in-one practice management suite</p>
         </div>
         <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
           <Link to="/app/practice" className="flex items-center gap-2">
@@ -298,40 +298,40 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">Revenue Sources</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">Revenue Sources</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Practice Management Revenue Details:\n\n- Total: £850,450\n- Growth: +12.5% YoY\n- Active Jobs: 145\n- Top Clients: 23\n- Avg Job Value: £5,865\n- Recurring Revenue: £425,000\n- One-time Projects: £425,450', 'info')}>
-                        <span className="text-blue-900">Practice Management</span>
-                        <span className="font-semibold text-blue-900">£850,450</span>
+                        <span className="text-[#001f3f]">Practice Management</span>
+                        <span className="font-semibold text-[#001f3f]">£850,450</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Bookkeeping Revenue Details:\n\n- Total: £645,230\n- Growth: +8.3% YoY\n- Active Clients: 289\n- Monthly Retainers: £487,500\n- VAT Services: £95,230\n- Management Accounts: £62,500', 'info')}>
-                        <span className="text-blue-900">Bookkeeping</span>
-                        <span className="font-semibold text-blue-900">£645,230</span>
+                        <span className="text-[#001f3f]">Bookkeeping</span>
+                        <span className="font-semibold text-[#001f3f]">£645,230</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Tax Services Revenue Details:\n\n- Total: £512,350\n- Growth: +15.2% YoY\n- Corporation Tax: £287,450\n- Personal Tax: £156,900\n- R&D Claims: £68,000\n- Tax Planning: £45,000', 'info')}>
-                        <span className="text-blue-900">Tax Services</span>
-                        <span className="font-semibold text-blue-900">£512,350</span>
+                        <span className="text-[#001f3f]">Tax Services</span>
+                        <span className="font-semibold text-[#001f3f]">£512,350</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'AML Services Revenue Details:\n\n- Total: £387,970\n- Growth: +6.7% YoY\n- Risk Assessments: £245,000\n- Compliance Reviews: £95,470\n- Training Services: £47,500', 'info')}>
-                        <span className="text-blue-900">AML Services</span>
-                        <span className="font-semibold text-blue-900">£387,970</span>
+                        <span className="text-[#001f3f]">AML Services</span>
+                        <span className="font-semibold text-[#001f3f]">£387,970</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">Growth Metrics</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">Growth Metrics</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'New MRR Details:\n\n- Total New MRR: +£23,450\n- New Clients: 18\n- Avg Contract Value: £1,303\n- Top Services:\n  * Bookkeeping: £12,450\n  * Tax Planning: £6,890\n  * Payroll: £4,110\n- Conversion Rate: 42%', 'info')}>
-                        <span className="text-blue-900">New MRR</span>
+                        <span className="text-[#001f3f]">New MRR</span>
                         <span className="font-semibold text-green-600">+£23,450</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Expansion MRR Details:\n\n- Total Expansion: +£15,230\n- Upsells: 12 clients\n- Cross-sells: 8 clients\n- Service Additions:\n  * Added Tax Services: £7,890\n  * Added Payroll: £4,560\n  * Added AML: £2,780\n- Expansion Rate: 8.2%', 'info')}>
-                        <span className="text-blue-900">Expansion MRR</span>
+                        <span className="text-[#001f3f]">Expansion MRR</span>
                         <span className="font-semibold text-green-600">+£15,230</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Churn MRR Details:\n\n- Total Churn: -£8,920\n- Churned Clients: 5\n- Avg Lost Revenue: £1,784\n- Churn Reasons:\n  * Cost: 2 clients (-£4,560)\n  * Service Quality: 1 client (-£1,890)\n  * Business Closure: 2 clients (-£2,470)\n- Churn Rate: 1.9%', 'info')}>
-                        <span className="text-blue-900">Churn MRR</span>
+                        <span className="text-[#001f3f]">Churn MRR</span>
                         <span className="font-semibold text-red-600">-£8,920</span>
                       </div>
                     </div>
@@ -360,36 +360,36 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">Client Segments</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">Client Segments</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Enterprise Clients Details:\n\n- Total Clients: 247\n- Avg Revenue per Client: £8,945/month\n- Services:\n  * Full Practice Management: 187\n  * Tax & Compliance: 234\n  * Payroll Services: 156\n  * AML/KYC: 198\n- Retention Rate: 96.8%\n- Growth: +12 clients YoY', 'info')}>
-                        <span className="text-blue-900">Enterprise</span>
-                        <span className="font-semibold text-blue-900">247</span>
+                        <span className="text-[#001f3f]">Enterprise</span>
+                        <span className="font-semibold text-[#001f3f]">247</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'SME Clients Details:\n\n- Total Clients: 645\n- Avg Revenue per Client: £2,340/month\n- Services:\n  * Bookkeeping: 589\n  * Tax Returns: 612\n  * Payroll: 387\n  * VAT Returns: 534\n- Retention Rate: 94.2%\n- Growth: +45 clients YoY', 'info')}>
-                        <span className="text-blue-900">SME</span>
-                        <span className="font-semibold text-blue-900">645</span>
+                        <span className="text-[#001f3f]">SME</span>
+                        <span className="font-semibold text-[#001f3f]">645</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Sole Trader Clients Details:\n\n- Total Clients: 355\n- Avg Revenue per Client: £890/month\n- Services:\n  * Self Assessment: 342\n  * Basic Bookkeeping: 298\n  * Tax Planning: 167\n  * VAT Returns: 189\n- Retention Rate: 91.5%\n- Growth: +23 clients YoY', 'info')}>
-                        <span className="text-blue-900">Sole Traders</span>
-                        <span className="font-semibold text-blue-900">355</span>
+                        <span className="text-[#001f3f]">Sole Traders</span>
+                        <span className="font-semibold text-[#001f3f]">355</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">Client Health</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">Client Health</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Healthy Clients Details:\n\n- Total: 1,089 clients (87.4%)\n- Characteristics:\n  * On-time payments: 100%\n  * Active engagement: High\n  * Service utilization: 85%+\n  * Satisfaction score: 4.5+/5\n- Revenue: £2.1M/month\n- Retention forecast: 98%', 'info')}>
-                        <span className="text-blue-900">Healthy</span>
+                        <span className="text-[#001f3f]">Healthy</span>
                         <span className="font-semibold text-green-600">1,089</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'At Risk Clients Details:\n\n- Total: 127 clients (10.2%)\n- Risk Factors:\n  * Payment delays: 45 clients\n  * Reduced engagement: 38 clients\n  * Service complaints: 24 clients\n  * Price sensitivity: 20 clients\n- Revenue at risk: £287K/month\n- Action required: Immediate outreach', 'info')}>
-                        <span className="text-blue-900">At Risk</span>
-                        <span className="font-semibold text-orange-600">127</span>
+                        <span className="text-[#001f3f]">At Risk</span>
+                        <span className="font-semibold text-[#001f3f]">127</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Churned Clients Details:\n\n- Total: 31 clients (2.4%)\n- Time Period: Last 90 days\n- Lost Revenue: £42K/month\n- Churn Reasons:\n  * Price: 12 clients\n  * Service issues: 7 clients\n  * Business closure: 8 clients\n  * Competitor: 4 clients\n- Win-back opportunity: 8 clients', 'info')}>
-                        <span className="text-blue-900">Churned</span>
+                        <span className="text-[#001f3f]">Churned</span>
                         <span className="font-semibold text-red-600">31</span>
                       </div>
                     </div>
@@ -418,41 +418,41 @@ export default function EcosystemHub() {
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">By Module</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">By Module</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Bookkeeping Completion Details:\n\n- Completion Rate: 96.8%\n- Total Tasks: 1,847\n- Completed: 1,788\n- In Progress: 42\n- Overdue: 17\n- Avg Completion Time: 2.3 days\n- Top Performers: Team A (98.5%)\n- Key Metrics: Bank Recs, VAT, Mgmt Accounts', 'info')}>
-                        <span className="text-blue-900">Bookkeeping</span>
-                        <span className="font-semibold text-blue-900">96.8%</span>
+                        <span className="text-[#001f3f]">Bookkeeping</span>
+                        <span className="font-semibold text-[#001f3f]">96.8%</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Tax Returns Completion Details:\n\n- Completion Rate: 94.2%\n- Total Tasks: 892\n- Completed: 840\n- In Progress: 38\n- Overdue: 14\n- Avg Completion Time: 4.1 days\n- Top Performers: Team C (97.2%)\n- Key Metrics: CT600, SA100, R&D Claims', 'info')}>
-                        <span className="text-blue-900">Tax Returns</span>
-                        <span className="font-semibold text-blue-900">94.2%</span>
+                        <span className="text-[#001f3f]">Tax Returns</span>
+                        <span className="font-semibold text-[#001f3f]">94.2%</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Payroll Completion Details:\n\n- Completion Rate: 92.1%\n- Total Tasks: 1,234\n- Completed: 1,137\n- In Progress: 67\n- Overdue: 30\n- Avg Completion Time: 1.8 days\n- Top Performers: Team B (95.8%)\n- Key Metrics: RTI, Pensions, P11D, CIS', 'info')}>
-                        <span className="text-blue-900">Payroll</span>
-                        <span className="font-semibold text-blue-900">92.1%</span>
+                        <span className="text-[#001f3f]">Payroll</span>
+                        <span className="font-semibold text-[#001f3f]">92.1%</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'AML Compliance Completion Details:\n\n- Completion Rate: 89.7%\n- Total Tasks: 567\n- Completed: 508\n- In Progress: 42\n- Overdue: 17\n- Avg Completion Time: 5.2 days\n- Top Performers: Team D (93.4%)\n- Key Metrics: Risk Assessments, PEP Checks, Reviews', 'info')}>
-                        <span className="text-blue-900">AML Compliance</span>
-                        <span className="font-semibold text-blue-900">89.7%</span>
+                        <span className="text-[#001f3f]">AML Compliance</span>
+                        <span className="font-semibold text-[#001f3f]">89.7%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">Performance Trends</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">Performance Trends</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-blue-900">This Week</span>
-                        <span className="font-semibold text-blue-900">94.2%</span>
+                        <span className="text-[#001f3f]">This Week</span>
+                        <span className="font-semibold text-[#001f3f]">94.2%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-900">Last Week</span>
-                        <span className="font-semibold text-blue-900">92.1%</span>
+                        <span className="text-[#001f3f]">Last Week</span>
+                        <span className="font-semibold text-[#001f3f]">92.1%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-900">Monthly Avg</span>
-                        <span className="font-semibold text-blue-900">93.5%</span>
+                        <span className="text-[#001f3f]">Monthly Avg</span>
+                        <span className="font-semibold text-[#001f3f]">93.5%</span>
                       </div>
                     </div>
                   </div>
@@ -474,46 +474,46 @@ export default function EcosystemHub() {
           value={dashboardData?.kpis.avg_response_time.value || '0h'}
           change={dashboardData?.kpis.avg_response_time.change || '+0%'}
           icon={Clock}
-          color="text-orange-600"
+          color="text-[#001f3f]"
           drillDownData={{
             title: "Response Time Analytics",
             content: (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">By Channel</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">By Channel</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Email Response Details:\n\n- Avg Response Time: 1.8h\n- Total Queries: 2,847/month\n- First Response: 1.2h\n- Resolution Time: 4.5h\n- Volume by Time:\n  * Morning: 45%\n  * Afternoon: 35%\n  * Evening: 20%\n- SLA Compliance: 87%', 'info')}>
-                        <span className="text-blue-900">Email</span>
-                        <span className="font-semibold text-blue-900">1.8h</span>
+                        <span className="text-[#001f3f]">Email</span>
+                        <span className="font-semibold text-[#001f3f]">1.8h</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Phone Response Details:\n\n- Avg Response Time: 0.5h\n- Total Calls: 1,234/month\n- Answer Rate: 94%\n- Avg Call Duration: 8.5 min\n- Peak Hours:\n  * 9-11am: 40%\n  * 2-4pm: 35%\n  * Other: 25%\n- SLA Compliance: 96%', 'info')}>
-                        <span className="text-blue-900">Phone</span>
-                        <span className="font-semibold text-blue-900">0.5h</span>
+                        <span className="text-[#001f3f]">Phone</span>
+                        <span className="font-semibold text-[#001f3f]">0.5h</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Portal Response Details:\n\n- Avg Response Time: 3.2h\n- Total Tickets: 1,567/month\n- First Response: 2.8h\n- Resolution Time: 12.4h\n- Ticket Types:\n  * Document Requests: 45%\n  * Query/Question: 35%\n  * Issue Report: 20%\n- SLA Compliance: 82%', 'info')}>
-                        <span className="text-blue-900">Portal</span>
-                        <span className="font-semibold text-blue-900">3.2h</span>
+                        <span className="text-[#001f3f]">Portal</span>
+                        <span className="font-semibold text-[#001f3f]">3.2h</span>
                       </div>
                       <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => console.log('Information', 'Chat Response Details:\n\n- Avg Response Time: 0.3h (18 min)\n- Total Chats: 892/month\n- Instant Response: 78%\n- Avg Chat Duration: 12 min\n- Popular Times:\n  * Business Hours: 85%\n  * After Hours: 15%\n- SLA Compliance: 98%\n- Satisfaction: 4.7/5', 'info')}>
-                        <span className="text-blue-900">Chat</span>
-                        <span className="font-semibold text-blue-900">0.3h</span>
+                        <span className="text-[#001f3f]">Chat</span>
+                        <span className="font-semibold text-[#001f3f]">0.3h</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                    <h4 className="font-semibold text-blue-900">SLA Performance</h4>
+                  <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                    <h4 className="font-semibold text-[#001f3f]">SLA Performance</h4>
                     <div className="mt-2 space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-blue-900">Within 1h</span>
+                        <span className="text-[#001f3f]">Within 1h</span>
                         <span className="font-semibold text-green-600">45%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-900">Within 4h</span>
+                        <span className="text-[#001f3f]">Within 4h</span>
                         <span className="font-semibold text-green-600">78%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-blue-900">Within 24h</span>
+                        <span className="text-[#001f3f]">Within 24h</span>
                         <span className="font-semibold text-green-600">94%</span>
                       </div>
                     </div>
@@ -535,13 +535,13 @@ export default function EcosystemHub() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <h2 className="text-xl font-bold mb-6 text-blue-900">Modules</h2>
+          <h2 className="text-xl font-bold mb-6 text-[#001f3f]">Modules</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {modules.map((module, index) => {
               const Icon = module.icon
               return (
                 <Link key={index} to={module.path}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-2 border-blue-900">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-2 border-[#001f3f]">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <div className={`p-2 rounded-[2px] ${module.color} text-white`}>
@@ -564,21 +564,21 @@ export default function EcosystemHub() {
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-6 text-blue-900">Recent Activity</h2>
-          <Card className="border-2 border-blue-900">
+          <h2 className="text-xl font-bold mb-6 text-[#001f3f]">Recent Activity</h2>
+          <Card className="border-2 border-[#001f3f]">
             <CardContent className="p-6">
               {recentActivity.length > 0 ? (
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
                     <div 
                       key={index} 
-                      className="flex items-start gap-3 cursor-pointer hover:bg-blue-50 p-3 rounded border-2 border-transparent hover:border-blue-900 transition-all"
+                      className="flex items-start gap-3 cursor-pointer hover:bg-blue-50 p-3 rounded border-2 border-transparent hover:border-[#001f3f] transition-all"
                       onClick={() => console.log('Information', `Opening details for ${activity.action}\nClient: ${activity.client}\nJob ID: ${activity.job_id || 'N/A'}\nTime: ${activity.time}`, 'info')}
                     >
                       <div className="w-2 h-2 bg-blue-900 rounded-full mt-2"></div>
                       <div className="flex-1">
-                        <p className="font-medium text-blue-900">{activity.action}</p>
-                        <p className="text-sm text-blue-700">{activity.client}</p>
+                        <p className="font-medium text-[#001f3f]">{activity.action}</p>
+                        <p className="text-sm text-[#001f3f]">{activity.client}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
                       </div>
                     </div>
@@ -592,7 +592,7 @@ export default function EcosystemHub() {
             </CardContent>
           </Card>
 
-          <Card className="mt-6 border-2 border-blue-900">
+          <Card className="mt-6 border-2 border-[#001f3f]">
             <CardHeader>
               <CardTitle>AI Insights</CardTitle>
             </CardHeader>

@@ -155,7 +155,7 @@ export default function TemplateBrandingEditor({
               <Label>Company Logo</Label>
               <div 
                 className={`border-2 border-dashed rounded-[2px] p-6 text-center cursor-pointer transition-colors ${
-                  dragActive ? 'border-brisk-primary bg-blue-50' : 'border-gray-300 hover:border-brisk-primary'
+                  dragActive ? 'border-brisk-primary bg-blue-50' : 'border-[#001f3f] hover:border-brisk-primary'
                 }`}
                 onDragOver={(e) => {
                   e.preventDefault()
@@ -239,7 +239,7 @@ export default function TemplateBrandingEditor({
                 >
                   {branding.custom_branding?.company_name || 'Your Company Name'}
                 </h5>
-                <p className="text-sm text-blue-900">Sample {templateType} content</p>
+                <p className="text-sm text-[#001f3f]">Sample {templateType} content</p>
                 <div 
                   className="mt-2 px-3 py-1 rounded text-white text-sm inline-block"
                   style={{ backgroundColor: branding.theme_colors?.secondary || '#1E40AF' }}

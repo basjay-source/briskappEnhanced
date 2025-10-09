@@ -573,7 +573,7 @@ export default function PracticeManagement() {
       case 'high':
         return 'bg-red-100 text-red-800'
       case 'medium':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-[#001f3f]'
       default:
         return 'bg-green-100 text-green-800'
     }
@@ -945,7 +945,7 @@ export default function PracticeManagement() {
       <div className="space-y-6">
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
-            <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
+            <h1 className={`font-bold text-[#001f3f] ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
             <p className="text-[#001f3f] mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
@@ -1306,7 +1306,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openJobDialog(job)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit job"
                           >
                             <Edit className="h-4 w-4" />
@@ -1615,7 +1615,7 @@ export default function PracticeManagement() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openTimeEntryDialog(entry)}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                          className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
                           title="Edit time entry"
                         >
                           <Edit className="h-4 w-4" />
@@ -2019,7 +2019,7 @@ export default function PracticeManagement() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openDeadlineDialog(deadline)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            className="text-blue-600 hover:text-[#001f3f] hover:bg-blue-50"
                             title="Edit deadline"
                           >
                             <Edit className="h-4 w-4" />
@@ -2400,14 +2400,14 @@ export default function PracticeManagement() {
                   <CardDescription>Configure portal security and access controls</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Two-Factor Authentication</p>
                       <p className="text-sm text-gray-500">Require 2FA for all client logins</p>
                     </div>
                     <Badge className="bg-green-500">Enabled</Badge>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Session Timeout</p>
                       <p className="text-sm text-gray-500">Auto-logout after inactivity</p>
@@ -2424,14 +2424,14 @@ export default function PracticeManagement() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">IP Whitelist</p>
                       <p className="text-sm text-gray-500">Restrict access to specific IPs</p>
                     </div>
                     <Button variant="outline" size="sm">Configure</Button>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-b border-[#001f3f]">
                     <div>
                       <p className="font-medium text-[#001f3f]">Password Policy</p>
                       <p className="text-sm text-gray-500">Minimum password requirements</p>
@@ -2821,7 +2821,7 @@ export default function PracticeManagement() {
               <div className="space-y-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-[2px]">
                   <h5 className="font-semibold text-[#001f3f] mb-2">What I can help you with:</h5>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <ul className="text-sm text-[#001f3f] space-y-1">
                     <li>• Practice workflow optimization and automation strategies</li>
                     <li>• Client onboarding and relationship management best practices</li>
                     <li>• Resource allocation and team utilization analysis</li>
@@ -2870,7 +2870,7 @@ export default function PracticeManagement() {
                 <div className="space-y-3">
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <p className="text-sm text-[#001f3f] font-medium">Workflow Optimization</p>
-                    <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
+                    <p className="text-xs text-[#001f3f] mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
                   <div className="p-3 bg-blue-50 rounded-[2px]">
                     <p className="text-sm text-[#001f3f] font-medium">Resource Allocation</p>
@@ -3310,7 +3310,7 @@ export default function PracticeManagement() {
                       <td className="py-2">Performance</td>
                       <td className="py-2">2024-03-13</td>
                       <td className="py-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Processing</span>
+                        <span className="px-2 py-1 bg-blue-100 text-[#001f3f] rounded text-xs">Processing</span>
                       </td>
                       <td className="py-2">
                         <button className="text-gray-400 text-sm mr-2">View</button>
@@ -3463,10 +3463,10 @@ export default function PracticeManagement() {
       <Dialog open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle className="text-blue-900">{notificationData.title}</DialogTitle>
+            <DialogTitle className="text-[#001f3f]">{notificationData.title}</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p className="text-blue-900 whitespace-pre-line">{notificationData.message}</p>
+            <p className="text-[#001f3f] whitespace-pre-line">{notificationData.message}</p>
           </div>
           <DialogFooter>
             <Button onClick={() => setIsNotificationOpen(false)}>OK</Button>

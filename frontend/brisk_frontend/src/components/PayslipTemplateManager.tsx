@@ -229,17 +229,17 @@ export default function PayslipTemplateManager() {
   const getTemplateTypeColor = (type: string) => {
     switch (type) {
       case 'modern':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-[#001f3f]'
       case 'classic':
         return 'bg-green-100 text-green-800'
       case 'minimal':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
       case 'corporate':
         return 'bg-purple-100 text-purple-800'
       case 'creative':
         return 'bg-pink-100 text-pink-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-[#001f3f]'
     }
   }
 
@@ -252,7 +252,7 @@ export default function PayslipTemplateManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold">Payslip Templates</h2>
-          <p className="text-blue-900">Customize payslip templates and branding for your organization</p>
+          <p className="text-[#001f3f]">Customize payslip templates and branding for your organization</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -392,7 +392,7 @@ export default function PayslipTemplateManager() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border-2 border-blue-900 rounded-[2px] p-6 bg-white min-h-[400px]">
+              <div className="border-2 border-[#001f3f] rounded-[2px] p-6 bg-white min-h-[400px]">
                 <div className="space-y-4">
                   {branding.custom_branding?.logo_url && (
                     <div className="flex justify-center">
@@ -422,19 +422,19 @@ export default function PayslipTemplateManager() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-medium text-blue-900">Employee Name</p>
+                        <p className="text-sm font-medium text-[#001f3f]">Employee Name</p>
                         <p className="font-medium">John Smith</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-blue-900">Employee Number</p>
+                        <p className="text-sm font-medium text-[#001f3f]">Employee Number</p>
                         <p className="font-medium">EMP001</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-blue-900">Pay Period</p>
+                        <p className="text-sm font-medium text-[#001f3f]">Pay Period</p>
                         <p className="font-medium">January 2024</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-blue-900">Pay Date</p>
+                        <p className="text-sm font-medium text-[#001f3f]">Pay Date</p>
                         <p className="font-medium">31/01/2024</p>
                       </div>
                     </div>
