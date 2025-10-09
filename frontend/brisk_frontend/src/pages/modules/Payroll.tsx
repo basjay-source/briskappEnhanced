@@ -502,8 +502,8 @@ export default function Payroll() {
             <p className="text-sm text-[#001f3f] mt-1">Comprehensive payroll management</p>
           </div>
           
-          <div className="flex-1 overflow-y-auto p-4">
-            <nav className="space-y-2">
+          <div className="flex-1 overflow-y-auto p-2">
+            <nav className="space-y-0.5">
               {menuStructure.map((item) => {
                 const Icon = item.icon
                 const isActive = activeMainTab === item.id
