@@ -221,7 +221,31 @@ export default function Bookkeeping() {
 
   const handleQuickAction = (action: string) => {
     console.log('Quick action:', action)
-    alert(`${action} functionality will be implemented`)
+    
+    switch(action) {
+      case 'Create Invoice':
+        handleMainTabClick('Sales')
+        handleSubTabClick('Invoices')
+        alert('📄 Create Invoice\n\nNavigated to Sales > Invoices section.\nClick "Add Invoice" button to create a new invoice.')
+        break
+      case 'Record Expense':
+        handleMainTabClick('Purchases')
+        handleSubTabClick('Expenses')
+        alert('💰 Record Expense\n\nNavigated to Purchases > Expenses section.\nClick "Add Expense" button to record a new expense.')
+        break
+      case 'Bank Reconciliation':
+        handleMainTabClick('Banking')
+        handleSubTabClick('Reconciliation')
+        alert('🏦 Bank Reconciliation\n\nNavigated to Banking > Reconciliation section.\nYou can now match transactions and reconcile your accounts.')
+        break
+      case 'Generate Report':
+        handleMainTabClick('Reports')
+        handleSubTabClick('Financial Reports')
+        alert('📊 Generate Report\n\nNavigated to Reports > Financial Reports section.\nSelect a report type to generate.')
+        break
+      default:
+        alert(`${action} functionality will be implemented`)
+    }
   }
 
   const handleViewTransaction = (transaction: any) => {
