@@ -52,6 +52,26 @@ import AIPromptSection from '../../components/AIPromptSection'
 import KPICard from '../../components/KPICard'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import InvoiceTemplateManager from '../../components/InvoiceTemplateManager'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -75,6 +95,21 @@ export default function Bookkeeping() {
   const [reportsDateFrom, setReportsDateFrom] = useState('')
   const [reportsDateTo, setReportsDateTo] = useState('')
 
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedAccount, setSelectedAccount] = useState<any>(null)
+  const [editFormData, setEditFormData] = useState<any>({})
+  const [addFormData, setAddFormData] = useState<any>({
+    name: '',
+    bank: '',
+    accountNumber: '',
+    balance: 0,
+    type: 'Current',
+    status: 'Active'
+  })
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -85,6 +120,50 @@ export default function Bookkeeping() {
     } finally {
       setIsAILoading(false)
     }
+  }
+
+  const handleViewAccount = (account: any) => {
+    setSelectedAccount(account)
+    setIsViewDialogOpen(true)
+  }
+
+  const handleEditAccount = (account: any) => {
+    setSelectedAccount(account)
+    setEditFormData({ ...account })
+    setIsEditDialogOpen(true)
+  }
+
+  const handleDeleteAccount = (account: any) => {
+    setSelectedAccount(account)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleSaveEdit = () => {
+    console.log('Saving edited account:', editFormData)
+    setIsEditDialogOpen(false)
+  }
+
+  const handleSaveAdd = () => {
+    console.log('Adding new account:', addFormData)
+    setIsAddDialogOpen(false)
+    setAddFormData({
+      name: '',
+      bank: '',
+      accountNumber: '',
+      balance: 0,
+      type: 'Current',
+      status: 'Active'
+    })
+  }
+
+  const confirmDelete = () => {
+    console.log('Deleting account:', selectedAccount)
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleQuickAction = (action: string) => {
+    console.log('Quick action:', action)
+    alert(`${action} functionality will be implemented`)
   }
 
   const statusOptions = [
@@ -553,19 +632,19 @@ export default function Bookkeeping() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg" onClick={() => handleQuickAction('Create Invoice')}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg" onClick={() => handleQuickAction('Record Expense')}>
                   <Receipt className="h-4 w-4 mr-2" />
                   Record Expense
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg" onClick={() => handleQuickAction('Bank Reconciliation')}>
                   <CreditCard className="h-4 w-4 mr-2" />
                   Bank Reconciliation
                 </Button>
-                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg">
+                <Button variant="outline" className="justify-start border-2 border-blue-900 rounded-lg" onClick={() => handleQuickAction('Generate Report')}>
                   <FileText className="h-4 w-4 mr-2" />
                   Generate Report
                 </Button>
@@ -4583,7 +4662,7 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Manage bank accounts, balances, and account settings</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
@@ -4688,13 +4767,13 @@ export default function Bookkeeping() {
                   <div className="text-right">
                     <p className="text-xl font-bold">£{account.balance.toLocaleString()}</p>
                     <div className="flex gap-1 mt-2">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewAccount(account)}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEditAccount(account)}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteAccount(account)}>
                         <RefreshCw className="h-3 w-3" />
                       </Button>
                     </div>
@@ -6222,6 +6301,171 @@ export default function Bookkeeping() {
           </div>
         </div>
       </div>
+
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Bank Account Details</DialogTitle>
+            <DialogDescription>View complete information for this bank account</DialogDescription>
+          </DialogHeader>
+          {selectedAccount && (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account Name</Label>
+                <p className="text-sm">{selectedAccount.name}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Bank</Label>
+                <p className="text-sm">{selectedAccount.bank}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account Number</Label>
+                <p className="text-sm">{selectedAccount.accountNumber}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Balance</Label>
+                <p className="text-xl font-bold text-green-600">£{selectedAccount.balance?.toLocaleString()}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Type</Label>
+                  <Badge className="mt-1 bg-blue-100 text-blue-800">{selectedAccount.type}</Badge>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Status</Label>
+                  <Badge className="mt-1 bg-green-100 text-green-800">{selectedAccount.status}</Badge>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Edit Bank Account</DialogTitle>
+            <DialogDescription>Update bank account information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="edit-name" className="text-blue-900">Account Name</Label>
+              <Input
+                id="edit-name"
+                value={editFormData.name || ''}
+                onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-bank" className="text-blue-900">Bank</Label>
+              <Input
+                id="edit-bank"
+                value={editFormData.bank || ''}
+                onChange={(e) => setEditFormData({...editFormData, bank: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-account-number" className="text-blue-900">Account Number</Label>
+              <Input
+                id="edit-account-number"
+                value={editFormData.accountNumber || ''}
+                onChange={(e) => setEditFormData({...editFormData, accountNumber: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-balance" className="text-blue-900">Balance</Label>
+              <Input
+                id="edit-balance"
+                type="number"
+                value={editFormData.balance || 0}
+                onChange={(e) => setEditFormData({...editFormData, balance: parseFloat(e.target.value)})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Add Bank Account</DialogTitle>
+            <DialogDescription>Add a new bank account to your bookkeeping system</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="add-name" className="text-blue-900">Account Name</Label>
+              <Input
+                id="add-name"
+                value={addFormData.name}
+                onChange={(e) => setAddFormData({...addFormData, name: e.target.value})}
+                placeholder="e.g., Business Current Account"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-bank" className="text-blue-900">Bank</Label>
+              <Input
+                id="add-bank"
+                value={addFormData.bank}
+                onChange={(e) => setAddFormData({...addFormData, bank: e.target.value})}
+                placeholder="e.g., Barclays"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-account-number" className="text-blue-900">Account Number</Label>
+              <Input
+                id="add-account-number"
+                value={addFormData.accountNumber}
+                onChange={(e) => setAddFormData({...addFormData, accountNumber: e.target.value})}
+                placeholder="e.g., ****1234"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-balance" className="text-blue-900">Initial Balance</Label>
+              <Input
+                id="add-balance"
+                type="number"
+                value={addFormData.balance}
+                onChange={(e) => setAddFormData({...addFormData, balance: parseFloat(e.target.value)})}
+                placeholder="0"
+                className="border-2 border-blue-900"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveAdd}>Add Account</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-blue-900">Delete Bank Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{selectedAccount?.name}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ResponsiveLayout>
   )
 }
