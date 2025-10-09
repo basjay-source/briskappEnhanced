@@ -42,8 +42,7 @@ import {
   Calendar,
   ArrowLeftRight,
   Tags,
-  Trash2,
-  X
+  Trash2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -75,12 +74,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ExportButton } from '@/components/ExportButton'
 
 export default function Bookkeeping() {
@@ -184,11 +177,6 @@ export default function Bookkeeping() {
     setSelectedAccount(account)
     setEditFormData({ ...account })
     setIsEditDialogOpen(true)
-  }
-
-  const handleDeleteAccount = (account: any) => {
-    setSelectedAccount(account)
-    setIsDeleteDialogOpen(true)
   }
 
   const handleRefreshAccount = (account: any) => {
@@ -422,7 +410,6 @@ export default function Bookkeeping() {
 
   const handleSyncFeed = (feed: any) => {
     console.log('Syncing feed:', feed)
-    const now = new Date()
     const randomTransactions = Math.floor(Math.random() * 50) + 1
     const updatedFeed = {
       ...feed,
@@ -443,7 +430,7 @@ export default function Bookkeeping() {
       status: 'Active'
     }))
     setBankFeeds(updatedFeeds)
-    const totalNew = updatedFeeds.reduce((sum, f, i) => sum + (updatedFeeds[i].transactions - bankFeeds[i].transactions), 0)
+    const totalNew = updatedFeeds.reduce((sum, _f, i) => sum + (updatedFeeds[i].transactions - bankFeeds[i].transactions), 0)
     alert(`✅ Successfully synced all bank feeds!\n\n${totalNew} new transactions imported across ${bankFeeds.length} feeds.`)
   }
 
@@ -454,64 +441,6 @@ export default function Bookkeeping() {
     }
   }
 
-  const handleExport = (data: any[][], filename: string, format: 'csv' | 'excel' | 'pdf') => {
-    if (format === 'csv') {
-      const csvContent = data.map(row => row.join(',')).join('\n')
-      const blob = new Blob([csvContent], { type: 'text/csv' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${filename}.csv`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-    } else if (format === 'excel') {
-      const csvContent = data.map(row => row.join(',')).join('\n')
-      const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${filename}.xls`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-    } else if (format === 'pdf') {
-      const htmlContent = `
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #001f3f; color: white; }
-            h1 { color: #001f3f; }
-          </style>
-        </head>
-        <body>
-          <h1>${filename}</h1>
-          <table>
-            <thead>
-              <tr>${data[0].map(cell => `<th>${cell}</th>`).join('')}</tr>
-            </thead>
-            <tbody>
-              ${data.slice(1).map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
-            </tbody>
-          </table>
-        </body>
-        </html>
-      `
-      const blob = new Blob([htmlContent], { type: 'text/html' })
-      const url = window.URL.createObjectURL(blob)
-      const printWindow = window.open(url, '_blank')
-      if (printWindow) {
-        printWindow.onload = () => {
-          printWindow.print()
-        }
-      }
-    }
-  }
 
   const statusOptions = [
     { label: 'All Statuses', value: 'all' },
@@ -1739,11 +1668,11 @@ export default function Bookkeeping() {
                     <ExportButton
                       data={[
                         ['Report Type', 'Period', 'Value'],
-                        ['Operating Cash Flow', selectedPeriod, '£42,350'],
-                        ['Investing Cash Flow', selectedPeriod, '-£15,200'],
-                        ['Financing Cash Flow', selectedPeriod, '-£8,500']
+                        ['Operating Cash Flow', 'Current Period', '£42,350'],
+                        ['Investing Cash Flow', 'Current Period', '-£15,200'],
+                        ['Financing Cash Flow', 'Current Period', '-£8,500']
                       ]}
-                      filename={`financial-report-${selectedReport.name}-${new Date().toISOString().split('T')[0]}`}
+                      filename={`financial-report-${report.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}`}
                       buttonText="Export Report"
                       variant="outline"
                     />
