@@ -1319,7 +1319,11 @@ const CharityAccounts: React.FC = () => {
             <div key={categoryKey}>
               <button
                 onClick={() => toggleCategory(categoryKey)}
-                className="w-full flex items-center justify-between p-2 text-left text-sm font-medium text-[#001f3f] hover:bg-gray-100 rounded-[2px]"
+                className={`w-full flex items-center justify-between p-2 text-left text-sm font-medium rounded-[2px] transition-colors ${
+                  activeMainTab === categoryKey
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
               >
                 <div className="flex items-center gap-2">
                   <category.icon className="h-4 w-4" />
