@@ -6461,7 +6461,7 @@ export default function Bookkeeping() {
             <div className="space-y-4">
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Description</Label>
-                <p className="text-sm">{selectedTransaction.description}</p>
+                <p className="text-sm text-blue-900">{selectedTransaction.description}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Amount</Label>
@@ -6472,7 +6472,7 @@ export default function Bookkeeping() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-blue-900 font-semibold">Date</Label>
-                  <p className="text-sm">{selectedTransaction.date}</p>
+                  <p className="text-sm text-blue-900">{selectedTransaction.date}</p>
                 </div>
                 <div>
                   <Label className="text-blue-900 font-semibold">Type</Label>
@@ -6481,7 +6481,7 @@ export default function Bookkeeping() {
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Account</Label>
-                <p className="text-sm">{selectedTransaction.account}</p>
+                <p className="text-sm text-blue-900">{selectedTransaction.account}</p>
               </div>
               {selectedTransaction.category && (
                 <div className="grid gap-2">
