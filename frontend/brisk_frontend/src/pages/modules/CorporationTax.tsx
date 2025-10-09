@@ -22,7 +22,7 @@ import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['computation'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024')

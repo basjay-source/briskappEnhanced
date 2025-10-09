@@ -22,7 +22,7 @@ import { Badge } from '../../components/ui/badge'
 const AccountsProduction: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['dashboard'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
 
   const menuStructure = [

@@ -26,7 +26,7 @@ export default function AMLCompliance() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['risk'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('')
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')

@@ -86,7 +86,7 @@ import { ExportButton } from '@/components/ExportButton'
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['transactions', 'reports'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const isMobile = useIsMobile()
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')

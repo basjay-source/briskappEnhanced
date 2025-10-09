@@ -27,7 +27,7 @@ export default function DocuSignage() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['envelopes'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDocumentType, setSelectedDocumentType] = useState('all')
   const [selectedSignatureStatus, setSelectedSignatureStatus] = useState('all')

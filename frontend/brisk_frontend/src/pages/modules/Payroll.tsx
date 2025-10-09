@@ -29,7 +29,7 @@ export default function Payroll() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['processing'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('all')

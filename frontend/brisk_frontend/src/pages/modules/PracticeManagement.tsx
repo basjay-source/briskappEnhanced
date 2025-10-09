@@ -108,7 +108,7 @@ export default function PracticeManagement() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['jobs'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')

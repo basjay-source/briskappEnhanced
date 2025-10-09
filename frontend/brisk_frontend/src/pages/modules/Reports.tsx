@@ -18,7 +18,7 @@ import ResponsiveLayout from '@/components/ResponsiveLayout'
 const Reports: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('financial')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['financial'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [searchValue, setSearchValue] = useState('')
   const [selectedPeriod, setSelectedPeriod] = useState('')
   const [selectedClient, setSelectedClient] = useState('')

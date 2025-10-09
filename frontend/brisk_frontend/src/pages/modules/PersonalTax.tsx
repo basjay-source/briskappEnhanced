@@ -44,7 +44,7 @@ export default function PersonalTax() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['returns', 'planning'])
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
