@@ -2728,10 +2728,16 @@ export default function Bookkeeping() {
               <Calculator className="h-4 w-4 mr-2" />
               Cost Calculator
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Analysis
-            </Button>
+            <ExportButton
+              data={[
+                ['Cost Category', 'Budget', 'Actual', 'Variance', 'Margin'],
+                ['Labour', '£8,000', '£7,500', '-£500', '35%'],
+                ['Materials', '£3,000', '£3,200', '+£200', '28%'],
+                ['Overheads', '£2,000', '£1,800', '-£200', '15%']
+              ]}
+              filename={`project-costing-analysis-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Analysis"
+            />
           </div>
         </div>
 
