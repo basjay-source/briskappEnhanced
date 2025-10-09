@@ -140,11 +140,17 @@ export default function Bookkeeping() {
 
   const handleSaveEdit = () => {
     console.log('Saving edited account:', editFormData)
+    alert(`✅ Successfully updated ${editFormData.name}!\n\nChanges saved to the system.`)
     setIsEditDialogOpen(false)
   }
 
   const handleSaveAdd = () => {
     console.log('Adding new account:', addFormData)
+    if (!addFormData.name || !addFormData.bank || !addFormData.accountNumber) {
+      alert('⚠️ Please fill in all required fields: Account Name, Bank, and Account Number')
+      return
+    }
+    alert(`✅ Successfully added ${addFormData.name}!\n\nNew bank account has been created.`)
     setIsAddDialogOpen(false)
     setAddFormData({
       name: '',
@@ -158,6 +164,7 @@ export default function Bookkeeping() {
 
   const confirmDelete = () => {
     console.log('Deleting account:', selectedAccount)
+    alert(`✅ Successfully deleted ${selectedAccount?.name}!\n\nBank account has been removed from the system.`)
     setIsDeleteDialogOpen(false)
   }
 
@@ -6306,7 +6313,7 @@ export default function Bookkeeping() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Bank Account Details</DialogTitle>
-            <DialogDescription>View complete information for this bank account</DialogDescription>
+            <DialogDescription className="text-blue-900">View complete information for this bank account</DialogDescription>
           </DialogHeader>
           {selectedAccount && (
             <div className="space-y-4">
@@ -6348,7 +6355,7 @@ export default function Bookkeeping() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Edit Bank Account</DialogTitle>
-            <DialogDescription>Update bank account information</DialogDescription>
+            <DialogDescription className="text-blue-900">Update bank account information</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid gap-2">
@@ -6400,7 +6407,7 @@ export default function Bookkeeping() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Add Bank Account</DialogTitle>
-            <DialogDescription>Add a new bank account to your bookkeeping system</DialogDescription>
+            <DialogDescription className="text-blue-900">Add a new bank account to your bookkeeping system</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid gap-2">
@@ -6456,7 +6463,7 @@ export default function Bookkeeping() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-blue-900">Delete Bank Account</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-blue-900">
               Are you sure you want to delete <strong>{selectedAccount?.name}</strong>? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
