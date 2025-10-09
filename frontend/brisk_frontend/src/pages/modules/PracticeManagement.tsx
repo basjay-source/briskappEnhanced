@@ -48,6 +48,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
+import { ExportButton } from '@/components/ExportButton'
 import { api } from '@/lib/api'
 
 interface Job {
@@ -799,9 +800,16 @@ export default function PracticeManagement() {
                 <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Client List
                 </button>
-                <button onClick={() => alert('Exporting client data...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
-                  Export Report
-                </button>
+                <ExportButton
+                  data={[
+                    ['Client Type', 'Count', 'Percentage'],
+                    ['Active', '1,087', '87.4%'],
+                    ['At Risk', '127', '10.2%'],
+                    ['Churned', '31', '2.4%']
+                  ]}
+                  filename={`client-report-${new Date().toISOString().split('T')[0]}`}
+                  buttonText="Export Report"
+                />
               </div>
             </div>
           )
