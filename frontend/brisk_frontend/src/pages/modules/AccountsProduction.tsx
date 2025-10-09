@@ -917,7 +917,13 @@ const AccountsProduction: React.FC = () => {
             <Upload className="h-4 w-4 mr-2" />
             Import
           </Button>
-          <ExportButton data={trialBalanceEntries} filename="trial-balance" />
+          <ExportButton 
+            data={[
+              ['Account Code', 'Account Name', 'Debit', 'Credit', 'Category'],
+              ...trialBalanceEntries.map(e => [e.accountCode, e.accountName, e.debit.toString(), e.credit.toString(), e.category])
+            ]} 
+            filename="trial-balance" 
+          />
           <Button size="sm" onClick={handleAddTBEntry}>
             <Plus className="h-4 w-4 mr-2" />
             Add Entry
@@ -1521,7 +1527,10 @@ const AccountsProduction: React.FC = () => {
                           </Button>
                         )}
                         <ExportButton 
-                          data={statement} 
+                          data={[
+                            ['Type', 'Period', 'Generated Date', 'Status'],
+                            [statement.type, statement.period, statement.generatedDate, statement.status]
+                          ]} 
                           filename={`${statement.type}-${statement.period}`} 
                         />
                       </div>
@@ -2708,7 +2717,10 @@ const AccountsProduction: React.FC = () => {
             )}
             {selectedStatement && (
               <ExportButton 
-                data={selectedStatement} 
+                data={[
+                  ['Type', 'Period', 'Generated Date', 'Status'],
+                  [selectedStatement.type, selectedStatement.period, selectedStatement.generatedDate, selectedStatement.status]
+                ]} 
                 filename={`${selectedStatement.type}-${selectedStatement.period}`} 
               />
             )}
