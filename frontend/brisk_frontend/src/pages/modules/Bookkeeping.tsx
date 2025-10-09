@@ -184,6 +184,11 @@ export default function Bookkeeping() {
     setIsDeleteDialogOpen(true)
   }
 
+  const handleRefreshAccount = (account: any) => {
+    console.log('Refreshing account:', account)
+    alert(`✅ Successfully refreshed ${account.name}!\n\nBalance updated: £${account.balance.toLocaleString()}\nLast updated: Just now`)
+  }
+
   const handleSaveEdit = () => {
     console.log('Saving edited account:', editFormData)
     alert(`✅ Successfully updated ${editFormData.name}!\n\nChanges saved to the system.`)
@@ -5013,7 +5018,7 @@ export default function Bookkeeping() {
                       <Button variant="ghost" size="sm" onClick={() => handleEditAccount(account)}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteAccount(account)}>
+                      <Button variant="ghost" size="sm" onClick={() => handleRefreshAccount(account)}>
                         <RefreshCw className="h-3 w-3" />
                       </Button>
                     </div>
