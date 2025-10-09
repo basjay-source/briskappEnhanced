@@ -1313,7 +1313,7 @@ const CharityAccounts: React.FC = () => {
           </h1>
         </div>
         
-        <nav className="flex-1 p-4 space-y-0.5">
+        <nav className="flex-1 p-2 space-y-0.5">
           {Object.entries(menuStructure).map(([categoryKey, category]) => (
             <div key={categoryKey}>
               <button

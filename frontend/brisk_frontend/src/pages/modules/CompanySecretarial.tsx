@@ -7764,7 +7764,7 @@ export default function CompanySecretarial() {
       <div className="flex">
         {/* Left Sidebar Navigation */}
         <div className="w-64 bg-white border-r border-[#001f3f] min-h-screen">
-          <div className="p-4">
+          <div className="p-2">
             <h2 className="text-lg font-semibold text-[#001f3f] mb-4">Company Secretarial</h2>
             <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => (
