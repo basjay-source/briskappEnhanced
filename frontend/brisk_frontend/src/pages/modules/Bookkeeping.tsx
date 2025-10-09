@@ -4701,10 +4701,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New PO
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['PO #', 'Supplier', 'Date', 'Amount', 'Status'],
+                ['PO-001', 'Supplier A', '2024-01-15', '£3,500', 'Pending'],
+                ['PO-002', 'Supplier B', '2024-01-14', '£2,800', 'Approved'],
+                ['PO-003', 'Supplier C', '2024-01-13', '£4,200', 'Received']
+              ]}
+              filename={`purchase-orders-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
