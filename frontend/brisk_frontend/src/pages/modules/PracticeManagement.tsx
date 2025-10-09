@@ -122,6 +122,14 @@ export default function PracticeManagement() {
   const [error, setError] = useState<string | null>(null)
   
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false)
+
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [notificationData, setNotificationData] = useState<{title: string, message: string, type?: 'success' | 'error' | 'info'}>({title: '', message: '', type: 'info'})
+  
+  const showNotification = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setNotificationData({ title, message, type })
+    setIsNotificationOpen(true)
+  }
   const [editingJob, setEditingJob] = useState<Job | null>(null)
   const [jobFormData, setJobFormData] = useState({
     client_id: '',
@@ -246,7 +254,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting job:', err)
-      alert('Failed to delete job')
+      showNotification('Error', 'Failed to delete job', 'error')
     }
   }
 
@@ -259,7 +267,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting deadline:', err)
-      alert('Failed to delete deadline')
+      showNotification('Error', 'Failed to delete deadline', 'error')
     }
   }
 
@@ -327,7 +335,7 @@ export default function PracticeManagement() {
       closeJobDialog()
     } catch (err: any) {
       console.error('Error creating job:', err)
-      alert('Failed to create job: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create job: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -341,7 +349,7 @@ export default function PracticeManagement() {
       closeJobDialog()
     } catch (err: any) {
       console.error('Error updating job:', err)
-      alert('Failed to update job: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update job: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -406,7 +414,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error creating time entry:', err)
-      alert('Failed to create time entry: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create time entry: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -424,7 +432,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error updating time entry:', err)
-      alert('Failed to update time entry: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update time entry: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -437,7 +445,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting time entry:', err)
-      alert('Failed to delete time entry')
+      showNotification('Error', 'Failed to delete time entry', 'error')
     }
   }
 
@@ -498,7 +506,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error creating deadline:', err)
-      alert('Failed to create deadline: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to create deadline: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -512,7 +520,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error updating deadline:', err)
-      alert('Failed to update deadline: ' + (err.message || 'Unknown error'))
+      showNotification('Error', 'Failed to update deadline: ' + (err.message || 'Unknown error'), 'error')
     }
   }
 
@@ -702,19 +710,19 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Revenue by Module</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Practice Management Revenue: £850,450\nJobs Completed: 145\nAvg Job Value: £5,865')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Practice Management Revenue: £850,450\nJobs Completed: 145\nAvg Job Value: £5,865', 'info')}>
                       <span className="text-[#001f3f]">Practice Management</span>
                       <span className="font-semibold text-[#001f3f]">£850,450</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Services Revenue: £645,230\nReturns Filed: 289\nAvg Fee: £2,232')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Tax Services Revenue: £645,230\nReturns Filed: 289\nAvg Fee: £2,232', 'info')}>
                       <span className="text-[#001f3f]">Tax Services</span>
                       <span className="font-semibold text-[#001f3f]">£645,230</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Bookkeeping Revenue: £512,350\nActive Clients: 234\nMonthly Recurring: £425,000')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Bookkeeping Revenue: £512,350\nActive Clients: 234\nMonthly Recurring: £425,000', 'info')}>
                       <span className="text-[#001f3f]">Bookkeeping</span>
                       <span className="font-semibold text-[#001f3f]">£512,350</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Payroll Services Revenue: £391,970\nPayroll Runs: 456\nEmployees Processed: 3,450')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Payroll Services Revenue: £391,970\nPayroll Runs: 456\nEmployees Processed: 3,450', 'info')}>
                       <span className="text-[#001f3f]">Payroll Services</span>
                       <span className="font-semibold text-[#001f3f]">£391,970</span>
                     </div>
@@ -723,15 +731,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Growth Metrics</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%', 'info')}>
                       <span className="text-[#001f3f]">MRR</span>
                       <span className="font-semibold text-green-600">+£1.2M</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67', 'info')}>
                       <span className="text-[#001f3f]">YoY Growth</span>
                       <span className="font-semibold text-green-600">+12.5%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450', 'info')}>
                       <span className="text-[#001f3f]">ARPC</span>
                       <span className="font-semibold text-[#001f3f]">£1,924</span>
                     </div>
@@ -739,10 +747,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening comprehensive revenue analytics dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening comprehensive revenue analytics dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Detailed Report
                 </button>
-                <button onClick={() => alert('Exporting revenue data to Excel...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Exporting revenue data to Excel...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Export Data
                 </button>
               </div>
@@ -764,15 +772,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Client Segments</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Enterprise Clients: 247\nAvg Revenue: £8,945/mo\nRetention: 96.8%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Enterprise Clients: 247\nAvg Revenue: £8,945/mo\nRetention: 96.8%', 'info')}>
                       <span className="text-[#001f3f]">Enterprise</span>
                       <span className="font-semibold text-[#001f3f]">247</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('SME Clients: 645\nAvg Revenue: £2,340/mo\nRetention: 94.2%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'SME Clients: 645\nAvg Revenue: £2,340/mo\nRetention: 94.2%', 'info')}>
                       <span className="text-[#001f3f]">SME</span>
                       <span className="font-semibold text-[#001f3f]">645</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Sole Traders: 355\nAvg Revenue: £890/mo\nRetention: 91.5%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Sole Traders: 355\nAvg Revenue: £890/mo\nRetention: 91.5%', 'info')}>
                       <span className="text-[#001f3f]">Sole Traders</span>
                       <span className="font-semibold text-[#001f3f]">355</span>
                     </div>
@@ -781,15 +789,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Client Health</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5', 'info')}>
                       <span className="text-[#001f3f]">Healthy</span>
                       <span className="font-semibold text-green-600">1,089</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38', 'info')}>
                       <span className="text-[#001f3f]">At Risk</span>
                       <span className="font-semibold text-orange-600">127</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8', 'info')}>
                       <span className="text-[#001f3f]">Churned</span>
                       <span className="font-semibold text-red-600">31</span>
                     </div>
@@ -797,7 +805,7 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening client management dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Client List
                 </button>
                 <ExportButton
@@ -829,15 +837,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">By Department</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Department: 96.8%\nCompleted: 1,788\nOverdue: 17')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Tax Department: 96.8%\nCompleted: 1,788\nOverdue: 17', 'info')}>
                       <span className="text-[#001f3f]">Tax Department</span>
                       <span className="font-semibold text-[#001f3f]">96.8%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Audit: 94.2%\nCompleted: 840\nOverdue: 14')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Audit: 94.2%\nCompleted: 840\nOverdue: 14', 'info')}>
                       <span className="text-[#001f3f]">Audit</span>
                       <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Advisory: 92.1%\nCompleted: 1,137\nOverdue: 30')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Advisory: 92.1%\nCompleted: 1,137\nOverdue: 30', 'info')}>
                       <span className="text-[#001f3f]">Advisory</span>
                       <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
@@ -846,15 +854,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">Performance Trends</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('This Week: 94.2%\nCompleted: 847\nIn Progress: 67')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'This Week: 94.2%\nCompleted: 847\nIn Progress: 67', 'info')}>
                       <span className="text-[#001f3f]">This Week</span>
                       <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Last Week: 92.1%\nCompleted: 823\nImprovement: +2.1%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Last Week: 92.1%\nCompleted: 823\nImprovement: +2.1%', 'info')}>
                       <span className="text-[#001f3f]">Last Week</span>
                       <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Avg: 93.5%\nTarget: 95%\nGap: -1.5%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Monthly Avg: 93.5%\nTarget: 95%\nGap: -1.5%', 'info')}>
                       <span className="text-[#001f3f]">Monthly Avg</span>
                       <span className="font-semibold text-[#001f3f]">93.5%</span>
                     </div>
@@ -862,10 +870,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening task performance dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening task performance dashboard...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Task Details
                 </button>
-                <button onClick={() => alert('Generating performance report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Generating performance report...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Performance Report
                 </button>
               </div>
@@ -887,15 +895,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">By Channel</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Email: 1.8h avg\nTotal Queries: 2,847/mo\nSLA Compliance: 87%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Email: 1.8h avg\nTotal Queries: 2,847/mo\nSLA Compliance: 87%', 'info')}>
                       <span className="text-[#001f3f]">Email</span>
                       <span className="font-semibold text-[#001f3f]">1.8h</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Phone: 0.5h avg\nTotal Calls: 1,234/mo\nSLA Compliance: 96%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Phone: 0.5h avg\nTotal Calls: 1,234/mo\nSLA Compliance: 96%', 'info')}>
                       <span className="text-[#001f3f]">Phone</span>
                       <span className="font-semibold text-[#001f3f]">0.5h</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Portal: 3.2h avg\nTotal Tickets: 1,567/mo\nSLA Compliance: 82%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Portal: 3.2h avg\nTotal Tickets: 1,567/mo\nSLA Compliance: 82%', 'info')}>
                       <span className="text-[#001f3f]">Portal</span>
                       <span className="font-semibold text-[#001f3f]">3.2h</span>
                     </div>
@@ -904,15 +912,15 @@ export default function PracticeManagement() {
                 <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
                   <h4 className="font-semibold text-[#001f3f]">SLA Performance</h4>
                   <div className="mt-2 space-y-2">
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 1h: 45%\nTotal: 2,145\nTarget: 50%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 1h: 45%\nTotal: 2,145\nTarget: 50%', 'info')}>
                       <span className="text-[#001f3f]">Within 1h</span>
                       <span className="font-semibold text-green-600">45%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 4h: 78%\nTotal: 3,714\nTarget: 80%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 4h: 78%\nTotal: 3,714\nTarget: 80%', 'info')}>
                       <span className="text-[#001f3f]">Within 4h</span>
                       <span className="font-semibold text-green-600">78%</span>
                     </div>
-                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 24h: 94%\nTotal: 4,476\nTarget: 95%')}>
+                    <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => showNotification('Information', 'Within 24h: 94%\nTotal: 4,476\nTarget: 95%', 'info')}>
                       <span className="text-[#001f3f]">Within 24h</span>
                       <span className="font-semibold text-green-600">94%</span>
                     </div>
@@ -920,10 +928,10 @@ export default function PracticeManagement() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening response time log...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Opening response time log...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Response Log
                 </button>
-                <button onClick={() => alert('Generating SLA report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
+                <button onClick={() => showNotification('Information', 'Generating SLA report...', 'info')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   SLA Report
                 </button>
               </div>
@@ -941,7 +949,7 @@ export default function PracticeManagement() {
             <p className="text-[#001f3f] mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''} onClick={() => alert('Filter functionality: You can filter jobs by status, priority, client, date range, etc.')}>
+            <Button variant="outline" className={isMobile ? 'w-full' : ''} onClick={() => showNotification('Information', 'Filter functionality: You can filter jobs by status, priority, client, date range, etc.', 'info')}>
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
@@ -3450,6 +3458,22 @@ export default function PracticeManagement() {
           </div>
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <Dialog open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">{notificationData.title}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-blue-900 whitespace-pre-line">{notificationData.message}</p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsNotificationOpen(false)}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </ResponsiveLayout>
   )
 }

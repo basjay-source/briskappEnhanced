@@ -224,6 +224,16 @@ export default function Bookkeeping() {
   const [isStockTakeDetailOpen, setIsStockTakeDetailOpen] = useState(false)
   const [selectedStockTake, setSelectedStockTake] = useState<any>(null)
   const [isStockTakeFormOpen, setIsStockTakeFormOpen] = useState(false)
+  
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [notificationData, setNotificationData] = useState<{title: string, message: string, type?: 'success' | 'error' | 'info'}>({title: '', message: '', type: 'info'})
+  
+  const [isWarehouseFormOpen, setIsWarehouseFormOpen] = useState(false)
+
+  const showNotification = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setNotificationData({ title, message, type })
+    setIsNotificationOpen(true)
+  }
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -250,22 +260,22 @@ export default function Bookkeeping() {
 
   const handleRefreshAccount = (account: any) => {
     console.log('Refreshing account:', account)
-    console.log('Account Refreshed', `Successfully refreshed ${account.name}!\n\nBalance updated: £${account.balance.toLocaleString()}\nLast updated: Just now`, 'success')
+    alert(`✅ Successfully refreshed ${account.name}!\n\nBalance updated: £${account.balance.toLocaleString()}\nLast updated: Just now`)
   }
 
   const handleSaveEdit = () => {
     console.log('Saving edited account:', editFormData)
-    console.log('Account Updated', `Successfully updated ${editFormData.name}!\n\nChanges saved to the system.`, 'success')
+    alert(`✅ Successfully updated ${editFormData.name}!\n\nChanges saved to the system.`)
     setIsEditDialogOpen(false)
   }
 
   const handleSaveAdd = () => {
     console.log('Adding new account:', addFormData)
     if (!addFormData.name || !addFormData.bank || !addFormData.accountNumber) {
-      console.log('Missing Information', 'Please fill in all required fields: Account Name, Bank, and Account Number', 'error')
+      alert('⚠️ Please fill in all required fields: Account Name, Bank, and Account Number')
       return
     }
-    console.log('Account Added', `Successfully added ${addFormData.name}!\n\nNew bank account has been created.`, 'success')
+    alert(`✅ Successfully added ${addFormData.name}!\n\nNew bank account has been created.`)
     setIsAddDialogOpen(false)
     setAddFormData({
       name: '',
@@ -279,7 +289,7 @@ export default function Bookkeeping() {
 
   const confirmDelete = () => {
     console.log('Deleting account:', selectedAccount)
-    console.log('Account Deleted', `Successfully deleted ${selectedAccount?.name}!\n\nBank account has been removed from the system.`, 'success')
+    alert(`✅ Successfully deleted ${selectedAccount?.name}!\n\nBank account has been removed from the system.`)
     setIsDeleteDialogOpen(false)
   }
 
@@ -293,7 +303,7 @@ export default function Bookkeeping() {
         if (!expandedCategories.includes('sales')) {
           toggleCategory('sales')
         }
-        console.log('Create Invoice', 'Navigated to Sales > Invoices section.\nClick \"Add Invoice\" button to create a new invoice.', 'info')
+        alert('📄 Create Invoice\n\nNavigated to Sales > Invoices section.\nClick "Add Invoice" button to create a new invoice.')
         break
       case 'Record Expense':
         setActiveMainTab('purchases')
@@ -301,7 +311,7 @@ export default function Bookkeeping() {
         if (!expandedCategories.includes('purchases')) {
           toggleCategory('purchases')
         }
-        console.log('Record Expense', 'Navigated to Purchases > Expenses section.\nClick \"Add Expense\" button to record a new expense.', 'info')
+        alert('💰 Record Expense\n\nNavigated to Purchases > Expenses section.\nClick "Add Expense" button to record a new expense.')
         break
       case 'Bank Reconciliation':
         setActiveMainTab('banking')
@@ -309,7 +319,7 @@ export default function Bookkeeping() {
         if (!expandedCategories.includes('banking')) {
           toggleCategory('banking')
         }
-        console.log('Bank Reconciliation', 'Navigated to Banking > Reconciliation section.\nYou can now match transactions and reconcile your accounts.', 'info')
+        alert('🏦 Bank Reconciliation\n\nNavigated to Banking > Reconciliation section.\nYou can now match transactions and reconcile your accounts.')
         break
       case 'Generate Report':
         setActiveMainTab('reports')
@@ -317,10 +327,10 @@ export default function Bookkeeping() {
         if (!expandedCategories.includes('reports')) {
           toggleCategory('reports')
         }
-        console.log('Generate Report', 'Navigated to Reports > Financial Reports section.\nSelect a report type to generate.', 'info')
+        alert('📊 Generate Report\n\nNavigated to Reports > Financial Reports section.\nSelect a report type to generate.')
         break
       default:
-        console.log('Coming Soon', `${action} functionality will be implemented`, 'info')
+        alert(`${action} functionality will be implemented`)
     }
   }
 
@@ -343,17 +353,17 @@ export default function Bookkeeping() {
 
   const handleSaveTransactionEdit = () => {
     console.log('Saving transaction:', transactionFormData)
-    console.log('Transaction Updated', 'Successfully updated transaction!\n\nChanges saved to the system.', 'success')
+    alert(`✅ Successfully updated transaction!\n\nChanges saved to the system.`)
     setIsTransactionEditOpen(false)
   }
 
   const handleSaveCashCoding = () => {
     console.log('Saving cash coding:', transactionFormData)
     if (!transactionFormData.category) {
-      console.log('Missing Category', 'Please select a category for this transaction', 'error')
+      alert('⚠️ Please select a category for this transaction')
       return
     }
-    console.log('Transaction Coded', `Successfully coded transaction!\n\nCategory: ${transactionFormData.category}`, 'success')
+    alert(`✅ Successfully coded transaction!\n\nCategory: ${transactionFormData.category}`)
     setIsCashCodingOpen(false)
   }
 
@@ -371,7 +381,7 @@ export default function Bookkeeping() {
   const handleConfirmMatch = (candidateId: number) => {
     const candidate = matchCandidates.find(c => c.id === candidateId)
     console.log('Matching transaction:', selectedReconciliationItem, 'with', candidate)
-    console.log(`✅ Successfully matched transaction!\n\nReconciliation item matched with ${candidate?.description}`)
+    alert(`✅ Successfully matched transaction!\n\nReconciliation item matched with ${candidate?.description}`)
     setIsMatchTransactionOpen(false)
   }
 
@@ -386,7 +396,7 @@ export default function Bookkeeping() {
   const handleSaveRule = () => {
     console.log('Saving banking rule:', ruleFormData)
     if (!ruleFormData.name || !ruleFormData.condition || !ruleFormData.category) {
-      console.log('⚠️ Please fill in all required fields: Name, Condition, and Category')
+      alert('⚠️ Please fill in all required fields: Name, Condition, and Category')
       return
     }
     const newRule = {
@@ -394,7 +404,7 @@ export default function Bookkeeping() {
       ...ruleFormData
     }
     setBankingRules([...bankingRules, newRule])
-    console.log(`✅ Successfully created banking rule!\n\nRule: ${ruleFormData.name}`)
+    alert(`✅ Successfully created banking rule!\n\nRule: ${ruleFormData.name}`)
     setIsAddRuleOpen(false)
     setRuleFormData({
       name: '',
@@ -416,7 +426,7 @@ export default function Bookkeeping() {
   const handleDeleteRule = (ruleId: number) => {
     if (confirm('Are you sure you want to delete this banking rule?')) {
       setBankingRules(bankingRules.filter(rule => rule.id !== ruleId))
-      console.log('✅ Successfully deleted banking rule!')
+      alert('✅ Successfully deleted banking rule!')
     }
 
   }
@@ -438,7 +448,7 @@ export default function Bookkeeping() {
   const handleSaveFeed = () => {
     console.log('Saving feed:', feedFormData)
     if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
-      console.log('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
       return
     }
     const updatedFeed = {
@@ -448,14 +458,14 @@ export default function Bookkeeping() {
       transactions: selectedFeed?.transactions || 0
     }
     setBankFeeds(bankFeeds.map(f => f.id === selectedFeed.id ? updatedFeed : f))
-    console.log(`✅ Successfully updated ${feedFormData.bank}!\n\nBank feed has been updated.`)
+    alert(`✅ Successfully updated ${feedFormData.bank}!\n\nBank feed has been updated.`)
     setIsEditFeedOpen(false)
   }
 
   const handleSaveAddFeed = () => {
     console.log('Adding feed:', feedFormData)
     if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
-      console.log('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
       return
     }
     const newFeed = {
@@ -466,7 +476,7 @@ export default function Bookkeeping() {
       status: 'Active'
     }
     setBankFeeds([...bankFeeds, newFeed])
-    console.log(`✅ Successfully added ${feedFormData.bank}!\n\nNew bank feed has been created.`)
+    alert(`✅ Successfully added ${feedFormData.bank}!\n\nNew bank feed has been created.`)
     setIsAddFeedOpen(false)
     setFeedFormData({
       bank: '',
@@ -487,7 +497,7 @@ export default function Bookkeeping() {
       status: 'Active'
     }
     setBankFeeds(bankFeeds.map(f => f.id === feed.id ? updatedFeed : f))
-    console.log(`✅ Successfully synced ${feed.bank}!\n\n${randomTransactions} new transactions imported.`)
+    alert(`✅ Successfully synced ${feed.bank}!\n\n${randomTransactions} new transactions imported.`)
   }
 
   const handleSyncAll = () => {
@@ -500,13 +510,13 @@ export default function Bookkeeping() {
     }))
     setBankFeeds(updatedFeeds)
     const totalNew = updatedFeeds.reduce((sum, _f, i) => sum + (updatedFeeds[i].transactions - bankFeeds[i].transactions), 0)
-    console.log(`✅ Successfully synced all bank feeds!\n\n${totalNew} new transactions imported across ${bankFeeds.length} feeds.`)
+    alert(`✅ Successfully synced all bank feeds!\n\n${totalNew} new transactions imported across ${bankFeeds.length} feeds.`)
   }
 
   const handleDeleteFeed = (feed: any) => {
     if (confirm(`Are you sure you want to delete ${feed.bank}?\n\nThis will stop automatic synchronization for this account.`)) {
       setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
-      console.log(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
+      alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
     }
   }
 
@@ -5387,7 +5397,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => console.log('📊 Viewing all transactions this month\n\nTotal: 1,245 transactions')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Viewing all transactions this month\n\nTotal: 1,245 transactions')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
@@ -5396,7 +5406,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Total transactions</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => console.log('⚠️ Uncategorized Transactions\n\n23 transactions need categorization')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Uncategorized Transactions\n\n23 transactions need categorization')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Uncategorized</CardTitle>
             </CardHeader>
@@ -5405,7 +5415,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Need attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => console.log('💰 Income Transactions\n\n£45,230 received this month')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('💰 Income Transactions\n\n£45,230 received this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Income</CardTitle>
             </CardHeader>
@@ -5414,7 +5424,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => console.log('💸 Expense Transactions\n\n£32,180 spent this month')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('💸 Expense Transactions\n\n£32,180 spent this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Expenses</CardTitle>
             </CardHeader>
@@ -5494,11 +5504,11 @@ export default function Bookkeeping() {
               <Settings className="h-4 w-4 mr-2" />
               Banking Rules
             </Button>
-            <Button variant="outline" onClick={() => console.log('📥 Import Statement\n\nSelect a bank statement file to import')}>
+            <Button variant="outline" onClick={() => alert('📥 Import Statement\n\nSelect a bank statement file to import')}>
               <Upload className="h-4 w-4 mr-2" />
               Import Statement
             </Button>
-            <Button onClick={() => console.log('🔄 Auto Reconcile\n\nAutomatically matching transactions...')}>
+            <Button onClick={() => alert('🔄 Auto Reconcile\n\nAutomatically matching transactions...')}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Auto Reconcile
             </Button>
@@ -5506,7 +5516,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => console.log('✅ Reconciled Transactions\n\n£123,450 reconciled this month')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('✅ Reconciled Transactions\n\n£123,450 reconciled this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Reconciled</CardTitle>
             </CardHeader>
@@ -5515,7 +5525,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => console.log('⚠️ Outstanding Items\n\n£2,850 needs reconciliation')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Outstanding Items\n\n£2,850 needs reconciliation')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
             </CardHeader>
@@ -5524,7 +5534,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Needs attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => console.log('❌ Discrepancies Found\n\n3 items need review')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('❌ Discrepancies Found\n\n3 items need review')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Discrepancies</CardTitle>
             </CardHeader>
@@ -5533,7 +5543,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Items to review</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => console.log('📊 Auto-Match Rate\n\n97.8% of transactions auto-matched')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Auto-Match Rate\n\n97.8% of transactions auto-matched')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Match Rate</CardTitle>
             </CardHeader>
@@ -5607,7 +5617,7 @@ export default function Bookkeeping() {
                         {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount)}
                       </p>
                       <div className="flex gap-1 mt-1">
-                        <Button variant="ghost" size="sm" onClick={() => console.log(`📋 Transaction Details\n\n${item.description}\nAmount: £${Math.abs(item.amount)}\nDate: ${item.date}`)}>
+                        <Button variant="ghost" size="sm" onClick={() => alert(`📋 Transaction Details\n\n${item.description}\nAmount: £${Math.abs(item.amount)}\nDate: ${item.date}`)}>
                           <Eye className="h-3 w-3" />
                         </Button>
                         <Button variant="ghost" size="sm" onClick={() => handleMatchTransaction(item)}>
@@ -5653,7 +5663,7 @@ export default function Bookkeeping() {
         <div className="grid gap-6 md:grid-cols-4">
           <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
             const activeList = bankFeeds.filter(f => f.status === 'Active')
-            console.log(`✅ Active Bank Feeds (${activeFeeds})\n\n${activeList.map(f => `• ${f.bank}\n  ${f.account}\n  ${f.transactions} transactions`).join('\n\n')}`)
+            alert(`✅ Active Bank Feeds (${activeFeeds})\n\n${activeList.map(f => `• ${f.bank}\n  ${f.account}\n  ${f.transactions} transactions`).join('\n\n')}`)
           }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Active Feeds</CardTitle>
@@ -5669,7 +5679,7 @@ export default function Bookkeeping() {
               const timeB = b.lastSync.includes('hour') ? parseInt(b.lastSync) : (b.lastSync.includes('day') ? parseInt(b.lastSync) * 24 : 0)
               return timeA - timeB
             })[0]
-            console.log(`🕐 Last Sync Information\n\nMost Recent: ${recentSync.bank}\n${recentSync.lastSync}\n\nAll Feeds:\n${bankFeeds.map(f => `• ${f.bank}: ${f.lastSync}`).join('\n')}`)
+            alert(`🕐 Last Sync Information\n\nMost Recent: ${recentSync.bank}\n${recentSync.lastSync}\n\nAll Feeds:\n${bankFeeds.map(f => `• ${f.bank}: ${f.lastSync}`).join('\n')}`)
           }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Last Sync</CardTitle>
@@ -5680,7 +5690,7 @@ export default function Bookkeeping() {
             </CardContent>
           </Card>
           <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
-            console.log(`📊 Total Transactions\n\nAcross All Feeds: ${totalTransactions}\n\nBreakdown:\n${bankFeeds.map(f => `• ${f.bank}: ${f.transactions} transactions`).join('\n')}\n\nAverage per Feed: ${avgTransactionsPerFeed}`)
+            alert(`📊 Total Transactions\n\nAcross All Feeds: ${totalTransactions}\n\nBreakdown:\n${bankFeeds.map(f => `• ${f.bank}: ${f.transactions} transactions`).join('\n')}\n\nAverage per Feed: ${avgTransactionsPerFeed}`)
           }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Total Transactions</CardTitle>
@@ -5694,7 +5704,7 @@ export default function Bookkeeping() {
             const active = bankFeeds.filter(f => f.status === 'Active').length
             const warning = bankFeeds.filter(f => f.status === 'Warning').length
             const error = bankFeeds.filter(f => f.status === 'Error').length
-            console.log(`📈 Sync Success Rate\n\nSuccess Rate: ${successRate.toFixed(1)}%\n\nStatus Breakdown:\n• Active: ${active} feeds\n• Warning: ${warning} feeds\n• Error: ${error} feeds\n\nTotal Feeds: ${bankFeeds.length}`)
+            alert(`📈 Sync Success Rate\n\nSuccess Rate: ${successRate.toFixed(1)}%\n\nStatus Breakdown:\n• Active: ${active} feeds\n• Warning: ${warning} feeds\n• Error: ${error} feeds\n\nTotal Feeds: ${bankFeeds.length}`)
           }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Sync Success</CardTitle>
@@ -6864,7 +6874,7 @@ export default function Bookkeeping() {
   }
 
   const handleGenerateInventoryReport = (reportType: string) => {
-    console.log(`📊 Generating ${reportType} Report...\n\nReport Type: ${reportType}\nDate Range: Last 30 days\nFormat: PDF\n\nReport will be downloaded shortly.\n\nReport includes:\n- Stock levels by category\n- Valuation analysis\n- Movement history\n- Reorder recommendations\n- Variance analysis`)
+    alert(`📊 Generating ${reportType} Report...\n\nReport Type: ${reportType}\nDate Range: Last 30 days\nFormat: PDF\n\nReport will be downloaded shortly.\n\nReport includes:\n- Stock levels by category\n- Valuation analysis\n- Movement history\n- Reorder recommendations\n- Variance analysis`)
   }
 
   function renderInventoryDashboard() {
@@ -6960,30 +6970,30 @@ export default function Bookkeeping() {
             <h2 className="text-xl font-bold text-blue-900">Warehouse Management</h2>
             <p className="text-blue-900">Manage warehouse locations and stock transfers</p>
           </div>
-          <Button onClick={() => console.log('Add new warehouse feature coming soon!')}><Plus className="h-4 w-4 mr-2" />Add Warehouse</Button>
+          <Button onClick={() => alert('Add new warehouse feature coming soon!')}><Plus className="h-4 w-4 mr-2" />Add Warehouse</Button>
         </div>
         
         {/* Warehouse KPIs */}
         <div className="grid gap-4 md:grid-cols-4">
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Total Warehouses: 3\n\nMain Warehouse\nNorth Distribution Center\nSouth Storage Facility')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Warehouses: 3\n\nMain Warehouse\nNorth Distribution Center\nSouth Storage Facility')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Total Warehouses</p>
               <p className="text-2xl font-bold text-blue-900">3</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Total Capacity: 45,000 sqft\n\nMain: 20,000 sqft\nNorth: 15,000 sqft\nSouth: 10,000 sqft')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Capacity: 45,000 sqft\n\nMain: 20,000 sqft\nNorth: 15,000 sqft\nSouth: 10,000 sqft')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Total Capacity</p>
               <p className="text-2xl font-bold text-blue-900">45,000 sqft</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Space Utilized: 30,500 sqft (67.8%)\n\nMain: 15,000/20,000\nNorth: 10,000/15,000\nSouth: 5,500/10,000')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Space Utilized: 30,500 sqft (67.8%)\n\nMain: 15,000/20,000\nNorth: 10,000/15,000\nSouth: 5,500/10,000')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Space Utilized</p>
               <p className="text-2xl font-bold text-blue-900">67.8%</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Active Transfers: 2\n\nTransfer #TRF-001: Main → North (15 items)\nTransfer #TRF-002: North → South (8 items)')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Active Transfers: 2\n\nTransfer #TRF-001: Main → North (15 items)\nTransfer #TRF-002: North → South (8 items)')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Active Transfers</p>
               <p className="text-2xl font-bold text-blue-900">2</p>
@@ -7030,7 +7040,7 @@ export default function Bookkeeping() {
               const qty = prompt('Adjustment Quantity (use negative for decrease):')
               const reason = prompt('Reason for adjustment:')
               if (qty && reason) {
-                console.log(`✅ Stock Adjustment Created!\n\nProduct: ${product}\nQuantity: ${qty}\nReason: ${reason}\nDate: ${new Date().toLocaleDateString()}\nAdjustment ID: ADJ-${Date.now()}`)
+                alert(`✅ Stock Adjustment Created!\n\nProduct: ${product}\nQuantity: ${qty}\nReason: ${reason}\nDate: ${new Date().toLocaleDateString()}\nAdjustment ID: ADJ-${Date.now()}`)
               }
             }
           }}><Plus className="h-4 w-4 mr-2" />New Adjustment</Button>
@@ -7038,25 +7048,25 @@ export default function Bookkeeping() {
         
         {/* Adjustment Summary Cards */}
         <div className="grid gap-4 md:grid-cols-4">
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Total Adjustments This Month: 4\n\nIncreases: 2\nDecreases: 1\nDamaged: 1')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Total Adjustments This Month: 4\n\nIncreases: 2\nDecreases: 1\nDamaged: 1')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">This Month</p>
               <p className="text-2xl font-bold text-blue-900">4</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Net Adjustment: +85 units\n\nIncreases: +120\nDecreases: -35')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Net Adjustment: +85 units\n\nIncreases: +120\nDecreases: -35')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Net Adjustment</p>
               <p className="text-2xl font-bold text-green-600">+85 units</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Value Impact: £2,450\n\nIncreases: +£3,200\nDecreases: -£750')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Value Impact: £2,450\n\nIncreases: +£3,200\nDecreases: -£750')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Value Impact</p>
               <p className="text-2xl font-bold text-blue-900">£2,450</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Pending Approvals: 0\n\nAll adjustments have been approved.')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Pending Approvals: 0\n\nAll adjustments have been approved.')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Pending</p>
               <p className="text-2xl font-bold text-blue-900">0</p>
@@ -7295,25 +7305,25 @@ export default function Bookkeeping() {
         
         {/* Report Summary Cards */}
         <div className="grid gap-4 md:grid-cols-4">
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Reports Generated This Month: 24\n\nStock Level: 8\nValuation: 4\nMovement: 6\nOther: 6')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Reports Generated This Month: 24\n\nStock Level: 8\nValuation: 4\nMovement: 6\nOther: 6')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Reports This Month</p>
               <p className="text-2xl font-bold text-blue-900">24</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Scheduled Reports: 5\n\nWeekly stock level report\nMonthly valuation report\nDaily reorder check\nWeekly variance report\nMonthly warehouse report')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Scheduled Reports: 5\n\nWeekly stock level report\nMonthly valuation report\nDaily reorder check\nWeekly variance report\nMonthly warehouse report')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Scheduled</p>
               <p className="text-2xl font-bold text-blue-900">5</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Export Formats Available:\n\n✓ PDF\n✓ CSV\n✓ Excel (.xlsx)\n✓ JSON')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Export Formats Available:\n\n✓ PDF\n✓ CSV\n✓ Excel (.xlsx)\n✓ JSON')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Export Formats</p>
               <p className="text-2xl font-bold text-blue-900">4</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Last Report Generated:\n\nStock Level Report\nGenerated: Today at 09:15\nFormat: PDF')}>
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => alert('Last Report Generated:\n\nStock Level Report\nGenerated: Today at 09:15\nFormat: PDF')}>
             <CardContent className="p-4">
               <p className="text-sm text-blue-900 font-medium">Last Generated</p>
               <p className="text-lg font-bold text-blue-900">Today</p>
@@ -8280,7 +8290,7 @@ export default function Bookkeeping() {
             <Button variant="outline" onClick={() => setIsStockFormOpen(false)}>Cancel</Button>
             <Button onClick={() => {
               setIsStockFormOpen(false)
-              console.log('Stock item saved successfully!')
+              alert('Stock item saved successfully!')
             }}>Save</Button>
           </DialogFooter>
         </DialogContent>
@@ -8439,7 +8449,7 @@ export default function Bookkeeping() {
             <Button variant="outline" onClick={() => setIsReorderDetailOpen(false)}>Close</Button>
             <Button onClick={() => {
               setIsReorderDetailOpen(false)
-              console.log(`Purchase Order PO-${Date.now()} created for ${selectedReorderAlert?.productName}`)
+              alert(`Purchase Order PO-${Date.now()} created for ${selectedReorderAlert?.productName}`)
             }}>Create Purchase Order</Button>
           </DialogFooter>
         </DialogContent>
@@ -8529,7 +8539,7 @@ export default function Bookkeeping() {
             <Button variant="outline" onClick={() => setIsStockTakeFormOpen(false)}>Cancel</Button>
             <Button onClick={() => {
               setIsStockTakeFormOpen(false)
-              console.log('Stock take recorded successfully!')
+              alert('Stock take recorded successfully!')
             }}>Save Stock Take</Button>
           </DialogFooter>
         </DialogContent>

@@ -235,7 +235,7 @@ export default function NewEmailStudio() {
       })
 
       if (response.ok) {
-        alert('Email sent successfully!')
+        console.log('Email sent successfully!')
         setIsComposing(false)
         setComposeData({
           to: '',
@@ -248,7 +248,7 @@ export default function NewEmailStudio() {
       }
     } catch (error) {
       console.error('Failed to send email:', error)
-      alert('Failed to send email')
+      console.log('Failed to send email')
     }
   }
 
