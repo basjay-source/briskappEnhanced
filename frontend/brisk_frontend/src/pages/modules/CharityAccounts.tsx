@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { useIsMobile } from '@/hooks/use-mobile'
 import KPICard from '@/components/KPICard'
+import { ExportButton } from '@/components/ExportButton'
 import { 
   Building2, 
   Users, 
@@ -839,10 +840,16 @@ const CharityAccounts: React.FC = () => {
               <Download className="h-4 w-4 mr-2" />
               Export SOFA
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Category', 'Unrestricted', 'Restricted', 'Endowment', 'Total'],
+                ['Donations and legacies', '£45,000', '£25,000', '£5,000', '£75,000'],
+                ['Charitable activities', '£180,000', '£520,000', '£0', '£700,000'],
+                ['Expenditure', '£195,000', '£485,000', '£0', '£680,000']
+              ]}
+              filename={`sofa-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Generate Report"
+            />
           </div>
         </div>
 

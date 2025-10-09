@@ -48,6 +48,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
+import { ExportButton } from '@/components/ExportButton'
 import { api } from '@/lib/api'
 
 interface Job {
@@ -799,9 +800,16 @@ export default function PracticeManagement() {
                 <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Client List
                 </button>
-                <button onClick={() => alert('Exporting client data...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
-                  Export Report
-                </button>
+                <ExportButton
+                  data={[
+                    ['Client Type', 'Count', 'Percentage'],
+                    ['Active', '1,087', '87.4%'],
+                    ['At Risk', '127', '10.2%'],
+                    ['Churned', '31', '2.4%']
+                  ]}
+                  filename={`client-report-${new Date().toISOString().split('T')[0]}`}
+                  buttonText="Export Report"
+                />
               </div>
             </div>
           )
@@ -2548,9 +2556,17 @@ export default function PracticeManagement() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold text-[#001f3f]">Practice Analytics</h3>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  Export Report
-                </button>
+                <ExportButton
+                  data={[
+                    ['Metric', 'Value', 'Change'],
+                    ['Practice Revenue', '£847,230', '+12.5%'],
+                    ['Billable Hours', '3,847', '+8.3%'],
+                    ['Client Satisfaction', '94.5%', '+2.1%'],
+                    ['Efficiency Rate', '87.2%', '+5.4%']
+                  ]}
+                  filename={`practice-analytics-${new Date().toISOString().split('T')[0]}`}
+                  buttonText="Export Report"
+                />
                 <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   Schedule Report
                 </button>
@@ -3044,9 +3060,17 @@ export default function PracticeManagement() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold text-[#001f3f]">Practice Reports</h3>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  Generate Report
-                </button>
+                <ExportButton
+                  data={[
+                    ['Report Type', 'Category', 'Status'],
+                    ['Monthly P&L', 'Financial', 'Available'],
+                    ['Cash Flow Report', 'Financial', 'Available'],
+                    ['Client Analysis', 'Operations', 'Available'],
+                    ['Resource Utilization', 'Operations', 'Available']
+                  ]}
+                  filename={`practice-reports-${new Date().toISOString().split('T')[0]}`}
+                  buttonText="Generate Report"
+                />
                 <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   Schedule Reports
                 </button>

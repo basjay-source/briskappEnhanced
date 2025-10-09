@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ExportButton } from '@/components/ExportButton'
 import { 
   FileText, 
   Calculator, 
@@ -266,10 +267,17 @@ export default function VAT() {
         <TabsContent value="analytics" className="space-y-4 mt-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">VAT Analytics & Reports</h2>
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Type', 'Description'],
+                ['VAT Liability Trend', 'Track VAT liability over time'],
+                ['VAT Rate Analysis', 'Analyze VAT rates across transactions'],
+                ['Submission History', 'Historical VAT return submissions']
+              ]}
+              filename={`vat-analytics-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+              variant="outline"
+            />
           </div>
 
           <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>

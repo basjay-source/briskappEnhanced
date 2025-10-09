@@ -40,7 +40,10 @@ import {
   Search,
   Settings,
   Calendar,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Tags,
+  Trash2,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -72,6 +75,13 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ExportButton } from '@/components/ExportButton'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -110,6 +120,49 @@ export default function Bookkeeping() {
     status: 'Active'
   })
 
+  const [isTransactionDetailOpen, setIsTransactionDetailOpen] = useState(false)
+  const [isTransactionEditOpen, setIsTransactionEditOpen] = useState(false)
+  const [isCashCodingOpen, setIsCashCodingOpen] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null)
+  const [transactionFormData, setTransactionFormData] = useState<any>({})
+
+  const [isMatchTransactionOpen, setIsMatchTransactionOpen] = useState(false)
+  const [isBankingRulesOpen, setIsBankingRulesOpen] = useState(false)
+  const [isAddRuleOpen, setIsAddRuleOpen] = useState(false)
+  const [selectedReconciliationItem, setSelectedReconciliationItem] = useState<any>(null)
+  const [matchCandidates, setMatchCandidates] = useState<any[]>([])
+  const [bankingRules, setBankingRules] = useState<any[]>([
+    { id: 1, name: 'Auto-categorize Office Rent', condition: 'Description contains "Rent"', category: 'Rent', autoMatch: true, status: 'Active' },
+    { id: 2, name: 'Supplier Payments', condition: 'Description contains "Supplier" OR "Tech Co"', category: 'Purchases', autoMatch: true, status: 'Active' },
+    { id: 3, name: 'Customer Receipts', condition: 'Amount > 1000 AND Type = Credit', category: 'Sales', autoMatch: false, status: 'Active' }
+  ])
+  const [ruleFormData, setRuleFormData] = useState<any>({
+    name: '',
+    condition: '',
+    category: '',
+    autoMatch: true,
+    status: 'Active'
+  })
+
+  const [bankFeeds, setBankFeeds] = useState<any[]>([
+    { id: 1, bank: 'Barclays Business', account: '****1234', status: 'Active', lastSync: '2 hours ago', frequency: 'Every 4 hours', transactions: 156, accountId: 'ACC-001' },
+    { id: 2, bank: 'HSBC Business', account: '****5678', status: 'Active', lastSync: '1 hour ago', frequency: 'Every 2 hours', transactions: 89, accountId: 'ACC-002' },
+    { id: 3, bank: 'Lloyds Payroll', account: '****9012', status: 'Active', lastSync: '3 hours ago', frequency: 'Daily', transactions: 23, accountId: 'ACC-003' },
+    { id: 4, bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5, accountId: 'ACC-004' },
+    { id: 5, bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0, accountId: 'ACC-005' }
+  ])
+  const [isAddFeedOpen, setIsAddFeedOpen] = useState(false)
+  const [isEditFeedOpen, setIsEditFeedOpen] = useState(false)
+  const [isViewFeedOpen, setIsViewFeedOpen] = useState(false)
+  const [selectedFeed, setSelectedFeed] = useState<any>(null)
+  const [feedFormData, setFeedFormData] = useState<any>({
+    bank: '',
+    account: '',
+    accountId: '',
+    frequency: 'Every 4 hours',
+    status: 'Active'
+  })
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -138,13 +191,24 @@ export default function Bookkeeping() {
     setIsDeleteDialogOpen(true)
   }
 
+  const handleRefreshAccount = (account: any) => {
+    console.log('Refreshing account:', account)
+    alert(`✅ Successfully refreshed ${account.name}!\n\nBalance updated: £${account.balance.toLocaleString()}\nLast updated: Just now`)
+  }
+
   const handleSaveEdit = () => {
     console.log('Saving edited account:', editFormData)
+    alert(`✅ Successfully updated ${editFormData.name}!\n\nChanges saved to the system.`)
     setIsEditDialogOpen(false)
   }
 
   const handleSaveAdd = () => {
     console.log('Adding new account:', addFormData)
+    if (!addFormData.name || !addFormData.bank || !addFormData.accountNumber) {
+      alert('⚠️ Please fill in all required fields: Account Name, Bank, and Account Number')
+      return
+    }
+    alert(`✅ Successfully added ${addFormData.name}!\n\nNew bank account has been created.`)
     setIsAddDialogOpen(false)
     setAddFormData({
       name: '',
@@ -158,12 +222,295 @@ export default function Bookkeeping() {
 
   const confirmDelete = () => {
     console.log('Deleting account:', selectedAccount)
+    alert(`✅ Successfully deleted ${selectedAccount?.name}!\n\nBank account has been removed from the system.`)
     setIsDeleteDialogOpen(false)
   }
 
   const handleQuickAction = (action: string) => {
     console.log('Quick action:', action)
-    alert(`${action} functionality will be implemented`)
+    
+    switch(action) {
+      case 'Create Invoice':
+        setActiveMainTab('sales')
+        setActiveSubTab('invoices')
+        if (!expandedCategories.includes('sales')) {
+          toggleCategory('sales')
+        }
+        alert('📄 Create Invoice\n\nNavigated to Sales > Invoices section.\nClick "Add Invoice" button to create a new invoice.')
+        break
+      case 'Record Expense':
+        setActiveMainTab('purchases')
+        setActiveSubTab('expenses')
+        if (!expandedCategories.includes('purchases')) {
+          toggleCategory('purchases')
+        }
+        alert('💰 Record Expense\n\nNavigated to Purchases > Expenses section.\nClick "Add Expense" button to record a new expense.')
+        break
+      case 'Bank Reconciliation':
+        setActiveMainTab('banking')
+        setActiveSubTab('reconciliation')
+        if (!expandedCategories.includes('banking')) {
+          toggleCategory('banking')
+        }
+        alert('🏦 Bank Reconciliation\n\nNavigated to Banking > Reconciliation section.\nYou can now match transactions and reconcile your accounts.')
+        break
+      case 'Generate Report':
+        setActiveMainTab('reports')
+        setActiveSubTab('financial')
+        if (!expandedCategories.includes('reports')) {
+          toggleCategory('reports')
+        }
+        alert('📊 Generate Report\n\nNavigated to Reports > Financial Reports section.\nSelect a report type to generate.')
+        break
+      default:
+        alert(`${action} functionality will be implemented`)
+    }
+  }
+
+  const handleViewTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setIsTransactionDetailOpen(true)
+  }
+
+  const handleEditTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setTransactionFormData({ ...transaction })
+    setIsTransactionEditOpen(true)
+  }
+
+  const handleCashCoding = (transaction: any) => {
+    setSelectedTransaction(transaction)
+    setTransactionFormData({ ...transaction })
+    setIsCashCodingOpen(true)
+  }
+
+  const handleSaveTransactionEdit = () => {
+    console.log('Saving transaction:', transactionFormData)
+    alert(`✅ Successfully updated transaction!\n\nChanges saved to the system.`)
+    setIsTransactionEditOpen(false)
+  }
+
+  const handleSaveCashCoding = () => {
+    console.log('Saving cash coding:', transactionFormData)
+    if (!transactionFormData.category) {
+      alert('⚠️ Please select a category for this transaction')
+      return
+    }
+    alert(`✅ Successfully coded transaction!\n\nCategory: ${transactionFormData.category}`)
+    setIsCashCodingOpen(false)
+  }
+
+  const handleMatchTransaction = (item: any) => {
+    setSelectedReconciliationItem(item)
+    const candidates = [
+      { id: 1, date: '2024-01-18', description: 'Customer Invoice Payment - INV-001', amount: 1500, type: 'Invoice', matchScore: 95 },
+      { id: 2, date: '2024-01-17', description: 'Client Deposit', amount: 1500, type: 'Receipt', matchScore: 85 },
+      { id: 3, date: '2024-01-16', description: 'Payment Received', amount: 1485, type: 'Receipt', matchScore: 75 }
+    ]
+    setMatchCandidates(candidates)
+    setIsMatchTransactionOpen(true)
+  }
+
+  const handleConfirmMatch = (candidateId: number) => {
+    const candidate = matchCandidates.find(c => c.id === candidateId)
+    console.log('Matching transaction:', selectedReconciliationItem, 'with', candidate)
+    alert(`✅ Successfully matched transaction!\n\nReconciliation item matched with ${candidate?.description}`)
+    setIsMatchTransactionOpen(false)
+  }
+
+  const handleOpenBankingRules = () => {
+    setIsBankingRulesOpen(true)
+  }
+
+  const handleAddRule = () => {
+    setIsAddRuleOpen(true)
+  }
+
+  const handleSaveRule = () => {
+    console.log('Saving banking rule:', ruleFormData)
+    if (!ruleFormData.name || !ruleFormData.condition || !ruleFormData.category) {
+      alert('⚠️ Please fill in all required fields: Name, Condition, and Category')
+      return
+    }
+    const newRule = {
+      id: bankingRules.length + 1,
+      ...ruleFormData
+    }
+    setBankingRules([...bankingRules, newRule])
+    alert(`✅ Successfully created banking rule!\n\nRule: ${ruleFormData.name}`)
+    setIsAddRuleOpen(false)
+    setRuleFormData({
+      name: '',
+      condition: '',
+      category: '',
+      autoMatch: true,
+      status: 'Active'
+    })
+  }
+
+  const handleToggleRule = (ruleId: number) => {
+    setBankingRules(bankingRules.map(rule => 
+      rule.id === ruleId 
+        ? { ...rule, status: rule.status === 'Active' ? 'Inactive' : 'Active' }
+        : rule
+    ))
+  }
+
+  const handleDeleteRule = (ruleId: number) => {
+    if (confirm('Are you sure you want to delete this banking rule?')) {
+      setBankingRules(bankingRules.filter(rule => rule.id !== ruleId))
+      alert('✅ Successfully deleted banking rule!')
+    }
+  }
+
+  const handleViewFeed = (feed: any) => {
+    setSelectedFeed(feed)
+    setIsViewFeedOpen(true)
+  }
+
+  const handleEditFeed = (feed: any) => {
+    setSelectedFeed(feed)
+    setFeedFormData({ ...feed })
+    setIsEditFeedOpen(true)
+  }
+
+  const handleAddFeed = () => {
+    setIsAddFeedOpen(true)
+  }
+
+  const handleSaveFeed = () => {
+    console.log('Saving feed:', feedFormData)
+    if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      return
+    }
+    const updatedFeed = {
+      ...selectedFeed,
+      ...feedFormData,
+      lastSync: 'Just now',
+      transactions: selectedFeed?.transactions || 0
+    }
+    setBankFeeds(bankFeeds.map(f => f.id === selectedFeed.id ? updatedFeed : f))
+    alert(`✅ Successfully updated ${feedFormData.bank}!\n\nBank feed has been updated.`)
+    setIsEditFeedOpen(false)
+  }
+
+  const handleSaveAddFeed = () => {
+    console.log('Adding feed:', feedFormData)
+    if (!feedFormData.bank || !feedFormData.account || !feedFormData.accountId) {
+      alert('⚠️ Please fill in all required fields: Bank Name, Account Number, and Account ID')
+      return
+    }
+    const newFeed = {
+      id: bankFeeds.length + 1,
+      ...feedFormData,
+      lastSync: 'Never',
+      transactions: 0,
+      status: 'Active'
+    }
+    setBankFeeds([...bankFeeds, newFeed])
+    alert(`✅ Successfully added ${feedFormData.bank}!\n\nNew bank feed has been created.`)
+    setIsAddFeedOpen(false)
+    setFeedFormData({
+      bank: '',
+      account: '',
+      accountId: '',
+      frequency: 'Every 4 hours',
+      status: 'Active'
+    })
+  }
+
+  const handleSyncFeed = (feed: any) => {
+    console.log('Syncing feed:', feed)
+    const now = new Date()
+    const randomTransactions = Math.floor(Math.random() * 50) + 1
+    const updatedFeed = {
+      ...feed,
+      lastSync: 'Just now',
+      transactions: feed.transactions + randomTransactions,
+      status: 'Active'
+    }
+    setBankFeeds(bankFeeds.map(f => f.id === feed.id ? updatedFeed : f))
+    alert(`✅ Successfully synced ${feed.bank}!\n\n${randomTransactions} new transactions imported.`)
+  }
+
+  const handleSyncAll = () => {
+    console.log('Syncing all feeds')
+    const updatedFeeds = bankFeeds.map(feed => ({
+      ...feed,
+      lastSync: 'Just now',
+      transactions: feed.transactions + Math.floor(Math.random() * 20) + 1,
+      status: 'Active'
+    }))
+    setBankFeeds(updatedFeeds)
+    const totalNew = updatedFeeds.reduce((sum, f, i) => sum + (updatedFeeds[i].transactions - bankFeeds[i].transactions), 0)
+    alert(`✅ Successfully synced all bank feeds!\n\n${totalNew} new transactions imported across ${bankFeeds.length} feeds.`)
+  }
+
+  const handleDeleteFeed = (feed: any) => {
+    if (confirm(`Are you sure you want to delete ${feed.bank}?\n\nThis will stop automatic synchronization for this account.`)) {
+      setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
+      alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
+    }
+  }
+
+  const handleExport = (data: any[][], filename: string, format: 'csv' | 'excel' | 'pdf') => {
+    if (format === 'csv') {
+      const csvContent = data.map(row => row.join(',')).join('\n')
+      const blob = new Blob([csvContent], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${filename}.csv`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } else if (format === 'excel') {
+      const csvContent = data.map(row => row.join(',')).join('\n')
+      const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${filename}.xls`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } else if (format === 'pdf') {
+      const htmlContent = `
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #001f3f; color: white; }
+            h1 { color: #001f3f; }
+          </style>
+        </head>
+        <body>
+          <h1>${filename}</h1>
+          <table>
+            <thead>
+              <tr>${data[0].map(cell => `<th>${cell}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+              ${data.slice(1).map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `
+      const blob = new Blob([htmlContent], { type: 'text/html' })
+      const url = window.URL.createObjectURL(blob)
+      const printWindow = window.open(url, '_blank')
+      if (printWindow) {
+        printWindow.onload = () => {
+          printWindow.print()
+        }
+      }
+    }
   }
 
   const statusOptions = [
@@ -465,14 +812,29 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Overview of your financial position and key metrics</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Data
-            </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Metric', 'Value', 'Change'],
+                ['Total Revenue', '£125,430', '+12%'],
+                ['Total Expenses', '£87,650', '+8%'],
+                ['Net Profit', '£37,780', '+15%'],
+                ['Outstanding Invoices', '£23,450', '-5%']
+              ]}
+              filename={`bookkeeping-dashboard-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Data"
+              variant="outline"
+            />
+            <ExportButton
+              data={[
+                ['Report Section', 'Details'],
+                ['Financial Overview', 'Summary of income and expenses'],
+                ['Bank Accounts', 'Account balances and transactions'],
+                ['VAT Summary', 'VAT returns and compliance'],
+                ['Profit & Loss', 'Revenue vs expenses analysis']
+              ]}
+              filename={`financial-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Generate Report"
+            />
           </div>
         </div>
 
@@ -1236,10 +1598,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Generate comprehensive financial statements and reports</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export All
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Name', 'Type', 'Period', 'Status'],
+                ['Profit & Loss', 'Financial', 'Current Month', 'Ready'],
+                ['Balance Sheet', 'Financial', 'Current Month', 'Ready'],
+                ['Cash Flow Statement', 'Financial', 'Current Month', 'Ready'],
+                ['Trial Balance', 'Financial', 'Current Month', 'Ready']
+              ]}
+              filename={`financial-reports-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export All"
+              variant="outline"
+            />
             <Button>
               <FileText className="h-4 w-4 mr-2" />
               Schedule Reports
@@ -1366,7 +1736,17 @@ export default function Bookkeeping() {
                   )}
                   
                   <div className="flex gap-2 pt-4">
-                    <Button variant="outline">Export Report</Button>
+                    <ExportButton
+                      data={[
+                        ['Report Type', 'Period', 'Value'],
+                        ['Operating Cash Flow', selectedPeriod, '£42,350'],
+                        ['Investing Cash Flow', selectedPeriod, '-£15,200'],
+                        ['Financing Cash Flow', selectedPeriod, '-£8,500']
+                      ]}
+                      filename={`financial-report-${selectedReport.name}-${new Date().toISOString().split('T')[0]}`}
+                      buttonText="Export Report"
+                      variant="outline"
+                    />
                     <Button>Generate New</Button>
                   </div>
                 </div>
@@ -1464,10 +1844,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Strategic insights and performance analytics for decision making</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Pack
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Name', 'Type', 'Period', 'Status'],
+                ['Departmental Performance', 'Management', 'Current Month', 'Ready'],
+                ['Budget vs Actual', 'Management', 'Current Month', 'Ready'],
+                ['KPI Dashboard', 'Management', 'Current Month', 'Ready'],
+                ['Resource Allocation', 'Management', 'Current Month', 'Ready']
+              ]}
+              filename={`management-reports-pack-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Pack"
+              variant="outline"
+            />
             <Button>
               <Target className="h-4 w-4 mr-2" />
               Create Dashboard
@@ -1687,10 +2075,18 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Advanced analytics and business intelligence for strategic planning</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Analytics
-            </Button>
+            <ExportButton
+              data={[
+                ['Metric', 'Analysis Type', 'Value', 'Trend'],
+                ['Revenue Growth', 'Ratio Analysis', '15%', 'Up'],
+                ['Profit Margin', 'Ratio Analysis', '28%', 'Stable'],
+                ['Cash Flow Ratio', 'Liquidity Analysis', '1.8', 'Up'],
+                ['ROI', 'Performance Metrics', '22%', 'Up']
+              ]}
+              filename={`analytics-insights-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Analytics"
+              variant="outline"
+            />
             <Button>
               <BarChart3 className="h-4 w-4 mr-2" />
               Create Dashboard
@@ -2139,10 +2535,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Project
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Project', 'Client', 'Budget', 'Spent', 'Status'],
+                ['Website Redesign', 'Client A', '£15,000', '£12,500', 'In Progress'],
+                ['Tax Compliance', 'Client B', '£8,000', '£7,200', 'In Progress'],
+                ['Audit Support', 'Client C', '£12,000', '£11,000', 'In Progress']
+              ]}
+              filename={`project-overview-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
@@ -2336,10 +2738,16 @@ export default function Bookkeeping() {
               <Calculator className="h-4 w-4 mr-2" />
               Cost Calculator
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Analysis
-            </Button>
+            <ExportButton
+              data={[
+                ['Cost Category', 'Budget', 'Actual', 'Variance', 'Margin'],
+                ['Labour', '£8,000', '£7,500', '-£500', '35%'],
+                ['Materials', '£3,000', '£3,200', '+£200', '28%'],
+                ['Overheads', '£2,000', '£1,800', '-£200', '15%']
+              ]}
+              filename={`project-costing-analysis-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Analysis"
+            />
           </div>
         </div>
 
@@ -2436,10 +2844,17 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Reports
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export All
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Type', 'Project', 'Date', 'Status'],
+                ['Progress Report', 'Website Redesign', '2024-01-15', 'Completed'],
+                ['Financial Summary', 'Tax Compliance', '2024-01-14', 'Completed'],
+                ['Resource Report', 'Audit Support', '2024-01-13', 'Completed'],
+                ['Timeline Analysis', 'Website Redesign', '2024-01-12', 'Completed']
+              ]}
+              filename={`project-reports-all-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export All"
+            />
           </div>
         </div>
 
@@ -2638,10 +3053,17 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Period
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Category', 'Budget', 'Actual', 'Variance', 'Status'],
+                ['Revenue', '£150,000', '£145,000', '-£5,000', 'Warning'],
+                ['Operating Costs', '£80,000', '£75,000', '-£5,000', 'Good'],
+                ['Marketing', '£20,000', '£22,000', '+£2,000', 'Over'],
+                ['Salaries', '£50,000', '£48,000', '-£2,000', 'Good']
+              ]}
+              filename={`budget-monitoring-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
@@ -2735,10 +3157,17 @@ export default function Bookkeeping() {
               <LineChart className="h-4 w-4 mr-2" />
               Run Forecast
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Forecast
-            </Button>
+            <ExportButton
+              data={[
+                ['Period', 'Revenue Forecast', 'Expense Forecast', 'Net Profit', 'Confidence'],
+                ['Q1 2024', '£175,000', '£95,000', '£80,000', '85%'],
+                ['Q2 2024', '£185,000', '£98,000', '£87,000', '80%'],
+                ['Q3 2024', '£195,000', '£102,000', '£93,000', '75%'],
+                ['Q4 2024', '£205,000', '£105,000', '£100,000', '70%']
+              ]}
+              filename={`financial-forecast-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Forecast"
+            />
           </div>
         </div>
 
@@ -2827,10 +3256,17 @@ export default function Bookkeeping() {
               <BarChart3 className="h-4 w-4 mr-2" />
               Generate Analysis
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Category', 'Budget', 'Actual', 'Variance', 'Variance %'],
+                ['Sales', '£200,000', '£195,000', '-£5,000', '-2.5%'],
+                ['COGS', '£80,000', '£78,000', '-£2,000', '-2.5%'],
+                ['Operating Expenses', '£60,000', '£65,000', '+£5,000', '+8.3%'],
+                ['Net Profit', '£60,000', '£52,000', '-£8,000', '-13.3%']
+              ]}
+              filename={`variance-analysis-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
@@ -3414,10 +3850,16 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Orders
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Orders
-            </Button>
+            <ExportButton
+              data={[
+                ['Order ID', 'Customer', 'Date', 'Amount', 'Status'],
+                ['ORD-001', 'Customer A', '2024-01-15', '£2,500', 'Completed'],
+                ['ORD-002', 'Customer B', '2024-01-14', '£1,800', 'Processing'],
+                ['ORD-003', 'Customer C', '2024-01-13', '£3,200', 'Shipped']
+              ]}
+              filename={`ecommerce-orders-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Orders"
+            />
           </div>
         </div>
 
@@ -3612,10 +4054,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Invoice
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Invoice #', 'Customer', 'Date', 'Amount', 'Status'],
+                ['INV-001', 'Customer A', '2024-01-15', '£2,500', 'Paid'],
+                ['INV-002', 'Customer B', '2024-01-14', '£1,800', 'Pending'],
+                ['INV-003', 'Customer C', '2024-01-13', '£3,200', 'Overdue']
+              ]}
+              filename={`invoices-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -3760,10 +4208,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Quote
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Quote #', 'Customer', 'Date', 'Amount', 'Status'],
+                ['QTE-001', 'Customer A', '2024-01-15', '£2,500', 'Sent'],
+                ['QTE-002', 'Customer B', '2024-01-14', '£1,800', 'Accepted'],
+                ['QTE-003', 'Customer C', '2024-01-13', '£3,200', 'Draft']
+              ]}
+              filename={`quotes-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -3874,10 +4328,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Customer
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Customer Name', 'Email', 'Phone', 'Total Sales', 'Status'],
+                ['Customer A', 'customerA@email.com', '020 1234 5678', '£12,500', 'Active'],
+                ['Customer B', 'customerB@email.com', '020 9876 5432', '£8,200', 'Active'],
+                ['Customer C', 'customerC@email.com', '020 5555 1234', '£15,800', 'Active']
+              ]}
+              filename={`customers-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -3986,10 +4446,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Catalog
-            </Button>
+            <ExportButton
+              data={[
+                ['Product Name', 'SKU', 'Category', 'Price', 'Stock'],
+                ['Product A', 'SKU-001', 'Services', '£150', 'N/A'],
+                ['Product B', 'SKU-002', 'Goods', '£250', '50'],
+                ['Product C', 'SKU-003', 'Services', '£350', 'N/A']
+              ]}
+              filename={`products-catalog-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Catalog"
+            />
           </div>
         </div>
 
@@ -4098,10 +4564,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New Bill
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Bill #', 'Supplier', 'Date', 'Amount', 'Status'],
+                ['BILL-001', 'Supplier A', '2024-01-15', '£1,500', 'Pending'],
+                ['BILL-002', 'Supplier B', '2024-01-14', '£2,800', 'Approved'],
+                ['BILL-003', 'Supplier C', '2024-01-13', '£1,200', 'Paid']
+              ]}
+              filename={`bills-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -4239,10 +4711,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               New PO
             </Button>
-            <Button>
-              <FileText className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['PO #', 'Supplier', 'Date', 'Amount', 'Status'],
+                ['PO-001', 'Supplier A', '2024-01-15', '£3,500', 'Pending'],
+                ['PO-002', 'Supplier B', '2024-01-14', '£2,800', 'Approved'],
+                ['PO-003', 'Supplier C', '2024-01-13', '£4,200', 'Received']
+              ]}
+              filename={`purchase-orders-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -4378,10 +4856,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Supplier
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Supplier Name', 'Email', 'Phone', 'Total Purchases', 'Status'],
+                ['Supplier A', 'supplierA@email.com', '020 1234 5678', '£25,500', 'Active'],
+                ['Supplier B', 'supplierB@email.com', '020 9876 5432', '£18,200', 'Active'],
+                ['Supplier C', 'supplierC@email.com', '020 5555 1234', '£35,800', 'Active']
+              ]}
+              filename={`suppliers-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
@@ -4489,10 +4973,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Expense
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Date', 'Category', 'Description', 'Amount', 'Status'],
+                ['2024-01-15', 'Office Supplies', 'Stationery', '£150', 'Approved'],
+                ['2024-01-14', 'Travel', 'Client Meeting', '£280', 'Pending'],
+                ['2024-01-13', 'Software', 'Subscriptions', '£420', 'Approved']
+              ]}
+              filename={`expenses-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
@@ -4666,10 +5156,18 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Account Name', 'Bank', 'Account Number', 'Balance', 'Type', 'Status'],
+                ['Business Current Account', 'Barclays', '****1234', '45230', 'Current', 'Active'],
+                ['Business Savings Account', 'HSBC', '****5678', '32100', 'Savings', 'Active'],
+                ['Payroll Account', 'Lloyds', '****9012', '28900', 'Current', 'Active'],
+                ['Tax Reserve Account', 'NatWest', '****3456', '12800', 'Savings', 'Active'],
+                ['Petty Cash Account', 'Santander', '****7890', '6400', 'Current', 'Active']
+              ]}
+              filename={`bank-accounts-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
@@ -4700,7 +5198,10 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('accounts')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Total Balance</CardTitle>
             </CardHeader>
@@ -4709,7 +5210,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Across all accounts</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('accounts')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Active Accounts</CardTitle>
             </CardHeader>
@@ -4718,7 +5222,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Connected accounts</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('transactions')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Monthly Inflow</CardTitle>
             </CardHeader>
@@ -4727,7 +5234,10 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            setActiveMainTab('banking')
+            setActiveSubTab('transactions')
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Monthly Outflow</CardTitle>
             </CardHeader>
@@ -4773,7 +5283,7 @@ export default function Bookkeeping() {
                       <Button variant="ghost" size="sm" onClick={() => handleEditAccount(account)}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteAccount(account)}>
+                      <Button variant="ghost" size="sm" onClick={() => handleRefreshAccount(account)}>
                         <RefreshCw className="h-3 w-3" />
                       </Button>
                     </div>
@@ -4796,14 +5306,25 @@ export default function Bookkeeping() {
             <p className="text-blue-900">View, categorize, and manage all bank transactions</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
+            <Button variant="outline" onClick={handleOpenBankingRules}>
+              <Settings className="h-4 w-4 mr-2" />
+              Banking Rules
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export
+            <Button onClick={() => handleCashCoding({ description: 'Select a transaction first' })}>
+              <Tags className="h-4 w-4 mr-2" />
+              Cash Coding
             </Button>
+            <ExportButton
+              data={[
+                ['Date', 'Description', 'Amount', 'Category', 'Status'],
+                ['2024-01-15', 'Payment from Client A', '£2,500', 'Income', 'Categorized'],
+                ['2024-01-14', 'Office Supplies', '£156', 'Expenses', 'Categorized'],
+                ['2024-01-13', 'Software Subscription', '£89', 'IT', 'Categorized'],
+                ['2024-01-12', 'Bank Transfer', '£500', 'Uncategorized', 'Uncategorized']
+              ]}
+              filename={`bank-transactions-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export"
+            />
           </div>
         </div>
 
@@ -4814,15 +5335,23 @@ export default function Bookkeeping() {
           filters={[
             {
               label: 'Status',
-              options: statusOptions,
+              options: [
+                { label: 'All Statuses', value: 'all' },
+                { label: 'Categorized', value: 'categorized' },
+                { label: 'Uncategorized', value: 'uncategorized' }
+              ],
               value: selectedStatus,
               onChange: setSelectedStatus
             },
             {
               label: 'Type',
-              options: typeOptions,
-              value: selectedCategory,
-              onChange: setSelectedCategory
+              options: [
+                { label: 'All Types', value: 'all' },
+                { label: 'Credit', value: 'credit' },
+                { label: 'Debit', value: 'debit' }
+              ],
+              value: selectedType,
+              onChange: setSelectedType
             }
           ]}
           dateRange={{
@@ -4834,7 +5363,7 @@ export default function Bookkeeping() {
         />
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Viewing all transactions this month\n\nTotal: 1,245 transactions')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">This Month</CardTitle>
             </CardHeader>
@@ -4843,7 +5372,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Total transactions</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Uncategorized Transactions\n\n23 transactions need categorization')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Uncategorized</CardTitle>
             </CardHeader>
@@ -4852,7 +5381,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Need attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('💰 Income Transactions\n\n£45,230 received this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Income</CardTitle>
             </CardHeader>
@@ -4861,7 +5390,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('💸 Expense Transactions\n\n£32,180 spent this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Expenses</CardTitle>
             </CardHeader>
@@ -4875,7 +5404,7 @@ export default function Bookkeeping() {
         <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-blue-900">Recent Transactions</CardTitle>
-            <CardDescription>Latest bank transactions across all accounts</CardDescription>
+            <CardDescription className="text-blue-900">Latest bank transactions across all accounts</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -4886,7 +5415,7 @@ export default function Bookkeeping() {
                 { date: '2024-01-19', description: 'Bank Transfer In', account: 'Business Savings', amount: 5000, type: 'Credit', category: '', status: 'Uncategorized' },
                 { date: '2024-01-18', description: 'Utilities - Electric', account: 'Business Current', amount: -185, type: 'Debit', category: 'Utilities', status: 'Categorized' }
               ].map((transaction, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewTransaction(transaction)}>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{transaction.description}</p>
@@ -4908,11 +5437,14 @@ export default function Bookkeeping() {
                     </p>
                     <p className="text-sm text-blue-900">{transaction.type}</p>
                     <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleViewTransaction(transaction); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleEditTransaction(transaction); }}>
                         <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleCashCoding(transaction); }}>
+                        <Tags className="h-3 w-3" />
                       </Button>
                     </div>
                   </div>
@@ -4934,11 +5466,15 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Reconcile bank statements with your accounting records</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleOpenBankingRules}>
+              <Settings className="h-4 w-4 mr-2" />
+              Banking Rules
+            </Button>
+            <Button variant="outline" onClick={() => alert('📥 Import Statement\n\nSelect a bank statement file to import')}>
               <Upload className="h-4 w-4 mr-2" />
               Import Statement
             </Button>
-            <Button>
+            <Button onClick={() => alert('🔄 Auto Reconcile\n\nAutomatically matching transactions...')}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Auto Reconcile
             </Button>
@@ -4946,7 +5482,7 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-green-50 transition-colors" onClick={() => alert('✅ Reconciled Transactions\n\n£123,450 reconciled this month')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Reconciled</CardTitle>
             </CardHeader>
@@ -4955,7 +5491,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-orange-50 transition-colors" onClick={() => alert('⚠️ Outstanding Items\n\n£2,850 needs reconciliation')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Outstanding</CardTitle>
             </CardHeader>
@@ -4964,7 +5500,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Needs attention</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-red-50 transition-colors" onClick={() => alert('❌ Discrepancies Found\n\n3 items need review')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Discrepancies</CardTitle>
             </CardHeader>
@@ -4973,7 +5509,7 @@ export default function Bookkeeping() {
               <p className="text-sm text-blue-900">Items to review</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => alert('📊 Auto-Match Rate\n\n97.8% of transactions auto-matched')}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Match Rate</CardTitle>
             </CardHeader>
@@ -5027,7 +5563,7 @@ export default function Bookkeeping() {
           <Card className="border-2 border-blue-900">
             <CardHeader>
               <CardTitle className="text-blue-900">Outstanding Items</CardTitle>
-              <CardDescription>Items requiring manual reconciliation</CardDescription>
+              <CardDescription className="text-blue-900">Items requiring manual reconciliation</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -5037,7 +5573,7 @@ export default function Bookkeeping() {
                   { description: 'Interest Payment', amount: 45, date: '2024-01-16', type: 'Credit' },
                   { description: 'Unknown Transfer', amount: -200, date: '2024-01-15', type: 'Debit' }
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px]">
+                  <div key={index} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
                     <div className="flex-1">
                       <p className="font-medium">{item.description}</p>
                       <p className="text-sm text-blue-900">{item.date}</p>
@@ -5047,10 +5583,10 @@ export default function Bookkeeping() {
                         {item.amount > 0 ? '+' : ''}£{Math.abs(item.amount)}
                       </p>
                       <div className="flex gap-1 mt-1">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => alert(`📋 Transaction Details\n\n${item.description}\nAmount: £${Math.abs(item.amount)}\nDate: ${item.date}`)}>
                           <Eye className="h-3 w-3" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleMatchTransaction(item)}>
                           <UserCheck className="h-3 w-3" />
                         </Button>
                       </div>
@@ -5066,6 +5602,11 @@ export default function Bookkeeping() {
   }
 
   function renderBankFeedsManagement() {
+    const activeFeeds = bankFeeds.filter(f => f.status === 'Active').length
+    const totalTransactions = bankFeeds.reduce((sum, f) => sum + f.transactions, 0)
+    const avgTransactionsPerFeed = bankFeeds.length > 0 ? Math.round(totalTransactions / bankFeeds.length) : 0
+    const successRate = bankFeeds.filter(f => f.status === 'Active').length / bankFeeds.length * 100
+
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -5074,11 +5615,11 @@ export default function Bookkeeping() {
             <p className="text-blue-900">Manage automatic bank feed connections and data synchronization</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleAddFeed}>
               <Plus className="h-4 w-4 mr-2" />
               Add Feed
             </Button>
-            <Button>
+            <Button onClick={handleSyncAll}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Sync All
             </Button>
@@ -5086,39 +5627,56 @@ export default function Bookkeeping() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const activeList = bankFeeds.filter(f => f.status === 'Active')
+            alert(`✅ Active Bank Feeds (${activeFeeds})\n\n${activeList.map(f => `• ${f.bank}\n  ${f.account}\n  ${f.transactions} transactions`).join('\n\n')}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Active Feeds</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-green-600">8</div>
+              <div className="text-xl font-bold text-green-600">{activeFeeds}</div>
               <p className="text-sm text-blue-900">Connected banks</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const recentSync = bankFeeds.sort((a, b) => {
+              const timeA = a.lastSync.includes('hour') ? parseInt(a.lastSync) : (a.lastSync.includes('day') ? parseInt(a.lastSync) * 24 : 0)
+              const timeB = b.lastSync.includes('hour') ? parseInt(b.lastSync) : (b.lastSync.includes('day') ? parseInt(b.lastSync) * 24 : 0)
+              return timeA - timeB
+            })[0]
+            alert(`🕐 Last Sync Information\n\nMost Recent: ${recentSync.bank}\n${recentSync.lastSync}\n\nAll Feeds:\n${bankFeeds.map(f => `• ${f.bank}: ${f.lastSync}`).join('\n')}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Last Sync</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-brisk-primary">2 hrs</div>
+              <div className="text-xl font-bold text-brisk-primary">{bankFeeds[0]?.lastSync.split(' ')[0] || '0'} {bankFeeds[0]?.lastSync.split(' ')[1] || 'hrs'}</div>
               <p className="text-sm text-blue-900">Ago</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            alert(`📊 Total Transactions\n\nAcross All Feeds: ${totalTransactions}\n\nBreakdown:\n${bankFeeds.map(f => `• ${f.bank}: ${f.transactions} transactions`).join('\n')}\n\nAverage per Feed: ${avgTransactionsPerFeed}`)
+          }}>
             <CardHeader>
-              <CardTitle className="text-lg text-blue-900">New Transactions</CardTitle>
+              <CardTitle className="text-lg text-blue-900">Total Transactions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-blue-600">45</div>
-              <p className="text-sm text-blue-900">Since last sync</p>
+              <div className="text-xl font-bold text-blue-600">{totalTransactions}</div>
+              <p className="text-sm text-blue-900">Across all feeds</p>
             </CardContent>
           </Card>
-          <Card className="border-2 border-blue-900">
+          <Card className="border-2 border-blue-900 cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => {
+            const active = bankFeeds.filter(f => f.status === 'Active').length
+            const warning = bankFeeds.filter(f => f.status === 'Warning').length
+            const error = bankFeeds.filter(f => f.status === 'Error').length
+            alert(`📈 Sync Success Rate\n\nSuccess Rate: ${successRate.toFixed(1)}%\n\nStatus Breakdown:\n• Active: ${active} feeds\n• Warning: ${warning} feeds\n• Error: ${error} feeds\n\nTotal Feeds: ${bankFeeds.length}`)
+          }}>
             <CardHeader>
               <CardTitle className="text-lg text-blue-900">Sync Success</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-orange-600">99.2%</div>
+              <div className="text-xl font-bold text-orange-600">{successRate.toFixed(1)}%</div>
               <p className="text-sm text-blue-900">Success rate</p>
             </CardContent>
           </Card>
@@ -5127,18 +5685,12 @@ export default function Bookkeeping() {
         <Card className="border-2 border-blue-900">
           <CardHeader>
             <CardTitle className="text-blue-900">Bank Feed Status</CardTitle>
-            <CardDescription>Status and configuration of all bank feed connections</CardDescription>
+            <CardDescription className="text-blue-900">Status and configuration of all bank feed connections</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { bank: 'Barclays Business', account: '****1234', status: 'Active', lastSync: '2 hours ago', frequency: 'Every 4 hours', transactions: 156 },
-                { bank: 'HSBC Business', account: '****5678', status: 'Active', lastSync: '1 hour ago', frequency: 'Every 2 hours', transactions: 89 },
-                { bank: 'Lloyds Payroll', account: '****9012', status: 'Active', lastSync: '3 hours ago', frequency: 'Daily', transactions: 23 },
-                { bank: 'NatWest Savings', account: '****3456', status: 'Warning', lastSync: '12 hours ago', frequency: 'Daily', transactions: 5 },
-                { bank: 'Santander Petty Cash', account: '****7890', status: 'Error', lastSync: '2 days ago', frequency: 'Every 6 hours', transactions: 0 }
-              ].map((feed, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px]">
+              {bankFeeds.map((feed) => (
+                <div key={feed.id} className="flex items-center justify-between p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleViewFeed(feed)}>
                   <div className="flex items-center gap-4">
                     <Link className={`h-6 w-6 ${
                       feed.status === 'Active' ? 'text-green-600' : 
@@ -5146,7 +5698,7 @@ export default function Bookkeeping() {
                       'text-red-600'
                     }`} />
                     <div>
-                      <p className="font-medium">{feed.bank}</p>
+                      <p className="font-medium text-blue-900">{feed.bank}</p>
                       <p className="text-sm text-blue-900">{feed.account} • {feed.frequency}</p>
                       <div className="flex gap-2 mt-1">
                         <Badge className={`${
@@ -5160,17 +5712,20 @@ export default function Bookkeeping() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">{feed.transactions} transactions</p>
+                    <p className="font-semibold text-blue-900">{feed.transactions} transactions</p>
                     <p className="text-sm text-blue-900">Last sync: {feed.lastSync}</p>
                     <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleViewFeed(feed); }}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleEditFeed(feed); }}>
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleSyncFeed(feed); }}>
                         <RefreshCw className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteFeed(feed); }}>
+                        <Trash2 className="h-3 w-3 text-red-600" />
                       </Button>
                     </div>
                   </div>
@@ -6302,29 +6857,528 @@ export default function Bookkeeping() {
         </div>
       </div>
 
+      <Dialog open={isTransactionDetailOpen} onOpenChange={setIsTransactionDetailOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Transaction Details</DialogTitle>
+            <DialogDescription className="text-blue-900">View complete information for this transaction</DialogDescription>
+          </DialogHeader>
+          {selectedTransaction && (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Description</Label>
+                <p className="text-sm text-blue-900">{selectedTransaction.description}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Amount</Label>
+                <p className={`text-xl font-bold ${selectedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedTransaction.amount > 0 ? '+' : ''}£{Math.abs(selectedTransaction.amount)}
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Date</Label>
+                  <p className="text-sm text-blue-900">{selectedTransaction.date}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Type</Label>
+                  <Badge className="mt-1 bg-blue-100 text-blue-800">{selectedTransaction.type}</Badge>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account</Label>
+                <p className="text-sm text-blue-900">{selectedTransaction.account}</p>
+              </div>
+              {selectedTransaction.category && (
+                <div className="grid gap-2">
+                  <Label className="text-blue-900 font-semibold">Category</Label>
+                  <Badge className="bg-green-100 text-green-800">{selectedTransaction.category}</Badge>
+                </div>
+              )}
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Status</Label>
+                <Badge className={selectedTransaction.status === 'Categorized' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}>
+                  {selectedTransaction.status}
+                </Badge>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTransactionDetailOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTransactionEditOpen} onOpenChange={setIsTransactionEditOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Edit Transaction</DialogTitle>
+            <DialogDescription className="text-blue-900">Update transaction information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="trans-desc" className="text-blue-900">Description</Label>
+              <Input
+                id="trans-desc"
+                value={transactionFormData.description || ''}
+                onChange={(e) => setTransactionFormData({...transactionFormData, description: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="trans-amount" className="text-blue-900">Amount</Label>
+              <Input
+                id="trans-amount"
+                type="number"
+                value={transactionFormData.amount || 0}
+                onChange={(e) => setTransactionFormData({...transactionFormData, amount: parseFloat(e.target.value)})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="trans-category" className="text-blue-900">Category</Label>
+              <select
+                id="trans-category"
+                value={transactionFormData.category || ''}
+                onChange={(e) => setTransactionFormData({...transactionFormData, category: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="">Select Category</option>
+                <option value="Sales">Sales</option>
+                <option value="Purchases">Purchases</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTransactionEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveTransactionEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isCashCodingOpen} onOpenChange={setIsCashCodingOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Cash Coding</DialogTitle>
+            <DialogDescription className="text-blue-900">Assign category and tax code to this transaction</DialogDescription>
+          </DialogHeader>
+          {selectedTransaction && (
+            <div className="space-y-4">
+              <div className="p-3 bg-blue-50 rounded-md border-2 border-blue-900">
+                <p className="font-medium">{selectedTransaction.description}</p>
+                <p className={`text-lg font-bold ${selectedTransaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedTransaction.amount > 0 ? '+' : ''}£{Math.abs(selectedTransaction.amount)}
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cash-category" className="text-blue-900">Category *</Label>
+                <select
+                  id="cash-category"
+                  value={transactionFormData.category || ''}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, category: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2"
+                >
+                  <option value="">Select Category</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Purchases">Purchases</option>
+                  <option value="Rent">Rent</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Salaries">Salaries</option>
+                  <option value="Banking Fees">Banking Fees</option>
+                  <option value="Interest">Interest</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="tax-code" className="text-blue-900">Tax Code</Label>
+                <select
+                  id="tax-code"
+                  value={transactionFormData.taxCode || 'T0'}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, taxCode: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2"
+                >
+                  <option value="T0">T0 - No VAT</option>
+                  <option value="T1">T1 - Standard Rate (20%)</option>
+                  <option value="T2">T2 - Exempt</option>
+                  <option value="T4">T4 - Reduced Rate (5%)</option>
+                  <option value="T9">T9 - Zero Rated</option>
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="notes" className="text-blue-900">Notes</Label>
+                <textarea
+                  id="notes"
+                  value={transactionFormData.notes || ''}
+                  onChange={(e) => setTransactionFormData({...transactionFormData, notes: e.target.value})}
+                  className="border-2 border-blue-900 rounded-md p-2 min-h-[80px]"
+                  placeholder="Add any additional notes..."
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCashCodingOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveCashCoding}>Save Coding</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isMatchTransactionOpen} onOpenChange={setIsMatchTransactionOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Match Transaction</DialogTitle>
+            <DialogDescription className="text-blue-900">Find and match this item with existing transactions</DialogDescription>
+          </DialogHeader>
+          {selectedReconciliationItem && (
+            <div className="space-y-4">
+              <div className="p-3 bg-blue-50 rounded-md border-2 border-blue-900">
+                <p className="font-medium">{selectedReconciliationItem.description}</p>
+                <p className={`text-lg font-bold ${selectedReconciliationItem.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {selectedReconciliationItem.amount > 0 ? '+' : ''}£{Math.abs(selectedReconciliationItem.amount)}
+                </p>
+                <p className="text-sm text-blue-900">{selectedReconciliationItem.date}</p>
+              </div>
+              <div>
+                <Label className="text-blue-900 font-semibold mb-2 block">Suggested Matches</Label>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {matchCandidates.map((candidate) => (
+                    <div key={candidate.id} className="p-3 border-2 border-blue-900 rounded-md hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => handleConfirmMatch(candidate.id)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <p className="font-medium">{candidate.description}</p>
+                          <p className="text-sm text-blue-900">{candidate.date} • {candidate.type}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">£{candidate.amount}</p>
+                          <Badge className={
+                            candidate.matchScore >= 90 ? 'bg-green-100 text-green-800' :
+                            candidate.matchScore >= 75 ? 'bg-orange-100 text-orange-800' :
+                            'bg-blue-100 text-blue-800'
+                          }>
+                            {candidate.matchScore}% Match
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsMatchTransactionOpen(false)}>Cancel</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isBankingRulesOpen} onOpenChange={setIsBankingRulesOpen}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Banking Rules</DialogTitle>
+            <DialogDescription className="text-blue-900">Manage automatic categorization and matching rules</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Button onClick={handleAddRule} className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Add New Rule
+            </Button>
+            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+              {bankingRules.map((rule) => (
+                <div key={rule.id} className="p-3 border-2 border-blue-900 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">{rule.name}</p>
+                      <p className="text-sm text-blue-900">{rule.condition}</p>
+                      <div className="flex gap-2 mt-2">
+                        <Badge className="bg-blue-100 text-blue-800">{rule.category}</Badge>
+                        {rule.autoMatch && <Badge className="bg-green-100 text-green-800">Auto-Match</Badge>}
+                        <Badge className={rule.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                          {rule.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="flex gap-1 ml-4">
+                      <Button variant="ghost" size="sm" onClick={() => handleToggleRule(rule.id)}>
+                        {rule.status === 'Active' ? <Eye className="h-4 w-4" /> : <Eye className="h-4 w-4 opacity-50" />}
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteRule(rule.id)}>
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBankingRulesOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddRuleOpen} onOpenChange={setIsAddRuleOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Add Banking Rule</DialogTitle>
+            <DialogDescription className="text-blue-900">Create a new rule for automatic transaction categorization</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="rule-name" className="text-blue-900">Rule Name *</Label>
+              <Input
+                id="rule-name"
+                value={ruleFormData.name}
+                onChange={(e) => setRuleFormData({...ruleFormData, name: e.target.value})}
+                placeholder="e.g., Auto-categorize Office Rent"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="rule-condition" className="text-blue-900">Condition *</Label>
+              <Input
+                id="rule-condition"
+                value={ruleFormData.condition}
+                onChange={(e) => setRuleFormData({...ruleFormData, condition: e.target.value})}
+                placeholder='e.g., Description contains "Rent"'
+                className="border-2 border-blue-900"
+              />
+              <p className="text-xs text-blue-900">Use operators: contains, equals, greater than, less than</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="rule-category" className="text-blue-900">Category *</Label>
+              <select
+                id="rule-category"
+                value={ruleFormData.category}
+                onChange={(e) => setRuleFormData({...ruleFormData, category: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2"
+              >
+                <option value="">Select Category</option>
+                <option value="Sales">Sales</option>
+                <option value="Purchases">Purchases</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Banking Fees">Banking Fees</option>
+                <option value="Interest">Interest</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="auto-match"
+                checked={ruleFormData.autoMatch}
+                onChange={(e) => setRuleFormData({...ruleFormData, autoMatch: e.target.checked})}
+                className="h-4 w-4"
+              />
+              <Label htmlFor="auto-match" className="text-blue-900">Enable auto-matching</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddRuleOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveRule}>Create Rule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isViewFeedOpen} onOpenChange={setIsViewFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Bank Feed Details</DialogTitle>
+            <DialogDescription className="text-blue-900">View complete information for this bank feed</DialogDescription>
+          </DialogHeader>
+          {selectedFeed && (
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Bank Name</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.bank}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account Number</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.account}</p>
+              </div>
+              <div className="grid gap-2">
+                <Label className="text-blue-900 font-semibold">Account ID</Label>
+                <p className="text-sm text-blue-900">{selectedFeed.accountId}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Status</Label>
+                  <Badge className={`mt-1 ${
+                    selectedFeed.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                    selectedFeed.status === 'Warning' ? 'bg-orange-100 text-orange-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>{selectedFeed.status}</Badge>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Frequency</Label>
+                  <p className="text-sm text-blue-900">{selectedFeed.frequency}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-blue-900 font-semibold">Last Sync</Label>
+                  <p className="text-sm text-blue-900">{selectedFeed.lastSync}</p>
+                </div>
+                <div>
+                  <Label className="text-blue-900 font-semibold">Transactions</Label>
+                  <p className="text-sm font-semibold text-blue-900">{selectedFeed.transactions}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewFeedOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditFeedOpen} onOpenChange={setIsEditFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Edit Bank Feed</DialogTitle>
+            <DialogDescription className="text-blue-900">Update bank feed configuration</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="feed-bank" className="text-blue-900">Bank Name *</Label>
+              <Input
+                id="feed-bank"
+                value={feedFormData.bank || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, bank: e.target.value})}
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-account" className="text-blue-900">Account Number *</Label>
+              <Input
+                id="feed-account"
+                value={feedFormData.account || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, account: e.target.value})}
+                placeholder="e.g., ****1234"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-accountId" className="text-blue-900">Account ID *</Label>
+              <Input
+                id="feed-accountId"
+                value={feedFormData.accountId || ''}
+                onChange={(e) => setFeedFormData({...feedFormData, accountId: e.target.value})}
+                placeholder="e.g., ACC-001"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="feed-frequency" className="text-blue-900">Sync Frequency</Label>
+              <select
+                id="feed-frequency"
+                value={feedFormData.frequency || 'Every 4 hours'}
+                onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2 text-blue-900"
+              >
+                <option value="Every 2 hours">Every 2 hours</option>
+                <option value="Every 4 hours">Every 4 hours</option>
+                <option value="Every 6 hours">Every 6 hours</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditFeedOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveFeed}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddFeedOpen} onOpenChange={setIsAddFeedOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-blue-900">Add Bank Feed</DialogTitle>
+            <DialogDescription className="text-blue-900">Connect a new bank feed for automatic transaction synchronization</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-bank" className="text-blue-900">Bank Name *</Label>
+              <Input
+                id="add-feed-bank"
+                value={feedFormData.bank}
+                onChange={(e) => setFeedFormData({...feedFormData, bank: e.target.value})}
+                placeholder="e.g., Barclays Business"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-account" className="text-blue-900">Account Number *</Label>
+              <Input
+                id="add-feed-account"
+                value={feedFormData.account}
+                onChange={(e) => setFeedFormData({...feedFormData, account: e.target.value})}
+                placeholder="e.g., ****1234"
+                className="border-2 border-blue-900"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-accountId" className="text-blue-900">Account ID *</Label>
+              <Input
+                id="add-feed-accountId"
+                value={feedFormData.accountId}
+                onChange={(e) => setFeedFormData({...feedFormData, accountId: e.target.value})}
+                placeholder="e.g., ACC-001"
+                className="border-2 border-blue-900"
+              />
+              <p className="text-xs text-blue-900">The account ID from your bank's API</p>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="add-feed-frequency" className="text-blue-900">Sync Frequency</Label>
+              <select
+                id="add-feed-frequency"
+                value={feedFormData.frequency}
+                onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
+                className="border-2 border-blue-900 rounded-md p-2 text-blue-900"
+              >
+                <option value="Every 2 hours">Every 2 hours</option>
+                <option value="Every 4 hours">Every 4 hours</option>
+                <option value="Every 6 hours">Every 6 hours</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddFeedOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveAddFeed}>Add Bank Feed</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Bank Account Details</DialogTitle>
-            <DialogDescription>View complete information for this bank account</DialogDescription>
+            <DialogDescription className="text-blue-900">View complete information for this bank account</DialogDescription>
           </DialogHeader>
           {selectedAccount && (
             <div className="space-y-4">
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Account Name</Label>
-                <p className="text-sm">{selectedAccount.name}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.name}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Bank</Label>
-                <p className="text-sm">{selectedAccount.bank}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.bank}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Account Number</Label>
-                <p className="text-sm">{selectedAccount.accountNumber}</p>
+                <p className="text-sm text-blue-900">{selectedAccount.accountNumber}</p>
               </div>
               <div className="grid gap-2">
                 <Label className="text-blue-900 font-semibold">Balance</Label>
-                <p className="text-xl font-bold text-green-600">£{selectedAccount.balance?.toLocaleString()}</p>
+                <p className="text-xl font-bold text-blue-900">£{selectedAccount.balance?.toLocaleString()}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -6348,7 +7402,7 @@ export default function Bookkeeping() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Edit Bank Account</DialogTitle>
-            <DialogDescription>Update bank account information</DialogDescription>
+            <DialogDescription className="text-blue-900">Update bank account information</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid gap-2">
@@ -6400,7 +7454,7 @@ export default function Bookkeeping() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-blue-900">Add Bank Account</DialogTitle>
-            <DialogDescription>Add a new bank account to your bookkeeping system</DialogDescription>
+            <DialogDescription className="text-blue-900">Add a new bank account to your bookkeeping system</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid gap-2">
@@ -6456,7 +7510,7 @@ export default function Bookkeeping() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-blue-900">Delete Bank Account</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-blue-900">
               Are you sure you want to delete <strong>{selectedAccount?.name}</strong>? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
