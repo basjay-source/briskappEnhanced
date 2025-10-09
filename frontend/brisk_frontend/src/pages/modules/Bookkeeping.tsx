@@ -4846,10 +4846,16 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Supplier
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export List
-            </Button>
+            <ExportButton
+              data={[
+                ['Supplier Name', 'Email', 'Phone', 'Total Purchases', 'Status'],
+                ['Supplier A', 'supplierA@email.com', '020 1234 5678', '£25,500', 'Active'],
+                ['Supplier B', 'supplierB@email.com', '020 9876 5432', '£18,200', 'Active'],
+                ['Supplier C', 'supplierC@email.com', '020 5555 1234', '£35,800', 'Active']
+              ]}
+              filename={`suppliers-list-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export List"
+            />
           </div>
         </div>
 
