@@ -75,6 +75,13 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ExportButton } from '@/components/ExportButton'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -444,6 +451,65 @@ export default function Bookkeeping() {
     if (confirm(`Are you sure you want to delete ${feed.bank}?\n\nThis will stop automatic synchronization for this account.`)) {
       setBankFeeds(bankFeeds.filter(f => f.id !== feed.id))
       alert(`✅ Successfully deleted ${feed.bank}!\n\nBank feed has been removed.`)
+    }
+  }
+
+  const handleExport = (data: any[][], filename: string, format: 'csv' | 'excel' | 'pdf') => {
+    if (format === 'csv') {
+      const csvContent = data.map(row => row.join(',')).join('\n')
+      const blob = new Blob([csvContent], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${filename}.csv`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } else if (format === 'excel') {
+      const csvContent = data.map(row => row.join(',')).join('\n')
+      const blob = new Blob([csvContent], { type: 'application/vnd.ms-excel' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${filename}.xls`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } else if (format === 'pdf') {
+      const htmlContent = `
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #001f3f; color: white; }
+            h1 { color: #001f3f; }
+          </style>
+        </head>
+        <body>
+          <h1>${filename}</h1>
+          <table>
+            <thead>
+              <tr>${data[0].map(cell => `<th>${cell}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+              ${data.slice(1).map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `
+      const blob = new Blob([htmlContent], { type: 'text/html' })
+      const url = window.URL.createObjectURL(blob)
+      const printWindow = window.open(url, '_blank')
+      if (printWindow) {
+        printWindow.onload = () => {
+          printWindow.print()
+        }
+      }
     }
   }
 
@@ -4947,29 +5013,18 @@ export default function Bookkeeping() {
               <Plus className="h-4 w-4 mr-2" />
               Add Account
             </Button>
-            <Button onClick={() => {
-              const csvContent = [
+            <ExportButton
+              data={[
                 ['Account Name', 'Bank', 'Account Number', 'Balance', 'Type', 'Status'],
                 ['Business Current Account', 'Barclays', '****1234', '45230', 'Current', 'Active'],
                 ['Business Savings Account', 'HSBC', '****5678', '32100', 'Savings', 'Active'],
                 ['Payroll Account', 'Lloyds', '****9012', '28900', 'Current', 'Active'],
                 ['Tax Reserve Account', 'NatWest', '****3456', '12800', 'Savings', 'Active'],
                 ['Petty Cash Account', 'Santander', '****7890', '6400', 'Current', 'Active']
-              ].map(row => row.join(',')).join('\n')
-              
-              const blob = new Blob([csvContent], { type: 'text/csv' })
-              const url = window.URL.createObjectURL(blob)
-              const link = document.createElement('a')
-              link.href = url
-              link.download = `bank-accounts-report-${new Date().toISOString().split('T')[0]}.csv`
-              document.body.appendChild(link)
-              link.click()
-              document.body.removeChild(link)
-              window.URL.revokeObjectURL(url)
-            }}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+              ]}
+              filename={`bank-accounts-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
