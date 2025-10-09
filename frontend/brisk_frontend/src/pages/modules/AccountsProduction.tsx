@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { 
   FileText, 
   Calculator, 
@@ -20,7 +20,18 @@ import {
   FileSpreadsheet,
   DollarSign,
   TrendingDown,
-  AlertCircle
+  AlertCircle,
+  Search,
+  Filter,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Calendar,
+  FileUp,
+  MessageSquare,
+  History,
+  Copy,
+  FileCheck
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
@@ -107,6 +118,23 @@ const AccountsProduction: React.FC = () => {
 
   const [drilldownData, setDrilldownData] = useState<any>(null)
   const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
+
+  const [tbSearchTerm, setTbSearchTerm] = useState('')
+  const [tbCategoryFilter, setTbCategoryFilter] = useState<string>('all')
+  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry>('accountCode')
+  const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [selectedTBEntries, setSelectedTBEntries] = useState<string[]>([])
+
+  const [jeSearchTerm, setJeSearchTerm] = useState('')
+  const [jeStatusFilter, setJeStatusFilter] = useState<string>('all')
+  const [jeDateFilter, setJeDateFilter] = useState<string>('')
+  const [jeSortField, setJeSortField] = useState<keyof JournalEntry>('reference')
+  const [jeSortDirection, setJeSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [selectedJEEntries, setSelectedJEEntries] = useState<string[]>([])
+
+  const [fsSearchTerm, setFsSearchTerm] = useState('')
+  const [fsTypeFilter, setFsTypeFilter] = useState<string>('all')
+  const [fsStatusFilter, setFsStatusFilter] = useState<string>('all')
 
   const menuStructure = [
     {
@@ -321,8 +349,126 @@ const AccountsProduction: React.FC = () => {
     setIsDrilldownOpen(true)
   }
 
-  const totalDebits = trialBalanceEntries.reduce((sum, entry) => sum + entry.debit, 0)
-  const totalCredits = trialBalanceEntries.reduce((sum, entry) => sum + entry.credit, 0)
+  const handleTBSort = (field: keyof TrialBalanceEntry) => {
+    if (tbSortField === field) {
+      setTbSortDirection(tbSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setTbSortField(field)
+      setTbSortDirection('asc')
+    }
+  }
+
+  const handleJESort = (field: keyof JournalEntry) => {
+    if (jeSortField === field) {
+      setJeSortDirection(jeSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setJeSortField(field)
+      setJeSortDirection('asc')
+    }
+  }
+
+  const handleSelectAllTB = (checked: boolean) => {
+    if (checked) {
+      setSelectedTBEntries(filteredAndSortedTBEntries.map(e => e.id))
+    } else {
+      setSelectedTBEntries([])
+    }
+  }
+
+  const handleSelectTBEntry = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedTBEntries([...selectedTBEntries, id])
+    } else {
+      setSelectedTBEntries(selectedTBEntries.filter(i => i !== id))
+    }
+  }
+
+  const handleBulkDeleteTB = () => {
+    setTrialBalanceEntries(prev => prev.filter(e => !selectedTBEntries.includes(e.id)))
+    setSelectedTBEntries([])
+  }
+
+  const handleSelectAllJE = (checked: boolean) => {
+    if (checked) {
+      setSelectedJEEntries(filteredAndSortedJEEntries.map(j => j.id))
+    } else {
+      setSelectedJEEntries([])
+    }
+  }
+
+  const handleSelectJEEntry = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedJEEntries([...selectedJEEntries, id])
+    } else {
+      setSelectedJEEntries(selectedJEEntries.filter(i => i !== id))
+    }
+  }
+
+  const handleBulkApproveJE = () => {
+    setJournalEntries(prev => prev.map(j => 
+      selectedJEEntries.includes(j.id) && j.status === 'draft' 
+        ? { ...j, status: 'approved' as const } 
+        : j
+    ))
+    setSelectedJEEntries([])
+  }
+
+  const handleBulkDeleteJE = () => {
+    setJournalEntries(prev => prev.filter(j => !selectedJEEntries.includes(j.id) || j.status === 'posted'))
+    setSelectedJEEntries([])
+  }
+
+  const filteredAndSortedTBEntries = useMemo(() => {
+    let filtered = trialBalanceEntries.filter(entry => {
+      const matchesSearch = !tbSearchTerm || 
+        entry.accountCode.toLowerCase().includes(tbSearchTerm.toLowerCase()) ||
+        entry.accountName.toLowerCase().includes(tbSearchTerm.toLowerCase())
+      const matchesCategory = tbCategoryFilter === 'all' || entry.category === tbCategoryFilter
+      return matchesSearch && matchesCategory
+    })
+
+    return filtered.sort((a, b) => {
+      const aVal = a[tbSortField]
+      const bVal = b[tbSortField]
+      const direction = tbSortDirection === 'asc' ? 1 : -1
+      
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return (aVal - bVal) * direction
+      }
+      return String(aVal).localeCompare(String(bVal)) * direction
+    })
+  }, [trialBalanceEntries, tbSearchTerm, tbCategoryFilter, tbSortField, tbSortDirection])
+
+  const filteredAndSortedJEEntries = useMemo(() => {
+    let filtered = journalEntries.filter(entry => {
+      const matchesSearch = !jeSearchTerm || 
+        entry.reference.toLowerCase().includes(jeSearchTerm.toLowerCase()) ||
+        entry.description.toLowerCase().includes(jeSearchTerm.toLowerCase())
+      const matchesStatus = jeStatusFilter === 'all' || entry.status === jeStatusFilter
+      const matchesDate = !jeDateFilter || entry.date.startsWith(jeDateFilter)
+      return matchesSearch && matchesStatus && matchesDate
+    })
+
+    return filtered.sort((a, b) => {
+      const aVal = a[jeSortField]
+      const bVal = b[jeSortField]
+      const direction = jeSortDirection === 'asc' ? 1 : -1
+      return String(aVal).localeCompare(String(bVal)) * direction
+    })
+  }, [journalEntries, jeSearchTerm, jeStatusFilter, jeDateFilter, jeSortField, jeSortDirection])
+
+  const filteredFinancialStatements = useMemo(() => {
+    return financialStatements.filter(statement => {
+      const matchesSearch = !fsSearchTerm || 
+        statement.period.toLowerCase().includes(fsSearchTerm.toLowerCase())
+      const matchesType = fsTypeFilter === 'all' || statement.type === fsTypeFilter
+      const matchesStatus = fsStatusFilter === 'all' || statement.status === fsStatusFilter
+      return matchesSearch && matchesType && matchesStatus
+    })
+  }, [financialStatements, fsSearchTerm, fsTypeFilter, fsStatusFilter])
+
+  const totalDebits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.debit, 0)
+  const totalCredits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.credit, 0)
   const totalAssets = trialBalanceEntries.filter(e => e.category === 'Asset').reduce((sum, e) => sum + e.debit - e.credit, 0)
   const totalLiabilities = trialBalanceEntries.filter(e => e.category === 'Liability').reduce((sum, e) => sum + e.credit - e.debit, 0)
   const totalEquity = trialBalanceEntries.filter(e => e.category === 'Equity').reduce((sum, e) => sum + e.credit - e.debit, 0)
@@ -459,30 +605,123 @@ const AccountsProduction: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
-          <CardDescription>Current period trial balance data</CardDescription>
+          <CardDescription>
+            Showing {filteredAndSortedTBEntries.length} of {trialBalanceEntries.length} entries
+            {selectedTBEntries.length > 0 && ` • ${selectedTBEntries.length} selected`}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Account Code</TableHead>
-                <TableHead className="text-[#001f3f]">Account Name</TableHead>
-                <TableHead className="text-[#001f3f]">Category</TableHead>
-                <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
-                <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
-                <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {trialBalanceEntries.map((entry) => (
+          <div className="space-y-4">
+            <div className="flex gap-4 items-center">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input
+                    placeholder="Search by account code or name..."
+                    value={tbSearchTerm}
+                    onChange={(e) => setTbSearchTerm(e.target.value)}
+                    className="pl-8"
+                  />
+                </div>
+              </div>
+              <Select value={tbCategoryFilter} onValueChange={setTbCategoryFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="Asset">Assets</SelectItem>
+                  <SelectItem value="Liability">Liabilities</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                  <SelectItem value="Revenue">Revenue</SelectItem>
+                  <SelectItem value="Expense">Expenses</SelectItem>
+                </SelectContent>
+              </Select>
+              {selectedTBEntries.length > 0 && (
+                <Button variant="destructive" size="sm" onClick={handleBulkDeleteTB}>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Selected ({selectedTBEntries.length})
+                </Button>
+              )}
+            </div>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12">
+                    <input
+                      type="checkbox"
+                      checked={selectedTBEntries.length === filteredAndSortedTBEntries.length && filteredAndSortedTBEntries.length > 0}
+                      onChange={(e) => handleSelectAllTB(e.target.checked)}
+                      className="rounded border-gray-300"
+                    />
+                  </TableHead>
+                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('accountCode')}>
+                    <div className="flex items-center gap-2">
+                      Account Code
+                      {tbSortField === 'accountCode' && (
+                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                      )}
+                      {tbSortField !== 'accountCode' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('accountName')}>
+                    <div className="flex items-center gap-2">
+                      Account Name
+                      {tbSortField === 'accountName' && (
+                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                      )}
+                      {tbSortField !== 'accountName' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('category')}>
+                    <div className="flex items-center gap-2">
+                      Category
+                      {tbSortField === 'category' && (
+                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                      )}
+                      {tbSortField !== 'category' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('debit')}>
+                    <div className="flex items-center justify-end gap-2">
+                      Debit
+                      {tbSortField === 'debit' && (
+                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                      )}
+                      {tbSortField !== 'debit' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('credit')}>
+                    <div className="flex items-center justify-end gap-2">
+                      Credit
+                      {tbSortField === 'credit' && (
+                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
+                      )}
+                      {tbSortField !== 'credit' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredAndSortedTBEntries.map((entry) => (
                 <TableRow 
                   key={entry.id}
-                  className="cursor-pointer hover:bg-gray-50"
+                  className={`cursor-pointer hover:bg-gray-50 ${selectedTBEntries.includes(entry.id) ? 'bg-blue-50' : ''}`}
                   onClick={() => handleDrilldown({
                     title: `${entry.accountName} Details`,
                     data: entry
                   })}
                 >
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedTBEntries.includes(entry.id)}
+                      onChange={(e) => handleSelectTBEntry(entry.id, e.target.checked)}
+                      className="rounded border-gray-300"
+                    />
+                  </TableCell>
                   <TableCell className="text-[#001f3f]">{entry.accountCode}</TableCell>
                   <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
                   <TableCell>
@@ -500,6 +739,7 @@ const AccountsProduction: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEditTBEntry(entry)}
+                        title="Edit Entry"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -507,14 +747,27 @@ const AccountsProduction: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteTBEntry(entry.id)}
+                        title="Delete Entry"
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDrilldown({
+                          title: `${entry.accountName} History`,
+                          data: entry
+                        })}
+                        title="View History"
+                      >
+                        <History className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
               <TableRow className="font-bold bg-gray-50">
+                <TableCell></TableCell>
                 <TableCell colSpan={3} className="text-[#001f3f]">Total</TableCell>
                 <TableCell className="text-right text-[#001f3f]">£{totalDebits.toLocaleString()}</TableCell>
                 <TableCell className="text-right text-[#001f3f]">£{totalCredits.toLocaleString()}</TableCell>
@@ -522,6 +775,7 @@ const AccountsProduction: React.FC = () => {
               </TableRow>
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
