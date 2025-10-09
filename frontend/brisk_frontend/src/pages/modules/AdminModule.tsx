@@ -272,7 +272,7 @@ const AdminModule = () => {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-900">Admin Overview</h1>
+          <h1 className="text-xl font-bold text-blue-900">Admin Overview</h1>
           <div className="flex space-x-3">
             <Button variant="outline" onClick={() => setShowApprovalDialog(true)}>
               <AlertTriangle className="h-4 w-4 mr-2" />
@@ -382,7 +382,7 @@ const AdminModule = () => {
   const renderCatalogPricing = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Catalog & Pricing</h1>
+        <h1 className="text-xl font-bold text-blue-900">Catalog & Pricing</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -522,7 +522,7 @@ const AdminModule = () => {
   const renderPromotions = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Promotions & Coupons</h1>
+        <h1 className="text-xl font-bold text-blue-900">Promotions & Coupons</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -640,7 +640,7 @@ const AdminModule = () => {
   const renderExperiments = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Experiments & Feature Flags</h1>
+        <h1 className="text-xl font-bold text-blue-900">Experiments & Feature Flags</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -759,7 +759,7 @@ const AdminModule = () => {
   const renderTenants = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Tenants & Subscriptions</h1>
+        <h1 className="text-xl font-bold text-blue-900">Tenants & Subscriptions</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -841,7 +841,7 @@ const AdminModule = () => {
   const renderSettings = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Admin Settings</h1>
+        <h1 className="text-xl font-bold text-blue-900">Admin Settings</h1>
         <Button>
           <Settings className="h-4 w-4 mr-2" />
           Save Changes
@@ -904,7 +904,7 @@ const AdminModule = () => {
   const renderInvoicesDunning = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Invoices & Dunning</h1>
+        <h1 className="text-xl font-bold text-blue-900">Invoices & Dunning</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1027,7 +1027,7 @@ const AdminModule = () => {
   const renderPartnersReferrals = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Partners & Referrals</h1>
+        <h1 className="text-xl font-bold text-blue-900">Partners & Referrals</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1149,7 +1149,7 @@ const AdminModule = () => {
   const renderGrowthJourneys = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Growth Journeys</h1>
+        <h1 className="text-xl font-bold text-blue-900">Growth Journeys</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1243,7 +1243,7 @@ const AdminModule = () => {
   const renderAuditLog = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Audit Log</h1>
+        <h1 className="text-xl font-bold text-blue-900">Audit Log</h1>
         <div className="flex space-x-3">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1319,7 +1319,7 @@ const AdminModule = () => {
   const renderTemplates = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-900">Templates & Branding</h1>
+        <h1 className="text-xl font-bold text-blue-900">Templates & Branding</h1>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
           Create Template

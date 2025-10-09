@@ -73,7 +73,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md my-auto">
           
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
             <p className="text-blue-900">Welcome back! Please enter your details.</p>
           </div>
 

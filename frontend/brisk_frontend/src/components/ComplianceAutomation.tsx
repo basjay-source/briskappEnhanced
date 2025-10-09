@@ -211,7 +211,7 @@ export default function ComplianceAutomation() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Compliance Automation</h2>
+          <h2 className="text-xl font-bold">Compliance Automation</h2>
           <p className="text-blue-900">Automated deadline tracking and client communication</p>
         </div>
         <div className="flex gap-2">
@@ -232,7 +232,7 @@ export default function ComplianceAutomation() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Active Deadlines</p>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-xl font-bold">12</p>
                 <p className="text-xs text-orange-600">3 due this week</p>
               </div>
               <Calendar className="h-8 w-8 text-blue-600" />
@@ -245,7 +245,7 @@ export default function ComplianceAutomation() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Automation Rate</p>
-                <p className="text-2xl font-bold">94%</p>
+                <p className="text-xl font-bold">94%</p>
                 <p className="text-xs text-green-600">+2% this month</p>
               </div>
               <Zap className="h-8 w-8 text-green-600" />
@@ -258,7 +258,7 @@ export default function ComplianceAutomation() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Time Saved</p>
-                <p className="text-2xl font-bold">47h</p>
+                <p className="text-xl font-bold">47h</p>
                 <p className="text-xs text-green-600">This month</p>
               </div>
               <Clock className="h-8 w-8 text-purple-600" />
@@ -271,7 +271,7 @@ export default function ComplianceAutomation() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Success Rate</p>
-                <p className="text-2xl font-bold">96.2%</p>
+                <p className="text-xl font-bold">96.2%</p>
                 <p className="text-xs text-green-600">On-time filings</p>
               </div>
               <Target className="h-8 w-8 text-green-600" />
@@ -594,7 +594,7 @@ export default function ComplianceAutomation() {
                       <Clock className="h-4 w-4 text-green-600" />
                       <span className="font-medium text-green-900">Time Savings</span>
                     </div>
-                    <p className="text-2xl font-bold text-green-700">47 hours</p>
+                    <p className="text-xl font-bold text-green-700">47 hours</p>
                     <p className="text-sm text-green-600">This month</p>
                   </div>
                   <div className="p-3 bg-blue-50 rounded-[2px]">
@@ -602,7 +602,7 @@ export default function ComplianceAutomation() {
                       <Target className="h-4 w-4 text-blue-600" />
                       <span className="font-medium text-blue-900">Cost Savings</span>
                     </div>
-                    <p className="text-2xl font-bold text-blue-700">£3,760</p>
+                    <p className="text-xl font-bold text-blue-700">£3,760</p>
                     <p className="text-sm text-blue-600">This month</p>
                   </div>
                   <div className="p-3 bg-purple-50 rounded-[2px]">
@@ -610,7 +610,7 @@ export default function ComplianceAutomation() {
                       <Zap className="h-4 w-4 text-purple-600" />
                       <span className="font-medium text-purple-900">Efficiency Gain</span>
                     </div>
-                    <p className="text-2xl font-bold text-purple-700">34%</p>
+                    <p className="text-xl font-bold text-purple-700">34%</p>
                     <p className="text-sm text-purple-600">vs manual process</p>
                   </div>
                 </div>

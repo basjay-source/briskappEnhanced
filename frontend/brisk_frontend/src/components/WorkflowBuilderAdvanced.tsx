@@ -335,7 +335,7 @@ export default function WorkflowBuilderAdvanced() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Workflow Automation</h2>
+          <h2 className="text-xl font-bold">Workflow Automation</h2>
           <p className="text-blue-900">Create and manage intelligent workflow templates</p>
         </div>
         <Button onClick={createNewWorkflow} className="bg-brisk-primary hover:bg-brisk-primary-600">
@@ -682,7 +682,7 @@ export default function WorkflowBuilderAdvanced() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-blue-900">Active Workflows</p>
-                    <p className="text-2xl font-bold">12</p>
+                    <p className="text-xl font-bold">12</p>
                     <p className="text-xs text-green-600">+2 this month</p>
                   </div>
                   <Workflow className="h-8 w-8 text-blue-600" />
@@ -695,7 +695,7 @@ export default function WorkflowBuilderAdvanced() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-blue-900">Jobs Automated</p>
-                    <p className="text-2xl font-bold">847</p>
+                    <p className="text-xl font-bold">847</p>
                     <p className="text-xs text-green-600">87% automation rate</p>
                   </div>
                   <Zap className="h-8 w-8 text-orange-600" />
@@ -708,7 +708,7 @@ export default function WorkflowBuilderAdvanced() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-blue-900">Time Saved</p>
-                    <p className="text-2xl font-bold">156h</p>
+                    <p className="text-xl font-bold">156h</p>
                     <p className="text-xs text-green-600">This month</p>
                   </div>
                   <Clock className="h-8 w-8 text-green-600" />
@@ -721,7 +721,7 @@ export default function WorkflowBuilderAdvanced() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-blue-900">Success Rate</p>
-                    <p className="text-2xl font-bold">94.2%</p>
+                    <p className="text-xl font-bold">94.2%</p>
                     <p className="text-xs text-green-600">+1.2% improvement</p>
                   </div>
                   <Target className="h-8 w-8 text-purple-600" />

@@ -250,7 +250,7 @@ export default function InvoiceTemplateManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Invoice Templates</h2>
+          <h2 className="text-xl font-bold">Invoice Templates</h2>
           <p className="text-blue-900">Customize invoice templates and branding for your business</p>
         </div>
         <div className="flex gap-2">
@@ -403,7 +403,7 @@ export default function InvoiceTemplateManager() {
                         />
                       )}
                       <h3 
-                        className="text-2xl font-bold"
+                        className="text-xl font-bold"
                         style={{ 
                           color: branding.theme_colors?.primary,
                           fontFamily: 'Inter'
@@ -420,7 +420,7 @@ export default function InvoiceTemplateManager() {
                     </div>
                     <div className="text-right">
                       <h2 
-                        className="text-3xl font-bold mb-2"
+                        className="text-xl font-bold mb-2"
                         style={{ color: branding.theme_colors?.primary }}
                       >
                         INVOICE

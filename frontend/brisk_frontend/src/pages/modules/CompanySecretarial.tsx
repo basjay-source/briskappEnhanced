@@ -856,7 +856,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Annual accounts (AA01)</h2>
+              <h2 className="text-xl font-bold">Annual accounts (AA01)</h2>
               <p className="text-blue-100">File annual accounts with Companies House</p>
             </div>
           </div>
@@ -1170,7 +1170,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Annual return (AR01)</h2>
+              <h2 className="text-xl font-bold">Annual return (AR01)</h2>
               <p className="text-blue-100">File annual return with Companies House</p>
             </div>
           </div>
@@ -1514,7 +1514,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Termination of appointment (TM01)</h2>
+              <h2 className="text-xl font-bold">Termination of appointment (TM01)</h2>
               <p className="text-blue-100">Terminate appointment of director or secretary</p>
             </div>
           </div>
@@ -1966,7 +1966,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Appointment of secretary (CH01)</h2>
+              <h2 className="text-xl font-bold">Appointment of secretary (CH01)</h2>
               <p className="text-blue-100">Appoint a new company secretary</p>
             </div>
           </div>
@@ -2532,7 +2532,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">PSC notification (PSC01)</h2>
+              <h2 className="text-xl font-bold">PSC notification (PSC01)</h2>
               <p className="text-blue-100">Notify of person with significant control</p>
             </div>
           </div>
@@ -2917,7 +2917,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Change of registered office address (AD01)</h2>
+              <h2 className="text-xl font-bold">Change of registered office address (AD01)</h2>
               <p className="text-blue-100">Change your company's registered office address</p>
             </div>
           </div>
@@ -3302,7 +3302,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <CompaniesHouseLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Change of company name (NM01)</h2>
+              <h2 className="text-xl font-bold">Change of company name (NM01)</h2>
               <p className="text-blue-100">Change your company's name</p>
             </div>
           </div>
@@ -4449,7 +4449,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Employment (SA102)</h2>
+              <h2 className="text-xl font-bold">Employment (SA102)</h2>
               <p className="text-green-100">Report employment income and benefits</p>
             </div>
           </div>
@@ -4677,7 +4677,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Self-employment (short) (SA103S)</h2>
+              <h2 className="text-xl font-bold">Self-employment (short) (SA103S)</h2>
               <p className="text-green-100">Report self-employment income - short version</p>
             </div>
           </div>
@@ -4894,7 +4894,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Partnership (short) (SA104S)</h2>
+              <h2 className="text-xl font-bold">Partnership (short) (SA104S)</h2>
               <p className="text-green-100">Report partnership income - short version</p>
             </div>
           </div>
@@ -5161,7 +5161,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">UK property (SA105)</h2>
+              <h2 className="text-xl font-bold">UK property (SA105)</h2>
               <p className="text-green-100">Report UK property income</p>
             </div>
           </div>
@@ -5420,7 +5420,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Foreign (SA106)</h2>
+              <h2 className="text-xl font-bold">Foreign (SA106)</h2>
               <p className="text-green-100">Report foreign income</p>
             </div>
           </div>
@@ -5698,7 +5698,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Capital gains (SA108)</h2>
+              <h2 className="text-xl font-bold">Capital gains (SA108)</h2>
               <p className="text-green-100">Report capital gains and losses</p>
             </div>
           </div>
@@ -5962,7 +5962,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Residence, remittance basis etc (SA109)</h2>
+              <h2 className="text-xl font-bold">Residence, remittance basis etc (SA109)</h2>
               <p className="text-green-100">Report residence and remittance basis claims</p>
             </div>
           </div>
@@ -6206,7 +6206,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Monthly return for contractors (CIS300)</h2>
+              <h2 className="text-xl font-bold">Monthly return for contractors (CIS300)</h2>
               <p className="text-green-100">Submit monthly CIS return</p>
             </div>
           </div>
@@ -6480,7 +6480,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Employer Annual Return (P35)</h2>
+              <h2 className="text-xl font-bold">Employer Annual Return (P35)</h2>
               <p className="text-green-100">Submit end of year employer return</p>
             </div>
           </div>
@@ -6766,7 +6766,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Application to register for VAT (VAT1)</h2>
+              <h2 className="text-xl font-bold">Application to register for VAT (VAT1)</h2>
               <p className="text-green-100">Register your business for VAT</p>
             </div>
           </div>
@@ -7082,7 +7082,7 @@ export default function CompanySecretarial() {
           <div className="flex items-center space-x-4">
             <HMRCLogo className="h-12 w-12" />
             <div>
-              <h2 className="text-2xl font-bold">Application for VAT group registration (VAT2)</h2>
+              <h2 className="text-xl font-bold">Application for VAT group registration (VAT2)</h2>
               <p className="text-green-100">Register companies as a VAT group</p>
             </div>
           </div>
@@ -7158,7 +7158,7 @@ export default function CompanySecretarial() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">
                       <h4 className="font-semibold text-blue-900 mb-2">Current Status</h4>
-                      <p className="text-2xl font-bold">{kpi.value}</p>
+                      <p className="text-xl font-bold">{kpi.value}</p>
                       <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
                     </div>
                     <div className="p-4 border-2 border-blue-900 rounded-[2px]">

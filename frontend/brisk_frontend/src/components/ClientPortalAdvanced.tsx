@@ -147,7 +147,7 @@ export default function ClientPortalAdvanced({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900">Active Jobs</p>
-                      <p className="text-2xl font-bold">2</p>
+                      <p className="text-xl font-bold">2</p>
                       <p className="text-xs text-blue-600">1 due this month</p>
                     </div>
                     <Clock className="h-8 w-8 text-blue-600" />
@@ -160,7 +160,7 @@ export default function ClientPortalAdvanced({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900">Completed</p>
-                      <p className="text-2xl font-bold">1</p>
+                      <p className="text-xl font-bold">1</p>
                       <p className="text-xs text-green-600">This quarter</p>
                     </div>
                     <CheckCircle className="h-8 w-8 text-green-600" />
@@ -173,7 +173,7 @@ export default function ClientPortalAdvanced({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900">Documents</p>
-                      <p className="text-2xl font-bold">3</p>
+                      <p className="text-xl font-bold">3</p>
                       <p className="text-xs text-blue-900">Ready for review</p>
                     </div>
                     <FileText className="h-8 w-8 text-blue-900" />
@@ -186,7 +186,7 @@ export default function ClientPortalAdvanced({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900">Messages</p>
-                      <p className="text-2xl font-bold">2</p>
+                      <p className="text-xl font-bold">2</p>
                       <p className="text-xs text-orange-600">Unread</p>
                     </div>
                     <MessageSquare className="h-8 w-8 text-orange-600" />

@@ -604,7 +604,7 @@ export default function TimeAndFeesModuleAdvanced() {
         <div className="p-6 border-b-2 border-blue-900 bg-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-blue-900">
+              <h2 className="text-xl font-bold text-blue-900">
                 {menuStructure.find(t => t.id === activeMainTab)?.label || 'Dashboard'}
               </h2>
               <p className="text-blue-900 mt-1">

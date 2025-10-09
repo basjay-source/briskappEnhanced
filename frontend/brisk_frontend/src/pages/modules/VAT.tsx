@@ -243,7 +243,7 @@ export default function VAT() {
                   {scheme.rate && (
                     <div className="mb-4">
                       <Label className="text-sm text-blue-900">Rate</Label>
-                      <p className="text-2xl font-bold text-brisk-primary">{scheme.rate}%</p>
+                      <p className="text-xl font-bold text-brisk-primary">{scheme.rate}%</p>
                     </div>
                   )}
                   <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'gap-2'}`}>

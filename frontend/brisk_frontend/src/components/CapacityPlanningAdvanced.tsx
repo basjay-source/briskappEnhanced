@@ -232,7 +232,7 @@ export default function CapacityPlanningAdvanced() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Advanced Capacity Planning</h2>
+          <h2 className="text-xl font-bold">Advanced Capacity Planning</h2>
           <p className="text-blue-900">AI-powered resource optimization and forecasting</p>
         </div>
         <div className="flex gap-2">
@@ -253,7 +253,7 @@ export default function CapacityPlanningAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Team Utilization</p>
-                <p className="text-2xl font-bold">{metrics.avgUtilization.toFixed(1)}%</p>
+                <p className="text-xl font-bold">{metrics.avgUtilization.toFixed(1)}%</p>
                 <p className={`text-xs ${getUtilizationColor(metrics.avgUtilization)}`}>
                   {metrics.overloadedMembers} overloaded
                 </p>
@@ -268,7 +268,7 @@ export default function CapacityPlanningAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Available Capacity</p>
-                <p className="text-2xl font-bold">{metrics.availableCapacity.toFixed(0)}h</p>
+                <p className="text-xl font-bold">{metrics.availableCapacity.toFixed(0)}h</p>
                 <p className="text-xs text-green-600">This week</p>
               </div>
               <Clock className="h-8 w-8 text-green-600" />
@@ -281,7 +281,7 @@ export default function CapacityPlanningAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Unassigned Jobs</p>
-                <p className="text-2xl font-bold">{unassignedJobs.length}</p>
+                <p className="text-xl font-bold">{unassignedJobs.length}</p>
                 <p className="text-xs text-orange-600">Require assignment</p>
               </div>
               <Briefcase className="h-8 w-8 text-orange-600" />
@@ -294,7 +294,7 @@ export default function CapacityPlanningAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-900">Efficiency Score</p>
-                <p className="text-2xl font-bold">87%</p>
+                <p className="text-xl font-bold">87%</p>
                 <p className="text-xs text-blue-600">+3% this month</p>
               </div>
               <Target className="h-8 w-8 text-blue-600" />
