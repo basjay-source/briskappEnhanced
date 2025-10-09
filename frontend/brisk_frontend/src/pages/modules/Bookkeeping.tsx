@@ -7006,7 +7006,7 @@ export default function Bookkeeping() {
                 id="feed-frequency"
                 value={feedFormData.frequency || 'Every 4 hours'}
                 onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
-                className="border-2 border-blue-900 rounded-md p-2"
+                className="border-2 border-blue-900 rounded-md p-2 text-blue-900"
               >
                 <option value="Every 2 hours">Every 2 hours</option>
                 <option value="Every 4 hours">Every 4 hours</option>
@@ -7067,7 +7067,7 @@ export default function Bookkeeping() {
                 id="add-feed-frequency"
                 value={feedFormData.frequency}
                 onChange={(e) => setFeedFormData({...feedFormData, frequency: e.target.value})}
-                className="border-2 border-blue-900 rounded-md p-2"
+                className="border-2 border-blue-900 rounded-md p-2 text-blue-900"
               >
                 <option value="Every 2 hours">Every 2 hours</option>
                 <option value="Every 4 hours">Every 4 hours</option>
