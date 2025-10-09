@@ -933,11 +933,11 @@ export default function PracticeManagement() {
             <p className="text-[#001f3f] mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
+            <Button variant="outline" className={isMobile ? 'w-full' : ''} onClick={() => alert('Filter functionality: You can filter jobs by status, priority, client, date range, etc.')}>
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
-            <Button className={`bg-[#001f3f] hover:bg-[#001f3f]-600 ${isMobile ? 'w-full' : ''}`}>
+            <Button className={`bg-[#001f3f] hover:bg-[#001f3f]-600 ${isMobile ? 'w-full' : ''}`} onClick={() => openJobDialog()}>
               <Plus className="h-4 w-4 mr-2" />
               New Job
             </Button>
