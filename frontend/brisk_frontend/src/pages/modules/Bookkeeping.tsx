@@ -2834,10 +2834,17 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Reports
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export All
-            </Button>
+            <ExportButton
+              data={[
+                ['Report Type', 'Project', 'Date', 'Status'],
+                ['Progress Report', 'Website Redesign', '2024-01-15', 'Completed'],
+                ['Financial Summary', 'Tax Compliance', '2024-01-14', 'Completed'],
+                ['Resource Report', 'Audit Support', '2024-01-13', 'Completed'],
+                ['Timeline Analysis', 'Website Redesign', '2024-01-12', 'Completed']
+              ]}
+              filename={`project-reports-all-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export All"
+            />
           </div>
         </div>
 
