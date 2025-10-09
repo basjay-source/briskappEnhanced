@@ -27,6 +27,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { ExportButton } from '@/components/ExportButton'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 
 interface TimeEntry {
@@ -242,10 +243,18 @@ export default function TimeAndFeesModule() {
             <p className="text-blue-900 mt-2">Advanced time tracking, billing workflows, and comprehensive analytics</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Metric', 'Value', 'Change'],
+                ['Total Hours This Week', '156.5', '+8%'],
+                ['Billable Hours', '124.2', '+12%'],
+                ['Utilization Rate', '87%', '+5%'],
+                ['Revenue This Month', '£45,200', '+15%']
+              ]}
+              filename={`time-fees-report-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+              variant="outline"
+            />
             <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
               <Plus className="h-4 w-4 mr-2" />
               New Time Entry
