@@ -7789,7 +7789,7 @@ export default function CompanySecretarial() {
                   </button>
                   
                   {config.hasSubTabs && activeMainTab === key && (
-                    <div className="ml-6 mt-0.5 space-y-0.5">
+                    <div className="ml-4 mt-0.5 space-y-0.5">
                       {Object.entries(config.subTabs || {}).map(([subKey, subConfig]) => (
                         <button
                           key={subKey}
