@@ -3043,10 +3043,17 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Period
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
+            <ExportButton
+              data={[
+                ['Category', 'Budget', 'Actual', 'Variance', 'Status'],
+                ['Revenue', '£150,000', '£145,000', '-£5,000', 'Warning'],
+                ['Operating Costs', '£80,000', '£75,000', '-£5,000', 'Good'],
+                ['Marketing', '£20,000', '£22,000', '+£2,000', 'Over'],
+                ['Salaries', '£50,000', '£48,000', '-£2,000', 'Good']
+              ]}
+              filename={`budget-monitoring-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Report"
+            />
           </div>
         </div>
 
