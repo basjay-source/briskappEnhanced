@@ -1313,7 +1313,7 @@ const CharityAccounts: React.FC = () => {
           </h1>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-0.5">
           {Object.entries(menuStructure).map(([categoryKey, category]) => (
             <div key={categoryKey}>
               <button
@@ -1328,15 +1328,13 @@ const CharityAccounts: React.FC = () => {
                   <category.icon className="h-4 w-4" />
                   {category.label}
                 </div>
-                {expandedCategories.includes(categoryKey) ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
+                <ChevronDown className={`h-4 w-4 transition-transform ${
+                  expandedCategories.includes(categoryKey) ? 'rotate-180' : ''
+                }`} />
               </button>
               
               {expandedCategories.includes(categoryKey) && category.subTabs && (
-                <div className="ml-6 mt-1 space-y-1">
+                <div className="ml-6 mt-0.5 space-y-0.5">
                   {Object.entries(category.subTabs).map(([subKey, subTab]) => (
                     <button
                       key={subKey}

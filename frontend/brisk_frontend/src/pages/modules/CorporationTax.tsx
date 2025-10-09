@@ -10,7 +10,8 @@ import {
   Zap,
   Target,
   BarChart3,
-  Clock
+  Clock,
+  ChevronDown
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -661,7 +662,7 @@ export default function CorporationTax() {
         </div>
         
         <div className="flex-1 overflow-y-auto p-2">
-          <nav className="space-y-1">
+          <nav className="space-y-0.5">
             {menuStructure.map((item) => {
               const Icon = item.icon
               const isActive = activeMainTab === item.id
@@ -682,14 +683,14 @@ export default function CorporationTax() {
                       {item.label}
                     </div>
                     {item.hasSubTabs && (
-                      <div className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
-                        ▶
-                      </div>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`} />
                     )}
                   </button>
                   
                   {item.hasSubTabs && isExpanded && (
-                    <div className="ml-4 mt-1 space-y-1">
+                    <div className="ml-4 mt-0.5 space-y-0.5">
                       {item.subTabs?.map((subTab) => {
                         const isSubActive = activeSubTab === subTab.id
                         return (

@@ -7389,7 +7389,7 @@ export default function Bookkeeping() {
                 const isActive = activeMainTab === key
                 
                 return (
-                  <div key={key} className="mb-1">
+                  <div key={key} className="mb-0.5">
                     <button
                       onClick={() => handleMainTabClick(key)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
@@ -7410,7 +7410,7 @@ export default function Bookkeeping() {
                     </button>
                     
                     {config.hasSubTabs && isExpanded && config.subTabs && (
-                      <div className="ml-4 mt-1 space-y-1">
+                      <div className="ml-4 mt-0.5 space-y-0.5">
                         {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
                           const SubIcon = subConfig.icon
                           const isSubActive = activeSubTab === subKey && activeMainTab === key

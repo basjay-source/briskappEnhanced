@@ -24,7 +24,8 @@ import {
   Home,
   Globe,
   HardHat,
-  Gift
+  Gift,
+  ChevronDown
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
@@ -7765,23 +7766,30 @@ export default function CompanySecretarial() {
         <div className="w-64 bg-white border-r border-[#001f3f] min-h-screen">
           <div className="p-4">
             <h2 className="text-lg font-semibold text-[#001f3f] mb-4">Company Secretarial</h2>
-            <nav className="space-y-2">
+            <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => (
                 <div key={key}>
                   <button
                     onClick={() => handleMainTabClick(key)}
-                    className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
+                    className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                       activeMainTab === key
                         ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold'
                         : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                     }`}
                   >
-                    <config.icon className="mr-3 h-4 w-4" />
-                    {config.label}
+                    <div className="flex items-center">
+                      <config.icon className="mr-3 h-4 w-4" />
+                      {config.label}
+                    </div>
+                    {config.hasSubTabs && (
+                      <ChevronDown className={`h-4 w-4 transition-transform ${
+                        activeMainTab === key ? 'rotate-180' : ''
+                      }`} />
+                    )}
                   </button>
                   
                   {config.hasSubTabs && activeMainTab === key && (
-                    <div className="ml-6 mt-2 space-y-1">
+                    <div className="ml-6 mt-0.5 space-y-0.5">
                       {Object.entries(config.subTabs || {}).map(([subKey, subConfig]) => (
                         <button
                           key={subKey}
