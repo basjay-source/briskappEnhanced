@@ -7381,8 +7381,8 @@ export default function Bookkeeping() {
             <h2 className="text-lg font-semibold text-[#001f3f]">Bookkeeping</h2>
           </div>
           
-          <div className="flex-1 overflow-y-auto">
-            <nav className="p-2">
+          <div className="flex-1 overflow-y-auto p-2">
+            <nav className="space-y-0.5">
               {Object.entries(menuStructure).map(([key, config]) => {
                 const Icon = config.icon
                 const isExpanded = expandedCategories.includes(key)
