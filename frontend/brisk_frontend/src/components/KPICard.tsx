@@ -28,14 +28,14 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
   return (
     <>
       <Card 
-        className={`border-2 border-blue-900 ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
+        className={`border-2 border-[#001f3f] ${drillDownData ? 'cursor-pointer hover:shadow-lg transition-shadow' : ''}`}
         onClick={handleClick}
       >
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-blue-900">{title}</p>
-              <p className="text-xl font-bold">{value}</p>
+              <p className="text-sm font-medium text-[#001f3f]">{title}</p>
+              <p className="text-xl font-bold text-[#001f3f]">{value}</p>
               <p className={`text-sm ${color}`}>{change}</p>
             </div>
             <Icon className={`h-8 w-8 ${color}`} />
@@ -47,11 +47,11 @@ export default function KPICard({ title, value, change, icon: Icon, color, drill
         <Dialog open={showDrillDown} onOpenChange={setShowDrillDown}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-blue-900">
-                <Icon className="h-5 w-5 text-blue-900" />
+              <DialogTitle className="flex items-center gap-2 text-[#001f3f]">
+                <Icon className="h-5 w-5 text-[#001f3f]" />
                 {drillDownData.title}
               </DialogTitle>
-              <DialogDescription className="text-blue-700">
+              <DialogDescription className="text-[#001f3f]">
                 {drillDownData.description}
               </DialogDescription>
             </DialogHeader>

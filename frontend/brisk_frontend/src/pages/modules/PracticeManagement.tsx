@@ -179,21 +179,7 @@ export default function PracticeManagement() {
       setError(null)
     } catch (err: any) {
       console.error('Error loading dashboard:', err)
-      setDashboardData({
-        kpis: {
-          total_revenue: { value: 2400000, change: '+12.5%' },
-          active_clients: { value: 1247, change: '+8.3%' },
-          completion_rate: { value: '94.2%', change: '+2.1%' },
-          avg_response_time: { value: '1.8h', change: '-15.4%' }
-        },
-        summary: {
-          active_jobs: 342,
-          overdue_jobs: 23,
-          upcoming_deadlines: 45,
-          this_week_hours: 1847
-        }
-      })
-      setError(null)
+      setError('Failed to load dashboard data. Please check your connection.')
     } finally {
       setLoading(false)
     }
@@ -567,7 +553,7 @@ export default function PracticeManagement() {
       case 'in_progress':
         return <Circle className="h-4 w-4 text-blue-600" />
       case 'on_hold':
-        return <Pause className="h-4 w-4 text-blue-900" />
+        return <Pause className="h-4 w-4 text-[#001f3f]" />
       default:
         return <Circle className="h-4 w-4 text-gray-400" />
     }
@@ -681,8 +667,8 @@ export default function PracticeManagement() {
       return (
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-blue-900">Loading dashboard data...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#001f3f] mx-auto mb-4"></div>
+            <p className="text-[#001f3f]">Loading dashboard data...</p>
           </div>
         </div>
       )
@@ -706,56 +692,56 @@ export default function PracticeManagement() {
         value: `£${dashboardData.kpis.total_revenue.value.toLocaleString()}`,
         change: dashboardData.kpis.total_revenue.change,
         icon: TrendingUp,
-        color: 'text-blue-900',
+        color: 'text-[#001f3f]',
         drillDownData: {
           title: "Revenue Analytics",
           content: (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">Revenue by Module</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Revenue by Module</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Practice Management Revenue: £850,450\nJobs Completed: 145\nAvg Job Value: £5,865')}>
-                      <span className="text-blue-900">Practice Management</span>
-                      <span className="font-semibold text-blue-900">£850,450</span>
+                      <span className="text-[#001f3f]">Practice Management</span>
+                      <span className="font-semibold text-[#001f3f]">£850,450</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Services Revenue: £645,230\nReturns Filed: 289\nAvg Fee: £2,232')}>
-                      <span className="text-blue-900">Tax Services</span>
-                      <span className="font-semibold text-blue-900">£645,230</span>
+                      <span className="text-[#001f3f]">Tax Services</span>
+                      <span className="font-semibold text-[#001f3f]">£645,230</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Bookkeeping Revenue: £512,350\nActive Clients: 234\nMonthly Recurring: £425,000')}>
-                      <span className="text-blue-900">Bookkeeping</span>
-                      <span className="font-semibold text-blue-900">£512,350</span>
+                      <span className="text-[#001f3f]">Bookkeeping</span>
+                      <span className="font-semibold text-[#001f3f]">£512,350</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Payroll Services Revenue: £391,970\nPayroll Runs: 456\nEmployees Processed: 3,450')}>
-                      <span className="text-blue-900">Payroll Services</span>
-                      <span className="font-semibold text-blue-900">£391,970</span>
+                      <span className="text-[#001f3f]">Payroll Services</span>
+                      <span className="font-semibold text-[#001f3f]">£391,970</span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">Growth Metrics</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Growth Metrics</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Recurring Revenue: £1,245,000\nGrowth Rate: +8.5% MoM\nChurn Rate: 1.2%')}>
-                      <span className="text-blue-900">MRR</span>
+                      <span className="text-[#001f3f]">MRR</span>
                       <span className="font-semibold text-green-600">+£1.2M</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Year over Year Growth: +12.5%\nNew Clients: 45\nExpanded Services: 67')}>
-                      <span className="text-blue-900">YoY Growth</span>
+                      <span className="text-[#001f3f]">YoY Growth</span>
                       <span className="font-semibold text-green-600">+12.5%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Average Revenue Per Client: £1,924/mo\nLTV: £34,632\nCAC: £2,450')}>
-                      <span className="text-blue-900">ARPC</span>
-                      <span className="font-semibold text-blue-900">£1,924</span>
+                      <span className="text-[#001f3f]">ARPC</span>
+                      <span className="font-semibold text-[#001f3f]">£1,924</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening comprehensive revenue analytics dashboard...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Opening comprehensive revenue analytics dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Detailed Report
                 </button>
-                <button onClick={() => alert('Exporting revenue data to Excel...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Exporting revenue data to Excel...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Export Data
                 </button>
               </div>
@@ -768,52 +754,52 @@ export default function PracticeManagement() {
         value: dashboardData.kpis.active_clients.value.toString(),
         change: dashboardData.kpis.active_clients.change,
         icon: Users,
-        color: 'text-blue-900',
+        color: 'text-[#001f3f]',
         drillDownData: {
           title: "Client Analytics",
           content: (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">Client Segments</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Client Segments</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Enterprise Clients: 247\nAvg Revenue: £8,945/mo\nRetention: 96.8%')}>
-                      <span className="text-blue-900">Enterprise</span>
-                      <span className="font-semibold text-blue-900">247</span>
+                      <span className="text-[#001f3f]">Enterprise</span>
+                      <span className="font-semibold text-[#001f3f]">247</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('SME Clients: 645\nAvg Revenue: £2,340/mo\nRetention: 94.2%')}>
-                      <span className="text-blue-900">SME</span>
-                      <span className="font-semibold text-blue-900">645</span>
+                      <span className="text-[#001f3f]">SME</span>
+                      <span className="font-semibold text-[#001f3f]">645</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Sole Traders: 355\nAvg Revenue: £890/mo\nRetention: 91.5%')}>
-                      <span className="text-blue-900">Sole Traders</span>
-                      <span className="font-semibold text-blue-900">355</span>
+                      <span className="text-[#001f3f]">Sole Traders</span>
+                      <span className="font-semibold text-[#001f3f]">355</span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">Client Health</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Client Health</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Healthy Clients: 1,089 (87.4%)\nOn-time Payments: 100%\nSatisfaction: 4.5/5')}>
-                      <span className="text-blue-900">Healthy</span>
+                      <span className="text-[#001f3f]">Healthy</span>
                       <span className="font-semibold text-green-600">1,089</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('At Risk: 127 (10.2%)\nPayment Delays: 45\nReduced Engagement: 38')}>
-                      <span className="text-blue-900">At Risk</span>
+                      <span className="text-[#001f3f]">At Risk</span>
                       <span className="font-semibold text-orange-600">127</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Churned: 31 (2.4%)\nLost Revenue: £42K/mo\nWin-back Opportunity: 8')}>
-                      <span className="text-blue-900">Churned</span>
+                      <span className="text-[#001f3f]">Churned</span>
                       <span className="font-semibold text-red-600">31</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Opening client management dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Client List
                 </button>
-                <button onClick={() => alert('Exporting client data...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Exporting client data...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Export Report
                 </button>
               </div>
@@ -826,52 +812,52 @@ export default function PracticeManagement() {
         value: dashboardData.kpis.completion_rate.value,
         change: dashboardData.kpis.completion_rate.change,
         icon: CheckCircle,
-        color: 'text-blue-900',
+        color: 'text-[#001f3f]',
         drillDownData: {
           title: "Task Completion Analytics",
           content: (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">By Department</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">By Department</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Tax Department: 96.8%\nCompleted: 1,788\nOverdue: 17')}>
-                      <span className="text-blue-900">Tax Department</span>
-                      <span className="font-semibold text-blue-900">96.8%</span>
+                      <span className="text-[#001f3f]">Tax Department</span>
+                      <span className="font-semibold text-[#001f3f]">96.8%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Audit: 94.2%\nCompleted: 840\nOverdue: 14')}>
-                      <span className="text-blue-900">Audit</span>
-                      <span className="font-semibold text-blue-900">94.2%</span>
+                      <span className="text-[#001f3f]">Audit</span>
+                      <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Advisory: 92.1%\nCompleted: 1,137\nOverdue: 30')}>
-                      <span className="text-blue-900">Advisory</span>
-                      <span className="font-semibold text-blue-900">92.1%</span>
+                      <span className="text-[#001f3f]">Advisory</span>
+                      <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">Performance Trends</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Performance Trends</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('This Week: 94.2%\nCompleted: 847\nIn Progress: 67')}>
-                      <span className="text-blue-900">This Week</span>
-                      <span className="font-semibold text-blue-900">94.2%</span>
+                      <span className="text-[#001f3f]">This Week</span>
+                      <span className="font-semibold text-[#001f3f]">94.2%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Last Week: 92.1%\nCompleted: 823\nImprovement: +2.1%')}>
-                      <span className="text-blue-900">Last Week</span>
-                      <span className="font-semibold text-blue-900">92.1%</span>
+                      <span className="text-[#001f3f]">Last Week</span>
+                      <span className="font-semibold text-[#001f3f]">92.1%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Monthly Avg: 93.5%\nTarget: 95%\nGap: -1.5%')}>
-                      <span className="text-blue-900">Monthly Avg</span>
-                      <span className="font-semibold text-blue-900">93.5%</span>
+                      <span className="text-[#001f3f]">Monthly Avg</span>
+                      <span className="font-semibold text-[#001f3f]">93.5%</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening task performance dashboard...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Opening task performance dashboard...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Task Details
                 </button>
-                <button onClick={() => alert('Generating performance report...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Generating performance report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   Performance Report
                 </button>
               </div>
@@ -884,52 +870,52 @@ export default function PracticeManagement() {
         value: dashboardData.kpis.avg_response_time.value,
         change: dashboardData.kpis.avg_response_time.change,
         icon: Clock,
-        color: 'text-blue-900',
+        color: 'text-[#001f3f]',
         drillDownData: {
           title: "Response Time Analytics",
           content: (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">By Channel</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">By Channel</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Email: 1.8h avg\nTotal Queries: 2,847/mo\nSLA Compliance: 87%')}>
-                      <span className="text-blue-900">Email</span>
-                      <span className="font-semibold text-blue-900">1.8h</span>
+                      <span className="text-[#001f3f]">Email</span>
+                      <span className="font-semibold text-[#001f3f]">1.8h</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Phone: 0.5h avg\nTotal Calls: 1,234/mo\nSLA Compliance: 96%')}>
-                      <span className="text-blue-900">Phone</span>
-                      <span className="font-semibold text-blue-900">0.5h</span>
+                      <span className="text-[#001f3f]">Phone</span>
+                      <span className="font-semibold text-[#001f3f]">0.5h</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Portal: 3.2h avg\nTotal Tickets: 1,567/mo\nSLA Compliance: 82%')}>
-                      <span className="text-blue-900">Portal</span>
-                      <span className="font-semibold text-blue-900">3.2h</span>
+                      <span className="text-[#001f3f]">Portal</span>
+                      <span className="font-semibold text-[#001f3f]">3.2h</span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-blue-900">
-                  <h4 className="font-semibold text-blue-900">SLA Performance</h4>
+                <div className="bg-blue-50 p-4 rounded-[2px] border-2 border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">SLA Performance</h4>
                   <div className="mt-2 space-y-2">
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 1h: 45%\nTotal: 2,145\nTarget: 50%')}>
-                      <span className="text-blue-900">Within 1h</span>
+                      <span className="text-[#001f3f]">Within 1h</span>
                       <span className="font-semibold text-green-600">45%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 4h: 78%\nTotal: 3,714\nTarget: 80%')}>
-                      <span className="text-blue-900">Within 4h</span>
+                      <span className="text-[#001f3f]">Within 4h</span>
                       <span className="font-semibold text-green-600">78%</span>
                     </div>
                     <div className="flex justify-between cursor-pointer hover:bg-blue-100 p-2 rounded transition-colors" onClick={() => alert('Within 24h: 94%\nTotal: 4,476\nTarget: 95%')}>
-                      <span className="text-blue-900">Within 24h</span>
+                      <span className="text-[#001f3f]">Within 24h</span>
                       <span className="font-semibold text-green-600">94%</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => alert('Opening response time log...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Opening response time log...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   View Response Log
                 </button>
-                <button onClick={() => alert('Generating SLA report...')} className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                <button onClick={() => alert('Generating SLA report...')} className="px-4 py-2 bg-[#001f3f] text-white rounded hover:bg-[#003366]">
                   SLA Report
                 </button>
               </div>
@@ -944,14 +930,14 @@ export default function PracticeManagement() {
         <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-center justify-between'}`}>
           <div>
             <h1 className={`font-bold text-gray-900 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Practice Management Dashboard</h1>
-            <p className="text-blue-900 mt-2">Workflow automation, job tracking, compliance management & communications</p>
+            <p className="text-[#001f3f] mt-2">Workflow automation, job tracking, compliance management & communications</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
             <Button variant="outline" className={isMobile ? 'w-full' : ''}>
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
-            <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
+            <Button className={`bg-[#001f3f] hover:bg-[#001f3f]-600 ${isMobile ? 'w-full' : ''}`}>
               <Plus className="h-4 w-4 mr-2" />
               New Job
             </Button>
@@ -971,14 +957,14 @@ export default function PracticeManagement() {
             placeholder="Search jobs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="w-full px-3 py-2 border-2 border-[#001f3f] rounded-[2px]-md text-[#001f3f]"
           />
         </div>
         <div className="flex gap-2">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="px-3 py-2 border-2 border-[#001f3f] rounded-[2px]-md text-[#001f3f]"
           >
             {statusOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -987,7 +973,7 @@ export default function PracticeManagement() {
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="px-3 py-2 border-2 border-blue-900 rounded-[2px]-md"
+            className="px-3 py-2 border-2 border-[#001f3f] rounded-[2px]-md text-[#001f3f]"
           >
             {priorityOptions.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -999,21 +985,25 @@ export default function PracticeManagement() {
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Recent Jobs</CardTitle>
+              <CardTitle className="text-[#001f3f]">Recent Jobs</CardTitle>
               <CardDescription>Latest job assignments and progress</CardDescription>
             </CardHeader>
             <CardContent>
               {jobs.length === 0 ? (
-                <p className="text-blue-900 text-center py-4">No jobs found. Create your first job to get started.</p>
+                <p className="text-[#001f3f] text-center py-4">No jobs found. Create your first job to get started.</p>
               ) : (
                 <div className="space-y-4">
                   {jobs.slice(0, 5).map((job) => (
-                    <div key={job.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                    <div 
+                      key={job.id} 
+                      className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors"
+                      onClick={() => openJobDialog(job)}
+                    >
                       <div className="flex items-center space-x-3 flex-1">
                         {getStatusIcon(job.status)}
                         <div>
-                          <p className="font-medium">{job.title}</p>
-                          <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
+                          <p className="font-medium text-[#001f3f]">{job.title}</p>
+                          <p className="text-sm text-[#001f3f]">Client ID: {job.client_id}</p>
                           {job.due_date && (
                             <p className="text-xs text-gray-500">Due: {new Date(job.due_date).toLocaleDateString()}</p>
                           )}
@@ -1025,7 +1015,7 @@ export default function PracticeManagement() {
                             {job.priority}
                           </Badge>
                           {job.assigned_to && (
-                            <p className="text-sm text-blue-900 mt-1">{job.assigned_to}</p>
+                            <p className="text-sm text-[#001f3f] mt-1">{job.assigned_to}</p>
                           )}
                         </div>
                         <Button
@@ -1049,27 +1039,31 @@ export default function PracticeManagement() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-blue-900">Upcoming Deadlines</CardTitle>
+              <CardTitle className="text-[#001f3f]">Upcoming Deadlines</CardTitle>
               <CardDescription>Critical deadlines requiring attention</CardDescription>
             </CardHeader>
             <CardContent>
               {deadlines.length === 0 ? (
-                <p className="text-blue-900 text-center py-4">No upcoming deadlines.</p>
+                <p className="text-[#001f3f] text-center py-4">No upcoming deadlines.</p>
               ) : (
                 <div className="space-y-4">
                   {deadlines.slice(0, 5).map((deadline) => {
                     const daysRemaining = calculateDaysRemaining(deadline.due_date)
                     return (
-                      <div key={deadline.id} className="flex items-center justify-between p-3 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors">
+                      <div 
+                        key={deadline.id} 
+                        className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors"
+                        onClick={() => openDeadlineDialog(deadline)}
+                      >
                         <div className="flex-1">
-                          <p className="font-medium">{deadline.title}</p>
-                          <p className="text-sm text-blue-900">{deadline.deadline_type}</p>
+                          <p className="font-medium text-[#001f3f]">{deadline.title}</p>
+                          <p className="text-sm text-[#001f3f]">{deadline.deadline_type}</p>
                           <p className="text-xs text-gray-500">Client ID: {deadline.client_id}</p>
                         </div>
                         <div className="text-right flex items-center gap-2">
                           <div>
-                            <p className="text-sm font-medium">{new Date(deadline.due_date).toLocaleDateString()}</p>
-                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-orange-600' : 'text-blue-600'}`}>
+                            <p className="text-sm font-medium text-[#001f3f]">{new Date(deadline.due_date).toLocaleDateString()}</p>
+                            <p className={`text-sm ${daysRemaining <= 7 ? 'text-red-600' : daysRemaining <= 14 ? 'text-orange-600' : 'text-[#001f3f]'}`}>
                               {daysRemaining > 0 ? `${daysRemaining} days` : 'Overdue'}
                             </p>
                           </div>
@@ -1112,15 +1106,15 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Job Overview</h2>
-          <p className="text-blue-900">Complete job management and tracking</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Job Overview</h2>
+          <p className="text-[#001f3f]">Complete job management and tracking</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={loadJobs}>
             <Filter className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openJobDialog()}>
+          <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openJobDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             New Job
           </Button>
@@ -1131,16 +1125,16 @@ export default function PracticeManagement() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Total Jobs</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Total Jobs</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-900">{jobStats.total}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{jobStats.total}</div>
             <p className="text-xs text-gray-500">All active jobs</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">In Progress</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">In Progress</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-green-600">{jobStats.inProgress}</div>
@@ -1149,7 +1143,7 @@ export default function PracticeManagement() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">High Priority</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-orange-600">{jobStats.highPriority}</div>
@@ -1158,7 +1152,7 @@ export default function PracticeManagement() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Overdue</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Overdue</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-red-600">{jobStats.overdue}</div>
@@ -1170,7 +1164,7 @@ export default function PracticeManagement() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+          <CardTitle className="text-[#001f3f]">Filters & Search</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1215,15 +1209,15 @@ export default function PracticeManagement() {
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-blue-900">All Jobs ({jobs.length})</CardTitle>
+            <CardTitle className="text-[#001f3f]">All Jobs ({jobs.length})</CardTitle>
             <CardDescription>Complete job management and tracking</CardDescription>
           </CardHeader>
           <CardContent>
             {jobs.length === 0 ? (
               <div className="text-center py-8">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-blue-900 mb-4">No jobs found. Create your first job to get started.</p>
-                <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openJobDialog()}>
+                <p className="text-[#001f3f] mb-4">No jobs found. Create your first job to get started.</p>
+                <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openJobDialog()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create First Job
                 </Button>
@@ -1235,7 +1229,7 @@ export default function PracticeManagement() {
                   const daysUntilDue = job.due_date ? Math.ceil((new Date(job.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
                   
                   return (
-                  <div key={job.id} className={`p-4 border-2 rounded-[2px] hover:bg-blue-50 transition-colors ${isOverdue ? 'border-red-500 bg-red-50' : 'border-blue-900'}`}>
+                  <div key={job.id} className={`p-4 border-2 rounded-[2px] hover:bg-blue-50 transition-colors ${isOverdue ? 'border-red-500 bg-red-50' : 'border-[#001f3f]'}`}>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start space-x-4 flex-1">
                         {getStatusIcon(job.status)}
@@ -1247,7 +1241,7 @@ export default function PracticeManagement() {
                                 <Badge className="bg-red-500">Overdue</Badge>
                               )}
                             </div>
-                            <p className="text-sm text-blue-900">Client ID: {job.client_id}</p>
+                            <p className="text-sm text-[#001f3f]">Client ID: {job.client_id}</p>
                           </div>
                           
                           {job.description && (
@@ -1260,7 +1254,7 @@ export default function PracticeManagement() {
                                 <Calendar className="h-3 w-3" />
                                 <span>Due: {new Date(job.due_date).toLocaleDateString()}</span>
                                 {daysUntilDue !== null && !isOverdue && (
-                                  <span className="text-blue-900 font-medium">({daysUntilDue} days)</span>
+                                  <span className="text-[#001f3f] font-medium">({daysUntilDue} days)</span>
                                 )}
                               </div>
                             )}
@@ -1282,7 +1276,7 @@ export default function PracticeManagement() {
                           {job.assigned_to && (
                             <div className="text-sm">
                               <p className="text-xs text-gray-500">Assigned to</p>
-                              <p className="text-blue-900 font-medium">{job.assigned_to}</p>
+                              <p className="text-[#001f3f] font-medium">{job.assigned_to}</p>
                             </div>
                           )}
                           <div className="space-y-1">
@@ -1326,7 +1320,7 @@ export default function PracticeManagement() {
       <Dialog open={isJobDialogOpen} onOpenChange={setIsJobDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle className="text-blue-900">{editingJob ? 'Edit Job' : 'Create New Job'}</DialogTitle>
+            <DialogTitle className="text-[#001f3f]">{editingJob ? 'Edit Job' : 'Create New Job'}</DialogTitle>
             <DialogDescription>
               {editingJob ? 'Update job details below' : 'Fill in the details to create a new job'}
             </DialogDescription>
@@ -1416,7 +1410,7 @@ export default function PracticeManagement() {
               Cancel
             </Button>
             <Button 
-              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              className="bg-[#001f3f] hover:bg-[#001f3f]-600"
               onClick={handleSaveJob}
               disabled={!jobFormData.client_id || !jobFormData.title}
             >
@@ -1441,15 +1435,15 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Time Tracking</h2>
-          <p className="text-blue-900">Track time spent on jobs and tasks</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Time Tracking</h2>
+          <p className="text-[#001f3f]">Track time spent on jobs and tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={loadTimeEntries}>
             <Filter className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openTimeEntryDialog()}>
+          <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openTimeEntryDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             Log Time
           </Button>
@@ -1460,16 +1454,16 @@ export default function PracticeManagement() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Total Entries</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Total Entries</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-900">{timeStats.entriesCount}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{timeStats.entriesCount}</div>
             <p className="text-xs text-gray-500">Time records</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Total Hours</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Total Hours</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-green-600">{timeStats.totalHours.toFixed(1)}h</div>
@@ -1478,7 +1472,7 @@ export default function PracticeManagement() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Billable Hours</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Billable Hours</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-orange-600">{timeStats.billableHours.toFixed(1)}h</div>
@@ -1487,7 +1481,7 @@ export default function PracticeManagement() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Revenue</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Revenue</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-purple-600">£{timeStats.totalRevenue.toFixed(2)}</div>
@@ -1499,7 +1493,7 @@ export default function PracticeManagement() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+          <CardTitle className="text-[#001f3f]">Filters & Search</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1531,15 +1525,15 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Time Entries ({timeEntries.length})</CardTitle>
+          <CardTitle className="text-[#001f3f]">Time Entries ({timeEntries.length})</CardTitle>
           <CardDescription>Track time spent on jobs and tasks</CardDescription>
         </CardHeader>
         <CardContent>
           {timeEntries.length === 0 ? (
             <div className="text-center py-8">
               <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-blue-900 mb-4">No time entries found. Start logging time to track your work.</p>
-              <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openTimeEntryDialog()}>
+              <p className="text-[#001f3f] mb-4">No time entries found. Start logging time to track your work.</p>
+              <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openTimeEntryDialog()}>
                 <Plus className="h-4 w-4 mr-2" />
                 Log First Entry
               </Button>
@@ -1551,10 +1545,10 @@ export default function PracticeManagement() {
                 const revenue = entry.billable && entry.hourly_rate ? entry.hours * entry.hourly_rate : 0
                 
                 return (
-                <div key={entry.id} className="p-4 border-2 border-blue-900 rounded-[2px] hover:bg-blue-50 transition-colors">
+                <div key={entry.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 transition-colors">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start space-x-4 flex-1">
-                      <Clock className="h-5 w-5 text-blue-900 mt-1" />
+                      <Clock className="h-5 w-5 text-[#001f3f] mt-1" />
                       <div className="flex-1 space-y-2">
                         <div>
                           <div className="flex items-center gap-2">
@@ -1565,7 +1559,7 @@ export default function PracticeManagement() {
                               <Badge className="bg-gray-500">Non-Billable</Badge>
                             )}
                           </div>
-                          <p className="text-sm text-blue-900">Job ID: {entry.job_id}</p>
+                          <p className="text-sm text-[#001f3f]">Job ID: {entry.job_id}</p>
                         </div>
                         
                         {entry.description && (
@@ -1579,7 +1573,7 @@ export default function PracticeManagement() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            <span className="font-medium text-blue-900">{entry.hours}h</span>
+                            <span className="font-medium text-[#001f3f]">{entry.hours}h</span>
                           </div>
                           {entry.hourly_rate && (
                             <div className="flex items-center gap-1">
@@ -1634,7 +1628,7 @@ export default function PracticeManagement() {
       <Dialog open={isTimeEntryDialogOpen} onOpenChange={setIsTimeEntryDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle className="text-blue-900">{editingTimeEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
+            <DialogTitle className="text-[#001f3f]">{editingTimeEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
             <DialogDescription>
               {editingTimeEntry ? 'Update time entry details below' : 'Record time spent on a job or task'}
             </DialogDescription>
@@ -1721,7 +1715,7 @@ export default function PracticeManagement() {
               Cancel
             </Button>
             <Button 
-              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              className="bg-[#001f3f] hover:bg-[#001f3f]-600"
               onClick={handleSaveTimeEntry}
               disabled={!timeEntryFormData.job_id || !timeEntryFormData.hours || !timeEntryFormData.date}
             >
@@ -1774,15 +1768,15 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Deadlines Management</h2>
-          <p className="text-blue-900">Monitor and manage upcoming deadlines</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Deadlines Management</h2>
+          <p className="text-[#001f3f]">Monitor and manage upcoming deadlines</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={loadDeadlines}>
             <Filter className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openDeadlineDialog()}>
+          <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openDeadlineDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             Add Deadline
           </Button>
@@ -1800,10 +1794,10 @@ export default function PracticeManagement() {
           }}
         >
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Total Deadlines</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Total Deadlines</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-900">{deadlineStats.total}</div>
+            <div className="text-xl font-bold text-[#001f3f]">{deadlineStats.total}</div>
             <p className="text-xs text-gray-500">All deadlines</p>
           </CardContent>
         </Card>
@@ -1816,7 +1810,7 @@ export default function PracticeManagement() {
           }}
         >
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Pending</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Pending</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-blue-600">{deadlineStats.pending}</div>
@@ -1832,7 +1826,7 @@ export default function PracticeManagement() {
           }}
         >
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Overdue</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Overdue</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-red-600">{deadlineStats.overdue}</div>
@@ -1848,7 +1842,7 @@ export default function PracticeManagement() {
           }}
         >
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">This Week</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">This Week</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-orange-600">{deadlineStats.dueThisWeek}</div>
@@ -1864,7 +1858,7 @@ export default function PracticeManagement() {
           }}
         >
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">High Priority</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">High Priority</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-purple-600">{deadlineStats.highPriority}</div>
@@ -1876,7 +1870,7 @@ export default function PracticeManagement() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Filters & Search</CardTitle>
+          <CardTitle className="text-[#001f3f]">Filters & Search</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1923,15 +1917,15 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">All Deadlines ({filteredDeadlines.length})</CardTitle>
+          <CardTitle className="text-[#001f3f]">All Deadlines ({filteredDeadlines.length})</CardTitle>
           <CardDescription>Monitor and manage upcoming deadlines</CardDescription>
         </CardHeader>
         <CardContent>
           {filteredDeadlines.length === 0 ? (
             <div className="text-center py-8">
               <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-blue-900 mb-4">No deadlines found. Add your first deadline to track compliance.</p>
-              <Button className="bg-brisk-primary hover:bg-brisk-primary-600" onClick={() => openDeadlineDialog()}>
+              <p className="text-[#001f3f] mb-4">No deadlines found. Add your first deadline to track compliance.</p>
+              <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600" onClick={() => openDeadlineDialog()}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add First Deadline
               </Button>
@@ -1946,12 +1940,12 @@ export default function PracticeManagement() {
                   <div 
                     key={deadline.id} 
                     className={`p-4 border-2 rounded-[2px] hover:bg-blue-50 transition-colors ${
-                      isOverdue ? 'border-red-600' : 'border-blue-900'
+                      isOverdue ? 'border-red-600' : 'border-[#001f3f]'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start space-x-4 flex-1">
-                        <AlertTriangle className={`h-5 w-5 mt-1 ${isOverdue ? 'text-red-600' : 'text-blue-900'}`} />
+                        <AlertTriangle className={`h-5 w-5 mt-1 ${isOverdue ? 'text-red-600' : 'text-[#001f3f]'}`} />
                         <div className="flex-1 space-y-2">
                           <div>
                             <div className="flex items-center gap-2">
@@ -1963,7 +1957,7 @@ export default function PracticeManagement() {
                                 <Badge className="bg-red-500">Overdue</Badge>
                               )}
                             </div>
-                            <p className="text-sm text-blue-900">Type: {deadline.deadline_type}</p>
+                            <p className="text-sm text-[#001f3f]">Type: {deadline.deadline_type}</p>
                             <p className="text-sm text-gray-500">Client ID: {deadline.client_id}</p>
                           </div>
                           
@@ -2038,7 +2032,7 @@ export default function PracticeManagement() {
       <Dialog open={isDeadlineDialogOpen} onOpenChange={setIsDeadlineDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle className="text-blue-900">{editingDeadline ? 'Edit Deadline' : 'Add Deadline'}</DialogTitle>
+            <DialogTitle className="text-[#001f3f]">{editingDeadline ? 'Edit Deadline' : 'Add Deadline'}</DialogTitle>
             <DialogDescription>
               {editingDeadline ? 'Update deadline details below' : 'Create a new compliance deadline'}
             </DialogDescription>
@@ -2128,7 +2122,7 @@ export default function PracticeManagement() {
               Cancel
             </Button>
             <Button 
-              className="bg-brisk-primary hover:bg-brisk-primary-600"
+              className="bg-[#001f3f] hover:bg-[#001f3f]-600"
               onClick={handleSaveDeadline}
               disabled={!deadlineFormData.client_id || !deadlineFormData.title || !deadlineFormData.due_date}
             >
@@ -2148,15 +2142,15 @@ export default function PracticeManagement() {
     <div className="space-y-6 w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Client Portal</h2>
-          <p className="text-blue-900">Advanced client portal management and configuration</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Client Portal</h2>
+          <p className="text-[#001f3f]">Advanced client portal management and configuration</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
             <Settings className="h-4 w-4 mr-2" />
             Portal Settings
           </Button>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+          <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
             <Plus className="h-4 w-4 mr-2" />
             Add Client Access
           </Button>
@@ -2167,16 +2161,16 @@ export default function PracticeManagement() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
         <Card className="cursor-pointer hover:shadow-lg transition-shadow">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Active Clients</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Active Clients</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-blue-900">0</div>
+            <div className="text-xl font-bold text-[#001f3f]">0</div>
             <p className="text-xs text-gray-500">Portal access enabled</p>
           </CardContent>
         </Card>
         <Card className="cursor-pointer hover:shadow-lg transition-shadow">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Documents Shared</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Documents Shared</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-green-600">0</div>
@@ -2185,7 +2179,7 @@ export default function PracticeManagement() {
         </Card>
         <Card className="cursor-pointer hover:shadow-lg transition-shadow">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Pending Signatures</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Pending Signatures</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-orange-600">0</div>
@@ -2194,7 +2188,7 @@ export default function PracticeManagement() {
         </Card>
         <Card className="cursor-pointer hover:shadow-lg transition-shadow">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-blue-900">Client Messages</CardTitle>
+            <CardTitle className="text-sm text-[#001f3f]">Client Messages</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold text-purple-600">0</div>
@@ -2206,39 +2200,39 @@ export default function PracticeManagement() {
       {/* Portal Tabs */}
       <Card className="w-full">
         <CardHeader>
-          <div className="flex gap-2 border-b border-blue-900 pb-2 w-full overflow-x-auto">
+          <div className="flex gap-2 border-b border-[#001f3f] pb-2 w-full overflow-x-auto">
             <Button
               variant={activePortalTab === 'overview' ? 'default' : 'ghost'}
               onClick={() => setActivePortalTab('overview')}
-              className={activePortalTab === 'overview' ? 'bg-brisk-primary' : 'text-blue-900'}
+              className={activePortalTab === 'overview' ? 'bg-[#001f3f]' : 'text-[#001f3f]'}
             >
               Overview
             </Button>
             <Button
               variant={activePortalTab === 'clients' ? 'default' : 'ghost'}
               onClick={() => setActivePortalTab('clients')}
-              className={activePortalTab === 'clients' ? 'bg-brisk-primary' : 'text-blue-900'}
+              className={activePortalTab === 'clients' ? 'bg-[#001f3f]' : 'text-[#001f3f]'}
             >
               Client Access
             </Button>
             <Button
               variant={activePortalTab === 'documents' ? 'default' : 'ghost'}
               onClick={() => setActivePortalTab('documents')}
-              className={activePortalTab === 'documents' ? 'bg-brisk-primary' : 'text-blue-900'}
+              className={activePortalTab === 'documents' ? 'bg-[#001f3f]' : 'text-[#001f3f]'}
             >
               Documents
             </Button>
             <Button
               variant={activePortalTab === 'branding' ? 'default' : 'ghost'}
               onClick={() => setActivePortalTab('branding')}
-              className={activePortalTab === 'branding' ? 'bg-brisk-primary' : 'text-blue-900'}
+              className={activePortalTab === 'branding' ? 'bg-[#001f3f]' : 'text-[#001f3f]'}
             >
               Branding
             </Button>
             <Button
               variant={activePortalTab === 'security' ? 'default' : 'ghost'}
               onClick={() => setActivePortalTab('security')}
-              className={activePortalTab === 'security' ? 'bg-brisk-primary' : 'text-blue-900'}
+              className={activePortalTab === 'security' ? 'bg-[#001f3f]' : 'text-[#001f3f]'}
             >
               Security
             </Button>
@@ -2250,34 +2244,34 @@ export default function PracticeManagement() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-blue-900">Recent Activity</CardTitle>
+                    <CardTitle className="text-[#001f3f]">Recent Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8">
                       <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-blue-900">No recent portal activity</p>
+                      <p className="text-[#001f3f]">No recent portal activity</p>
                     </div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-blue-900">Portal Status</CardTitle>
+                    <CardTitle className="text-[#001f3f]">Portal Status</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-blue-900">Portal Status</span>
+                      <span className="text-sm text-[#001f3f]">Portal Status</span>
                       <Badge className="bg-green-500">Active</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-blue-900">SSL Certificate</span>
+                      <span className="text-sm text-[#001f3f]">SSL Certificate</span>
                       <Badge className="bg-green-500">Valid</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-blue-900">Two-Factor Auth</span>
+                      <span className="text-sm text-[#001f3f]">Two-Factor Auth</span>
                       <Badge className="bg-blue-500">Enabled</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-blue-900">Auto Backups</span>
+                      <span className="text-sm text-[#001f3f]">Auto Backups</span>
                       <Badge className="bg-green-500">Active</Badge>
                     </div>
                   </CardContent>
@@ -2290,7 +2284,7 @@ export default function PracticeManagement() {
             <div className="space-y-4 w-full">
               <div className="flex justify-between items-center w-full">
                 <Input placeholder="Search clients..." className="max-w-sm" />
-                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
                   <UserPlus className="h-4 w-4 mr-2" />
                   Invite Client
                 </Button>
@@ -2299,8 +2293,8 @@ export default function PracticeManagement() {
                 <CardContent className="pt-6">
                   <div className="text-center py-8">
                     <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-blue-900 mb-4">No clients with portal access yet</p>
-                    <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                    <p className="text-[#001f3f] mb-4">No clients with portal access yet</p>
+                    <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
                       <Plus className="h-4 w-4 mr-2" />
                       Add First Client
                     </Button>
@@ -2314,7 +2308,7 @@ export default function PracticeManagement() {
             <div className="space-y-4 w-full">
               <div className="flex justify-between items-center w-full">
                 <Input placeholder="Search documents..." className="max-w-sm" />
-                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
                   <Upload className="h-4 w-4 mr-2" />
                   Upload Document
                 </Button>
@@ -2323,9 +2317,9 @@ export default function PracticeManagement() {
                 <CardContent className="pt-6">
                   <div className="text-center py-8">
                     <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-blue-900 mb-4">No documents shared on portal</p>
+                    <p className="text-[#001f3f] mb-4">No documents shared on portal</p>
                     <p className="text-sm text-gray-500 mb-4">Upload documents to share with clients securely</p>
-                    <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                    <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
                       <Upload className="h-4 w-4 mr-2" />
                       Upload First Document
                     </Button>
@@ -2339,14 +2333,14 @@ export default function PracticeManagement() {
             <div className="space-y-6 w-full">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-blue-900">Portal Appearance</CardTitle>
+                  <CardTitle className="text-[#001f3f]">Portal Appearance</CardTitle>
                   <CardDescription>Customize your client portal branding</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-2">
                     <Label>Company Logo</Label>
                     <div className="flex items-center gap-4">
-                      <div className="w-32 h-32 border-2 border-blue-900 rounded flex items-center justify-center bg-gray-50">
+                      <div className="w-32 h-32 border-2 border-[#001f3f] rounded flex items-center justify-center bg-gray-50">
                         <ImageIcon className="h-8 w-8 text-gray-400" />
                       </div>
                       <Button variant="outline">
@@ -2374,7 +2368,7 @@ export default function PracticeManagement() {
                       <Input placeholder="#1e40af" defaultValue="#1e40af" className="flex-1" />
                     </div>
                   </div>
-                  <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                  <Button className="bg-[#001f3f] hover:bg-[#001f3f]-600">
                     Save Branding Changes
                   </Button>
                 </CardContent>
@@ -2386,20 +2380,20 @@ export default function PracticeManagement() {
             <div className="space-y-6 w-full">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-blue-900">Security Settings</CardTitle>
+                  <CardTitle className="text-[#001f3f]">Security Settings</CardTitle>
                   <CardDescription>Configure portal security and access controls</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between py-3 border-b border-gray-200">
                     <div>
-                      <p className="font-medium text-blue-900">Two-Factor Authentication</p>
+                      <p className="font-medium text-[#001f3f]">Two-Factor Authentication</p>
                       <p className="text-sm text-gray-500">Require 2FA for all client logins</p>
                     </div>
                     <Badge className="bg-green-500">Enabled</Badge>
                   </div>
                   <div className="flex items-center justify-between py-3 border-b border-gray-200">
                     <div>
-                      <p className="font-medium text-blue-900">Session Timeout</p>
+                      <p className="font-medium text-[#001f3f]">Session Timeout</p>
                       <p className="text-sm text-gray-500">Auto-logout after inactivity</p>
                     </div>
                     <Select defaultValue="30">
@@ -2416,21 +2410,21 @@ export default function PracticeManagement() {
                   </div>
                   <div className="flex items-center justify-between py-3 border-b border-gray-200">
                     <div>
-                      <p className="font-medium text-blue-900">IP Whitelist</p>
+                      <p className="font-medium text-[#001f3f]">IP Whitelist</p>
                       <p className="text-sm text-gray-500">Restrict access to specific IPs</p>
                     </div>
                     <Button variant="outline" size="sm">Configure</Button>
                   </div>
                   <div className="flex items-center justify-between py-3 border-b border-gray-200">
                     <div>
-                      <p className="font-medium text-blue-900">Password Policy</p>
+                      <p className="font-medium text-[#001f3f]">Password Policy</p>
                       <p className="text-sm text-gray-500">Minimum password requirements</p>
                     </div>
                     <Button variant="outline" size="sm">Edit Policy</Button>
                   </div>
                   <div className="flex items-center justify-between py-3">
                     <div>
-                      <p className="font-medium text-blue-900">Audit Logs</p>
+                      <p className="font-medium text-[#001f3f]">Audit Logs</p>
                       <p className="text-sm text-gray-500">Track all portal access and changes</p>
                     </div>
                     <Button variant="outline" size="sm">
@@ -2452,8 +2446,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Workflow Builder</h2>
-          <p className="text-blue-900">Design and configure automated workflows</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Workflow Builder</h2>
+          <p className="text-[#001f3f]">Design and configure automated workflows</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2470,8 +2464,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Workflow Automation</h2>
-          <p className="text-blue-900">Configure automated workflow triggers and actions</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Workflow Automation</h2>
+          <p className="text-[#001f3f]">Configure automated workflow triggers and actions</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2483,11 +2477,11 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Automation Rules</CardTitle>
+          <CardTitle className="text-[#001f3f]">Automation Rules</CardTitle>
           <CardDescription>Configure automated workflow triggers and actions</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-blue-900">Workflow automation configuration will be implemented here.</p>
+          <p className="text-[#001f3f]">Workflow automation configuration will be implemented here.</p>
         </CardContent>
       </Card>
     </div>
@@ -2497,8 +2491,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Capacity Planning</h2>
-          <p className="text-blue-900">Advanced capacity planning and resource allocation</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Capacity Planning</h2>
+          <p className="text-[#001f3f]">Advanced capacity planning and resource allocation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2515,8 +2509,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Compliance Management</h2>
-          <p className="text-blue-900">Automated compliance monitoring and management</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Compliance Management</h2>
+          <p className="text-[#001f3f]">Automated compliance monitoring and management</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2533,8 +2527,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Practice Analytics</h2>
-          <p className="text-blue-900">Analyze practice performance and efficiency</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Practice Analytics</h2>
+          <p className="text-[#001f3f]">Analyze practice performance and efficiency</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2546,18 +2540,18 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Performance Metrics</CardTitle>
+          <CardTitle className="text-[#001f3f]">Performance Metrics</CardTitle>
           <CardDescription>Analyze practice performance and efficiency</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-bold text-blue-900">Practice Analytics</h3>
+              <h3 className="text-xl font-bold text-[#001f3f]">Practice Analytics</h3>
               <div className="flex gap-2">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   Export Report
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   Schedule Report
                 </button>
               </div>
@@ -2577,7 +2571,7 @@ export default function PracticeManagement() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-blue-50 p-4 rounded-[2px]">
-                          <h4 className="font-semibold text-blue-900">Revenue by Service</h4>
+                          <h4 className="font-semibold text-[#001f3f]">Revenue by Service</h4>
                           <div className="mt-2 space-y-2">
                             <div className="flex justify-between">
                               <span>Advisory Services</span>
@@ -2631,7 +2625,7 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Satisfaction Breakdown</h4>
+                        <h4 className="font-semibold text-[#001f3f]">Satisfaction Breakdown</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Service Quality</span>
@@ -2663,7 +2657,7 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Utilization by Role</h4>
+                        <h4 className="font-semibold text-[#001f3f]">Utilization by Role</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Senior Partners</span>
@@ -2695,7 +2689,7 @@ export default function PracticeManagement() {
                   content: (
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-[2px]">
-                        <h4 className="font-semibold text-blue-900">Completion by Type</h4>
+                        <h4 className="font-semibold text-[#001f3f]">Completion by Type</h4>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span>Tax Projects</span>
@@ -2737,15 +2731,15 @@ export default function PracticeManagement() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-[2px]">
                   <div className="text-xl font-bold text-blue-600">£2,847</div>
-                  <div className="text-sm text-blue-900">Average Project Value</div>
+                  <div className="text-sm text-[#001f3f]">Average Project Value</div>
                 </div>
                 <div className="text-center p-4 bg-orange-50 rounded-[2px]">
                   <div className="text-xl font-bold text-orange-600">12.3</div>
-                  <div className="text-sm text-blue-900">Days Average Completion</div>
+                  <div className="text-sm text-[#001f3f]">Days Average Completion</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-[2px]">
                   <div className="text-xl font-bold text-green-600">98.7%</div>
-                  <div className="text-sm text-blue-900">Client Retention Rate</div>
+                  <div className="text-sm text-[#001f3f]">Client Retention Rate</div>
                 </div>
               </div>
             </div>
@@ -2759,8 +2753,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">AI Practice Adviser</h2>
-          <p className="text-blue-900">Get intelligent insights for practice optimization</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">AI Practice Adviser</h2>
+          <p className="text-[#001f3f]">Get intelligent insights for practice optimization</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2772,18 +2766,18 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">AI Recommendations</CardTitle>
+          <CardTitle className="text-[#001f3f]">AI Recommendations</CardTitle>
           <CardDescription>Get intelligent insights for practice optimization</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-bold text-blue-900">Ask your Practice Manager</h3>
+              <h3 className="text-xl font-bold text-[#001f3f]">Ask your Practice Manager</h3>
               <div className="flex gap-2">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   New Conversation
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   View History
                 </button>
               </div>
@@ -2795,14 +2789,14 @@ export default function PracticeManagement() {
                   <span className="text-white font-semibold">AI</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-blue-900">Practice Management AI Adviser</h4>
-                  <p className="text-sm text-blue-900">Specialized in practice operations, client management, and business strategy</p>
+                  <h4 className="font-semibold text-[#001f3f]">Practice Management AI Adviser</h4>
+                  <p className="text-sm text-[#001f3f]">Specialized in practice operations, client management, and business strategy</p>
                 </div>
               </div>
 
               <div className="space-y-4 mb-6">
                 <div className="bg-blue-50 p-4 rounded-[2px]">
-                  <h5 className="font-semibold text-blue-900 mb-2">What I can help you with:</h5>
+                  <h5 className="font-semibold text-[#001f3f] mb-2">What I can help you with:</h5>
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• Practice workflow optimization and automation strategies</li>
                     <li>• Client onboarding and relationship management best practices</li>
@@ -2817,11 +2811,11 @@ export default function PracticeManagement() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                    <span className="text-blue-900 text-sm">You</span>
+                    <span className="text-[#001f3f] text-sm">You</span>
                   </div>
                   <div className="flex-1">
                     <textarea
-                      className="w-full p-3 border-2 border-blue-900 rounded-[2px] resize-none"
+                      className="w-full p-3 border-2 border-[#001f3f] rounded-[2px] resize-none"
                       rows={3}
                       placeholder="Ask me anything about practice management, client relationships, workflow optimization, or business strategy..."
                     />
@@ -2829,13 +2823,13 @@ export default function PracticeManagement() {
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-[#001f3f] rounded hover:bg-gray-200">
                       Workflow Analysis
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-[#001f3f] rounded hover:bg-gray-200">
                       Client Strategy
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 text-blue-900 rounded hover:bg-gray-200">
+                    <button className="px-3 py-1 text-sm bg-gray-100 text-[#001f3f] rounded hover:bg-gray-200">
                       Performance Review
                     </button>
                   </div>
@@ -2851,7 +2845,7 @@ export default function PracticeManagement() {
                 <h4 className="text-lg font-semibold mb-4">Recent Insights</h4>
                 <div className="space-y-3">
                   <div className="p-3 bg-blue-50 rounded-[2px]">
-                    <p className="text-sm text-blue-900 font-medium">Workflow Optimization</p>
+                    <p className="text-sm text-[#001f3f] font-medium">Workflow Optimization</p>
                     <p className="text-xs text-blue-700 mt-1">Your client onboarding process could be streamlined by 23% with automated document collection.</p>
                   </div>
                   <div className="p-3 bg-orange-50 rounded-[2px]">
@@ -2872,21 +2866,21 @@ export default function PracticeManagement() {
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Review high-risk client accounts</p>
-                      <p className="text-xs text-blue-900">3 clients showing payment delays</p>
+                      <p className="text-xs text-[#001f3f]">3 clients showing payment delays</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Update service agreements</p>
-                      <p className="text-xs text-blue-900">12 agreements due for renewal</p>
+                      <p className="text-xs text-[#001f3f]">12 agreements due for renewal</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-[2px]">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">Schedule team training</p>
-                      <p className="text-xs text-blue-900">New compliance requirements</p>
+                      <p className="text-xs text-[#001f3f]">New compliance requirements</p>
                     </div>
                   </div>
                 </div>
@@ -2902,8 +2896,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Email Studio</h2>
-          <p className="text-blue-900">Advanced email management and automation</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Email Studio</h2>
+          <p className="text-[#001f3f]">Advanced email management and automation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2920,8 +2914,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Payslip Templates</h2>
-          <p className="text-blue-900">Streamline payroll processing with branded templates</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Payslip Templates</h2>
+          <p className="text-[#001f3f]">Streamline payroll processing with branded templates</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2933,7 +2927,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Payslip Template Workflows</CardTitle>
+          <CardTitle className="text-[#001f3f]">Payslip Template Workflows</CardTitle>
           <CardDescription>Streamline payroll processing with branded templates</CardDescription>
         </CardHeader>
         <CardContent>
@@ -2947,8 +2941,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Invoice Templates</h2>
-          <p className="text-blue-900">Streamline invoice creation with branded templates</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Invoice Templates</h2>
+          <p className="text-[#001f3f]">Streamline invoice creation with branded templates</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2960,7 +2954,7 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Invoice Template Workflows</CardTitle>
+          <CardTitle className="text-[#001f3f]">Invoice Template Workflows</CardTitle>
           <CardDescription>Streamline invoice creation with branded templates</CardDescription>
         </CardHeader>
         <CardContent>
@@ -2974,8 +2968,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Template Analytics</h2>
-          <p className="text-blue-900">Monitor template performance and usage patterns</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Template Analytics</h2>
+          <p className="text-[#001f3f]">Monitor template performance and usage patterns</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -2987,36 +2981,36 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Template Usage Analytics</CardTitle>
+          <CardTitle className="text-[#001f3f]">Template Usage Analytics</CardTitle>
           <CardDescription>Monitor template performance and usage patterns</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-blue-900">Templates Created</CardTitle>
+                <CardTitle className="text-sm text-[#001f3f]">Templates Created</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xl font-bold">24</div>
-                <p className="text-xs text-blue-900">+3 this month</p>
+                <p className="text-xs text-[#001f3f]">+3 this month</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-blue-900">Templates Used</CardTitle>
+                <CardTitle className="text-sm text-[#001f3f]">Templates Used</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xl font-bold">156</div>
-                <p className="text-xs text-blue-900">+12 this week</p>
+                <p className="text-xs text-[#001f3f]">+12 this week</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-blue-900">Time Saved</CardTitle>
+                <CardTitle className="text-sm text-[#001f3f]">Time Saved</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xl font-bold">42h</div>
-                <p className="text-xs text-blue-900">This month</p>
+                <p className="text-xs text-[#001f3f]">This month</p>
               </CardContent>
             </Card>
           </div>
@@ -3029,8 +3023,8 @@ export default function PracticeManagement() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-blue-900">Practice Reports</h2>
-          <p className="text-blue-900">Generate comprehensive practice management reports</p>
+          <h2 className="text-xl font-bold text-[#001f3f]">Practice Reports</h2>
+          <p className="text-[#001f3f]">Generate comprehensive practice management reports</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -3042,18 +3036,18 @@ export default function PracticeManagement() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-900">Management Reports</CardTitle>
+          <CardTitle className="text-[#001f3f]">Management Reports</CardTitle>
           <CardDescription>Generate comprehensive practice management reports</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-bold text-blue-900">Practice Reports</h3>
+              <h3 className="text-xl font-bold text-[#001f3f]">Practice Reports</h3>
               <div className="flex gap-2">
                 <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                   Generate Report
                 </button>
-                <button className="px-4 py-2 bg-gray-200 text-blue-900 rounded hover:bg-gray-300">
+                <button className="px-4 py-2 bg-gray-200 text-[#001f3f] rounded hover:bg-gray-300">
                   Schedule Reports
                 </button>
               </div>
@@ -3066,8 +3060,8 @@ export default function PracticeManagement() {
                     <span className="text-blue-600">📊</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900">Financial Reports</h4>
-                    <p className="text-sm text-blue-900">Revenue, profitability, and financial performance</p>
+                    <h4 className="font-semibold text-[#001f3f]">Financial Reports</h4>
+                    <p className="text-sm text-[#001f3f]">Revenue, profitability, and financial performance</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3096,8 +3090,8 @@ export default function PracticeManagement() {
                     <span className="text-orange-600">👥</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900">Client Reports</h4>
-                    <p className="text-sm text-blue-900">Client analysis and relationship metrics</p>
+                    <h4 className="font-semibold text-[#001f3f]">Client Reports</h4>
+                    <p className="text-sm text-[#001f3f]">Client analysis and relationship metrics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3126,8 +3120,8 @@ export default function PracticeManagement() {
                     <span className="text-green-600">⚡</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900">Performance Reports</h4>
-                    <p className="text-sm text-blue-900">Team productivity and efficiency metrics</p>
+                    <h4 className="font-semibold text-[#001f3f]">Performance Reports</h4>
+                    <p className="text-sm text-[#001f3f]">Team productivity and efficiency metrics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3156,8 +3150,8 @@ export default function PracticeManagement() {
                     <span className="text-purple-600">📋</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900">Compliance Reports</h4>
-                    <p className="text-sm text-blue-900">Regulatory and compliance tracking</p>
+                    <h4 className="font-semibold text-[#001f3f]">Compliance Reports</h4>
+                    <p className="text-sm text-[#001f3f]">Regulatory and compliance tracking</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3187,7 +3181,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Business Intelligence</h4>
-                    <p className="text-sm text-blue-900">Strategic insights and analytics</p>
+                    <p className="text-sm text-[#001f3f]">Strategic insights and analytics</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3217,7 +3211,7 @@ export default function PracticeManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Custom Reports</h4>
-                    <p className="text-sm text-blue-900">Build your own reports and dashboards</p>
+                    <p className="text-sm text-[#001f3f]">Build your own reports and dashboards</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -3350,9 +3344,9 @@ export default function PracticeManagement() {
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
-        <div className="w-64 bg-white border-r-2 border-blue-900 flex flex-col">
-          <div className="p-4 border-b-2 border-blue-900">
-            <h2 className="text-lg font-semibold text-blue-900">Practice Management</h2>
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h2 className="text-lg font-semibold text-[#001f3f]">Practice Management</h2>
           </div>
           
           <div className="flex-1 overflow-y-auto">
