@@ -1736,7 +1736,17 @@ export default function Bookkeeping() {
                   )}
                   
                   <div className="flex gap-2 pt-4">
-                    <Button variant="outline">Export Report</Button>
+                    <ExportButton
+                      data={[
+                        ['Report Type', 'Period', 'Value'],
+                        ['Operating Cash Flow', selectedPeriod, '£42,350'],
+                        ['Investing Cash Flow', selectedPeriod, '-£15,200'],
+                        ['Financing Cash Flow', selectedPeriod, '-£8,500']
+                      ]}
+                      filename={`financial-report-${selectedReport.name}-${new Date().toISOString().split('T')[0]}`}
+                      buttonText="Export Report"
+                      variant="outline"
+                    />
                     <Button>Generate New</Button>
                   </div>
                 </div>
