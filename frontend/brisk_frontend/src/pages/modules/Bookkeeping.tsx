@@ -3840,10 +3840,16 @@ export default function Bookkeeping() {
               <Filter className="h-4 w-4 mr-2" />
               Filter Orders
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Orders
-            </Button>
+            <ExportButton
+              data={[
+                ['Order ID', 'Customer', 'Date', 'Amount', 'Status'],
+                ['ORD-001', 'Customer A', '2024-01-15', '£2,500', 'Completed'],
+                ['ORD-002', 'Customer B', '2024-01-14', '£1,800', 'Processing'],
+                ['ORD-003', 'Customer C', '2024-01-13', '£3,200', 'Shipped']
+              ]}
+              filename={`ecommerce-orders-${new Date().toISOString().split('T')[0]}`}
+              buttonText="Export Orders"
+            />
           </div>
         </div>
 
