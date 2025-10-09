@@ -14,6 +14,7 @@ import {
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
 import KPICard from '@/components/KPICard'
+import { ExportButton } from '@/components/ExportButton'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
@@ -305,10 +306,16 @@ const AccountsProduction: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Financial Reports</h2>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Generate Report
-        </Button>
+        <ExportButton
+          data={[
+            ['Report Type', 'Description', 'Status'],
+            ['Management Accounts', 'Monthly management reporting', 'Available'],
+            ['Financial Analysis', 'Ratio and trend analysis', 'Available'],
+            ['Variance Reports', 'Budget vs actual analysis', 'Available']
+          ]}
+          filename={`financial-reports-${new Date().toISOString().split('T')[0]}`}
+          buttonText="Generate Report"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
