@@ -1048,6 +1048,305 @@ const AccountsProduction: React.FC = () => {
     )
   }
 
+  const renderChartOfAccounts = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">Chart of Accounts</h2>
+          <p className="text-[#001f3f]">Manage your chart of accounts and account codes</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline"><Download className="h-4 w-4 mr-2" />Export</Button>
+          <Button className="bg-[#001f3f]"><Plus className="h-4 w-4 mr-2" />New Account</Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Asset accounts clicked')}>
+          <CardHeader><CardTitle className="text-lg">Assets</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">45</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Liability accounts clicked')}>
+          <CardHeader><CardTitle className="text-lg">Liabilities</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">28</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Revenue accounts clicked')}>
+          <CardHeader><CardTitle className="text-lg">Revenue</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">15</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => console.log('Expense accounts clicked')}>
+          <CardHeader><CardTitle className="text-lg">Expenses</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">62</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>Account List</CardTitle></CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead><div className="flex items-center gap-2">Code<Input placeholder="Search..." className="h-6 text-xs w-24" /></div></TableHead>
+                <TableHead><div className="flex items-center gap-2">Name<Input placeholder="Search..." className="h-6 text-xs w-32" /></div></TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50">
+                <TableCell>1000</TableCell>
+                <TableCell>Fixed Assets</TableCell>
+                <TableCell><Badge>Asset</Badge></TableCell>
+                <TableCell><Badge variant="outline">Active</Badge></TableCell>
+                <TableCell><Button variant="ghost" size="sm"><Eye className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50">
+                <TableCell>4000</TableCell>
+                <TableCell>Sales Revenue</TableCell>
+                <TableCell><Badge>Revenue</Badge></TableCell>
+                <TableCell><Badge variant="outline">Active</Badge></TableCell>
+                <TableCell><Button variant="ghost" size="sm"><Eye className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderPostingBatches = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">Posting Batches</h2>
+          <p className="text-[#001f3f]">Manage journal entries and posting batches</p>
+        </div>
+        <Button className="bg-[#001f3f]"><Plus className="h-4 w-4 mr-2" />New Batch</Button>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Draft Batches</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">5</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Posted</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">23</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Approved</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">12</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Total Entries</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">156</p></CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>Recent Batches</CardTitle></CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Batch Name</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Entries</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50">
+                <TableCell>Year End Adjustments 2024</TableCell>
+                <TableCell>Year-End</TableCell>
+                <TableCell>2024-12-31</TableCell>
+                <TableCell>15</TableCell>
+                <TableCell><Badge>Posted</Badge></TableCell>
+                <TableCell><Button variant="ghost" size="sm"><Eye className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderReviewValidation = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">Check & Finish</h2>
+          <p className="text-[#001f3f]">Validation and compliance checks</p>
+        </div>
+        <Button className="bg-[#001f3f]"><CheckCircle className="h-4 w-4 mr-2" />Run Checks</Button>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow border-green-200">
+          <CardContent className="pt-6">
+            <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
+            <h3 className="font-semibold text-green-600">Passed: 24</h3>
+            <p className="text-sm text-[#001f3f]">All checks passed</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow border-yellow-200">
+          <CardContent className="pt-6">
+            <AlertCircle className="h-8 w-8 text-yellow-600 mb-2" />
+            <h3 className="font-semibold text-yellow-600">Warnings: 3</h3>
+            <p className="text-sm text-[#001f3f]">Review required</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow border-red-200">
+          <CardContent className="pt-6">
+            <AlertCircle className="h-8 w-8 text-red-600 mb-2" />
+            <h3 className="font-semibold text-red-600">Errors: 0</h3>
+            <p className="text-sm text-[#001f3f]">No errors found</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>Validation Results</CardTitle></CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="p-3 border-2 border-green-200 rounded-[2px]">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="font-semibold text-[#001f3f]">Trial Balance Balanced</span>
+              </div>
+              <p className="text-sm text-[#001f3f] ml-7">Debits and credits match perfectly</p>
+            </div>
+            <div className="p-3 border-2 border-yellow-200 rounded-[2px]">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-yellow-600" />
+                <span className="font-semibold text-[#001f3f]">Directors Report Review</span>
+              </div>
+              <p className="text-sm text-[#001f3f] ml-7">Please review directors' signatures</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderiXBRLTagging = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">iXBRL Tagging</h2>
+          <p className="text-[#001f3f]">Tag accounts for HMRC submission</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline"><Eye className="h-4 w-4 mr-2" />Preview</Button>
+          <Button className="bg-[#001f3f]"><Globe className="h-4 w-4 mr-2" />Auto-Tag</Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Tagged Elements</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-[#001f3f]">142</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Validated</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-green-600">138</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Errors</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-red-600">0</p></CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardHeader><CardTitle className="text-lg">Untagged</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-yellow-600">4</p></CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>Tagging Status</CardTitle></CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-2 border rounded">
+              <span className="text-[#001f3f]">Balance Sheet Elements</span>
+              <Badge className="bg-green-100 text-green-800">Complete</Badge>
+            </div>
+            <div className="flex items-center justify-between p-2 border rounded">
+              <span className="text-[#001f3f]">Profit & Loss Elements</span>
+              <Badge className="bg-green-100 text-green-800">Complete</Badge>
+            </div>
+            <div className="flex items-center justify-between p-2 border rounded">
+              <span className="text-[#001f3f]">Notes Elements</span>
+              <Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
+  const renderReportsArchive = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">Reports & Archive</h2>
+          <p className="text-[#001f3f]">Export and archive completed accounts</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardContent className="pt-6">
+            <Download className="h-8 w-8 text-[#001f3f] mb-2" />
+            <h3 className="font-semibold text-[#001f3f]">Export to PDF</h3>
+            <p className="text-sm text-[#001f3f]">Generate PDF accounts</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardContent className="pt-6">
+            <FileSpreadsheet className="h-8 w-8 text-[#001f3f] mb-2" />
+            <h3 className="font-semibold text-[#001f3f]">Export to Excel</h3>
+            <p className="text-sm text-[#001f3f]">Excel format export</p>
+          </CardContent>
+        </Card>
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardContent className="pt-6">
+            <Globe className="h-8 w-8 text-[#001f3f] mb-2" />
+            <h3 className="font-semibold text-[#001f3f]">iXBRL Export</h3>
+            <p className="text-sm text-[#001f3f]">Tagged accounts file</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>Archived Accounts</CardTitle></CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Client Name</TableHead>
+                <TableHead>Period</TableHead>
+                <TableHead>Archive Date</TableHead>
+                <TableHead>Format</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="cursor-pointer hover:bg-gray-50">
+                <TableCell>Acme Trading Ltd</TableCell>
+                <TableCell>2023-12-31</TableCell>
+                <TableCell>2024-01-15</TableCell>
+                <TableCell><Badge>PDF, iXBRL</Badge></TableCell>
+                <TableCell><Button variant="ghost" size="sm"><Download className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
   const renderMainContent = () => {
     if (activeMainTab === 'dashboard') return renderDashboard()
     if (activeMainTab === 'clients') return renderClientManagement()
@@ -1067,11 +1366,16 @@ const AccountsProduction: React.FC = () => {
           </div>
         )
       }
+      if (activeSubTab === 'chart-accounts') return renderChartOfAccounts()
+      if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
     }
     if (activeMainTab === 'adjustments') return renderAdjustments()
     if (activeMainTab === 'accounts') return renderStatements()
+    if (activeMainTab === 'review') return renderReviewValidation()
+    if (activeMainTab === 'ixbrl') return renderiXBRLTagging()
     if (activeMainTab === 'filing') return renderFiling()
+    if (activeMainTab === 'reports') return renderReportsArchive()
     
     return (
       <div className="text-center py-12">
