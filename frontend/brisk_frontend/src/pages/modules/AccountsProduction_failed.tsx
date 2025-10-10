@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { 
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
-  Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
+  Edit, Trash2, Download, TrendingUp,
   Globe, Save
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
@@ -92,38 +92,6 @@ const AccountsProduction: React.FC = () => {
       nextDue: '2025-01-31', frsStandard: 'FRS 102 1A',
       contactPerson: 'David Smith', email: 'david@smithco.com',
       phone: '020 7345 6789'
-    },
-    {
-      id: '4', name: 'Tech Innovations Ltd', type: 'limited-company',
-      registrationNumber: '87654321', yearEnd: '2024-06-30',
-      accountsStatus: 'in-progress', lastAccounts: '2023-06-30',
-      nextDue: '2025-04-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Emma Wilson', email: 'emma@techinnovations.com',
-      phone: '020 7456 7890'
-    },
-    {
-      id: '5', name: 'Community Care CIC', type: 'cic',
-      registrationNumber: 'CE123456', yearEnd: '2024-03-31',
-      accountsStatus: 'completed', lastAccounts: '2024-03-31',
-      nextDue: '2025-01-31', frsStandard: 'FRS 105',
-      contactPerson: 'Michael Brown', email: 'michael@communitycare.org',
-      phone: '020 7567 8901'
-    },
-    {
-      id: '6', name: 'Johnson & Associates', type: 'partnership',
-      registrationNumber: undefined, yearEnd: '2024-12-31',
-      accountsStatus: 'filed', lastAccounts: '2023-12-31',
-      nextDue: '2025-09-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Robert Johnson', email: 'robert@johnsonassociates.com',
-      phone: '020 7678 9012'
-    },
-    {
-      id: '7', name: 'Brighton Retail Ltd', type: 'limited-company',
-      registrationNumber: '11223344', yearEnd: '2024-09-30',
-      accountsStatus: 'review', lastAccounts: '2023-09-30',
-      nextDue: '2025-07-31', frsStandard: 'FRS 105',
-      contactPerson: 'Lisa Chen', email: 'lisa@brightonretail.com',
-      phone: '020 7789 0123'
     }
   ])
   const [clientSearchName, setClientSearchName] = useState('')
@@ -180,10 +148,6 @@ const AccountsProduction: React.FC = () => {
   const [isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
   const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
   const [statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
-
-  const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
-  const [drilldownTitle, setDrilldownTitle] = useState('')
-  const [drilldownContent, setDrilldownContent] = useState<any>(null)
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -378,54 +342,24 @@ const AccountsProduction: React.FC = () => {
       id: 'trial-balance', label: 'Trial Balance', icon: Calculator, hasSubTabs: true,
       subTabs: {
         'import': { label: 'Import TB', icon: Upload },
-        'chart-accounts': { label: 'Chart of Accounts', icon: FileText },
-        'posting': { label: 'Posting Batches', icon: Calculator },
         'review': { label: 'Review & Adjust', icon: Eye }
       }
     },
     {
-      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: true,
-      subTabs: {
-        'journals': { label: 'Journal Entries', icon: FileText },
-        'accruals': { label: 'Accruals & Prepayments', icon: Calculator },
-        'depreciation': { label: 'Depreciation', icon: TrendingDown }
-      }
+      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: false
     },
     {
       id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
       subTabs: {
         'generate': { label: 'Generate Accounts', icon: FileSpreadsheet },
-        'balance-sheet': { label: 'Balance Sheet', icon: FileCheck },
-        'profit-loss': { label: 'Profit & Loss', icon: TrendingUp },
-        'notes': { label: 'Notes & Disclosures', icon: FileText }
+        'formats': { label: 'Account Formats', icon: FileCheck }
       }
     },
     {
-      id: 'review', label: 'Review & Validation', icon: CheckCircle, hasSubTabs: true,
-      subTabs: {
-        'check-finish': { label: 'Check & Finish', icon: CheckCircle },
-        'approval': { label: 'Approval Workflow', icon: Eye }
-      }
-    },
-    {
-      id: 'ixbrl', label: 'iXBRL Tagging', icon: Globe, hasSubTabs: true,
-      subTabs: {
-        'tagging': { label: 'Tag Accounts', icon: Globe },
-        'validation': { label: 'Validation', icon: CheckCircle }
-      }
-    },
-    {
-      id: 'filing', label: 'Filing & Submission', icon: Send, hasSubTabs: true,
+      id: 'filing', label: 'Statutory Filing', icon: Send, hasSubTabs: true,
       subTabs: {
         'companies-house': { label: 'Companies House', icon: Building2 },
-        'status': { label: 'Filing Status', icon: Eye }
-      }
-    },
-    {
-      id: 'reports', label: 'Reports & Archive', icon: Download, hasSubTabs: true,
-      subTabs: {
-        'export': { label: 'Export Reports', icon: Download },
-        'archive': { label: 'Archive', icon: Save }
+        'hmrc': { label: 'HMRC Filing', icon: FileCheck }
       }
     }
   ]
@@ -464,50 +398,21 @@ const AccountsProduction: React.FC = () => {
           <h2 className="text-2xl font-bold text-[#001f3f]">Accounts Production Dashboard</h2>
           <p className="text-[#001f3f]">Client accounts and production workflow</p>
         </div>
-        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
-          <Plus className="h-4 w-4 mr-2" />New Client
-        </Button>
+        <Button><Plus className="h-4 w-4 mr-2" />New Client</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div onClick={() => {
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
-        }} className="cursor-pointer">
-          <KPICard title="Total Clients" value={clients.length.toString()} 
-            change="+3 this month" icon={Building2} color="text-blue-600" />
-        </div>
-        <div onClick={() => {
-          setClientSearchStatus('in-progress')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
-        }} className="cursor-pointer">
-          <KPICard title="In Progress" 
-            value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
-            change="Active" icon={FileText} color="text-orange-600" />
-        </div>
-        <div onClick={() => {
-          setClientSearchStatus('review')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
-        }} className="cursor-pointer">
-          <KPICard title="Review" 
-            value={clients.filter(c => c.accountsStatus === 'review').length.toString()}
-            change="Pending" icon={Eye} color="text-blue-600" />
-        </div>
-        <div onClick={() => {
-          setClientSearchStatus('completed')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
-        }} className="cursor-pointer">
-          <KPICard title="Completed" 
-            value={clients.filter(c => c.accountsStatus === 'completed').length.toString()}
-            change="Ready" icon={CheckCircle} color="text-green-600" />
-        </div>
+        <KPICard title="Total Clients" value={clients.length.toString()} 
+          change="+3 this month" icon={Building2} color="text-blue-600" />
+        <KPICard title="In Progress" 
+          value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
+          change="Active" icon={FileText} color="text-orange-600" />
+        <KPICard title="Review" 
+          value={clients.filter(c => c.accountsStatus === 'review').length.toString()}
+          change="Pending" icon={Eye} color="text-blue-600" />
+        <KPICard title="Completed" 
+          value={clients.filter(c => c.accountsStatus === 'completed').length.toString()}
+          change="Ready" icon={CheckCircle} color="text-green-600" />
       </div>
 
       <Card>
@@ -525,7 +430,7 @@ const AccountsProduction: React.FC = () => {
             </TableRow></TableHeader>
             <TableBody>
               {clients.map(client => (
-                <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => handleViewClient(client)}>
+                <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
                   <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                   <TableCell className="text-[#001f3f]">{client.type}</TableCell>
                   <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
@@ -1081,418 +986,6 @@ const AccountsProduction: React.FC = () => {
     )
   }
 
-  const renderChartOfAccounts = () => {
-    const handleAccountCategoryClick = (category: string, count: number) => {
-      setDrilldownTitle(`${category} Accounts`)
-      setDrilldownContent(
-        <div className="space-y-4">
-          <p className="text-[#001f3f]">Total {category} accounts: {count}</p>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Code</TableHead>
-                <TableHead className="text-[#001f3f]">Account Name</TableHead>
-                <TableHead className="text-[#001f3f]">Balance</TableHead>
-                <TableHead className="text-[#001f3f]">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="text-[#001f3f]">1000</TableCell>
-                <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
-                <TableCell className="text-[#001f3f]">£250,000</TableCell>
-                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-[#001f3f]">1100</TableCell>
-                <TableCell className="text-[#001f3f]">Current Assets</TableCell>
-                <TableCell className="text-[#001f3f]">£85,000</TableCell>
-                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      )
-      setIsDrilldownOpen(true)
-    }
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Chart of Accounts</h2>
-            <p className="text-[#001f3f]">Manage your chart of accounts and account codes</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
-              <Download className="h-4 w-4 mr-2" />Export
-            </Button>
-            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Adding new account...')}>
-              <Plus className="h-4 w-4 mr-2" />New Account
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Assets', 45)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">45</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Liabilities', 28)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">28</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Revenue', 15)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Revenue</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">15</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Expenses', 62)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">62</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Account List</CardTitle></CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Code<Input placeholder="Search..." className="h-6 text-xs w-24 border-[#001f3f]" /></div></TableHead>
-                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Name<Input placeholder="Search..." className="h-6 text-xs w-32 border-[#001f3f]" /></div></TableHead>
-                  <TableHead className="text-[#001f3f]">Category</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
-                  <TableHead className="text-[#001f3f]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
-                  setDrilldownTitle('Account Details: Fixed Assets')
-                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 1000</p><p className="text-[#001f3f]">Name: Fixed Assets</p><p className="text-[#001f3f]">Balance: £250,000</p></div>)
-                  setIsDrilldownOpen(true)
-                }}>
-                  <TableCell className="text-[#001f3f]">1000</TableCell>
-                  <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">Asset</Badge></TableCell>
-                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
-                  setDrilldownTitle('Account Details: Sales Revenue')
-                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 4000</p><p className="text-[#001f3f]">Name: Sales Revenue</p><p className="text-[#001f3f]">Balance: £450,000</p></div>)
-                  setIsDrilldownOpen(true)
-                }}>
-                  <TableCell className="text-[#001f3f]">4000</TableCell>
-                  <TableCell className="text-[#001f3f]">Sales Revenue</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">Revenue</Badge></TableCell>
-                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const renderPostingBatches = () => {
-    const handleBatchClick = (title: string, content: any) => {
-      setDrilldownTitle(title)
-      setDrilldownContent(content)
-      setIsDrilldownOpen(true)
-    }
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Posting Batches</h2>
-            <p className="text-[#001f3f]">Manage journal entries and posting batches</p>
-          </div>
-          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Creating new batch...')}>
-            <Plus className="h-4 w-4 mr-2" />New Batch
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches', <div className="space-y-2"><p className="text-[#001f3f]">5 batches in draft status</p><p className="text-[#001f3f]">Total entries: 23</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Draft Batches</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">5</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches', <div className="space-y-2"><p className="text-[#001f3f]">23 batches posted</p><p className="text-[#001f3f]">Total entries: 342</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Posted</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">23</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches', <div className="space-y-2"><p className="text-[#001f3f]">12 batches approved</p><p className="text-[#001f3f]">Pending posting</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Approved</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">12</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Entries', <div className="space-y-2"><p className="text-[#001f3f]">156 total journal entries</p><p className="text-[#001f3f]">Across all batches</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Total Entries</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">156</p></CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Recent Batches</CardTitle></CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[#001f3f]">Batch Name</TableHead>
-                  <TableHead className="text-[#001f3f]">Type</TableHead>
-                  <TableHead className="text-[#001f3f]">Date</TableHead>
-                  <TableHead className="text-[#001f3f]">Entries</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
-                  <TableHead className="text-[#001f3f]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleBatchClick('Batch Details', <div className="space-y-2"><p className="text-[#001f3f]">Batch: Year End Adjustments 2024</p><p className="text-[#001f3f]">Type: Year-End</p><p className="text-[#001f3f]">Entries: 15</p><p className="text-[#001f3f]">Status: Posted</p></div>)}>
-                  <TableCell className="text-[#001f3f]">Year End Adjustments 2024</TableCell>
-                  <TableCell className="text-[#001f3f]">Year-End</TableCell>
-                  <TableCell className="text-[#001f3f]">2024-12-31</TableCell>
-                  <TableCell className="text-[#001f3f]">15</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">Posted</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const renderReviewValidation = () => {
-    const handleValidationClick = (title: string, content: any) => {
-      setDrilldownTitle(title)
-      setDrilldownContent(content)
-      setIsDrilldownOpen(true)
-    }
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Check & Finish</h2>
-            <p className="text-[#001f3f]">Validation and compliance checks</p>
-          </div>
-          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Running checks...')}>
-            <CheckCircle className="h-4 w-4 mr-2" />Run Checks
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-green-600" onClick={() => handleValidationClick('Passed Checks', <div className="space-y-2"><p className="text-[#001f3f]">24 validation checks passed</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Trial Balance Balanced</li><li>Account Codes Valid</li><li>FRS Compliance Met</li></ul></div>)}>
-            <CardContent className="pt-6">
-              <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
-              <h3 className="font-semibold text-green-600">Passed: 24</h3>
-              <p className="text-sm text-[#001f3f]">All checks passed</p>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleValidationClick('Warnings', <div className="space-y-2"><p className="text-[#001f3f]">3 warnings requiring review</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Directors Report Review</li><li>Missing Signatures</li><li>Date Format Check</li></ul></div>)}>
-            <CardContent className="pt-6">
-              <AlertCircle className="h-8 w-8 text-[#001f3f] mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Warnings: 3</h3>
-              <p className="text-sm text-[#001f3f]">Review required</p>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-red-600" onClick={() => handleValidationClick('Errors', <div className="space-y-2"><p className="text-[#001f3f]">No errors found</p><p className="text-green-600 font-semibold">All validation checks passed!</p></div>)}>
-            <CardContent className="pt-6">
-              <AlertCircle className="h-8 w-8 text-red-600 mb-2" />
-              <h3 className="font-semibold text-red-600">Errors: 0</h3>
-              <p className="text-sm text-[#001f3f]">No errors found</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Validation Results</CardTitle></CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="p-3 border-2 border-green-600 rounded-[2px] cursor-pointer hover:bg-gray-50" onClick={() => handleValidationClick('Trial Balance Details', <div className="space-y-2"><p className="text-[#001f3f]">Total Debits: £595,000</p><p className="text-[#001f3f]">Total Credits: £595,000</p><p className="text-green-600 font-semibold">Balanced ✓</p></div>)}>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="font-semibold text-[#001f3f]">Trial Balance Balanced</span>
-                </div>
-                <p className="text-sm text-[#001f3f] ml-7">Debits and credits match perfectly</p>
-              </div>
-              <div className="p-3 border-2 border-[#001f3f] rounded-[2px] cursor-pointer hover:bg-gray-50" onClick={() => handleValidationClick('Directors Report', <div className="space-y-2"><p className="text-[#001f3f]">Review Required:</p><p className="text-[#001f3f]">Please verify directors signatures on the report</p><Button className="bg-[#001f3f] mt-2">Mark as Reviewed</Button></div>)}>
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-[#001f3f]" />
-                  <span className="font-semibold text-[#001f3f]">Directors Report Review</span>
-                </div>
-                <p className="text-sm text-[#001f3f] ml-7">Please review directors' signatures</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const renderiXBRLTagging = () => {
-    const handleTaggingClick = (title: string, content: any) => {
-      setDrilldownTitle(title)
-      setDrilldownContent(content)
-      setIsDrilldownOpen(true)
-    }
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">iXBRL Tagging</h2>
-            <p className="text-[#001f3f]">Tag accounts for HMRC submission</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Previewing...')}>
-              <Eye className="h-4 w-4 mr-2" />Preview
-            </Button>
-            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Auto-tagging...')}>
-              <Globe className="h-4 w-4 mr-2" />Auto-Tag
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleTaggingClick('Tagged Elements', <div className="space-y-2"><p className="text-[#001f3f]">142 elements successfully tagged</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Balance Sheet: 68</li><li>Profit & Loss: 54</li><li>Notes: 20</li></ul></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Tagged Elements</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">142</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-green-600" onClick={() => handleTaggingClick('Validated Tags', <div className="space-y-2"><p className="text-[#001f3f]">138 tags validated successfully</p><p className="text-green-600 font-semibold">97% validation rate</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Validated</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-green-600">138</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-red-600" onClick={() => handleTaggingClick('Errors', <div className="space-y-2"><p className="text-[#001f3f]">No tagging errors found</p><p className="text-green-600 font-semibold">All tags validated!</p></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Errors</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-red-600">0</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleTaggingClick('Untagged Elements', <div className="space-y-2"><p className="text-[#001f3f]">4 elements pending tagging</p><Button className="bg-[#001f3f] mt-2">Tag Now</Button></div>)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Untagged</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">4</p></CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Tagging Status</CardTitle></CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('Balance Sheet Tags', <div className="space-y-2"><p className="text-[#001f3f]">68 Balance Sheet elements tagged</p><p className="text-green-600 font-semibold">100% Complete</p></div>)}>
-                <span className="text-[#001f3f] font-semibold">Balance Sheet Elements</span>
-                <Badge className="bg-green-600 text-white">Complete</Badge>
-              </div>
-              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('P&L Tags', <div className="space-y-2"><p className="text-[#001f3f]">54 Profit & Loss elements tagged</p><p className="text-green-600 font-semibold">100% Complete</p></div>)}>
-                <span className="text-[#001f3f] font-semibold">Profit & Loss Elements</span>
-                <Badge className="bg-green-600 text-white">Complete</Badge>
-              </div>
-              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('Notes Tags', <div className="space-y-2"><p className="text-[#001f3f]">20 Notes elements tagged, 4 remaining</p><Button className="bg-[#001f3f] mt-2">Complete Tagging</Button></div>)}>
-                <span className="text-[#001f3f] font-semibold">Notes Elements</span>
-                <Badge className="bg-[#001f3f] text-white">In Progress</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const renderReportsArchive = () => {
-    const handleExportClick = (format: string) => {
-      setDrilldownTitle(`Export to ${format}`)
-      setDrilldownContent(
-        <div className="space-y-4">
-          <p className="text-[#001f3f]">Select accounts to export as {format}:</p>
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <input type="checkbox" className="form-checkbox" defaultChecked />
-              <span className="text-[#001f3f]">Balance Sheet</span>
-            </label>
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <input type="checkbox" className="form-checkbox" defaultChecked />
-              <span className="text-[#001f3f]">Profit & Loss</span>
-            </label>
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <input type="checkbox" className="form-checkbox" defaultChecked />
-              <span className="text-[#001f3f]">Directors Report</span>
-            </label>
-          </div>
-          <Button className="bg-[#001f3f] w-full mt-4" onClick={() => console.log(`Exporting to ${format}...`)}>
-            <Download className="h-4 w-4 mr-2" />Generate {format}
-          </Button>
-        </div>
-      )
-      setIsDrilldownOpen(true)
-    }
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Reports & Archive</h2>
-            <p className="text-[#001f3f]">Export and archive completed accounts</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('PDF')}>
-            <CardContent className="pt-6">
-              <Download className="h-8 w-8 text-[#001f3f] mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Export to PDF</h3>
-              <p className="text-sm text-[#001f3f]">Generate PDF accounts</p>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('Excel')}>
-            <CardContent className="pt-6">
-              <FileSpreadsheet className="h-8 w-8 text-[#001f3f] mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Export to Excel</h3>
-              <p className="text-sm text-[#001f3f]">Excel format export</p>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('iXBRL')}>
-            <CardContent className="pt-6">
-              <Globe className="h-8 w-8 text-[#001f3f] mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">iXBRL Export</h3>
-              <p className="text-sm text-[#001f3f]">Tagged accounts file</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Archived Accounts</CardTitle></CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-[#001f3f]">Client Name</TableHead>
-                  <TableHead className="text-[#001f3f]">Period</TableHead>
-                  <TableHead className="text-[#001f3f]">Archive Date</TableHead>
-                  <TableHead className="text-[#001f3f]">Format</TableHead>
-                  <TableHead className="text-[#001f3f]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
-                  setDrilldownTitle('Archived Account Details')
-                  setDrilldownContent(<div className="space-y-2"><p className="text-[#001f3f]">Client: Acme Trading Ltd</p><p className="text-[#001f3f]">Period: 2023-12-31</p><p className="text-[#001f3f]">Archived: 2024-01-15</p><Button className="bg-[#001f3f] mt-2"><Download className="h-4 w-4 mr-2" />Download Files</Button></div>)
-                  setIsDrilldownOpen(true)
-                }}>
-                  <TableCell className="text-[#001f3f]">Acme Trading Ltd</TableCell>
-                  <TableCell className="text-[#001f3f]">2023-12-31</TableCell>
-                  <TableCell className="text-[#001f3f]">2024-01-15</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">PDF, iXBRL</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Download className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   const renderMainContent = () => {
     if (activeMainTab === 'dashboard') return renderDashboard()
     if (activeMainTab === 'clients') return renderClientManagement()
@@ -1512,16 +1005,11 @@ const AccountsProduction: React.FC = () => {
           </div>
         )
       }
-      if (activeSubTab === 'chart-accounts') return renderChartOfAccounts()
-      if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
     }
     if (activeMainTab === 'adjustments') return renderAdjustments()
     if (activeMainTab === 'accounts') return renderStatements()
-    if (activeMainTab === 'review') return renderReviewValidation()
-    if (activeMainTab === 'ixbrl') return renderiXBRLTagging()
     if (activeMainTab === 'filing') return renderFiling()
-    if (activeMainTab === 'reports') return renderReportsArchive()
     
     return (
       <div className="text-center py-12">
@@ -1863,7 +1351,7 @@ const AccountsProduction: React.FC = () => {
               <Textarea
                 value={adjFormData.description || ''}
                 onChange={(e) => setAdjFormData({...adjFormData, description: e.target.value})}
-                className="text-[#001f3f] border-[#001f3f]"
+                className="text-[#001f3f]"
               />
             </div>
             <div>
@@ -1872,7 +1360,7 @@ const AccountsProduction: React.FC = () => {
                 type="number"
                 value={adjFormData.amount || 0}
                 onChange={(e) => setAdjFormData({...adjFormData, amount: parseFloat(e.target.value)})}
-                className="text-[#001f3f] border-[#001f3f]"
+                className="text-[#001f3f]"
               />
             </div>
           </div>
@@ -1881,20 +1369,6 @@ const AccountsProduction: React.FC = () => {
             <Button onClick={handleSaveAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
               <Save className="h-4 w-4 mr-2" />Save
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isDrilldownOpen} onOpenChange={setIsDrilldownOpen}>
-        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">{drilldownTitle}</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            {drilldownContent}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsDrilldownOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
