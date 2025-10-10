@@ -92,6 +92,38 @@ const AccountsProduction: React.FC = () => {
       nextDue: '2025-01-31', frsStandard: 'FRS 102 1A',
       contactPerson: 'David Smith', email: 'david@smithco.com',
       phone: '020 7345 6789'
+    },
+    {
+      id: '4', name: 'Tech Innovations Ltd', type: 'limited-company',
+      registrationNumber: '87654321', yearEnd: '2024-06-30',
+      accountsStatus: 'in-progress', lastAccounts: '2023-06-30',
+      nextDue: '2025-04-30', frsStandard: 'FRS 102 1A',
+      contactPerson: 'Emma Wilson', email: 'emma@techinnovations.com',
+      phone: '020 7456 7890'
+    },
+    {
+      id: '5', name: 'Community Care CIC', type: 'cic',
+      registrationNumber: 'CE123456', yearEnd: '2024-03-31',
+      accountsStatus: 'completed', lastAccounts: '2024-03-31',
+      nextDue: '2025-01-31', frsStandard: 'FRS 105',
+      contactPerson: 'Michael Brown', email: 'michael@communitycare.org',
+      phone: '020 7567 8901'
+    },
+    {
+      id: '6', name: 'Johnson & Associates', type: 'partnership',
+      registrationNumber: undefined, yearEnd: '2024-12-31',
+      accountsStatus: 'filed', lastAccounts: '2023-12-31',
+      nextDue: '2025-09-30', frsStandard: 'FRS 102 1A',
+      contactPerson: 'Robert Johnson', email: 'robert@johnsonassociates.com',
+      phone: '020 7678 9012'
+    },
+    {
+      id: '7', name: 'Brighton Retail Ltd', type: 'limited-company',
+      registrationNumber: '11223344', yearEnd: '2024-09-30',
+      accountsStatus: 'review', lastAccounts: '2023-09-30',
+      nextDue: '2025-07-31', frsStandard: 'FRS 105',
+      contactPerson: 'Lisa Chen', email: 'lisa@brightonretail.com',
+      phone: '020 7789 0123'
     }
   ])
   const [clientSearchName, setClientSearchName] = useState('')
@@ -342,24 +374,54 @@ const AccountsProduction: React.FC = () => {
       id: 'trial-balance', label: 'Trial Balance', icon: Calculator, hasSubTabs: true,
       subTabs: {
         'import': { label: 'Import TB', icon: Upload },
+        'chart-accounts': { label: 'Chart of Accounts', icon: FileText },
+        'posting': { label: 'Posting Batches', icon: Calculator },
         'review': { label: 'Review & Adjust', icon: Eye }
       }
     },
     {
-      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: false
+      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: true,
+      subTabs: {
+        'journals': { label: 'Journal Entries', icon: FileText },
+        'accruals': { label: 'Accruals & Prepayments', icon: Calculator },
+        'depreciation': { label: 'Depreciation', icon: TrendingDown }
+      }
     },
     {
       id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
       subTabs: {
         'generate': { label: 'Generate Accounts', icon: FileSpreadsheet },
-        'formats': { label: 'Account Formats', icon: FileCheck }
+        'balance-sheet': { label: 'Balance Sheet', icon: FileCheck },
+        'profit-loss': { label: 'Profit & Loss', icon: TrendingUp },
+        'notes': { label: 'Notes & Disclosures', icon: FileText }
       }
     },
     {
-      id: 'filing', label: 'Statutory Filing', icon: Send, hasSubTabs: true,
+      id: 'review', label: 'Review & Validation', icon: CheckCircle, hasSubTabs: true,
+      subTabs: {
+        'check-finish': { label: 'Check & Finish', icon: CheckCircle },
+        'approval': { label: 'Approval Workflow', icon: Eye }
+      }
+    },
+    {
+      id: 'ixbrl', label: 'iXBRL Tagging', icon: Globe, hasSubTabs: true,
+      subTabs: {
+        'tagging': { label: 'Tag Accounts', icon: Globe },
+        'validation': { label: 'Validation', icon: CheckCircle }
+      }
+    },
+    {
+      id: 'filing', label: 'Filing & Submission', icon: Send, hasSubTabs: true,
       subTabs: {
         'companies-house': { label: 'Companies House', icon: Building2 },
-        'hmrc': { label: 'HMRC Filing', icon: FileCheck }
+        'status': { label: 'Filing Status', icon: Eye }
+      }
+    },
+    {
+      id: 'reports', label: 'Reports & Archive', icon: Download, hasSubTabs: true,
+      subTabs: {
+        'export': { label: 'Export Reports', icon: Download },
+        'archive': { label: 'Archive', icon: Save }
       }
     }
   ]
