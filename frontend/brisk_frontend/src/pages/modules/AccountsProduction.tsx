@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { 
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
-  Edit, Trash2, Download, TrendingUp,
+  Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
   Globe, Save
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
