@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { 
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
@@ -40,6 +40,18 @@ interface TrialBalanceEntry {
   debit: number
   credit: number
   category: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
+  statementCategory?: 'Fixed Assets' | 'Current Assets' | 'Current Liabilities' | 'Long-term Liabilities' | 'Equity' | 'Revenue' | 'Cost of Sales' | 'Operating Expenses' | 'Finance Costs'
+  mapped?: boolean
+}
+
+interface ImportedTBEntry {
+  accountCode: string
+  accountName: string
+  debit: number
+  credit: number
+  category?: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
+  statementCategory?: string
+  mapped: boolean
 }
 
 interface Adjustment {
@@ -205,6 +217,11 @@ const AccountsProduction: React.FC = () => {
   const [drilldownTitle, setDrilldownTitle] = useState('')
   const [drilldownContent, setDrilldownContent] = useState<any>(null)
 
+  const [importedTBEntries, setImportedTBEntries] = useState<ImportedTBEntry[]>([])
+  const [isImportMappingOpen, setIsImportMappingOpen] = useState(false)
+  const [isTBImported, setIsTBImported] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -357,6 +374,78 @@ const AccountsProduction: React.FC = () => {
     }
     setStatements([...statements, newStatement])
     setIsGenerateStatementOpen(false)
+  }
+
+  const handleSyncFromBookkeeping = () => {
+    const syncedEntries: ImportedTBEntry[] = [
+      { accountCode: '1000', accountName: 'Fixed Assets', debit: 250000, credit: 0, category: 'Asset', mapped: false },
+      { accountCode: '1100', accountName: 'Current Assets', debit: 85000, credit: 0, category: 'Asset', mapped: false },
+      { accountCode: '2000', accountName: 'Current Liabilities', debit: 0, credit: 45000, category: 'Liability', mapped: false },
+      { accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity', mapped: false },
+      { accountCode: '4000', accountName: 'Sales Revenue', debit: 0, credit: 450000, category: 'Revenue', mapped: false },
+      { accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense', mapped: false },
+      { accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense', mapped: false }
+    ]
+    setImportedTBEntries(syncedEntries)
+    setIsTBImported(true)
+    setIsImportMappingOpen(true)
+  }
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result as string
+      const lines = text.split('\n')
+      const entries: ImportedTBEntry[] = []
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim()
+        if (!line) continue
+
+        const [code, name, debitStr, creditStr] = line.split(',').map(s => s.trim())
+        if (code && name) {
+          entries.push({
+            accountCode: code,
+            accountName: name,
+            debit: parseFloat(debitStr) || 0,
+            credit: parseFloat(creditStr) || 0,
+            mapped: false
+          })
+        }
+      }
+
+      setImportedTBEntries(entries)
+      setIsTBImported(true)
+      setIsImportMappingOpen(true)
+    }
+    reader.readAsText(file)
+  }
+
+  const handleUpdateMapping = (index: number, field: string, value: string) => {
+    const updated = [...importedTBEntries]
+    updated[index] = { ...updated[index], [field]: value, mapped: true }
+    setImportedTBEntries(updated)
+  }
+
+  const handleSaveMappedTB = () => {
+    const newEntries: TrialBalanceEntry[] = importedTBEntries.map((entry, index) => ({
+      id: Date.now().toString() + index,
+      accountCode: entry.accountCode,
+      accountName: entry.accountName,
+      debit: entry.debit,
+      credit: entry.credit,
+      category: entry.category || 'Asset',
+      statementCategory: entry.statementCategory as any,
+      mapped: entry.mapped
+    }))
+    
+    setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+    setIsImportMappingOpen(false)
+    setImportedTBEntries([])
+    setIsTBImported(false)
   }
 
   const getFilteredClients = () => {
@@ -2073,15 +2162,97 @@ const AccountsProduction: React.FC = () => {
       if (activeSubTab === 'import') {
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#001f3f]">Import Trial Balance</h2>
-            <p className="text-[#001f3f]">Upload trial balance from accounting software</p>
-            <Card>
-              <CardContent className="pt-6">
-                <Button className="bg-[#001f3f] hover:bg-[#003366]">
-                  <Upload className="h-4 w-4 mr-2" />Upload File
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#001f3f]">Import Trial Balance</h2>
+                <p className="text-[#001f3f]">Sync from Bookkeeping module or upload from external software</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Sync from Bookkeeping</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-[#001f3f]">
+                    Automatically pull trial balance data from the Bookkeeping module's current trial balance.
+                  </p>
+                  <Button 
+                    onClick={handleSyncFromBookkeeping}
+                    className="bg-[#001f3f] hover:bg-[#003366] w-full"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Sync from Bookkeeping
+                  </Button>
+                  {isTBImported && (
+                    <Badge className="bg-green-600 text-white">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      {importedTBEntries.length} entries synced
+                    </Badge>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Manual Import</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-[#001f3f]">
+                    Upload CSV file or integrate with other bookkeeping software (Xero, QuickBooks, Sage).
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <Button 
+                    onClick={() => fileInputRef.current?.click()}
+                    variant="outline"
+                    className="w-full border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload CSV File
+                  </Button>
+                  <div className="text-xs text-[#001f3f]">
+                    Expected format: AccountCode, AccountName, Debit, Credit
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {isTBImported && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Preview Imported Data</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-semibold text-[#001f3f]">Total Entries:</p>
+                        <p className="text-2xl font-bold text-[#001f3f]">{importedTBEntries.length}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#001f3f]">Total Debit:</p>
+                        <p className="text-2xl font-bold text-[#001f3f]">
+                          £{importedTBEntries.reduce((sum, e) => sum + e.debit, 0).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={() => setIsImportMappingOpen(true)}
+                      className="bg-[#001f3f] hover:bg-[#003366]"
+                    >
+                      Map Accounts & Categories
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )
       }
@@ -2468,6 +2639,89 @@ const AccountsProduction: React.FC = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsDrilldownOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isImportMappingOpen} onOpenChange={setIsImportMappingOpen}>
+        <DialogContent className="max-w-6xl border-2 border-[#001f3f] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Map Trial Balance Accounts</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-[#001f3f]">
+              Map each imported account to a category and statement category for financial statement generation.
+            </p>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b-2 border-[#001f3f]">
+                  <TableHead className="text-[#001f3f]">Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Account Name</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
+                  <TableHead className="text-[#001f3f]">Category</TableHead>
+                  <TableHead className="text-[#001f3f]">Statement Category</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {importedTBEntries.map((entry, index) => (
+                  <TableRow key={index} className="border-b border-[#001f3f]">
+                    <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
+                    <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
+                    <TableCell className="text-right text-[#001f3f]">
+                      {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
+                    </TableCell>
+                    <TableCell className="text-right text-[#001f3f]">
+                      {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Select 
+                        value={entry.category || ''} 
+                        onValueChange={(value) => handleUpdateMapping(index, 'category', value)}
+                      >
+                        <SelectTrigger className="h-8 text-xs border-[#001f3f]">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Asset">Asset</SelectItem>
+                          <SelectItem value="Liability">Liability</SelectItem>
+                          <SelectItem value="Equity">Equity</SelectItem>
+                          <SelectItem value="Revenue">Revenue</SelectItem>
+                          <SelectItem value="Expense">Expense</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Select 
+                        value={entry.statementCategory || ''} 
+                        onValueChange={(value) => handleUpdateMapping(index, 'statementCategory', value)}
+                      >
+                        <SelectTrigger className="h-8 text-xs border-[#001f3f]">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Fixed Assets">Fixed Assets</SelectItem>
+                          <SelectItem value="Current Assets">Current Assets</SelectItem>
+                          <SelectItem value="Current Liabilities">Current Liabilities</SelectItem>
+                          <SelectItem value="Long-term Liabilities">Long-term Liabilities</SelectItem>
+                          <SelectItem value="Equity">Equity</SelectItem>
+                          <SelectItem value="Revenue">Revenue</SelectItem>
+                          <SelectItem value="Cost of Sales">Cost of Sales</SelectItem>
+                          <SelectItem value="Operating Expenses">Operating Expenses</SelectItem>
+                          <SelectItem value="Finance Costs">Finance Costs</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsImportMappingOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveMappedTB} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Save className="h-4 w-4 mr-2" />Save Mapped Trial Balance
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
