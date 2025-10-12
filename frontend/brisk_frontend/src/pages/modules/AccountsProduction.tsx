@@ -616,7 +616,7 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader><TableRow>
+            <TableHeader><TableRow className="border-b-2 border-[#001f3f]">
               <TableHead className="text-[#001f3f]">Client</TableHead>
               <TableHead className="text-[#001f3f]">Type</TableHead>
               <TableHead className="text-[#001f3f]">Year End</TableHead>
@@ -625,7 +625,7 @@ const AccountsProduction: React.FC = () => {
             </TableRow></TableHeader>
             <TableBody>
               {clients.map(client => (
-                <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => handleViewClient(client)}>
+                <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => handleViewClient(client)}>
                   <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                   <TableCell className="text-[#001f3f]">{client.type}</TableCell>
                   <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
