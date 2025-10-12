@@ -362,8 +362,8 @@ const AccountsProduction: React.FC = () => {
   const getFilteredClients = () => {
     let filtered = clients.filter(client => {
       const matchesName = !clientSearchName || client.name.toLowerCase().includes(clientSearchName.toLowerCase())
-      const matchesType = !clientSearchType || client.type === clientSearchType
-      const matchesStatus = !clientSearchStatus || client.accountsStatus === clientSearchStatus
+      const matchesType = !clientSearchType || clientSearchType === 'all' || client.type === clientSearchType
+      const matchesStatus = !clientSearchStatus || clientSearchStatus === 'all' || client.accountsStatus === clientSearchStatus
       const matchesYearEnd = !clientSearchYearEnd || client.yearEnd.includes(clientSearchYearEnd)
       const matchesDueDate = !clientSearchDueDate || client.nextDue.includes(clientSearchDueDate)
       return matchesName && matchesType && matchesStatus && matchesYearEnd && matchesDueDate
@@ -390,7 +390,7 @@ const AccountsProduction: React.FC = () => {
     let filtered = trialBalanceEntries.filter(entry => {
       const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
       const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
-      const matchesCategory = !tbSearchCategory || entry.category === tbSearchCategory
+      const matchesCategory = !tbSearchCategory || tbSearchCategory === 'all' || entry.category === tbSearchCategory
       const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
       const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
       return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
@@ -415,8 +415,8 @@ const AccountsProduction: React.FC = () => {
 
   const getFilteredAdjustments = () => {
     let filtered = adjustments.filter(adj => {
-      const matchesType = !adjSearchType || adj.type === adjSearchType
-      const matchesStatus = !adjSearchStatus || adj.status === adjSearchStatus
+      const matchesType = !adjSearchType || adjSearchType === 'all' || adj.type === adjSearchType
+      const matchesStatus = !adjSearchStatus || adjSearchStatus === 'all' || adj.status === adjSearchStatus
       const matchesDescription = !adjSearchDescription || adj.description.toLowerCase().includes(adjSearchDescription.toLowerCase())
       const matchesAmount = !adjSearchAmount || adj.amount.toString().includes(adjSearchAmount)
       const matchesDate = !adjSearchDate || adj.date.includes(adjSearchDate)
@@ -444,10 +444,10 @@ const AccountsProduction: React.FC = () => {
     let filtered = statements.filter(stmt => {
       const client = clients.find(c => c.id === stmt.clientId)
       const matchesClient = !stmtSearchClient || (client?.name.toLowerCase().includes(stmtSearchClient.toLowerCase()) ?? false)
-      const matchesType = !stmtSearchType || stmt.type === stmtSearchType
+      const matchesType = !stmtSearchType || stmtSearchType === 'all' || stmt.type === stmtSearchType
       const matchesPeriod = !stmtSearchPeriod || stmt.period.includes(stmtSearchPeriod)
       const matchesDate = !stmtSearchDate || stmt.generatedDate.includes(stmtSearchDate)
-      const matchesStatus = !stmtSearchStatus || stmt.status === stmtSearchStatus
+      const matchesStatus = !stmtSearchStatus || stmtSearchStatus === 'all' || stmt.status === stmtSearchStatus
       return matchesClient && matchesType && matchesPeriod && matchesDate && matchesStatus
     })
 
@@ -819,7 +819,7 @@ const AccountsProduction: React.FC = () => {
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
                         <SelectItem value="limited-company">Limited Company</SelectItem>
                         <SelectItem value="llp">LLP</SelectItem>
                         <SelectItem value="partnership">Partnership</SelectItem>
@@ -852,7 +852,7 @@ const AccountsProduction: React.FC = () => {
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
                         <SelectItem value="not-started">Not Started</SelectItem>
                         <SelectItem value="in-progress">In Progress</SelectItem>
                         <SelectItem value="review">Review</SelectItem>
@@ -942,7 +942,7 @@ const AccountsProduction: React.FC = () => {
                             <SelectValue placeholder="All" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value="limited-company">Limited Company</SelectItem>
                             <SelectItem value="llp">LLP</SelectItem>
                             <SelectItem value="partnership">Partnership</SelectItem>
@@ -974,7 +974,7 @@ const AccountsProduction: React.FC = () => {
                             <SelectValue placeholder="All" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value="not-started">Not Started</SelectItem>
                             <SelectItem value="in-progress">In Progress</SelectItem>
                             <SelectItem value="review">Review</SelectItem>
@@ -1151,7 +1151,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="Asset">Asset</SelectItem>
                           <SelectItem value="Liability">Liability</SelectItem>
                           <SelectItem value="Equity">Equity</SelectItem>
@@ -1263,7 +1263,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="prepayment">Prepayment</SelectItem>
                           <SelectItem value="accrual">Accrual</SelectItem>
                           <SelectItem value="depreciation">Depreciation</SelectItem>
@@ -1321,7 +1321,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="approved">Approved</SelectItem>
                           <SelectItem value="posted">Posted</SelectItem>
@@ -1444,7 +1444,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="balance-sheet">Balance Sheet</SelectItem>
                           <SelectItem value="profit-loss">Profit & Loss</SelectItem>
                           <SelectItem value="cash-flow">Cash Flow</SelectItem>
@@ -1488,7 +1488,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="review">Review</SelectItem>
                           <SelectItem value="finalized">Finalized</SelectItem>
