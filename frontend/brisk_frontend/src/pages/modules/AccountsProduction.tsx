@@ -477,7 +477,7 @@ const AccountsProduction: React.FC = () => {
               <p className="text-[#001f3f]">Total clients: {clients.length}</p>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="border-b-2 border-[#001f3f]">
                     <TableHead className="text-[#001f3f]">Client</TableHead>
                     <TableHead className="text-[#001f3f]">Type</TableHead>
                     <TableHead className="text-[#001f3f]">Status</TableHead>
@@ -485,7 +485,7 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {clients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
                       setIsDrilldownOpen(false)
                       handleViewClient(client)
                     }}>
@@ -511,7 +511,7 @@ const AccountsProduction: React.FC = () => {
               <p className="text-[#001f3f]">Clients with accounts in progress: {inProgressClients.length}</p>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="border-b-2 border-[#001f3f]">
                     <TableHead className="text-[#001f3f]">Client</TableHead>
                     <TableHead className="text-[#001f3f]">Year End</TableHead>
                     <TableHead className="text-[#001f3f]">Due Date</TableHead>
@@ -519,7 +519,7 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {inProgressClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
                       setIsDrilldownOpen(false)
                       handleViewClient(client)
                     }}>
@@ -546,7 +546,7 @@ const AccountsProduction: React.FC = () => {
               <p className="text-[#001f3f]">Clients pending review: {reviewClients.length}</p>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="border-b-2 border-[#001f3f]">
                     <TableHead className="text-[#001f3f]">Client</TableHead>
                     <TableHead className="text-[#001f3f]">Year End</TableHead>
                     <TableHead className="text-[#001f3f]">Due Date</TableHead>
@@ -554,7 +554,7 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {reviewClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
                       setIsDrilldownOpen(false)
                       handleViewClient(client)
                     }}>
@@ -581,7 +581,7 @@ const AccountsProduction: React.FC = () => {
               <p className="text-[#001f3f]">Completed accounts: {completedClients.length}</p>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="border-b-2 border-[#001f3f]">
                     <TableHead className="text-[#001f3f]">Client</TableHead>
                     <TableHead className="text-[#001f3f]">Year End</TableHead>
                     <TableHead className="text-[#001f3f]">Completion Date</TableHead>
@@ -589,7 +589,7 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {completedClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
                       setIsDrilldownOpen(false)
                       handleViewClient(client)
                     }}>
