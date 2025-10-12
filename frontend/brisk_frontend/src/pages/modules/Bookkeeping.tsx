@@ -82,6 +82,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ExportButton } from '@/components/ExportButton'
+import { chartOfAccounts, getAllAccounts, searchAccounts } from '../../data/chartOfAccounts'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -224,6 +225,11 @@ export default function Bookkeeping() {
   const [isStockTakeDetailOpen, setIsStockTakeDetailOpen] = useState(false)
   const [selectedStockTake, setSelectedStockTake] = useState<any>(null)
   const [isStockTakeFormOpen, setIsStockTakeFormOpen] = useState(false)
+
+  const [coaSearchCode, setCoaSearchCode] = useState('')
+  const [coaSearchName, setCoaSearchName] = useState('')
+  const [coaSearchGroup, setCoaSearchGroup] = useState('')
+  const [coaSearchCategory, setCoaSearchCategory] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -5930,122 +5936,143 @@ export default function Bookkeeping() {
   }
 
   function renderChartOfAccounts() {
+    const allAccounts = getAllAccounts()
+    const filteredAccounts = allAccounts.filter(account => {
+      const codeMatch = !coaSearchCode || account.code.toLowerCase().includes(coaSearchCode.toLowerCase())
+      const nameMatch = !coaSearchName || account.name.toLowerCase().includes(coaSearchName.toLowerCase())
+      const groupMatch = !coaSearchGroup || (account.groupNumber && account.groupNumber.includes(coaSearchGroup))
+      const categoryMatch = !coaSearchCategory || (account.category && account.category.toLowerCase().includes(coaSearchCategory.toLowerCase()))
+      return codeMatch && nameMatch && groupMatch && categoryMatch
+    })
+
+    const categoryCounts = {
+      Income: allAccounts.filter(a => a.category === 'Income').length,
+      'Cost of Sales': allAccounts.filter(a => a.category === 'Cost of Sales').length,
+      Expenses: allAccounts.filter(a => a.category === 'Expenses').length,
+      Assets: allAccounts.filter(a => a.category === 'Assets').length,
+      Liabilities: allAccounts.filter(a => a.category === 'Liabilities').length,
+      Equity: allAccounts.filter(a => a.category === 'Equity').length
+    }
+
+    const handleAccountClick = (account: any) => {
+      setIsViewDialogOpen(true)
+      setSelectedAccount(account)
+    }
+
+    const handleCategoryClick = (category: string) => {
+      const categoryAccounts = allAccounts.filter(a => a.category === category)
+      setIsViewDialogOpen(true)
+      setSelectedAccount({ name: `${category} Accounts`, details: categoryAccounts })
+    }
+
     return (
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-[#001f3f]">Chart of Accounts</h2>
-            <p className="text-[#001f3f]">Manage your complete chart of accounts structure</p>
+            <p className="text-[#001f3f]">IAS Chart of Accounts - {allAccounts.length} total accounts</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Account
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
+              <Download className="h-4 w-4 mr-2" />Export
             </Button>
-            <Button>
-              <Download className="h-4 w-4 mr-2" />
-              Export Chart
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Adding new account...')}>
+              <Plus className="h-4 w-4 mr-2" />New Account
             </Button>
           </div>
         </div>
 
-        <div className={`grid gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-          <Card className="border-2 border-[#001f3f]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#001f3f]">Total Accounts</p>
-                  <p className="text-xl font-bold">247</p>
-                  <p className="text-xs text-[#001f3f]">Active accounts</p>
-                </div>
-                <Database className="h-8 w-8 text-[#001f3f]" />
-              </div>
-            </CardContent>
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Income')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Income</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Income}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
-          <Card className="border-2 border-[#001f3f]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#001f3f]">Asset Accounts</p>
-                  <p className="text-xl font-bold">89</p>
-                  <p className="text-xs text-green-600">Including current assets</p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-green-600" />
-              </div>
-            </CardContent>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Expenses')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Expenses + categoryCounts['Cost of Sales']}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
-          <Card className="border-2 border-[#001f3f]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#001f3f]">Liability Accounts</p>
-                  <p className="text-xl font-bold">34</p>
-                  <p className="text-xs text-orange-600">Current & long-term</p>
-                </div>
-                <TrendingDown className="h-8 w-8 text-orange-600" />
-              </div>
-            </CardContent>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Assets')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Assets}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
-          <Card className="border-2 border-[#001f3f]">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#001f3f]">Revenue Accounts</p>
-                  <p className="text-xl font-bold">45</p>
-                  <p className="text-xs text-purple-600">Income streams</p>
-                </div>
-                <PoundSterling className="h-8 w-8 text-purple-600" />
-              </div>
-            </CardContent>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Liabilities')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Liabilities}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Equity')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Equity</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Equity}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
         </div>
 
         <Card className="border-2 border-[#001f3f]">
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Account Categories</CardTitle>
-            <CardDescription>Organized by account type and classification</CardDescription>
-          </CardHeader>
+          <CardHeader><CardTitle className="text-[#001f3f]">Account List</CardTitle></CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { category: 'Current Assets', accounts: 45, balance: '£125,430', type: 'Assets' },
-                { category: 'Fixed Assets', accounts: 23, balance: '£89,200', type: 'Assets' },
-                { category: 'Current Liabilities', accounts: 18, balance: '£34,500', type: 'Liabilities' },
-                { category: 'Revenue', accounts: 32, balance: '£245,600', type: 'Income' },
-                { category: 'Operating Expenses', accounts: 67, balance: '£78,900', type: 'Expenses' }
-              ].map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{category.category}</p>
-                      <Badge className={`${
-                        category.type === 'Assets' ? 'bg-green-100 text-green-800' : 
-                        category.type === 'Liabilities' ? 'bg-red-100 text-red-800' : 
-                        category.type === 'Income' ? 'bg-blue-100 text-[#001f3f]' :
-                        'bg-orange-100 text-orange-800'
-                      }`}>
-                        {category.type}
-                      </Badge>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Code</span>
+                      <Input 
+                        placeholder="Search code..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchCode}
+                        onChange={(e) => setCoaSearchCode(e.target.value)}
+                      />
                     </div>
-                    <p className="text-sm text-[#001f3f]">{category.accounts} accounts</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">{category.balance}</p>
-                    <div className="flex gap-1 mt-1">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Plus className="h-3 w-3" />
-                      </Button>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Name</span>
+                      <Input 
+                        placeholder="Search name..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchName}
+                        onChange={(e) => setCoaSearchName(e.target.value)}
+                      />
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Group</span>
+                      <Input 
+                        placeholder="Search group..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchGroup}
+                        onChange={(e) => setCoaSearchGroup(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Category</span>
+                      <Input 
+                        placeholder="Search category..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchCategory}
+                        onChange={(e) => setCoaSearchCategory(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredAccounts.slice(0, 50).map(account => (
+                  <TableRow key={account.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(account)}>
+                    <TableCell className="text-[#001f3f]">{account.code}</TableCell>
+                    <TableCell className="text-[#001f3f]">{account.name}</TableCell>
+                    <TableCell className="text-[#001f3f]">{account.groupNumber || '-'}</TableCell>
+                    <TableCell><Badge className="bg-[#001f3f]">{account.category || 'N/A'}</Badge></TableCell>
+                    <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {filteredAccounts.length > 50 && (
+              <p className="text-sm text-gray-500 mt-2">Showing first 50 of {filteredAccounts.length} accounts. Use search to narrow results.</p>
+            )}
           </CardContent>
         </Card>
       </div>

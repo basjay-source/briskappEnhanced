@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../../components/ui/textarea'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { chartOfAccounts, getAllAccounts, searchAccounts } from '../../data/chartOfAccounts'
 
 interface Client {
   id: string
@@ -204,6 +205,11 @@ const AccountsProduction: React.FC = () => {
   const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
   const [drilldownTitle, setDrilldownTitle] = useState('')
   const [drilldownContent, setDrilldownContent] = useState<any>(null)
+
+  const [coaSearchCode, setCoaSearchCode] = useState('')
+  const [coaSearchName, setCoaSearchName] = useState('')
+  const [coaSearchGroup, setCoaSearchGroup] = useState('')
+  const [coaSearchCategory, setCoaSearchCategory] = useState('')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -1535,65 +1541,68 @@ const AccountsProduction: React.FC = () => {
   }
 
   const renderChartOfAccounts = () => {
-    const handleAccountCategoryClick = (category: string, count: number) => {
-      const handleAccountRowClick = (code: string, name: string, balance: string) => {
-        setDrilldownTitle(`Account Details: ${name}`)
-        setDrilldownContent(
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div><p className="text-sm text-gray-500">Account Code</p><p className="text-lg font-semibold text-[#001f3f]">{code}</p></div>
-              <div><p className="text-sm text-gray-500">Account Name</p><p className="text-lg font-semibold text-[#001f3f]">{name}</p></div>
-              <div><p className="text-sm text-gray-500">Current Balance</p><p className="text-lg font-semibold text-[#001f3f]">{balance}</p></div>
-              <div><p className="text-sm text-gray-500">Category</p><p className="text-lg font-semibold text-[#001f3f]">{category}</p></div>
-            </div>
-            <div className="border-t-2 border-[#001f3f] pt-4">
-              <h3 className="text-lg font-semibold text-[#001f3f] mb-3">Recent Transactions</h3>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-[#001f3f]">Date</TableHead>
-                    <TableHead className="text-[#001f3f]">Description</TableHead>
-                    <TableHead className="text-[#001f3f]">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow><TableCell className="text-[#001f3f]">2024-03-15</TableCell><TableCell className="text-[#001f3f]">Opening Balance</TableCell><TableCell className="text-[#001f3f]">{balance}</TableCell></TableRow>
-                </TableBody>
-              </Table>
-            </div>
+    const allAccounts = getAllAccounts()
+    const filteredAccounts = allAccounts.filter(account => {
+      const codeMatch = !coaSearchCode || account.code.toLowerCase().includes(coaSearchCode.toLowerCase())
+      const nameMatch = !coaSearchName || account.name.toLowerCase().includes(coaSearchName.toLowerCase())
+      const groupMatch = !coaSearchGroup || (account.groupNumber && account.groupNumber.includes(coaSearchGroup))
+      const categoryMatch = !coaSearchCategory || (account.category && account.category.toLowerCase().includes(coaSearchCategory.toLowerCase()))
+      return codeMatch && nameMatch && groupMatch && categoryMatch
+    })
+
+    const categoryCounts = {
+      Income: allAccounts.filter(a => a.category === 'Income').length,
+      'Cost of Sales': allAccounts.filter(a => a.category === 'Cost of Sales').length,
+      Expenses: allAccounts.filter(a => a.category === 'Expenses').length,
+      Assets: allAccounts.filter(a => a.category === 'Assets').length,
+      Liabilities: allAccounts.filter(a => a.category === 'Liabilities').length,
+      Equity: allAccounts.filter(a => a.category === 'Equity').length
+    }
+
+    const handleAccountClick = (account: any) => {
+      setDrilldownTitle(`Account: ${account.name}`)
+      setDrilldownContent(
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div><p className="text-sm text-gray-500">Code</p><p className="text-lg font-semibold text-[#001f3f]">{account.code}</p></div>
+            <div><p className="text-sm text-gray-500">Name</p><p className="text-lg font-semibold text-[#001f3f]">{account.name}</p></div>
+            <div><p className="text-sm text-gray-500">Category</p><p className="text-lg font-semibold text-[#001f3f]">{account.category || 'N/A'}</p></div>
+            <div><p className="text-sm text-gray-500">Group</p><p className="text-lg font-semibold text-[#001f3f]">{account.groupNumber || 'N/A'}</p></div>
           </div>
-        )
-        setIsDrilldownOpen(true)
-      }
-      
+          <div className="border-t-2 border-[#001f3f] pt-4">
+            <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Account Information</h3>
+            <p className="text-sm text-[#001f3f]">This is a {account.category || 'general'} account in the IAS Chart of Accounts.</p>
+          </div>
+        </div>
+      )
+      setIsDrilldownOpen(true)
+    }
+
+    const handleCategoryClick = (category: string) => {
+      const categoryAccounts = allAccounts.filter(a => a.category === category)
       setDrilldownTitle(`${category} Accounts`)
       setDrilldownContent(
         <div className="space-y-4">
-          <p className="text-[#001f3f]">Total {category} accounts: {count}</p>
+          <p className="text-[#001f3f]">Total: {categoryAccounts.length} accounts</p>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="text-[#001f3f]">Code</TableHead>
-                <TableHead className="text-[#001f3f]">Account Name</TableHead>
-                <TableHead className="text-[#001f3f]">Balance</TableHead>
-                <TableHead className="text-[#001f3f]">Status</TableHead>
+                <TableHead className="text-[#001f3f]">Name</TableHead>
+                <TableHead className="text-[#001f3f]">Group</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1000', 'Fixed Assets', '£250,000')}>
-                <TableCell className="text-[#001f3f]">1000</TableCell>
-                <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
-                <TableCell className="text-[#001f3f]">£250,000</TableCell>
-                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
-              </TableRow>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1100', 'Current Assets', '£85,000')}>
-                <TableCell className="text-[#001f3f]">1100</TableCell>
-                <TableCell className="text-[#001f3f]">Current Assets</TableCell>
-                <TableCell className="text-[#001f3f]">£85,000</TableCell>
-                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
-              </TableRow>
+              {categoryAccounts.slice(0, 10).map(acc => (
+                <TableRow key={acc.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(acc)}>
+                  <TableCell className="text-[#001f3f]">{acc.code}</TableCell>
+                  <TableCell className="text-[#001f3f]">{acc.name}</TableCell>
+                  <TableCell className="text-[#001f3f]">{acc.groupNumber || '-'}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
+          {categoryAccounts.length > 10 && <p className="text-sm text-gray-500">Showing first 10 of {categoryAccounts.length} accounts</p>}
         </div>
       )
       setIsDrilldownOpen(true)
@@ -1604,7 +1613,7 @@ const AccountsProduction: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-[#001f3f]">Chart of Accounts</h2>
-            <p className="text-[#001f3f]">Manage your chart of accounts and account codes</p>
+            <p className="text-[#001f3f]">IAS Chart of Accounts - {allAccounts.length} total accounts</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
@@ -1616,22 +1625,26 @@ const AccountsProduction: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Assets', 45)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">45</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Income')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Income</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Income}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Liabilities', 28)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">28</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Revenue', 15)}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Revenue</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">15</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Expenses', 62)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Expenses')}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold text-[#001f3f]">62</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Expenses + categoryCounts['Cost of Sales']}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Assets')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Assets}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Liabilities')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Liabilities}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Equity')}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Equity</CardTitle></CardHeader>
+            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Equity}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
           </Card>
         </div>
 
@@ -1641,38 +1654,68 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Code<Input placeholder="Search..." className="h-6 text-xs w-24 border-[#001f3f]" /></div></TableHead>
-                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Name<Input placeholder="Search..." className="h-6 text-xs w-32 border-[#001f3f]" /></div></TableHead>
-                  <TableHead className="text-[#001f3f]">Category</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Code</span>
+                      <Input 
+                        placeholder="Search code..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchCode}
+                        onChange={(e) => setCoaSearchCode(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Name</span>
+                      <Input 
+                        placeholder="Search name..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchName}
+                        onChange={(e) => setCoaSearchName(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Group</span>
+                      <Input 
+                        placeholder="Search group..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchGroup}
+                        onChange={(e) => setCoaSearchGroup(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="flex flex-col gap-1">
+                      <span>Category</span>
+                      <Input 
+                        placeholder="Search category..." 
+                        className="h-8 text-xs border-[#001f3f]" 
+                        value={coaSearchCategory}
+                        onChange={(e) => setCoaSearchCategory(e.target.value)}
+                      />
+                    </div>
+                  </TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
-                  setDrilldownTitle('Account Details: Fixed Assets')
-                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 1000</p><p className="text-[#001f3f]">Name: Fixed Assets</p><p className="text-[#001f3f]">Balance: £250,000</p></div>)
-                  setIsDrilldownOpen(true)
-                }}>
-                  <TableCell className="text-[#001f3f]">1000</TableCell>
-                  <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">Asset</Badge></TableCell>
-                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
-                  setDrilldownTitle('Account Details: Sales Revenue')
-                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 4000</p><p className="text-[#001f3f]">Name: Sales Revenue</p><p className="text-[#001f3f]">Balance: £450,000</p></div>)
-                  setIsDrilldownOpen(true)
-                }}>
-                  <TableCell className="text-[#001f3f]">4000</TableCell>
-                  <TableCell className="text-[#001f3f]">Sales Revenue</TableCell>
-                  <TableCell><Badge className="bg-[#001f3f]">Revenue</Badge></TableCell>
-                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
+                {filteredAccounts.slice(0, 50).map(account => (
+                  <TableRow key={account.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(account)}>
+                    <TableCell className="text-[#001f3f]">{account.code}</TableCell>
+                    <TableCell className="text-[#001f3f]">{account.name}</TableCell>
+                    <TableCell className="text-[#001f3f]">{account.groupNumber || '-'}</TableCell>
+                    <TableCell><Badge className="bg-[#001f3f]">{account.category || 'N/A'}</Badge></TableCell>
+                    <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button></TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
+            {filteredAccounts.length > 50 && (
+              <p className="text-sm text-gray-500 mt-2">Showing first 50 of {filteredAccounts.length} accounts. Use search to narrow results.</p>
+            )}
           </CardContent>
         </Card>
       </div>
