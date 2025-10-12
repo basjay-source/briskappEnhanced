@@ -632,7 +632,10 @@ const AccountsProduction: React.FC = () => {
       : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
 
-  const renderDashboard = () => (
+  const renderDashboard = () => {
+    const filteredClients = getFilteredClients()
+    
+    return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -791,15 +794,91 @@ const AccountsProduction: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader><TableRow className="border-b-2 border-[#001f3f]">
-              <TableHead className="text-[#001f3f]">Client</TableHead>
-              <TableHead className="text-[#001f3f]">Type</TableHead>
-              <TableHead className="text-[#001f3f]">Year End</TableHead>
-              <TableHead className="text-[#001f3f]">Status</TableHead>
-              <TableHead className="text-[#001f3f]">Due Date</TableHead>
-            </TableRow></TableHeader>
+            <TableHeader>
+              <TableRow className="border-b-2 border-[#001f3f]">
+                <TableHead className="text-[#001f3f]">
+                  <div className="space-y-2">
+                    <div className="cursor-pointer" onClick={() => handleSort('name')}>
+                      Client {getSortIcon('name')}
+                    </div>
+                    <Input
+                      placeholder="Search..."
+                      value={clientSearchName}
+                      onChange={(e) => setClientSearchName(e.target.value)}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </TableHead>
+                <TableHead className="text-[#001f3f]">
+                  <div className="space-y-2">
+                    <div className="cursor-pointer" onClick={() => handleSort('type')}>
+                      Type {getSortIcon('type')}
+                    </div>
+                    <Select value={clientSearchType} onValueChange={setClientSearchType}>
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="All" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="limited-company">Limited Company</SelectItem>
+                        <SelectItem value="llp">LLP</SelectItem>
+                        <SelectItem value="partnership">Partnership</SelectItem>
+                        <SelectItem value="sole-trader">Sole Trader</SelectItem>
+                        <SelectItem value="cic">CIC</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </TableHead>
+                <TableHead className="text-[#001f3f]">
+                  <div className="space-y-2">
+                    <div className="cursor-pointer" onClick={() => handleSort('yearEnd')}>
+                      Year End {getSortIcon('yearEnd')}
+                    </div>
+                    <Input
+                      placeholder="Search..."
+                      value={clientSearchYearEnd}
+                      onChange={(e) => setClientSearchYearEnd(e.target.value)}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </TableHead>
+                <TableHead className="text-[#001f3f]">
+                  <div className="space-y-2">
+                    <div className="cursor-pointer" onClick={() => handleSort('accountsStatus')}>
+                      Status {getSortIcon('accountsStatus')}
+                    </div>
+                    <Select value={clientSearchStatus} onValueChange={setClientSearchStatus}>
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="All" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="not-started">Not Started</SelectItem>
+                        <SelectItem value="in-progress">In Progress</SelectItem>
+                        <SelectItem value="review">Review</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="filed">Filed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </TableHead>
+                <TableHead className="text-[#001f3f]">
+                  <div className="space-y-2">
+                    <div className="cursor-pointer" onClick={() => handleSort('nextDue')}>
+                      Due Date {getSortIcon('nextDue')}
+                    </div>
+                    <Input
+                      placeholder="Search..."
+                      value={clientSearchDueDate}
+                      onChange={(e) => setClientSearchDueDate(e.target.value)}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody>
-              {clients.map(client => (
+              {filteredClients.map(client => (
                 <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => handleViewClient(client)}>
                   <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                   <TableCell className="text-[#001f3f]">{client.type}</TableCell>
@@ -813,7 +892,8 @@ const AccountsProduction: React.FC = () => {
         </CardContent>
       </Card>
     </div>
-  )
+    )
+  }
 
   const renderClientManagement = () => {
     const filteredClients = getFilteredClients()
