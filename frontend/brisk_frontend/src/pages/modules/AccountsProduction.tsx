@@ -1,47 +1,37 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { 
-  FileText, 
-  Calculator, 
-  TrendingUp, 
-  Upload, 
-  Eye,
-  BarChart3,
-  Globe,
-  ChevronLeft,
-  Plus,
-  Edit,
-  Trash2,
-  Check,
-  Save,
-  RefreshCw,
-  Send,
-  FileSpreadsheet,
-  DollarSign,
-  TrendingDown,
-  AlertCircle,
-  Search,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  Calendar,
-  FileUp,
-  History,
-  Copy,
-  FileCheck
+  Building2, FileText, Calculator, Upload, Eye, BarChart3,
+  Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
+  Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
+  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
 import KPICard from '@/components/KPICard'
-import { ExportButton } from '@/components/ExportButton'
 import { Button } from '../../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
 import { Textarea } from '../../components/ui/textarea'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+
+interface Client {
+  id: string
+  name: string
+  type: 'sole-trader' | 'partnership' | 'limited-company' | 'llp' | 'charity' | 'academy' | 'cic'
+  registrationNumber?: string
+  yearEnd: string
+  accountsStatus: 'not-started' | 'in-progress' | 'review' | 'completed' | 'filed'
+  lastAccounts: string
+  nextDue: string
+  frsStandard: 'FRS 101' | 'FRS 102' | 'FRS 102 1A' | 'FRS 105' | 'IFRS'
+  contactPerson: string
+  email: string
+  phone: string
+}
 
 interface TrialBalanceEntry {
   id: string
@@ -49,25 +39,27 @@ interface TrialBalanceEntry {
   accountName: string
   debit: number
   credit: number
-  category: string
+  category: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
 }
 
-interface JournalEntry {
+interface Adjustment {
   id: string
-  date: string
-  reference: string
+  type: 'prepayment' | 'accrual' | 'depreciation' | 'provision'
   description: string
-  entries: { accountCode: string; accountName: string; debit: number; credit: number }[]
+  amount: number
+  date: string
+  accountCode: string
   status: 'draft' | 'approved' | 'posted'
-  createdBy: string
 }
 
 interface FinancialStatement {
   id: string
+  clientId: string
   type: 'balance-sheet' | 'profit-loss' | 'cash-flow'
   period: string
   generatedDate: string
-  status: 'draft' | 'final' | 'finalized'
+  status: 'draft' | 'review' | 'finalized'
+  frsStandard: string
 }
 
 const AccountsProduction: React.FC = () => {
@@ -76,545 +68,514 @@ const AccountsProduction: React.FC = () => {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
 
+  const [clients, setClients] = useState<Client[]>([
+    {
+      id: '1', name: 'Acme Trading Ltd', type: 'limited-company',
+      registrationNumber: '12345678', yearEnd: '2024-12-31',
+      accountsStatus: 'in-progress', lastAccounts: '2023-12-31',
+      nextDue: '2025-09-30', frsStandard: 'FRS 102',
+      contactPerson: 'John Smith', email: 'john@acmetrading.com',
+      phone: '020 7123 4567'
+    },
+    {
+      id: '2', name: 'Green & Partners LLP', type: 'llp',
+      registrationNumber: 'OC234567', yearEnd: '2024-03-31',
+      accountsStatus: 'review', lastAccounts: '2024-03-31',
+      nextDue: '2025-01-31', frsStandard: 'FRS 102',
+      contactPerson: 'Sarah Green', email: 'sarah@greenpartners.com',
+      phone: '020 7234 5678'
+    },
+    {
+      id: '3', name: 'Smith & Co Solicitors', type: 'partnership',
+      registrationNumber: undefined, yearEnd: '2024-04-30',
+      accountsStatus: 'not-started', lastAccounts: '2023-04-30',
+      nextDue: '2025-01-31', frsStandard: 'FRS 102 1A',
+      contactPerson: 'David Smith', email: 'david@smithco.com',
+      phone: '020 7345 6789'
+    },
+    {
+      id: '4', name: 'Tech Innovations Ltd', type: 'limited-company',
+      registrationNumber: '87654321', yearEnd: '2024-06-30',
+      accountsStatus: 'in-progress', lastAccounts: '2023-06-30',
+      nextDue: '2025-04-30', frsStandard: 'FRS 102 1A',
+      contactPerson: 'Emma Wilson', email: 'emma@techinnovations.com',
+      phone: '020 7456 7890'
+    },
+    {
+      id: '5', name: 'Community Care CIC', type: 'cic',
+      registrationNumber: 'CE123456', yearEnd: '2024-03-31',
+      accountsStatus: 'completed', lastAccounts: '2024-03-31',
+      nextDue: '2025-01-31', frsStandard: 'FRS 105',
+      contactPerson: 'Michael Brown', email: 'michael@communitycare.org',
+      phone: '020 7567 8901'
+    },
+    {
+      id: '6', name: 'Johnson & Associates', type: 'partnership',
+      registrationNumber: undefined, yearEnd: '2024-12-31',
+      accountsStatus: 'filed', lastAccounts: '2023-12-31',
+      nextDue: '2025-09-30', frsStandard: 'FRS 102 1A',
+      contactPerson: 'Robert Johnson', email: 'robert@johnsonassociates.com',
+      phone: '020 7678 9012'
+    },
+    {
+      id: '7', name: 'Brighton Retail Ltd', type: 'limited-company',
+      registrationNumber: '11223344', yearEnd: '2024-09-30',
+      accountsStatus: 'review', lastAccounts: '2023-09-30',
+      nextDue: '2025-07-31', frsStandard: 'FRS 105',
+      contactPerson: 'Lisa Chen', email: 'lisa@brightonretail.com',
+      phone: '020 7789 0123'
+    }
+  ])
+  const [clientSearchName, setClientSearchName] = useState('')
+  const [clientSearchType, setClientSearchType] = useState('')
+  const [clientSearchStatus, setClientSearchStatus] = useState('')
+  const [clientSearchYearEnd, setClientSearchYearEnd] = useState('')
+  const [clientSearchDueDate, setClientSearchDueDate] = useState('')
+  const [clientSortField, setClientSortField] = useState<keyof Client | ''>('')
+  const [clientSortDirection, setClientSortDirection] = useState<'asc' | 'desc'>('asc')
+
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
-    { id: '1', accountCode: '1000', accountName: 'Cash at Bank - Current Account', debit: 45000, credit: 0, category: 'Asset' },
-    { id: '2', accountCode: '1010', accountName: 'Cash at Bank - Savings Account', debit: 25000, credit: 0, category: 'Asset' },
-    { id: '3', accountCode: '1020', accountName: 'Petty Cash', debit: 500, credit: 0, category: 'Asset' },
-    { id: '4', accountCode: '1100', accountName: 'Accounts Receivable', debit: 28500, credit: 0, category: 'Asset' },
-    { id: '5', accountCode: '1110', accountName: 'Allowance for Doubtful Debts', debit: 0, credit: 1500, category: 'Asset' },
-    { id: '6', accountCode: '1200', accountName: 'Inventory - Raw Materials', debit: 18000, credit: 0, category: 'Asset' },
-    { id: '7', accountCode: '1210', accountName: 'Inventory - Finished Goods', debit: 22500, credit: 0, category: 'Asset' },
-    { id: '8', accountCode: '1300', accountName: 'Prepaid Expenses', debit: 3500, credit: 0, category: 'Asset' },
-    { id: '9', accountCode: '1310', accountName: 'Prepaid Insurance', debit: 4200, credit: 0, category: 'Asset' },
-    { id: '10', accountCode: '1500', accountName: 'Land and Buildings', debit: 250000, credit: 0, category: 'Asset' },
-    { id: '11', accountCode: '1510', accountName: 'Plant and Machinery', debit: 85000, credit: 0, category: 'Asset' },
-    { id: '12', accountCode: '1520', accountName: 'Office Equipment', debit: 15000, credit: 0, category: 'Asset' },
-    { id: '13', accountCode: '1530', accountName: 'Motor Vehicles', debit: 35000, credit: 0, category: 'Asset' },
-    { id: '14', accountCode: '1550', accountName: 'Accumulated Depreciation', debit: 0, credit: 45000, category: 'Asset' },
-    { id: '15', accountCode: '1600', accountName: 'Intangible Assets - Goodwill', debit: 50000, credit: 0, category: 'Asset' },
-    
-    { id: '16', accountCode: '2000', accountName: 'Accounts Payable', debit: 0, credit: 18500, category: 'Liability' },
-    { id: '17', accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 5200, category: 'Liability' },
-    { id: '18', accountCode: '2020', accountName: 'VAT Payable', debit: 0, credit: 8750, category: 'Liability' },
-    { id: '19', accountCode: '2030', accountName: 'PAYE/NIC Payable', debit: 0, credit: 6800, category: 'Liability' },
-    { id: '20', accountCode: '2100', accountName: 'Bank Loan - Long Term', debit: 0, credit: 66000, category: 'Liability' },
-    { id: '21', accountCode: '2110', accountName: 'Bank Loan - Current Portion', debit: 0, credit: 12000, category: 'Liability' },
-    { id: '22', accountCode: '2200', accountName: 'Directors Loan Account', debit: 0, credit: 15000, category: 'Liability' },
-    { id: '23', accountCode: '2300', accountName: 'Deferred Tax Liability', debit: 0, credit: 8500, category: 'Liability' },
-    
-    { id: '24', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
-    { id: '25', accountCode: '3100', accountName: 'Retained Earnings', debit: 0, credit: 24000, category: 'Equity' },
-    { id: '26', accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 45200, category: 'Equity' },
-    
-    { id: '27', accountCode: '4000', accountName: 'Sales Revenue - Products', debit: 0, credit: 285000, category: 'Revenue' },
-    { id: '28', accountCode: '4010', accountName: 'Sales Revenue - Services', debit: 0, credit: 125000, category: 'Revenue' },
-    { id: '29', accountCode: '4100', accountName: 'Other Income', debit: 0, credit: 8500, category: 'Revenue' },
-    { id: '30', accountCode: '4110', accountName: 'Interest Income', debit: 0, credit: 1200, category: 'Revenue' },
-    
-    { id: '31', accountCode: '5000', accountName: 'Cost of Goods Sold', debit: 145000, credit: 0, category: 'Expense' },
-    { id: '32', accountCode: '5100', accountName: 'Salaries and Wages', debit: 95000, credit: 0, category: 'Expense' },
-    { id: '33', accountCode: '5110', accountName: 'Employers NIC', debit: 12500, credit: 0, category: 'Expense' },
-    { id: '34', accountCode: '5120', accountName: 'Pension Contributions', debit: 8200, credit: 0, category: 'Expense' },
-    { id: '35', accountCode: '5200', accountName: 'Rent and Rates', debit: 24000, credit: 0, category: 'Expense' },
-    { id: '36', accountCode: '5210', accountName: 'Utilities', debit: 6500, credit: 0, category: 'Expense' },
-    { id: '37', accountCode: '5300', accountName: 'Marketing and Advertising', debit: 15000, credit: 0, category: 'Expense' },
-    { id: '38', accountCode: '5310', accountName: 'Professional Fees', debit: 12000, credit: 0, category: 'Expense' },
-    { id: '39', accountCode: '5400', accountName: 'Depreciation Expense', debit: 18500, credit: 0, category: 'Expense' },
-    { id: '40', accountCode: '5500', accountName: 'Bank Charges and Interest', debit: 3200, credit: 0, category: 'Expense' },
-    { id: '41', accountCode: '5600', accountName: 'Insurance', debit: 8400, credit: 0, category: 'Expense' },
-    { id: '42', accountCode: '5700', accountName: 'Motor Vehicle Expenses', debit: 7800, credit: 0, category: 'Expense' },
-    { id: '43', accountCode: '5800', accountName: 'Office Expenses', debit: 5600, credit: 0, category: 'Expense' },
-    { id: '44', accountCode: '5900', accountName: 'Telecommunications', debit: 3400, credit: 0, category: 'Expense' },
+    { id: '1', accountCode: '1000', accountName: 'Fixed Assets', debit: 250000, credit: 0, category: 'Asset' },
+    { id: '2', accountCode: '1100', accountName: 'Current Assets', debit: 85000, credit: 0, category: 'Asset' },
+    { id: '3', accountCode: '2000', accountName: 'Current Liabilities', debit: 0, credit: 45000, category: 'Liability' },
+    { id: '4', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
+    { id: '5', accountCode: '4000', accountName: 'Sales Revenue', debit: 0, credit: 450000, category: 'Revenue' },
+    { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
+    { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
   ])
-  const [isTrialBalanceDialogOpen, setIsTrialBalanceDialogOpen] = useState(false)
-  const [editingTBEntry, setEditingTBEntry] = useState<TrialBalanceEntry | null>(null)
-
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([
-    {
-      id: '1',
-      date: '2024-12-15',
-      reference: 'JE001',
-      description: 'Monthly depreciation adjustment',
-      entries: [
-        { accountCode: '5400', accountName: 'Depreciation Expense', debit: 2500, credit: 0 },
-        { accountCode: '1550', accountName: 'Accumulated Depreciation', debit: 0, credit: 2500 }
-      ],
-      status: 'posted',
-      createdBy: 'John Smith'
-    },
-    {
-      id: '2',
-      date: '2024-12-18',
-      reference: 'JE002',
-      description: 'Accrued expenses adjustment',
-      entries: [
-        { accountCode: '5310', accountName: 'Professional Fees', debit: 1200, credit: 0 },
-        { accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 1200 }
-      ],
-      status: 'approved',
-      createdBy: 'Sarah Johnson'
-    },
-    {
-      id: '3',
-      date: '2024-12-20',
-      reference: 'JE003',
-      description: 'Bad debt write-off',
-      entries: [
-        { accountCode: '1110', accountName: 'Allowance for Doubtful Debts', debit: 500, credit: 0 },
-        { accountCode: '1100', accountName: 'Accounts Receivable', debit: 0, credit: 500 }
-      ],
-      status: 'approved',
-      createdBy: 'Michael Brown'
-    },
-    {
-      id: '4',
-      date: '2024-12-22',
-      reference: 'JE004',
-      description: 'Prepaid insurance adjustment',
-      entries: [
-        { accountCode: '5600', accountName: 'Insurance', debit: 700, credit: 0 },
-        { accountCode: '1310', accountName: 'Prepaid Insurance', debit: 0, credit: 700 }
-      ],
-      status: 'draft',
-      createdBy: 'Emily Davis'
-    },
-    {
-      id: '5',
-      date: '2024-12-23',
-      reference: 'JE005',
-      description: 'Inventory revaluation',
-      entries: [
-        { accountCode: '5000', accountName: 'Cost of Goods Sold', debit: 1500, credit: 0 },
-        { accountCode: '1210', accountName: 'Inventory - Finished Goods', debit: 0, credit: 1500 }
-      ],
-      status: 'draft',
-      createdBy: 'David Wilson'
-    },
-    {
-      id: '6',
-      date: '2024-12-24',
-      reference: 'JE006',
-      description: 'Reclassify loan current portion',
-      entries: [
-        { accountCode: '2100', accountName: 'Bank Loan - Long Term', debit: 12000, credit: 0 },
-        { accountCode: '2110', accountName: 'Bank Loan - Current Portion', debit: 0, credit: 12000 }
-      ],
-      status: 'posted',
-      createdBy: 'John Smith'
-    },
-    {
-      id: '7',
-      date: '2024-12-26',
-      reference: 'JE007',
-      description: 'Deferred tax adjustment',
-      entries: [
-        { accountCode: '2300', accountName: 'Deferred Tax Liability', debit: 850, credit: 0 },
-        { accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 850 }
-      ],
-      status: 'approved',
-      createdBy: 'Sarah Johnson'
-    },
-    {
-      id: '8',
-      date: '2024-12-28',
-      reference: 'JE008',
-      description: 'Correct VAT posting error',
-      entries: [
-        { accountCode: '5800', accountName: 'Office Expenses', debit: 200, credit: 0 },
-        { accountCode: '2020', accountName: 'VAT Payable', debit: 0, credit: 200 }
-      ],
-      status: 'draft',
-      createdBy: 'Michael Brown'
-    },
-    {
-      id: '9',
-      date: '2024-12-29',
-      reference: 'JE009',
-      description: 'Year-end closing entry - Revenue',
-      entries: [
-        { accountCode: '4000', accountName: 'Sales Revenue - Products', debit: 285000, credit: 0 },
-        { accountCode: '4010', accountName: 'Sales Revenue - Services', debit: 125000, credit: 0 },
-        { accountCode: '3200', accountName: 'Current Year Profit/Loss', debit: 0, credit: 410000 }
-      ],
-      status: 'draft',
-      createdBy: 'John Smith'
-    },
-    {
-      id: '10',
-      date: '2024-12-30',
-      reference: 'JE010',
-      description: 'Accrue pension contributions',
-      entries: [
-        { accountCode: '5120', accountName: 'Pension Contributions', debit: 850, credit: 0 },
-        { accountCode: '2010', accountName: 'Accrued Expenses', debit: 0, credit: 850 }
-      ],
-      status: 'approved',
-      createdBy: 'Emily Davis'
-    }
-  ])
-  const [isJournalDialogOpen, setIsJournalDialogOpen] = useState(false)
-  const [editingJournal, setEditingJournal] = useState<JournalEntry | null>(null)
-
-  const [financialStatements, setFinancialStatements] = useState<FinancialStatement[]>([
-    { id: '1', type: 'balance-sheet', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
-    { id: '2', type: 'profit-loss', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
-    { id: '3', type: 'cash-flow', period: 'Dec 2024', generatedDate: '2024-12-20', status: 'finalized' },
-    { id: '4', type: 'balance-sheet', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
-    { id: '5', type: 'profit-loss', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
-    { id: '6', type: 'cash-flow', period: 'Nov 2024', generatedDate: '2024-11-20', status: 'finalized' },
-    { id: '7', type: 'balance-sheet', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
-    { id: '8', type: 'profit-loss', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
-    { id: '9', type: 'cash-flow', period: 'Oct 2024', generatedDate: '2024-10-20', status: 'finalized' },
-    { id: '10', type: 'balance-sheet', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' },
-    { id: '11', type: 'profit-loss', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' },
-    { id: '12', type: 'cash-flow', period: 'Q4 2024', generatedDate: '2024-12-31', status: 'draft' }
-  ])
-  const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
-  const [isStatementDialogOpen, setIsStatementDialogOpen] = useState(false)
-
-  const [drilldownData, setDrilldownData] = useState<any>(null)
-  const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
-
-  const [tbSearchTerm, setTbSearchTerm] = useState('')
-  const [tbCategoryFilter, setTbCategoryFilter] = useState<string>('all')
-  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry>('accountCode')
+  const [tbSearchCode, setTbSearchCode] = useState('')
+  const [tbSearchName, setTbSearchName] = useState('')
+  const [tbSearchCategory, setTbSearchCategory] = useState('')
+  const [tbSearchDebit, setTbSearchDebit] = useState('')
+  const [tbSearchCredit, setTbSearchCredit] = useState('')
+  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry | ''>('')
   const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
-  const [selectedTBEntries, setSelectedTBEntries] = useState<string[]>([])
 
-  const [jeSearchTerm, setJeSearchTerm] = useState('')
-  const [jeStatusFilter, setJeStatusFilter] = useState<string>('all')
-  const [jeDateFilter, setJeDateFilter] = useState<string>('')
-  const [jeSortField, setJeSortField] = useState<keyof JournalEntry>('reference')
-  const [jeSortDirection, setJeSortDirection] = useState<'asc' | 'desc'>('asc')
-  const [selectedJEEntries, setSelectedJEEntries] = useState<string[]>([])
+  const [adjustments, setAdjustments] = useState<Adjustment[]>([
+    { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
+    { id: '2', type: 'accrual', description: 'Electricity Accrual', amount: 850, date: '2024-12-31', accountCode: '2100', status: 'draft' },
+    { id: '3', type: 'depreciation', description: 'Plant & Machinery Depreciation', amount: 12500, date: '2024-12-31', accountCode: '6200', status: 'approved' }
+  ])
+  const [adjSearchType, setAdjSearchType] = useState('')
+  const [adjSearchStatus, setAdjSearchStatus] = useState('')
+  const [adjSearchDescription, setAdjSearchDescription] = useState('')
+  const [adjSearchAmount, setAdjSearchAmount] = useState('')
+  const [adjSearchDate, setAdjSearchDate] = useState('')
+  const [adjSortField, setAdjSortField] = useState<keyof Adjustment | ''>('')
+  const [adjSortDirection, setAdjSortDirection] = useState<'asc' | 'desc'>('asc')
 
+  const [statements, setStatements] = useState<FinancialStatement[]>([
+    { id: '1', clientId: '1', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
+    { id: '2', clientId: '1', type: 'profit-loss', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
+    { id: '3', clientId: '2', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-10', status: 'review', frsStandard: 'FRS 102' }
+  ])
+  const [stmtSearchClient, setStmtSearchClient] = useState('')
+  const [stmtSearchType, setStmtSearchType] = useState('')
+  const [stmtSearchPeriod, setStmtSearchPeriod] = useState('')
+  const [stmtSearchDate, setStmtSearchDate] = useState('')
+  const [stmtSearchStatus, setStmtSearchStatus] = useState('')
+  const [stmtSortField, setStmtSortField] = useState<keyof FinancialStatement | ''>('')
+  const [stmtSortDirection, setStmtSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const menuStructure = [
-    {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: BarChart3,
-      hasSubTabs: false
-    },
-    {
-      id: 'trial-balance',
-      label: 'Trial Balance',
-      icon: Calculator,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'tb-overview', label: 'Overview' },
-        { id: 'tb-mapping', label: 'Account Mapping' },
-        { id: 'tb-reconciliation', label: 'Reconciliation' },
-        { id: 'tb-import', label: 'Data Import' },
-        { id: 'tb-history', label: 'History & Audit Trail' }
-      ]
-    },
-    {
-      id: 'adjustments',
-      label: 'Adjustments',
-      icon: Edit,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'journal-entries', label: 'Journal Entries' },
-        { id: 'prepayments', label: 'Prepayments' },
-        { id: 'accruals', label: 'Accruals' },
-        { id: 'depreciation', label: 'Depreciation' },
-        { id: 'provisions', label: 'Provisions' },
-        { id: 'reclassifications', label: 'Reclassifications' }
-      ]
-    },
-    {
-      id: 'statements',
-      label: 'Financial Statements',
-      icon: FileText,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'balance-sheet', label: 'Balance Sheet' },
-        { id: 'profit-loss', label: 'Profit & Loss' },
-        { id: 'cash-flow', label: 'Cash Flow' },
-        { id: 'notes', label: 'Notes to Accounts' },
-        { id: 'directors-report', label: "Directors' Report" },
-        { id: 'templates', label: 'Statement Templates' }
-      ]
-    },
-    {
-      id: 'year-end',
-      label: 'Year-End Processing',
-      icon: Calendar,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'closing-entries', label: 'Closing Entries' },
-        { id: 'retained-earnings', label: 'Retained Earnings' },
-        { id: 'opening-balances', label: 'Opening Balances' },
-        { id: 'period-lock', label: 'Period Lock' },
-        { id: 'year-end-checklist', label: 'Year-End Checklist' }
-      ]
-    },
-    {
-      id: 'consolidation',
-      label: 'Group Consolidation',
-      icon: Copy,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'group-structure', label: 'Group Structure' },
-        { id: 'intercompany', label: 'Intercompany Eliminations' },
-        { id: 'consolidated-accounts', label: 'Consolidated Accounts' },
-        { id: 'minority-interests', label: 'Minority Interests' }
-      ]
-    },
-    {
-      id: 'ixbrl',
-      label: 'iXBRL Tagging',
-      icon: Globe,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'auto-tagging', label: 'Auto Tagging' },
-        { id: 'manual-tagging', label: 'Manual Tagging' },
-        { id: 'validation', label: 'Validation' },
-        { id: 'preview', label: 'Preview & Submit' }
-      ]
-    },
-    {
-      id: 'hmrc',
-      label: 'HMRC Integration',
-      icon: Send,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'hmrc-connect', label: 'HMRC Connection' },
-        { id: 'corporation-tax', label: 'Corporation Tax' },
-        { id: 'vat-filing', label: 'VAT Filing' },
-        { id: 'paye-filing', label: 'PAYE Filing' },
-        { id: 'submission-history', label: 'Submission History' }
-      ]
-    },
-    {
-      id: 'companies-house',
-      label: 'Companies House',
-      icon: FileUp,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'ch-connect', label: 'Connection Setup' },
-        { id: 'annual-accounts', label: 'Annual Accounts Filing' },
-        { id: 'confirmation-statement', label: 'Confirmation Statement' },
-        { id: 'forms', label: 'Other Forms' },
-        { id: 'filing-history', label: 'Filing History' }
-      ]
-    },
-    {
-      id: 'entity-templates',
-      label: 'Entity Templates',
-      icon: FileSpreadsheet,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'limited-company', label: 'Limited Company' },
-        { id: 'llp', label: 'LLP' },
-        { id: 'sole-trader', label: 'Sole Trader' },
-        { id: 'partnership', label: 'Partnership' },
-        { id: 'charity', label: 'Charity' },
-        { id: 'academy', label: 'Academy' }
-      ]
-    },
-    {
-      id: 'reports',
-      label: 'Reports & Analytics',
-      icon: TrendingUp,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'financial-reports', label: 'Financial Reports' },
-        { id: 'management-accounts', label: 'Management Accounts' },
-        { id: 'variance-analysis', label: 'Variance Analysis' },
-        { id: 'ratio-analysis', label: 'Ratio Analysis' },
-        { id: 'trend-analysis', label: 'Trend Analysis' },
-        { id: 'custom-reports', label: 'Custom Reports' }
-      ]
-    },
-    {
-      id: 'audit',
-      label: 'Audit Trail',
-      icon: History,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'activity-log', label: 'Activity Log' },
-        { id: 'change-history', label: 'Change History' },
-        { id: 'user-actions', label: 'User Actions' },
-        { id: 'approval-workflow', label: 'Approval Workflow' }
-      ]
-    }
-  ]
+  const [isClientViewOpen, setIsClientViewOpen] = useState(false)
+  const [isClientEditOpen, setIsClientEditOpen] = useState(false)
+  const [isClientAddOpen, setIsClientAddOpen] = useState(false)
+  const [isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
+  const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
 
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    )
-  }
+  const [isTBViewOpen, setIsTBViewOpen] = useState(false)
+  const [isTBEditOpen, setIsTBEditOpen] = useState(false)
+  const [isTBAddOpen, setIsTBAddOpen] = useState(false)
+  const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
+  const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
-  const handleMainTabClick = (tabId: string) => {
-    setActiveMainTab(tabId)
-    setActiveSubTab('')
-    const menuItem = menuStructure.find(item => item.id === tabId)
-    if (menuItem?.hasSubTabs) {
-      toggleCategory(tabId)
-    }
-  }
+  const [isAdjViewOpen, setIsAdjViewOpen] = useState(false)
+  const [isAdjEditOpen, setIsAdjEditOpen] = useState(false)
+  const [isAdjAddOpen, setIsAdjAddOpen] = useState(false)
+  const [selectedAdjustment, setSelectedAdjustment] = useState<Adjustment | null>(null)
+  const [adjFormData, setAdjFormData] = useState<Partial<Adjustment>>({})
 
-  const handleSubTabClick = (subTabId: string) => {
-    setActiveSubTab(subTabId)
-  }
+  const [isStatementViewOpen, setIsStatementViewOpen] = useState(false)
+  const [isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
+  const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
+  const [statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
+
+  const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
+  const [drilldownTitle, setDrilldownTitle] = useState('')
+  const [drilldownContent, setDrilldownContent] = useState<any>(null)
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
       console.log('AI Question:', question)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+    } catch (error) {
+      console.error('Error asking AI:', error)
     } finally {
       setIsAILoading(false)
     }
   }
 
-  const handleAddTBEntry = () => {
-    setEditingTBEntry({
-      id: Date.now().toString(),
-      accountCode: '',
-      accountName: '',
-      debit: 0,
-      credit: 0,
-      category: 'Asset'
+  const handleViewClient = (client: Client) => {
+    setSelectedClient(client)
+    setIsClientViewOpen(true)
+  }
+
+  const handleEditClient = (client: Client) => {
+    setSelectedClient(client)
+    setClientFormData(client)
+    setIsClientEditOpen(true)
+  }
+
+  const handleAddClient = () => {
+    setClientFormData({
+      name: '', type: 'limited-company', yearEnd: '', accountsStatus: 'not-started',
+      lastAccounts: '', nextDue: '', frsStandard: 'FRS 102',
+      contactPerson: '', email: '', phone: ''
     })
-    setIsTrialBalanceDialogOpen(true)
+    setIsClientAddOpen(true)
+  }
+
+  const handleDeleteClient = (client: Client) => {
+    setSelectedClient(client)
+    setIsClientDeleteOpen(true)
+  }
+
+  const handleSaveClient = () => {
+    if (selectedClient) {
+      setClients(clients.map(c => c.id === selectedClient.id ? { ...selectedClient, ...clientFormData } as Client : c))
+    }
+    setIsClientEditOpen(false)
+  }
+
+  const handleSaveNewClient = () => {
+    const newClient: Client = {
+      ...clientFormData as Client,
+      id: Date.now().toString()
+    }
+    setClients([...clients, newClient])
+    setIsClientAddOpen(false)
+  }
+
+  const confirmDeleteClient = () => {
+    if (selectedClient) {
+      setClients(clients.filter(c => c.id !== selectedClient.id))
+    }
+    setIsClientDeleteOpen(false)
+  }
+
+  const handleViewTBEntry = (entry: TrialBalanceEntry) => {
+    setSelectedTBEntry(entry)
+    setIsTBViewOpen(true)
   }
 
   const handleEditTBEntry = (entry: TrialBalanceEntry) => {
-    setEditingTBEntry(entry)
-    setIsTrialBalanceDialogOpen(true)
+    setSelectedTBEntry(entry)
+    setTBFormData(entry)
+    setIsTBEditOpen(true)
   }
 
-  const handleDeleteTBEntry = (id: string) => {
-    setTrialBalanceEntries(prev => prev.filter(e => e.id !== id))
+  const handleAddTBEntry = () => {
+    setTBFormData({
+      accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset'
+    })
+    setIsTBAddOpen(true)
   }
 
   const handleSaveTBEntry = () => {
-    if (!editingTBEntry) return
-    
-    if (trialBalanceEntries.find(e => e.id === editingTBEntry.id)) {
-      setTrialBalanceEntries(prev => prev.map(e => 
-        e.id === editingTBEntry.id ? editingTBEntry : e
+    if (selectedTBEntry) {
+      setTrialBalanceEntries(trialBalanceEntries.map(e => 
+        e.id === selectedTBEntry.id ? { ...selectedTBEntry, ...tbFormData } as TrialBalanceEntry : e
       ))
-    } else {
-      setTrialBalanceEntries(prev => [...prev, editingTBEntry])
     }
-    setIsTrialBalanceDialogOpen(false)
-    setEditingTBEntry(null)
+    setIsTBEditOpen(false)
   }
 
-  const handleImportTB = () => {
-    const sampleImport: TrialBalanceEntry[] = [
-      { id: Date.now().toString(), accountCode: '4000', accountName: 'Sales Revenue', debit: 0, credit: 150000, category: 'Revenue' },
-      { id: (Date.now() + 1).toString(), accountCode: '5100', accountName: 'Cost of Sales', debit: 85000, credit: 0, category: 'Expense' }
-    ]
-    setTrialBalanceEntries(prev => [...prev, ...sampleImport])
+  const handleSaveNewTBEntry = () => {
+    const newEntry: TrialBalanceEntry = {
+      ...tbFormData as TrialBalanceEntry,
+      id: Date.now().toString()
+    }
+    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
+    setIsTBAddOpen(false)
   }
 
-  const handleAddJournal = () => {
-    setEditingJournal({
-      id: Date.now().toString(),
-      date: new Date().toISOString().split('T')[0],
-      reference: `JE${String(journalEntries.length + 1).padStart(3, '0')}`,
-      description: '',
-      entries: [
-        { accountCode: '', accountName: '', debit: 0, credit: 0 },
-        { accountCode: '', accountName: '', debit: 0, credit: 0 }
-      ],
-      status: 'draft',
-      createdBy: 'Current User'
+  const handleViewAdjustment = (adj: Adjustment) => {
+    setSelectedAdjustment(adj)
+    setIsAdjViewOpen(true)
+  }
+
+  const handleEditAdjustment = (adj: Adjustment) => {
+    setSelectedAdjustment(adj)
+    setAdjFormData(adj)
+    setIsAdjEditOpen(true)
+  }
+
+  const handleAddAdjustment = () => {
+    setAdjFormData({
+      type: 'prepayment', description: '', amount: 0, date: '', accountCode: '', status: 'draft'
     })
-    setIsJournalDialogOpen(true)
+    setIsAdjAddOpen(true)
   }
 
-  const handleEditJournal = (journal: JournalEntry) => {
-    setEditingJournal(journal)
-    setIsJournalDialogOpen(true)
-  }
-
-  const handleDeleteJournal = (id: string) => {
-    setJournalEntries(prev => prev.filter(j => j.id !== id))
-  }
-
-  const handleSaveJournal = () => {
-    if (!editingJournal) return
-    
-    if (journalEntries.find(j => j.id === editingJournal.id)) {
-      setJournalEntries(prev => prev.map(j => 
-        j.id === editingJournal.id ? editingJournal : j
+  const handleSaveAdjustment = () => {
+    if (selectedAdjustment) {
+      setAdjustments(adjustments.map(a => 
+        a.id === selectedAdjustment.id ? { ...selectedAdjustment, ...adjFormData } as Adjustment : a
       ))
-    } else {
-      setJournalEntries(prev => [...prev, editingJournal])
     }
-    setIsJournalDialogOpen(false)
-    setEditingJournal(null)
+    setIsAdjEditOpen(false)
   }
 
-  const handleApproveJournal = (id: string) => {
-    setJournalEntries(prev => prev.map(j => 
-      j.id === id ? { ...j, status: 'approved' as const } : j
-    ))
+  const handleSaveNewAdjustment = () => {
+    const newAdj: Adjustment = {
+      ...adjFormData as Adjustment,
+      id: Date.now().toString()
+    }
+    setAdjustments([...adjustments, newAdj])
+    setIsAdjAddOpen(false)
   }
 
-  const handlePostJournal = (id: string) => {
-    const journal = journalEntries.find(j => j.id === id)
-    if (journal && journal.status === 'approved') {
-      setJournalEntries(prev => prev.map(j => 
-        j.id === id ? { ...j, status: 'posted' as const } : j
-      ))
-      
-      journal.entries.forEach(entry => {
-        const existingEntry = trialBalanceEntries.find(tb => tb.accountCode === entry.accountCode)
-        if (existingEntry) {
-          setTrialBalanceEntries(prev => prev.map(tb => 
-            tb.accountCode === entry.accountCode 
-              ? { ...tb, debit: tb.debit + entry.debit, credit: tb.credit + entry.credit }
-              : tb
-          ))
+  const handleViewStatement = (stmt: FinancialStatement) => {
+    setSelectedStatement(stmt)
+    setIsStatementViewOpen(true)
+  }
+
+  const handleGenerateStatement = () => {
+    setStatementFormData({
+      clientId: '', type: 'balance-sheet', period: new Date().getFullYear().toString(),
+      status: 'draft', frsStandard: 'FRS 102'
+    })
+    setIsGenerateStatementOpen(true)
+  }
+
+  const handleSaveNewStatement = () => {
+    const newStatement: FinancialStatement = {
+      ...statementFormData as FinancialStatement,
+      id: Date.now().toString(),
+      generatedDate: new Date().toISOString().split('T')[0]
+    }
+    setStatements([...statements, newStatement])
+    setIsGenerateStatementOpen(false)
+  }
+
+  const getFilteredClients = () => {
+    let filtered = clients.filter(client => {
+      const matchesName = !clientSearchName || client.name.toLowerCase().includes(clientSearchName.toLowerCase())
+      const matchesType = !clientSearchType || client.type === clientSearchType
+      const matchesStatus = !clientSearchStatus || client.accountsStatus === clientSearchStatus
+      const matchesYearEnd = !clientSearchYearEnd || client.yearEnd.includes(clientSearchYearEnd)
+      const matchesDueDate = !clientSearchDueDate || client.nextDue.includes(clientSearchDueDate)
+      return matchesName && matchesType && matchesStatus && matchesYearEnd && matchesDueDate
+    })
+
+    if (clientSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[clientSortField]
+        const bVal = b[clientSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (clientSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
         } else {
-          setTrialBalanceEntries(prev => [...prev, {
-            id: Date.now().toString(),
-            accountCode: entry.accountCode,
-            accountName: entry.accountName,
-            debit: entry.debit,
-            credit: entry.credit,
-            category: 'Adjustment'
-          }])
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
         }
       })
     }
+
+    return filtered
   }
 
-  const handleGenerateStatement = (type: 'balance-sheet' | 'profit-loss' | 'cash-flow') => {
-    const newStatement: FinancialStatement = {
-      id: Date.now().toString(),
-      type,
-      period: 'Dec 2024',
-      generatedDate: new Date().toISOString().split('T')[0],
-      status: 'draft'
+  const getFilteredTBEntries = () => {
+    let filtered = trialBalanceEntries.filter(entry => {
+      const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
+      const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
+      const matchesCategory = !tbSearchCategory || entry.category === tbSearchCategory
+      const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
+      const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
+      return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
+    })
+
+    if (tbSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[tbSortField]
+        const bVal = b[tbSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (tbSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
     }
-    setFinancialStatements(prev => [...prev, newStatement])
+
+    return filtered
   }
 
-  const handleViewStatement = (statement: FinancialStatement) => {
-    setSelectedStatement(statement)
-    setIsStatementDialogOpen(true)
+  const getFilteredAdjustments = () => {
+    let filtered = adjustments.filter(adj => {
+      const matchesType = !adjSearchType || adj.type === adjSearchType
+      const matchesStatus = !adjSearchStatus || adj.status === adjSearchStatus
+      const matchesDescription = !adjSearchDescription || adj.description.toLowerCase().includes(adjSearchDescription.toLowerCase())
+      const matchesAmount = !adjSearchAmount || adj.amount.toString().includes(adjSearchAmount)
+      const matchesDate = !adjSearchDate || adj.date.includes(adjSearchDate)
+      return matchesType && matchesStatus && matchesDescription && matchesAmount && matchesDate
+    })
+
+    if (adjSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[adjSortField]
+        const bVal = b[adjSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (adjSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
   }
 
-  const handleFinalizeStatement = (id: string) => {
-    setFinancialStatements(prev => prev.map(s => 
-      s.id === id ? { ...s, status: 'final' as const } : s
-    ))
+  const getFilteredStatements = () => {
+    let filtered = statements.filter(stmt => {
+      const client = clients.find(c => c.id === stmt.clientId)
+      const matchesClient = !stmtSearchClient || (client?.name.toLowerCase().includes(stmtSearchClient.toLowerCase()) ?? false)
+      const matchesType = !stmtSearchType || stmt.type === stmtSearchType
+      const matchesPeriod = !stmtSearchPeriod || stmt.period.includes(stmtSearchPeriod)
+      const matchesDate = !stmtSearchDate || stmt.generatedDate.includes(stmtSearchDate)
+      const matchesStatus = !stmtSearchStatus || stmt.status === stmtSearchStatus
+      return matchesClient && matchesType && matchesPeriod && matchesDate && matchesStatus
+    })
+
+    if (stmtSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[stmtSortField]
+        const bVal = b[stmtSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (stmtSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
   }
 
-  const handleDrilldown = (data: any) => {
-    setDrilldownData(data)
-    setIsDrilldownOpen(true)
+  const menuStructure = [
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, hasSubTabs: false },
+    {
+      id: 'clients', label: 'Client Management', icon: Building2, hasSubTabs: true,
+      subTabs: {
+        'client-list': { label: 'Client List', icon: Building2 },
+        'entity-setup': { label: 'Entity Setup', icon: Settings }
+      }
+    },
+    {
+      id: 'trial-balance', label: 'Trial Balance', icon: Calculator, hasSubTabs: true,
+      subTabs: {
+        'import': { label: 'Import TB', icon: Upload },
+        'chart-accounts': { label: 'Chart of Accounts', icon: FileText },
+        'posting': { label: 'Posting Batches', icon: Calculator },
+        'review': { label: 'Review & Adjust', icon: Eye }
+      }
+    },
+    {
+      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: true,
+      subTabs: {
+        'journals': { label: 'Journal Entries', icon: FileText },
+        'accruals': { label: 'Accruals & Prepayments', icon: Calculator },
+        'depreciation': { label: 'Depreciation', icon: TrendingDown }
+      }
+    },
+    {
+      id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
+      subTabs: {
+        'generate': { label: 'Generate Accounts', icon: FileSpreadsheet },
+        'balance-sheet': { label: 'Balance Sheet', icon: FileCheck },
+        'profit-loss': { label: 'Profit & Loss', icon: TrendingUp },
+        'notes': { label: 'Notes & Disclosures', icon: FileText }
+      }
+    },
+    {
+      id: 'review', label: 'Review & Validation', icon: CheckCircle, hasSubTabs: true,
+      subTabs: {
+        'check-finish': { label: 'Check & Finish', icon: CheckCircle },
+        'approval': { label: 'Approval Workflow', icon: Eye }
+      }
+    },
+    {
+      id: 'ixbrl', label: 'iXBRL Tagging', icon: Globe, hasSubTabs: true,
+      subTabs: {
+        'tagging': { label: 'Tag Accounts', icon: Globe },
+        'validation': { label: 'Validation', icon: CheckCircle }
+      }
+    },
+    {
+      id: 'filing', label: 'Filing & Submission', icon: Send, hasSubTabs: true,
+      subTabs: {
+        'companies-house': { label: 'Companies House', icon: Building2 },
+        'status': { label: 'Filing Status', icon: Eye }
+      }
+    },
+    {
+      id: 'reports', label: 'Reports & Archive', icon: Download, hasSubTabs: true,
+      subTabs: {
+        'export': { label: 'Export Reports', icon: Download },
+        'archive': { label: 'Archive', icon: Save }
+      }
+    }
+  ]
+
+  const handleMainTabClick = (tabKey: string) => {
+    setActiveMainTab(tabKey)
+    const tabConfig = menuStructure.find(item => item.id === tabKey)
+    if (tabConfig && tabConfig.hasSubTabs && tabConfig.subTabs) {
+      const firstSubTab = Object.keys(tabConfig.subTabs)[0]
+      setActiveSubTab(firstSubTab || '')
+      setExpandedCategories([tabKey])
+    } else {
+      setActiveSubTab('')
+      setExpandedCategories([])
+    }
+  }
+
+  const handleSubTabClick = (subTab: string) => {
+    setActiveSubTab(subTab)
+  }
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'completed': return 'default'
+      case 'review': return 'secondary'
+      case 'in-progress': return 'outline'
+      case 'not-started': return 'destructive'
+      default: return 'outline'
+    }
+  }
+
+  const handleSort = (field: keyof Client) => {
+    if (clientSortField === field) {
+      setClientSortDirection(clientSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setClientSortField(field)
+      setClientSortDirection('asc')
+    }
+  }
+
+  const getSortIcon = (field: keyof Client) => {
+    if (clientSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return clientSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
 
   const handleTBSort = (field: keyof TrialBalanceEntry) => {
@@ -626,759 +587,376 @@ const AccountsProduction: React.FC = () => {
     }
   }
 
-  const handleJESort = (field: keyof JournalEntry) => {
-    if (jeSortField === field) {
-      setJeSortDirection(jeSortDirection === 'asc' ? 'desc' : 'asc')
+  const getTBSortIcon = (field: keyof TrialBalanceEntry) => {
+    if (tbSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return tbSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
+  }
+
+  const handleAdjSort = (field: keyof Adjustment) => {
+    if (adjSortField === field) {
+      setAdjSortDirection(adjSortDirection === 'asc' ? 'desc' : 'asc')
     } else {
-      setJeSortField(field)
-      setJeSortDirection('asc')
+      setAdjSortField(field)
+      setAdjSortDirection('asc')
     }
   }
 
-  const handleSelectAllTB = (checked: boolean) => {
-    if (checked) {
-      setSelectedTBEntries(filteredAndSortedTBEntries.map(e => e.id))
+  const getAdjSortIcon = (field: keyof Adjustment) => {
+    if (adjSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return adjSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
+  }
+
+  const handleStmtSort = (field: keyof FinancialStatement) => {
+    if (stmtSortField === field) {
+      setStmtSortDirection(stmtSortDirection === 'asc' ? 'desc' : 'asc')
     } else {
-      setSelectedTBEntries([])
+      setStmtSortField(field)
+      setStmtSortDirection('asc')
     }
   }
 
-  const handleSelectTBEntry = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedTBEntries([...selectedTBEntries, id])
-    } else {
-      setSelectedTBEntries(selectedTBEntries.filter(i => i !== id))
+  const getStmtSortIcon = (field: keyof FinancialStatement) => {
+    if (stmtSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
     }
+    return stmtSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
 
-  const handleBulkDeleteTB = () => {
-    setTrialBalanceEntries(prev => prev.filter(e => !selectedTBEntries.includes(e.id)))
-    setSelectedTBEntries([])
-  }
-
-  const handleSelectAllJE = (checked: boolean) => {
-    if (checked) {
-      setSelectedJEEntries(filteredAndSortedJEEntries.map(j => j.id))
-    } else {
-      setSelectedJEEntries([])
-    }
-  }
-
-  const handleSelectJEEntry = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedJEEntries([...selectedJEEntries, id])
-    } else {
-      setSelectedJEEntries(selectedJEEntries.filter(i => i !== id))
-    }
-  }
-
-  const handleBulkApproveJE = () => {
-    setJournalEntries(prev => prev.map(j => 
-      selectedJEEntries.includes(j.id) && j.status === 'draft' 
-        ? { ...j, status: 'approved' as const } 
-        : j
-    ))
-    setSelectedJEEntries([])
-  }
-
-  const handleBulkDeleteJE = () => {
-    setJournalEntries(prev => prev.filter(j => !selectedJEEntries.includes(j.id) || j.status === 'posted'))
-    setSelectedJEEntries([])
-  }
-
-  const filteredAndSortedTBEntries = useMemo(() => {
-    let filtered = trialBalanceEntries.filter(entry => {
-      const matchesSearch = !tbSearchTerm || 
-        entry.accountCode.toLowerCase().includes(tbSearchTerm.toLowerCase()) ||
-        entry.accountName.toLowerCase().includes(tbSearchTerm.toLowerCase())
-      const matchesCategory = tbCategoryFilter === 'all' || entry.category === tbCategoryFilter
-      return matchesSearch && matchesCategory
-    })
-
-    return filtered.sort((a, b) => {
-      const aVal = a[tbSortField]
-      const bVal = b[tbSortField]
-      const direction = tbSortDirection === 'asc' ? 1 : -1
-      
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return (aVal - bVal) * direction
-      }
-      return String(aVal).localeCompare(String(bVal)) * direction
-    })
-  }, [trialBalanceEntries, tbSearchTerm, tbCategoryFilter, tbSortField, tbSortDirection])
-
-  const filteredAndSortedJEEntries = useMemo(() => {
-    let filtered = journalEntries.filter(entry => {
-      const matchesSearch = !jeSearchTerm || 
-        entry.reference.toLowerCase().includes(jeSearchTerm.toLowerCase()) ||
-        entry.description.toLowerCase().includes(jeSearchTerm.toLowerCase())
-      const matchesStatus = jeStatusFilter === 'all' || entry.status === jeStatusFilter
-      const matchesDate = !jeDateFilter || entry.date.startsWith(jeDateFilter)
-      return matchesSearch && matchesStatus && matchesDate
-    })
-
-    return filtered.sort((a, b) => {
-      const aVal = a[jeSortField]
-      const bVal = b[jeSortField]
-      const direction = jeSortDirection === 'asc' ? 1 : -1
-      return String(aVal).localeCompare(String(bVal)) * direction
-    })
-  }, [journalEntries, jeSearchTerm, jeStatusFilter, jeDateFilter, jeSortField, jeSortDirection])
-
-  // const filteredFinancialStatements = useMemo(() => {
-  //   return financialStatements.filter(statement => {
-  //     const matchesSearch = !fsSearchTerm || 
-  //       statement.period.toLowerCase().includes(fsSearchTerm.toLowerCase())
-  //     const matchesType = fsTypeFilter === 'all' || statement.type === fsTypeFilter
-  //     const matchesStatus = fsStatusFilter === 'all' || statement.status === fsStatusFilter
-  //     return matchesSearch && matchesType && matchesStatus
-  //   })
-  // }, [financialStatements, fsSearchTerm, fsTypeFilter, fsStatusFilter])
-
-  const totalDebits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.debit, 0)
-  const totalCredits = filteredAndSortedTBEntries.reduce((sum, entry) => sum + entry.credit, 0)
-  const totalAssets = trialBalanceEntries.filter(e => e.category === 'Asset').reduce((sum, e) => sum + e.debit - e.credit, 0)
-  const totalLiabilities = trialBalanceEntries.filter(e => e.category === 'Liability').reduce((sum, e) => sum + e.credit - e.debit, 0)
-  const totalEquity = trialBalanceEntries.filter(e => e.category === 'Equity').reduce((sum, e) => sum + e.credit - e.debit, 0)
-
-  const kpis = [
-    { label: 'Total Assets', value: `£${totalAssets.toLocaleString()}`, change: '+12.5%', positive: true },
-    { label: 'Total Liabilities', value: `£${totalLiabilities.toLocaleString()}`, change: '-3.2%', positive: true },
-    { label: 'Net Equity', value: `£${totalEquity.toLocaleString()}`, change: '+18.7%', positive: true },
-    { label: 'Working Capital', value: `£${(totalAssets - totalLiabilities).toLocaleString()}`, change: '+8.9%', positive: true }
-  ]
-
-  const renderTabContent = (tabId: string) => {
-    switch (tabId) {
-      case 'dashboard':
-        return renderDashboardContent()
-      
-      case 'tb-overview':
-        return renderTrialBalanceContent()
-      case 'tb-mapping':
-        return renderAccountMappingContent()
-      case 'tb-reconciliation':
-        return renderReconciliationContent()
-      case 'tb-import':
-        return renderDataImportContent()
-      case 'tb-history':
-        return renderHistoryContent()
-      
-      case 'journal-entries':
-        return renderAdjustmentsContent()
-      case 'prepayments':
-        return renderPrepaymentsContent()
-      case 'accruals':
-        return renderAccrualsContent()
-      case 'depreciation':
-        return renderDepreciationContent()
-      case 'provisions':
-        return renderProvisionsContent()
-      case 'reclassifications':
-        return renderReclassificationsContent()
-      
-      case 'balance-sheet':
-      case 'profit-loss':
-      case 'cash-flow':
-      case 'notes':
-      case 'directors-report':
-      case 'templates':
-        return renderStatementsContent()
-      
-      case 'closing-entries':
-        return renderClosingEntriesContent()
-      case 'retained-earnings':
-        return renderRetainedEarningsContent()
-      case 'opening-balances':
-        return renderOpeningBalancesContent()
-      case 'period-lock':
-        return renderPeriodLockContent()
-      case 'year-end-checklist':
-        return renderYearEndChecklistContent()
-      
-      // Consolidation
-      case 'group-structure':
-      case 'intercompany':
-      case 'consolidated-accounts':
-      case 'minority-interests':
-        return renderConsolidationContent()
-      
-      case 'auto-tagging':
-      case 'manual-tagging':
-      case 'validation':
-      case 'preview':
-        return renderIXBRLContent()
-      
-      case 'hmrc-connect':
-        return renderHMRCConnectionContent()
-      case 'corporation-tax':
-        return renderCorporationTaxContent()
-      case 'vat-filing':
-        return renderVATFilingContent()
-      case 'paye-filing':
-        return renderPAYEFilingContent()
-      case 'submission-history':
-        return renderSubmissionHistoryContent()
-      
-      case 'ch-connect':
-        return renderCompaniesHouseConnectionContent()
-      case 'annual-accounts':
-        return renderAnnualAccountsFilingContent()
-      case 'confirmation-statement':
-        return renderConfirmationStatementContent()
-      case 'forms':
-        return renderCompaniesHouseFormsContent()
-      case 'filing-history':
-        return renderFilingHistoryContent()
-      
-      case 'limited-company':
-      case 'llp':
-      case 'sole-trader':
-      case 'partnership':
-      case 'charity':
-      case 'academy':
-        return renderEntityTemplatesContent()
-      
-      case 'financial-reports':
-      case 'management-accounts':
-      case 'variance-analysis':
-      case 'ratio-analysis':
-      case 'trend-analysis':
-      case 'custom-reports':
-        return renderReportsContent()
-      
-      case 'activity-log':
-      case 'change-history':
-      case 'user-actions':
-      case 'approval-workflow':
-        return renderAuditTrailContent()
-      
-      default:
-        return renderDashboardContent()
-    }
-  }
-
-  const renderDashboardContent = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {kpis.map((kpi, index) => (
-          <KPICard
-            key={index}
-            title={kpi.label}
-            value={kpi.value}
-            change={kpi.change}
-            icon={Calculator}
-            color={kpi.positive ? 'text-green-600' : 'text-red-600'}
-            drillDownData={{
-              title: `${kpi.label} Analysis`,
-              description: `Detailed financial analysis for ${kpi.label.toLowerCase()}`,
-              content: <div>Detailed analysis content for {kpi.label}</div>
-            }}
-          />
-        ))}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Recent Activity</CardTitle>
-          <CardDescription>Latest accounts production activities</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
-              <div>
-                <h3 className="font-semibold text-[#001f3f]">Trial Balance Updated</h3>
-                <p className="text-sm text-[#001f3f]">Client: ABC Ltd - Period: Dec 2024</p>
-              </div>
-              <Badge variant="default">Completed</Badge>
-            </div>
-            <div className="flex items-center justify-between p-4 border-2 border-[#001f3f] rounded-[2px]">
-              <div>
-                <h3 className="font-semibold text-[#001f3f]">Financial Statements Generated</h3>
-                <p className="text-sm text-[#001f3f]">Client: XYZ Corp - Period: Q4 2024</p>
-              </div>
-              <Badge variant="secondary">In Progress</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderTrialBalanceContent = () => (
+  const renderDashboard = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Trial Balance</h2>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleImportTB}>
-            <Upload className="h-4 w-4 mr-2" />
-            Import
-          </Button>
-          <ExportButton 
-            data={[
-              ['Account Code', 'Account Name', 'Debit', 'Credit', 'Category'],
-              ...trialBalanceEntries.map(e => [e.accountCode, e.accountName, e.debit.toString(), e.credit.toString(), e.category])
-            ]} 
-            filename="trial-balance" 
-          />
-          <Button size="sm" onClick={handleAddTBEntry}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Entry
-          </Button>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Accounts Production Dashboard</h2>
+          <p className="text-[#001f3f]">Client accounts and production workflow</p>
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => handleDrilldown({
-            title: 'Total Debits Breakdown',
-            data: trialBalanceEntries.filter(e => e.debit > 0)
-          })}
-        >
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Total Debits</h3>
-            <p className="text-xl font-bold text-[#001f3f]">£{totalDebits.toLocaleString()}</p>
-          </CardContent>
-        </Card>
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => handleDrilldown({
-            title: 'Total Credits Breakdown',
-            data: trialBalanceEntries.filter(e => e.credit > 0)
-          })}
-        >
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Total Credits</h3>
-            <p className="text-xl font-bold text-green-600">£{totalCredits.toLocaleString()}</p>
-          </CardContent>
-        </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Balance</h3>
-            <p className={`text-xl font-bold ${Math.abs(totalDebits - totalCredits) < 0.01 ? 'text-green-600' : 'text-red-600'}`}>
-              £{Math.abs(totalDebits - totalCredits).toLocaleString()}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
-          <CardDescription>
-            Showing {filteredAndSortedTBEntries.length} of {trialBalanceEntries.length} entries
-            {selectedTBEntries.length > 0 && ` • ${selectedTBEntries.length} selected`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4 items-center">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input
-                    placeholder="Search by account code or name..."
-                    value={tbSearchTerm}
-                    onChange={(e) => setTbSearchTerm(e.target.value)}
-                    className="pl-8"
-                  />
-                </div>
-              </div>
-              <Select value={tbCategoryFilter} onValueChange={setTbCategoryFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Filter by category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Asset">Assets</SelectItem>
-                  <SelectItem value="Liability">Liabilities</SelectItem>
-                  <SelectItem value="Equity">Equity</SelectItem>
-                  <SelectItem value="Revenue">Revenue</SelectItem>
-                  <SelectItem value="Expense">Expenses</SelectItem>
-                </SelectContent>
-              </Select>
-              {selectedTBEntries.length > 0 && (
-                <Button variant="destructive" size="sm" onClick={handleBulkDeleteTB}>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete Selected ({selectedTBEntries.length})
-                </Button>
-              )}
-            </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
-                    <input
-                      type="checkbox"
-                      checked={selectedTBEntries.length === filteredAndSortedTBEntries.length && filteredAndSortedTBEntries.length > 0}
-                      onChange={(e) => handleSelectAllTB(e.target.checked)}
-                      className="rounded border-gray-300"
-                    />
-                  </TableHead>
-                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('accountCode')}>
-                    <div className="flex items-center gap-2">
-                      Account Code
-                      {tbSortField === 'accountCode' && (
-                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                      )}
-                      {tbSortField !== 'accountCode' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('accountName')}>
-                    <div className="flex items-center gap-2">
-                      Account Name
-                      {tbSortField === 'accountName' && (
-                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                      )}
-                      {tbSortField !== 'accountName' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('category')}>
-                    <div className="flex items-center gap-2">
-                      Category
-                      {tbSortField === 'category' && (
-                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                      )}
-                      {tbSortField !== 'category' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('debit')}>
-                    <div className="flex items-center justify-end gap-2">
-                      Debit
-                      {tbSortField === 'debit' && (
-                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                      )}
-                      {tbSortField !== 'debit' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleTBSort('credit')}>
-                    <div className="flex items-center justify-end gap-2">
-                      Credit
-                      {tbSortField === 'credit' && (
-                        tbSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                      )}
-                      {tbSortField !== 'credit' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAndSortedTBEntries.map((entry) => (
-                <TableRow 
-                  key={entry.id}
-                  className={`cursor-pointer hover:bg-gray-50 ${selectedTBEntries.includes(entry.id) ? 'bg-blue-50' : ''}`}
-                  onClick={() => handleDrilldown({
-                    title: `${entry.accountName} Details`,
-                    data: entry
-                  })}
-                >
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTBEntries.includes(entry.id)}
-                      onChange={(e) => handleSelectTBEntry(entry.id, e.target.checked)}
-                      className="rounded border-gray-300"
-                    />
-                  </TableCell>
-                  <TableCell className="text-[#001f3f]">{entry.accountCode}</TableCell>
-                  <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{entry.category}</Badge>
-                  </TableCell>
-                  <TableCell className="text-right text-[#001f3f]">
-                    {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
-                  </TableCell>
-                  <TableCell className="text-right text-[#001f3f]">
-                    {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEditTBEntry(entry)}
-                        title="Edit Entry"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteTBEntry(entry.id)}
-                        title="Delete Entry"
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDrilldown({
-                          title: `${entry.accountName} History`,
-                          data: entry
-                        })}
-                        title="View History"
-                      >
-                        <History className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              <TableRow className="font-bold bg-gray-50">
-                <TableCell></TableCell>
-                <TableCell colSpan={3} className="text-[#001f3f]">Total</TableCell>
-                <TableCell className="text-right text-[#001f3f]">£{totalDebits.toLocaleString()}</TableCell>
-                <TableCell className="text-right text-[#001f3f]">£{totalCredits.toLocaleString()}</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderAdjustmentsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Journal Entries & Adjustments</h2>
-        <Button onClick={handleAddJournal}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Journal Entry
+        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+          <Plus className="h-4 w-4 mr-2" />New Client
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Draft Entries</h3>
-            <p className="text-xl font-bold text-[#001f3f]">
-              {journalEntries.filter(j => j.status === 'draft').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Approved Entries</h3>
-            <p className="text-xl font-bold text-green-600">
-              {journalEntries.filter(j => j.status === 'approved').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-[#001f3f]">Posted Entries</h3>
-            <p className="text-xl font-bold text-blue-600">
-              {journalEntries.filter(j => j.status === 'posted').length}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div onClick={() => {
+          setDrilldownTitle('All Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Total clients: {clients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2 border-[#001f3f]">
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Type</TableHead>
+                    <TableHead className="text-[#001f3f]">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {clients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
+                      <TableCell className="text-[#001f3f]">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.type}</TableCell>
+                      <TableCell><Badge variant={getStatusBadge(client.accountsStatus)} className="bg-[#001f3f] text-white">{client.accountsStatus}</Badge></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
+        }} className="cursor-pointer">
+          <KPICard title="Total Clients" value={clients.length.toString()} 
+            change="+3 this month" icon={Building2} color="text-blue-600" />
+        </div>
+        <div onClick={() => {
+          const inProgressClients = clients.filter(c => c.accountsStatus === 'in-progress')
+          setDrilldownTitle('In Progress Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Clients with accounts in progress: {inProgressClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2 border-[#001f3f]">
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Due Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {inProgressClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
+        }} className="cursor-pointer">
+          <KPICard title="In Progress" 
+            value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
+            change="Active" icon={FileText} color="text-orange-600" />
+        </div>
+        <div onClick={() => {
+          const reviewClients = clients.filter(c => c.accountsStatus === 'review')
+          setDrilldownTitle('Clients in Review')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Clients pending review: {reviewClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2 border-[#001f3f]">
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Due Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {reviewClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
+        }} className="cursor-pointer">
+          <KPICard title="Review" 
+            value={clients.filter(c => c.accountsStatus === 'review').length.toString()}
+            change="Pending" icon={Eye} color="text-blue-600" />
+        </div>
+        <div onClick={() => {
+          const completedClients = clients.filter(c => c.accountsStatus === 'completed')
+          setDrilldownTitle('Completed Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Completed accounts: {completedClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2 border-[#001f3f]">
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Completion Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {completedClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.lastAccounts}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
+        }} className="cursor-pointer">
+          <KPICard title="Completed" 
+            value={clients.filter(c => c.accountsStatus === 'completed').length.toString()}
+            change="Ready" icon={CheckCircle} color="text-green-600" />
+        </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#001f3f]">Journal Entries</CardTitle>
-          <CardDescription>
-            Showing {filteredAndSortedJEEntries.length} of {journalEntries.length} entries
-            {selectedJEEntries.length > 0 && ` • ${selectedJEEntries.length} selected`}
-          </CardDescription>
+          <CardTitle className="text-[#001f3f]">Client Accounts</CardTitle>
         </CardHeader>
         <CardContent>
-          {journalEntries.length > 0 ? (
-            <div className="space-y-4">
-              <div className="flex gap-4 items-center">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                    <Input
-                      placeholder="Search by reference or description..."
-                      value={jeSearchTerm}
-                      onChange={(e) => setJeSearchTerm(e.target.value)}
-                      className="pl-8"
-                    />
-                  </div>
-                </div>
-                <Select value={jeStatusFilter} onValueChange={setJeStatusFilter}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="posted">Posted</SelectItem>
-                  </SelectContent>
-                </Select>
-                <div className="relative">
-                  <Calendar className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input
-                    type="month"
-                    value={jeDateFilter}
-                    onChange={(e) => setJeDateFilter(e.target.value)}
-                    className="pl-8 w-[180px]"
-                    placeholder="Filter by month"
-                  />
-                </div>
-                {selectedJEEntries.length > 0 && (
-                  <>
-                    <Button variant="default" size="sm" onClick={handleBulkApproveJE}>
-                      <Check className="h-4 w-4 mr-2" />
-                      Approve Selected ({selectedJEEntries.length})
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={handleBulkDeleteJE}>
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Selected ({selectedJEEntries.length})
-                    </Button>
-                  </>
-                )}
-              </div>
+          <Table>
+            <TableHeader><TableRow className="border-b-2 border-[#001f3f]">
+              <TableHead className="text-[#001f3f]">Client</TableHead>
+              <TableHead className="text-[#001f3f]">Type</TableHead>
+              <TableHead className="text-[#001f3f]">Year End</TableHead>
+              <TableHead className="text-[#001f3f]">Status</TableHead>
+              <TableHead className="text-[#001f3f]">Due Date</TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {clients.map(client => (
+                <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50 border-b border-[#001f3f]" onClick={() => handleViewClient(client)}>
+                  <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                  <TableCell className="text-[#001f3f]">{client.type}</TableCell>
+                  <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                  <TableCell><Badge variant={getStatusBadge(client.accountsStatus)}>{client.accountsStatus}</Badge></TableCell>
+                  <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
 
+  const renderClientManagement = () => {
+    const filteredClients = getFilteredClients()
+    
+    if (activeSubTab === 'client-list') {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-[#001f3f]">Client Management</h2>
+              <p className="text-[#001f3f]">Manage client accounts and entity details</p>
+            </div>
+            <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Client
+            </Button>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#001f3f]">Client List</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12">
-                      <input
-                        type="checkbox"
-                        checked={selectedJEEntries.length === filteredAndSortedJEEntries.length && filteredAndSortedJEEntries.length > 0}
-                        onChange={(e) => handleSelectAllJE(e.target.checked)}
-                        className="rounded border-gray-300"
-                      />
-                    </TableHead>
-                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('reference')}>
-                      <div className="flex items-center gap-2">
-                        Reference
-                        {jeSortField === 'reference' && (
-                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                        )}
-                        {jeSortField !== 'reference' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('name')}>
+                          Client Name {getSortIcon('name')}
+                        </div>
+                        <Input
+                          placeholder="Search..."
+                          value={clientSearchName}
+                          onChange={(e) => setClientSearchName(e.target.value)}
+                          className="h-8 text-xs"
+                        />
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('date')}>
-                      <div className="flex items-center gap-2">
-                        Date
-                        {jeSortField === 'date' && (
-                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                        )}
-                        {jeSortField !== 'date' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('type')}>
+                          Type {getSortIcon('type')}
+                        </div>
+                        <Select value={clientSearchType} onValueChange={setClientSearchType}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue placeholder="All" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="limited-company">Limited Company</SelectItem>
+                            <SelectItem value="llp">LLP</SelectItem>
+                            <SelectItem value="partnership">Partnership</SelectItem>
+                            <SelectItem value="sole-trader">Sole Trader</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('description')}>
-                      <div className="flex items-center gap-2">
-                        Description
-                        {jeSortField === 'description' && (
-                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                        )}
-                        {jeSortField !== 'description' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('yearEnd')}>
+                          Year End {getSortIcon('yearEnd')}
+                        </div>
+                        <Input
+                          placeholder="Search..."
+                          value={clientSearchYearEnd}
+                          onChange={(e) => setClientSearchYearEnd(e.target.value)}
+                          className="h-8 text-xs"
+                        />
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('status')}>
-                      <div className="flex items-center gap-2">
-                        Status
-                        {jeSortField === 'status' && (
-                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                        )}
-                        {jeSortField !== 'status' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('accountsStatus')}>
+                          Status {getSortIcon('accountsStatus')}
+                        </div>
+                        <Select value={clientSearchStatus} onValueChange={setClientSearchStatus}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue placeholder="All" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="not-started">Not Started</SelectItem>
+                            <SelectItem value="in-progress">In Progress</SelectItem>
+                            <SelectItem value="review">Review</SelectItem>
+                            <SelectItem value="completed">Completed</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f] cursor-pointer hover:bg-gray-50" onClick={() => handleJESort('createdBy')}>
-                      <div className="flex items-center gap-2">
-                        Created By
-                        {jeSortField === 'createdBy' && (
-                          jeSortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-                        )}
-                        {jeSortField !== 'createdBy' && <ArrowUpDown className="h-4 w-4 text-gray-400" />}
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('nextDue')}>
+                          Due Date {getSortIcon('nextDue')}
+                        </div>
+                        <Input
+                          placeholder="Search..."
+                          value={clientSearchDueDate}
+                          onChange={(e) => setClientSearchDueDate(e.target.value)}
+                          className="h-8 text-xs"
+                        />
                       </div>
                     </TableHead>
-                    <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
+                    <TableHead className="text-[#001f3f]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredAndSortedJEEntries.map((journal) => (
-                    <TableRow 
-                      key={journal.id}
-                      className={`cursor-pointer hover:bg-gray-50 ${selectedJEEntries.includes(journal.id) ? 'bg-blue-50' : ''}`}
-                      onClick={() => handleDrilldown({
-                        title: `Journal Entry ${journal.reference}`,
-                        data: journal
-                      })}
-                    >
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          checked={selectedJEEntries.includes(journal.id)}
-                          onChange={(e) => handleSelectJEEntry(journal.id, e.target.checked)}
-                          className="rounded border-gray-300"
-                        />
+                  {filteredClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                      <TableCell 
+                        className="text-[#001f3f] font-semibold"
+                        onClick={() => handleViewClient(client)}
+                      >
+                        {client.name}
                       </TableCell>
-                      <TableCell className="text-[#001f3f]">{journal.reference}</TableCell>
-                      <TableCell className="text-[#001f3f]">{journal.date}</TableCell>
-                      <TableCell className="text-[#001f3f]">{journal.description}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.type}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
                       <TableCell>
-                        <Badge 
-                          variant={
-                            journal.status === 'posted' ? 'default' : 
-                            journal.status === 'approved' ? 'secondary' : 
-                            'outline'
-                          }
-                        >
-                          {journal.status.toUpperCase()}
+                        <Badge variant={getStatusBadge(client.accountsStatus)}>
+                          {client.accountsStatus}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-[#001f3f]">{journal.createdBy}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                      <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
                             size="sm"
-                            onClick={() => handleEditJournal(journal)}
-                            title="View Entry"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditClient(client)
+                            }}
                           >
-                            <Eye className="h-4 w-4" />
+                            <Edit className="h-3 w-3" />
                           </Button>
-                          {journal.status === 'draft' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleApproveJournal(journal.id)}
-                              title="Approve Entry"
-                            >
-                              <Check className="h-4 w-4 text-green-600" />
-                            </Button>
-                          )}
-                          {journal.status === 'approved' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handlePostJournal(journal.id)}
-                              title="Post to Trial Balance"
-                            >
-                              <Send className="h-4 w-4 text-blue-600" />
-                            </Button>
-                          )}
-                          {journal.status === 'draft' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteJournal(journal.id)}
-                              title="Delete Entry"
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                            </Button>
-                          )}
                           <Button
-                            variant="ghost"
                             size="sm"
-                            onClick={() => handleDrilldown({
-                              title: `${journal.reference} - Full Details`,
-                              data: journal
-                            })}
-                            title="View Details"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteClient(client)
+                            }}
                           >
-                            <FileCheck className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
                       </TableCell>
@@ -1386,938 +964,1091 @@ const AccountsProduction: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500">No journal entries recorded for this period</p>
-              <Button className="mt-4" onClick={handleAddJournal}>
-                <Plus className="h-4 w-4 mr-2" />
-                Create First Journal Entry
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderStatementsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Financial Statements</h2>
-        <div className="flex gap-2">
-          <Button onClick={() => handleGenerateStatement('balance-sheet')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Balance Sheet
-          </Button>
-          <Button onClick={() => handleGenerateStatement('profit-loss')}>
-            <Plus className="h-4 w-4 mr-2" />
-            P&L
-          </Button>
-          <Button onClick={() => handleGenerateStatement('cash-flow')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Cash Flow
-          </Button>
+            </CardContent>
+          </Card>
         </div>
+      )
+    }
+    
+    return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-[#001f3f]">Entity Setup</h2>
+        <p className="text-[#001f3f]">Configure entity-specific accounting settings and compliance requirements</p>
       </div>
+    )
+  }
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => handleDrilldown({
-            title: 'Balance Sheet Overview',
-            data: { assets: totalAssets, liabilities: totalLiabilities, equity: totalEquity }
-          })}
-        >
-          <CardContent className="p-4">
-            <FileText className="h-8 w-8 text-[#001f3f] mb-2" />
-            <h3 className="text-sm font-semibold text-[#001f3f]">Balance Sheets</h3>
-            <p className="text-xl font-bold text-[#001f3f]">
-              {financialStatements.filter(s => s.type === 'balance-sheet').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => handleDrilldown({
-            title: 'P&L Overview',
-            data: financialStatements.filter(s => s.type === 'profit-loss')
-          })}
-        >
-          <CardContent className="p-4">
-            <TrendingUp className="h-8 w-8 text-[#001f3f] mb-2" />
-            <h3 className="text-sm font-semibold text-[#001f3f]">Profit & Loss</h3>
-            <p className="text-xl font-bold text-[#001f3f]">
-              {financialStatements.filter(s => s.type === 'profit-loss').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => handleDrilldown({
-            title: 'Cash Flow Overview',
-            data: financialStatements.filter(s => s.type === 'cash-flow')
-          })}
-        >
-          <CardContent className="p-4">
-            <DollarSign className="h-8 w-8 text-[#001f3f] mb-2" />
-            <h3 className="text-sm font-semibold text-[#001f3f]">Cash Flow</h3>
-            <p className="text-xl font-bold text-[#001f3f]">
-              {financialStatements.filter(s => s.type === 'cash-flow').length}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+  const renderTrialBalance = () => {
+    const filteredEntries = getFilteredTBEntries()
+    const totalDebit = filteredEntries.reduce((sum, entry) => sum + entry.debit, 0)
+    const totalCredit = filteredEntries.reduce((sum, entry) => sum + entry.credit, 0)
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Trial Balance</h2>
+            <p className="text-[#001f3f]">Import and review trial balance entries</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Upload className="h-4 w-4 mr-2" />Import TB
+            </Button>
+            <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Entry
+            </Button>
+          </div>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Generated Statements</CardTitle>
-          <CardDescription>All financial statements for the current period</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {financialStatements.length > 0 ? (
+        <div className="grid grid-cols-3 gap-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-sm text-[#001f3f]">Total Debits</div>
+              <div className="text-2xl font-bold text-[#001f3f]">
+                £{totalDebit.toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-sm text-[#001f3f]">Total Credits</div>
+              <div className="text-2xl font-bold text-[#001f3f]">
+                £{totalCredit.toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-sm text-[#001f3f]">Difference</div>
+              <div className={`text-2xl font-bold ${Math.abs(totalDebit - totalCredit) < 0.01 ? 'text-green-600' : 'text-red-600'}`}>
+                £{Math.abs(totalDebit - totalCredit).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
+          </CardHeader>
+          <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f]">Type</TableHead>
-                  <TableHead className="text-[#001f3f]">Period</TableHead>
-                  <TableHead className="text-[#001f3f]">Generated Date</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Actions</TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('accountCode')}>
+                        Code {getTBSortIcon('accountCode')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchCode}
+                        onChange={(e) => setTbSearchCode(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('accountName')}>
+                        Account Name {getTBSortIcon('accountName')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchName}
+                        onChange={(e) => setTbSearchName(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('category')}>
+                        Category {getTBSortIcon('category')}
+                      </div>
+                      <Select value={tbSearchCategory} onValueChange={setTbSearchCategory}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="Asset">Asset</SelectItem>
+                          <SelectItem value="Liability">Liability</SelectItem>
+                          <SelectItem value="Equity">Equity</SelectItem>
+                          <SelectItem value="Revenue">Revenue</SelectItem>
+                          <SelectItem value="Expense">Expense</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('debit')}>
+                        Debit {getTBSortIcon('debit')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchDebit}
+                        onChange={(e) => setTbSearchDebit(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('credit')}>
+                        Credit {getTBSortIcon('credit')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchCredit}
+                        onChange={(e) => setTbSearchCredit(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {financialStatements.map((statement) => (
+                {filteredEntries.map(entry => (
                   <TableRow 
-                    key={statement.id}
+                    key={entry.id} 
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleViewStatement(statement)}
+                    onClick={() => handleViewTBEntry(entry)}
                   >
-                    <TableCell className="text-[#001f3f]">
-                      {statement.type === 'balance-sheet' ? 'Balance Sheet' : 
-                       statement.type === 'profit-loss' ? 'Profit & Loss' : 
-                       'Cash Flow Statement'}
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{statement.period}</TableCell>
-                    <TableCell className="text-[#001f3f]">{statement.generatedDate}</TableCell>
+                    <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
+                    <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
                     <TableCell>
-                      <Badge variant={statement.status === 'final' ? 'default' : 'outline'}>
-                        {statement.status.toUpperCase()}
-                      </Badge>
+                      <Badge variant="outline">{entry.category}</Badge>
                     </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleViewStatement(statement)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        {statement.status === 'draft' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleFinalizeStatement(statement.id)}
-                          >
-                            <Check className="h-4 w-4 text-green-600" />
-                          </Button>
-                        )}
-                        <ExportButton 
-                          data={[
-                            ['Type', 'Period', 'Generated Date', 'Status'],
-                            [statement.type, statement.period, statement.generatedDate, statement.status]
-                          ]} 
-                          filename={`${statement.type}-${statement.period}`} 
-                        />
-                      </div>
+                    <TableCell className="text-right text-[#001f3f]">
+                      {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
+                    </TableCell>
+                    <TableCell className="text-right text-[#001f3f]">
+                      {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleEditTBEntry(entry)
+                        }}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500">No financial statements generated yet</p>
-              <div className="flex gap-2 justify-center mt-4">
-                <Button onClick={() => handleGenerateStatement('balance-sheet')}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Generate Balance Sheet
-                </Button>
-                <Button onClick={() => handleGenerateStatement('profit-loss')}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Generate P&L
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Balance Sheet</CardTitle>
-            <CardDescription>Statement of financial position</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              View Balance Sheet
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Profit & Loss</CardTitle>
-            <CardDescription>Income statement</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              View P&L
-            </Button>
           </CardContent>
         </Card>
       </div>
-    </div>
-  )
+    )
+  }
 
-  const renderConsolidationContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Consolidation</h2>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          New Consolidation
-        </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Group Consolidation</CardTitle>
-          <CardDescription>Multi-entity financial consolidation</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-gray-500">No consolidation entities configured</p>
+  const renderAdjustments = () => {
+    const filteredAdj = getFilteredAdjustments()
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Year-End Adjustments</h2>
+            <p className="text-[#001f3f]">Manage prepayments, accruals, depreciation, and provisions</p>
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderReportsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Financial Reports</h2>
-        <ExportButton
-          data={[
-            ['Report Type', 'Description', 'Status'],
-            ['Management Accounts', 'Monthly management reporting', 'Available'],
-            ['Financial Analysis', 'Ratio and trend analysis', 'Available'],
-            ['Variance Reports', 'Budget vs actual analysis', 'Available']
-          ]}
-          filename={`financial-reports-${new Date().toISOString().split('T')[0]}`}
-          buttonText="Generate Report"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Management Accounts</CardTitle>
-            <CardDescription>Monthly management reporting</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              View Reports
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Financial Analysis</CardTitle>
-            <CardDescription>Ratio and trend analysis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              View Analysis
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Variance Reports</CardTitle>
-            <CardDescription>Budget vs actual analysis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full">
-              <Eye className="h-4 w-4 mr-2" />
-              View Variances
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  )
-
-  const renderIXBRLContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">iXBRL Tagging & Validation</h2>
-        <div className="flex gap-2">
-          <Button onClick={() => handleDrilldown({ title: 'Auto-Tag All', data: {} })}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Auto-Tag All
+          <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />Add Adjustment
           </Button>
-          <Button onClick={() => handleDrilldown({ title: 'Validate Tags', data: {} })}>
-            <Check className="h-4 w-4 mr-2" />
-            Validate
-          </Button>
-          <ExportButton data={[[]]} filename="ixbrl-document" />
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <KPICard
-          title="Tagged Items"
-          value="847"
-          change="+12.5%"
-          icon={Globe}
-          color="text-green-600"
-          drillDownData={{ title: 'Tagged Items Details', description: 'View all tagged items', content: <div>Tagged items list</div> }}
-        />
-        <KPICard
-          title="Untagged Items"
-          value="23"
-          change="-45%"
-          icon={AlertCircle}
-          color="text-orange-600"
-          drillDownData={{ title: 'Untagged Items', description: 'Items requiring tagging', content: <div>Untagged items list</div> }}
-        />
-        <KPICard
-          title="Validation Errors"
-          value="0"
-          change="-100%"
-          icon={Check}
-          color="text-green-600"
-          drillDownData={{ title: 'Validation Status', description: 'Validation details', content: <div>All validations passed</div> }}
-        />
-        <KPICard
-          title="Completion"
-          value="97.4%"
-          change="+8.2%"
-          icon={TrendingUp}
-          color="text-blue-600"
-          drillDownData={{ title: 'Tagging Progress', description: 'Overall progress', content: <div>Progress details</div> }}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Adjustments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('type')}>
+                        Type {getAdjSortIcon('type')}
+                      </div>
+                      <Select value={adjSearchType} onValueChange={setAdjSearchType}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="prepayment">Prepayment</SelectItem>
+                          <SelectItem value="accrual">Accrual</SelectItem>
+                          <SelectItem value="depreciation">Depreciation</SelectItem>
+                          <SelectItem value="provision">Provision</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('description')}>
+                        Description {getAdjSortIcon('description')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchDescription}
+                        onChange={(e) => setAdjSearchDescription(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('amount')}>
+                        Amount {getAdjSortIcon('amount')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchAmount}
+                        onChange={(e) => setAdjSearchAmount(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('date')}>
+                        Date {getAdjSortIcon('date')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchDate}
+                        onChange={(e) => setAdjSearchDate(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('status')}>
+                        Status {getAdjSortIcon('status')}
+                      </div>
+                      <Select value={adjSearchStatus} onValueChange={setAdjSearchStatus}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="posted">Posted</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredAdj.map(adj => (
+                  <TableRow 
+                    key={adj.id} 
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleViewAdjustment(adj)}
+                  >
+                    <TableCell>
+                      <Badge variant="outline">{adj.type}</Badge>
+                    </TableCell>
+                    <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                    <TableCell className="text-right text-[#001f3f]">
+                      £{adj.amount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                    <TableCell>
+                      <Badge variant={adj.status === 'approved' ? 'default' : 'secondary'}>
+                        {adj.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleEditAdjustment(adj)
+                        }}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
+    )
+  }
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">iXBRL Document Preview</CardTitle>
-          <CardDescription>Preview and validate iXBRL tags before submission to Companies House</CardDescription>
-        </CardHeader>
-        <CardContent>
+  const renderStatements = () => {
+    const filteredStmts = getFilteredStatements()
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Financial Statements</h2>
+            <p className="text-[#001f3f]">Generate and manage statutory accounts</p>
+          </div>
+          <Button onClick={handleGenerateStatement} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />Generate Statement
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <FileSpreadsheet className="h-8 w-8 text-blue-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Balance Sheet</h3>
+              <p className="text-sm text-[#001f3f]">Statement of financial position</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-green-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Profit & Loss</h3>
+              <p className="text-sm text-[#001f3f]">Income statement</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <TrendingUp className="h-8 w-8 text-purple-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Cash Flow</h3>
+              <p className="text-sm text-[#001f3f]">Statement of cash flows</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Generated Statements</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('clientId')}>
+                        Client {getStmtSortIcon('clientId')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchClient}
+                        onChange={(e) => setStmtSearchClient(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('type')}>
+                        Type {getStmtSortIcon('type')}
+                      </div>
+                      <Select value={stmtSearchType} onValueChange={setStmtSearchType}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="balance-sheet">Balance Sheet</SelectItem>
+                          <SelectItem value="profit-loss">Profit & Loss</SelectItem>
+                          <SelectItem value="cash-flow">Cash Flow</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('period')}>
+                        Period {getStmtSortIcon('period')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchPeriod}
+                        onChange={(e) => setStmtSearchPeriod(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('generatedDate')}>
+                        Generated {getStmtSortIcon('generatedDate')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchDate}
+                        onChange={(e) => setStmtSearchDate(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('status')}>
+                        Status {getStmtSortIcon('status')}
+                      </div>
+                      <Select value={stmtSearchStatus} onValueChange={setStmtSearchStatus}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="review">Review</SelectItem>
+                          <SelectItem value="finalized">Finalized</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredStmts.map(stmt => {
+                  const client = clients.find(c => c.id === stmt.clientId)
+                  return (
+                    <TableRow 
+                      key={stmt.id} 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewStatement(stmt)}
+                    >
+                      <TableCell className="text-[#001f3f]">{client?.name || 'Unknown'}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{stmt.type}</Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{stmt.period}</TableCell>
+                      <TableCell className="text-[#001f3f]">{stmt.generatedDate}</TableCell>
+                      <TableCell>
+                        <Badge variant={stmt.status === 'finalized' ? 'default' : 'secondary'}>
+                          {stmt.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
+                            <Download className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderFiling = () => {
+    if (activeSubTab === 'companies-house') {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Companies House Filing</h2>
+            <p className="text-[#001f3f]">Submit annual accounts and confirmations to Companies House</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <FileCheck className="h-8 w-8 text-blue-600 mb-2" />
+                <h3 className="font-semibold text-[#001f3f]">Annual Accounts (AA01)</h3>
+                <p className="text-sm text-[#001f3f]">File statutory accounts</p>
+              </CardContent>
+            </Card>
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
+                <h3 className="font-semibold text-[#001f3f]">Confirmation Statement (CS01)</h3>
+                <p className="text-sm text-[#001f3f]">Annual confirmation of company details</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#001f3f]">Filing History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-[#001f3f]">Recent Companies House submissions will appear here</p>
+            </CardContent>
+          </Card>
+        </div>
+      )
+    }
+
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-[#00703c]">HMRC Filing</h2>
+          <p className="text-[#00703c]">Submit tax computations and iXBRL accounts to HMRC</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-[#00703c] mb-2" />
+              <h3 className="font-semibold text-[#00703c]">Corporation Tax (CT600)</h3>
+              <p className="text-sm text-[#00703c]">File CT600 return with computations</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+            <CardContent className="pt-6">
+              <Globe className="h-8 w-8 text-[#00703c] mb-2" />
+              <h3 className="font-semibold text-[#00703c]">iXBRL Accounts</h3>
+              <p className="text-sm text-[#00703c]">Tagged accounts for HMRC</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="border-[#00703c]">
+          <CardHeader>
+            <CardTitle className="text-[#00703c]">HMRC Filing History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-[#00703c]">Recent HMRC submissions will appear here</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderChartOfAccounts = () => {
+    const handleAccountCategoryClick = (category: string, count: number) => {
+      const handleAccountRowClick = (code: string, name: string, balance: string) => {
+        setDrilldownTitle(`Account Details: ${name}`)
+        setDrilldownContent(
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
-                <h3 className="font-semibold text-[#001f3f] mb-2">Document Information</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-[#001f3f]">Entity:</span>
-                    <span className="font-semibold text-[#001f3f]">ABC Limited</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#001f3f]">Period End:</span>
-                    <span className="font-semibold text-[#001f3f]">31 Dec 2024</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#001f3f]">Framework:</span>
-                    <span className="font-semibold text-[#001f3f]">FRS 102</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#001f3f]">Taxonomy:</span>
-                    <span className="font-semibold text-[#001f3f]">UK GAAP 2024</span>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
-                <h3 className="font-semibold text-[#001f3f] mb-2">Validation Status</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#001f3f]">Schema Validation</span>
-                    <Badge variant="default">Passed</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#001f3f]">Business Rules</span>
-                    <Badge variant="default">Passed</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#001f3f]">Completeness Check</span>
-                    <Badge variant="default">Passed</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#001f3f]">HMRC Validation</span>
-                    <Badge variant="default">Ready</Badge>
-                  </div>
-                </div>
-              </div>
+              <div><p className="text-sm text-gray-500">Account Code</p><p className="text-lg font-semibold text-[#001f3f]">{code}</p></div>
+              <div><p className="text-sm text-gray-500">Account Name</p><p className="text-lg font-semibold text-[#001f3f]">{name}</p></div>
+              <div><p className="text-sm text-gray-500">Current Balance</p><p className="text-lg font-semibold text-[#001f3f]">{balance}</p></div>
+              <div><p className="text-sm text-gray-500">Category</p><p className="text-lg font-semibold text-[#001f3f]">{category}</p></div>
             </div>
-            <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => handleDrilldown({ title: 'Edit Tags', data: {} })}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Tags
-              </Button>
-              <Button onClick={() => handleDrilldown({ title: 'Submit to Companies House', data: {} })}>
-                <Send className="h-4 w-4 mr-2" />
-                Submit to Companies House
-              </Button>
+            <div className="border-t-2 border-[#001f3f] pt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-3">Recent Transactions</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Date</TableHead>
+                    <TableHead className="text-[#001f3f]">Description</TableHead>
+                    <TableHead className="text-[#001f3f]">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow><TableCell className="text-[#001f3f]">2024-03-15</TableCell><TableCell className="text-[#001f3f]">Opening Balance</TableCell><TableCell className="text-[#001f3f]">{balance}</TableCell></TableRow>
+                </TableBody>
+              </Table>
             </div>
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderAccountMappingContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Account Mapping</h2>
-        <Button onClick={() => handleDrilldown({ title: 'Create Mapping Rule', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Mapping Rule
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Chart of Accounts Mapping</CardTitle>
-          <CardDescription>Map bookkeeping accounts to financial statement categories</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-[#001f3f] mb-4">Automated account mapping with AI-powered suggestions</p>
-            <Button onClick={() => handleDrilldown({ title: 'Configure Mappings', data: {} })}>Configure Mappings</Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderReconciliationContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Account Reconciliation</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <KPICard
-          title="Reconciled Accounts"
-          value="42"
-          change="+5"
-          icon={Check}
-          color="text-green-600"
-          drillDownData={{ title: 'Reconciled Accounts', description: 'View reconciled accounts', content: <div>List of reconciled accounts</div> }}
-        />
-        <KPICard
-          title="Pending Reconciliation"
-          value="8"
-          change="-2"
-          icon={AlertCircle}
-          color="text-orange-600"
-          drillDownData={{ title: 'Pending Items', description: 'Accounts awaiting reconciliation', content: <div>Pending reconciliation list</div> }}
-        />
-        <KPICard
-          title="Reconciliation Rate"
-          value="84%"
-          change="+3%"
-          icon={TrendingUp}
-          color="text-blue-600"
-          drillDownData={{ title: 'Reconciliation Progress', description: 'Overall progress', content: <div>Progress details</div> }}
-        />
-      </div>
-    </div>
-  )
-
-  const renderDataImportContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Data Import</h2>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Import Trial Balance</CardTitle>
-          <CardDescription>Import from Xero, QuickBooks, Sage, or CSV file</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button variant="outline" onClick={() => handleImportTB()}>
-                <Upload className="h-4 w-4 mr-2" />
-                Xero
-              </Button>
-              <Button variant="outline" onClick={() => handleImportTB()}>
-                <Upload className="h-4 w-4 mr-2" />
-                QuickBooks
-              </Button>
-              <Button variant="outline" onClick={() => handleImportTB()}>
-                <Upload className="h-4 w-4 mr-2" />
-                Sage
-              </Button>
-              <Button variant="outline" onClick={() => handleImportTB()}>
-                <Upload className="h-4 w-4 mr-2" />
-                CSV File
-              </Button>
-            </div>
-            <div className="text-sm text-[#001f3f]">
-              <p>Supported formats: CSV, Excel, QBO, Sage XML</p>
-              <p>Automatic mapping and validation included</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderHistoryContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">History & Audit Trail</h2>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Trial Balance Changes</CardTitle>
-          <CardDescription>Complete audit trail of all changes</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="p-3 border-2 border-[#001f3f] rounded-[2px] cursor-pointer hover:bg-gray-50"
-                onClick={() => handleDrilldown({ title: `Change Details #${i}`, data: {} })}>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-[#001f3f]">Trial Balance Adjustment</p>
-                    <p className="text-sm text-[#001f3f]">Modified by John Smith - 2 days ago</p>
-                  </div>
-                  <Badge variant="outline">Modified</Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderPrepaymentsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Prepayments</h2>
-        <Button onClick={() => handleDrilldown({ title: 'New Prepayment', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Prepayment
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Prepayment Schedule</CardTitle>
-          <CardDescription>Track and amortize prepaid expenses</CardDescription>
-        </CardHeader>
-        <CardContent>
+        )
+        setIsDrilldownOpen(true)
+      }
+      
+      setDrilldownTitle(`${category} Accounts`)
+      setDrilldownContent(
+        <div className="space-y-4">
+          <p className="text-[#001f3f]">Total {category} accounts: {count}</p>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-[#001f3f]">Description</TableHead>
-                <TableHead className="text-[#001f3f]">Total Amount</TableHead>
-                <TableHead className="text-[#001f3f]">Period</TableHead>
-                <TableHead className="text-[#001f3f]">Monthly Amount</TableHead>
-                <TableHead className="text-[#001f3f]">Remaining</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Insurance Prepayment Details', data: {} })}>
-                <TableCell className="text-[#001f3f]">Insurance Premium</TableCell>
-                <TableCell className="text-[#001f3f]">£12,000</TableCell>
-                <TableCell className="text-[#001f3f]">12 months</TableCell>
-                <TableCell className="text-[#001f3f]">£1,000</TableCell>
-                <TableCell className="text-[#001f3f]">£8,000</TableCell>
-              </TableRow>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Rent Prepayment Details', data: {} })}>
-                <TableCell className="text-[#001f3f]">Office Rent</TableCell>
-                <TableCell className="text-[#001f3f]">£18,000</TableCell>
-                <TableCell className="text-[#001f3f]">6 months</TableCell>
-                <TableCell className="text-[#001f3f]">£3,000</TableCell>
-                <TableCell className="text-[#001f3f]">£12,000</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderAccrualsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Accruals</h2>
-        <Button onClick={() => handleDrilldown({ title: 'New Accrual', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Accrual
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Accrued Expenses</CardTitle>
-          <CardDescription>Track expenses incurred but not yet paid</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Description</TableHead>
-                <TableHead className="text-[#001f3f]">Amount</TableHead>
-                <TableHead className="text-[#001f3f]">Period</TableHead>
+                <TableHead className="text-[#001f3f]">Code</TableHead>
+                <TableHead className="text-[#001f3f]">Account Name</TableHead>
+                <TableHead className="text-[#001f3f]">Balance</TableHead>
                 <TableHead className="text-[#001f3f]">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Utilities Accrual Details', data: {} })}>
-                <TableCell className="text-[#001f3f]">Utilities Expense</TableCell>
-                <TableCell className="text-[#001f3f]">£1,250</TableCell>
-                <TableCell className="text-[#001f3f]">Dec 2024</TableCell>
-                <TableCell><Badge variant="default">Active</Badge></TableCell>
-              </TableRow>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Professional Fees Accrual Details', data: {} })}>
-                <TableCell className="text-[#001f3f]">Professional Fees</TableCell>
-                <TableCell className="text-[#001f3f]">£3,500</TableCell>
-                <TableCell className="text-[#001f3f]">Dec 2024</TableCell>
-                <TableCell><Badge variant="default">Active</Badge></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderDepreciationContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Depreciation Calculator</h2>
-        <Button onClick={() => handleDrilldown({ title: 'New Asset', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Fixed Asset
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <KPICard
-          title="Total Fixed Assets"
-          value="£385,000"
-          change="+5.2%"
-          icon={FileSpreadsheet}
-          color="text-blue-600"
-          drillDownData={{ title: 'Fixed Assets Register', description: 'All fixed assets', content: <div>Fixed assets list</div> }}
-        />
-        <KPICard
-          title="Accumulated Depreciation"
-          value="£45,000"
-          change="+12%"
-          icon={TrendingDown}
-          color="text-orange-600"
-          drillDownData={{ title: 'Depreciation History', description: 'Cumulative depreciation', content: <div>Depreciation details</div> }}
-        />
-        <KPICard
-          title="Net Book Value"
-          value="£340,000"
-          change="+2.8%"
-          icon={Calculator}
-          color="text-green-600"
-          drillDownData={{ title: 'NBV Analysis', description: 'Net book value breakdown', content: <div>NBV details</div> }}
-        />
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Fixed Assets Register</CardTitle>
-          <CardDescription>Calculate depreciation using straight-line, reducing balance, or units of production methods</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Asset</TableHead>
-                <TableHead className="text-[#001f3f]">Cost</TableHead>
-                <TableHead className="text-[#001f3f]">Method</TableHead>
-                <TableHead className="text-[#001f3f]">Rate</TableHead>
-                <TableHead className="text-[#001f3f]">Depreciation (Annual)</TableHead>
-                <TableHead className="text-[#001f3f]">NBV</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Building Depreciation Schedule', data: {} })}>
-                <TableCell className="text-[#001f3f]">Building</TableCell>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1000', 'Fixed Assets', '£250,000')}>
+                <TableCell className="text-[#001f3f]">1000</TableCell>
+                <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
                 <TableCell className="text-[#001f3f]">£250,000</TableCell>
-                <TableCell className="text-[#001f3f]">Straight Line</TableCell>
-                <TableCell className="text-[#001f3f]">2%</TableCell>
-                <TableCell className="text-[#001f3f]">£5,000</TableCell>
-                <TableCell className="text-[#001f3f]">£225,000</TableCell>
+                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
               </TableRow>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Machinery Depreciation Schedule', data: {} })}>
-                <TableCell className="text-[#001f3f]">Machinery</TableCell>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1100', 'Current Assets', '£85,000')}>
+                <TableCell className="text-[#001f3f]">1100</TableCell>
+                <TableCell className="text-[#001f3f]">Current Assets</TableCell>
                 <TableCell className="text-[#001f3f]">£85,000</TableCell>
-                <TableCell className="text-[#001f3f]">Reducing Balance</TableCell>
-                <TableCell className="text-[#001f3f]">25%</TableCell>
-                <TableCell className="text-[#001f3f]">£18,500</TableCell>
-                <TableCell className="text-[#001f3f]">£66,500</TableCell>
-              </TableRow>
-              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleDrilldown({ title: 'Vehicles Depreciation Schedule', data: {} })}>
-                <TableCell className="text-[#001f3f]">Motor Vehicles</TableCell>
-                <TableCell className="text-[#001f3f]">£35,000</TableCell>
-                <TableCell className="text-[#001f3f]">Straight Line</TableCell>
-                <TableCell className="text-[#001f3f]">20%</TableCell>
-                <TableCell className="text-[#001f3f]">£7,000</TableCell>
-                <TableCell className="text-[#001f3f]">£28,000</TableCell>
+                <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
               </TableRow>
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
+      )
+      setIsDrilldownOpen(true)
+    }
 
-  const renderProvisionsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Provisions</h2>
-        <Button onClick={() => handleDrilldown({ title: 'New Provision', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Provision
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Provisions Register</CardTitle>
-          <CardDescription>Track provisions for liabilities and contingencies</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-[#001f3f] mb-4">Manage provisions for warranties, restructuring, legal claims, and other contingencies</p>
-            <Button onClick={() => handleDrilldown({ title: 'Provision Calculator', data: {} })}>Calculate Provision</Button>
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Chart of Accounts</h2>
+            <p className="text-[#001f3f]">Manage your chart of accounts and account codes</p>
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-
-  const renderReclassificationsContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-[#001f3f]">Reclassifications</h2>
-        <Button onClick={() => handleDrilldown({ title: 'New Reclassification', data: {} })}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Reclassification
-        </Button>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-[#001f3f]">Account Reclassifications</CardTitle>
-          <CardDescription>Reclassify accounts between balance sheet and P&L categories</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-[#001f3f] mb-4">Move items between categories for correct financial statement presentation</p>
-            <Button onClick={() => handleDrilldown({ title: 'Reclassification Journal', data: {} })}>View Reclassifications</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
+              <Download className="h-4 w-4 mr-2" />Export
+            </Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Adding new account...')}>
+              <Plus className="h-4 w-4 mr-2" />New Account
+            </Button>
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
 
+        <div className="grid grid-cols-4 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Assets', 45)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">45</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Liabilities', 28)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">28</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Revenue', 15)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Revenue</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">15</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleAccountCategoryClick('Expenses', 62)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">62</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
+          </Card>
+        </div>
 
-  const renderClosingEntriesContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Year-End Closing Entries</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Automated Closing Process</CardTitle></CardHeader>
-      <CardContent><Button onClick={() => handleDrilldown({ title: "Generate Closing Entries", data: {} })}>Generate Entries</Button></CardContent></Card>
-    </div>
-  )
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader><CardTitle className="text-[#001f3f]">Account List</CardTitle></CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Code<Input placeholder="Search..." className="h-6 text-xs w-24 border-[#001f3f]" /></div></TableHead>
+                  <TableHead className="text-[#001f3f]"><div className="flex items-center gap-2">Name<Input placeholder="Search..." className="h-6 text-xs w-32 border-[#001f3f]" /></div></TableHead>
+                  <TableHead className="text-[#001f3f]">Category</TableHead>
+                  <TableHead className="text-[#001f3f]">Status</TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                  setDrilldownTitle('Account Details: Fixed Assets')
+                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 1000</p><p className="text-[#001f3f]">Name: Fixed Assets</p><p className="text-[#001f3f]">Balance: £250,000</p></div>)
+                  setIsDrilldownOpen(true)
+                }}>
+                  <TableCell className="text-[#001f3f]">1000</TableCell>
+                  <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
+                  <TableCell><Badge className="bg-[#001f3f]">Asset</Badge></TableCell>
+                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                  setDrilldownTitle('Account Details: Sales Revenue')
+                  setDrilldownContent(<div className="space-y-4"><p className="text-[#001f3f]">Code: 4000</p><p className="text-[#001f3f]">Name: Sales Revenue</p><p className="text-[#001f3f]">Balance: £450,000</p></div>)
+                  setIsDrilldownOpen(true)
+                }}>
+                  <TableCell className="text-[#001f3f]">4000</TableCell>
+                  <TableCell className="text-[#001f3f]">Sales Revenue</TableCell>
+                  <TableCell><Badge className="bg-[#001f3f]">Revenue</Badge></TableCell>
+                  <TableCell><Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">Active</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-  const renderRetainedEarningsContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Retained Earnings</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Retained Earnings Statement</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Track changes in retained earnings</p></CardContent></Card>
-    </div>
-  )
+  const renderPostingBatches = () => {
+    const handleBatchClick = (title: string, content: any) => {
+      setDrilldownTitle(title)
+      setDrilldownContent(content)
+      setIsDrilldownOpen(true)
+    }
 
-  const renderOpeningBalancesContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Opening Balances</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">New Period Opening Balances</CardTitle></CardHeader>
-      <CardContent><Button onClick={() => handleDrilldown({ title: "Create Opening Balances", data: {} })}>Generate Balances</Button></CardContent></Card>
-    </div>
-  )
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Posting Batches</h2>
+            <p className="text-[#001f3f]">Manage journal entries and posting batches</p>
+          </div>
+          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Creating new batch...')}>
+            <Plus className="h-4 w-4 mr-2" />New Batch
+          </Button>
+        </div>
 
-  const renderPeriodLockContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Period Lock</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Lock Accounting Periods</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Prevent changes to closed periods</p></CardContent></Card>
-    </div>
-  )
+        <div className="grid grid-cols-4 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches', <div className="space-y-2"><p className="text-[#001f3f]">5 batches in draft status</p><p className="text-[#001f3f]">Total entries: 23</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Draft Batches</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">5</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches', <div className="space-y-2"><p className="text-[#001f3f]">23 batches posted</p><p className="text-[#001f3f]">Total entries: 342</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Posted</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">23</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches', <div className="space-y-2"><p className="text-[#001f3f]">12 batches approved</p><p className="text-[#001f3f]">Pending posting</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Approved</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">12</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Entries', <div className="space-y-2"><p className="text-[#001f3f]">156 total journal entries</p><p className="text-[#001f3f]">Across all batches</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Total Entries</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">156</p></CardContent>
+          </Card>
+        </div>
 
-  const renderYearEndChecklistContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Year-End Checklist</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Year-End Closing Checklist</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Track progress through year-end procedures</p></CardContent></Card>
-    </div>
-  )
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader><CardTitle className="text-[#001f3f]">Recent Batches</CardTitle></CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]">Batch Name</TableHead>
+                  <TableHead className="text-[#001f3f]">Type</TableHead>
+                  <TableHead className="text-[#001f3f]">Date</TableHead>
+                  <TableHead className="text-[#001f3f]">Entries</TableHead>
+                  <TableHead className="text-[#001f3f]">Status</TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleBatchClick('Batch Details', <div className="space-y-2"><p className="text-[#001f3f]">Batch: Year End Adjustments 2024</p><p className="text-[#001f3f]">Type: Year-End</p><p className="text-[#001f3f]">Entries: 15</p><p className="text-[#001f3f]">Status: Posted</p></div>)}>
+                  <TableCell className="text-[#001f3f]">Year End Adjustments 2024</TableCell>
+                  <TableCell className="text-[#001f3f]">Year-End</TableCell>
+                  <TableCell className="text-[#001f3f]">2024-12-31</TableCell>
+                  <TableCell className="text-[#001f3f]">15</TableCell>
+                  <TableCell><Badge className="bg-[#001f3f]">Posted</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Eye className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-  const renderHMRCConnectionContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">HMRC Connection</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">HMRC Gateway Connection</CardTitle></CardHeader>
-      <CardContent><Button onClick={() => handleDrilldown({ title: "Connect to HMRC", data: {} })}>Connect to HMRC</Button></CardContent></Card>
-    </div>
-  )
+  const renderReviewValidation = () => {
+    const handleValidationClick = (title: string, content: any) => {
+      setDrilldownTitle(title)
+      setDrilldownContent(content)
+      setIsDrilldownOpen(true)
+    }
 
-  const renderCorporationTaxContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Corporation Tax Submission</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">CT600 Filing</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Submit corporation tax returns to HMRC</p></CardContent></Card>
-    </div>
-  )
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Check & Finish</h2>
+            <p className="text-[#001f3f]">Validation and compliance checks</p>
+          </div>
+          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Running checks...')}>
+            <CheckCircle className="h-4 w-4 mr-2" />Run Checks
+          </Button>
+        </div>
 
-  const renderVATFilingContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">VAT Filing</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">MTD VAT Returns</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Submit VAT returns via Making Tax Digital</p></CardContent></Card>
-    </div>
-  )
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-green-600" onClick={() => handleValidationClick('Passed Checks', <div className="space-y-2"><p className="text-[#001f3f]">24 validation checks passed</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Trial Balance Balanced</li><li>Account Codes Valid</li><li>FRS Compliance Met</li></ul></div>)}>
+            <CardContent className="pt-6">
+              <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
+              <h3 className="font-semibold text-green-600">Passed: 24</h3>
+              <p className="text-sm text-[#001f3f]">All checks passed</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleValidationClick('Warnings', <div className="space-y-2"><p className="text-[#001f3f]">3 warnings requiring review</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Directors Report Review</li><li>Missing Signatures</li><li>Date Format Check</li></ul></div>)}>
+            <CardContent className="pt-6">
+              <AlertCircle className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Warnings: 3</h3>
+              <p className="text-sm text-[#001f3f]">Review required</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-red-600" onClick={() => handleValidationClick('Errors', <div className="space-y-2"><p className="text-[#001f3f]">No errors found</p><p className="text-green-600 font-semibold">All validation checks passed!</p></div>)}>
+            <CardContent className="pt-6">
+              <AlertCircle className="h-8 w-8 text-red-600 mb-2" />
+              <h3 className="font-semibold text-red-600">Errors: 0</h3>
+              <p className="text-sm text-[#001f3f]">No errors found</p>
+            </CardContent>
+          </Card>
+        </div>
 
-  const renderPAYEFilingContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">PAYE Filing</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">RTI Submissions</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Submit PAYE information via RTI</p></CardContent></Card>
-    </div>
-  )
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader><CardTitle className="text-[#001f3f]">Validation Results</CardTitle></CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="p-3 border-2 border-green-600 rounded-[2px] cursor-pointer hover:bg-gray-50" onClick={() => handleValidationClick('Trial Balance Details', <div className="space-y-2"><p className="text-[#001f3f]">Total Debits: £595,000</p><p className="text-[#001f3f]">Total Credits: £595,000</p><p className="text-green-600 font-semibold">Balanced ✓</p></div>)}>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold text-[#001f3f]">Trial Balance Balanced</span>
+                </div>
+                <p className="text-sm text-[#001f3f] ml-7">Debits and credits match perfectly</p>
+              </div>
+              <div className="p-3 border-2 border-[#001f3f] rounded-[2px] cursor-pointer hover:bg-gray-50" onClick={() => handleValidationClick('Directors Report', <div className="space-y-2"><p className="text-[#001f3f]">Review Required:</p><p className="text-[#001f3f]">Please verify directors signatures on the report</p><Button className="bg-[#001f3f] mt-2">Mark as Reviewed</Button></div>)}>
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-[#001f3f]" />
+                  <span className="font-semibold text-[#001f3f]">Directors Report Review</span>
+                </div>
+                <p className="text-sm text-[#001f3f] ml-7">Please review directors' signatures</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-  const renderSubmissionHistoryContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Submission History</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">HMRC Submission History</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">View all submissions to HMRC</p></CardContent></Card>
-    </div>
-  )
+  const renderiXBRLTagging = () => {
+    const handleTaggingClick = (title: string, content: any) => {
+      setDrilldownTitle(title)
+      setDrilldownContent(content)
+      setIsDrilldownOpen(true)
+    }
 
-  const renderCompaniesHouseConnectionContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Companies House Connection</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Companies House Authentication</CardTitle></CardHeader>
-      <CardContent><Button onClick={() => handleDrilldown({ title: "Connect to Companies House", data: {} })}>Connect</Button></CardContent></Card>
-    </div>
-  )
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">iXBRL Tagging</h2>
+            <p className="text-[#001f3f]">Tag accounts for HMRC submission</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Previewing...')}>
+              <Eye className="h-4 w-4 mr-2" />Preview
+            </Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Auto-tagging...')}>
+              <Globe className="h-4 w-4 mr-2" />Auto-Tag
+            </Button>
+          </div>
+        </div>
 
-  const renderAnnualAccountsFilingContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Annual Accounts Filing</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">File Annual Accounts</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Submit annual accounts to Companies House</p></CardContent></Card>
-    </div>
-  )
+        <div className="grid grid-cols-4 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleTaggingClick('Tagged Elements', <div className="space-y-2"><p className="text-[#001f3f]">142 elements successfully tagged</p><ul className="list-disc ml-5 text-[#001f3f]"><li>Balance Sheet: 68</li><li>Profit & Loss: 54</li><li>Notes: 20</li></ul></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Tagged Elements</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">142</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-green-600" onClick={() => handleTaggingClick('Validated Tags', <div className="space-y-2"><p className="text-[#001f3f]">138 tags validated successfully</p><p className="text-green-600 font-semibold">97% validation rate</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Validated</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-green-600">138</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-red-600" onClick={() => handleTaggingClick('Errors', <div className="space-y-2"><p className="text-[#001f3f]">No tagging errors found</p><p className="text-green-600 font-semibold">All tags validated!</p></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Errors</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-red-600">0</p></CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleTaggingClick('Untagged Elements', <div className="space-y-2"><p className="text-[#001f3f]">4 elements pending tagging</p><Button className="bg-[#001f3f] mt-2">Tag Now</Button></div>)}>
+            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Untagged</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-[#001f3f]">4</p></CardContent>
+          </Card>
+        </div>
 
-  const renderConfirmationStatementContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Confirmation Statement</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">File Confirmation Statement</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Submit annual confirmation statement</p></CardContent></Card>
-    </div>
-  )
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader><CardTitle className="text-[#001f3f]">Tagging Status</CardTitle></CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('Balance Sheet Tags', <div className="space-y-2"><p className="text-[#001f3f]">68 Balance Sheet elements tagged</p><p className="text-green-600 font-semibold">100% Complete</p></div>)}>
+                <span className="text-[#001f3f] font-semibold">Balance Sheet Elements</span>
+                <Badge className="bg-green-600 text-white">Complete</Badge>
+              </div>
+              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('P&L Tags', <div className="space-y-2"><p className="text-[#001f3f]">54 Profit & Loss elements tagged</p><p className="text-green-600 font-semibold">100% Complete</p></div>)}>
+                <span className="text-[#001f3f] font-semibold">Profit & Loss Elements</span>
+                <Badge className="bg-green-600 text-white">Complete</Badge>
+              </div>
+              <div className="flex items-center justify-between p-2 border-2 border-[#001f3f] rounded cursor-pointer hover:bg-gray-50" onClick={() => handleTaggingClick('Notes Tags', <div className="space-y-2"><p className="text-[#001f3f]">20 Notes elements tagged, 4 remaining</p><Button className="bg-[#001f3f] mt-2">Complete Tagging</Button></div>)}>
+                <span className="text-[#001f3f] font-semibold">Notes Elements</span>
+                <Badge className="bg-[#001f3f] text-white">In Progress</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-  const renderCompaniesHouseFormsContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Companies House Forms</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Other Statutory Forms</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">File other Companies House forms</p></CardContent></Card>
-    </div>
-  )
+  const renderReportsArchive = () => {
+    const handleExportClick = (format: string) => {
+      setDrilldownTitle(`Export to ${format}`)
+      setDrilldownContent(
+        <div className="space-y-4">
+          <p className="text-[#001f3f]">Select accounts to export as {format}:</p>
+          <div className="space-y-2">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" className="form-checkbox" defaultChecked />
+              <span className="text-[#001f3f]">Balance Sheet</span>
+            </label>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" className="form-checkbox" defaultChecked />
+              <span className="text-[#001f3f]">Profit & Loss</span>
+            </label>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" className="form-checkbox" defaultChecked />
+              <span className="text-[#001f3f]">Directors Report</span>
+            </label>
+          </div>
+          <Button className="bg-[#001f3f] w-full mt-4" onClick={() => console.log(`Exporting to ${format}...`)}>
+            <Download className="h-4 w-4 mr-2" />Generate {format}
+          </Button>
+        </div>
+      )
+      setIsDrilldownOpen(true)
+    }
 
-  const renderFilingHistoryContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Filing History</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Companies House Filing History</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">View all Companies House filings</p></CardContent></Card>
-    </div>
-  )
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Reports & Archive</h2>
+            <p className="text-[#001f3f]">Export and archive completed accounts</p>
+          </div>
+        </div>
 
-  const renderEntityTemplatesContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Entity Templates</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Accounting Framework Templates</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">Select templates for different entity types and accounting frameworks</p></CardContent></Card>
-    </div>
-  )
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('PDF')}>
+            <CardContent className="pt-6">
+              <Download className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Export to PDF</h3>
+              <p className="text-sm text-[#001f3f]">Generate PDF accounts</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('Excel')}>
+            <CardContent className="pt-6">
+              <FileSpreadsheet className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Export to Excel</h3>
+              <p className="text-sm text-[#001f3f]">Excel format export</p>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleExportClick('iXBRL')}>
+            <CardContent className="pt-6">
+              <Globe className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">iXBRL Export</h3>
+              <p className="text-sm text-[#001f3f]">Tagged accounts file</p>
+            </CardContent>
+          </Card>
+        </div>
 
-  const renderAuditTrailContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-[#001f3f]">Audit Trail</h2>
-      <Card><CardHeader><CardTitle className="text-[#001f3f]">Complete Audit Trail</CardTitle></CardHeader>
-      <CardContent><p className="text-[#001f3f]">View all system activities and changes</p></CardContent></Card>
-    </div>
-  )
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader><CardTitle className="text-[#001f3f]">Archived Accounts</CardTitle></CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-[#001f3f]">Client Name</TableHead>
+                  <TableHead className="text-[#001f3f]">Period</TableHead>
+                  <TableHead className="text-[#001f3f]">Archive Date</TableHead>
+                  <TableHead className="text-[#001f3f]">Format</TableHead>
+                  <TableHead className="text-[#001f3f]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                  setDrilldownTitle('Archived Account Details')
+                  setDrilldownContent(<div className="space-y-2"><p className="text-[#001f3f]">Client: Acme Trading Ltd</p><p className="text-[#001f3f]">Period: 2023-12-31</p><p className="text-[#001f3f]">Archived: 2024-01-15</p><Button className="bg-[#001f3f] mt-2"><Download className="h-4 w-4 mr-2" />Download Files</Button></div>)
+                  setIsDrilldownOpen(true)
+                }}>
+                  <TableCell className="text-[#001f3f]">Acme Trading Ltd</TableCell>
+                  <TableCell className="text-[#001f3f]">2023-12-31</TableCell>
+                  <TableCell className="text-[#001f3f]">2024-01-15</TableCell>
+                  <TableCell><Badge className="bg-[#001f3f]">PDF, iXBRL</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]"><Download className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderMainContent = () => {
+    if (activeMainTab === 'dashboard') return renderDashboard()
+    if (activeMainTab === 'clients') return renderClientManagement()
+    if (activeMainTab === 'trial-balance') {
+      if (activeSubTab === 'import') {
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-[#001f3f]">Import Trial Balance</h2>
+            <p className="text-[#001f3f]">Upload trial balance from accounting software</p>
+            <Card>
+              <CardContent className="pt-6">
+                <Button className="bg-[#001f3f] hover:bg-[#003366]">
+                  <Upload className="h-4 w-4 mr-2" />Upload File
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
+      if (activeSubTab === 'chart-accounts') return renderChartOfAccounts()
+      if (activeSubTab === 'posting') return renderPostingBatches()
+      return renderTrialBalance()
+    }
+    if (activeMainTab === 'adjustments') return renderAdjustments()
+    if (activeMainTab === 'accounts') return renderStatements()
+    if (activeMainTab === 'review') return renderReviewValidation()
+    if (activeMainTab === 'ixbrl') return renderiXBRLTagging()
+    if (activeMainTab === 'filing') return renderFiling()
+    if (activeMainTab === 'reports') return renderReportsArchive()
+    
+    return (
+      <div className="text-center py-12">
+        <h3 className="text-xl font-semibold text-[#001f3f] mb-4">
+          {menuStructure.find(m => m.id === activeMainTab)?.label}
+        </h3>
+        <p className="text-[#001f3f]">Content implementation in progress...</p>
+      </div>
+    )
+  }
+
   return (
     <ResponsiveLayout>
-      <div className="flex min-h-screen bg-blue-50">
-        {/* Left Sidebar Navigation */}
-        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
-          <div className="p-4 border-b-2 border-[#001f3f]">
-            <h1 className="text-xl font-bold text-[#001f3f]">Accounts Production</h1>
-            <p className="text-sm text-[#001f3f] mt-1">Financial Statement Preparation</p>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex h-full">
+        <div className="w-64 border-r border-gray-200 bg-white overflow-y-auto">
+          <div className="p-2">
             <nav className="space-y-0.5">
-              {menuStructure.map((item) => {
-                const Icon = item.icon
-                const isActive = activeMainTab === item.id
-                const isExpanded = expandedCategories.includes(item.id)
-                
+              {menuStructure.map((config) => {
+                const Icon = config.icon
+                const isExpanded = expandedCategories.includes(config.id)
+                const isActive = activeMainTab === config.id
                 return (
-                  <div key={item.id}>
-                    <button
-                      onClick={() => handleMainTabClick(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
-                        isActive 
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
-                          : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <Icon className="h-4 w-4 mr-2" />
-                        <span>{item.label}</span>
-                      </div>
-                      {item.hasSubTabs && (
-                        <ChevronLeft className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
-                      )}
+                  <div key={config.id}>
+                    <button onClick={() => handleMainTabClick(config.id)}
+                      className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all shadow-sm ${
+                        isActive && !config.hasSubTabs
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold'
+                          : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 font-medium'
+                      }`}>
+                      <div className="flex items-center"><Icon className="h-4 w-4 mr-2" />{config.label}</div>
+                      {config.hasSubTabs && <ChevronDown className={`h-4 w-4 ${isExpanded ? 'rotate-180' : ''}`} />}
                     </button>
-                    
-                    {item.hasSubTabs && isExpanded && (
+                    {config.hasSubTabs && isExpanded && config.subTabs && (
                       <div className="ml-0.5 mt-0.5 space-y-0.5">
-                        {item.subTabs?.map((subTab) => {
-                          const isSubActive = activeSubTab === subTab.id
+                        {Object.entries(config.subTabs).map(([subKey, subConfig]) => {
+                          const isSubActive = activeSubTab === subKey
                           return (
-                            <button
-                              key={subTab.id}
-                              onClick={() => handleSubTabClick(subTab.id)}
-                              className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
-                                isSubActive 
-                                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
-                                  : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
-                              }`}
-                            >
-                              <span>{subTab.label}</span>
+                            <button key={subKey} onClick={() => handleSubTabClick(subKey)}
+                              className={`w-full px-3 py-2 m-0.5 text-sm rounded-[2px] ${
+                                isSubActive
+                                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold'
+                                  : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 font-medium'
+                              }`}>
+                              {subConfig.label}
                             </button>
                           )
                         })}
@@ -2329,445 +2060,324 @@ const AccountsProduction: React.FC = () => {
             </nav>
           </div>
         </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 overflow-y-auto p-6">
-            {renderTabContent(activeSubTab || activeMainTab)}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            {renderMainContent()}
+            <div className="mt-8">
+              <AIPromptSection title="Ask your Accountant"
+                description="Get expert guidance on accounts production and compliance"
+                placeholder="Ask about FRS standards, iXBRL tagging, Companies House filing..."
+                isLoading={isAILoading} onSubmit={handleAIQuestion}
+                recentQuestions={[
+                  "How do I apply FRS 102 Section 1A?",
+                  "What's required for Companies House filing?"
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
-      
-      <AIPromptSection
-        title="Ask your Accountant"
-        description="Get expert accounting and financial reporting guidance"
-        placeholder="Ask about FRS 102 disclosures, going concern assessments, ratio analysis, or accounting standards..."
-        recentQuestions={[
-          "What disclosures are required under FRS 102?",
-          "How should we handle going concern assessments?",
-          "What are the key ratio analysis insights for this client?",
-          "How do we account for lease modifications under FRS 102?",
-          "What are the latest updates to accounting standards?"
-        ]}
-        onSubmit={handleAIQuestion}
-        isLoading={isAILoading}
-      />
 
-      {/* Trial Balance Entry Dialog */}
-      <Dialog open={isTrialBalanceDialogOpen} onOpenChange={setIsTrialBalanceDialogOpen}>
-        <DialogContent className="max-w-2xl">
+      <Dialog open={isClientViewOpen} onOpenChange={setIsClientViewOpen}>
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
           <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">
-              {editingTBEntry && trialBalanceEntries.find(e => e.id === editingTBEntry.id) ? 'Edit' : 'Add'} Trial Balance Entry
-            </DialogTitle>
-            <DialogDescription>
-              Enter the trial balance account details
-            </DialogDescription>
+            <DialogTitle className="text-[#001f3f]">Client Details</DialogTitle>
           </DialogHeader>
-          {editingTBEntry && (
-            <div className="grid gap-4 py-4">
+          {selectedClient && (
+            <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="accountCode" className="text-[#001f3f]">Account Code</Label>
-                  <Input
-                    id="accountCode"
-                    value={editingTBEntry.accountCode}
-                    onChange={(e) => setEditingTBEntry({...editingTBEntry, accountCode: e.target.value})}
-                    placeholder="1000"
-                  />
+                <div>
+                  <Label className="text-[#001f3f]">Client Name</Label>
+                  <p className="text-[#001f3f] font-semibold">{selectedClient.name}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category" className="text-[#001f3f]">Category</Label>
-                  <Select
-                    value={editingTBEntry.category}
-                    onValueChange={(value) => setEditingTBEntry({...editingTBEntry, category: value})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Asset">Asset</SelectItem>
-                      <SelectItem value="Liability">Liability</SelectItem>
-                      <SelectItem value="Equity">Equity</SelectItem>
-                      <SelectItem value="Revenue">Revenue</SelectItem>
-                      <SelectItem value="Expense">Expense</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div>
+                  <Label className="text-[#001f3f]">Entity Type</Label>
+                  <p className="text-[#001f3f]">{selectedClient.type}</p>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="accountName" className="text-[#001f3f]">Account Name</Label>
-                <Input
-                  id="accountName"
-                  value={editingTBEntry.accountName}
-                  onChange={(e) => setEditingTBEntry({...editingTBEntry, accountName: e.target.value})}
-                  placeholder="Cash at Bank"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="debit" className="text-[#001f3f]">Debit (£)</Label>
-                  <Input
-                    id="debit"
-                    type="number"
-                    value={editingTBEntry.debit}
-                    onChange={(e) => setEditingTBEntry({...editingTBEntry, debit: parseFloat(e.target.value) || 0})}
-                    placeholder="0.00"
-                  />
+                <div>
+                  <Label className="text-[#001f3f]">Registration Number</Label>
+                  <p className="text-[#001f3f]">{selectedClient.registrationNumber || 'N/A'}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="credit" className="text-[#001f3f]">Credit (£)</Label>
-                  <Input
-                    id="credit"
-                    type="number"
-                    value={editingTBEntry.credit}
-                    onChange={(e) => setEditingTBEntry({...editingTBEntry, credit: parseFloat(e.target.value) || 0})}
-                    placeholder="0.00"
-                  />
+                <div>
+                  <Label className="text-[#001f3f]">Year End</Label>
+                  <p className="text-[#001f3f]">{selectedClient.yearEnd}</p>
                 </div>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsTrialBalanceDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveTBEntry}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Entry
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Journal Entry Dialog */}
-      <Dialog open={isJournalDialogOpen} onOpenChange={setIsJournalDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">
-              {editingJournal && journalEntries.find(j => j.id === editingJournal.id) ? 'Edit' : 'New'} Journal Entry
-            </DialogTitle>
-            <DialogDescription>
-              Create or edit a journal entry
-            </DialogDescription>
-          </DialogHeader>
-          {editingJournal && (
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="reference" className="text-[#001f3f]">Reference</Label>
-                  <Input
-                    id="reference"
-                    value={editingJournal.reference}
-                    onChange={(e) => setEditingJournal({...editingJournal, reference: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="date" className="text-[#001f3f]">Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={editingJournal.date}
-                    onChange={(e) => setEditingJournal({...editingJournal, date: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-[#001f3f]">Status</Label>
-                  <Badge variant={
-                    editingJournal.status === 'posted' ? 'default' : 
-                    editingJournal.status === 'approved' ? 'secondary' : 
-                    'outline'
-                  }>
-                    {editingJournal.status.toUpperCase()}
+                <div>
+                  <Label className="text-[#001f3f]">Accounts Status</Label>
+                  <Badge variant={getStatusBadge(selectedClient.accountsStatus)}>
+                    {selectedClient.accountsStatus}
                   </Badge>
                 </div>
+                <div>
+                  <Label className="text-[#001f3f]">FRS Standard</Label>
+                  <p className="text-[#001f3f]">{selectedClient.frsStandard}</p>
+                </div>
+                <div>
+                  <Label className="text-[#001f3f]">Contact Person</Label>
+                  <p className="text-[#001f3f]">{selectedClient.contactPerson}</p>
+                </div>
+                <div>
+                  <Label className="text-[#001f3f]">Email</Label>
+                  <p className="text-[#001f3f]">{selectedClient.email}</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-[#001f3f]">Description</Label>
-                <Textarea
-                  id="description"
-                  value={editingJournal.description}
-                  onChange={(e) => setEditingJournal({...editingJournal, description: e.target.value})}
-                  placeholder="Describe the journal entry..."
-                  rows={3}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsClientViewOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isClientEditOpen} onOpenChange={setIsClientEditOpen}>
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Edit Client</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f]">Client Name</Label>
+                <Input
+                  value={clientFormData.name || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
+                  className="text-[#001f3f]"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[#001f3f]">Journal Lines</Label>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-[#001f3f]">Account Code</TableHead>
-                      <TableHead className="text-[#001f3f]">Account Name</TableHead>
-                      <TableHead className="text-[#001f3f]">Debit</TableHead>
-                      <TableHead className="text-[#001f3f]">Credit</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {editingJournal.entries.map((entry, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Input
-                            value={entry.accountCode}
-                            onChange={(e) => {
-                              const newEntries = [...editingJournal.entries]
-                              newEntries[index].accountCode = e.target.value
-                              setEditingJournal({...editingJournal, entries: newEntries})
-                            }}
-                            placeholder="Code"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            value={entry.accountName}
-                            onChange={(e) => {
-                              const newEntries = [...editingJournal.entries]
-                              newEntries[index].accountName = e.target.value
-                              setEditingJournal({...editingJournal, entries: newEntries})
-                            }}
-                            placeholder="Account Name"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="number"
-                            value={entry.debit}
-                            onChange={(e) => {
-                              const newEntries = [...editingJournal.entries]
-                              newEntries[index].debit = parseFloat(e.target.value) || 0
-                              setEditingJournal({...editingJournal, entries: newEntries})
-                            }}
-                            placeholder="0.00"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="number"
-                            value={entry.credit}
-                            onChange={(e) => {
-                              const newEntries = [...editingJournal.entries]
-                              newEntries[index].credit = parseFloat(e.target.value) || 0
-                              setEditingJournal({...editingJournal, entries: newEntries})
-                            }}
-                            placeholder="0.00"
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditingJournal({
-                    ...editingJournal,
-                    entries: [...editingJournal.entries, { accountCode: '', accountName: '', debit: 0, credit: 0 }]
-                  })}
+              <div>
+                <Label className="text-[#001f3f]">Entity Type</Label>
+                <Select 
+                  value={clientFormData.type} 
+                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
                 >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Line
-                </Button>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="limited-company">Limited Company</SelectItem>
+                    <SelectItem value="llp">LLP</SelectItem>
+                    <SelectItem value="partnership">Partnership</SelectItem>
+                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded">
-                <div>
-                  <Label className="text-[#001f3f]">Total Debits</Label>
-                  <p className="text-xl font-bold text-[#001f3f]">
-                    £{editingJournal.entries.reduce((sum, e) => sum + e.debit, 0).toLocaleString()}
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-[#001f3f]">Total Credits</Label>
-                  <p className="text-xl font-bold text-[#001f3f]">
-                    £{editingJournal.entries.reduce((sum, e) => sum + e.credit, 0).toLocaleString()}
-                  </p>
-                </div>
+              <div>
+                <Label className="text-[#001f3f]">Year End</Label>
+                <Input
+                  type="date"
+                  value={clientFormData.yearEnd || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Contact Person</Label>
+                <Input
+                  value={clientFormData.contactPerson || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
+                  className="text-[#001f3f]"
+                />
               </div>
             </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsJournalDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveJournal}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Journal Entry
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Financial Statement View Dialog */}
-      <Dialog open={isStatementDialogOpen} onOpenChange={setIsStatementDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">
-              {selectedStatement?.type === 'balance-sheet' ? 'Balance Sheet' : 
-               selectedStatement?.type === 'profit-loss' ? 'Profit & Loss Statement' : 
-               'Cash Flow Statement'}
-            </DialogTitle>
-            <DialogDescription>
-              Period: {selectedStatement?.period} | Generated: {selectedStatement?.generatedDate}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedStatement && (
-            <div className="space-y-4">
-              {selectedStatement.type === 'balance-sheet' && (
-                <div className="space-y-4">
-                  <div className="border-2 border-[#001f3f] rounded p-4">
-                    <h3 className="font-bold text-[#001f3f] text-lg mb-4">Assets</h3>
-                    <div className="space-y-2">
-                      {trialBalanceEntries.filter(e => e.category === 'Asset').map(entry => (
-                        <div key={entry.id} className="flex justify-between">
-                          <span className="text-[#001f3f]">{entry.accountName}</span>
-                          <span className="text-[#001f3f] font-semibold">£{(entry.debit - entry.credit).toLocaleString()}</span>
-                        </div>
-                      ))}
-                      <div className="border-t-2 border-[#001f3f] pt-2 mt-2 flex justify-between font-bold">
-                        <span className="text-[#001f3f]">Total Assets</span>
-                        <span className="text-[#001f3f]">£{totalAssets.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-2 border-[#001f3f] rounded p-4">
-                    <h3 className="font-bold text-[#001f3f] text-lg mb-4">Liabilities</h3>
-                    <div className="space-y-2">
-                      {trialBalanceEntries.filter(e => e.category === 'Liability').map(entry => (
-                        <div key={entry.id} className="flex justify-between">
-                          <span className="text-[#001f3f]">{entry.accountName}</span>
-                          <span className="text-[#001f3f] font-semibold">£{(entry.credit - entry.debit).toLocaleString()}</span>
-                        </div>
-                      ))}
-                      <div className="border-t-2 border-[#001f3f] pt-2 mt-2 flex justify-between font-bold">
-                        <span className="text-[#001f3f]">Total Liabilities</span>
-                        <span className="text-[#001f3f]">£{totalLiabilities.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-2 border-[#001f3f] rounded p-4">
-                    <h3 className="font-bold text-[#001f3f] text-lg mb-4">Equity</h3>
-                    <div className="space-y-2">
-                      {trialBalanceEntries.filter(e => e.category === 'Equity').map(entry => (
-                        <div key={entry.id} className="flex justify-between">
-                          <span className="text-[#001f3f]">{entry.accountName}</span>
-                          <span className="text-[#001f3f] font-semibold">£{(entry.credit - entry.debit).toLocaleString()}</span>
-                        </div>
-                      ))}
-                      <div className="border-t-2 border-[#001f3f] pt-2 mt-2 flex justify-between font-bold">
-                        <span className="text-[#001f3f]">Total Equity</span>
-                        <span className="text-[#001f3f]">£{totalEquity.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {selectedStatement.type === 'profit-loss' && (
-                <div className="space-y-4">
-                  <div className="border-2 border-[#001f3f] rounded p-4">
-                    <h3 className="font-bold text-[#001f3f] text-lg mb-4">Revenue</h3>
-                    <div className="space-y-2">
-                      {trialBalanceEntries.filter(e => e.category === 'Revenue').map(entry => (
-                        <div key={entry.id} className="flex justify-between">
-                          <span className="text-[#001f3f]">{entry.accountName}</span>
-                          <span className="text-[#001f3f] font-semibold">£{(entry.credit - entry.debit).toLocaleString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="border-2 border-[#001f3f] rounded p-4">
-                    <h3 className="font-bold text-[#001f3f] text-lg mb-4">Expenses</h3>
-                    <div className="space-y-2">
-                      {trialBalanceEntries.filter(e => e.category === 'Expense').map(entry => (
-                        <div key={entry.id} className="flex justify-between">
-                          <span className="text-[#001f3f]">{entry.accountName}</span>
-                          <span className="text-[#001f3f] font-semibold">£{(entry.debit - entry.credit).toLocaleString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="border-2 border-green-600 bg-green-50 rounded p-4">
-                    <div className="flex justify-between font-bold text-lg">
-                      <span className="text-[#001f3f]">Net Profit / (Loss)</span>
-                      <span className="text-green-600">
-                        £{(
-                          trialBalanceEntries.filter(e => e.category === 'Revenue').reduce((sum, e) => sum + e.credit - e.debit, 0) -
-                          trialBalanceEntries.filter(e => e.category === 'Expense').reduce((sum, e) => sum + e.debit - e.credit, 0)
-                        ).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsStatementDialogOpen(false)}>
-              Close
-            </Button>
-            {selectedStatement && selectedStatement.status === 'draft' && (
-              <Button onClick={() => {
-                handleFinalizeStatement(selectedStatement.id)
-                setIsStatementDialogOpen(false)
-              }}>
-                <Check className="h-4 w-4 mr-2" />
-                Finalize Statement
-              </Button>
-            )}
-            {selectedStatement && (
-              <ExportButton 
-                data={[
-                  ['Type', 'Period', 'Generated Date', 'Status'],
-                  [selectedStatement.type, selectedStatement.period, selectedStatement.generatedDate, selectedStatement.status]
-                ]} 
-                filename={`${selectedStatement.type}-${selectedStatement.period}`} 
-              />
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Drilldown Dialog */}
-      <Dialog open={isDrilldownOpen} onOpenChange={setIsDrilldownOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">{drilldownData?.title}</DialogTitle>
-            <DialogDescription>Detailed information and analysis</DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            {drilldownData && (
-              <div className="space-y-4">
-                {Array.isArray(drilldownData.data) ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-[#001f3f]">Item</TableHead>
-                        <TableHead className="text-[#001f3f]">Details</TableHead>
-                        <TableHead className="text-right text-[#001f3f]">Amount</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {drilldownData.data.map((item: any, index: number) => (
-                        <TableRow key={index}>
-                          <TableCell className="text-[#001f3f]">{item.accountCode || item.reference || index + 1}</TableCell>
-                          <TableCell className="text-[#001f3f]">{item.accountName || item.description || 'N/A'}</TableCell>
-                          <TableCell className="text-right text-[#001f3f]">
-                            £{((item.debit || 0) + (item.credit || 0)).toLocaleString()}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="space-y-2">
-                    <pre className="bg-gray-50 p-4 rounded border-2 border-[#001f3f] overflow-auto">
-                      <code className="text-[#001f3f]">{JSON.stringify(drilldownData.data, null, 2)}</code>
-                    </pre>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
           <DialogFooter>
-            <Button onClick={() => setIsDrilldownOpen(false)}>Close</Button>
+            <Button variant="outline" onClick={() => setIsClientEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveClient} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Save className="h-4 w-4 mr-2" />Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isClientAddOpen} onOpenChange={setIsClientAddOpen}>
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Add New Client</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f]">Client Name</Label>
+                <Input
+                  value={clientFormData.name || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Entity Type</Label>
+                <Select 
+                  value={clientFormData.type} 
+                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="limited-company">Limited Company</SelectItem>
+                    <SelectItem value="llp">LLP</SelectItem>
+                    <SelectItem value="partnership">Partnership</SelectItem>
+                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Year End</Label>
+                <Input
+                  type="date"
+                  value={clientFormData.yearEnd || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Contact Person</Label>
+                <Input
+                  value={clientFormData.contactPerson || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Email</Label>
+                <Input
+                  type="email"
+                  value={clientFormData.email || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, email: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Phone</Label>
+                <Input
+                  value={clientFormData.phone || ''}
+                  onChange={(e) => setClientFormData({...clientFormData, phone: e.target.value})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsClientAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveNewClient} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Client
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBEditOpen} onOpenChange={setIsTBEditOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Edit Trial Balance Entry</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code</Label>
+              <Input
+                value={tbFormData.accountCode || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountCode: e.target.value})}
+                className="text-[#001f3f]"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name</Label>
+              <Input
+                value={tbFormData.accountName || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountName: e.target.value})}
+                className="text-[#001f3f]"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f]">Debit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.debit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, debit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Credit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.credit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, credit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTBEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Save className="h-4 w-4 mr-2" />Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAdjEditOpen} onOpenChange={setIsAdjEditOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Edit Adjustment</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Type</Label>
+              <Select 
+                value={adjFormData.type} 
+                onValueChange={(value) => setAdjFormData({...adjFormData, type: value as any})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="prepayment">Prepayment</SelectItem>
+                  <SelectItem value="accrual">Accrual</SelectItem>
+                  <SelectItem value="depreciation">Depreciation</SelectItem>
+                  <SelectItem value="provision">Provision</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Description</Label>
+              <Textarea
+                value={adjFormData.description || ''}
+                onChange={(e) => setAdjFormData({...adjFormData, description: e.target.value})}
+                className="text-[#001f3f] border-[#001f3f]"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Amount</Label>
+              <Input
+                type="number"
+                value={adjFormData.amount || 0}
+                onChange={(e) => setAdjFormData({...adjFormData, amount: parseFloat(e.target.value)})}
+                className="text-[#001f3f] border-[#001f3f]"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAdjEditOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Save className="h-4 w-4 mr-2" />Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDrilldownOpen} onOpenChange={setIsDrilldownOpen}>
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">{drilldownTitle}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            {drilldownContent}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsDrilldownOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
