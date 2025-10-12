@@ -485,7 +485,10 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {clients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
                       <TableCell className="text-[#001f3f]">{client.name}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.type}</TableCell>
                       <TableCell><Badge variant={getStatusBadge(client.accountsStatus)} className="bg-[#001f3f] text-white">{client.accountsStatus}</Badge></TableCell>
@@ -516,7 +519,10 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {inProgressClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
                       <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
@@ -548,7 +554,10 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {reviewClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
                       <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
@@ -580,7 +589,10 @@ const AccountsProduction: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {completedClients.map(client => (
-                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50" onClick={() => {
+                      setIsDrilldownOpen(false)
+                      handleViewClient(client)
+                    }}>
                       <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
                       <TableCell className="text-[#001f3f]">{client.lastAccounts}</TableCell>
@@ -1171,6 +1183,36 @@ const AccountsProduction: React.FC = () => {
 
   const renderChartOfAccounts = () => {
     const handleAccountCategoryClick = (category: string, count: number) => {
+      const handleAccountRowClick = (code: string, name: string, balance: string) => {
+        setDrilldownTitle(`Account Details: ${name}`)
+        setDrilldownContent(
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div><p className="text-sm text-gray-500">Account Code</p><p className="text-lg font-semibold text-[#001f3f]">{code}</p></div>
+              <div><p className="text-sm text-gray-500">Account Name</p><p className="text-lg font-semibold text-[#001f3f]">{name}</p></div>
+              <div><p className="text-sm text-gray-500">Current Balance</p><p className="text-lg font-semibold text-[#001f3f]">{balance}</p></div>
+              <div><p className="text-sm text-gray-500">Category</p><p className="text-lg font-semibold text-[#001f3f]">{category}</p></div>
+            </div>
+            <div className="border-t-2 border-[#001f3f] pt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-3">Recent Transactions</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Date</TableHead>
+                    <TableHead className="text-[#001f3f]">Description</TableHead>
+                    <TableHead className="text-[#001f3f]">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow><TableCell className="text-[#001f3f]">2024-03-15</TableCell><TableCell className="text-[#001f3f]">Opening Balance</TableCell><TableCell className="text-[#001f3f]">{balance}</TableCell></TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )
+        setIsDrilldownOpen(true)
+      }
+      
       setDrilldownTitle(`${category} Accounts`)
       setDrilldownContent(
         <div className="space-y-4">
@@ -1185,13 +1227,13 @@ const AccountsProduction: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1000', 'Fixed Assets', '£250,000')}>
                 <TableCell className="text-[#001f3f]">1000</TableCell>
                 <TableCell className="text-[#001f3f]">Fixed Assets</TableCell>
                 <TableCell className="text-[#001f3f]">£250,000</TableCell>
                 <TableCell><Badge className="bg-green-600">Active</Badge></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountRowClick('1100', 'Current Assets', '£85,000')}>
                 <TableCell className="text-[#001f3f]">1100</TableCell>
                 <TableCell className="text-[#001f3f]">Current Assets</TableCell>
                 <TableCell className="text-[#001f3f]">£85,000</TableCell>
