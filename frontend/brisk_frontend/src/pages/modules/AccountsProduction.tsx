@@ -3,7 +3,7 @@ import {
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
   Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
-  Globe, Save
+  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
@@ -129,6 +129,10 @@ const AccountsProduction: React.FC = () => {
   const [clientSearchName, setClientSearchName] = useState('')
   const [clientSearchType, setClientSearchType] = useState('')
   const [clientSearchStatus, setClientSearchStatus] = useState('')
+  const [clientSearchYearEnd, setClientSearchYearEnd] = useState('')
+  const [clientSearchDueDate, setClientSearchDueDate] = useState('')
+  const [clientSortField, setClientSortField] = useState<keyof Client | ''>('')
+  const [clientSortDirection, setClientSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
     { id: '1', accountCode: '1000', accountName: 'Fixed Assets', debit: 250000, credit: 0, category: 'Asset' },
@@ -142,6 +146,10 @@ const AccountsProduction: React.FC = () => {
   const [tbSearchCode, setTbSearchCode] = useState('')
   const [tbSearchName, setTbSearchName] = useState('')
   const [tbSearchCategory, setTbSearchCategory] = useState('')
+  const [tbSearchDebit, setTbSearchDebit] = useState('')
+  const [tbSearchCredit, setTbSearchCredit] = useState('')
+  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry | ''>('')
+  const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
     { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
@@ -150,12 +158,24 @@ const AccountsProduction: React.FC = () => {
   ])
   const [adjSearchType, setAdjSearchType] = useState('')
   const [adjSearchStatus, setAdjSearchStatus] = useState('')
+  const [adjSearchDescription, setAdjSearchDescription] = useState('')
+  const [adjSearchAmount, setAdjSearchAmount] = useState('')
+  const [adjSearchDate, setAdjSearchDate] = useState('')
+  const [adjSortField, setAdjSortField] = useState<keyof Adjustment | ''>('')
+  const [adjSortDirection, setAdjSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [statements, setStatements] = useState<FinancialStatement[]>([
     { id: '1', clientId: '1', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '2', clientId: '1', type: 'profit-loss', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '3', clientId: '2', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-10', status: 'review', frsStandard: 'FRS 102' }
   ])
+  const [stmtSearchClient, setStmtSearchClient] = useState('')
+  const [stmtSearchType, setStmtSearchType] = useState('')
+  const [stmtSearchPeriod, setStmtSearchPeriod] = useState('')
+  const [stmtSearchDate, setStmtSearchDate] = useState('')
+  const [stmtSearchStatus, setStmtSearchStatus] = useState('')
+  const [stmtSortField, setStmtSortField] = useState<keyof FinancialStatement | ''>('')
+  const [stmtSortDirection, setStmtSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [isClientViewOpen, setIsClientViewOpen] = useState(false)
   const [isClientEditOpen, setIsClientEditOpen] = useState(false)
@@ -340,29 +360,112 @@ const AccountsProduction: React.FC = () => {
   }
 
   const getFilteredClients = () => {
-    return clients.filter(client => {
+    let filtered = clients.filter(client => {
       const matchesName = !clientSearchName || client.name.toLowerCase().includes(clientSearchName.toLowerCase())
       const matchesType = !clientSearchType || client.type === clientSearchType
       const matchesStatus = !clientSearchStatus || client.accountsStatus === clientSearchStatus
-      return matchesName && matchesType && matchesStatus
+      const matchesYearEnd = !clientSearchYearEnd || client.yearEnd.includes(clientSearchYearEnd)
+      const matchesDueDate = !clientSearchDueDate || client.nextDue.includes(clientSearchDueDate)
+      return matchesName && matchesType && matchesStatus && matchesYearEnd && matchesDueDate
     })
+
+    if (clientSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[clientSortField]
+        const bVal = b[clientSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (clientSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
   }
 
   const getFilteredTBEntries = () => {
-    return trialBalanceEntries.filter(entry => {
+    let filtered = trialBalanceEntries.filter(entry => {
       const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
       const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
       const matchesCategory = !tbSearchCategory || entry.category === tbSearchCategory
-      return matchesCode && matchesName && matchesCategory
+      const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
+      const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
+      return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
     })
+
+    if (tbSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[tbSortField]
+        const bVal = b[tbSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (tbSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
   }
 
   const getFilteredAdjustments = () => {
-    return adjustments.filter(adj => {
+    let filtered = adjustments.filter(adj => {
       const matchesType = !adjSearchType || adj.type === adjSearchType
       const matchesStatus = !adjSearchStatus || adj.status === adjSearchStatus
-      return matchesType && matchesStatus
+      const matchesDescription = !adjSearchDescription || adj.description.toLowerCase().includes(adjSearchDescription.toLowerCase())
+      const matchesAmount = !adjSearchAmount || adj.amount.toString().includes(adjSearchAmount)
+      const matchesDate = !adjSearchDate || adj.date.includes(adjSearchDate)
+      return matchesType && matchesStatus && matchesDescription && matchesAmount && matchesDate
     })
+
+    if (adjSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[adjSortField]
+        const bVal = b[adjSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (adjSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
+  }
+
+  const getFilteredStatements = () => {
+    let filtered = statements.filter(stmt => {
+      const client = clients.find(c => c.id === stmt.clientId)
+      const matchesClient = !stmtSearchClient || (client?.name.toLowerCase().includes(stmtSearchClient.toLowerCase()) ?? false)
+      const matchesType = !stmtSearchType || stmt.type === stmtSearchType
+      const matchesPeriod = !stmtSearchPeriod || stmt.period.includes(stmtSearchPeriod)
+      const matchesDate = !stmtSearchDate || stmt.generatedDate.includes(stmtSearchDate)
+      const matchesStatus = !stmtSearchStatus || stmt.status === stmtSearchStatus
+      return matchesClient && matchesType && matchesPeriod && matchesDate && matchesStatus
+    })
+
+    if (stmtSortField) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[stmtSortField]
+        const bVal = b[stmtSortField]
+        if (aVal === undefined || bVal === undefined) return 0
+        
+        if (stmtSortDirection === 'asc') {
+          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
+        } else {
+          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
+        }
+      })
+    }
+
+    return filtered
   }
 
   const menuStructure = [
@@ -455,6 +558,78 @@ const AccountsProduction: React.FC = () => {
       case 'not-started': return 'destructive'
       default: return 'outline'
     }
+  }
+
+  const handleSort = (field: keyof Client) => {
+    if (clientSortField === field) {
+      setClientSortDirection(clientSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setClientSortField(field)
+      setClientSortDirection('asc')
+    }
+  }
+
+  const getSortIcon = (field: keyof Client) => {
+    if (clientSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return clientSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
+  }
+
+  const handleTBSort = (field: keyof TrialBalanceEntry) => {
+    if (tbSortField === field) {
+      setTbSortDirection(tbSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setTbSortField(field)
+      setTbSortDirection('asc')
+    }
+  }
+
+  const getTBSortIcon = (field: keyof TrialBalanceEntry) => {
+    if (tbSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return tbSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
+  }
+
+  const handleAdjSort = (field: keyof Adjustment) => {
+    if (adjSortField === field) {
+      setAdjSortDirection(adjSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setAdjSortField(field)
+      setAdjSortDirection('asc')
+    }
+  }
+
+  const getAdjSortIcon = (field: keyof Adjustment) => {
+    if (adjSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return adjSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
+  }
+
+  const handleStmtSort = (field: keyof FinancialStatement) => {
+    if (stmtSortField === field) {
+      setStmtSortDirection(stmtSortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setStmtSortField(field)
+      setStmtSortDirection('asc')
+    }
+  }
+
+  const getStmtSortIcon = (field: keyof FinancialStatement) => {
+    if (stmtSortField !== field) {
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
+    }
+    return stmtSortDirection === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
+      : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
 
   const renderDashboard = () => (
@@ -666,7 +841,9 @@ const AccountsProduction: React.FC = () => {
                   <TableRow>
                     <TableHead className="text-[#001f3f]">
                       <div className="space-y-2">
-                        <div>Client Name</div>
+                        <div className="cursor-pointer" onClick={() => handleSort('name')}>
+                          Client Name {getSortIcon('name')}
+                        </div>
                         <Input
                           placeholder="Search..."
                           value={clientSearchName}
@@ -677,7 +854,9 @@ const AccountsProduction: React.FC = () => {
                     </TableHead>
                     <TableHead className="text-[#001f3f]">
                       <div className="space-y-2">
-                        <div>Type</div>
+                        <div className="cursor-pointer" onClick={() => handleSort('type')}>
+                          Type {getSortIcon('type')}
+                        </div>
                         <Select value={clientSearchType} onValueChange={setClientSearchType}>
                           <SelectTrigger className="h-8 text-xs">
                             <SelectValue placeholder="All" />
@@ -692,10 +871,24 @@ const AccountsProduction: React.FC = () => {
                         </Select>
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f]">Year End</TableHead>
                     <TableHead className="text-[#001f3f]">
                       <div className="space-y-2">
-                        <div>Status</div>
+                        <div className="cursor-pointer" onClick={() => handleSort('yearEnd')}>
+                          Year End {getSortIcon('yearEnd')}
+                        </div>
+                        <Input
+                          placeholder="Search..."
+                          value={clientSearchYearEnd}
+                          onChange={(e) => setClientSearchYearEnd(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('accountsStatus')}>
+                          Status {getSortIcon('accountsStatus')}
+                        </div>
                         <Select value={clientSearchStatus} onValueChange={setClientSearchStatus}>
                           <SelectTrigger className="h-8 text-xs">
                             <SelectValue placeholder="All" />
@@ -710,7 +903,19 @@ const AccountsProduction: React.FC = () => {
                         </Select>
                       </div>
                     </TableHead>
-                    <TableHead className="text-[#001f3f]">Due Date</TableHead>
+                    <TableHead className="text-[#001f3f]">
+                      <div className="space-y-2">
+                        <div className="cursor-pointer" onClick={() => handleSort('nextDue')}>
+                          Due Date {getSortIcon('nextDue')}
+                        </div>
+                        <Input
+                          placeholder="Search..."
+                          value={clientSearchDueDate}
+                          onChange={(e) => setClientSearchDueDate(e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                    </TableHead>
                     <TableHead className="text-[#001f3f]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -736,14 +941,20 @@ const AccountsProduction: React.FC = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleEditClient(client)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditClient(client)
+                            }}
                           >
                             <Edit className="h-3 w-3" />
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleDeleteClient(client)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteClient(client)
+                            }}
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
@@ -826,7 +1037,9 @@ const AccountsProduction: React.FC = () => {
                 <TableRow>
                   <TableHead className="text-[#001f3f]">
                     <div className="space-y-2">
-                      <div>Code</div>
+                      <div className="cursor-pointer" onClick={() => handleTBSort('accountCode')}>
+                        Code {getTBSortIcon('accountCode')}
+                      </div>
                       <Input
                         placeholder="Search..."
                         value={tbSearchCode}
@@ -837,7 +1050,9 @@ const AccountsProduction: React.FC = () => {
                   </TableHead>
                   <TableHead className="text-[#001f3f]">
                     <div className="space-y-2">
-                      <div>Account Name</div>
+                      <div className="cursor-pointer" onClick={() => handleTBSort('accountName')}>
+                        Account Name {getTBSortIcon('accountName')}
+                      </div>
                       <Input
                         placeholder="Search..."
                         value={tbSearchName}
@@ -848,7 +1063,9 @@ const AccountsProduction: React.FC = () => {
                   </TableHead>
                   <TableHead className="text-[#001f3f]">
                     <div className="space-y-2">
-                      <div>Category</div>
+                      <div className="cursor-pointer" onClick={() => handleTBSort('category')}>
+                        Category {getTBSortIcon('category')}
+                      </div>
                       <Select value={tbSearchCategory} onValueChange={setTbSearchCategory}>
                         <SelectTrigger className="h-8 text-xs">
                           <SelectValue placeholder="All" />
@@ -864,8 +1081,32 @@ const AccountsProduction: React.FC = () => {
                       </Select>
                     </div>
                   </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('debit')}>
+                        Debit {getTBSortIcon('debit')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchDebit}
+                        onChange={(e) => setTbSearchDebit(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleTBSort('credit')}>
+                        Credit {getTBSortIcon('credit')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={tbSearchCredit}
+                        onChange={(e) => setTbSearchCredit(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -934,7 +1175,9 @@ const AccountsProduction: React.FC = () => {
                 <TableRow>
                   <TableHead className="text-[#001f3f]">
                     <div className="space-y-2">
-                      <div>Type</div>
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('type')}>
+                        Type {getAdjSortIcon('type')}
+                      </div>
                       <Select value={adjSearchType} onValueChange={setAdjSearchType}>
                         <SelectTrigger className="h-8 text-xs">
                           <SelectValue placeholder="All" />
@@ -949,12 +1192,50 @@ const AccountsProduction: React.FC = () => {
                       </Select>
                     </div>
                   </TableHead>
-                  <TableHead className="text-[#001f3f]">Description</TableHead>
-                  <TableHead className="text-right text-[#001f3f]">Amount</TableHead>
-                  <TableHead className="text-[#001f3f]">Date</TableHead>
                   <TableHead className="text-[#001f3f]">
                     <div className="space-y-2">
-                      <div>Status</div>
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('description')}>
+                        Description {getAdjSortIcon('description')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchDescription}
+                        onChange={(e) => setAdjSearchDescription(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('amount')}>
+                        Amount {getAdjSortIcon('amount')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchAmount}
+                        onChange={(e) => setAdjSearchAmount(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('date')}>
+                        Date {getAdjSortIcon('date')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={adjSearchDate}
+                        onChange={(e) => setAdjSearchDate(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleAdjSort('status')}>
+                        Status {getAdjSortIcon('status')}
+                      </div>
                       <Select value={adjSearchStatus} onValueChange={setAdjSearchStatus}>
                         <SelectTrigger className="h-8 text-xs">
                           <SelectValue placeholder="All" />
@@ -1014,6 +1295,8 @@ const AccountsProduction: React.FC = () => {
   }
 
   const renderStatements = () => {
+    const filteredStmts = getFilteredStatements()
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -1058,16 +1341,86 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f]">Client</TableHead>
-                  <TableHead className="text-[#001f3f]">Type</TableHead>
-                  <TableHead className="text-[#001f3f]">Period</TableHead>
-                  <TableHead className="text-[#001f3f]">Generated</TableHead>
-                  <TableHead className="text-[#001f3f]">Status</TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('clientId')}>
+                        Client {getStmtSortIcon('clientId')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchClient}
+                        onChange={(e) => setStmtSearchClient(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('type')}>
+                        Type {getStmtSortIcon('type')}
+                      </div>
+                      <Select value={stmtSearchType} onValueChange={setStmtSearchType}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="balance-sheet">Balance Sheet</SelectItem>
+                          <SelectItem value="profit-loss">Profit & Loss</SelectItem>
+                          <SelectItem value="cash-flow">Cash Flow</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('period')}>
+                        Period {getStmtSortIcon('period')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchPeriod}
+                        onChange={(e) => setStmtSearchPeriod(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('generatedDate')}>
+                        Generated {getStmtSortIcon('generatedDate')}
+                      </div>
+                      <Input
+                        placeholder="Search..."
+                        value={stmtSearchDate}
+                        onChange={(e) => setStmtSearchDate(e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-[#001f3f]">
+                    <div className="space-y-2">
+                      <div className="cursor-pointer" onClick={() => handleStmtSort('status')}>
+                        Status {getStmtSortIcon('status')}
+                      </div>
+                      <Select value={stmtSearchStatus} onValueChange={setStmtSearchStatus}>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="review">Review</SelectItem>
+                          <SelectItem value="finalized">Finalized</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {statements.map(stmt => {
+                {filteredStmts.map(stmt => {
                   const client = clients.find(c => c.id === stmt.clientId)
                   return (
                     <TableRow 
@@ -1088,10 +1441,10 @@ const AccountsProduction: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
                             <Eye className="h-3 w-3" />
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
                             <Download className="h-3 w-3" />
                           </Button>
                         </div>
