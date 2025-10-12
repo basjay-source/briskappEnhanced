@@ -471,38 +471,126 @@ const AccountsProduction: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div onClick={() => {
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
+          setDrilldownTitle('All Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Total clients: {clients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Type</TableHead>
+                    <TableHead className="text-[#001f3f]">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {clients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                      <TableCell className="text-[#001f3f]">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.type}</TableCell>
+                      <TableCell><Badge variant={getStatusBadge(client.accountsStatus)} className="bg-[#001f3f] text-white">{client.accountsStatus}</Badge></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
         }} className="cursor-pointer">
           <KPICard title="Total Clients" value={clients.length.toString()} 
             change="+3 this month" icon={Building2} color="text-blue-600" />
         </div>
         <div onClick={() => {
-          setClientSearchStatus('in-progress')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
+          const inProgressClients = clients.filter(c => c.accountsStatus === 'in-progress')
+          setDrilldownTitle('In Progress Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Clients with accounts in progress: {inProgressClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Due Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {inProgressClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
         }} className="cursor-pointer">
           <KPICard title="In Progress" 
             value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
             change="Active" icon={FileText} color="text-orange-600" />
         </div>
         <div onClick={() => {
-          setClientSearchStatus('review')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
+          const reviewClients = clients.filter(c => c.accountsStatus === 'review')
+          setDrilldownTitle('Clients in Review')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Clients pending review: {reviewClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Due Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {reviewClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.nextDue}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
         }} className="cursor-pointer">
           <KPICard title="Review" 
             value={clients.filter(c => c.accountsStatus === 'review').length.toString()}
             change="Pending" icon={Eye} color="text-blue-600" />
         </div>
         <div onClick={() => {
-          setClientSearchStatus('completed')
-          setActiveMainTab('clients')
-          setActiveSubTab('client-list')
-          setExpandedCategories(['clients'])
+          const completedClients = clients.filter(c => c.accountsStatus === 'completed')
+          setDrilldownTitle('Completed Clients')
+          setDrilldownContent(
+            <div className="space-y-4">
+              <p className="text-[#001f3f]">Completed accounts: {completedClients.length}</p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Client</TableHead>
+                    <TableHead className="text-[#001f3f]">Year End</TableHead>
+                    <TableHead className="text-[#001f3f]">Completion Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {completedClients.map(client => (
+                    <TableRow key={client.id} className="cursor-pointer hover:bg-gray-50">
+                      <TableCell className="text-[#001f3f] font-semibold">{client.name}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.yearEnd}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.lastAccounts}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )
+          setIsDrilldownOpen(true)
         }} className="cursor-pointer">
           <KPICard title="Completed" 
             value={clients.filter(c => c.accountsStatus === 'completed').length.toString()}
