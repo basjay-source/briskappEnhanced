@@ -1726,7 +1726,7 @@ const AccountsProduction: React.FC = () => {
       </div>
 
       <Dialog open={isClientViewOpen} onOpenChange={setIsClientViewOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">Client Details</DialogTitle>
           </DialogHeader>
@@ -1777,7 +1777,7 @@ const AccountsProduction: React.FC = () => {
       </Dialog>
 
       <Dialog open={isClientEditOpen} onOpenChange={setIsClientEditOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">Edit Client</DialogTitle>
           </DialogHeader>
@@ -1837,7 +1837,7 @@ const AccountsProduction: React.FC = () => {
       </Dialog>
 
       <Dialog open={isClientAddOpen} onOpenChange={setIsClientAddOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">Add New Client</DialogTitle>
           </DialogHeader>
@@ -1914,7 +1914,7 @@ const AccountsProduction: React.FC = () => {
       </Dialog>
 
       <Dialog open={isTBEditOpen} onOpenChange={setIsTBEditOpen}>
-        <DialogContent>
+        <DialogContent className="border-2 border-[#001f3f]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">Edit Trial Balance Entry</DialogTitle>
           </DialogHeader>
@@ -1966,7 +1966,7 @@ const AccountsProduction: React.FC = () => {
       </Dialog>
 
       <Dialog open={isAdjEditOpen} onOpenChange={setIsAdjEditOpen}>
-        <DialogContent>
+        <DialogContent className="border-2 border-[#001f3f]">
           <DialogHeader>
             <DialogTitle className="text-[#001f3f]">Edit Adjustment</DialogTitle>
           </DialogHeader>
