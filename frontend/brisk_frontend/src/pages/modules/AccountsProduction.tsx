@@ -2669,12 +2669,29 @@ const AccountsProduction: React.FC = () => {
                 {importedTBEntries.map((entry, index) => (
                   <TableRow key={index} className="border-b border-[#001f3f]">
                     <TableCell>
-                      <Input
-                        value={entry.mappedCode || ''}
-                        onChange={(e) => handleUpdateMapping(index, 'mappedCode', e.target.value)}
-                        placeholder="Map code"
-                        className="h-8 text-xs border-[#001f3f] font-mono w-24"
-                      />
+                      <Select 
+                        value={entry.mappedCode || ''} 
+                        onValueChange={(value) => handleUpdateMapping(index, 'mappedCode', value)}
+                      >
+                        <SelectTrigger className="h-8 text-xs border-[#001f3f]">
+                          <SelectValue placeholder="Select code" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1000">1000 - Fixed Assets</SelectItem>
+                          <SelectItem value="1100">1100 - Current Assets</SelectItem>
+                          <SelectItem value="1200">1200 - Bank</SelectItem>
+                          <SelectItem value="1300">1300 - Debtors</SelectItem>
+                          <SelectItem value="2000">2000 - Current Liabilities</SelectItem>
+                          <SelectItem value="2100">2100 - Creditors</SelectItem>
+                          <SelectItem value="2200">2200 - VAT</SelectItem>
+                          <SelectItem value="3000">3000 - Capital & Reserves</SelectItem>
+                          <SelectItem value="4000">4000 - Sales</SelectItem>
+                          <SelectItem value="5000">5000 - Cost of Sales</SelectItem>
+                          <SelectItem value="6000">6000 - Overheads</SelectItem>
+                          <SelectItem value="7000">7000 - Other Income</SelectItem>
+                          <SelectItem value="8000">8000 - Finance Costs</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
