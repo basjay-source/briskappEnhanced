@@ -1222,6 +1222,16 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                <TableRow className="bg-gray-100 border-t-2 border-[#001f3f] font-bold">
+                  <TableCell colSpan={3} className="text-right text-[#001f3f]">Total:</TableCell>
+                  <TableCell className="text-right text-[#001f3f]">
+                    £{totalDebit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </TableCell>
+                  <TableCell className="text-right text-[#001f3f]">
+                    £{totalCredit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
