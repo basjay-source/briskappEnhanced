@@ -49,6 +49,7 @@ interface ImportedTBEntry {
   accountName: string
   debit: number
   credit: number
+  mappedCode?: string
   category?: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
   statementCategory?: string
   mapped: boolean
@@ -433,7 +434,7 @@ const AccountsProduction: React.FC = () => {
   const handleSaveMappedTB = () => {
     const newEntries: TrialBalanceEntry[] = importedTBEntries.map((entry, index) => ({
       id: Date.now().toString() + index,
-      accountCode: entry.accountCode,
+      accountCode: entry.mappedCode || entry.accountCode,
       accountName: entry.accountName,
       debit: entry.debit,
       credit: entry.credit,
@@ -2655,7 +2656,8 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-[#001f3f]">
-                  <TableHead className="text-[#001f3f]">Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Imported Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Mapped Code</TableHead>
                   <TableHead className="text-[#001f3f]">Account Name</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
@@ -2667,6 +2669,14 @@ const AccountsProduction: React.FC = () => {
                 {importedTBEntries.map((entry, index) => (
                   <TableRow key={index} className="border-b border-[#001f3f]">
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
+                    <TableCell>
+                      <Input
+                        value={entry.mappedCode || ''}
+                        onChange={(e) => handleUpdateMapping(index, 'mappedCode', e.target.value)}
+                        placeholder="Enter code"
+                        className="h-8 text-xs border-[#001f3f] font-mono"
+                      />
+                    </TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
