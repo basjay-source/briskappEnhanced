@@ -2656,8 +2656,8 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-[#001f3f]">
-                  <TableHead className="text-[#001f3f]">Imported Code</TableHead>
-                  <TableHead className="text-[#001f3f]">Mapped Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Map Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Code</TableHead>
                   <TableHead className="text-[#001f3f]">Account Name</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
@@ -2668,15 +2668,15 @@ const AccountsProduction: React.FC = () => {
               <TableBody>
                 {importedTBEntries.map((entry, index) => (
                   <TableRow key={index} className="border-b border-[#001f3f]">
-                    <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell>
                       <Input
                         value={entry.mappedCode || ''}
                         onChange={(e) => handleUpdateMapping(index, 'mappedCode', e.target.value)}
-                        placeholder="Enter code"
-                        className="h-8 text-xs border-[#001f3f] font-mono"
+                        placeholder="Map code"
+                        className="h-8 text-xs border-[#001f3f] font-mono w-24"
                       />
                     </TableCell>
+                    <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
