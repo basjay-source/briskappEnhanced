@@ -51,7 +51,7 @@ export const chartOfAccounts: AccountCategory[] = [
           { code: '40', name: 'Cost of sales (40)', groupNumber: '21', category: 'Cost of Sales' },
           { code: '41', name: 'Cost of sales (41)', groupNumber: '21', category: 'Cost of Sales' },
           { code: '42', name: 'Cost of sales (42)', groupNumber: '21', category: 'Cost of Sales' },
-          { code: '43', name: 'Directors' remuneration', groupNumber: '21', category: 'Cost of Sales' },
+          { code: '43', name: "Directors' remuneration", groupNumber: '21', category: 'Cost of Sales' },
           { code: '44', name: 'Wages', groupNumber: '21', category: 'Cost of Sales' },
           { code: '45', name: 'Social security', groupNumber: '21', category: 'Cost of Sales' },
           { code: '46', name: 'Pensions', groupNumber: '21', category: 'Cost of Sales' },
@@ -94,20 +94,20 @@ export const chartOfAccounts: AccountCategory[] = [
           { code: '83', name: 'Gain/loss on revaluation of assets', groupNumber: '21', category: 'Cost of Sales' }
         ]},
       { groupNumber: '101', groupName: 'DISTRIBUTION COSTS', accounts: [
-          { code: '151', name: 'Directors' remuneration', groupNumber: '101', category: 'Expenses' },
+          { code: '151', name: "Directors' remuneration", groupNumber: '101', category: 'Expenses' },
           { code: '152', name: 'Wages', groupNumber: '101', category: 'Expenses' },
           { code: '153', name: 'Social security', groupNumber: '101', category: 'Expenses' },
           { code: '154', name: 'Pensions', groupNumber: '101', category: 'Expenses' }
         ]},
       { groupNumber: '151', groupName: 'ADMINISTRATIVE EXPENSES', accounts: [
-          { code: '220', name: 'Directors' remuneration', groupNumber: '151', category: 'Expenses' },
+          { code: '220', name: "Directors' remuneration", groupNumber: '151', category: 'Expenses' },
           { code: '221', name: 'Wages', groupNumber: '151', category: 'Expenses' },
           { code: '263', name: 'Telephone', groupNumber: '151', category: 'Expenses' },
           { code: '264', name: 'Post and stationery', groupNumber: '151', category: 'Expenses' },
           { code: '265', name: 'Advertising', groupNumber: '151', category: 'Expenses' },
           { code: '267', name: 'Motor expenses', groupNumber: '151', category: 'Expenses' },
           { code: '290', name: 'Legal fees', groupNumber: '151', category: 'Expenses' },
-          { code: '292', name: 'Auditors' remuneration', groupNumber: '151', category: 'Expenses' }
+          { code: '292', name: "Auditors' remuneration", groupNumber: '151', category: 'Expenses' }
         ]}
     ]},
   { category: 'Balance Sheet', groups: [
