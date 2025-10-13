@@ -1084,33 +1084,6 @@ const AccountsProduction: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Total Debits</div>
-              <div className="text-2xl font-bold text-[#001f3f]">
-                £{totalDebit.toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Total Credits</div>
-              <div className="text-2xl font-bold text-[#001f3f]">
-                £{totalCredit.toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Difference</div>
-              <div className={`text-2xl font-bold ${Math.abs(totalDebit - totalCredit) < 0.01 ? 'text-green-600' : 'text-red-600'}`}>
-                £{Math.abs(totalDebit - totalCredit).toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
         <Card>
           <CardHeader>
             <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
@@ -1226,22 +1199,6 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-                <TableRow className="bg-[#001f3f] hover:bg-[#001f3f]">
-                  <TableCell colSpan={3} className="text-white font-bold text-right">TOTALS:</TableCell>
-                  <TableCell className="text-right text-white font-bold text-lg">
-                    £{totalDebit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </TableCell>
-                  <TableCell className="text-right text-white font-bold text-lg">
-                    £{totalCredit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </TableCell>
-                  <TableCell className="text-white text-center">
-                    {Math.abs(totalDebit - totalCredit) < 0.01 ? (
-                      <span className="text-green-400 font-bold">✓ Balanced</span>
-                    ) : (
-                      <span className="text-red-400 font-bold">⚠ £{Math.abs(totalDebit - totalCredit).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    )}
-                  </TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
