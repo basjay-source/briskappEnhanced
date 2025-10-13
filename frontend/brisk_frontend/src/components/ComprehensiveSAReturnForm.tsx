@@ -6,327 +6,374 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
-interface Employment {
+interface EmploymentDetails {
   id: string
-  type: 'employed' | 'director'
-  employerName: string
-  payeReference: string
-  fromDate: string
-  toDate: string
-  grossPay: number
-  taxDeducted: number
-  p60Received: boolean
+  employerName: string // Box 5
+  payeReference: string // Box 4
+  dateStoppedBeingDirector: string // Box 6.1
+  payFromEmployment: number // Box 1
+  taxDeducted: number // Box 2
+  tipsAndOtherPayments: number // Box 3
+  directorIndicator: boolean // Box 6
+  offPayrollWorkingIndicator: boolean // Box 8
   benefits: {
-    companyCarBenefit: number
-    medicalInsurance: number
+    companyCarAndVan: number // Box 9
+    fuelForCompanyCar: number // Box 10
+    privateMedicalDental: number // Box 11
+    vouchersCreditsCards: number // Box 12
     otherBenefits: number
   }
   expenses: {
-    businessMileage: number
+    travelExpenses: number // Box 17-20
     professionalFees: number
     otherExpenses: number
-  }
-  studentLoan: {
-    plan1: number
-    plan2: number
+    expensesDescription: string
   }
 }
 
-interface SelfEmployment {
+interface SelfEmploymentDetails {
   id: string
-  tradeName: string
-  description: string
-  startDate: string
-  accountingPeriodEnd: string
-  turnover: number
-  allowableExpenses: number
-  capitalAllowances: number
-  profit: number
-  niContributions: {
-    class2: number
-    class4: number
+  businessName: string
+  businessDescription: string
+  accountingBasis: 'cash' | 'traditional'
+  accountsPeriodEnd: string
+  turnover: number // Box 15
+  otherBusinessIncome: number // Box 16
+  tradingIncomeAllowanceClaimed: boolean // Box 16.1
+  tradingIncomeAllowanceAmount: number
+  costOfGoods: number // Box 17
+  paymentsToSubcontractors: number // Box 18 CIS
+  staffCosts: number // Box 19
+  carTravelExpenses: number // Box 20
+  rentRatesPowerInsurance: number // Box 21
+  repairsMaintenance: number // Box 22
+  phoneStationeryOffice: number // Box 23
+  advertisingEntertainment: number // Box 24
+  interestOnLoans: number // Box 25
+  bankCharges: number // Box 26
+  irrecoverableDebts: number // Box 27
+  accountancyLegalFees: number // Box 28
+  depreciationLossProfitOnSale: number // Box 29
+  otherBusinessExpenses: number // Box 30
+  privateUseAdjustments: number // Box 32-45
+  disallowables: number
+  capitalAllowances: {
+    annualInvestmentAllowance: number // Box 49-59
+    otherCapitalAllowances: number
   }
-  losses: {
-    currentYearLoss: number
-    lossCarryBack: number
-    lossCarryForward: number
-  }
-  overlapRelief: number
-  basisPeriodReform: boolean
-  cashBasis: boolean
+  netProfit: number // Box 47
+  netLoss: number // Box 48
 }
 
-interface Partnership {
-  id: string
-  partnershipName: string
-  partnershipUTR: string
-  profitShare: number
-  accountingPeriodEnd: string
-  yourShareOfProfit: number
-  yourShareOfLoss: number
-  capitalIntroduced: number
-  capitalWithdrawn: number
-}
-
-interface UKProperty {
-  id: string
-  propertyAddress: string
-  propertyType: 'residential' | 'commercial' | 'furnished-holiday-let'
-  rentalIncome: number
-  expenses: {
-    mortgageInterest: number
-    repairsMaintenance: number
-    insuranceFees: number
-    otherExpenses: number
-  }
-  profitOrLoss: number
-}
-
-interface ForeignProperty {
-  id: string
-  country: string
-  propertyAddress: string
-  rentalIncome: number
-  expensesAllowed: number
-  foreignTaxPaid: number
-  profitOrLoss: number
-}
-
-interface DividendIncome {
-  id: string
-  companyName: string
-  companyUTR?: string
-  ukDividends: number
-  foreignDividends: number
-  foreignTaxCredit: number
-}
-
-interface PensionIncome {
-  id: string
+interface PensionDetails {
   providerName: string
-  pensionType: 'state' | 'private' | 'overseas'
-  grossPension: number
+  pensionType: string
+  grossAmount: number
   taxDeducted: number
-  statePensionLumpSum: number
 }
 
-interface ForeignIncome {
+interface DividendDetails {
+  companyName: string
+  dividendAmount: number
+  isDomestic: boolean
+}
+
+interface RentalProperty {
   id: string
-  country: string
-  incomeType: 'employment' | 'self-employment' | 'investment' | 'other'
-  grossIncome: number
-  foreignTaxPaid: number
-  taxCreditRelief: number
-}
-
-interface ReliefsClaims {
-  pensionContributions: number
-  giftAidDonations: number
-  marriageAllowance: boolean
-  marriageAllowanceTransfer: number
-  eisInvestments: number
-  seisSeed: number
-  vctInvestments: number
-  loanInterestRelief: number
-  maintenancePayments: number
-}
-
-interface CapitalGain {
-  id: string
-  assetType: string
-  disposalDate: string
-  disposalProceeds: number
-  acquisitionCost: number
-  enhancementCosts: number
-  gain: number
-  loss: number
-  reliefsClaimed: number
-}
-
-interface SAReturnFormData {
-  clientId: string
-  taxYear: string
-  returnType: 'full' | 'short'
-  filingDeadline: string
-  
-  employments: Employment[]
-  selfEmployments: SelfEmployment[]
-  partnerships: Partnership[]
-  ukProperties: UKProperty[]
-  foreignProperties: ForeignProperty[]
-  dividends: DividendIncome[]
-  pensions: PensionIncome[]
-  foreignIncome: ForeignIncome[]
-  
-  savingsInterest: number
-  otherIncome: number
-  
-  reliefs: ReliefsClaims
-  
-  capitalGains: CapitalGain[]
-  
-  totalIncome: number
-  totalTaxLiability: number
-  paymentsOnAccount: {
-    firstPayment: number
-    secondPayment: number
+  propertyType: 'uk-rental' | 'fhl-uk' | 'fhl-eea' | 'other'
+  jointOwnership: boolean // Box 3
+  rentARoomRelief: boolean
+  totalRents: number // Box 20
+  taxDeductedFromRents: number // Box 21
+  premiumsForLease: number // Box 22
+  reversePremiums: number // Box 23
+  propertyIncomeAllowanceClaimed: boolean // Box 20.1
+  propertyIncomeAllowanceAmount: number
+  accountingBasis: 'cash' | 'traditional' // Box 20.2
+  expenses: {
+    rentRatesInsurance: number // Box 24
+    repairs: number // Box 25
+    nonResidentialFinanceCosts: number // Box 26
+    legalManagementFees: number // Box 27
+    servicesWages: number // Box 28
+    otherExpenses: number // Box 29
   }
-  balancingPayment: number
-  
-  status: 'draft' | 'review' | 'submitted'
+  privateUseAdjustment: number // Box 30
+  balancingCharges: number // Box 31
+  capitalAllowances: {
+    annualInvestmentAllowance: number // Box 32-33.2
+    otherAllowances: number
+  }
+  netProfit: number
+  netLoss: number
 }
 
-interface ComprehensiveSAReturnFormProps {
+interface BankInterest {
+  taxedUKInterestNet: number // Box 1
+  untaxedUKInterestGross: number // Box 2
+  untaxedForeignInterest: number // Box 3
+  foreignCountry: string
+}
+
+interface PensionContributions {
+  paymentsToRegisteredSchemes: number // Box 1
+  oneOffPensionContributions: number // Box 1.1
+  paymentsToRetirementAnnuities: number // Box 2
+  paymentsToEmployerSchemes: number // Box 3
+  paymentsToOverseasSchemes: number // Box 4
+}
+
+interface SAReturn {
+  id: string
+  clientId: string
+  clientName: string
+  taxYear: string
+  status: 'draft' | 'in_progress' | 'review' | 'submitted' | 'approved'
+  dueDate: string
+  submittedDate?: string
+  utr: string
+  niNumber: string
+  employmentIncome: number
+  employmentDetails?: EmploymentDetails[]
+  selfEmploymentIncome: number
+  selfEmploymentDetails?: SelfEmploymentDetails[]
+  propertyIncome: number
+  rentalProperties?: RentalProperty[]
+  dividendIncome: number
+  dividendDetails?: DividendDetails[]
+  pensionIncome?: number
+  pensionDetails?: PensionDetails[]
+  bankInterest?: BankInterest
+  savingsInterest: number
+  capitalGains: number
+  otherIncome: number
+  totalIncome: number
+  personalAllowance: number
+  taxRelief: number
+  pensionContributionsTotal: number
+  detailedPensionContributions?: PensionContributions
+  businessExpenses?: number
+  rentalExpenses?: number
+  tradingLosses?: number
+  capitalAllowances?: number
+  charitableGiving: number
+  taxableIncome: number
+  estimatedTax: number
+  progress: number
+  notes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface SAReturnFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  clients: Array<{ id: string; name: string }>
-  onSave: (data: Partial<SAReturnFormData>) => void
+  saReturn: SAReturn | null
+  onSave: (data: Partial<SAReturn>) => void
+  mode: 'add' | 'edit' | 'view'
+  clients: Array<{ id: string; firstName: string; lastName: string; utr?: string; nationalInsuranceNumber?: string }>
 }
 
-export default function ComprehensiveSAReturnForm({ 
-  open, 
-  onOpenChange, 
-  clients, 
-  onSave 
-}: ComprehensiveSAReturnFormProps) {
-  const [formData, setFormData] = useState<Partial<SAReturnFormData>>({
-    returnType: 'full',
-    employments: [],
-    selfEmployments: [],
-    partnerships: [],
-    ukProperties: [],
-    foreignProperties: [],
-    dividends: [],
-    pensions: [],
-    foreignIncome: [],
-    capitalGains: [],
-    reliefs: {
-      pensionContributions: 0,
-      giftAidDonations: 0,
-      marriageAllowance: false,
-      marriageAllowanceTransfer: 0,
-      eisInvestments: 0,
-      seisSeed: 0,
-      vctInvestments: 0,
-      loanInterestRelief: 0,
-      maintenancePayments: 0
-    }
+export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clients }: SAReturnFormProps) {
+  const [formData, setFormData] = useState<Partial<SAReturn>>({
+    clientId: '',
+    clientName: '',
+    taxYear: '2024/25',
+    status: 'draft',
+    dueDate: '',
+    utr: '',
+    niNumber: '',
+    employmentIncome: 0,
+    employmentDetails: [],
+    selfEmploymentIncome: 0,
+    selfEmploymentDetails: [],
+    propertyIncome: 0,
+    rentalProperties: [],
+    dividendIncome: 0,
+    dividendDetails: [],
+    pensionIncome: 0,
+    pensionDetails: [],
+    bankInterest: {
+      taxedUKInterestNet: 0,
+      untaxedUKInterestGross: 0,
+      untaxedForeignInterest: 0,
+      foreignCountry: ''
+    },
+    savingsInterest: 0,
+    capitalGains: 0,
+    otherIncome: 0,
+    totalIncome: 0,
+    personalAllowance: 12570,
+    taxRelief: 0,
+    pensionContributionsTotal: 0,
+    detailedPensionContributions: {
+      paymentsToRegisteredSchemes: 0,
+      oneOffPensionContributions: 0,
+      paymentsToRetirementAnnuities: 0,
+      paymentsToEmployerSchemes: 0,
+      paymentsToOverseasSchemes: 0
+    },
+    businessExpenses: 0,
+    rentalExpenses: 0,
+    tradingLosses: 0,
+    capitalAllowances: 0,
+    charitableGiving: 0,
+    taxableIncome: 0,
+    estimatedTax: 0,
+    progress: 0,
+    notes: ''
   })
 
   const [currentTab, setCurrentTab] = useState('basic')
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({})
+  const [currentIncomeTab, setCurrentIncomeTab] = useState('employment')
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const tabs = ['basic', 'income', 'deductions', 'summary']
 
-  const tabs = [
-    'basic',
-    'employment', 
-    'self-employment',
-    'property',
-    'dividends',
-    'pensions',
-    'foreign',
-    'reliefs',
-    'capital-gains',
-    'summary'
-  ]
+  useEffect(() => {
+    if (saReturn && mode !== 'add') {
+      setFormData(saReturn)
+    } else {
+      setFormData({
+        clientId: '',
+        clientName: '',
+        taxYear: '2024/25',
+        status: 'draft',
+        dueDate: new Date(new Date().getFullYear() + 1, 0, 31).toISOString().split('T')[0],
+        utr: '',
+        niNumber: '',
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        capitalGains: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        personalAllowance: 12570,
+        taxRelief: 0,
+        pensionContributions: 0,
+        charitableGiving: 0,
+        taxableIncome: 0,
+        estimatedTax: 0,
+        progress: 0,
+        notes: ''
+      })
+    }
+  }, [saReturn, mode, open])
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
+  const handleClientChange = (clientId: string) => {
+    const client = clients.find(c => c.id === clientId)
+    if (client) {
+      setFormData({
+        ...formData,
+        clientId,
+        clientName: `${client.firstName} ${client.lastName}`,
+        utr: client.utr || '',
+        niNumber: client.nationalInsuranceNumber || ''
+      })
+    }
   }
 
-  const addEmployment = () => {
-    const newEmployment: Employment = {
-      id: Date.now().toString(),
-      type: 'employed',
-      employerName: '',
-      payeReference: '',
-      fromDate: '',
-      toDate: '',
-      grossPay: 0,
-      taxDeducted: 0,
-      p60Received: false,
-      benefits: { companyCarBenefit: 0, medicalInsurance: 0, otherBenefits: 0 },
-      expenses: { businessMileage: 0, professionalFees: 0, otherExpenses: 0 },
-      studentLoan: { plan1: 0, plan2: 0 }
+  const calculateTotals = () => {
+    const employmentTotal = (formData.employmentDetails || []).reduce((sum, emp) => 
+      sum + Number(emp.grossPay || 0) + Number(emp.benefits || 0) - Number(emp.expenses || 0), 0
+    )
+
+    const selfEmploymentTotal = (formData.selfEmploymentDetails || []).reduce((sum, business) =>
+      sum + Number(business.turnover || 0) - Number(business.allowableExpenses || 0) - Number(business.capitalAllowances || 0), 0
+    )
+
+    const rentalTotal = (formData.rentalProperties || []).reduce((sum, property) =>
+      sum + Number(property.rentalIncome || 0) - Number(property.mortgageInterest || 0) - 
+      Number(property.repairs || 0) - Number(property.insurance || 0) - Number(property.otherExpenses || 0), 0
+    )
+
+    const dividendTotal = (formData.dividendDetails || []).reduce((sum, div) =>
+      sum + Number(div.dividendAmount || 0), 0
+    )
+
+    const pensionTotal = (formData.pensionDetails || []).reduce((sum, pension) =>
+      sum + Number(pension.grossAmount || 0), 0
+    )
+
+    const totalIncome = 
+      employmentTotal +
+      selfEmploymentTotal +
+      rentalTotal +
+      dividendTotal +
+      pensionTotal +
+      Number(formData.savingsInterest || 0) +
+      Number(formData.otherIncome || 0)
+
+    const taxableIncome = Math.max(0, 
+      totalIncome - 
+      Number(formData.personalAllowance || 0) -
+      Number(formData.taxRelief || 0) -
+      Number(formData.pensionContributions || 0) -
+      Number(formData.charitableGiving || 0)
+    )
+
+    let estimatedTax = 0
+    if (taxableIncome > 125140) {
+      estimatedTax = (taxableIncome - 125140) * 0.45 + 50270 * 0.4 + 37700 * 0.2
+    } else if (taxableIncome > 50270) {
+      estimatedTax = (taxableIncome - 50270) * 0.4 + 37700 * 0.2
+    } else if (taxableIncome > 12570) {
+      estimatedTax = (taxableIncome - 12570) * 0.2
     }
-    setFormData(prev => ({
-      ...prev,
-      employments: [...(prev.employments || []), newEmployment]
-    }))
+
+    const capitalGainsTax = Number(formData.capitalGains || 0) > 6000 
+      ? (Number(formData.capitalGains || 0) - 6000) * 0.2 
+      : 0
+
+    estimatedTax += capitalGainsTax
+
+    setFormData({
+      ...formData,
+      employmentIncome: employmentTotal,
+      selfEmploymentIncome: selfEmploymentTotal,
+      propertyIncome: rentalTotal,
+      dividendIncome: dividendTotal,
+      pensionIncome: pensionTotal,
+      totalIncome,
+      taxableIncome,
+      estimatedTax: Math.round(estimatedTax * 100) / 100
+    })
   }
 
-  const addSelfEmployment = () => {
-    const newBusiness: SelfEmployment = {
-      id: Date.now().toString(),
-      tradeName: '',
-      description: '',
-      startDate: '',
-      accountingPeriodEnd: '',
-      turnover: 0,
-      allowableExpenses: 0,
-      capitalAllowances: 0,
-      profit: 0,
-      niContributions: { class2: 0, class4: 0 },
-      losses: { currentYearLoss: 0, lossCarryBack: 0, lossCarryForward: 0 },
-      overlapRelief: 0,
-      basisPeriodReform: false,
-      cashBasis: false
-    }
-    setFormData(prev => ({
-      ...prev,
-      selfEmployments: [...(prev.selfEmployments || []), newBusiness]
-    }))
-  }
+  useEffect(() => {
+    calculateTotals()
+  }, [
+    formData.employmentIncome,
+    formData.selfEmploymentIncome,
+    formData.propertyIncome,
+    formData.dividendIncome,
+    formData.savingsInterest,
+    formData.otherIncome,
+    formData.capitalGains,
+    formData.personalAllowance,
+    formData.taxRelief,
+    formData.pensionContributions,
+    formData.charitableGiving
+  ])
 
-  const addUKProperty = () => {
-    const newProperty: UKProperty = {
-      id: Date.now().toString(),
-      propertyAddress: '',
-      propertyType: 'residential',
-      rentalIncome: 0,
-      expenses: {
-        mortgageInterest: 0,
-        repairsMaintenance: 0,
-        insuranceFees: 0,
-        otherExpenses: 0
-      },
-      profitOrLoss: 0
+  const validateForm = (): boolean => {
+    const errors: string[] = []
+    
+    if (!formData.clientId?.trim()) {
+      errors.push('Client is required')
     }
-    setFormData(prev => ({
-      ...prev,
-      ukProperties: [...(prev.ukProperties || []), newProperty]
-    }))
-  }
-
-  const addDividend = () => {
-    const newDividend: DividendIncome = {
-      id: Date.now().toString(),
-      companyName: '',
-      companyUTR: '',
-      ukDividends: 0,
-      foreignDividends: 0,
-      foreignTaxCredit: 0
+    if (!formData.taxYear?.trim()) {
+      errors.push('Tax Year is required')
     }
-    setFormData(prev => ({
-      ...prev,
-      dividends: [...(prev.dividends || []), newDividend]
-    }))
-  }
-
-  const addPension = () => {
-    const newPension: PensionIncome = {
-      id: Date.now().toString(),
-      providerName: '',
-      pensionType: 'private',
-      grossPension: 0,
-      taxDeducted: 0,
-      statePensionLumpSum: 0
+    if (!formData.dueDate) {
+      errors.push('Due Date is required')
     }
-    setFormData(prev => ({
-      ...prev,
-      pensions: [...(prev.pensions || []), newPension]
-    }))
+    
+    setValidationErrors(errors)
+    return errors.length === 0
   }
 
   const handleNext = () => {
@@ -343,377 +390,1108 @@ export default function ComprehensiveSAReturnForm({
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!validateForm()) {
+      setCurrentTab('basic')
+      return
+    }
     onSave(formData)
     onOpenChange(false)
+    setValidationErrors([])
   }
+
+  const isReadOnly = mode === 'view'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto border-2 border-[#001f3f]">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-[#001f3f] text-2xl font-bold">
-            Comprehensive Self Assessment Tax Return
+          <DialogTitle className="text-[#001f3f] text-xl">
+            {mode === 'add' ? 'New SA Return' : mode === 'edit' ? 'Edit SA Return' : 'View SA Return'}
           </DialogTitle>
           <DialogDescription className="text-[#001f3f]">
-            Enterprise-grade SA return with comprehensive functionality
+            {mode === 'add' 
+              ? 'Create a new Self Assessment tax return for a client' 
+              : mode === 'edit'
+              ? 'Update Self Assessment tax return details'
+              : 'View Self Assessment tax return details'}
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-100">
-            <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
-              Basic Details
-            </TabsTrigger>
-            <TabsTrigger value="employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
-              Employment
-            </TabsTrigger>
-            <TabsTrigger value="self-employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
-              Self-Employment
-            </TabsTrigger>
-            <TabsTrigger value="property" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
-              Property
-            </TabsTrigger>
-            <TabsTrigger value="dividends" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
-              Dividends & More
-            </TabsTrigger>
-          </TabsList>
+        {validationErrors.length > 0 && (
+          <div className="bg-red-50 border-2 border-red-500 rounded p-3 mb-4">
+            <p className="font-semibold text-red-800 mb-2">Please fix the following errors:</p>
+            <ul className="list-disc list-inside text-sm text-red-700">
+              {validationErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-          {/* BASIC DETAILS TAB */}
-          <TabsContent value="basic" className="space-y-4 mt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#001f3f] font-semibold">Client *</Label>
-                <Select value={formData.clientId} onValueChange={(value) => setFormData({ ...formData, clientId: value })}>
-                  <SelectTrigger className="border-[#001f3f]">
-                    <SelectValue placeholder="Select client" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {clients.map(client => (
-                      <SelectItem key={client.id} value={client.id}>{client.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+        <form onSubmit={handleSubmit}>
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-4 gap-px bg-gray-100">
+              <TabsTrigger value="basic" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Basic Info</TabsTrigger>
+              <TabsTrigger value="income" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Income</TabsTrigger>
+              <TabsTrigger value="deductions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Deductions</TabsTrigger>
+              <TabsTrigger value="summary" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Summary</TabsTrigger>
+            </TabsList>
 
-              <div>
-                <Label className="text-[#001f3f] font-semibold">Tax Year *</Label>
-                <Select value={formData.taxYear} onValueChange={(value) => setFormData({ ...formData, taxYear: value })}>
-                  <SelectTrigger className="border-[#001f3f]">
-                    <SelectValue placeholder="Select tax year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2024-25">2024-25</SelectItem>
-                    <SelectItem value="2023-24">2023-24</SelectItem>
-                    <SelectItem value="2022-23">2022-23</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label className="text-[#001f3f] font-semibold">Return Type</Label>
-                <Select value={formData.returnType} onValueChange={(value: 'full' | 'short') => setFormData({ ...formData, returnType: value })}>
-                  <SelectTrigger className="border-[#001f3f]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="full">Full Return</SelectItem>
-                    <SelectItem value="short">Short Return</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label className="text-[#001f3f] font-semibold">Filing Deadline</Label>
-                <Input
-                  type="date"
-                  value={formData.filingDeadline || ''}
-                  onChange={(e) => setFormData({ ...formData, filingDeadline: e.target.value })}
-                  className="border-[#001f3f]"
-                />
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* EMPLOYMENT TAB */}
-          <TabsContent value="employment" className="space-y-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#001f3f]">Employment & Directorship Income</h3>
-              <Button onClick={addEmployment} className="bg-[#001f3f] text-white hover:bg-[#003366]">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Employment
-              </Button>
-            </div>
-
-            {(formData.employments || []).map((employment, index) => (
-              <div key={employment.id} className="border-2 border-[#001f3f] rounded-lg p-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h4 className="font-semibold text-[#001f3f]">Employment {index + 1}</h4>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      const updated = formData.employments?.filter(e => e.id !== employment.id)
-                      setFormData({ ...formData, employments: updated })
-                    }}
+            <TabsContent value="basic" className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="client" className="text-[#001f3f]">Client*</Label>
+                  <Select
+                    value={formData.clientId}
+                    onValueChange={handleClientChange}
+                    disabled={isReadOnly || mode === 'edit'}
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                    <SelectTrigger className="border-[#001f3f]">
+                      <SelectValue placeholder="Select client" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                          {client.firstName} {client.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <Tabs defaultValue="employed" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="employed">Employed</TabsTrigger>
-                    <TabsTrigger value="director">Director</TabsTrigger>
-                  </TabsList>
+                <div className="space-y-2">
+                  <Label htmlFor="taxYear" className="text-[#001f3f]">Tax Year*</Label>
+                  <Select
+                    value={formData.taxYear}
+                    onValueChange={(value) => setFormData({ ...formData, taxYear: value })}
+                    disabled={isReadOnly}
+                  >
+                    <SelectTrigger className="border-[#001f3f]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2024/25">2024/25</SelectItem>
+                      <SelectItem value="2023/24">2023/24</SelectItem>
+                      <SelectItem value="2022/23">2022/23</SelectItem>
+                      <SelectItem value="2021/22">2021/22</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                  <TabsContent value="employed" className="space-y-4 mt-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="col-span-2">
-                        <Label className="text-[#001f3f] font-semibold">Employer Name *</Label>
-                        <Input
-                          value={employment.employerName}
-                          onChange={(e) => {
-                            const updated = formData.employments?.map(emp =>
-                              emp.id === employment.id ? { ...emp, employerName: e.target.value } : emp
-                            )
-                            setFormData({ ...formData, employments: updated })
-                          }}
-                          className="border-[#001f3f]"
-                          placeholder="e.g., ABC Ltd"
-                        />
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="utr" className="text-[#001f3f]">UTR</Label>
+                  <Input
+                    id="utr"
+                    value={formData.utr}
+                    onChange={(e) => setFormData({ ...formData, utr: e.target.value })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
 
-                      <div>
-                        <Label className="text-[#001f3f] font-semibold">PAYE Reference</Label>
-                        <Input
-                          value={employment.payeReference}
-                          onChange={(e) => {
-                            const updated = formData.employments?.map(emp =>
-                              emp.id === employment.id ? { ...emp, payeReference: e.target.value } : emp
-                            )
-                            setFormData({ ...formData, employments: updated })
-                          }}
-                          className="border-[#001f3f]"
-                          placeholder="123/AB12345"
-                        />
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="niNumber" className="text-[#001f3f]">NI Number</Label>
+                  <Input
+                    id="niNumber"
+                    value={formData.niNumber}
+                    onChange={(e) => setFormData({ ...formData, niNumber: e.target.value })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
 
-                      <div>
-                        <Label className="text-[#001f3f] font-semibold">Gross Pay (P60)</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={employment.grossPay}
-                          onChange={(e) => {
-                            const updated = formData.employments?.map(emp =>
-                              emp.id === employment.id ? { ...emp, grossPay: parseFloat(e.target.value) || 0 } : emp
-                            )
-                            setFormData({ ...formData, employments: updated })
-                          }}
-                          className="border-[#001f3f]"
-                        />
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dueDate" className="text-[#001f3f]">Due Date*</Label>
+                  <Input
+                    id="dueDate"
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
 
-                      <div>
-                        <Label className="text-[#001f3f] font-semibold">From Date</Label>
-                        <Input
-                          type="date"
-                          value={employment.fromDate}
-                          onChange={(e) => {
-                            const updated = formData.employments?.map(emp =>
-                              emp.id === employment.id ? { ...emp, fromDate: e.target.value } : emp
-                            )
-                            setFormData({ ...formData, employments: updated })
-                          }}
-                          className="border-[#001f3f]"
-                        />
-                      </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status" className="text-[#001f3f]">Status</Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                    disabled={isReadOnly}
+                  >
+                    <SelectTrigger className="border-[#001f3f]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="in_progress">In Progress</SelectItem>
+                      <SelectItem value="review">Review</SelectItem>
+                      <SelectItem value="submitted">Submitted</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </TabsContent>
 
-                      <div>
-                        <Label className="text-[#001f3f] font-semibold">To Date</Label>
-                        <Input
-                          type="date"
-                          value={employment.toDate}
-                          onChange={(e) => {
-                            const updated = formData.employments?.map(emp =>
-                              emp.id === employment.id ? { ...emp, toDate: e.target.value } : emp
-                            )
-                            setFormData({ ...formData, employments: updated })
-                          }}
-                          className="border-[#001f3f]"
-                        />
-                      </div>
-                    </div>
+            <TabsContent value="income" className="space-y-4 mt-4">
+              <Tabs value={currentIncomeTab} onValueChange={setCurrentIncomeTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-6 gap-px bg-gray-100">
+                  <TabsTrigger value="employment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Employment</TabsTrigger>
+                  <TabsTrigger value="selfemployment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Self-Employed</TabsTrigger>
+                  <TabsTrigger value="rental" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Rental</TabsTrigger>
+                  <TabsTrigger value="dividends" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Dividends</TabsTrigger>
+                  <TabsTrigger value="pensions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Pensions</TabsTrigger>
+                  <TabsTrigger value="other" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Other</TabsTrigger>
+                </TabsList>
 
-                    {/* Benefits Section */}
-                    <div className="mt-4">
-                      <button
-                        onClick={() => toggleSection(`benefits-${employment.id}`)}
-                        className="flex items-center text-[#001f3f] font-semibold mb-2"
+                {/* Employment Income Tab */}
+                <TabsContent value="employment" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Employment Income Details</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newEmployment: EmploymentDetails = {
+                            id: `emp-${Date.now()}`,
+                            employerName: '',
+                            payeReference: '',
+                            dateStoppedBeingDirector: '',
+                            payFromEmployment: 0,
+                            taxDeducted: 0,
+                            tipsAndOtherPayments: 0,
+                            directorIndicator: false,
+                            offPayrollWorkingIndicator: false,
+                            benefits: {
+                              companyCarAndVan: 0,
+                              fuelForCompanyCar: 0,
+                              privateMedicalDental: 0,
+                              vouchersCreditsCards: 0,
+                              otherBenefits: 0
+                            },
+                            expenses: {
+                              travelExpenses: 0,
+                              professionalFees: 0,
+                              otherExpenses: 0,
+                              expensesDescription: ''
+                            }
+                          }
+                          setFormData({
+                            ...formData,
+                            employmentDetails: [...(formData.employmentDetails || []), newEmployment]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
                       >
-                        {expandedSections[`benefits-${employment.id}`] ? <ChevronUp className="w-4 h-4 mr-2" /> : <ChevronDown className="w-4 h-4 mr-2" />}
-                        Benefits & Expenses
-                      </button>
-                      {expandedSections[`benefits-${employment.id}`] && (
-                        <div className="grid grid-cols-3 gap-4 pl-6">
-                          <div>
-                            <Label className="text-[#001f3f]">Company Car</Label>
-                            <Input type="number" step="0.01" className="border-[#001f3f]" value={employment.benefits.companyCarBenefit} />
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Employment
+                      </Button>
+                    )}
+                  </div>
+
+                  {formData.employmentDetails && formData.employmentDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.employmentDetails.map((employment, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Employment {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.employmentDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
                           </div>
-                          <div>
-                            <Label className="text-[#001f3f]">Medical Insurance</Label>
-                            <Input type="number" step="0.01" className="border-[#001f3f]" value={employment.benefits.medicalInsurance} />
-                          </div>
-                          <div>
-                            <Label className="text-[#001f3f]">Other Benefits</Label>
-                            <Input type="number" step="0.01" className="border-[#001f3f]" value={employment.benefits.otherBenefits} />
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Employer Name*</Label>
+                              <Input
+                                value={employment.employerName}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].employerName = e.target.value
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Enter employer name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">PAYE Reference</Label>
+                              <Input
+                                value={employment.payeReference}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].payeReference = e.target.value
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="123/AB12345"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Gross Pay (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={employment.grossPay}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].grossPay = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Tax Deducted (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={employment.taxDeducted}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].taxDeducted = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Benefits/P11D (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={employment.benefits}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].benefits = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Employment Expenses (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={employment.expenses}
+                                onChange={(e) => {
+                                  const updated = [...formData.employmentDetails!]
+                                  updated[index].expenses = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, employmentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
                           </div>
                         </div>
-                      )}
+                      ))}
                     </div>
-                  </TabsContent>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No employment income added yet. Click "Add Employment" to get started.</p>
+                    </div>
+                  )}
+                </TabsContent>
 
-                  <TabsContent value="director">
-                    <p className="text-sm text-[#001f3f] italic">Director-specific fields (same structure as employed with additional directorship details)</p>
-                  </TabsContent>
-                </Tabs>
-              </div>
-            ))}
+                {/* Self-Employment Tab */}
+                <TabsContent value="selfemployment" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Self-Employment Income Details</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newBusiness: SelfEmploymentDetails = {
+                            businessName: '',
+                            natureOfBusiness: '',
+                            turnover: 0,
+                            grossProfit: 0,
+                            allowableExpenses: 0,
+                            netProfit: 0,
+                            capitalAllowances: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            selfEmploymentDetails: [...(formData.selfEmploymentDetails || []), newBusiness]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Business
+                      </Button>
+                    )}
+                  </div>
 
-            {(formData.employments?.length === 0) && (
-              <p className="text-center text-gray-500 py-8">No employments added. Click "Add Employment" to begin.</p>
-            )}
-          </TabsContent>
+                  {formData.selfEmploymentDetails && formData.selfEmploymentDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.selfEmploymentDetails.map((business, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Business {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.selfEmploymentDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Business Name*</Label>
+                              <Input
+                                value={business.businessName}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].businessName = e.target.value
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Enter business/trading name"
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Nature of Business*</Label>
+                              <Input
+                                value={business.natureOfBusiness}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].natureOfBusiness = e.target.value
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="e.g., Consultant, Freelancer, Trader"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Turnover (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.turnover}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].turnover = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Gross Profit (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.grossProfit}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].grossProfit = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Allowable Expenses (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.allowableExpenses}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].allowableExpenses = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Capital Allowances (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.capitalAllowances}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].capitalAllowances = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f] font-semibold">Net Profit (£)</Label>
+                              <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
+                                <span className="text-xl font-bold text-[#001f3f]">
+                                  £{(business.turnover - business.allowableExpenses - business.capitalAllowances).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No self-employment income added yet. Click "Add Business" to get started.</p>
+                    </div>
+                  )}
+                </TabsContent>
 
-          {/* SELF-EMPLOYMENT TAB */}
-          <TabsContent value="self-employment" className="space-y-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#001f3f]">Self-Employment & Partnerships</h3>
-              <Button onClick={addSelfEmployment} className="bg-[#001f3f] text-white hover:bg-[#003366]">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Business
-              </Button>
-            </div>
+                {/* Rental Properties Tab */}
+                <TabsContent value="rental" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Rental Property Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newProperty: RentalProperty = {
+                            propertyAddress: '',
+                            rentalIncome: 0,
+                            mortgageInterest: 0,
+                            repairs: 0,
+                            insurance: 0,
+                            otherExpenses: 0,
+                            netIncome: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            rentalProperties: [...(formData.rentalProperties || []), newProperty]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Property
+                      </Button>
+                    )}
+                  </div>
 
-            {(formData.selfEmployments || []).map((business, index) => (
-              <div key={business.id} className="border-2 border-[#001f3f] rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Trade/Business Name</Label>
-                    <Input className="border-[#001f3f]" value={business.tradeName} />
+                  {formData.rentalProperties && formData.rentalProperties.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.rentalProperties.map((property, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Property {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.rentalProperties!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Property Address*</Label>
+                              <Textarea
+                                value={property.propertyAddress}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].propertyAddress = e.target.value
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Full property address"
+                                rows={2}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Rental Income (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.rentalIncome}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].rentalIncome = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Mortgage Interest (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.mortgageInterest}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].mortgageInterest = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Repairs & Maintenance (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.repairs}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].repairs = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Insurance (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.insurance}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].insurance = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Other Expenses (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.otherExpenses}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].otherExpenses = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Agents fees, legal costs, etc."
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f] font-semibold">Net Rental Income (£)</Label>
+                              <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
+                                <span className="text-xl font-bold text-[#001f3f]">
+                                  £{(property.rentalIncome - property.mortgageInterest - property.repairs - property.insurance - property.otherExpenses).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No rental properties added yet. Click "Add Property" to get started.</p>
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* Dividends Tab */}
+                <TabsContent value="dividends" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Dividend Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newDividend: DividendDetails = {
+                            companyName: '',
+                            dividendAmount: 0,
+                            isDomestic: true
+                          }
+                          setFormData({
+                            ...formData,
+                            dividendDetails: [...(formData.dividendDetails || []), newDividend]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Dividend
+                      </Button>
+                    )}
                   </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Description</Label>
-                    <Input className="border-[#001f3f]" value={business.description} />
+
+                  {formData.dividendDetails && formData.dividendDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.dividendDetails.map((dividend, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Dividend {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.dividendDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Company Name*</Label>
+                              <Input
+                                value={dividend.companyName}
+                                onChange={(e) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].companyName = e.target.value
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Name of company paying dividend"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Dividend Amount (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={dividend.dividendAmount}
+                                onChange={(e) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].dividendAmount = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Dividend Type</Label>
+                              <Select
+                                value={dividend.isDomestic ? 'domestic' : 'foreign'}
+                                onValueChange={(value) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].isDomestic = value === 'domestic'
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                disabled={isReadOnly}
+                              >
+                                <SelectTrigger className="border-[#001f3f]">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="domestic">UK Dividends</SelectItem>
+                                  <SelectItem value="foreign">Foreign Dividends</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No dividend income added yet. Click "Add Dividend" to get started.</p>
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* Pensions Tab */}
+                <TabsContent value="pensions" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Pension Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newPension: PensionDetails = {
+                            providerName: '',
+                            pensionType: '',
+                            grossAmount: 0,
+                            taxDeducted: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            pensionDetails: [...(formData.pensionDetails || []), newPension]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Pension
+                      </Button>
+                    )}
                   </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Turnover</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={business.turnover} />
+
+                  {formData.pensionDetails && formData.pensionDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.pensionDetails.map((pension, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Pension {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.pensionDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Provider Name*</Label>
+                              <Input
+                                value={pension.providerName}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].providerName = e.target.value
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Pension provider name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Pension Type*</Label>
+                              <Select
+                                value={pension.pensionType}
+                                onValueChange={(value) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].pensionType = value
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                disabled={isReadOnly}
+                              >
+                                <SelectTrigger className="border-[#001f3f]">
+                                  <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="state">State Pension</SelectItem>
+                                  <SelectItem value="occupational">Occupational Pension</SelectItem>
+                                  <SelectItem value="personal">Personal Pension</SelectItem>
+                                  <SelectItem value="stakeholder">Stakeholder Pension</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Gross Amount (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={pension.grossAmount}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].grossAmount = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Tax Deducted (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={pension.taxDeducted}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].taxDeducted = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No pension income added yet. Click "Add Pension" to get started.</p>
+                    </div>
+                  )}
+                </TabsContent>
+                <TabsContent value="other" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="savingsInterest" className="text-[#001f3f]">Savings Interest (£)</Label>
+                      <Input
+                        id="savingsInterest"
+                        type="number"
+                        step="0.01"
+                        value={formData.savingsInterest}
+                        onChange={(e) => setFormData({ ...formData, savingsInterest: parseFloat(e.target.value) || 0 })}
+                        className="border-[#001f3f]"
+                        disabled={isReadOnly}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="capitalGains" className="text-[#001f3f]">Capital Gains (£)</Label>
+                      <Input
+                        id="capitalGains"
+                        type="number"
+                        step="0.01"
+                        value={formData.capitalGains}
+                        onChange={(e) => setFormData({ ...formData, capitalGains: parseFloat(e.target.value) || 0 })}
+                        className="border-[#001f3f]"
+                        disabled={isReadOnly}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="otherIncome" className="text-[#001f3f]">Other Income (£)</Label>
+                      <Input
+                        id="otherIncome"
+                        type="number"
+                        step="0.01"
+                        value={formData.otherIncome}
+                        onChange={(e) => setFormData({ ...formData, otherIncome: parseFloat(e.target.value) || 0 })}
+                        className="border-[#001f3f]"
+                        disabled={isReadOnly}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Allowable Expenses</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={business.allowableExpenses} />
-                  </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Capital Allowances</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={business.capitalAllowances} />
-                  </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Net Profit</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={business.profit} readOnly />
-                  </div>
+                </TabsContent>
+              </Tabs>
+            </TabsContent>
+
+            <TabsContent value="deductions" className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="personalAllowance" className="text-[#001f3f]">Personal Allowance (£)</Label>
+                  <Input
+                    id="personalAllowance"
+                    type="number"
+                    step="0.01"
+                    value={formData.personalAllowance}
+                    onChange={(e) => setFormData({ ...formData, personalAllowance: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pensionContributions" className="text-[#001f3f]">Pension Contributions (£)</Label>
+                  <Input
+                    id="pensionContributions"
+                    type="number"
+                    step="0.01"
+                    value={formData.pensionContributions}
+                    onChange={(e) => setFormData({ ...formData, pensionContributions: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="charitableGiving" className="text-[#001f3f]">Charitable Giving (£)</Label>
+                  <Input
+                    id="charitableGiving"
+                    type="number"
+                    step="0.01"
+                    value={formData.charitableGiving}
+                    onChange={(e) => setFormData({ ...formData, charitableGiving: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="taxRelief" className="text-[#001f3f]">Other Tax Relief (£)</Label>
+                  <Input
+                    id="taxRelief"
+                    type="number"
+                    step="0.01"
+                    value={formData.taxRelief}
+                    onChange={(e) => setFormData({ ...formData, taxRelief: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
+
+                <div className="col-span-2 space-y-2">
+                  <Label htmlFor="notes" className="text-[#001f3f]">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="border-[#001f3f]"
+                    rows={4}
+                    disabled={isReadOnly}
+                  />
                 </div>
               </div>
-            ))}
-          </TabsContent>
+            </TabsContent>
 
-          {/* PROPERTY TAB */}
-          <TabsContent value="property" className="space-y-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#001f3f]">UK Land & Property</h3>
-              <Button onClick={addUKProperty} className="bg-[#001f3f] text-white hover:bg-[#003366]">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Property
-              </Button>
-            </div>
+            <TabsContent value="summary" className="space-y-4 mt-4">
+              <div className="border-2 border-[#001f3f] rounded p-4 space-y-3 bg-blue-50">
+                <h3 className="font-bold text-[#001f3f] text-lg">Tax Calculation Summary</h3>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-white border border-[#001f3f] rounded">
+                    <div className="text-sm text-[#001f3f]">Total Income</div>
+                    <div className="text-xl font-bold text-[#001f3f]">£{formData.totalIncome?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                  </div>
 
-            {(formData.ukProperties || []).map((property, index) => (
-              <div key={property.id} className="border-2 border-[#001f3f] rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <Label className="text-[#001f3f] font-semibold">Property Address</Label>
-                    <Input className="border-[#001f3f]" value={property.propertyAddress} />
+                  <div className="p-3 bg-white border border-[#001f3f] rounded">
+                    <div className="text-sm text-[#001f3f]">Taxable Income</div>
+                    <div className="text-xl font-bold text-[#001f3f]">£{formData.taxableIncome?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                   </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Property Type</Label>
-                    <Select value={property.propertyType}>
-                      <SelectTrigger className="border-[#001f3f]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="residential">Residential</SelectItem>
-                        <SelectItem value="commercial">Commercial</SelectItem>
-                        <SelectItem value="furnished-holiday-let">Furnished Holiday Let</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Rental Income</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={property.rentalIncome} />
+
+                  <div className="p-3 bg-white border border-[#001f3f] rounded col-span-2">
+                    <div className="text-sm text-[#001f3f]">Estimated Tax Liability</div>
+                    <div className="text-2xl font-bold text-[#001f3f]">£{formData.estimatedTax?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </TabsContent>
 
-          {/* DIVIDENDS TAB */}
-          <TabsContent value="dividends" className="space-y-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#001f3f]">Dividend Income</h3>
-              <Button onClick={addDividend} className="bg-[#001f3f] text-white hover:bg-[#003366]">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Dividend
-              </Button>
-            </div>
+                <div className="space-y-2 pt-3 border-t border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Income Breakdown</h4>
+                  {formData.employmentIncome! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Employment Income:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.employmentIncome?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.selfEmploymentIncome! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Self Employment:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.selfEmploymentIncome?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.propertyIncome! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Property Income:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.propertyIncome?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.dividendIncome! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Dividends:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.dividendIncome?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.savingsInterest! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Savings Interest:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.savingsInterest?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.capitalGains! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Capital Gains:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.capitalGains?.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
 
-            {(formData.dividends || []).map((dividend, index) => (
-              <div key={dividend.id} className="border-2 border-[#001f3f] rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Company Name</Label>
-                    <Input className="border-[#001f3f]" value={dividend.companyName} />
+                <div className="space-y-2 pt-3 border-t border-[#001f3f]">
+                  <h4 className="font-semibold text-[#001f3f]">Deductions</h4>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#001f3f]">Personal Allowance:</span>
+                    <span className="font-medium text-[#001f3f]">£{formData.personalAllowance?.toLocaleString()}</span>
                   </div>
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">UK Dividends</Label>
-                    <Input type="number" step="0.01" className="border-[#001f3f]" value={dividend.ukDividends} />
-                  </div>
+                  {formData.pensionContributions! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Pension Contributions:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.pensionContributions?.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {formData.charitableGiving! > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#001f3f]">Charitable Giving:</span>
+                      <span className="font-medium text-[#001f3f]">£{formData.charitableGiving?.toLocaleString()}</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
 
-        <DialogFooter className="flex justify-between items-center mt-6">
-          <div className="flex gap-2">
-            {currentTab !== 'basic' && (
-              <Button onClick={handleBack} variant="outline" className="border-[#001f3f] text-[#001f3f]">
-                ← Back
+          <DialogFooter className="mt-6 flex justify-between">
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                {mode === 'view' ? 'Close' : 'Cancel'}
               </Button>
-            )}
-            {currentTab !== 'summary' && (
-              <Button onClick={handleNext} className="bg-[#001f3f] text-white hover:bg-[#003366]">
-                Next →
-              </Button>
-            )}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={handleSubmit} className="bg-green-600 text-white hover:bg-green-700">
-              Save Return
-            </Button>
-          </div>
-        </DialogFooter>
+            </div>
+            <div className="flex gap-2">
+              {!isReadOnly && currentTab !== 'basic' && (
+                <Button type="button" variant="outline" onClick={handleBack} className="border-[#001f3f] text-[#001f3f]">
+                  ← Back
+                </Button>
+              )}
+              {!isReadOnly && currentTab !== 'summary' && (
+                <Button type="button" onClick={handleNext} className="bg-[#001f3f] hover:bg-[#003366]">
+                  Next →
+                </Button>
+              )}
+              {!isReadOnly && currentTab === 'summary' && (
+                <Button type="submit" className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  {mode === 'add' ? 'Create SA Return' : 'Update SA Return'}
+                </Button>
+              )}
+            </div>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )

@@ -271,7 +271,7 @@ export default function ComprehensiveIndividualClientForm({
         )}
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-gray-100">
+          <TabsList className="grid w-full grid-cols-7 gap-px bg-gray-100">
             <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
               Basic Info
             </TabsTrigger>
