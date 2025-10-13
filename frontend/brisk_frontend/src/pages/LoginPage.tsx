@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,8 +13,14 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    localStorage.setItem('isAuthenticated', 'true')
     navigate('/app')
   }
+
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', 'true')
+    navigate('/app')
+  }, [navigate])
 
   return (
     <div className="h-screen w-screen flex overflow-hidden">
