@@ -21,6 +21,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
 import { api } from '../../lib/api'
 import { EnhancedClientForm } from '../../components/EnhancedClientForm'
+import { JournalAdjustmentForm } from '../../components/JournalAdjustmentForm'
 
 interface Client {
   id: string
@@ -1319,21 +1320,146 @@ const AccountsProduction: React.FC = () => {
   const renderAdjustments = () => {
     const filteredAdj = getFilteredAdjustments()
     
+    const totalAdjustments = filteredAdj.length
+    const draftCount = filteredAdj.filter(a => a.status === 'draft').length
+    const approvedCount = filteredAdj.filter(a => a.status === 'approved').length
+    const postedCount = filteredAdj.filter(a => a.status === 'posted').length
+    const totalImpact = filteredAdj.reduce((sum, adj) => sum + (adj.amount || 0), 0)
+    
+    const byType = {
+      prepayment: filteredAdj.filter(a => a.type === 'prepayment'),
+      accrual: filteredAdj.filter(a => a.type === 'accrual'),
+      depreciation: filteredAdj.filter(a => a.type === 'depreciation'),
+      provision: filteredAdj.filter(a => a.type === 'provision'),
+      reclassification: filteredAdj.filter(a => a.type === 'reclassification'),
+      writeOff: filteredAdj.filter(a => a.type === 'write-off'),
+      revaluation: filteredAdj.filter(a => a.type === 'revaluation')
+    }
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-[#001f3f]">Year-End Adjustments</h2>
-            <p className="text-[#001f3f]">Manage prepayments, accruals, depreciation, and provisions</p>
+            <p className="text-[#001f3f]">Manage journal entries, prepayments, accruals, depreciation, and provisions</p>
           </div>
           <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
-            <Plus className="h-4 w-4 mr-2" />Add Adjustment
+            <Plus className="h-4 w-4 mr-2" />New Adjustment
           </Button>
         </div>
 
-        <Card>
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <KPICard
+            title="Total Adjustments"
+            value={totalAdjustments.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Draft"
+            value={draftCount.toString()}
+            icon={FileText}
+            onClick={() => setAdjSearchStatus('draft')}
+            subtitle={`${((draftCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Approved"
+            value={approvedCount.toString()}
+            icon={CheckCircle}
+            onClick={() => setAdjSearchStatus('approved')}
+            subtitle={`${((approvedCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Posted"
+            value={postedCount.toString()}
+            icon={Database}
+            onClick={() => setAdjSearchStatus('posted')}
+            subtitle={`${((postedCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Total Impact"
+            value={`£${totalImpact.toLocaleString()}`}
+            icon={TrendingUp}
+            onClick={() => {}}
+          />
+        </div>
+
+        {/* Adjustment Type Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('prepayment')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <TrendingUp className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.prepayment.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Prepayments</h3>
+              <p className="text-sm text-gray-600 mt-1">Expenses paid in advance</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.prepayment.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('accrual')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <TrendingDown className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.accrual.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Accruals</h3>
+              <p className="text-sm text-gray-600 mt-1">Expenses incurred not yet paid</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.accrual.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('depreciation')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <Calculator className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.depreciation.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Depreciation</h3>
+              <p className="text-sm text-gray-600 mt-1">Asset value reduction</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.depreciation.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('provision')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <AlertCircle className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.provision.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Provisions</h3>
+              <p className="text-sm text-gray-600 mt-1">Future liabilities</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.provision.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Adjustments Table */}
+        <Card className="border-2 border-[#001f3f]">
           <CardHeader>
-            <CardTitle className="text-[#001f3f]">Adjustments</CardTitle>
+            <CardTitle className="text-[#001f3f]">All Adjustments</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -1354,6 +1480,9 @@ const AccountsProduction: React.FC = () => {
                           <SelectItem value="accrual">Accrual</SelectItem>
                           <SelectItem value="depreciation">Depreciation</SelectItem>
                           <SelectItem value="provision">Provision</SelectItem>
+                          <SelectItem value="reclassification">Reclassification</SelectItem>
+                          <SelectItem value="write-off">Write-off</SelectItem>
+                          <SelectItem value="revaluation">Revaluation</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1419,39 +1548,69 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAdj.map(adj => (
-                  <TableRow 
-                    key={adj.id} 
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleViewAdjustment(adj)}
-                  >
-                    <TableCell>
-                      <Badge variant="outline">{adj.type}</Badge>
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
-                    <TableCell className="text-right text-[#001f3f]">
-                      £{adj.amount.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
-                    <TableCell>
-                      <Badge variant={adj.status === 'approved' ? 'default' : 'secondary'}>
-                        {adj.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleEditAdjustment(adj)
-                        }}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                {filteredAdj.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+                      No adjustments found. Click "New Adjustment" to create one.
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filteredAdj.map(adj => (
+                    <TableRow 
+                      key={adj.id} 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewAdjustment(adj)}
+                    >
+                      <TableCell>
+                        <Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">
+                          {adj.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                      <TableCell className="text-right text-[#001f3f] font-semibold">
+                        £{adj.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          className={
+                            adj.status === 'posted' ? 'bg-green-600' :
+                            adj.status === 'approved' ? 'bg-blue-600' :
+                            'bg-gray-500'
+                          }
+                        >
+                          {adj.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditAdjustment(adj)
+                            }}
+                            className="border-[#001f3f] text-[#001f3f]"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteAdjustment(adj.id)
+                            }}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -2726,55 +2885,21 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isAdjEditOpen} onOpenChange={setIsAdjEditOpen}>
-        <DialogContent className="border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Edit Adjustment</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label className="text-[#001f3f]">Type</Label>
-              <Select 
-                value={adjFormData.type} 
-                onValueChange={(value) => setAdjFormData({...adjFormData, type: value as any})}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="prepayment">Prepayment</SelectItem>
-                  <SelectItem value="accrual">Accrual</SelectItem>
-                  <SelectItem value="depreciation">Depreciation</SelectItem>
-                  <SelectItem value="provision">Provision</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-[#001f3f]">Description</Label>
-              <Textarea
-                value={adjFormData.description || ''}
-                onChange={(e) => setAdjFormData({...adjFormData, description: e.target.value})}
-                className="text-[#001f3f] border-[#001f3f]"
-              />
-            </div>
-            <div>
-              <Label className="text-[#001f3f]">Amount</Label>
-              <Input
-                type="number"
-                value={adjFormData.amount || 0}
-                onChange={(e) => setAdjFormData({...adjFormData, amount: parseFloat(e.target.value)})}
-                className="text-[#001f3f] border-[#001f3f]"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAdjEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Save className="h-4 w-4 mr-2" />Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <JournalAdjustmentForm
+        open={isAdjEditOpen}
+        onOpenChange={setIsAdjEditOpen}
+        adjustment={selectedAdjustment}
+        onSave={handleSaveAdjustment}
+        mode="edit"
+      />
+
+      <JournalAdjustmentForm
+        open={_isAdjAddOpen}
+        onOpenChange={setIsAdjAddOpen}
+        adjustment={null}
+        onSave={handleSaveNewAdjustment}
+        mode="add"
+      />
 
       <Dialog open={isAccountAddOpen} onOpenChange={setIsAccountAddOpen}>
         <DialogContent className="max-w-lg border-2 border-[#001f3f]">
