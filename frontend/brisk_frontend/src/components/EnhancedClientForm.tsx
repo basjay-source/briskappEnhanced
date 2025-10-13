@@ -75,9 +75,16 @@ export const EnhancedClientForm: React.FC<EnhancedClientFormProps> = ({
   })
   
   const [newTag, setNewTag] = useState('')
+  const [currentTab, setCurrentTab] = useState('basic')
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+
+  const tabs = ['basic', 'contact', 'business', 'compliance', 'notes']
 
   const updateField = (field: keyof Client, value: any) => {
     setFormData({ ...formData, [field]: value })
+    if (validationErrors.length > 0) {
+      setValidationErrors([])
+    }
   }
 
   const addTag = () => {
@@ -91,9 +98,50 @@ export const EnhancedClientForm: React.FC<EnhancedClientFormProps> = ({
     updateField('tags', formData.tags?.filter(t => t !== tag))
   }
 
+  const validateForm = (): boolean => {
+    const errors: string[] = []
+    
+    if (!formData.name?.trim()) {
+      errors.push('Client Name is required')
+    }
+    if (!formData.email?.trim()) {
+      errors.push('Email is required')
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push('Please enter a valid email address')
+    }
+    if (!formData.phone?.trim()) {
+      errors.push('Phone number is required')
+    }
+    if (!formData.yearEnd) {
+      errors.push('Year End date is required')
+    }
+    
+    setValidationErrors(errors)
+    return errors.length === 0
+  }
+
+  const handleNext = () => {
+    const currentIndex = tabs.indexOf(currentTab)
+    if (currentIndex < tabs.length - 1) {
+      setCurrentTab(tabs[currentIndex + 1])
+    }
+  }
+
+  const handleBack = () => {
+    const currentIndex = tabs.indexOf(currentTab)
+    if (currentIndex > 0) {
+      setCurrentTab(tabs[currentIndex - 1])
+    }
+  }
+
   const handleSave = () => {
+    if (!validateForm()) {
+      setCurrentTab('basic')
+      return
+    }
     onSave(formData)
     onOpenChange(false)
+    setValidationErrors([])
   }
 
   const isReadOnly = mode === 'view'
@@ -107,7 +155,18 @@ export const EnhancedClientForm: React.FC<EnhancedClientFormProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="basic" className="w-full">
+        {validationErrors.length > 0 && (
+          <div className="bg-red-50 border-2 border-red-500 rounded p-3 mb-4">
+            <p className="font-semibold text-red-800 mb-2">Please fix the following errors:</p>
+            <ul className="list-disc list-inside text-sm text-red-700">
+              {validationErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-gray-100">
             <TabsTrigger value="basic" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white">
               Basic Info
@@ -620,19 +679,33 @@ export const EnhancedClientForm: React.FC<EnhancedClientFormProps> = ({
           </TabsContent>
         </Tabs>
 
-        <DialogFooter className="mt-6">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {mode === 'view' ? 'Close' : 'Cancel'}
-          </Button>
-          {mode !== 'view' && (
-            <Button onClick={handleSave} className="bg-[#001f3f] hover:bg-[#003366]">
-              {mode === 'add' ? (
-                <><Plus className="h-4 w-4 mr-2" />Add Client</>
-              ) : (
-                <><Save className="h-4 w-4 mr-2" />Save Changes</>
-              )}
+        <DialogFooter className="mt-6 flex justify-between">
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              {mode === 'view' ? 'Close' : 'Cancel'}
             </Button>
-          )}
+          </div>
+          <div className="flex gap-2">
+            {mode !== 'view' && currentTab !== 'basic' && (
+              <Button variant="outline" onClick={handleBack} className="border-[#001f3f] text-[#001f3f]">
+                ← Back
+              </Button>
+            )}
+            {mode !== 'view' && currentTab !== 'notes' && (
+              <Button onClick={handleNext} className="bg-[#001f3f] hover:bg-[#003366]">
+                Next →
+              </Button>
+            )}
+            {mode !== 'view' && currentTab === 'notes' && (
+              <Button onClick={handleSave} className="bg-[#001f3f] hover:bg-[#003366]">
+                {mode === 'add' ? (
+                  <><Plus className="h-4 w-4 mr-2" />Add Client</>
+                ) : (
+                  <><Save className="h-4 w-4 mr-2" />Save Changes</>
+                )}
+              </Button>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
