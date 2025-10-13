@@ -304,10 +304,27 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                     <TableRow key={line.id} className="hover:bg-blue-50">
                       <TableCell className="p-2">
                         <div className="relative">
-                          <Input
-                            value={line.accountCode || ''}
-                            onChange={(e) => handleAccountCodeChange(line.id, e.target.value)}
-                            className="text-[#001f3f] border-[#001f3f] h-9 text-sm"
+                          <input
+                            type="text"
+                            defaultValue={line.accountCode || ''}
+                            onChange={(e) => {
+                              const code = e.target.value
+                              updateLine(line.id, 'accountCode', code)
+                              
+                              const exactMatch = chartAccounts.find(acc => acc.code === code)
+                              if (exactMatch) {
+                                updateLine(line.id, 'accountName', exactMatch.name)
+                                setActiveSearchRow(null)
+                              } else {
+                                setSearchQuery(code)
+                                if (code.length > 0) {
+                                  setActiveSearchRow(line.id)
+                                } else {
+                                  setActiveSearchRow(null)
+                                }
+                              }
+                            }}
+                            className="flex h-9 w-full rounded-md border border-[#001f3f] bg-transparent px-3 py-1 text-sm text-[#001f3f] shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             placeholder="Code"
                           />
                           {activeSearchRow === line.id && filteredAccounts.length > 0 && (
@@ -316,7 +333,11 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                                 <div
                                   key={idx}
                                   className="p-2 hover:bg-blue-100 cursor-pointer border-b text-sm"
-                                  onClick={() => selectAccountForLine(line.id, account)}
+                                  onClick={() => {
+                                    const codeInput = document.querySelectorAll('input[placeholder="Code"]')[0] as HTMLInputElement
+                                    if (codeInput) codeInput.value = account.code
+                                    selectAccountForLine(line.id, account)
+                                  }}
                                 >
                                   <div className="flex items-center gap-2">
                                     <span className="font-semibold text-[#001f3f] min-w-[60px]">{account.code}</span>
