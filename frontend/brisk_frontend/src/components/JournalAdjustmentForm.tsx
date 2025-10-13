@@ -284,7 +284,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       <TableCell className="p-2">
                         <div className="relative">
                           <Input
-                            value={line.accountCode}
+                            value={line.accountCode || ''}
                             onChange={(e) => handleAccountCodeChange(line.id, e.target.value)}
                             className="text-[#001f3f] border-[#001f3f] h-9 text-sm"
                             placeholder="Code"
@@ -310,15 +310,15 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       </TableCell>
                       <TableCell className="p-2">
                         <Input
-                          value={line.accountName}
+                          value={line.accountName || ''}
                           readOnly
                           className="text-[#001f3f] border-[#001f3f] bg-gray-50 h-9 text-sm"
-                          placeholder="Auto-filled"
+                          placeholder="Account name"
                         />
                       </TableCell>
                       <TableCell className="p-2">
                         <Input
-                          value={line.description}
+                          value={line.description || ''}
                           onChange={(e) => updateLine(line.id, 'description', e.target.value)}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm"
                           placeholder="Line description"
