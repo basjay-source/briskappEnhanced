@@ -8,6 +8,7 @@ from app.database import create_tables
 from app.routers import accounts, tax_ct, tax_sa, payroll, aml, cosec, books, esign, ai_advisers, integrations, admin, practice, charity, templates, search, vat, tax_rates, report_translation
 from app.middleware.tenant import TenantMiddleware
 from app.middleware.auth import AuthMiddleware
+from app.models import accounts as accounts_models
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

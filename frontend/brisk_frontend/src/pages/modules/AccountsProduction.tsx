@@ -81,21 +81,9 @@ const AccountsProduction: React.FC = () => {
   const [clientSortField, setClientSortField] = useState<keyof Client | ''>('')
   const [clientSortDirection, setClientSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
-    { id: '1', accountCode: '1', accountName: 'Sales', debit: 0, credit: 450000, category: 'Revenue' },
-    { id: '2', accountCode: '27', accountName: 'Purchases', debit: 180000, credit: 0, category: 'Expense' },
-    { id: '3', accountCode: '101', accountName: 'Salaries', debit: 80000, credit: 0, category: 'Expense' },
-    { id: '4', accountCode: '501', accountName: 'Freehold property', debit: 250000, credit: 0, category: 'Asset' },
-    { id: '5', accountCode: '601', accountName: 'Bank accounts', debit: 85000, credit: 0, category: 'Asset' },
-    { id: '6', accountCode: '801', accountName: 'Trade creditors', debit: 0, credit: 45000, category: 'Liability' },
-    { id: '7', accountCode: '1001', accountName: 'Called up share capital', debit: 0, credit: 100000, category: 'Equity' }
-  ])
+  const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([])
 
-  const [adjustments, setAdjustments] = useState<Adjustment[]>([
-    { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
-    { id: '2', type: 'accrual', description: 'Electricity Accrual', amount: 850, date: '2024-12-31', accountCode: '2100', status: 'draft' },
-    { id: '3', type: 'depreciation', description: 'Plant & Machinery Depreciation', amount: 12500, date: '2024-12-31', accountCode: '6200', status: 'approved' }
-  ])
+  const [adjustments, setAdjustments] = useState<Adjustment[]>([])
   const [adjSearchType, setAdjSearchType] = useState('')
   const [adjSearchStatus, setAdjSearchStatus] = useState('')
   const [adjSearchDescription, setAdjSearchDescription] = useState('')
@@ -187,6 +175,49 @@ const AccountsProduction: React.FC = () => {
     loadClients()
   }, [])
 
+  useEffect(() => {
+    const loadTrialBalance = async () => {
+      try {
+        const companyId = 'default-company-id'
+        const response = await api.getTrialBalance(companyId)
+        const tbEntries = response.trial_balance || []
+        setTrialBalanceEntries(tbEntries.map((entry: any) => ({
+          id: entry.id,
+          accountCode: entry.account_code,
+          accountName: entry.account_name,
+          debit: Number(entry.debit_balance || 0),
+          credit: Number(entry.credit_balance || 0),
+          category: entry.category || ''
+        })))
+      } catch (error) {
+        console.error('Failed to load trial balance:', error)
+      }
+    }
+    loadTrialBalance()
+  }, [])
+
+  useEffect(() => {
+    const loadAdjustments = async () => {
+      try {
+        const companyId = 'default-company-id'
+        const response = await api.getAdjustments(companyId)
+        const adjustmentsData = response || []
+        setAdjustments(adjustmentsData.map((adj: any) => ({
+          id: adj.id,
+          type: adj.adjustment_type,
+          description: adj.description,
+          amount: Number(adj.amount),
+          date: adj.adjustment_date,
+          accountCode: adj.account_code,
+          status: adj.status
+        })))
+      } catch (error) {
+        console.error('Failed to load adjustments:', error)
+      }
+    }
+    loadAdjustments()
+  }, [])
+
   const handleAddNewBatch = () => {
     setBatchFormData({ name: '', type: 'Manual Entry', description: '' })
     setIsBatchAddOpen(true)
@@ -265,34 +296,64 @@ const AccountsProduction: React.FC = () => {
     setIsTBAddOpen(true)
   }
 
-  const handleSaveNewTBEntry = () => {
-    const newEntry: TrialBalanceEntry = {
-      id: Date.now().toString(),
-      accountCode: tbFormData.accountCode || '',
-      accountName: tbFormData.accountName || '',
-      debit: tbFormData.debit || 0,
-      credit: tbFormData.credit || 0,
-      category: tbFormData.category || 'Asset'
+  const handleSaveNewTBEntry = async () => {
+    try {
+      const response = await api.createTrialBalanceEntry({
+        company_id: 'default-company-id',
+        period_end: new Date().toISOString().split('T')[0],
+        account_code: tbFormData.accountCode || '',
+        account_name: tbFormData.accountName || '',
+        debit_balance: tbFormData.debit || 0,
+        credit_balance: tbFormData.credit || 0
+      }) as any
+      const newEntry: TrialBalanceEntry = {
+        id: response.id,
+        accountCode: response.account_code,
+        accountName: response.account_name,
+        debit: Number(response.debit_balance),
+        credit: Number(response.credit_balance),
+        category: tbFormData.category || 'Asset'
+      }
+      setTrialBalanceEntries([...trialBalanceEntries, newEntry])
+      setIsTBAddOpen(false)
+      setTBFormData({})
+    } catch (error) {
+      console.error('Failed to create trial balance entry:', error)
+      alert('Failed to create trial balance entry. Please try again.')
     }
-    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
-    setIsTBAddOpen(false)
-    setTBFormData({})
   }
 
-  const handleSaveTBEntry = () => {
+  const handleSaveTBEntry = async () => {
     if (selectedTBEntry) {
-      setTrialBalanceEntries(trialBalanceEntries.map(e => 
-        e.id === selectedTBEntry.id ? { ...selectedTBEntry, ...tbFormData } as TrialBalanceEntry : e
-      ))
+      try {
+        await api.updateTrialBalanceEntry(selectedTBEntry.id, {
+          account_code: tbFormData.accountCode,
+          account_name: tbFormData.accountName,
+          debit_balance: tbFormData.debit,
+          credit_balance: tbFormData.credit
+        })
+        setTrialBalanceEntries(trialBalanceEntries.map(e => 
+          e.id === selectedTBEntry.id ? { ...selectedTBEntry, ...tbFormData } as TrialBalanceEntry : e
+        ))
+        setIsTBEditOpen(false)
+      } catch (error) {
+        console.error('Failed to update trial balance entry:', error)
+        alert('Failed to update trial balance entry. Please try again.')
+      }
     }
-    setIsTBEditOpen(false)
   }
 
-  const handleConfirmDeleteTBEntry = () => {
+  const handleConfirmDeleteTBEntry = async () => {
     if (selectedTBEntry) {
-      setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
-      setIsTBDeleteOpen(false)
-      setSelectedTBEntry(null)
+      try {
+        await api.deleteTrialBalanceEntry(selectedTBEntry.id)
+        setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
+        setIsTBDeleteOpen(false)
+        setSelectedTBEntry(null)
+      } catch (error) {
+        console.error('Failed to delete trial balance entry:', error)
+        alert('Failed to delete trial balance entry. Please try again.')
+      }
     }
   }
 
@@ -346,13 +407,67 @@ const AccountsProduction: React.FC = () => {
     setIsAdjAddOpen(true)
   }
 
-  const handleSaveAdjustment = () => {
+  const handleSaveAdjustment = async () => {
     if (selectedAdjustment) {
-      setAdjustments(adjustments.map(a => 
-        a.id === selectedAdjustment.id ? { ...selectedAdjustment, ...adjFormData } as Adjustment : a
-      ))
+      try {
+        await api.updateAdjustment(selectedAdjustment.id, {
+          adjustment_type: adjFormData.type,
+          description: adjFormData.description,
+          amount: adjFormData.amount,
+          adjustment_date: adjFormData.date,
+          account_code: adjFormData.accountCode,
+          status: adjFormData.status
+        })
+        setAdjustments(adjustments.map(a => 
+          a.id === selectedAdjustment.id ? { ...selectedAdjustment, ...adjFormData } as Adjustment : a
+        ))
+        setIsAdjEditOpen(false)
+      } catch (error) {
+        console.error('Failed to update adjustment:', error)
+        alert('Failed to update adjustment. Please try again.')
+      }
     }
-    setIsAdjEditOpen(false)
+  }
+
+  const handleSaveNewAdjustment = async () => {
+    try {
+      const response = await api.createAdjustment({
+        company_id: 'default-company-id',
+        adjustment_type: adjFormData.type || 'prepayment',
+        description: adjFormData.description || '',
+        amount: adjFormData.amount || 0,
+        adjustment_date: adjFormData.date || new Date().toISOString().split('T')[0],
+        account_code: adjFormData.accountCode || '',
+        status: adjFormData.status || 'draft'
+      }) as any
+      const newAdjustment: Adjustment = {
+        id: response.id,
+        type: response.adjustment_type,
+        description: response.description,
+        amount: Number(response.amount),
+        date: response.adjustment_date,
+        accountCode: response.account_code,
+        status: response.status
+      }
+      setAdjustments([...adjustments, newAdjustment])
+      setIsAdjAddOpen(false)
+      setAdjFormData({})
+    } catch (error) {
+      console.error('Failed to create adjustment:', error)
+      alert('Failed to create adjustment. Please try again.')
+    }
+  }
+
+  const handleDeleteAdjustment = async (adj: Adjustment) => {
+    if (confirm(`Are you sure you want to delete adjustment "${adj.description}"?`)) {
+      try {
+        await api.deleteAdjustment(adj.id)
+        setAdjustments(adjustments.filter(a => a.id !== adj.id))
+      } catch (error) {
+        console.error('Failed to delete adjustment:', error)
+        alert('Failed to delete adjustment. Please try again.')
+      }
+    }
   }
 
 
