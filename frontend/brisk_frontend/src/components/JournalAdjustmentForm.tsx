@@ -332,31 +332,39 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       <TableCell className="p-2">
                         <Input
                           type="text"
-                          value={(line.debit || 0).toFixed(2)}
+                          value={line.debit === 0 ? '0.00' : line.debit.toFixed(2)}
                           onChange={(e) => {
-                            const value = e.target.value.replace(/[^\d.]/g, '')
-                            updateLine(line.id, 'debit', parseFloat(value) || 0)
-                          }}
-                          onBlur={(e) => {
-                            const value = parseFloat(e.target.value) || 0
-                            updateLine(line.id, 'debit', value)
+                            const value = e.target.value
+                            if (value === '' || value === '0' || value === '0.') {
+                              updateLine(line.id, 'debit', 0)
+                            } else {
+                              const numValue = parseFloat(value)
+                              if (!isNaN(numValue)) {
+                                updateLine(line.id, 'debit', numValue)
+                              }
+                            }
                           }}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
+                          placeholder="0.00"
                         />
                       </TableCell>
                       <TableCell className="p-2">
                         <Input
                           type="text"
-                          value={(line.credit || 0).toFixed(2)}
+                          value={line.credit === 0 ? '0.00' : line.credit.toFixed(2)}
                           onChange={(e) => {
-                            const value = e.target.value.replace(/[^\d.]/g, '')
-                            updateLine(line.id, 'credit', parseFloat(value) || 0)
-                          }}
-                          onBlur={(e) => {
-                            const value = parseFloat(e.target.value) || 0
-                            updateLine(line.id, 'credit', value)
+                            const value = e.target.value
+                            if (value === '' || value === '0' || value === '0.') {
+                              updateLine(line.id, 'credit', 0)
+                            } else {
+                              const numValue = parseFloat(value)
+                              if (!isNaN(numValue)) {
+                                updateLine(line.id, 'credit', numValue)
+                              }
+                            }
                           }}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
+                          placeholder="0.00"
                         />
                       </TableCell>
                       <TableCell className="p-2">
