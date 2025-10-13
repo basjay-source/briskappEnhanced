@@ -221,6 +221,12 @@ const AccountsProduction: React.FC = () => {
   const [accountFormData, setAccountFormData] = useState<Partial<AccountCode>>({})
   const [deleteError, setDeleteError] = useState('')
 
+  const [isTBImportOpen, setIsTBImportOpen] = useState(false)
+  const [csvData, setCsvData] = useState<any[]>([])
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([])
+  const [accountMapping, setAccountMapping] = useState<Record<string, string>>({})
+  const [importStep, setImportStep] = useState<'upload' | 'mapping' | 'review'>('upload')
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -393,6 +399,48 @@ const AccountsProduction: React.FC = () => {
     } else {
       setDeleteError(result.message)
     }
+  }
+
+  const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result as string
+      const lines = text.split('\n').filter(line => line.trim())
+      const headers = lines[0].split(',').map(h => h.trim())
+      const data = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim())
+        return headers.reduce((obj, header, index) => {
+          obj[header] = values[index] || ''
+          return obj
+        }, {} as any)
+      })
+      
+      setCsvHeaders(headers)
+      setCsvData(data)
+      setImportStep('mapping')
+    }
+    reader.readAsText(file)
+  }
+
+  const handleImportConfirm = () => {
+    const newEntries: TrialBalanceEntry[] = csvData.map((row, index) => ({
+      id: `imported-${Date.now()}-${index}`,
+      accountCode: row[accountMapping.code] || '',
+      accountName: row[accountMapping.name] || '',
+      debit: parseFloat(row[accountMapping.debit] || '0'),
+      credit: parseFloat(row[accountMapping.credit] || '0'),
+      category: row[accountMapping.category] || 'Asset'
+    }))
+
+    setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+    setIsTBImportOpen(false)
+    setImportStep('upload')
+    setCsvData([])
+    setCsvHeaders([])
+    setAccountMapping({})
   }
 
   const getFilteredClients = () => {
@@ -1027,7 +1075,7 @@ const AccountsProduction: React.FC = () => {
             <p className="text-[#001f3f]">Import and review trial balance entries</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsTBImportOpen(true)}>
               <Upload className="h-4 w-4 mr-2" />Import TB
             </Button>
             <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
@@ -1178,6 +1226,22 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                <TableRow className="bg-[#001f3f] hover:bg-[#001f3f]">
+                  <TableCell colSpan={3} className="text-white font-bold text-right">TOTALS:</TableCell>
+                  <TableCell className="text-right text-white font-bold text-lg">
+                    £{totalDebit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </TableCell>
+                  <TableCell className="text-right text-white font-bold text-lg">
+                    £{totalCredit.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </TableCell>
+                  <TableCell className="text-white text-center">
+                    {Math.abs(totalDebit - totalCredit) < 0.01 ? (
+                      <span className="text-green-400 font-bold">✓ Balanced</span>
+                    ) : (
+                      <span className="text-red-400 font-bold">⚠ £{Math.abs(totalDebit - totalCredit).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    )}
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
@@ -2585,6 +2649,97 @@ const AccountsProduction: React.FC = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsDrilldownOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBImportOpen} onOpenChange={(open) => { setIsTBImportOpen(open); if (!open) { setImportStep('upload'); setCsvData([]); setCsvHeaders([]); setAccountMapping({}); } }}>
+        <DialogContent className="max-w-4xl border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Import Trial Balance from CSV</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            {importStep === 'upload' && (
+              <div className="space-y-4">
+                <div className="border-2 border-dashed border-[#001f3f] rounded-lg p-8 text-center">
+                  <Upload className="h-12 w-12 mx-auto mb-4 text-[#001f3f]" />
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Upload CSV File</h3>
+                  <p className="text-sm text-gray-600 mb-4">Select a CSV file containing your trial balance data</p>
+                  <input type="file" accept=".csv" onChange={handleCSVUpload} className="hidden" id="csv-upload" />
+                  <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => document.getElementById('csv-upload')?.click()}>Choose File</Button>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded">
+                  <h4 className="font-semibold text-[#001f3f] mb-2">Expected CSV Format:</h4>
+                  <p className="text-sm text-gray-700">Your CSV should include columns for: Account Code, Account Name, Debit, Credit, and Category</p>
+                </div>
+              </div>
+            )}
+            {importStep === 'mapping' && (
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-200 p-4 rounded">
+                  <p className="text-sm text-green-800">✓ File uploaded successfully: {csvData.length} rows detected</p>
+                </div>
+                <h3 className="font-semibold text-[#001f3f]">Map CSV Columns to Trial Balance Fields</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Account Code</label>
+                    <Select value={accountMapping.code} onValueChange={(val) => setAccountMapping({...accountMapping, code: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Account Name</label>
+                    <Select value={accountMapping.name} onValueChange={(val) => setAccountMapping({...accountMapping, name: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Debit Amount</label>
+                    <Select value={accountMapping.debit} onValueChange={(val) => setAccountMapping({...accountMapping, debit: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Credit Amount</label>
+                    <Select value={accountMapping.credit} onValueChange={(val) => setAccountMapping({...accountMapping, credit: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Category (Optional)</label>
+                    <Select value={accountMapping.category} onValueChange={(val) => setAccountMapping({...accountMapping, category: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent><SelectItem value="">None</SelectItem>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="max-h-60 overflow-auto border border-[#001f3f] rounded">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>{csvHeaders.map(h => <TableHead key={h} className="text-[#001f3f]">{h}</TableHead>)}</TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {csvData.slice(0, 5).map((row, i) => (
+                        <TableRow key={i}>
+                          {csvHeaders.map(h => <TableCell key={h} className="text-[#001f3f]">{row[h]}</TableCell>)}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  {csvData.length > 5 && <p className="text-sm text-gray-500 p-2">Showing first 5 of {csvData.length} rows</p>}
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => {setIsTBImportOpen(false); setImportStep('upload'); setCsvData([]); setCsvHeaders([]); setAccountMapping({})}}>Cancel</Button>
+            {importStep === 'mapping' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" disabled={!accountMapping.code || !accountMapping.name || !accountMapping.debit || !accountMapping.credit} onClick={handleImportConfirm}>Import {csvData.length} Entries</Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
