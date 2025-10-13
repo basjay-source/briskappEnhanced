@@ -211,6 +211,8 @@ const AccountsProduction: React.FC = () => {
   const [coaSearchName, setCoaSearchName] = useState('')
   const [coaSearchGroup, setCoaSearchGroup] = useState('')
   const [coaSearchCategory, setCoaSearchCategory] = useState('')
+  const [coaCurrentPage, setCoaCurrentPage] = useState(1)
+  const [coaItemsPerPage, setCoaItemsPerPage] = useState(50)
 
   const [isAccountAddOpen, setIsAccountAddOpen] = useState(false)
   const [isAccountEditOpen, setIsAccountEditOpen] = useState(false)
@@ -1578,14 +1580,10 @@ const AccountsProduction: React.FC = () => {
       return codeMatch && nameMatch && groupMatch && categoryMatch
     })
 
-    const categoryCounts = {
-      Income: allAccounts.filter(a => a.category === 'Income').length,
-      'Cost of Sales': allAccounts.filter(a => a.category === 'Cost of Sales').length,
-      Expenses: allAccounts.filter(a => a.category === 'Expenses').length,
-      Assets: allAccounts.filter(a => a.category === 'Assets').length,
-      Liabilities: allAccounts.filter(a => a.category === 'Liabilities').length,
-      Equity: allAccounts.filter(a => a.category === 'Equity').length
-    }
+    const totalPages = Math.ceil(filteredAccounts.length / coaItemsPerPage)
+    const startIndex = (coaCurrentPage - 1) * coaItemsPerPage
+    const endIndex = startIndex + coaItemsPerPage
+    const paginatedAccounts = filteredAccounts.slice(startIndex, endIndex)
 
     const handleAccountClick = (account: any) => {
       setDrilldownTitle(`Account: ${account.name}`)
@@ -1606,35 +1604,6 @@ const AccountsProduction: React.FC = () => {
       setIsDrilldownOpen(true)
     }
 
-    const handleCategoryClick = (category: string) => {
-      const categoryAccounts = allAccounts.filter(a => a.category === category)
-      setDrilldownTitle(`${category} Accounts`)
-      setDrilldownContent(
-        <div className="space-y-4">
-          <p className="text-[#001f3f]">Total: {categoryAccounts.length} accounts</p>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Code</TableHead>
-                <TableHead className="text-[#001f3f]">Name</TableHead>
-                <TableHead className="text-[#001f3f]">Group</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categoryAccounts.slice(0, 10).map(acc => (
-                <TableRow key={acc.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(acc)}>
-                  <TableCell className="text-[#001f3f]">{acc.code}</TableCell>
-                  <TableCell className="text-[#001f3f]">{acc.name}</TableCell>
-                  <TableCell className="text-[#001f3f]">{acc.groupNumber || '-'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {categoryAccounts.length > 10 && <p className="text-sm text-gray-500">Showing first 10 of {categoryAccounts.length} accounts</p>}
-        </div>
-      )
-      setIsDrilldownOpen(true)
-    }
 
     return (
       <div className="space-y-6">
@@ -1653,31 +1622,8 @@ const AccountsProduction: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Income')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Income</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Income}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Expenses')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Expenses + categoryCounts['Cost of Sales']}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Assets')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Assets}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Liabilities')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Liabilities}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Equity')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Equity</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Equity}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-        </div>
-
         <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Account List</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-[#001f3f]">Complete Chart of Accounts ({filteredAccounts.length} accounts)</CardTitle></CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
@@ -1730,7 +1676,7 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAccounts.slice(0, 50).map(account => (
+                {paginatedAccounts.map(account => (
                   <TableRow key={account.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(account)}>
                     <TableCell className="text-[#001f3f]">{account.code}</TableCell>
                     <TableCell className="text-[#001f3f]">{account.name}</TableCell>
@@ -1747,9 +1693,64 @@ const AccountsProduction: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
-            {filteredAccounts.length > 50 && (
-              <p className="text-sm text-gray-500 mt-2">Showing first 50 of {filteredAccounts.length} accounts. Use search to narrow results.</p>
-            )}
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-[#001f3f]">Items per page:</p>
+                <Select value={coaItemsPerPage.toString()} onValueChange={(value) => { setCoaItemsPerPage(Number(value)); setCoaCurrentPage(1); }}>
+                  <SelectTrigger className="w-20 border-[#001f3f]"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                    <SelectItem value="200">200</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-[#001f3f]">
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredAccounts.length)} of {filteredAccounts.length} accounts
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === 1}
+                  onClick={() => setCoaCurrentPage(1)}
+                >
+                  First
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === 1}
+                  onClick={() => setCoaCurrentPage(p => p - 1)}
+                >
+                  Previous
+                </Button>
+                <span className="flex items-center px-3 text-sm text-[#001f3f]">
+                  Page {coaCurrentPage} of {totalPages}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === totalPages}
+                  onClick={() => setCoaCurrentPage(p => p + 1)}
+                >
+                  Next
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === totalPages}
+                  onClick={() => setCoaCurrentPage(totalPages)}
+                >
+                  Last
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
