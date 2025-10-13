@@ -167,3 +167,41 @@ class ChartOfAccount(Base):
     is_system = Column(Boolean, default=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    balances = relationship("AccountBalance", back_populates="account")
+
+class AccountBalance(Base):
+    __tablename__ = "account_balances"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    account_code = Column(String, nullable=False)
+    period_start = Column(Date, nullable=False)
+    period_end = Column(Date, nullable=False)
+    opening_debit = Column(Numeric(15, 2), default=0)
+    opening_credit = Column(Numeric(15, 2), default=0)
+    current_debit = Column(Numeric(15, 2), default=0)
+    current_credit = Column(Numeric(15, 2), default=0)
+    closing_debit = Column(Numeric(15, 2), default=0)
+    closing_credit = Column(Numeric(15, 2), default=0)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    account = relationship("ChartOfAccount", back_populates="balances")
+
+class NominalLedgerEntry(Base):
+    __tablename__ = "nominal_ledger_entries"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    account_code = Column(String, nullable=False)
+    transaction_date = Column(Date, nullable=False)
+    reference = Column(String, nullable=False)
+    description = Column(Text)
+    debit_amount = Column(Numeric(15, 2), default=0)
+    credit_amount = Column(Numeric(15, 2), default=0)
+    source_type = Column(String, nullable=False)
+    source_id = Column(String, nullable=False)
+    posted_by = Column(String)
+    posted_at = Column(DateTime(timezone=True), server_default=func.now())

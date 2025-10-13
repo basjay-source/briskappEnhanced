@@ -6,7 +6,7 @@ from datetime import date
 from decimal import Decimal
 
 from app.database import get_db
-from app.models import LedgerAccount, JournalEntry, TrialBalance, FinancialStatement, AccountsProductionClient, YearEndAdjustment, ChartOfAccount
+from app.models import LedgerAccount, JournalEntry, TrialBalance, FinancialStatement, AccountsProductionClient, YearEndAdjustment, AdjustmentJournalLine, ChartOfAccount, AccountBalance, NominalLedgerEntry
 
 router = APIRouter()
 
@@ -333,22 +333,31 @@ def delete_production_client(
     db.commit()
     return {"message": "Client deleted successfully"}
 
+class JournalLineCreate(BaseModel):
+    account_code: str
+    account_name: str
+    description: Optional[str] = ""
+    debit: Decimal = 0
+    credit: Decimal = 0
+
 class YearEndAdjustmentCreate(BaseModel):
     company_id: str
     adjustment_type: str
+    reference: str
     description: str
-    amount: Decimal
     adjustment_date: date
-    account_code: str
     status: str = "draft"
+    notes: Optional[str] = ""
+    journal_lines: List[JournalLineCreate]
 
 class YearEndAdjustmentUpdate(BaseModel):
     adjustment_type: Optional[str] = None
+    reference: Optional[str] = None
     description: Optional[str] = None
-    amount: Optional[Decimal] = None
     adjustment_date: Optional[date] = None
-    account_code: Optional[str] = None
     status: Optional[str] = None
+    notes: Optional[str] = None
+    journal_lines: Optional[List[JournalLineCreate]] = None
 
 @router.get("/production/adjustments/{company_id}")
 def get_adjustments(
@@ -360,7 +369,36 @@ def get_adjustments(
         YearEndAdjustment.tenant_id == request.state.tenant_id,
         YearEndAdjustment.company_id == company_id
     ).all()
-    return adjustments
+    
+    result = []
+    for adj in adjustments:
+        adj_dict = {
+            "id": adj.id,
+            "company_id": adj.company_id,
+            "adjustment_type": adj.adjustment_type,
+            "reference": adj.reference,
+            "description": adj.description,
+            "adjustment_date": adj.adjustment_date,
+            "status": adj.status,
+            "total_debit": adj.total_debit,
+            "total_credit": adj.total_credit,
+            "notes": adj.notes,
+            "created_at": adj.created_at,
+            "journal_lines": [
+                {
+                    "id": line.id,
+                    "account_code": line.account_code,
+                    "account_name": line.account_name,
+                    "description": line.description,
+                    "debit": line.debit_amount,
+                    "credit": line.credit_amount
+                }
+                for line in adj.journal_lines
+            ]
+        }
+        result.append(adj_dict)
+    
+    return result
 
 @router.post("/production/adjustments")
 def create_adjustment(
@@ -368,14 +406,54 @@ def create_adjustment(
     request: Request = None,
     db: Session = Depends(get_db)
 ):
+    total_debit = sum(line.debit for line in adjustment_data.journal_lines)
+    total_credit = sum(line.credit for line in adjustment_data.journal_lines)
+    
+    if abs(total_debit - total_credit) > 0.01:
+        raise HTTPException(status_code=400, detail="Journal must be balanced (total debits must equal total credits)")
+    
     adjustment = YearEndAdjustment(
         tenant_id=request.state.tenant_id,
-        **adjustment_data.dict()
+        company_id=adjustment_data.company_id,
+        adjustment_type=adjustment_data.adjustment_type,
+        reference=adjustment_data.reference,
+        description=adjustment_data.description,
+        adjustment_date=adjustment_data.adjustment_date,
+        status=adjustment_data.status,
+        total_debit=total_debit,
+        total_credit=total_credit,
+        notes=adjustment_data.notes
     )
+    
     db.add(adjustment)
+    db.flush()
+    
+    for idx, line_data in enumerate(adjustment_data.journal_lines):
+        line = AdjustmentJournalLine(
+            adjustment_id=adjustment.id,
+            account_code=line_data.account_code,
+            account_name=line_data.account_name,
+            description=line_data.description,
+            debit_amount=line_data.debit,
+            credit_amount=line_data.credit,
+            line_order=idx
+        )
+        db.add(line)
+    
+    if adjustment.status == "posted":
+        post_journal_to_ledger(db, request.state.tenant_id, adjustment)
+    
     db.commit()
     db.refresh(adjustment)
-    return adjustment
+    
+    return {
+        "id": adjustment.id,
+        "reference": adjustment.reference,
+        "status": adjustment.status,
+        "total_debit": adjustment.total_debit,
+        "total_credit": adjustment.total_credit,
+        "message": "Journal entry created successfully"
+    }
 
 @router.put("/production/adjustments/{adjustment_id}")
 def update_adjustment(
@@ -392,8 +470,41 @@ def update_adjustment(
     if not adjustment:
         raise HTTPException(status_code=404, detail="Adjustment not found")
     
-    for key, value in adjustment_data.dict(exclude_unset=True).items():
+    if adjustment.status == "posted":
+        raise HTTPException(status_code=400, detail="Cannot edit a posted journal entry")
+    
+    if adjustment_data.journal_lines is not None:
+        total_debit = sum(line.debit for line in adjustment_data.journal_lines)
+        total_credit = sum(line.credit for line in adjustment_data.journal_lines)
+        
+        if abs(total_debit - total_credit) > 0.01:
+            raise HTTPException(status_code=400, detail="Journal must be balanced")
+        
+        db.query(AdjustmentJournalLine).filter(
+            AdjustmentJournalLine.adjustment_id == adjustment_id
+        ).delete()
+        
+        for idx, line_data in enumerate(adjustment_data.journal_lines):
+            line = AdjustmentJournalLine(
+                adjustment_id=adjustment.id,
+                account_code=line_data.account_code,
+                account_name=line_data.account_name,
+                description=line_data.description,
+                debit_amount=line_data.debit,
+                credit_amount=line_data.credit,
+                line_order=idx
+            )
+            db.add(line)
+        
+        adjustment.total_debit = total_debit
+        adjustment.total_credit = total_credit
+    
+    for key, value in adjustment_data.dict(exclude_unset=True, exclude={'journal_lines'}).items():
         setattr(adjustment, key, value)
+    
+    was_draft = adjustment.status != "posted"
+    if was_draft and adjustment_data.status == "posted":
+        post_journal_to_ledger(db, request.state.tenant_id, adjustment)
     
     db.commit()
     db.refresh(adjustment)
@@ -413,9 +524,118 @@ def delete_adjustment(
     if not adjustment:
         raise HTTPException(status_code=404, detail="Adjustment not found")
     
+    if adjustment.status == "posted":
+        raise HTTPException(status_code=400, detail="Cannot delete a posted journal entry. Reverse it instead.")
+    
     db.delete(adjustment)
     db.commit()
     return {"message": "Adjustment deleted successfully"}
+
+def post_journal_to_ledger(db: Session, tenant_id: str, adjustment: YearEndAdjustment):
+    for line in adjustment.journal_lines:
+        if line.debit_amount > 0 or line.credit_amount > 0:
+            ledger_entry = NominalLedgerEntry(
+                tenant_id=tenant_id,
+                company_id=adjustment.company_id,
+                account_code=line.account_code,
+                transaction_date=adjustment.adjustment_date,
+                reference=adjustment.reference,
+                description=f"{adjustment.description} - {line.description}",
+                debit_amount=line.debit_amount,
+                credit_amount=line.credit_amount,
+                source_type="year_end_adjustment",
+                source_id=adjustment.id
+            )
+            db.add(ledger_entry)
+            
+            update_account_balance(
+                db, 
+                tenant_id, 
+                adjustment.company_id, 
+                line.account_code, 
+                line.debit_amount, 
+                line.credit_amount,
+                adjustment.adjustment_date
+            )
+            
+            update_trial_balance(
+                db,
+                tenant_id,
+                adjustment.company_id,
+                line.account_code,
+                line.account_name,
+                line.debit_amount,
+                line.credit_amount,
+                adjustment.adjustment_date
+            )
+
+def update_account_balance(
+    db: Session, 
+    tenant_id: str, 
+    company_id: str, 
+    account_code: str, 
+    debit_amount: Decimal, 
+    credit_amount: Decimal,
+    transaction_date: date
+):
+    balance = db.query(AccountBalance).filter(
+        AccountBalance.tenant_id == tenant_id,
+        AccountBalance.company_id == company_id,
+        AccountBalance.account_code == account_code,
+        AccountBalance.period_start <= transaction_date,
+        AccountBalance.period_end >= transaction_date
+    ).first()
+    
+    if not balance:
+        balance = AccountBalance(
+            tenant_id=tenant_id,
+            company_id=company_id,
+            account_code=account_code,
+            period_start=date(transaction_date.year, 1, 1),
+            period_end=date(transaction_date.year, 12, 31),
+            opening_debit=0,
+            opening_credit=0,
+            current_debit=0,
+            current_credit=0
+        )
+        db.add(balance)
+    
+    balance.current_debit += debit_amount
+    balance.current_credit += credit_amount
+    balance.closing_debit = balance.opening_debit + balance.current_debit
+    balance.closing_credit = balance.opening_credit + balance.current_credit
+
+def update_trial_balance(
+    db: Session,
+    tenant_id: str,
+    company_id: str,
+    account_code: str,
+    account_name: str,
+    debit_amount: Decimal,
+    credit_amount: Decimal,
+    transaction_date: date
+):
+    tb_entry = db.query(TrialBalance).filter(
+        TrialBalance.tenant_id == tenant_id,
+        TrialBalance.company_id == company_id,
+        TrialBalance.account_code == account_code,
+        TrialBalance.period_end >= transaction_date
+    ).first()
+    
+    if not tb_entry:
+        tb_entry = TrialBalance(
+            tenant_id=tenant_id,
+            company_id=company_id,
+            period_end=date(transaction_date.year, 12, 31),
+            account_code=account_code,
+            account_name=account_name,
+            debit_balance=0,
+            credit_balance=0
+        )
+        db.add(tb_entry)
+    
+    tb_entry.debit_balance += debit_amount
+    tb_entry.credit_balance += credit_amount
 
 class ChartOfAccountCreate(BaseModel):
     code: str
@@ -569,3 +789,53 @@ def delete_trial_balance_entry(
     db.delete(entry)
     db.commit()
     return {"message": "Trial balance entry deleted successfully"}
+
+@router.get("/nominal-ledger/{company_id}")
+def get_nominal_ledger(
+    company_id: str,
+    account_code: Optional[str] = None,
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(NominalLedgerEntry).filter(
+        NominalLedgerEntry.tenant_id == request.state.tenant_id,
+        NominalLedgerEntry.company_id == company_id
+    )
+    
+    if account_code:
+        query = query.filter(NominalLedgerEntry.account_code == account_code)
+    
+    if start_date:
+        query = query.filter(NominalLedgerEntry.transaction_date >= start_date)
+    
+    if end_date:
+        query = query.filter(NominalLedgerEntry.transaction_date <= end_date)
+    
+    entries = query.order_by(NominalLedgerEntry.transaction_date.desc()).all()
+    
+    return {
+        "entries": entries,
+        "total_entries": len(entries),
+        "total_debit": sum(e.debit_amount for e in entries),
+        "total_credit": sum(e.credit_amount for e in entries)
+    }
+
+@router.get("/account-balances/{company_id}")
+def get_account_balances(
+    company_id: str,
+    account_code: Optional[str] = None,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(AccountBalance).filter(
+        AccountBalance.tenant_id == request.state.tenant_id,
+        AccountBalance.company_id == company_id
+    )
+    
+    if account_code:
+        query = query.filter(AccountBalance.account_code == account_code)
+    
+    balances = query.all()
+    return balances
