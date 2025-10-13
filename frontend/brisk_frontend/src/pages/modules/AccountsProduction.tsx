@@ -1332,6 +1332,16 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                <TableRow className="bg-[#001f3f] text-white font-bold border-t-4 border-[#001f3f]">
+                  <TableCell colSpan={3} className="text-white text-right pr-4">TOTAL:</TableCell>
+                  <TableCell className="text-right text-white">
+                    £{filteredEntries.reduce((sum, entry) => sum + (entry.debit || 0), 0).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right text-white">
+                    £{filteredEntries.reduce((sum, entry) => sum + (entry.credit || 0), 0).toLocaleString()}
+                  </TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
