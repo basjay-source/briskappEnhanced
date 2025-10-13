@@ -145,13 +145,6 @@ const AccountsProduction: React.FC = () => {
     { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
     { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
   ])
-  const [tbSearchCode, setTbSearchCode] = useState('')
-  const [tbSearchName, setTbSearchName] = useState('')
-  const [tbSearchCategory, setTbSearchCategory] = useState('')
-  const [tbSearchDebit, setTbSearchDebit] = useState('')
-  const [tbSearchCredit, setTbSearchCredit] = useState('')
-  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry | ''>('')
-  const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
     { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
@@ -188,6 +181,10 @@ const AccountsProduction: React.FC = () => {
 
   const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
+  const [isTBAddOpen, setIsTBAddOpen] = useState(false)
+  const [isTBDeleteOpen, setIsTBDeleteOpen] = useState(false)
+  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false)
+  const [isIntegrationOpen, setIsIntegrationOpen] = useState(false)
   const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
   const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
@@ -226,6 +223,20 @@ const AccountsProduction: React.FC = () => {
   const [accountMapping, setAccountMapping] = useState<Record<string, string>>({})
   const [importStep, setImportStep] = useState<'method' | 'upload' | 'mapping' | 'review'>('method')
   const [importMethod, setImportMethod] = useState<'bookkeeping' | 'csv' | 'integration'>('bookkeeping')
+
+  const [isBatchAddOpen, setIsBatchAddOpen] = useState(false)
+  const [batchFormData, setBatchFormData] = useState<{name?: string, type?: string, description?: string}>({})
+
+  const handleAddNewBatch = () => {
+    setBatchFormData({ name: '', type: 'Manual Entry', description: '' })
+    setIsBatchAddOpen(true)
+  }
+
+  const handleSaveNewBatch = () => {
+    console.log('New batch created:', batchFormData)
+    setIsBatchAddOpen(false)
+    setBatchFormData({})
+  }
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -292,6 +303,25 @@ const AccountsProduction: React.FC = () => {
   }
 
 
+  const handleAddTBEntry = () => {
+    setTBFormData({ accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset' })
+    setIsTBAddOpen(true)
+  }
+
+  const handleSaveNewTBEntry = () => {
+    const newEntry: TrialBalanceEntry = {
+      id: Date.now().toString(),
+      accountCode: tbFormData.accountCode || '',
+      accountName: tbFormData.accountName || '',
+      debit: tbFormData.debit || 0,
+      credit: tbFormData.credit || 0,
+      category: tbFormData.category || 'Asset'
+    }
+    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
+    setIsTBAddOpen(false)
+    setTBFormData({})
+  }
+
   const handleSaveTBEntry = () => {
     if (selectedTBEntry) {
       setTrialBalanceEntries(trialBalanceEntries.map(e => 
@@ -299,6 +329,50 @@ const AccountsProduction: React.FC = () => {
       ))
     }
     setIsTBEditOpen(false)
+  }
+
+  const handleDeleteTBEntry = (entry: TrialBalanceEntry) => {
+    setSelectedTBEntry(entry)
+    setIsTBDeleteOpen(true)
+  }
+
+  const handleConfirmDeleteTBEntry = () => {
+    if (selectedTBEntry) {
+      setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
+      setIsTBDeleteOpen(false)
+      setSelectedTBEntry(null)
+    }
+  }
+
+  const handleBookkeepingSync = () => {
+    setIsSyncConfirmOpen(true)
+  }
+
+  const handleConfirmSync = () => {
+    const bookkeepingData = [
+      { accountCode: '1', accountName: 'Cash at bank and in hand', debit: 50000, credit: 0, category: 'Asset' },
+      { accountCode: '2', accountName: 'Trade debtors', debit: 75000, credit: 0, category: 'Asset' },
+      { accountCode: '3', accountName: 'Prepayments and accrued income', debit: 5000, credit: 0, category: 'Asset' },
+      { accountCode: '101', accountName: 'Sales - goods', debit: 0, credit: 250000, category: 'Income' },
+      { accountCode: '102', accountName: 'Sales - services', debit: 0, credit: 150000, category: 'Income' },
+      { accountCode: '201', accountName: 'Cost of goods sold - materials', debit: 80000, credit: 0, category: 'Expenses' },
+      { accountCode: '301', accountName: 'Wages and salaries', debit: 120000, credit: 0, category: 'Expenses' },
+      { accountCode: '401', accountName: 'Rent', debit: 24000, credit: 0, category: 'Expenses' },
+      { accountCode: '501', accountName: 'Bank charges', debit: 1000, credit: 0, category: 'Expenses' },
+      { accountCode: '601', accountName: 'Trade creditors', debit: 0, credit: 45000, category: 'Liability' },
+      { accountCode: '651', accountName: 'Equipment', debit: 85000, credit: 0, category: 'Asset' },
+      { accountCode: '701', accountName: 'Share capital', debit: 0, credit: 100000, category: 'Equity' }
+    ]
+    const newEntries = bookkeepingData.map(d => ({
+      id: Date.now().toString() + Math.random(),
+      accountCode: d.accountCode,
+      accountName: d.accountName,
+      debit: d.debit,
+      credit: d.credit,
+      category: d.category as any
+    }))
+    setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+    setIsSyncConfirmOpen(false)
   }
 
 
@@ -395,6 +469,22 @@ const AccountsProduction: React.FC = () => {
     }
   }
 
+  const handleExportCoA = () => {
+    const allAccounts = getAllAccounts()
+    const csv = [
+      ['Code', 'Name', 'Category', 'Group Number'].join(','),
+      ...allAccounts.map(acc => [acc.code, `"${acc.name}"`, acc.category || '', acc.groupNumber || ''].join(','))
+    ].join('\n')
+    
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `chart-of-accounts-${new Date().toISOString().split('T')[0]}.csv`
+    a.click()
+    window.URL.revokeObjectURL(url)
+  }
+
   const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -465,30 +555,7 @@ const AccountsProduction: React.FC = () => {
   }
 
   const getFilteredTBEntries = () => {
-    let filtered = trialBalanceEntries.filter(entry => {
-      const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
-      const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
-      const matchesCategory = !tbSearchCategory || tbSearchCategory === 'all' || entry.category === tbSearchCategory
-      const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
-      const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
-      return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
-    })
-
-    if (tbSortField) {
-      filtered = [...filtered].sort((a, b) => {
-        const aVal = a[tbSortField]
-        const bVal = b[tbSortField]
-        if (aVal === undefined || bVal === undefined) return 0
-        
-        if (tbSortDirection === 'asc') {
-          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
-        } else {
-          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
-        }
-      })
-    }
-
-    return filtered
+    return [...trialBalanceEntries]
   }
 
   const getFilteredAdjustments = () => {
@@ -651,24 +718,6 @@ const AccountsProduction: React.FC = () => {
       return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
     }
     return clientSortDirection === 'asc' 
-      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
-      : <ArrowDown className="h-3 w-3 ml-1 inline" />
-  }
-
-  const handleTBSort = (field: keyof TrialBalanceEntry) => {
-    if (tbSortField === field) {
-      setTbSortDirection(tbSortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setTbSortField(field)
-      setTbSortDirection('asc')
-    }
-  }
-
-  const getTBSortIcon = (field: keyof TrialBalanceEntry) => {
-    if (tbSortField !== field) {
-      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
-    }
-    return tbSortDirection === 'asc' 
       ? <ArrowUp className="h-3 w-3 ml-1 inline" />
       : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
@@ -1066,23 +1115,7 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
-            const bookkeepingData = [
-              { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
-              { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
-              { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
-              { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
-            ]
-            const newEntries = bookkeepingData.map(d => ({
-              id: Date.now().toString() + Math.random(),
-              accountCode: d.accountCode,
-              accountName: d.accountName,
-              debit: d.debit,
-              credit: d.credit,
-              category: d.category as any
-            }))
-            setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
-          }}>
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={handleBookkeepingSync}>
             <CardContent className="pt-6 text-center">
               <Database className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
               <h3 className="font-bold text-[#001f3f] mb-2">Sync from Bookkeeping</h3>
@@ -1108,7 +1141,7 @@ const AccountsProduction: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => alert('Integration with Xero, Sage, and QuickBooks coming soon')}>
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => setIsIntegrationOpen(true)}>
             <CardContent className="pt-6 text-center">
               <Globe className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
               <h3 className="font-bold text-[#001f3f] mb-2">Software Integration</h3>
@@ -1121,85 +1154,20 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
+            <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Entry
+            </Button>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('accountCode')}>
-                        Code {getTBSortIcon('accountCode')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchCode}
-                        onChange={(e) => setTbSearchCode(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('accountName')}>
-                        Account Name {getTBSortIcon('accountName')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchName}
-                        onChange={(e) => setTbSearchName(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('category')}>
-                        Category {getTBSortIcon('category')}
-                      </div>
-                      <Select value={tbSearchCategory} onValueChange={setTbSearchCategory}>
-                        <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="All" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
-                          <SelectItem value="Asset">Asset</SelectItem>
-                          <SelectItem value="Liability">Liability</SelectItem>
-                          <SelectItem value="Equity">Equity</SelectItem>
-                          <SelectItem value="Revenue">Revenue</SelectItem>
-                          <SelectItem value="Expense">Expense</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('debit')}>
-                        Debit {getTBSortIcon('debit')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchDebit}
-                        onChange={(e) => setTbSearchDebit(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('credit')}>
-                        Credit {getTBSortIcon('credit')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchCredit}
-                        onChange={(e) => setTbSearchCredit(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
-                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Account Name</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -1212,9 +1180,6 @@ const AccountsProduction: React.FC = () => {
                   >
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{entry.category}</Badge>
-                    </TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
                     </TableCell>
@@ -1222,19 +1187,42 @@ const AccountsProduction: React.FC = () => {
                       {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
                     </TableCell>
                     <TableCell>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleEditTBEntry(entry)
-                        }}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleEditTBEntry(entry)
+                          }}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteTBEntry(entry)
+                          }}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
+                <TableRow className="bg-[#001f3f] text-white font-bold border-t-4 border-[#001f3f]">
+                  <TableCell colSpan={2} className="text-white text-right pr-4">TOTAL:</TableCell>
+                  <TableCell className="text-right text-white">
+                    £{filteredEntries.reduce((sum, entry) => sum + (entry.debit || 0), 0).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right text-white">
+                    £{filteredEntries.reduce((sum, entry) => sum + (entry.credit || 0), 0).toLocaleString()}
+                  </TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
@@ -1670,7 +1658,7 @@ const AccountsProduction: React.FC = () => {
             <p className="text-[#001f3f]">IAS Chart of Accounts - {allAccounts.length} total accounts</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={handleExportCoA}>
               <Download className="h-4 w-4 mr-2" />Export
             </Button>
             <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddAccountOpen}>
@@ -1840,25 +1828,138 @@ const AccountsProduction: React.FC = () => {
             <h2 className="text-xl font-bold text-[#001f3f]">Posting Batches</h2>
             <p className="text-[#001f3f]">Manage journal entries and posting batches</p>
           </div>
-          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Creating new batch...')}>
+          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddNewBatch}>
             <Plus className="h-4 w-4 mr-2" />New Batch
           </Button>
         </div>
 
         <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches', <div className="space-y-2"><p className="text-[#001f3f]">5 batches in draft status</p><p className="text-[#001f3f]">Total entries: 23</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches - Detailed Breakdown', 
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Draft Batches Summary</h3>
+                <p className="text-[#001f3f]">5 batches awaiting approval</p>
+                <p className="text-[#001f3f]">Total entries: 23 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £48,500</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Batch List:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                      <TableHead className="text-[#001f3f]">Value</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Depreciation Q4</TableCell><TableCell className="text-[#001f3f]">8</TableCell><TableCell className="text-[#001f3f]">£12,500</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Accruals Dec</TableCell><TableCell className="text-[#001f3f]">5</TableCell><TableCell className="text-[#001f3f]">£8,200</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Prepayments</TableCell><TableCell className="text-[#001f3f]">4</TableCell><TableCell className="text-[#001f3f]">£15,800</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Reclassifications</TableCell><TableCell className="text-[#001f3f]">4</TableCell><TableCell className="text-[#001f3f]">£9,000</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Other Adjustments</TableCell><TableCell className="text-[#001f3f]">2</TableCell><TableCell className="text-[#001f3f]">£3,000</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Draft Batches</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">5</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches', <div className="space-y-2"><p className="text-[#001f3f]">23 batches posted</p><p className="text-[#001f3f]">Total entries: 342</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Posted Batches Summary</h3>
+                <p className="text-[#001f3f]">23 batches successfully posted</p>
+                <p className="text-[#001f3f]">Total entries: 342 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £1,245,800</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Recent Posted Batches:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Date Posted</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Year End 2024</TableCell><TableCell className="text-[#001f3f]">2024-12-31</TableCell><TableCell className="text-[#001f3f]">15</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Month End Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-30</TableCell><TableCell className="text-[#001f3f]">28</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Payroll Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-28</TableCell><TableCell className="text-[#001f3f]">45</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Sales Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-27</TableCell><TableCell className="text-[#001f3f]">120</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Purchases Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-26</TableCell><TableCell className="text-[#001f3f]">89</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Posted</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">23</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches', <div className="space-y-2"><p className="text-[#001f3f]">12 batches approved</p><p className="text-[#001f3f]">Pending posting</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Approved Batches Summary</h3>
+                <p className="text-[#001f3f]">12 batches approved and pending posting</p>
+                <p className="text-[#001f3f]">Total entries: 86 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £234,500</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Approved Batches Awaiting Posting:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Approved By</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Jan Adjustments</TableCell><TableCell className="text-[#001f3f]">Manager A</TableCell><TableCell className="text-[#001f3f]">12</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">VAT Return Q4</TableCell><TableCell className="text-[#001f3f]">Manager B</TableCell><TableCell className="text-[#001f3f]">8</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Stock Adj</TableCell><TableCell className="text-[#001f3f]">Manager A</TableCell><TableCell className="text-[#001f3f]">15</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Bank Reconciliation</TableCell><TableCell className="text-[#001f3f]">Manager C</TableCell><TableCell className="text-[#001f3f]">22</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Fixed Assets</TableCell><TableCell className="text-[#001f3f]">Manager B</TableCell><TableCell className="text-[#001f3f]">18</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Approved</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">12</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Entries', <div className="space-y-2"><p className="text-[#001f3f]">156 total journal entries</p><p className="text-[#001f3f]">Across all batches</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Journal Entries - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">All Journal Entries</h3>
+                <p className="text-[#001f3f]">156 total journal entries across all batches</p>
+                <p className="text-[#001f3f]">Total value: £1,528,800</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Sample Journal Entries (using Chart of Accounts codes):</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Code</TableHead>
+                      <TableHead className="text-[#001f3f]">Account</TableHead>
+                      <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
+                      <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">1</TableCell><TableCell className="text-[#001f3f]">Sales</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell><TableCell className="text-right text-[#001f3f]">£25,000</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">17</TableCell><TableCell className="text-[#001f3f]">Opening stock</TableCell><TableCell className="text-right text-[#001f3f]">£18,000</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">27</TableCell><TableCell className="text-[#001f3f]">Purchases</TableCell><TableCell className="text-right text-[#001f3f]">£12,500</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">101</TableCell><TableCell className="text-[#001f3f]">Buildings cost</TableCell><TableCell className="text-right text-[#001f3f]">£45,000</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">220</TableCell><TableCell className="text-[#001f3f]">Bank current account</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell><TableCell className="text-right text-[#001f3f]">£55,500</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+                <p className="text-sm text-[#001f3f] mt-3 italic">All account codes match Chart of Accounts (codes 1-1193)</p>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Total Entries</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">156</p></CardContent>
           </Card>
@@ -2446,6 +2547,214 @@ const AccountsProduction: React.FC = () => {
             <Button variant="outline" onClick={() => setIsTBEditOpen(false)}>Cancel</Button>
             <Button onClick={handleSaveTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
               <Save className="h-4 w-4 mr-2" />Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBAddOpen} onOpenChange={setIsTBAddOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Add Trial Balance Entry</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code</Label>
+              <Input
+                value={tbFormData.accountCode || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountCode: e.target.value})}
+                className="text-[#001f3f]"
+                placeholder="Enter account code from Chart of Accounts"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name</Label>
+              <Input
+                value={tbFormData.accountName || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountName: e.target.value})}
+                className="text-[#001f3f]"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f]">Debit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.debit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, debit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Credit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.credit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, credit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category</Label>
+              <Select value={tbFormData.category || 'Asset'} onValueChange={(value) => setTBFormData({...tbFormData, category: value as any})}>
+                <SelectTrigger className="border-[#001f3f]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Asset">Asset</SelectItem>
+                  <SelectItem value="Liability">Liability</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expense">Expense</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTBAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveNewTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Entry
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBDeleteOpen} onOpenChange={setIsTBDeleteOpen}>
+        <DialogContent className="border-2 border-red-600">
+          <DialogHeader>
+            <DialogTitle className="text-red-600">Delete Trial Balance Entry</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete this trial balance entry?</p>
+          {selectedTBEntry && (
+            <div className="bg-gray-50 p-3 rounded">
+              <p className="text-sm"><strong>Code:</strong> {selectedTBEntry.accountCode}</p>
+              <p className="text-sm"><strong>Name:</strong> {selectedTBEntry.accountName}</p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTBDeleteOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmDeleteTBEntry} className="bg-red-600 hover:bg-red-700">
+              <Trash2 className="h-4 w-4 mr-2" />Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isSyncConfirmOpen} onOpenChange={setIsSyncConfirmOpen}>
+        <DialogContent className="border-2 border-[#001f3f] max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Confirm Bookkeeping Sync</DialogTitle>
+          </DialogHeader>
+          <div>
+            <p className="mb-3 text-[#001f3f]">This will import 12 trial balance entries from the Bookkeeping module. Preview:</p>
+            <div className="max-h-60 overflow-y-auto border-2 border-[#001f3f] rounded p-2">
+              <table className="w-full text-sm text-[#001f3f]">
+                <thead>
+                  <tr className="border-b-2 border-[#001f3f]">
+                    <th className="text-left p-1 text-[#001f3f]">Code</th>
+                    <th className="text-left p-1 text-[#001f3f]">Account Name</th>
+                    <th className="text-right p-1 text-[#001f3f]">Debit</th>
+                    <th className="text-right p-1 text-[#001f3f]">Credit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">1</td><td className="p-1">Cash at bank</td><td className="text-right p-1">£50,000</td><td className="text-right p-1">-</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">2</td><td className="p-1">Trade debtors</td><td className="text-right p-1">£75,000</td><td className="text-right p-1">-</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">101</td><td className="p-1">Sales - goods</td><td className="text-right p-1">-</td><td className="text-right p-1">£250,000</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">102</td><td className="p-1">Sales - services</td><td className="text-right p-1">-</td><td className="text-right p-1">£150,000</td></tr>
+                  <tr className="text-[#001f3f]"><td colSpan={4} className="p-1 text-center">... 8 more entries</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSyncConfirmOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmSync} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Database className="h-4 w-4 mr-2" />Import Entries
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isIntegrationOpen} onOpenChange={setIsIntegrationOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Software Integration</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-[#001f3f]">Connect your accounting software to import trial balance data:</p>
+            <div className="grid gap-3">
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold text-[#001f3f]">Xero</div>
+                  <div className="text-xs text-[#001f3f]">Import from Xero accounting</div>
+                </div>
+              </Button>
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold text-[#001f3f]">Sage</div>
+                  <div className="text-xs text-[#001f3f]">Import from Sage 50/200</div>
+                </div>
+              </Button>
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold text-[#001f3f]">QuickBooks</div>
+                  <div className="text-xs text-[#001f3f]">Import from QuickBooks Online</div>
+                </div>
+              </Button>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsIntegrationOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isBatchAddOpen} onOpenChange={setIsBatchAddOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Create New Posting Batch</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Batch Name</Label>
+              <Input
+                value={batchFormData.name || ''}
+                onChange={(e) => setBatchFormData({...batchFormData, name: e.target.value})}
+                className="text-[#001f3f] border-[#001f3f]"
+                placeholder="e.g., Month End Adjustments"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Type</Label>
+              <Select value={batchFormData.type || 'Manual Entry'} onValueChange={(value) => setBatchFormData({...batchFormData, type: value})}>
+                <SelectTrigger className="border-[#001f3f]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Manual Entry">Manual Entry</SelectItem>
+                  <SelectItem value="Year-End">Year-End</SelectItem>
+                  <SelectItem value="Month-End">Month-End</SelectItem>
+                  <SelectItem value="Adjustment">Adjustment</SelectItem>
+                  <SelectItem value="Reclassification">Reclassification</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Description</Label>
+              <Textarea
+                value={batchFormData.description || ''}
+                onChange={(e) => setBatchFormData({...batchFormData, description: e.target.value})}
+                className="text-[#001f3f] border-[#001f3f]"
+                placeholder="Enter batch description..."
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBatchAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveNewBatch} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Create Batch
             </Button>
           </DialogFooter>
         </DialogContent>
