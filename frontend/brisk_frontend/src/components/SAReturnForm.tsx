@@ -580,20 +580,563 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                   )}
                 </TabsContent>
 
-                {/* Self-Employment Tab - Placeholder for now */}
+                {/* Self-Employment Tab */}
                 <TabsContent value="selfemployment" className="space-y-4 mt-4">
-                  <p className="text-[#001f3f]">Self-Employment income form coming next...</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Self-Employment Income Details</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newBusiness: SelfEmploymentDetails = {
+                            businessName: '',
+                            natureOfBusiness: '',
+                            turnover: 0,
+                            grossProfit: 0,
+                            allowableExpenses: 0,
+                            netProfit: 0,
+                            capitalAllowances: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            selfEmploymentDetails: [...(formData.selfEmploymentDetails || []), newBusiness]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Business
+                      </Button>
+                    )}
+                  </div>
+
+                  {formData.selfEmploymentDetails && formData.selfEmploymentDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.selfEmploymentDetails.map((business, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Business {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.selfEmploymentDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Business Name*</Label>
+                              <Input
+                                value={business.businessName}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].businessName = e.target.value
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Enter business/trading name"
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Nature of Business*</Label>
+                              <Input
+                                value={business.natureOfBusiness}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].natureOfBusiness = e.target.value
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="e.g., Consultant, Freelancer, Trader"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Turnover (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.turnover}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].turnover = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Gross Profit (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.grossProfit}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].grossProfit = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Allowable Expenses (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.allowableExpenses}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].allowableExpenses = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Capital Allowances (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={business.capitalAllowances}
+                                onChange={(e) => {
+                                  const updated = [...formData.selfEmploymentDetails!]
+                                  updated[index].capitalAllowances = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, selfEmploymentDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f] font-semibold">Net Profit (£)</Label>
+                              <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
+                                <span className="text-xl font-bold text-[#001f3f]">
+                                  £{(business.turnover - business.allowableExpenses - business.capitalAllowances).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No self-employment income added yet. Click "Add Business" to get started.</p>
+                    </div>
+                  )}
                 </TabsContent>
 
-                {/* Other tabs - Placeholders */}
+                {/* Rental Properties Tab */}
                 <TabsContent value="rental" className="space-y-4 mt-4">
-                  <p className="text-[#001f3f]">Rental income form coming next...</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Rental Property Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newProperty: RentalProperty = {
+                            propertyAddress: '',
+                            rentalIncome: 0,
+                            mortgageInterest: 0,
+                            repairs: 0,
+                            insurance: 0,
+                            otherExpenses: 0,
+                            netIncome: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            rentalProperties: [...(formData.rentalProperties || []), newProperty]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Property
+                      </Button>
+                    )}
+                  </div>
+
+                  {formData.rentalProperties && formData.rentalProperties.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.rentalProperties.map((property, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Property {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.rentalProperties!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Property Address*</Label>
+                              <Textarea
+                                value={property.propertyAddress}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].propertyAddress = e.target.value
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Full property address"
+                                rows={2}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Rental Income (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.rentalIncome}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].rentalIncome = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Mortgage Interest (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.mortgageInterest}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].mortgageInterest = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Repairs & Maintenance (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.repairs}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].repairs = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Insurance (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.insurance}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].insurance = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Other Expenses (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={property.otherExpenses}
+                                onChange={(e) => {
+                                  const updated = [...formData.rentalProperties!]
+                                  updated[index].otherExpenses = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, rentalProperties: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Agents fees, legal costs, etc."
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f] font-semibold">Net Rental Income (£)</Label>
+                              <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
+                                <span className="text-xl font-bold text-[#001f3f]">
+                                  £{(property.rentalIncome - property.mortgageInterest - property.repairs - property.insurance - property.otherExpenses).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No rental properties added yet. Click "Add Property" to get started.</p>
+                    </div>
+                  )}
                 </TabsContent>
+
+                {/* Dividends Tab */}
                 <TabsContent value="dividends" className="space-y-4 mt-4">
-                  <p className="text-[#001f3f]">Dividends form coming next...</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Dividend Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newDividend: DividendDetails = {
+                            companyName: '',
+                            dividendAmount: 0,
+                            isDomestic: true
+                          }
+                          setFormData({
+                            ...formData,
+                            dividendDetails: [...(formData.dividendDetails || []), newDividend]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Dividend
+                      </Button>
+                    )}
+                  </div>
+
+                  {formData.dividendDetails && formData.dividendDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.dividendDetails.map((dividend, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Dividend {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.dividendDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Company Name*</Label>
+                              <Input
+                                value={dividend.companyName}
+                                onChange={(e) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].companyName = e.target.value
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Name of company paying dividend"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Dividend Amount (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={dividend.dividendAmount}
+                                onChange={(e) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].dividendAmount = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2 col-span-2">
+                              <Label className="text-[#001f3f]">Dividend Type</Label>
+                              <Select
+                                value={dividend.isDomestic ? 'domestic' : 'foreign'}
+                                onValueChange={(value) => {
+                                  const updated = [...formData.dividendDetails!]
+                                  updated[index].isDomestic = value === 'domestic'
+                                  setFormData({ ...formData, dividendDetails: updated })
+                                }}
+                                disabled={isReadOnly}
+                              >
+                                <SelectTrigger className="border-[#001f3f]">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="domestic">UK Dividends</SelectItem>
+                                  <SelectItem value="foreign">Foreign Dividends</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No dividend income added yet. Click "Add Dividend" to get started.</p>
+                    </div>
+                  )}
                 </TabsContent>
+
+                {/* Pensions Tab */}
                 <TabsContent value="pensions" className="space-y-4 mt-4">
-                  <p className="text-[#001f3f]">Pensions form coming next...</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Pension Income</h3>
+                    {!isReadOnly && (
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        onClick={() => {
+                          const newPension: PensionDetails = {
+                            providerName: '',
+                            pensionType: '',
+                            grossAmount: 0,
+                            taxDeducted: 0
+                          }
+                          setFormData({
+                            ...formData,
+                            pensionDetails: [...(formData.pensionDetails || []), newPension]
+                          })
+                        }}
+                        className="bg-[#001f3f] hover:bg-[#003366]"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Pension
+                      </Button>
+                    )}
+                  </div>
+
+                  {formData.pensionDetails && formData.pensionDetails.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.pensionDetails.map((pension, index) => (
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-semibold text-[#001f3f]">Pension {index + 1}</h4>
+                            {!isReadOnly && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const updated = formData.pensionDetails!.filter((_, i) => i !== index)
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Provider Name*</Label>
+                              <Input
+                                value={pension.providerName}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].providerName = e.target.value
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Pension provider name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Pension Type*</Label>
+                              <Select
+                                value={pension.pensionType}
+                                onValueChange={(value) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].pensionType = value
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                disabled={isReadOnly}
+                              >
+                                <SelectTrigger className="border-[#001f3f]">
+                                  <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="state">State Pension</SelectItem>
+                                  <SelectItem value="occupational">Occupational Pension</SelectItem>
+                                  <SelectItem value="personal">Personal Pension</SelectItem>
+                                  <SelectItem value="stakeholder">Stakeholder Pension</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Gross Amount (£)*</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={pension.grossAmount}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].grossAmount = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Tax Deducted (£)</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={pension.taxDeducted}
+                                onChange={(e) => {
+                                  const updated = [...formData.pensionDetails!]
+                                  updated[index].taxDeducted = parseFloat(e.target.value) || 0
+                                  setFormData({ ...formData, pensionDetails: updated })
+                                }}
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-[#001f3f]">
+                      <p>No pension income added yet. Click "Add Pension" to get started.</p>
+                    </div>
+                  )}
                 </TabsContent>
                 <TabsContent value="other" className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
