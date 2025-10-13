@@ -1118,7 +1118,7 @@ const AccountsProduction: React.FC = () => {
         }} className="cursor-pointer">
           <KPICard title="In Progress" 
             value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
-            change="Active" icon={FileText} color="text-orange-600" />
+            change="Active" icon={FileText} color="text-[#001f3f]" />
         </div>
         <div onClick={() => {
           const reviewClients = clients.filter(c => c.accountsStatus === 'review')

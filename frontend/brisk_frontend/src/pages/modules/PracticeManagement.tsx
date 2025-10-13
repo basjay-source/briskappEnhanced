@@ -52,6 +52,7 @@ import ComplianceAutomation from '../../components/ComplianceAutomation'
 import { ExportButton } from '@/components/ExportButton'
 import { IndividualClientForm } from '../../components/IndividualClientForm'
 import { api } from '@/lib/api'
+import notifications from '@/lib/notifications'
 
 interface Job {
   id: string
@@ -310,7 +311,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting job:', err)
-      showNotification('Error', 'Failed to delete job', 'error')
+      notifications.error('Failed to delete job')
     }
   }
 
@@ -323,7 +324,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting deadline:', err)
-      showNotification('Error', 'Failed to delete deadline', 'error')
+      notifications.error('Failed to delete deadline')
     }
   }
 
@@ -389,9 +390,10 @@ export default function PracticeManagement() {
       await loadJobs()
       await loadDashboardData()
       closeJobDialog()
+      notifications.created('Job', jobFormData.title)
     } catch (err: any) {
       console.error('Error creating job:', err)
-      showNotification('Error', 'Failed to create job: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to create job', err.message || 'Unknown error')
     }
   }
 
@@ -405,7 +407,7 @@ export default function PracticeManagement() {
       closeJobDialog()
     } catch (err: any) {
       console.error('Error updating job:', err)
-      showNotification('Error', 'Failed to update job: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to update job', err.message || 'Unknown error')
     }
   }
 
@@ -470,7 +472,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error creating time entry:', err)
-      showNotification('Error', 'Failed to create time entry: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to create time entry', err.message || 'Unknown error')
     }
   }
 
@@ -488,7 +490,7 @@ export default function PracticeManagement() {
       closeTimeEntryDialog()
     } catch (err: any) {
       console.error('Error updating time entry:', err)
-      showNotification('Error', 'Failed to update time entry: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to update time entry', err.message || 'Unknown error')
     }
   }
 
@@ -501,7 +503,7 @@ export default function PracticeManagement() {
       await loadDashboardData()
     } catch (err: any) {
       console.error('Error deleting time entry:', err)
-      showNotification('Error', 'Failed to delete time entry', 'error')
+      notifications.error('Failed to delete time entry')
     }
   }
 
@@ -562,7 +564,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error creating deadline:', err)
-      showNotification('Error', 'Failed to create deadline: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to create deadline', err.message || 'Unknown error')
     }
   }
 
@@ -576,7 +578,7 @@ export default function PracticeManagement() {
       closeDeadlineDialog()
     } catch (err: any) {
       console.error('Error updating deadline:', err)
-      showNotification('Error', 'Failed to update deadline: ' + (err.message || 'Unknown error'), 'error')
+      notifications.error('Failed to update deadline', err.message || 'Unknown error')
     }
   }
 
@@ -610,7 +612,7 @@ export default function PracticeManagement() {
       localStorage.setItem('individualClients', JSON.stringify(updated))
     }
     setIsIndividualClientEditOpen(false)
-    showNotification('Success', 'Client updated successfully', 'success')
+    notifications.saved('Individual Client')
   }
 
   const handleSaveNewIndividualClient = () => {
@@ -625,7 +627,7 @@ export default function PracticeManagement() {
     localStorage.setItem('individualClients', JSON.stringify(updated))
     setIsIndividualClientAddOpen(false)
     setIndividualClientFormData({})
-    showNotification('Success', 'Client added successfully', 'success')
+    notifications.created('Individual Client')
   }
 
   const handleDeleteIndividualClient = async (clientId: string) => {
@@ -634,7 +636,7 @@ export default function PracticeManagement() {
     const updated = individualClients.filter(c => c.id !== clientId)
     setIndividualClients(updated)
     localStorage.setItem('individualClients', JSON.stringify(updated))
-    showNotification('Success', 'Client deleted successfully', 'success')
+    notifications.deleted('Individual Client')
   }
 
   const statusOptions = [
