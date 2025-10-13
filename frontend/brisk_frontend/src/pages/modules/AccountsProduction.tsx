@@ -1212,8 +1212,159 @@ const AccountsProduction: React.FC = () => {
     
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-[#001f3f]">Entity Setup</h2>
-        <p className="text-[#001f3f]">Configure entity-specific accounting settings and compliance requirements</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Entity Setup</h2>
+            <p className="text-[#001f3f]">Configure detailed client entity settings, compliance, and engagement information</p>
+          </div>
+          <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />Add New Entity
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <KPICard
+            title="Total Entities"
+            value={clients.length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Limited Companies"
+            value={clients.filter(c => c.type === 'limited-company').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Partnerships/LLPs"
+            value={clients.filter(c => c.type === 'llp' || c.type === 'partnership').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Sole Traders"
+            value={clients.filter(c => c.type === 'sole-trader').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+        </div>
+
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Entity List - Detailed View</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {clients.length === 0 ? (
+              <div className="text-center py-12">
+                <Building2 className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No entities configured</p>
+                <p className="text-gray-400 text-sm mb-4">Add your first client entity with comprehensive setup details</p>
+                <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+                  <Plus className="h-4 w-4 mr-2" />Add First Entity
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredClients.map(client => (
+                  <Card 
+                    key={client.id}
+                    className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => handleViewClient(client)}
+                  >
+                    <CardContent className="pt-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 mb-4">
+                            <Building2 className="h-6 w-6 text-[#001f3f]" />
+                            <h3 className="text-xl font-bold text-[#001f3f]">{client.name}</h3>
+                          </div>
+                          
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Entity Type</Label>
+                            <Badge variant="outline" className="ml-2 border-[#001f3f] text-[#001f3f]">
+                              {client.type}
+                            </Badge>
+                          </div>
+                          
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Status</Label>
+                            <Badge variant={getStatusBadge(client.accountsStatus)} className="ml-2">
+                              {client.accountsStatus}
+                            </Badge>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Year End</Label>
+                            <p className="text-[#001f3f] text-sm">{client.yearEnd}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Contact Person</Label>
+                            <p className="text-[#001f3f] text-sm">{client.contactPerson || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Email</Label>
+                            <p className="text-[#001f3f] text-sm">{client.email || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Phone</Label>
+                            <p className="text-[#001f3f] text-sm">{client.phone || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">FRS Standard</Label>
+                            <p className="text-[#001f3f] text-sm">{client.frsStandard}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Last Accounts Filed</Label>
+                            <p className="text-[#001f3f] text-sm">{client.lastAccounts || 'N/A'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Next Due</Label>
+                            <p className="text-[#001f3f] text-sm font-semibold">{client.nextDue}</p>
+                          </div>
+
+                          <div className="flex gap-2 mt-4">
+                            <Button
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleEditClient(client)
+                              }}
+                              className="bg-[#001f3f] hover:bg-[#003366]"
+                            >
+                              <Edit className="h-3 w-3 mr-2" />
+                              Edit Setup
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteClient(client)
+                              }}
+                              className="border-red-600 text-red-600"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     )
   }
