@@ -82,6 +82,16 @@ interface DividendDetails {
   isDomestic: boolean
 }
 
+interface BankInterestDetails {
+  id: string
+  institutionName: string
+  accountNumber: string
+  grossInterest: number
+  taxDeducted: number
+  isForeign: boolean
+  country?: string
+}
+
 interface RentalProperty {
   id: string
   propertyType: 'uk-rental' | 'fhl-uk' | 'fhl-eea' | 'other'
@@ -148,6 +158,7 @@ interface SAReturn {
   pensionIncome?: number
   pensionDetails?: PensionDetails[]
   bankInterest?: BankInterest
+  bankInterestDetails?: BankInterestDetails[]
   savingsInterest: number
   capitalGains: number
   otherIncome: number
@@ -2792,6 +2803,96 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
           </DialogFooter>
         </form>
         )}
+      </DialogContent>
+    </Dialog>
+
+    {/* Exchange Sync Modal */}
+    <Dialog open={showExchangeSync} onOpenChange={setShowExchangeSync}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-[#001f3f]">Sync Dividends from Exchange</DialogTitle>
+          <DialogDescription>
+            Connect to your brokerage platform to automatically import dividend data
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label className="text-[#001f3f]">Select Brokerage Platform</Label>
+            <Select>
+              <SelectTrigger className="border-[#001f3f]">
+                <SelectValue placeholder="Choose your broker" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="interactive-brokers">Interactive Brokers</SelectItem>
+                <SelectItem value="charles-schwab">Charles Schwab</SelectItem>
+                <SelectItem value="trading212">Trading 212</SelectItem>
+                <SelectItem value="etoro">eToro</SelectItem>
+                <SelectItem value="degiro">DEGIRO</SelectItem>
+                <SelectItem value="freetrade">Freetrade</SelectItem>
+                <SelectItem value="hargreaves">Hargreaves Lansdown</SelectItem>
+                <SelectItem value="aj-bell">AJ Bell</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+            <h4 className="font-semibold text-[#001f3f] mb-2">Authentication Required</h4>
+            <div className="space-y-3">
+              <div>
+                <Label className="text-[#001f3f]">API Key / Username</Label>
+                <Input className="border-[#001f3f]" placeholder="Enter your API key or username" />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">API Secret / Password</Label>
+                <Input type="password" className="border-[#001f3f]" placeholder="Enter your API secret or password" />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Account Number (optional)</Label>
+                <Input className="border-[#001f3f]" placeholder="Enter account number if applicable" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[#001f3f]">Date Range</Label>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm text-[#001f3f]">From Date</Label>
+                <Input type="date" className="border-[#001f3f]" />
+              </div>
+              <div>
+                <Label className="text-sm text-[#001f3f]">To Date</Label>
+                <Input type="date" className="border-[#001f3f]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-green-50 border border-green-200 rounded">
+            <h4 className="font-semibold text-[#001f3f] mb-2">💡 Quick Tips</h4>
+            <ul className="text-sm text-[#001f3f] space-y-1 list-disc list-inside">
+              <li>Ensure your API credentials have read-only access</li>
+              <li>Data will be imported as UK Sterling (GBP) equivalent</li>
+              <li>Foreign dividends will be tagged automatically</li>
+              <li>You can review and edit imported data before saving</li>
+            </ul>
+          </div>
+        </div>
+
+        <DialogFooter className="flex justify-between">
+          <Button variant="outline" onClick={() => setShowExchangeSync(false)}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={() => {
+              alert('Exchange sync feature - Integration with broker APIs will be implemented in production')
+              setShowExchangeSync(false)
+            }}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            Connect & Import
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
