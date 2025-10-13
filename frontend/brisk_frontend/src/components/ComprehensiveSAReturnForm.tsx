@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Plus } from 'lucide-react'
 import { importFromBookkeeping, importFromAccountsProduction, importFromPreviousYear } from '@/services/taxReturnDataImport'
-import { showNotification } from '@/lib/notifications'
 import { getTaxRatesForYear, calculateIncomeTax, calculateDividendTax, calculateCapitalGainsTax, generateTaxYears } from '@/services/taxRates'
 
 interface EmploymentDetails {
@@ -421,17 +420,11 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
       let importedData: any = {}
 
       if (setupData.importSource === 'bookkeeping' && formData.clientId) {
-        showNotification('Importing data from Bookkeeping module...', 'info')
         importedData = await importFromBookkeeping(formData.clientId)
-        showNotification('Successfully imported data from Bookkeeping', 'success')
       } else if (setupData.importSource === 'accounts' && formData.clientId) {
-        showNotification('Importing data from Accounts Production...', 'info')
         importedData = await importFromAccountsProduction(formData.clientId)
-        showNotification('Successfully imported data from Accounts Production', 'success')
       } else if (setupData.importSource === 'previous' && setupData.previousReturnId) {
-        showNotification('Importing data from previous year...', 'info')
         importedData = await importFromPreviousYear(setupData.previousReturnId)
-        showNotification('Successfully imported data from previous year', 'success')
       }
 
       setFormData({
@@ -443,7 +436,6 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
       setShowSetup(false)
     } catch (error) {
       console.error('Error importing data:', error)
-      showNotification('Failed to import data. Please try manual entry.', 'error')
       setFormData({
         ...formData,
         taxYear: setupData.taxYear.replace('-', '/'),
