@@ -4,7 +4,7 @@ from .tenant import (
     AdminPersona, SubscriptionStatus, InvoiceStatus, PromotionStatus, ExperimentStatus
 )
 from .client import Client, Company, EntityGroup
-from .accounts import LedgerAccount, JournalEntry, TrialBalance, FXRate, ConsolidationRule
+from .accounts import LedgerAccount, JournalEntry, TrialBalance, FXRate, ConsolidationRule, AccountsProductionClient, YearEndAdjustment, AdjustmentJournalLine, ChartOfAccount
 from .statements import FinancialStatement, NoteDisclosure
 from .tax import TaxReturnCT, TaxReturnSA, RnDClaim
 from .payroll import PayrollEmployee, PayRun, Payslip, PensionScheme, CISStatement
@@ -28,7 +28,7 @@ __all__ = [
     "PlanVersion", "Promotion", "UsageMeter", "Invoice", "Experiment", "ApprovalRequest",
     "AdminPersona", "SubscriptionStatus", "InvoiceStatus", "PromotionStatus", "ExperimentStatus",
     "Client", "Company", "EntityGroup",
-    "LedgerAccount", "JournalEntry", "TrialBalance", "FXRate", "ConsolidationRule",
+    "LedgerAccount", "JournalEntry", "TrialBalance", "FXRate", "ConsolidationRule", "AccountsProductionClient", "YearEndAdjustment", "AdjustmentJournalLine", "ChartOfAccount",
     "FinancialStatement", "NoteDisclosure",
     "TaxReturnCT", "TaxReturnSA", "RnDClaim",
     "PayrollEmployee", "PayRun", "Payslip", "PensionScheme", "CISStatement",

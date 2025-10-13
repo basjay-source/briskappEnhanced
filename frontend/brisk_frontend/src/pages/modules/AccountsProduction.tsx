@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
@@ -19,20 +19,52 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../components/ui/alert-dialog'
 import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
+import { api } from '../../lib/api'
+import { EnhancedClientForm } from '../../components/EnhancedClientForm'
+import { JournalAdjustmentForm } from '../../components/JournalAdjustmentForm'
 
 interface Client {
   id: string
   name: string
   type: 'sole-trader' | 'partnership' | 'limited-company' | 'llp' | 'charity' | 'academy' | 'cic'
   registrationNumber?: string
+  incorporationDate?: string
+  vatNumber?: string
+  utr?: string
+  
   yearEnd: string
   accountsStatus: 'not-started' | 'in-progress' | 'review' | 'completed' | 'filed'
   lastAccounts: string
   nextDue: string
   frsStandard: 'FRS 101' | 'FRS 102' | 'FRS 102 1A' | 'FRS 105' | 'IFRS'
+  
   contactPerson: string
   email: string
   phone: string
+  website?: string
+  
+  addressLine1?: string
+  addressLine2?: string
+  city?: string
+  county?: string
+  postcode?: string
+  country?: string
+  
+  industry?: string
+  turnover?: number
+  numberOfEmployees?: number
+  
+  auditRequired?: boolean
+  dormant?: boolean
+  
+  annualFee?: number
+  engagementLetterSigned?: boolean
+  engagementLetterDate?: string
+  
+  notes?: string
+  tags?: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface TrialBalanceEntry {
@@ -44,14 +76,29 @@ interface TrialBalanceEntry {
   category: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
 }
 
+interface JournalLine {
+  id: string
+  accountCode: string
+  accountName: string
+  description: string
+  debit: number
+  credit: number
+}
+
 interface Adjustment {
   id: string
-  type: 'prepayment' | 'accrual' | 'depreciation' | 'provision'
+  type: 'prepayment' | 'accrual' | 'depreciation' | 'provision' | 'reclassification' | 'write-off' | 'revaluation'
+  reference: string
   description: string
-  amount: number
   date: string
-  accountCode: string
   status: 'draft' | 'approved' | 'posted'
+  journalLines: JournalLine[]
+  totalDebit: number
+  totalCredit: number
+  createdBy?: string
+  approvedBy?: string
+  approvedDate?: string
+  notes?: string
 }
 
 interface FinancialStatement {
@@ -69,65 +116,9 @@ const AccountsProduction: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [clients, setClients] = useState<Client[]>([
-    {
-      id: '1', name: 'Acme Trading Ltd', type: 'limited-company',
-      registrationNumber: '12345678', yearEnd: '2024-12-31',
-      accountsStatus: 'in-progress', lastAccounts: '2023-12-31',
-      nextDue: '2025-09-30', frsStandard: 'FRS 102',
-      contactPerson: 'John Smith', email: 'john@acmetrading.com',
-      phone: '020 7123 4567'
-    },
-    {
-      id: '2', name: 'Green & Partners LLP', type: 'llp',
-      registrationNumber: 'OC234567', yearEnd: '2024-03-31',
-      accountsStatus: 'review', lastAccounts: '2024-03-31',
-      nextDue: '2025-01-31', frsStandard: 'FRS 102',
-      contactPerson: 'Sarah Green', email: 'sarah@greenpartners.com',
-      phone: '020 7234 5678'
-    },
-    {
-      id: '3', name: 'Smith & Co Solicitors', type: 'partnership',
-      registrationNumber: undefined, yearEnd: '2024-04-30',
-      accountsStatus: 'not-started', lastAccounts: '2023-04-30',
-      nextDue: '2025-01-31', frsStandard: 'FRS 102 1A',
-      contactPerson: 'David Smith', email: 'david@smithco.com',
-      phone: '020 7345 6789'
-    },
-    {
-      id: '4', name: 'Tech Innovations Ltd', type: 'limited-company',
-      registrationNumber: '87654321', yearEnd: '2024-06-30',
-      accountsStatus: 'in-progress', lastAccounts: '2023-06-30',
-      nextDue: '2025-04-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Emma Wilson', email: 'emma@techinnovations.com',
-      phone: '020 7456 7890'
-    },
-    {
-      id: '5', name: 'Community Care CIC', type: 'cic',
-      registrationNumber: 'CE123456', yearEnd: '2024-03-31',
-      accountsStatus: 'completed', lastAccounts: '2024-03-31',
-      nextDue: '2025-01-31', frsStandard: 'FRS 105',
-      contactPerson: 'Michael Brown', email: 'michael@communitycare.org',
-      phone: '020 7567 8901'
-    },
-    {
-      id: '6', name: 'Johnson & Associates', type: 'partnership',
-      registrationNumber: undefined, yearEnd: '2024-12-31',
-      accountsStatus: 'filed', lastAccounts: '2023-12-31',
-      nextDue: '2025-09-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Robert Johnson', email: 'robert@johnsonassociates.com',
-      phone: '020 7678 9012'
-    },
-    {
-      id: '7', name: 'Brighton Retail Ltd', type: 'limited-company',
-      registrationNumber: '11223344', yearEnd: '2024-09-30',
-      accountsStatus: 'review', lastAccounts: '2023-09-30',
-      nextDue: '2025-07-31', frsStandard: 'FRS 105',
-      contactPerson: 'Lisa Chen', email: 'lisa@brightonretail.com',
-      phone: '020 7789 0123'
-    }
-  ])
+  const [clients, setClients] = useState<Client[]>([])
   const [clientSearchName, setClientSearchName] = useState('')
   const [clientSearchType, setClientSearchType] = useState('')
   const [clientSearchStatus, setClientSearchStatus] = useState('')
@@ -136,20 +127,79 @@ const AccountsProduction: React.FC = () => {
   const [clientSortField, setClientSortField] = useState<keyof Client | ''>('')
   const [clientSortDirection, setClientSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
-    { id: '1', accountCode: '1000', accountName: 'Fixed Assets', debit: 250000, credit: 0, category: 'Asset' },
-    { id: '2', accountCode: '1100', accountName: 'Current Assets', debit: 85000, credit: 0, category: 'Asset' },
-    { id: '3', accountCode: '2000', accountName: 'Current Liabilities', debit: 0, credit: 45000, category: 'Liability' },
-    { id: '4', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
-    { id: '5', accountCode: '4000', accountName: 'Sales Revenue', debit: 0, credit: 450000, category: 'Revenue' },
-    { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
-    { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
-  ])
+  const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([])
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
-    { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
-    { id: '2', type: 'accrual', description: 'Electricity Accrual', amount: 850, date: '2024-12-31', accountCode: '2100', status: 'draft' },
-    { id: '3', type: 'depreciation', description: 'Plant & Machinery Depreciation', amount: 12500, date: '2024-12-31', accountCode: '6200', status: 'approved' }
+    { 
+      id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2500, date: '2024-03-31', status: 'posted', accountCode: '1200',
+      journalLines: [
+        { id: 'L1-1', accountCode: '1200', accountName: 'Prepayments', description: 'Insurance prepaid', debit: 2500, credit: 0 },
+        { id: 'L1-2', accountCode: '5100', accountName: 'Insurance Expense', description: 'Reverse insurance', debit: 0, credit: 2500 }
+      ]
+    },
+    { 
+      id: '2', type: 'accrual', description: 'Utilities Accrual', amount: 1200, date: '2024-03-31', status: 'posted', accountCode: '2100',
+      journalLines: [
+        { id: 'L2-1', accountCode: '5200', accountName: 'Utilities Expense', description: 'Utilities accrued', debit: 1200, credit: 0 },
+        { id: 'L2-2', accountCode: '2100', accountName: 'Accruals', description: 'Utilities payable', debit: 0, credit: 1200 }
+      ]
+    },
+    { 
+      id: '3', type: 'depreciation', description: 'Office Equipment Depreciation', amount: 5000, date: '2024-03-31', status: 'posted', accountCode: '6200',
+      journalLines: [
+        { id: 'L3-1', accountCode: '6200', accountName: 'Depreciation Expense', description: 'Equipment depreciation', debit: 5000, credit: 0 },
+        { id: 'L3-2', accountCode: '0220', accountName: 'Accumulated Depreciation', description: 'Equipment accumulated dep', debit: 0, credit: 5000 }
+      ]
+    },
+    { 
+      id: '4', type: 'prepayment', description: 'Rent Prepayment', amount: 15000, date: '2024-03-31', status: 'approved', accountCode: '1201',
+      journalLines: [
+        { id: 'L4-1', accountCode: '1201', accountName: 'Rent Prepaid', description: 'Advance rent payment', debit: 15000, credit: 0 },
+        { id: 'L4-2', accountCode: '5300', accountName: 'Rent Expense', description: 'Reverse rent charge', debit: 0, credit: 15000 }
+      ]
+    },
+    { 
+      id: '5', type: 'accrual', description: 'Professional Fees Accrual', amount: 3500, date: '2024-03-31', status: 'draft', accountCode: '2101',
+      journalLines: [
+        { id: 'L5-1', accountCode: '5400', accountName: 'Professional Fees', description: 'Consultancy fees', debit: 3500, credit: 0 },
+        { id: 'L5-2', accountCode: '2101', accountName: 'Accrued Expenses', description: 'Fees payable', debit: 0, credit: 3500 }
+      ]
+    },
+    { 
+      id: '6', type: 'depreciation', description: 'Motor Vehicles Depreciation', amount: 8000, date: '2024-03-31', status: 'posted', accountCode: '6201',
+      journalLines: [
+        { id: 'L6-1', accountCode: '6201', accountName: 'Depreciation - Vehicles', description: 'Vehicle depreciation', debit: 8000, credit: 0 },
+        { id: 'L6-2', accountCode: '0230', accountName: 'Acc Dep - Vehicles', description: 'Vehicle accumulated dep', debit: 0, credit: 8000 }
+      ]
+    },
+    { 
+      id: '7', type: 'provision', description: 'Bad Debt Provision', amount: 4500, date: '2024-03-31', status: 'approved', accountCode: '6500',
+      journalLines: [
+        { id: 'L7-1', accountCode: '6500', accountName: 'Bad Debt Expense', description: 'Provision for doubtful debts', debit: 4500, credit: 0 },
+        { id: 'L7-2', accountCode: '0130', accountName: 'Provision for Bad Debts', description: 'Increase provision', debit: 0, credit: 4500 }
+      ]
+    },
+    { 
+      id: '8', type: 'reclassification', description: 'Reclassify Fixed Assets', amount: 12000, date: '2024-03-31', status: 'draft', accountCode: '1500',
+      journalLines: [
+        { id: 'L8-1', accountCode: '0210', accountName: 'Plant & Machinery', description: 'Reclassify to machinery', debit: 12000, credit: 0 },
+        { id: 'L8-2', accountCode: '0200', accountName: 'Office Equipment', description: 'Reclassify from equipment', debit: 0, credit: 12000 }
+      ]
+    },
+    { 
+      id: '9', type: 'write-off', description: 'Write-off Obsolete Inventory', amount: 2200, date: '2024-03-31', status: 'posted', accountCode: '5500',
+      journalLines: [
+        { id: 'L9-1', accountCode: '5500', accountName: 'Inventory Write-off', description: 'Obsolete stock', debit: 2200, credit: 0 },
+        { id: 'L9-2', accountCode: '0110', accountName: 'Inventory', description: 'Remove obsolete items', debit: 0, credit: 2200 }
+      ]
+    },
+    { 
+      id: '10', type: 'revaluation', description: 'Property Revaluation', amount: 50000, date: '2024-03-31', status: 'approved', accountCode: '1600',
+      journalLines: [
+        { id: 'L10-1', accountCode: '0300', accountName: 'Land & Buildings', description: 'Property revaluation gain', debit: 50000, credit: 0 },
+        { id: 'L10-2', accountCode: '3100', accountName: 'Revaluation Reserve', description: 'Increase in property value', debit: 0, credit: 50000 }
+      ]
+    }
   ])
   const [adjSearchType, setAdjSearchType] = useState('')
   const [adjSearchStatus, setAdjSearchStatus] = useState('')
@@ -179,7 +229,7 @@ const AccountsProduction: React.FC = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
 
-  const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
+  const [_isTBViewOpen, _setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
   const [isTBAddOpen, setIsTBAddOpen] = useState(false)
   const [isTBDeleteOpen, setIsTBDeleteOpen] = useState(false)
@@ -226,6 +276,64 @@ const AccountsProduction: React.FC = () => {
 
   const [isBatchAddOpen, setIsBatchAddOpen] = useState(false)
   const [batchFormData, setBatchFormData] = useState<{name?: string, type?: string, description?: string}>({})
+
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        setIsLoading(true)
+        const response = await api.getProductionClients()
+        setClients(response as any || [])
+      } catch (error) {
+        console.error('Failed to load clients:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadClients()
+  }, [])
+
+  useEffect(() => {
+    const loadTrialBalance = async () => {
+      try {
+        const companyId = 'default-company-id'
+        const response = await api.getTrialBalance(companyId)
+        const tbEntries = response.trial_balance || []
+        setTrialBalanceEntries(tbEntries.map((entry: any) => ({
+          id: entry.id,
+          accountCode: entry.account_code,
+          accountName: entry.account_name,
+          debit: Number(entry.debit_balance || 0),
+          credit: Number(entry.credit_balance || 0),
+          category: entry.category || ''
+        })))
+      } catch (error) {
+        console.error('Failed to load trial balance:', error)
+      }
+    }
+    loadTrialBalance()
+  }, [])
+
+  useEffect(() => {
+    const loadAdjustments = async () => {
+      try {
+        const companyId = 'default-company-id'
+        const response = await api.getAdjustments(companyId)
+        const adjustmentsData = response || []
+        setAdjustments(adjustmentsData.map((adj: any) => ({
+          id: adj.id,
+          type: adj.adjustment_type,
+          description: adj.description,
+          amount: Number(adj.amount),
+          date: adj.adjustment_date,
+          accountCode: adj.account_code,
+          status: adj.status
+        })))
+      } catch (error) {
+        console.error('Failed to load adjustments:', error)
+      }
+    }
+    loadAdjustments()
+  }, [])
 
   const handleAddNewBatch = () => {
     setBatchFormData({ name: '', type: 'Manual Entry', description: '' })
@@ -274,32 +382,29 @@ const AccountsProduction: React.FC = () => {
     setIsClientDeleteOpen(true)
   }
 
-  const handleSaveClient = () => {
+  const handleSaveClient = async () => {
     if (selectedClient) {
-      setClients(clients.map(c => c.id === selectedClient.id ? { ...selectedClient, ...clientFormData } as Client : c))
+      try {
+        await api.updateProductionClient(selectedClient.id, clientFormData)
+        setClients(clients.map(c => c.id === selectedClient.id ? { ...selectedClient, ...clientFormData } as Client : c))
+      } catch (error) {
+        console.error('Failed to update client:', error)
+        alert('Failed to update client. Please try again.')
+      }
     }
     setIsClientEditOpen(false)
   }
 
-  const handleSaveNewClient = () => {
-    const newClient: Client = {
-      ...clientFormData as Client,
-      id: Date.now().toString()
+  const handleSaveNewClient = async () => {
+    try {
+      const response = await api.createProductionClient(clientFormData) as any
+      setClients([...clients, response])
+      setIsClientAddOpen(false)
+      setClientFormData({})
+    } catch (error) {
+      console.error('Failed to create client:', error)
+      alert('Failed to create client. Please try again.')
     }
-    setClients([...clients, newClient])
-    setIsClientAddOpen(false)
-  }
-
-
-  const handleViewTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setIsTBViewOpen(true)
-  }
-
-  const handleEditTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setTBFormData(entry)
-    setIsTBEditOpen(true)
   }
 
 
@@ -308,39 +413,64 @@ const AccountsProduction: React.FC = () => {
     setIsTBAddOpen(true)
   }
 
-  const handleSaveNewTBEntry = () => {
-    const newEntry: TrialBalanceEntry = {
-      id: Date.now().toString(),
-      accountCode: tbFormData.accountCode || '',
-      accountName: tbFormData.accountName || '',
-      debit: tbFormData.debit || 0,
-      credit: tbFormData.credit || 0,
-      category: tbFormData.category || 'Asset'
+  const handleSaveNewTBEntry = async () => {
+    try {
+      const response = await api.createTrialBalanceEntry({
+        company_id: 'default-company-id',
+        period_end: new Date().toISOString().split('T')[0],
+        account_code: tbFormData.accountCode || '',
+        account_name: tbFormData.accountName || '',
+        debit_balance: tbFormData.debit || 0,
+        credit_balance: tbFormData.credit || 0
+      }) as any
+      const newEntry: TrialBalanceEntry = {
+        id: response.id,
+        accountCode: response.account_code,
+        accountName: response.account_name,
+        debit: Number(response.debit_balance),
+        credit: Number(response.credit_balance),
+        category: tbFormData.category || 'Asset'
+      }
+      setTrialBalanceEntries([...trialBalanceEntries, newEntry])
+      setIsTBAddOpen(false)
+      setTBFormData({})
+    } catch (error) {
+      console.error('Failed to create trial balance entry:', error)
+      alert('Failed to create trial balance entry. Please try again.')
     }
-    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
-    setIsTBAddOpen(false)
-    setTBFormData({})
   }
 
-  const handleSaveTBEntry = () => {
+  const handleSaveTBEntry = async () => {
     if (selectedTBEntry) {
-      setTrialBalanceEntries(trialBalanceEntries.map(e => 
-        e.id === selectedTBEntry.id ? { ...selectedTBEntry, ...tbFormData } as TrialBalanceEntry : e
-      ))
+      try {
+        await api.updateTrialBalanceEntry(selectedTBEntry.id, {
+          account_code: tbFormData.accountCode,
+          account_name: tbFormData.accountName,
+          debit_balance: tbFormData.debit,
+          credit_balance: tbFormData.credit
+        })
+        setTrialBalanceEntries(trialBalanceEntries.map(e => 
+          e.id === selectedTBEntry.id ? { ...selectedTBEntry, ...tbFormData } as TrialBalanceEntry : e
+        ))
+        setIsTBEditOpen(false)
+      } catch (error) {
+        console.error('Failed to update trial balance entry:', error)
+        alert('Failed to update trial balance entry. Please try again.')
+      }
     }
-    setIsTBEditOpen(false)
   }
 
-  const handleDeleteTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setIsTBDeleteOpen(true)
-  }
-
-  const handleConfirmDeleteTBEntry = () => {
+  const handleConfirmDeleteTBEntry = async () => {
     if (selectedTBEntry) {
-      setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
-      setIsTBDeleteOpen(false)
-      setSelectedTBEntry(null)
+      try {
+        await api.deleteTrialBalanceEntry(selectedTBEntry.id)
+        setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
+        setIsTBDeleteOpen(false)
+        setSelectedTBEntry(null)
+      } catch (error) {
+        console.error('Failed to delete trial balance entry:', error)
+        alert('Failed to delete trial balance entry. Please try again.')
+      }
     }
   }
 
@@ -394,13 +524,67 @@ const AccountsProduction: React.FC = () => {
     setIsAdjAddOpen(true)
   }
 
-  const handleSaveAdjustment = () => {
+  const handleSaveAdjustment = async () => {
     if (selectedAdjustment) {
-      setAdjustments(adjustments.map(a => 
-        a.id === selectedAdjustment.id ? { ...selectedAdjustment, ...adjFormData } as Adjustment : a
-      ))
+      try {
+        await api.updateAdjustment(selectedAdjustment.id, {
+          adjustment_type: adjFormData.type,
+          description: adjFormData.description,
+          amount: adjFormData.amount,
+          adjustment_date: adjFormData.date,
+          account_code: adjFormData.accountCode,
+          status: adjFormData.status
+        })
+        setAdjustments(adjustments.map(a => 
+          a.id === selectedAdjustment.id ? { ...selectedAdjustment, ...adjFormData } as Adjustment : a
+        ))
+        setIsAdjEditOpen(false)
+      } catch (error) {
+        console.error('Failed to update adjustment:', error)
+        alert('Failed to update adjustment. Please try again.')
+      }
     }
-    setIsAdjEditOpen(false)
+  }
+
+  const handleSaveNewAdjustment = async () => {
+    try {
+      const response = await api.createAdjustment({
+        company_id: 'default-company-id',
+        adjustment_type: adjFormData.type || 'prepayment',
+        description: adjFormData.description || '',
+        amount: adjFormData.amount || 0,
+        adjustment_date: adjFormData.date || new Date().toISOString().split('T')[0],
+        account_code: adjFormData.accountCode || '',
+        status: adjFormData.status || 'draft'
+      }) as any
+      const newAdjustment: Adjustment = {
+        id: response.id,
+        type: response.adjustment_type,
+        description: response.description,
+        amount: Number(response.amount),
+        date: response.adjustment_date,
+        accountCode: response.account_code,
+        status: response.status
+      }
+      setAdjustments([...adjustments, newAdjustment])
+      setIsAdjAddOpen(false)
+      setAdjFormData({})
+    } catch (error) {
+      console.error('Failed to create adjustment:', error)
+      alert('Failed to create adjustment. Please try again.')
+    }
+  }
+
+  const handleDeleteAdjustment = async (adj: Adjustment) => {
+    if (confirm(`Are you sure you want to delete adjustment "${adj.description}"?`)) {
+      try {
+        await api.deleteAdjustment(adj.id)
+        setAdjustments(adjustments.filter(a => a.id !== adj.id))
+      } catch (error) {
+        console.error('Failed to delete adjustment:', error)
+        alert('Failed to delete adjustment. Please try again.')
+      }
+    }
   }
 
 
@@ -641,10 +825,11 @@ const AccountsProduction: React.FC = () => {
     {
       id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
       subTabs: {
-        'generate': { label: 'Generate Accounts', icon: FileSpreadsheet },
-        'balance-sheet': { label: 'Balance Sheet', icon: FileCheck },
-        'profit-loss': { label: 'Profit & Loss', icon: TrendingUp },
-        'notes': { label: 'Notes & Disclosures', icon: FileText }
+        'full': { label: 'Full Financial Statements', icon: FileSpreadsheet },
+        'abbreviated': { label: 'Abbreviated Accounts', icon: FileCheck },
+        'filleted': { label: 'Filleted Accounts', icon: FileText },
+        'dormant': { label: 'Dormant Accounts', icon: TrendingDown },
+        'consolidated': { label: 'Consolidated Accounts', icon: Building2 }
       }
     },
     {
@@ -763,9 +948,9 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[#001f3f]">Accounts Production Dashboard</h2>
-          <p className="text-[#001f3f]">Client accounts and production workflow</p>
+          <p className="text-[#001f3f]">Client accounts and production workflow {isLoading && '(Loading...)'}</p>
         </div>
-        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]" disabled={isLoading}>
           <Plus className="h-4 w-4 mr-2" />New Client
         </Button>
       </div>
@@ -1098,8 +1283,159 @@ const AccountsProduction: React.FC = () => {
     
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-[#001f3f]">Entity Setup</h2>
-        <p className="text-[#001f3f]">Configure entity-specific accounting settings and compliance requirements</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Entity Setup</h2>
+            <p className="text-[#001f3f]">Configure detailed client entity settings, compliance, and engagement information</p>
+          </div>
+          <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />Add New Entity
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <KPICard
+            title="Total Entities"
+            value={clients.length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Limited Companies"
+            value={clients.filter(c => c.type === 'limited-company').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Partnerships/LLPs"
+            value={clients.filter(c => c.type === 'llp' || c.type === 'partnership').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Sole Traders"
+            value={clients.filter(c => c.type === 'sole-trader').length.toString()}
+            icon={Building2}
+            onClick={() => {}}
+          />
+        </div>
+
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Entity List - Detailed View</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {clients.length === 0 ? (
+              <div className="text-center py-12">
+                <Building2 className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No entities configured</p>
+                <p className="text-gray-400 text-sm mb-4">Add your first client entity with comprehensive setup details</p>
+                <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+                  <Plus className="h-4 w-4 mr-2" />Add First Entity
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredClients.map(client => (
+                  <Card 
+                    key={client.id}
+                    className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => handleViewClient(client)}
+                  >
+                    <CardContent className="pt-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 mb-4">
+                            <Building2 className="h-6 w-6 text-[#001f3f]" />
+                            <h3 className="text-xl font-bold text-[#001f3f]">{client.name}</h3>
+                          </div>
+                          
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Entity Type</Label>
+                            <Badge variant="outline" className="ml-2 border-[#001f3f] text-[#001f3f]">
+                              {client.type}
+                            </Badge>
+                          </div>
+                          
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Status</Label>
+                            <Badge variant={getStatusBadge(client.accountsStatus)} className="ml-2">
+                              {client.accountsStatus}
+                            </Badge>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Year End</Label>
+                            <p className="text-[#001f3f] text-sm">{client.yearEnd}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Contact Person</Label>
+                            <p className="text-[#001f3f] text-sm">{client.contactPerson || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Email</Label>
+                            <p className="text-[#001f3f] text-sm">{client.email || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Phone</Label>
+                            <p className="text-[#001f3f] text-sm">{client.phone || 'Not specified'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">FRS Standard</Label>
+                            <p className="text-[#001f3f] text-sm">{client.frsStandard}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Last Accounts Filed</Label>
+                            <p className="text-[#001f3f] text-sm">{client.lastAccounts || 'N/A'}</p>
+                          </div>
+
+                          <div>
+                            <Label className="text-[#001f3f] text-xs font-semibold">Next Due</Label>
+                            <p className="text-[#001f3f] text-sm font-semibold">{client.nextDue}</p>
+                          </div>
+
+                          <div className="flex gap-2 mt-4">
+                            <Button
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleEditClient(client)
+                              }}
+                              className="bg-[#001f3f] hover:bg-[#003366]"
+                            >
+                              <Edit className="h-3 w-3 mr-2" />
+                              Edit Setup
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteClient(client)
+                              }}
+                              className="border-red-600 text-red-600"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -1168,15 +1504,13 @@ const AccountsProduction: React.FC = () => {
                   <TableHead className="text-[#001f3f]">Account Name</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
-                  <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredEntries.map(entry => (
                   <TableRow 
                     key={entry.id} 
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleViewTBEntry(entry)}
+                    className="hover:bg-gray-50"
                   >
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
@@ -1185,31 +1519,6 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleEditTBEntry(entry)
-                          }}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 hover:text-red-700"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDeleteTBEntry(entry)
-                          }}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1221,7 +1530,6 @@ const AccountsProduction: React.FC = () => {
                   <TableCell className="text-right text-white">
                     £{filteredEntries.reduce((sum, entry) => sum + (entry.credit || 0), 0).toLocaleString()}
                   </TableCell>
-                  <TableCell></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -1234,21 +1542,146 @@ const AccountsProduction: React.FC = () => {
   const renderAdjustments = () => {
     const filteredAdj = getFilteredAdjustments()
     
+    const totalAdjustments = filteredAdj.length
+    const draftCount = filteredAdj.filter(a => a.status === 'draft').length
+    const approvedCount = filteredAdj.filter(a => a.status === 'approved').length
+    const postedCount = filteredAdj.filter(a => a.status === 'posted').length
+    const totalImpact = filteredAdj.reduce((sum, adj) => sum + (adj.amount || 0), 0)
+    
+    const byType = {
+      prepayment: filteredAdj.filter(a => a.type === 'prepayment'),
+      accrual: filteredAdj.filter(a => a.type === 'accrual'),
+      depreciation: filteredAdj.filter(a => a.type === 'depreciation'),
+      provision: filteredAdj.filter(a => a.type === 'provision'),
+      reclassification: filteredAdj.filter(a => a.type === 'reclassification'),
+      writeOff: filteredAdj.filter(a => a.type === 'write-off'),
+      revaluation: filteredAdj.filter(a => a.type === 'revaluation')
+    }
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-[#001f3f]">Year-End Adjustments</h2>
-            <p className="text-[#001f3f]">Manage prepayments, accruals, depreciation, and provisions</p>
+            <p className="text-[#001f3f]">Manage journal entries, prepayments, accruals, depreciation, and provisions</p>
           </div>
           <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
-            <Plus className="h-4 w-4 mr-2" />Add Adjustment
+            <Plus className="h-4 w-4 mr-2" />New Adjustment
           </Button>
         </div>
 
-        <Card>
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <KPICard
+            title="Total Adjustments"
+            value={totalAdjustments.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Draft"
+            value={draftCount.toString()}
+            icon={FileText}
+            onClick={() => setAdjSearchStatus('draft')}
+            subtitle={`${((draftCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Approved"
+            value={approvedCount.toString()}
+            icon={CheckCircle}
+            onClick={() => setAdjSearchStatus('approved')}
+            subtitle={`${((approvedCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Posted"
+            value={postedCount.toString()}
+            icon={Database}
+            onClick={() => setAdjSearchStatus('posted')}
+            subtitle={`${((postedCount/totalAdjustments)*100).toFixed(0)}%`}
+          />
+          <KPICard
+            title="Total Impact"
+            value={`£${totalImpact.toLocaleString()}`}
+            icon={TrendingUp}
+            onClick={() => {}}
+          />
+        </div>
+
+        {/* Adjustment Type Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('prepayment')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <TrendingUp className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.prepayment.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Prepayments</h3>
+              <p className="text-sm text-gray-600 mt-1">Expenses paid in advance</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.prepayment.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('accrual')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <TrendingDown className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.accrual.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Accruals</h3>
+              <p className="text-sm text-gray-600 mt-1">Expenses incurred not yet paid</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.accrual.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('depreciation')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <Calculator className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.depreciation.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Depreciation</h3>
+              <p className="text-sm text-gray-600 mt-1">Asset value reduction</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.depreciation.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setAdjSearchType('provision')}
+          >
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-2">
+                <AlertCircle className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{byType.provision.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Provisions</h3>
+              <p className="text-sm text-gray-600 mt-1">Future liabilities</p>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{byType.provision.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Adjustments Table */}
+        <Card className="border-2 border-[#001f3f]">
           <CardHeader>
-            <CardTitle className="text-[#001f3f]">Adjustments</CardTitle>
+            <CardTitle className="text-[#001f3f]">All Adjustments</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -1269,6 +1702,9 @@ const AccountsProduction: React.FC = () => {
                           <SelectItem value="accrual">Accrual</SelectItem>
                           <SelectItem value="depreciation">Depreciation</SelectItem>
                           <SelectItem value="provision">Provision</SelectItem>
+                          <SelectItem value="reclassification">Reclassification</SelectItem>
+                          <SelectItem value="write-off">Write-off</SelectItem>
+                          <SelectItem value="revaluation">Revaluation</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1334,39 +1770,69 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAdj.map(adj => (
-                  <TableRow 
-                    key={adj.id} 
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleViewAdjustment(adj)}
-                  >
-                    <TableCell>
-                      <Badge variant="outline">{adj.type}</Badge>
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
-                    <TableCell className="text-right text-[#001f3f]">
-                      £{adj.amount.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
-                    <TableCell>
-                      <Badge variant={adj.status === 'approved' ? 'default' : 'secondary'}>
-                        {adj.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleEditAdjustment(adj)
-                        }}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                {filteredAdj.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+                      No adjustments found. Click "New Adjustment" to create one.
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filteredAdj.map(adj => (
+                    <TableRow 
+                      key={adj.id} 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewAdjustment(adj)}
+                    >
+                      <TableCell>
+                        <Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">
+                          {adj.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                      <TableCell className="text-right text-[#001f3f] font-semibold">
+                        £{adj.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          className={
+                            adj.status === 'posted' ? 'bg-green-600' :
+                            adj.status === 'approved' ? 'bg-blue-600' :
+                            'bg-gray-500'
+                          }
+                        >
+                          {adj.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditAdjustment(adj)
+                            }}
+                            className="border-[#001f3f] text-[#001f3f]"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteAdjustment(adj.id)
+                            }}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -1375,41 +1841,477 @@ const AccountsProduction: React.FC = () => {
     )
   }
 
-  const renderStatements = () => {
-    const filteredStmts = getFilteredStatements()
+  const renderJournalEntries = () => {
+    const journalAdjustments = adjustments.filter(a => 
+      a.type === 'reclassification' || a.type === 'write-off' || a.type === 'revaluation' || 
+      (!a.type.match(/prepayment|accrual|depreciation|provision/))
+    )
     
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Financial Statements</h2>
-            <p className="text-[#001f3f]">Generate and manage statutory accounts</p>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Journal Entries</h2>
+            <p className="text-[#001f3f]">Manage general journal entries and reclassifications</p>
           </div>
-          <Button onClick={handleGenerateStatement} className="bg-[#001f3f] hover:bg-[#003366]">
-            <Plus className="h-4 w-4 mr-2" />Generate Statement
+          <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />New Journal Entry
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <KPICard
+            title="Total Entries"
+            value={journalAdjustments.length.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Draft"
+            value={journalAdjustments.filter(a => a.status === 'draft').length.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Posted"
+            value={journalAdjustments.filter(a => a.status === 'posted').length.toString()}
+            icon={Database}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Total Impact"
+            value={`£${journalAdjustments.reduce((s, a) => s + a.amount, 0).toLocaleString()}`}
+            icon={TrendingUp}
+            onClick={() => {}}
+          />
+        </div>
+
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Journal Entries</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {journalAdjustments.length === 0 ? (
+              <div className="text-center py-12">
+                <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No journal entries found</p>
+                <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                  <Plus className="h-4 w-4 mr-2" />Create First Entry
+                </Button>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Reference</TableHead>
+                    <TableHead className="text-[#001f3f]">Description</TableHead>
+                    <TableHead className="text-[#001f3f] text-right">Amount</TableHead>
+                    <TableHead className="text-[#001f3f]">Date</TableHead>
+                    <TableHead className="text-[#001f3f]">Status</TableHead>
+                    <TableHead className="text-[#001f3f]">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {journalAdjustments.map(adj => (
+                    <TableRow 
+                      key={adj.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewAdjustment(adj)}
+                    >
+                      <TableCell className="text-[#001f3f] font-semibold">{adj.id}</TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                      <TableCell className="text-[#001f3f] text-right font-semibold">
+                        £{adj.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                      <TableCell>
+                        <Badge className={
+                          adj.status === 'posted' ? 'bg-green-600' :
+                          adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'
+                        }>
+                          {adj.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditAdjustment(adj)
+                            }}
+                            className="border-[#001f3f] text-[#001f3f]"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteAdjustment(adj.id)
+                            }}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderAccrualsAndPrepayments = () => {
+    const accrualsAndPrepayments = adjustments.filter(a => a.type === 'prepayment' || a.type === 'accrual')
+    const prepayments = accrualsAndPrepayments.filter(a => a.type === 'prepayment')
+    const accruals = accrualsAndPrepayments.filter(a => a.type === 'accrual')
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Accruals & Prepayments</h2>
+            <p className="text-[#001f3f]">Manage expense accruals and prepaid expenses</p>
+          </div>
+          <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />New Entry
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg" onClick={() => {}}>
             <CardContent className="pt-6">
-              <FileSpreadsheet className="h-8 w-8 text-blue-600 mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Balance Sheet</h3>
-              <p className="text-sm text-[#001f3f]">Statement of financial position</p>
+              <div className="flex justify-between items-start mb-2">
+                <TrendingUp className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{prepayments.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Prepayments</h3>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{prepayments.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
             </CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+
+          <Card className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg" onClick={() => {}}>
             <CardContent className="pt-6">
-              <FileText className="h-8 w-8 text-green-600 mb-2" />
+              <div className="flex justify-between items-start mb-2">
+                <TrendingDown className="h-8 w-8 text-[#001f3f]" />
+                <Badge className="bg-[#001f3f]">{accruals.length}</Badge>
+              </div>
+              <h3 className="font-semibold text-xl text-[#001f3f]">Accruals</h3>
+              <p className="text-lg font-bold text-[#001f3f] mt-2">
+                £{accruals.reduce((s, a) => s + a.amount, 0).toLocaleString()}
+              </p>
+            </CardContent>
+          </Card>
+
+          <KPICard
+            title="Draft"
+            value={accrualsAndPrepayments.filter(a => a.status === 'draft').length.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+
+          <KPICard
+            title="Posted"
+            value={accrualsAndPrepayments.filter(a => a.status === 'posted').length.toString()}
+            icon={Database}
+            onClick={() => {}}
+          />
+        </div>
+
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">All Accruals & Prepayments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {accrualsAndPrepayments.length === 0 ? (
+              <div className="text-center py-12">
+                <Calculator className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No accruals or prepayments found</p>
+                <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                  <Plus className="h-4 w-4 mr-2" />Create First Entry
+                </Button>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Type</TableHead>
+                    <TableHead className="text-[#001f3f]">Description</TableHead>
+                    <TableHead className="text-[#001f3f] text-right">Amount</TableHead>
+                    <TableHead className="text-[#001f3f]">Date</TableHead>
+                    <TableHead className="text-[#001f3f]">Status</TableHead>
+                    <TableHead className="text-[#001f3f]">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {accrualsAndPrepayments.map(adj => (
+                    <TableRow 
+                      key={adj.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewAdjustment(adj)}
+                    >
+                      <TableCell>
+                        <Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">
+                          {adj.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                      <TableCell className="text-[#001f3f] text-right font-semibold">
+                        £{adj.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                      <TableCell>
+                        <Badge className={
+                          adj.status === 'posted' ? 'bg-green-600' :
+                          adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'
+                        }>
+                          {adj.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditAdjustment(adj)
+                            }}
+                            className="border-[#001f3f] text-[#001f3f]"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteAdjustment(adj.id)
+                            }}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderDepreciation = () => {
+    const depreciationEntries = adjustments.filter(a => a.type === 'depreciation')
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Depreciation</h2>
+            <p className="text-[#001f3f]">Manage fixed asset depreciation charges</p>
+          </div>
+          <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />New Depreciation Entry
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <KPICard
+            title="Total Entries"
+            value={depreciationEntries.length.toString()}
+            icon={Calculator}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Annual Charge"
+            value={`£${depreciationEntries.reduce((s, a) => s + a.amount, 0).toLocaleString()}`}
+            icon={TrendingDown}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Draft"
+            value={depreciationEntries.filter(a => a.status === 'draft').length.toString()}
+            icon={FileText}
+            onClick={() => {}}
+          />
+          <KPICard
+            title="Posted"
+            value={depreciationEntries.filter(a => a.status === 'posted').length.toString()}
+            icon={Database}
+            onClick={() => {}}
+          />
+        </div>
+
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Depreciation Charges</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {depreciationEntries.length === 0 ? (
+              <div className="text-center py-12">
+                <Calculator className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No depreciation entries found</p>
+                <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                  <Plus className="h-4 w-4 mr-2" />Create First Entry
+                </Button>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[#001f3f]">Asset/Description</TableHead>
+                    <TableHead className="text-[#001f3f] text-right">Annual Charge</TableHead>
+                    <TableHead className="text-[#001f3f]">Period</TableHead>
+                    <TableHead className="text-[#001f3f]">Status</TableHead>
+                    <TableHead className="text-[#001f3f]">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {depreciationEntries.map(adj => (
+                    <TableRow 
+                      key={adj.id}
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleViewAdjustment(adj)}
+                    >
+                      <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                      <TableCell className="text-[#001f3f] text-right font-semibold">
+                        £{adj.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                      <TableCell>
+                        <Badge className={
+                          adj.status === 'posted' ? 'bg-green-600' :
+                          adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'
+                        }>
+                          {adj.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditAdjustment(adj)
+                            }}
+                            className="border-[#001f3f] text-[#001f3f]"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteAdjustment(adj.id)
+                            }}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderStatements = () => {
+    const statementType = activeSubTab
+    const title = statementType === 'full' ? 'Full Financial Statements' : 
+                  statementType === 'abbreviated' ? 'Abbreviated Accounts' :
+                  statementType === 'filleted' ? 'Filleted Accounts' :
+                  statementType === 'consolidated' ? 'Consolidated Accounts' : 'Dormant Accounts'
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">{title}</h2>
+            <p className="text-[#001f3f]">Generate and manage {title.toLowerCase()}</p>
+          </div>
+          <Button onClick={handleGenerateStatement} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />Generate {title}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <TrendingUp className="h-8 w-8 text-[#001f3f] mb-2" />
               <h3 className="font-semibold text-[#001f3f]">Profit & Loss</h3>
-              <p className="text-sm text-[#001f3f]">Income statement</p>
+              <p className="text-xs text-[#001f3f]">Income statement</p>
             </CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <TrendingUp className="h-8 w-8 text-purple-600 mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Cash Flow</h3>
-              <p className="text-sm text-[#001f3f]">Statement of cash flows</p>
+              <FileSpreadsheet className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Balance Sheet</h3>
+              <p className="text-xs text-[#001f3f]">Financial position</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">STRGL</h3>
+              <p className="text-xs text-[#001f3f]">Total recognised gains</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileCheck className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Accounting Policies</h3>
+              <p className="text-xs text-[#001f3f]">Basis of preparation</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <Eye className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Director's Report</h3>
+              <p className="text-xs text-[#001f3f]">Strategic report</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <CheckCircle className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Accountants Report</h3>
+              <p className="text-xs text-[#001f3f]">Professional opinion</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Notes to Accounts</h3>
+              <p className="text-xs text-[#001f3f]">Detailed disclosures</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <Plus className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Additional Notes</h3>
+              <p className="text-xs text-[#001f3f]">Supplementary info</p>
             </CardContent>
           </Card>
         </div>
@@ -1501,7 +2403,7 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStmts.map(stmt => {
+                {getFilteredStatements().map((stmt: FinancialStatement) => {
                   const client = clients.find(c => c.id === stmt.clientId)
                   return (
                     <TableRow 
@@ -1542,73 +2444,36 @@ const AccountsProduction: React.FC = () => {
   }
 
   const renderFiling = () => {
-    if (activeSubTab === 'companies-house') {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Companies House Filing</h2>
-            <p className="text-[#001f3f]">Submit annual accounts and confirmations to Companies House</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <FileCheck className="h-8 w-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-[#001f3f]">Annual Accounts (AA01)</h3>
-                <p className="text-sm text-[#001f3f]">File statutory accounts</p>
-              </CardContent>
-            </Card>
-            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
-                <h3 className="font-semibold text-[#001f3f]">Confirmation Statement (CS01)</h3>
-                <p className="text-sm text-[#001f3f]">Annual confirmation of company details</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-[#001f3f]">Filing History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[#001f3f]">Recent Companies House submissions will appear here</p>
-            </CardContent>
-          </Card>
-        </div>
-      )
-    }
-
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#00703c]">HMRC Filing</h2>
-          <p className="text-[#00703c]">Submit tax computations and iXBRL accounts to HMRC</p>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Companies House Filing</h2>
+          <p className="text-[#001f3f]">Submit annual accounts and confirmations to Companies House</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <FileText className="h-8 w-8 text-[#00703c] mb-2" />
-              <h3 className="font-semibold text-[#00703c]">Corporation Tax (CT600)</h3>
-              <p className="text-sm text-[#00703c]">File CT600 return with computations</p>
+              <FileCheck className="h-8 w-8 text-blue-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Annual Accounts (AA01)</h3>
+              <p className="text-sm text-[#001f3f]">File statutory accounts</p>
             </CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <Globe className="h-8 w-8 text-[#00703c] mb-2" />
-              <h3 className="font-semibold text-[#00703c]">iXBRL Accounts</h3>
-              <p className="text-sm text-[#00703c]">Tagged accounts for HMRC</p>
+              <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Confirmation Statement (CS01)</h3>
+              <p className="text-sm text-[#001f3f]">Annual confirmation of company details</p>
             </CardContent>
           </Card>
         </div>
 
-        <Card className="border-[#00703c]">
+        <Card className="border-2 border-[#001f3f]">
           <CardHeader>
-            <CardTitle className="text-[#00703c]">HMRC Filing History</CardTitle>
+            <CardTitle className="text-[#001f3f]">Filing History</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-[#00703c]">Recent HMRC submissions will appear here</p>
+            <p className="text-[#001f3f]">Recent Companies House submissions will appear here</p>
           </CardContent>
         </Card>
       </div>
@@ -2233,7 +3098,12 @@ const AccountsProduction: React.FC = () => {
       if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
     }
-    if (activeMainTab === 'adjustments') return renderAdjustments()
+    if (activeMainTab === 'adjustments') {
+      if (activeSubTab === 'journals') return renderJournalEntries()
+      if (activeSubTab === 'accruals') return renderAccrualsAndPrepayments()
+      if (activeSubTab === 'depreciation') return renderDepreciation()
+      return renderJournalEntries()
+    }
     if (activeMainTab === 'accounts') return renderStatements()
     if (activeMainTab === 'review') return renderReviewValidation()
     if (activeMainTab === 'ixbrl') return renderiXBRLTagging()
@@ -2363,142 +3233,21 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isClientEditOpen} onOpenChange={setIsClientEditOpen}>
-        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Edit Client</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#001f3f]">Client Name</Label>
-                <Input
-                  value={clientFormData.name || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Entity Type</Label>
-                <Select 
-                  value={clientFormData.type} 
-                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="limited-company">Limited Company</SelectItem>
-                    <SelectItem value="llp">LLP</SelectItem>
-                    <SelectItem value="partnership">Partnership</SelectItem>
-                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Year End</Label>
-                <Input
-                  type="date"
-                  value={clientFormData.yearEnd || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Contact Person</Label>
-                <Input
-                  value={clientFormData.contactPerson || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsClientEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveClient} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Save className="h-4 w-4 mr-2" />Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EnhancedClientForm
+        open={isClientEditOpen}
+        onOpenChange={setIsClientEditOpen}
+        client={selectedClient}
+        onSave={handleSaveClient}
+        mode="edit"
+      />
 
-      <Dialog open={isClientAddOpen} onOpenChange={setIsClientAddOpen}>
-        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Add New Client</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#001f3f]">Client Name</Label>
-                <Input
-                  value={clientFormData.name || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Entity Type</Label>
-                <Select 
-                  value={clientFormData.type} 
-                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="limited-company">Limited Company</SelectItem>
-                    <SelectItem value="llp">LLP</SelectItem>
-                    <SelectItem value="partnership">Partnership</SelectItem>
-                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Year End</Label>
-                <Input
-                  type="date"
-                  value={clientFormData.yearEnd || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Contact Person</Label>
-                <Input
-                  value={clientFormData.contactPerson || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Email</Label>
-                <Input
-                  type="email"
-                  value={clientFormData.email || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, email: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Phone</Label>
-                <Input
-                  value={clientFormData.phone || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, phone: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsClientAddOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveNewClient} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Plus className="h-4 w-4 mr-2" />Add Client
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EnhancedClientForm
+        open={isClientAddOpen}
+        onOpenChange={setIsClientAddOpen}
+        client={null}
+        onSave={handleSaveNewClient}
+        mode="add"
+      />
 
       <Dialog open={isTBEditOpen} onOpenChange={setIsTBEditOpen}>
         <DialogContent className="border-2 border-[#001f3f]">
@@ -2760,55 +3509,21 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isAdjEditOpen} onOpenChange={setIsAdjEditOpen}>
-        <DialogContent className="border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Edit Adjustment</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label className="text-[#001f3f]">Type</Label>
-              <Select 
-                value={adjFormData.type} 
-                onValueChange={(value) => setAdjFormData({...adjFormData, type: value as any})}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="prepayment">Prepayment</SelectItem>
-                  <SelectItem value="accrual">Accrual</SelectItem>
-                  <SelectItem value="depreciation">Depreciation</SelectItem>
-                  <SelectItem value="provision">Provision</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-[#001f3f]">Description</Label>
-              <Textarea
-                value={adjFormData.description || ''}
-                onChange={(e) => setAdjFormData({...adjFormData, description: e.target.value})}
-                className="text-[#001f3f] border-[#001f3f]"
-              />
-            </div>
-            <div>
-              <Label className="text-[#001f3f]">Amount</Label>
-              <Input
-                type="number"
-                value={adjFormData.amount || 0}
-                onChange={(e) => setAdjFormData({...adjFormData, amount: parseFloat(e.target.value)})}
-                className="text-[#001f3f] border-[#001f3f]"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAdjEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Save className="h-4 w-4 mr-2" />Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <JournalAdjustmentForm
+        open={isAdjEditOpen}
+        onOpenChange={setIsAdjEditOpen}
+        adjustment={selectedAdjustment}
+        onSave={handleSaveAdjustment}
+        mode="edit"
+      />
+
+      <JournalAdjustmentForm
+        open={_isAdjAddOpen}
+        onOpenChange={setIsAdjAddOpen}
+        adjustment={null}
+        onSave={handleSaveNewAdjustment}
+        mode="add"
+      />
 
       <Dialog open={isAccountAddOpen} onOpenChange={setIsAccountAddOpen}>
         <DialogContent className="max-w-lg border-2 border-[#001f3f]">

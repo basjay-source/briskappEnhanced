@@ -135,7 +135,7 @@ graph TB
 - **Analytics**: Firm KPIs, utilization rates, profitability analysis
 
 ### 2. Accounts Production
-- **Chart of Accounts**: IRIS-style templates with sector presets
+- **Chart of Accounts**: IAS-compliant templates with sector presets
 - **Trial Balance**: Import from external systems with auto-mapping
 - **Adjustments**: Journals, reclassifications, consolidation eliminations
 - **Financial Statements**: P&L, Balance Sheet, Cash Flow with iXBRL tagging

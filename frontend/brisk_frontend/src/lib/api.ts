@@ -387,6 +387,109 @@ class ApiClient {
   async getLiveForexRate(from: string, to: string) {
     return this.request(`/reports/live-forex-rate/${from}/${to}`)
   }
+
+  async getProductionClients() {
+    return this.request('/accounts/production/clients')
+  }
+
+  async createProductionClient(data: Record<string, unknown>) {
+    return this.request('/accounts/production/clients', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async getProductionClient(clientId: string) {
+    return this.request(`/accounts/production/clients/${clientId}`)
+  }
+
+  async updateProductionClient(clientId: string, data: Record<string, unknown>) {
+    return this.request(`/accounts/production/clients/${clientId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteProductionClient(clientId: string) {
+    return this.request(`/accounts/production/clients/${clientId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async getAdjustments(companyId: string) {
+    return this.request(`/accounts/production/adjustments/${companyId}`)
+  }
+
+  async createAdjustment(data: Record<string, unknown>) {
+    return this.request('/accounts/production/adjustments', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateAdjustment(adjustmentId: string, data: Record<string, unknown>) {
+    return this.request(`/accounts/production/adjustments/${adjustmentId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteAdjustment(adjustmentId: string) {
+    return this.request(`/accounts/production/adjustments/${adjustmentId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async getChartOfAccounts() {
+    return this.request('/accounts/chart-of-accounts')
+  }
+
+  async createChartAccount(data: Record<string, unknown>) {
+    return this.request('/accounts/chart-of-accounts', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateChartAccount(accountId: string, data: Record<string, unknown>) {
+    return this.request(`/accounts/chart-of-accounts/${accountId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteChartAccount(accountId: string) {
+    return this.request(`/accounts/chart-of-accounts/${accountId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async createTrialBalanceEntry(data: Record<string, unknown>) {
+    return this.request('/accounts/trial-balance/entry', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async updateTrialBalanceEntry(entryId: string, data: Record<string, unknown>) {
+    return this.request(`/accounts/trial-balance/entry/${entryId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  }
+
+  async deleteTrialBalanceEntry(entryId: string) {
+    return this.request(`/accounts/trial-balance/entry/${entryId}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async importTrialBalance(data: Record<string, unknown>[]) {
+    return this.request('/accounts/trial-balance/import', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+  }
 }
 
 export const apiClient = new ApiClient()
