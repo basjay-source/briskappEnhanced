@@ -624,10 +624,10 @@ const AccountsProduction: React.FC = () => {
     {
       id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
       subTabs: {
-        'generate': { label: 'Generate Accounts', icon: FileSpreadsheet },
-        'balance-sheet': { label: 'Balance Sheet', icon: FileCheck },
-        'profit-loss': { label: 'Profit & Loss', icon: TrendingUp },
-        'notes': { label: 'Notes & Disclosures', icon: FileText }
+        'full': { label: 'Full Financial Statements', icon: FileSpreadsheet },
+        'abbreviated': { label: 'Abbreviated Accounts', icon: FileCheck },
+        'filleted': { label: 'Filleted Accounts', icon: FileText },
+        'dormant': { label: 'Dormant Accounts', icon: TrendingDown }
       }
     },
     {
@@ -1331,40 +1331,78 @@ const AccountsProduction: React.FC = () => {
   }
 
   const renderStatements = () => {
-    const filteredStmts = getFilteredStatements()
+    const statementType = activeSubTab
+    const title = statementType === 'full' ? 'Full Financial Statements' : 
+                  statementType === 'abbreviated' ? 'Abbreviated Accounts' :
+                  statementType === 'filleted' ? 'Filleted Accounts' : 'Dormant Accounts'
     
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Financial Statements</h2>
-            <p className="text-[#001f3f]">Generate and manage statutory accounts</p>
+            <h2 className="text-2xl font-bold text-[#001f3f]">{title}</h2>
+            <p className="text-[#001f3f]">Generate and manage {title.toLowerCase()}</p>
           </div>
           <Button onClick={handleGenerateStatement} className="bg-[#001f3f] hover:bg-[#003366]">
-            <Plus className="h-4 w-4 mr-2" />Generate Statement
+            <Plus className="h-4 w-4 mr-2" />Generate {title}
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <FileSpreadsheet className="h-8 w-8 text-blue-600 mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Balance Sheet</h3>
-              <p className="text-sm text-[#001f3f]">Statement of financial position</p>
-            </CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
-              <FileText className="h-8 w-8 text-green-600 mb-2" />
+              <TrendingUp className="h-8 w-8 text-[#001f3f] mb-2" />
               <h3 className="font-semibold text-[#001f3f]">Profit & Loss</h3>
-              <p className="text-sm text-[#001f3f]">Income statement</p>
+              <p className="text-xs text-[#001f3f]">Income statement</p>
             </CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <TrendingUp className="h-8 w-8 text-purple-600 mb-2" />
-              <h3 className="font-semibold text-[#001f3f]">Cash Flow</h3>
-              <p className="text-sm text-[#001f3f]">Statement of cash flows</p>
+              <FileSpreadsheet className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Balance Sheet</h3>
+              <p className="text-xs text-[#001f3f]">Financial position</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">STRGL</h3>
+              <p className="text-xs text-[#001f3f]">Total recognised gains</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileCheck className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Accounting Policies</h3>
+              <p className="text-xs text-[#001f3f]">Basis of preparation</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <Eye className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Director's Report</h3>
+              <p className="text-xs text-[#001f3f]">Strategic report</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <CheckCircle className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Accountants Report</h3>
+              <p className="text-xs text-[#001f3f]">Professional opinion</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <FileText className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Notes to Accounts</h3>
+              <p className="text-xs text-[#001f3f]">Detailed disclosures</p>
+            </CardContent>
+          </Card>
+          <Card className="border-2 border-[#001f3f]">
+            <CardContent className="pt-6">
+              <Plus className="h-8 w-8 text-[#001f3f] mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Additional Notes</h3>
+              <p className="text-xs text-[#001f3f]">Supplementary info</p>
             </CardContent>
           </Card>
         </div>
@@ -1456,7 +1494,7 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStmts.map(stmt => {
+                {getFilteredStatements().map((stmt: FinancialStatement) => {
                   const client = clients.find(c => c.id === stmt.clientId)
                   return (
                     <TableRow 
