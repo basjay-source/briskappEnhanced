@@ -114,6 +114,7 @@ interface FinancialStatement {
 const AccountsProduction: React.FC = () => {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
+  const [adjustmentTab, setAdjustmentTab] = useState<'journals' | 'accruals' | 'depreciation'>('journals')
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -814,14 +815,7 @@ const AccountsProduction: React.FC = () => {
         'posting': { label: 'Posting Batches', icon: Calculator }
       }
     },
-    {
-      id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: true,
-      subTabs: {
-        'journals': { label: 'Journal Entries', icon: FileText },
-        'accruals': { label: 'Accruals & Prepayments', icon: Calculator },
-        'depreciation': { label: 'Depreciation', icon: TrendingDown }
-      }
-    },
+    { id: 'adjustments', label: 'Year-End Adjustments', icon: FileText, hasSubTabs: false },
     {
       id: 'accounts', label: 'Financial Statements', icon: FileSpreadsheet, hasSubTabs: true,
       subTabs: {
@@ -2995,6 +2989,314 @@ const AccountsProduction: React.FC = () => {
     )
   }
 
+  const renderYearEndAdjustmentsConsolidated = () => {
+    const journalAdjustments = adjustments.filter(a => 
+      a.type === 'reclassification' || a.type === 'write-off' || a.type === 'revaluation' || 
+      (!a.type.match(/prepayment|accrual|depreciation|provision/))
+    )
+    const accrualsAndPrepayments = adjustments.filter(a => a.type === 'prepayment' || a.type === 'accrual')
+    const prepayments = accrualsAndPrepayments.filter(a => a.type === 'prepayment')
+    const accruals = accrualsAndPrepayments.filter(a => a.type === 'accrual')
+    const depreciationEntries = adjustments.filter(a => a.type === 'depreciation')
+
+    const handleReverseEntry = (adj: Adjustment) => {
+      const reversalEntry: Adjustment = {
+        ...adj,
+        id: `REV-${adj.id}`,
+        reference: `REVERSAL-${adj.reference || adj.id}`,
+        description: `Reversal: ${adj.description}`,
+        status: 'draft',
+        journalLines: adj.journalLines.map(line => ({
+          ...line,
+          id: `REV-${line.id}`,
+          debit: line.credit, // Swap debit and credit
+          credit: line.debit
+        }))
+      }
+      setAdjustments(prev => [...prev, reversalEntry])
+      alert(`Reversal entry created: ${reversalEntry.reference}`)
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Year-End Adjustments</h2>
+            <p className="text-[#001f3f]">Manage journal entries, accruals, prepayments, and depreciation</p>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-2 border-b-2 border-[#001f3f]">
+          <button
+            onClick={() => setAdjustmentTab('journals')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              adjustmentTab === 'journals'
+                ? 'bg-[#001f3f] text-white border-b-4 border-[#001f3f]'
+                : 'bg-gray-100 text-[#001f3f] hover:bg-gray-200'
+            }`}
+          >
+            <FileText className="h-4 w-4 inline mr-2" />
+            Journal Entries
+          </button>
+          <button
+            onClick={() => setAdjustmentTab('accruals')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              adjustmentTab === 'accruals'
+                ? 'bg-[#001f3f] text-white border-b-4 border-[#001f3f]'
+                : 'bg-gray-100 text-[#001f3f] hover:bg-gray-200'
+            }`}
+          >
+            <Calculator className="h-4 w-4 inline mr-2" />
+            Accruals & Prepayments
+          </button>
+          <button
+            onClick={() => setAdjustmentTab('depreciation')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              adjustmentTab === 'depreciation'
+                ? 'bg-[#001f3f] text-white border-b-4 border-[#001f3f]'
+                : 'bg-gray-100 text-[#001f3f] hover:bg-gray-200'
+            }`}
+          >
+            <TrendingDown className="h-4 w-4 inline mr-2" />
+            Depreciation
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {adjustmentTab === 'journals' && (
+          <div className="space-y-6">
+            <div className="flex justify-end">
+              <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+                <Plus className="h-4 w-4 mr-2" />New Journal Entry
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <KPICard title="Total Entries" value={journalAdjustments.length.toString()} icon={FileText} onClick={() => {}} />
+              <KPICard title="Draft" value={journalAdjustments.filter(a => a.status === 'draft').length.toString()} icon={FileText} onClick={() => {}} />
+              <KPICard title="Posted" value={journalAdjustments.filter(a => a.status === 'posted').length.toString()} icon={Database} onClick={() => {}} />
+              <KPICard title="Total Impact" value={`£${journalAdjustments.reduce((s, a) => s + a.amount, 0).toLocaleString()}`} icon={TrendingUp} onClick={() => {}} />
+            </div>
+
+            <Card className="border-2 border-[#001f3f]">
+              <CardHeader><CardTitle className="text-[#001f3f]">Journal Entries</CardTitle></CardHeader>
+              <CardContent>
+                {journalAdjustments.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No journal entries found</p>
+                    <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                      <Plus className="h-4 w-4 mr-2" />Create First Entry
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-[#001f3f]">Reference</TableHead>
+                        <TableHead className="text-[#001f3f]">Description</TableHead>
+                        <TableHead className="text-[#001f3f] text-right">Amount</TableHead>
+                        <TableHead className="text-[#001f3f]">Date</TableHead>
+                        <TableHead className="text-[#001f3f]">Status</TableHead>
+                        <TableHead className="text-[#001f3f]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {journalAdjustments.map(adj => (
+                        <TableRow key={adj.id} className="cursor-pointer hover:bg-gray-50" onClick={() => handleViewAdjustment(adj)}>
+                          <TableCell className="text-[#001f3f] font-semibold">{adj.id}</TableCell>
+                          <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                          <TableCell className="text-[#001f3f] text-right font-semibold">£{adj.amount.toLocaleString()}</TableCell>
+                          <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                          <TableCell>
+                            <Badge className={adj.status === 'posted' ? 'bg-green-600' : adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'}>
+                              {adj.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditAdjustment(adj) }} className="border-[#001f3f] text-[#001f3f]">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleDeleteAdjustment(adj.id) }} className="border-red-600 text-red-600">
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {adjustmentTab === 'accruals' && (
+          <div className="space-y-6">
+            <div className="flex justify-end">
+              <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+                <Plus className="h-4 w-4 mr-2" />New Entry
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg" onClick={() => {}}>
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <TrendingUp className="h-8 w-8 text-[#001f3f]" />
+                    <Badge className="bg-[#001f3f]">{prepayments.length}</Badge>
+                  </div>
+                  <h3 className="font-semibold text-xl text-[#001f3f]">Prepayments</h3>
+                  <p className="text-lg font-bold text-[#001f3f] mt-2">£{prepayments.reduce((s, a) => s + a.amount, 0).toLocaleString()}</p>
+                </CardContent>
+              </Card>
+              <Card className="border-2 border-[#001f3f] cursor-pointer hover:shadow-lg" onClick={() => {}}>
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <TrendingDown className="h-8 w-8 text-[#001f3f]" />
+                    <Badge className="bg-[#001f3f]">{accruals.length}</Badge>
+                  </div>
+                  <h3 className="font-semibold text-xl text-[#001f3f]">Accruals</h3>
+                  <p className="text-lg font-bold text-[#001f3f] mt-2">£{accruals.reduce((s, a) => s + a.amount, 0).toLocaleString()}</p>
+                </CardContent>
+              </Card>
+              <KPICard title="Draft" value={accrualsAndPrepayments.filter(a => a.status === 'draft').length.toString()} icon={FileText} onClick={() => {}} />
+              <KPICard title="Posted" value={accrualsAndPrepayments.filter(a => a.status === 'posted').length.toString()} icon={Database} onClick={() => {}} />
+            </div>
+
+            <Card className="border-2 border-[#001f3f]">
+              <CardHeader><CardTitle className="text-[#001f3f]">All Accruals & Prepayments</CardTitle></CardHeader>
+              <CardContent>
+                {accrualsAndPrepayments.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Calculator className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No accruals or prepayments found</p>
+                    <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                      <Plus className="h-4 w-4 mr-2" />Create First Entry
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-[#001f3f]">Type</TableHead>
+                        <TableHead className="text-[#001f3f]">Description</TableHead>
+                        <TableHead className="text-[#001f3f] text-right">Amount</TableHead>
+                        <TableHead className="text-[#001f3f]">Date</TableHead>
+                        <TableHead className="text-[#001f3f]">Status</TableHead>
+                        <TableHead className="text-[#001f3f]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {accrualsAndPrepayments.map(adj => (
+                        <TableRow key={adj.id} className="cursor-pointer hover:bg-gray-50" onClick={() => handleViewAdjustment(adj)}>
+                          <TableCell>
+                            <Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">{adj.type}</Badge>
+                          </TableCell>
+                          <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                          <TableCell className="text-[#001f3f] text-right font-semibold">£{adj.amount.toLocaleString()}</TableCell>
+                          <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                          <TableCell>
+                            <Badge className={adj.status === 'posted' ? 'bg-green-600' : adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'}>
+                              {adj.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditAdjustment(adj) }} className="border-[#001f3f] text-[#001f3f]">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleReverseEntry(adj) }} className="border-green-600 text-green-600" title="Create reversal entry">
+                                <ArrowUpDown className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleDeleteAdjustment(adj.id) }} className="border-red-600 text-red-600">
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {adjustmentTab === 'depreciation' && (
+          <div className="space-y-6">
+            <div className="flex justify-end">
+              <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366]">
+                <Plus className="h-4 w-4 mr-2" />New Depreciation Entry
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <KPICard title="Total Entries" value={depreciationEntries.length.toString()} icon={Calculator} onClick={() => {}} />
+              <KPICard title="Annual Charge" value={`£${depreciationEntries.reduce((s, a) => s + a.amount, 0).toLocaleString()}`} icon={TrendingDown} onClick={() => {}} />
+              <KPICard title="Draft" value={depreciationEntries.filter(a => a.status === 'draft').length.toString()} icon={FileText} onClick={() => {}} />
+              <KPICard title="Posted" value={depreciationEntries.filter(a => a.status === 'posted').length.toString()} icon={Database} onClick={() => {}} />
+            </div>
+
+            <Card className="border-2 border-[#001f3f]">
+              <CardHeader><CardTitle className="text-[#001f3f]">Depreciation Charges</CardTitle></CardHeader>
+              <CardContent>
+                {depreciationEntries.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Calculator className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No depreciation entries found</p>
+                    <Button onClick={handleAddAdjustment} className="bg-[#001f3f] hover:bg-[#003366] mt-4">
+                      <Plus className="h-4 w-4 mr-2" />Create First Entry
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-[#001f3f]">Asset/Description</TableHead>
+                        <TableHead className="text-[#001f3f] text-right">Annual Charge</TableHead>
+                        <TableHead className="text-[#001f3f]">Period</TableHead>
+                        <TableHead className="text-[#001f3f]">Status</TableHead>
+                        <TableHead className="text-[#001f3f]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {depreciationEntries.map(adj => (
+                        <TableRow key={adj.id} className="cursor-pointer hover:bg-gray-50" onClick={() => handleViewAdjustment(adj)}>
+                          <TableCell className="text-[#001f3f]">{adj.description}</TableCell>
+                          <TableCell className="text-[#001f3f] text-right font-semibold">£{adj.amount.toLocaleString()}</TableCell>
+                          <TableCell className="text-[#001f3f]">{adj.date}</TableCell>
+                          <TableCell>
+                            <Badge className={adj.status === 'posted' ? 'bg-green-600' : adj.status === 'approved' ? 'bg-blue-600' : 'bg-gray-500'}>
+                              {adj.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditAdjustment(adj) }} className="border-[#001f3f] text-[#001f3f]">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleDeleteAdjustment(adj.id) }} className="border-red-600 text-red-600">
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+    )
+  }
   const renderReportsArchive = () => {
     const handleExportClick = (format: string) => {
       setDrilldownTitle(`Export to ${format}`)
@@ -3098,12 +3400,7 @@ const AccountsProduction: React.FC = () => {
       if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
     }
-    if (activeMainTab === 'adjustments') {
-      if (activeSubTab === 'journals') return renderJournalEntries()
-      if (activeSubTab === 'accruals') return renderAccrualsAndPrepayments()
-      if (activeSubTab === 'depreciation') return renderDepreciation()
-      return renderJournalEntries()
-    }
+    if (activeMainTab === 'adjustments') return renderYearEndAdjustmentsConsolidated()
     if (activeMainTab === 'accounts') return renderStatements()
     if (activeMainTab === 'review') return renderReviewValidation()
     if (activeMainTab === 'ixbrl') return renderiXBRLTagging()
