@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../components/ui/alert-dialog'
 import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
+import { api } from '../../lib/api'
 
 interface Client {
   id: string
@@ -69,65 +70,9 @@ const AccountsProduction: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [clients, setClients] = useState<Client[]>([
-    {
-      id: '1', name: 'Acme Trading Ltd', type: 'limited-company',
-      registrationNumber: '12345678', yearEnd: '2024-12-31',
-      accountsStatus: 'in-progress', lastAccounts: '2023-12-31',
-      nextDue: '2025-09-30', frsStandard: 'FRS 102',
-      contactPerson: 'John Smith', email: 'john@acmetrading.com',
-      phone: '020 7123 4567'
-    },
-    {
-      id: '2', name: 'Green & Partners LLP', type: 'llp',
-      registrationNumber: 'OC234567', yearEnd: '2024-03-31',
-      accountsStatus: 'review', lastAccounts: '2024-03-31',
-      nextDue: '2025-01-31', frsStandard: 'FRS 102',
-      contactPerson: 'Sarah Green', email: 'sarah@greenpartners.com',
-      phone: '020 7234 5678'
-    },
-    {
-      id: '3', name: 'Smith & Co Solicitors', type: 'partnership',
-      registrationNumber: undefined, yearEnd: '2024-04-30',
-      accountsStatus: 'not-started', lastAccounts: '2023-04-30',
-      nextDue: '2025-01-31', frsStandard: 'FRS 102 1A',
-      contactPerson: 'David Smith', email: 'david@smithco.com',
-      phone: '020 7345 6789'
-    },
-    {
-      id: '4', name: 'Tech Innovations Ltd', type: 'limited-company',
-      registrationNumber: '87654321', yearEnd: '2024-06-30',
-      accountsStatus: 'in-progress', lastAccounts: '2023-06-30',
-      nextDue: '2025-04-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Emma Wilson', email: 'emma@techinnovations.com',
-      phone: '020 7456 7890'
-    },
-    {
-      id: '5', name: 'Community Care CIC', type: 'cic',
-      registrationNumber: 'CE123456', yearEnd: '2024-03-31',
-      accountsStatus: 'completed', lastAccounts: '2024-03-31',
-      nextDue: '2025-01-31', frsStandard: 'FRS 105',
-      contactPerson: 'Michael Brown', email: 'michael@communitycare.org',
-      phone: '020 7567 8901'
-    },
-    {
-      id: '6', name: 'Johnson & Associates', type: 'partnership',
-      registrationNumber: undefined, yearEnd: '2024-12-31',
-      accountsStatus: 'filed', lastAccounts: '2023-12-31',
-      nextDue: '2025-09-30', frsStandard: 'FRS 102 1A',
-      contactPerson: 'Robert Johnson', email: 'robert@johnsonassociates.com',
-      phone: '020 7678 9012'
-    },
-    {
-      id: '7', name: 'Brighton Retail Ltd', type: 'limited-company',
-      registrationNumber: '11223344', yearEnd: '2024-09-30',
-      accountsStatus: 'review', lastAccounts: '2023-09-30',
-      nextDue: '2025-07-31', frsStandard: 'FRS 105',
-      contactPerson: 'Lisa Chen', email: 'lisa@brightonretail.com',
-      phone: '020 7789 0123'
-    }
-  ])
+  const [clients, setClients] = useState<Client[]>([])
   const [clientSearchName, setClientSearchName] = useState('')
   const [clientSearchType, setClientSearchType] = useState('')
   const [clientSearchStatus, setClientSearchStatus] = useState('')
@@ -227,6 +172,21 @@ const AccountsProduction: React.FC = () => {
   const [isBatchAddOpen, setIsBatchAddOpen] = useState(false)
   const [batchFormData, setBatchFormData] = useState<{name?: string, type?: string, description?: string}>({})
 
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        setIsLoading(true)
+        const response = await api.getProductionClients()
+        setClients(response as any || [])
+      } catch (error) {
+        console.error('Failed to load clients:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadClients()
+  }, [])
+
   const handleAddNewBatch = () => {
     setBatchFormData({ name: '', type: 'Manual Entry', description: '' })
     setIsBatchAddOpen(true)
@@ -274,20 +234,29 @@ const AccountsProduction: React.FC = () => {
     setIsClientDeleteOpen(true)
   }
 
-  const handleSaveClient = () => {
+  const handleSaveClient = async () => {
     if (selectedClient) {
-      setClients(clients.map(c => c.id === selectedClient.id ? { ...selectedClient, ...clientFormData } as Client : c))
+      try {
+        await api.updateProductionClient(selectedClient.id, clientFormData)
+        setClients(clients.map(c => c.id === selectedClient.id ? { ...selectedClient, ...clientFormData } as Client : c))
+      } catch (error) {
+        console.error('Failed to update client:', error)
+        alert('Failed to update client. Please try again.')
+      }
     }
     setIsClientEditOpen(false)
   }
 
-  const handleSaveNewClient = () => {
-    const newClient: Client = {
-      ...clientFormData as Client,
-      id: Date.now().toString()
+  const handleSaveNewClient = async () => {
+    try {
+      const response = await api.createProductionClient(clientFormData) as any
+      setClients([...clients, response])
+      setIsClientAddOpen(false)
+      setClientFormData({})
+    } catch (error) {
+      console.error('Failed to create client:', error)
+      alert('Failed to create client. Please try again.')
     }
-    setClients([...clients, newClient])
-    setIsClientAddOpen(false)
   }
 
 
