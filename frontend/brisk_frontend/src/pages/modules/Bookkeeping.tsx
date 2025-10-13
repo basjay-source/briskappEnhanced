@@ -84,10 +84,27 @@ import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ExportButton } from '@/components/ExportButton'
 import { getAllAccounts } from '../../data/chartOfAccounts'
+import { BookkeepingJournalForm } from '@/components/BookkeepingJournalForm'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
+  const [journalFormOpen, setJournalFormOpen] = useState(false)
+  const [journalEntries, setJournalEntries] = useState<any[]>([
+    {
+      id: 'JE001',
+      reference: 'JE001',
+      date: '2024-01-15',
+      description: 'Office supplies purchase',
+      journalLines: [
+        { id: 'L1', accountCode: '6200', accountName: 'Office Expenses', description: 'Office supplies', debit: 250, credit: 0 },
+        { id: 'L2', accountCode: '1000', accountName: 'Bank Account', description: 'Payment', debit: 0, credit: 250 }
+      ],
+      totalDebit: 250,
+      totalCredit: 250
+    }
+  ])
+  const [editingJournal, setEditingJournal] = useState<any>(null)
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const isMobile = useIsMobile()
   const [isAILoading, setIsAILoading] = useState(false)
@@ -1462,6 +1479,36 @@ export default function Bookkeeping() {
     )
   }
 
+  const handleAddJournal = () => {
+    setEditingJournal(null)
+    setJournalFormOpen(true)
+  }
+
+  const handleEditJournal = (journal: any) => {
+    setEditingJournal(journal)
+    setJournalFormOpen(true)
+  }
+
+  const handleSaveJournal = (journalData: any) => {
+    if (editingJournal) {
+      setJournalEntries(journalEntries.map(j => j.id === editingJournal.id ? { ...journalData, id: editingJournal.id } : j))
+    } else {
+      const newJournal = {
+        ...journalData,
+        id: `JE${String(journalEntries.length + 1).padStart(3, '0')}`
+      }
+      setJournalEntries([...journalEntries, newJournal])
+    }
+    setJournalFormOpen(false)
+    setEditingJournal(null)
+  }
+
+  const handleDeleteJournal = (id: string) => {
+    if (confirm('Are you sure you want to delete this journal entry?')) {
+      setJournalEntries(journalEntries.filter(j => j.id !== id))
+    }
+  }
+
   function renderJournalsContent() {
     return (
       <div className="space-y-6">
@@ -1471,7 +1518,7 @@ export default function Bookkeeping() {
             <p className="text-[#001f3f]">Manual journal entries and adjustments</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleAddJournal}>
               <Plus className="h-4 w-4 mr-2" />
               New Entry
             </Button>
@@ -1484,25 +1531,67 @@ export default function Bookkeeping() {
 
         <Card className="border-2 border-[#001f3f]">
           <CardHeader>
-            <CardTitle className="text-[#001f3f]">Recent Journal Entries</CardTitle>
-            <CardDescription>Latest manual entries and adjustments</CardDescription>
+            <CardTitle className="text-[#001f3f]">Journal Entries</CardTitle>
+            <CardDescription>Manual entries and adjustments</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
-                <div className="flex-1">
-                  <p className="font-medium">Office supplies purchase</p>
-                  <p className="text-sm text-[#001f3f]">JE001 - Office Expenses</p>
-                  <p className="text-xs text-gray-500">2024-01-15</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold">£250</p>
-                  <p className="text-xs text-gray-500">Debit</p>
-                </div>
-              </div>
+            <div className="border-2 border-[#001f3f] rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-[#001f3f]">
+                    <TableHead className="text-white">Reference</TableHead>
+                    <TableHead className="text-white">Date</TableHead>
+                    <TableHead className="text-white">Description</TableHead>
+                    <TableHead className="text-white text-right">Debit (£)</TableHead>
+                    <TableHead className="text-white text-right">Credit (£)</TableHead>
+                    <TableHead className="text-white">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {journalEntries.map((entry) => (
+                    <TableRow key={entry.id} className="hover:bg-blue-50 cursor-pointer">
+                      <TableCell className="text-[#001f3f] font-semibold">{entry.reference}</TableCell>
+                      <TableCell className="text-[#001f3f]">{entry.date}</TableCell>
+                      <TableCell className="text-[#001f3f]">{entry.description}</TableCell>
+                      <TableCell className="text-[#001f3f] text-right font-semibold">
+                        {entry.totalDebit.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f] text-right font-semibold">
+                        {entry.totalCredit.toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditJournal(entry)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteJournal(entry.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
+
+        <BookkeepingJournalForm
+          open={journalFormOpen}
+          onOpenChange={setJournalFormOpen}
+          journalEntry={editingJournal}
+          onSave={handleSaveJournal}
+          mode={editingJournal ? 'edit' : 'add'}
+        />
       </div>
     )
   }

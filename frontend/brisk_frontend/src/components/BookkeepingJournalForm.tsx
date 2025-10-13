@@ -3,34 +3,52 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { AlertCircle, Save, Plus, Trash2, Search } from 'lucide-react'
-import { Adjustment, JournalLine } from '@/types'
+import { AlertCircle, Save, Plus, Trash2 } from 'lucide-react'
 import { getAllAccounts } from '@/data/chartOfAccounts'
 
 const generateUniqueId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-interface JournalAdjustmentFormProps {
+interface JournalLine {
+  id: string
+  accountCode: string
+  accountName: string
+  description: string
+  debit: number
+  credit: number
+}
+
+interface JournalEntry {
+  id?: string
+  reference: string
+  date: string
+  description: string
+  journalLines: JournalLine[]
+  totalDebit: number
+  totalCredit: number
+  notes?: string
+}
+
+interface BookkeepingJournalFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  adjustment?: Adjustment
-  onSave: (adjustment: Partial<Adjustment>) => void
+  journalEntry?: JournalEntry
+  onSave: (entry: Partial<JournalEntry>) => void
   mode: 'add' | 'edit'
 }
 
-export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
+export const BookkeepingJournalForm: React.FC<BookkeepingJournalFormProps> = ({
   open,
   onOpenChange,
-  adjustment,
+  journalEntry,
   onSave,
   mode
 }) => {
   const getInitialLines = (): JournalLine[] => {
-    if (adjustment?.journalLines && adjustment.journalLines.length > 0) {
-      return adjustment.journalLines
+    if (journalEntry?.journalLines && journalEntry.journalLines.length > 0) {
+      return journalEntry.journalLines
     }
     return [
       { id: generateUniqueId(), accountCode: '', accountName: '', description: '', debit: 0, credit: 0 },
@@ -38,11 +56,9 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
     ]
   }
 
-  const [formData, setFormData] = useState<Partial<Adjustment>>(adjustment || {
-    type: 'accrual',
-    reference: `ADJ-${Date.now()}`,
+  const [formData, setFormData] = useState<Partial<JournalEntry>>(journalEntry || {
+    reference: `JE-${Date.now()}`,
     date: new Date().toISOString().split('T')[0],
-    status: 'draft',
     journalLines: getInitialLines(),
     totalDebit: 0,
     totalCredit: 0
@@ -57,7 +73,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
     calculateTotals()
   }, [formData.journalLines])
 
-  const updateField = (field: keyof Adjustment, value: any) => {
+  const updateField = (field: keyof JournalEntry, value: any) => {
     setFormData({ ...formData, [field]: value })
   }
 
@@ -178,40 +194,19 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
       <DialogContent className="max-w-[95vw] max-h-[90vh] overflow-y-auto border-2 border-[#001f3f]">
         <DialogHeader>
           <DialogTitle className="text-[#001f3f] text-2xl">
-            {mode === 'add' ? 'Add Year-End Adjustment' : 'Edit Year-End Adjustment'}
+            {mode === 'add' ? 'Add Journal Entry' : 'Edit Journal Entry'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
             <div>
-              <Label className="text-[#001f3f] font-semibold">Adjustment Type *</Label>
-              <Select 
-                value={formData.type} 
-                onValueChange={(value) => updateField('type', value)}
-              >
-                <SelectTrigger className="border-[#001f3f]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="prepayment">Prepayment</SelectItem>
-                  <SelectItem value="accrual">Accrual</SelectItem>
-                  <SelectItem value="depreciation">Depreciation</SelectItem>
-                  <SelectItem value="provision">Provision</SelectItem>
-                  <SelectItem value="reclassification">Reclassification</SelectItem>
-                  <SelectItem value="write-off">Write-off</SelectItem>
-                  <SelectItem value="revaluation">Revaluation</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
               <Label className="text-[#001f3f] font-semibold">Reference Number *</Label>
               <Input
                 value={formData.reference || ''}
                 onChange={(e) => updateField('reference', e.target.value)}
                 className="text-[#001f3f] border-[#001f3f]"
-                placeholder="ADJ-001"
+                placeholder="JE-001"
               />
             </div>
 
@@ -225,31 +220,16 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
               />
             </div>
 
+            <div className="col-span-1"></div>
+
             <div className="col-span-3">
               <Label className="text-[#001f3f] font-semibold">Description *</Label>
               <Input
                 value={formData.description || ''}
                 onChange={(e) => updateField('description', e.target.value)}
                 className="text-[#001f3f] border-[#001f3f]"
-                placeholder="Brief description of adjustment"
+                placeholder="Brief description of journal entry"
               />
-            </div>
-
-            <div>
-              <Label className="text-[#001f3f] font-semibold">Status</Label>
-              <Select 
-                value={formData.status} 
-                onValueChange={(value) => updateField('status', value)}
-              >
-                <SelectTrigger className="border-[#001f3f]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="approved">Approved</SelectItem>
-                  <SelectItem value="posted">Posted</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -386,7 +366,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
               value={formData.notes || ''}
               onChange={(e) => updateField('notes', e.target.value)}
               className="text-[#001f3f] border-[#001f3f]"
-              placeholder="Additional notes or explanations for this adjustment..."
+              placeholder="Additional notes or explanations for this journal entry..."
               rows={3}
             />
           </div>
@@ -402,7 +382,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
             disabled={!isBalanced()}
           >
             <Save className="h-4 w-4 mr-2" />
-            {mode === 'add' ? 'Create Adjustment' : 'Save Changes'}
+            {mode === 'add' ? 'Create Entry' : 'Save Changes'}
           </Button>
         </DialogFooter>
       </DialogContent>
