@@ -521,7 +521,7 @@ export default function PersonalTax() {
       case 'completed':
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'review':
-        return <AlertCircle className="h-4 w-4 text-orange-600" />
+        return <AlertCircle className="h-4 w-4 text-[#001f3f]" />
       case 'in_progress':
         return <Clock className="h-4 w-4 text-[#001f3f]" />
       default:
@@ -534,7 +534,7 @@ export default function PersonalTax() {
       case 'completed':
         return 'bg-green-100 text-green-800'
       case 'review':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-blue-100 text-[#001f3f]'
       case 'in_progress':
         return 'bg-blue-100 text-[#001f3f]'
       default:
@@ -789,7 +789,7 @@ export default function PersonalTax() {
                           <p className="font-medium text-sm">Payment on Account</p>
                           <p className="text-xs text-[#001f3f]">8 clients affected</p>
                         </div>
-                        <Badge className="bg-orange-100 text-orange-800">14 days</Badge>
+                        <Badge className="bg-blue-100 text-[#001f3f]">14 days</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
@@ -1271,9 +1271,9 @@ export default function PersonalTax() {
                           <Button className="w-full" variant="outline">
                             Calculate HICBC
                           </Button>
-                          <div className="p-3 bg-orange-50 rounded-[2px]">
-                            <p className="text-sm font-medium text-orange-900">HICBC Charge</p>
-                            <p className="text-lg font-bold text-orange-600">£0</p>
+                          <div className="p-3 bg-blue-50 rounded-[2px]">
+                            <p className="text-sm font-medium text-[#001f3f]">HICBC Charge</p>
+                            <p className="text-lg font-bold text-[#001f3f]">£0</p>
                           </div>
                         </div>
                       </CardContent>
@@ -1343,9 +1343,9 @@ export default function PersonalTax() {
                   View Receipts
                 </Button>
               </div>
-              <div className="p-4 bg-orange-50 rounded-[2px]">
-                <h3 className="font-semibold text-[#001f3f] text-orange-900">Pending Review</h3>
-                <p className="text-sm text-orange-700">2 returns require client approval before filing</p>
+              <div className="p-4 bg-blue-50 rounded-[2px]">
+                <h3 className="font-semibold text-[#001f3f] text-[#001f3f]">Pending Review</h3>
+                <p className="text-sm text-[#001f3f]">2 returns require client approval before filing</p>
                 <Button variant="outline" className="mt-2" size="sm">
                   Send for Approval
                 </Button>
@@ -1371,7 +1371,7 @@ export default function PersonalTax() {
                     onClick={() => handleMainTabClick(key)}
                     className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                       activeMainTab === key 
-                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md transform scale-[0.98] font-semibold' 
+                        ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white shadow-md transform scale-[0.98] font-semibold' 
                         : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transform hover:scale-[0.99] font-medium'
                     }`}
                   >
@@ -1394,7 +1394,7 @@ export default function PersonalTax() {
                           onClick={() => handleSubTabClick(subKey, key)}
                           className={`w-full flex items-center px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all duration-200 shadow-sm ${
                             activeSubTab === subKey 
-                              ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-l-2 border-orange-300 shadow-md font-semibold' 
+                              ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white border-l-2 border-[#001f3f] shadow-md font-semibold' 
                               : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-sm hover:shadow-md font-medium'
                           }`}
                         >
@@ -1498,7 +1498,7 @@ export default function PersonalTax() {
                             saInfo.status === 'not-created' ? 'bg-gray-500 text-white' :
                             saInfo.status === 'draft' ? 'bg-gray-400 text-white' :
                             saInfo.status === 'in_progress' ? 'bg-blue-500 text-white' :
-                            saInfo.status === 'review' ? 'bg-orange-500 text-white' :
+                            saInfo.status === 'review' ? 'bg-blue-500 text-white' :
                             saInfo.status === 'submitted' ? 'bg-green-600 text-white' :
                             saInfo.status === 'approved' ? 'bg-green-700 text-white' :
                             'bg-gray-500 text-white'

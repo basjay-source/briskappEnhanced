@@ -7,6 +7,48 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
+interface EmploymentDetails {
+  employerName: string
+  payeReference: string
+  grossPay: number
+  taxDeducted: number
+  benefits: number
+  expenses: number
+}
+
+interface SelfEmploymentDetails {
+  businessName: string
+  natureOfBusiness: string
+  turnover: number
+  grossProfit: number
+  allowableExpenses: number
+  netProfit: number
+  capitalAllowances: number
+}
+
+interface PensionDetails {
+  providerName: string
+  pensionType: string
+  grossAmount: number
+  taxDeducted: number
+}
+
+interface DividendDetails {
+  companyName: string
+  dividendAmount: number
+  isDomestic: boolean
+}
+
+interface RentalProperty {
+  propertyAddress: string
+  rentalIncome: number
+  mortgageInterest: number
+  repairs: number
+  insurance: number
+  otherExpenses: number
+  netIncome: number
+}
+
 interface SAReturn {
   id: string
   clientId: string
@@ -18,9 +60,15 @@ interface SAReturn {
   utr: string
   niNumber: string
   employmentIncome: number
+  employmentDetails?: EmploymentDetails[]
   selfEmploymentIncome: number
+  selfEmploymentDetails?: SelfEmploymentDetails[]
   propertyIncome: number
+  rentalProperties?: RentalProperty[]
   dividendIncome: number
+  dividendDetails?: DividendDetails[]
+  pensionIncome?: number
+  pensionDetails?: PensionDetails[]
   savingsInterest: number
   capitalGains: number
   otherIncome: number
@@ -28,6 +76,10 @@ interface SAReturn {
   personalAllowance: number
   taxRelief: number
   pensionContributions: number
+  businessExpenses?: number
+  rentalExpenses?: number
+  tradingLosses?: number
+  capitalAllowances?: number
   charitableGiving: number
   taxableIncome: number
   estimatedTax: number
@@ -56,9 +108,15 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
     utr: '',
     niNumber: '',
     employmentIncome: 0,
+    employmentDetails: [],
     selfEmploymentIncome: 0,
+    selfEmploymentDetails: [],
     propertyIncome: 0,
+    rentalProperties: [],
     dividendIncome: 0,
+    dividendDetails: [],
+    pensionIncome: 0,
+    pensionDetails: [],
     savingsInterest: 0,
     capitalGains: 0,
     otherIncome: 0,
@@ -66,6 +124,10 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
     personalAllowance: 12570,
     taxRelief: 0,
     pensionContributions: 0,
+    businessExpenses: 0,
+    rentalExpenses: 0,
+    tradingLosses: 0,
+    capitalAllowances: 0,
     charitableGiving: 0,
     taxableIncome: 0,
     estimatedTax: 0,
@@ -74,6 +136,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
   })
 
   const [currentTab, setCurrentTab] = useState('basic')
+  const [currentIncomeTab, setCurrentIncomeTab] = useState('employment')
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const tabs = ['basic', 'income', 'deductions', 'summary']
 

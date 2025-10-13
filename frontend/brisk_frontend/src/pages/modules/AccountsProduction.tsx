@@ -1118,7 +1118,7 @@ const AccountsProduction: React.FC = () => {
         }} className="cursor-pointer">
           <KPICard title="In Progress" 
             value={clients.filter(c => c.accountsStatus === 'in-progress').length.toString()} 
-            change="Active" icon={FileText} color="text-orange-600" />
+            change="Active" icon={FileText} color="text-[#001f3f]" />
         </div>
         <div onClick={() => {
           const reviewClients = clients.filter(c => c.accountsStatus === 'review')
@@ -3534,7 +3534,7 @@ const AccountsProduction: React.FC = () => {
                     <button onClick={() => handleMainTabClick(config.id)}
                       className={`w-full flex items-center justify-between px-3 py-2 m-0.5 text-sm rounded-[2px] transition-all shadow-sm ${
                         isActive && !config.hasSubTabs
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold'
+                          ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white font-semibold'
                           : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 font-medium'
                       }`}>
                       <div className="flex items-center"><Icon className="h-4 w-4 mr-2" />{config.label}</div>
@@ -3548,7 +3548,7 @@ const AccountsProduction: React.FC = () => {
                             <button key={subKey} onClick={() => handleSubTabClick(subKey)}
                               className={`w-full px-3 py-2 m-0.5 text-sm rounded-[2px] ${
                                 isSubActive
-                                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold'
+                                  ? 'bg-gradient-to-r from-[#001f3f] to-[#003366] text-white font-semibold'
                                   : 'bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 font-medium'
                               }`}>
                               {subConfig.label}
