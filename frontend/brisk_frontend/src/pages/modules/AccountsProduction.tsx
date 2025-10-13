@@ -29,7 +29,13 @@ interface Client {
   type: 'sole-trader' | 'partnership' | 'limited-company' | 'llp' | 'charity' | 'academy' | 'cic'
   registrationNumber?: string
   incorporationDate?: string
+  businessStartDate?: string
   vatNumber?: string
+  vatScheme?: 'non-vat' | 'standard-accrual' | 'standard-cash' | 'flat-rate-accrual' | 'flat-rate-cash'
+  vatRegDate?: string
+  vatSubmitType?: 'monthly' | 'quarterly' | 'yearly'
+  accountOfficeRef?: string
+  payeRef?: string
   utr?: string
   
   yearEnd: string
