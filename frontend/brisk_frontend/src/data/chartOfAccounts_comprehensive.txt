@@ -1,0 +1,22 @@
+This will be the comprehensive chart of accounts with 900+ accounts organized as:
+
+INCOME STATEMENT:
+- Revenue: 1-16 (16 accounts)
+- Cost of Sales: 17-166 (150 accounts) 
+- Distribution Costs: 167-302 (136 accounts)
+- Administrative Expenses: 303-488 (186 accounts)
+- Other Operating Income: 489-500 (12 accounts)
+
+BALANCE SHEET:
+- Intangible Assets: 501-530 (30 accounts)
+- Tangible Fixed Assets: 531-600 (70 accounts)
+- Investments: 601-630 (30 accounts)
+- Stock/Inventory: 631-660 (30 accounts)
+- Debtors: 661-720 (60 accounts)
+- Cash and Bank: 721-750 (30 accounts)
+- Creditors (Current): 751-820 (70 accounts)
+- Creditors (Non-current): 821-870 (50 accounts)
+- Provisions: 871-900 (30 accounts)
+- Capital and Reserves: 901-970 (70 accounts)
+
+Total: 970 accounts

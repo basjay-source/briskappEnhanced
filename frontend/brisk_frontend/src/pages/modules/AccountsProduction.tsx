@@ -3,7 +3,7 @@ import {
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
   Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
-  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown
+  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown, Database
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
@@ -17,7 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../../components/ui/textarea'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
-import { chartOfAccounts, getAllAccounts, searchAccounts } from '../../data/chartOfAccounts'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../components/ui/alert-dialog'
+import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
 
 interface Client {
   id: string
@@ -165,7 +166,7 @@ const AccountsProduction: React.FC = () => {
   const [adjSortField, setAdjSortField] = useState<keyof Adjustment | ''>('')
   const [adjSortDirection, setAdjSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const [statements, setStatements] = useState<FinancialStatement[]>([
+  const [statements, _setStatements] = useState<FinancialStatement[]>([
     { id: '1', clientId: '1', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '2', clientId: '1', type: 'profit-loss', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '3', clientId: '2', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-10', status: 'review', frsStandard: 'FRS 102' }
@@ -181,26 +182,25 @@ const AccountsProduction: React.FC = () => {
   const [isClientViewOpen, setIsClientViewOpen] = useState(false)
   const [isClientEditOpen, setIsClientEditOpen] = useState(false)
   const [isClientAddOpen, setIsClientAddOpen] = useState(false)
-  const [isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
+  const [_isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
 
-  const [isTBViewOpen, setIsTBViewOpen] = useState(false)
+  const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
-  const [isTBAddOpen, setIsTBAddOpen] = useState(false)
   const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
   const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
-  const [isAdjViewOpen, setIsAdjViewOpen] = useState(false)
+  const [_isAdjViewOpen, setIsAdjViewOpen] = useState(false)
   const [isAdjEditOpen, setIsAdjEditOpen] = useState(false)
-  const [isAdjAddOpen, setIsAdjAddOpen] = useState(false)
+  const [_isAdjAddOpen, setIsAdjAddOpen] = useState(false)
   const [selectedAdjustment, setSelectedAdjustment] = useState<Adjustment | null>(null)
   const [adjFormData, setAdjFormData] = useState<Partial<Adjustment>>({})
 
-  const [isStatementViewOpen, setIsStatementViewOpen] = useState(false)
-  const [isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
-  const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
-  const [statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
+  const [_isStatementViewOpen, setIsStatementViewOpen] = useState(false)
+  const [_isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
+  const [_selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
+  const [_statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
 
   const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
   const [drilldownTitle, setDrilldownTitle] = useState('')
@@ -210,6 +210,22 @@ const AccountsProduction: React.FC = () => {
   const [coaSearchName, setCoaSearchName] = useState('')
   const [coaSearchGroup, setCoaSearchGroup] = useState('')
   const [coaSearchCategory, setCoaSearchCategory] = useState('')
+  const [coaCurrentPage, setCoaCurrentPage] = useState(1)
+  const [coaItemsPerPage, setCoaItemsPerPage] = useState(50)
+
+  const [isAccountAddOpen, setIsAccountAddOpen] = useState(false)
+  const [isAccountEditOpen, setIsAccountEditOpen] = useState(false)
+  const [isAccountDeleteOpen, setIsAccountDeleteOpen] = useState(false)
+  const [selectedAccount, setSelectedAccount] = useState<AccountCode | null>(null)
+  const [accountFormData, setAccountFormData] = useState<Partial<AccountCode>>({})
+  const [deleteError, setDeleteError] = useState('')
+
+  const [isTBImportOpen, setIsTBImportOpen] = useState(false)
+  const [csvData, setCsvData] = useState<any[]>([])
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([])
+  const [accountMapping, setAccountMapping] = useState<Record<string, string>>({})
+  const [importStep, setImportStep] = useState<'method' | 'upload' | 'mapping' | 'review'>('method')
+  const [importMethod, setImportMethod] = useState<'bookkeeping' | 'csv' | 'integration'>('bookkeeping')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -263,12 +279,6 @@ const AccountsProduction: React.FC = () => {
     setIsClientAddOpen(false)
   }
 
-  const confirmDeleteClient = () => {
-    if (selectedClient) {
-      setClients(clients.filter(c => c.id !== selectedClient.id))
-    }
-    setIsClientDeleteOpen(false)
-  }
 
   const handleViewTBEntry = (entry: TrialBalanceEntry) => {
     setSelectedTBEntry(entry)
@@ -281,12 +291,6 @@ const AccountsProduction: React.FC = () => {
     setIsTBEditOpen(true)
   }
 
-  const handleAddTBEntry = () => {
-    setTBFormData({
-      accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset'
-    })
-    setIsTBAddOpen(true)
-  }
 
   const handleSaveTBEntry = () => {
     if (selectedTBEntry) {
@@ -297,14 +301,6 @@ const AccountsProduction: React.FC = () => {
     setIsTBEditOpen(false)
   }
 
-  const handleSaveNewTBEntry = () => {
-    const newEntry: TrialBalanceEntry = {
-      ...tbFormData as TrialBalanceEntry,
-      id: Date.now().toString()
-    }
-    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
-    setIsTBAddOpen(false)
-  }
 
   const handleViewAdjustment = (adj: Adjustment) => {
     setSelectedAdjustment(adj)
@@ -333,14 +329,6 @@ const AccountsProduction: React.FC = () => {
     setIsAdjEditOpen(false)
   }
 
-  const handleSaveNewAdjustment = () => {
-    const newAdj: Adjustment = {
-      ...adjFormData as Adjustment,
-      id: Date.now().toString()
-    }
-    setAdjustments([...adjustments, newAdj])
-    setIsAdjAddOpen(false)
-  }
 
   const handleViewStatement = (stmt: FinancialStatement) => {
     setSelectedStatement(stmt)
@@ -355,21 +343,105 @@ const AccountsProduction: React.FC = () => {
     setIsGenerateStatementOpen(true)
   }
 
-  const handleSaveNewStatement = () => {
-    const newStatement: FinancialStatement = {
-      ...statementFormData as FinancialStatement,
-      id: Date.now().toString(),
-      generatedDate: new Date().toISOString().split('T')[0]
+  const handleAddAccountOpen = () => {
+    setAccountFormData({ code: '', name: '', category: '', groupNumber: '' })
+    setIsAccountAddOpen(true)
+  }
+
+  const handleEditAccountOpen = (account: AccountCode) => {
+    setSelectedAccount(account)
+    setAccountFormData(account)
+    setIsAccountEditOpen(true)
+  }
+
+  const handleDeleteAccountOpen = (account: AccountCode) => {
+    setSelectedAccount(account)
+    setDeleteError('')
+    setIsAccountDeleteOpen(true)
+  }
+
+  const handleSaveNewAccount = () => {
+    if (!accountFormData.code || !accountFormData.name || !accountFormData.groupNumber || !accountFormData.category) {
+      alert('Please fill in all fields')
+      return
     }
-    setStatements([...statements, newStatement])
-    setIsGenerateStatementOpen(false)
+    const success = addAccount(accountFormData as AccountCode)
+    if (success) {
+      setIsAccountAddOpen(false)
+      setAccountFormData({})
+    } else {
+      alert('Account code already exists')
+    }
+  }
+
+  const handleUpdateAccount = () => {
+    if (!selectedAccount) return
+    const success = updateAccount(selectedAccount.code, accountFormData)
+    if (success) {
+      setIsAccountEditOpen(false)
+      setSelectedAccount(null)
+      setAccountFormData({})
+    }
+  }
+
+  const handleConfirmDeleteAccount = () => {
+    if (!selectedAccount) return
+    const result = deleteAccount(selectedAccount.code)
+    if (result.success) {
+      setIsAccountDeleteOpen(false)
+      setSelectedAccount(null)
+    } else {
+      setDeleteError(result.message)
+    }
+  }
+
+  const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result as string
+      const lines = text.split('\n').filter(line => line.trim())
+      const headers = lines[0].split(',').map(h => h.trim())
+      const data = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim())
+        return headers.reduce((obj, header, index) => {
+          obj[header] = values[index] || ''
+          return obj
+        }, {} as any)
+      })
+      
+      setCsvHeaders(headers)
+      setCsvData(data)
+      setImportStep('mapping')
+    }
+    reader.readAsText(file)
+  }
+
+  const handleImportConfirm = () => {
+    const newEntries: TrialBalanceEntry[] = csvData.map((row, index) => ({
+      id: `imported-${Date.now()}-${index}`,
+      accountCode: row[accountMapping.code] || '',
+      accountName: row[accountMapping.name] || '',
+      debit: parseFloat(row[accountMapping.debit] || '0'),
+      credit: parseFloat(row[accountMapping.credit] || '0'),
+      category: row[accountMapping.category] || 'Asset'
+    }))
+
+    setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+    setIsTBImportOpen(false)
+    setImportStep('upload')
+    setCsvData([])
+    setCsvHeaders([])
+    setAccountMapping({})
   }
 
   const getFilteredClients = () => {
     let filtered = clients.filter(client => {
       const matchesName = !clientSearchName || client.name.toLowerCase().includes(clientSearchName.toLowerCase())
-      const matchesType = !clientSearchType || client.type === clientSearchType
-      const matchesStatus = !clientSearchStatus || client.accountsStatus === clientSearchStatus
+      const matchesType = !clientSearchType || clientSearchType === 'all' || client.type === clientSearchType
+      const matchesStatus = !clientSearchStatus || clientSearchStatus === 'all' || client.accountsStatus === clientSearchStatus
       const matchesYearEnd = !clientSearchYearEnd || client.yearEnd.includes(clientSearchYearEnd)
       const matchesDueDate = !clientSearchDueDate || client.nextDue.includes(clientSearchDueDate)
       return matchesName && matchesType && matchesStatus && matchesYearEnd && matchesDueDate
@@ -396,7 +468,7 @@ const AccountsProduction: React.FC = () => {
     let filtered = trialBalanceEntries.filter(entry => {
       const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
       const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
-      const matchesCategory = !tbSearchCategory || entry.category === tbSearchCategory
+      const matchesCategory = !tbSearchCategory || tbSearchCategory === 'all' || entry.category === tbSearchCategory
       const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
       const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
       return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
@@ -421,8 +493,8 @@ const AccountsProduction: React.FC = () => {
 
   const getFilteredAdjustments = () => {
     let filtered = adjustments.filter(adj => {
-      const matchesType = !adjSearchType || adj.type === adjSearchType
-      const matchesStatus = !adjSearchStatus || adj.status === adjSearchStatus
+      const matchesType = !adjSearchType || adjSearchType === 'all' || adj.type === adjSearchType
+      const matchesStatus = !adjSearchStatus || adjSearchStatus === 'all' || adj.status === adjSearchStatus
       const matchesDescription = !adjSearchDescription || adj.description.toLowerCase().includes(adjSearchDescription.toLowerCase())
       const matchesAmount = !adjSearchAmount || adj.amount.toString().includes(adjSearchAmount)
       const matchesDate = !adjSearchDate || adj.date.includes(adjSearchDate)
@@ -450,10 +522,10 @@ const AccountsProduction: React.FC = () => {
     let filtered = statements.filter(stmt => {
       const client = clients.find(c => c.id === stmt.clientId)
       const matchesClient = !stmtSearchClient || (client?.name.toLowerCase().includes(stmtSearchClient.toLowerCase()) ?? false)
-      const matchesType = !stmtSearchType || stmt.type === stmtSearchType
+      const matchesType = !stmtSearchType || stmtSearchType === 'all' || stmt.type === stmtSearchType
       const matchesPeriod = !stmtSearchPeriod || stmt.period.includes(stmtSearchPeriod)
       const matchesDate = !stmtSearchDate || stmt.generatedDate.includes(stmtSearchDate)
-      const matchesStatus = !stmtSearchStatus || stmt.status === stmtSearchStatus
+      const matchesStatus = !stmtSearchStatus || stmtSearchStatus === 'all' || stmt.status === stmtSearchStatus
       return matchesClient && matchesType && matchesPeriod && matchesDate && matchesStatus
     })
 
@@ -486,10 +558,9 @@ const AccountsProduction: React.FC = () => {
     {
       id: 'trial-balance', label: 'Trial Balance', icon: Calculator, hasSubTabs: true,
       subTabs: {
-        'import': { label: 'Import TB', icon: Upload },
+        'overview': { label: 'Trial Balance', icon: Calculator },
         'chart-accounts': { label: 'Chart of Accounts', icon: FileText },
-        'posting': { label: 'Posting Batches', icon: Calculator },
-        'review': { label: 'Review & Adjust', icon: Eye }
+        'posting': { label: 'Posting Batches', icon: Calculator }
       }
     },
     {
@@ -868,7 +939,7 @@ const AccountsProduction: React.FC = () => {
                             <SelectValue placeholder="All" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value="limited-company">Limited Company</SelectItem>
                             <SelectItem value="llp">LLP</SelectItem>
                             <SelectItem value="partnership">Partnership</SelectItem>
@@ -900,7 +971,7 @@ const AccountsProduction: React.FC = () => {
                             <SelectValue placeholder="All" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">All</SelectItem>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value="not-started">Not Started</SelectItem>
                             <SelectItem value="in-progress">In Progress</SelectItem>
                             <SelectItem value="review">Review</SelectItem>
@@ -986,49 +1057,65 @@ const AccountsProduction: React.FC = () => {
 
   const renderTrialBalance = () => {
     const filteredEntries = getFilteredTBEntries()
-    const totalDebit = filteredEntries.reduce((sum, entry) => sum + entry.debit, 0)
-    const totalCredit = filteredEntries.reduce((sum, entry) => sum + entry.credit, 0)
     
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Trial Balance</h2>
-            <p className="text-[#001f3f]">Import and review trial balance entries</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <Upload className="h-4 w-4 mr-2" />Import TB
-            </Button>
-            <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Plus className="h-4 w-4 mr-2" />Add Entry
-            </Button>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Trial Balance</h2>
+          <p className="text-[#001f3f]">Import and review trial balance entries</p>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Total Debits</div>
-              <div className="text-2xl font-bold text-[#001f3f]">
-                £{totalDebit.toLocaleString()}
-              </div>
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
+            const bookkeepingData = [
+              { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
+              { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
+              { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
+              { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
+            ]
+            const newEntries = bookkeepingData.map(d => ({
+              id: Date.now().toString() + Math.random(),
+              accountCode: d.accountCode,
+              accountName: d.accountName,
+              debit: d.debit,
+              credit: d.credit,
+              category: d.category as any
+            }))
+            setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+          }}>
+            <CardContent className="pt-6 text-center">
+              <Database className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Sync from Bookkeeping</h3>
+              <p className="text-sm text-gray-600 mb-3">Auto-pull trial balance from Bookkeeping module</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Database className="h-4 w-4 mr-2" />Sync Now
+              </Button>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Total Credits</div>
-              <div className="text-2xl font-bold text-[#001f3f]">
-                £{totalCredit.toLocaleString()}
-              </div>
+
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
+            setImportMethod('csv')
+            setIsTBImportOpen(true)
+            setImportStep('upload')
+          }}>
+            <CardContent className="pt-6 text-center">
+              <Upload className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Upload CSV File</h3>
+              <p className="text-sm text-gray-600 mb-3">Import from CSV with code mapping</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Upload className="h-4 w-4 mr-2" />Choose File
+              </Button>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-sm text-[#001f3f]">Difference</div>
-              <div className={`text-2xl font-bold ${Math.abs(totalDebit - totalCredit) < 0.01 ? 'text-green-600' : 'text-red-600'}`}>
-                £{Math.abs(totalDebit - totalCredit).toLocaleString()}
-              </div>
+
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => alert('Integration with Xero, Sage, and QuickBooks coming soon')}>
+            <CardContent className="pt-6 text-center">
+              <Globe className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Software Integration</h3>
+              <p className="text-sm text-gray-600 mb-3">Connect Xero, Sage, QuickBooks</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Globe className="h-4 w-4 mr-2" />Connect
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -1077,7 +1164,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="Asset">Asset</SelectItem>
                           <SelectItem value="Liability">Liability</SelectItem>
                           <SelectItem value="Equity">Equity</SelectItem>
@@ -1189,7 +1276,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="prepayment">Prepayment</SelectItem>
                           <SelectItem value="accrual">Accrual</SelectItem>
                           <SelectItem value="depreciation">Depreciation</SelectItem>
@@ -1247,7 +1334,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="approved">Approved</SelectItem>
                           <SelectItem value="posted">Posted</SelectItem>
@@ -1370,7 +1457,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="balance-sheet">Balance Sheet</SelectItem>
                           <SelectItem value="profit-loss">Profit & Loss</SelectItem>
                           <SelectItem value="cash-flow">Cash Flow</SelectItem>
@@ -1414,7 +1501,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="review">Review</SelectItem>
                           <SelectItem value="finalized">Finalized</SelectItem>
@@ -1550,14 +1637,10 @@ const AccountsProduction: React.FC = () => {
       return codeMatch && nameMatch && groupMatch && categoryMatch
     })
 
-    const categoryCounts = {
-      Income: allAccounts.filter(a => a.category === 'Income').length,
-      'Cost of Sales': allAccounts.filter(a => a.category === 'Cost of Sales').length,
-      Expenses: allAccounts.filter(a => a.category === 'Expenses').length,
-      Assets: allAccounts.filter(a => a.category === 'Assets').length,
-      Liabilities: allAccounts.filter(a => a.category === 'Liabilities').length,
-      Equity: allAccounts.filter(a => a.category === 'Equity').length
-    }
+    const totalPages = Math.ceil(filteredAccounts.length / coaItemsPerPage)
+    const startIndex = (coaCurrentPage - 1) * coaItemsPerPage
+    const endIndex = startIndex + coaItemsPerPage
+    const paginatedAccounts = filteredAccounts.slice(startIndex, endIndex)
 
     const handleAccountClick = (account: any) => {
       setDrilldownTitle(`Account: ${account.name}`)
@@ -1578,35 +1661,6 @@ const AccountsProduction: React.FC = () => {
       setIsDrilldownOpen(true)
     }
 
-    const handleCategoryClick = (category: string) => {
-      const categoryAccounts = allAccounts.filter(a => a.category === category)
-      setDrilldownTitle(`${category} Accounts`)
-      setDrilldownContent(
-        <div className="space-y-4">
-          <p className="text-[#001f3f]">Total: {categoryAccounts.length} accounts</p>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-[#001f3f]">Code</TableHead>
-                <TableHead className="text-[#001f3f]">Name</TableHead>
-                <TableHead className="text-[#001f3f]">Group</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categoryAccounts.slice(0, 10).map(acc => (
-                <TableRow key={acc.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(acc)}>
-                  <TableCell className="text-[#001f3f]">{acc.code}</TableCell>
-                  <TableCell className="text-[#001f3f]">{acc.name}</TableCell>
-                  <TableCell className="text-[#001f3f]">{acc.groupNumber || '-'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {categoryAccounts.length > 10 && <p className="text-sm text-gray-500">Showing first 10 of {categoryAccounts.length} accounts</p>}
-        </div>
-      )
-      setIsDrilldownOpen(true)
-    }
 
     return (
       <div className="space-y-6">
@@ -1619,37 +1673,14 @@ const AccountsProduction: React.FC = () => {
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
               <Download className="h-4 w-4 mr-2" />Export
             </Button>
-            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Adding new account...')}>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddAccountOpen}>
               <Plus className="h-4 w-4 mr-2" />New Account
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Income')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Income</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Income}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Expenses')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Expenses</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Expenses + categoryCounts['Cost of Sales']}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Assets')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Assets</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Assets}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Liabilities')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Liabilities</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Liabilities}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleCategoryClick('Equity')}>
-            <CardHeader><CardTitle className="text-lg text-[#001f3f]">Equity</CardTitle></CardHeader>
-            <CardContent><p className="text-xl font-bold text-[#001f3f]">{categoryCounts.Equity}</p><p className="text-sm text-[#001f3f]">accounts</p></CardContent>
-          </Card>
-        </div>
-
         <Card className="border-2 border-[#001f3f]">
-          <CardHeader><CardTitle className="text-[#001f3f]">Account List</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-[#001f3f]">Complete Chart of Accounts ({filteredAccounts.length} accounts)</CardTitle></CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
@@ -1661,7 +1692,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search code..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchCode}
-                        onChange={(e) => setCoaSearchCode(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchCode(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1672,7 +1706,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search name..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchName}
-                        onChange={(e) => setCoaSearchName(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchName(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1683,7 +1720,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search group..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchGroup}
-                        onChange={(e) => setCoaSearchGroup(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchGroup(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1694,7 +1734,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search category..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchCategory}
-                        onChange={(e) => setCoaSearchCategory(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchCategory(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1702,20 +1745,81 @@ const AccountsProduction: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAccounts.slice(0, 50).map(account => (
+                {paginatedAccounts.map(account => (
                   <TableRow key={account.code} className="cursor-pointer hover:bg-gray-50" onClick={() => handleAccountClick(account)}>
                     <TableCell className="text-[#001f3f]">{account.code}</TableCell>
                     <TableCell className="text-[#001f3f]">{account.name}</TableCell>
                     <TableCell className="text-[#001f3f]">{account.groupNumber || '-'}</TableCell>
                     <TableCell><Badge className="bg-[#001f3f]">{account.category || 'N/A'}</Badge></TableCell>
-                    <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button></TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleEditAccountOpen(account); }}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" className="text-red-600" onClick={(e) => { e.stopPropagation(); handleDeleteAccountOpen(account); }}><Trash2 className="h-4 w-4" /></Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-            {filteredAccounts.length > 50 && (
-              <p className="text-sm text-gray-500 mt-2">Showing first 50 of {filteredAccounts.length} accounts. Use search to narrow results.</p>
-            )}
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-[#001f3f]">Items per page:</p>
+                <Select value={coaItemsPerPage.toString()} onValueChange={(value) => { setCoaItemsPerPage(Number(value)); setCoaCurrentPage(1); }}>
+                  <SelectTrigger className="w-20 border-[#001f3f]"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                    <SelectItem value="200">200</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-[#001f3f]">
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredAccounts.length)} of {filteredAccounts.length} accounts
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === 1}
+                  onClick={() => setCoaCurrentPage(1)}
+                >
+                  First
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === 1}
+                  onClick={() => setCoaCurrentPage(p => p - 1)}
+                >
+                  Previous
+                </Button>
+                <span className="flex items-center px-3 text-sm text-[#001f3f]">
+                  Page {coaCurrentPage} of {totalPages}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === totalPages}
+                  onClick={() => setCoaCurrentPage(p => p + 1)}
+                >
+                  Next
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-[#001f3f] text-[#001f3f]" 
+                  disabled={coaCurrentPage === totalPages}
+                  onClick={() => setCoaCurrentPage(totalPages)}
+                >
+                  Last
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -2023,21 +2127,7 @@ const AccountsProduction: React.FC = () => {
     if (activeMainTab === 'dashboard') return renderDashboard()
     if (activeMainTab === 'clients') return renderClientManagement()
     if (activeMainTab === 'trial-balance') {
-      if (activeSubTab === 'import') {
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#001f3f]">Import Trial Balance</h2>
-            <p className="text-[#001f3f]">Upload trial balance from accounting software</p>
-            <Card>
-              <CardContent className="pt-6">
-                <Button className="bg-[#001f3f] hover:bg-[#003366]">
-                  <Upload className="h-4 w-4 mr-2" />Upload File
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )
-      }
+      if (activeSubTab === 'overview') return renderTrialBalance()
       if (activeSubTab === 'chart-accounts') return renderChartOfAccounts()
       if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
@@ -2411,6 +2501,135 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={isAccountAddOpen} onOpenChange={setIsAccountAddOpen}>
+        <DialogContent className="max-w-lg border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Add New Account</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.code || ''} onChange={(e) => setAccountFormData({...accountFormData, code: e.target.value})} placeholder="Enter account code" />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.name || ''} onChange={(e) => setAccountFormData({...accountFormData, name: e.target.value})} placeholder="Enter account name" />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Group Number *</Label>
+              <Select value={accountFormData.groupNumber || ''} onValueChange={(value) => setAccountFormData({...accountFormData, groupNumber: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select group" /></SelectTrigger>
+                <SelectContent>
+                  {chartOfAccounts.flatMap(cat => cat.groups).map(group => (
+                    <SelectItem key={group.groupNumber} value={group.groupNumber}>{group.groupNumber} - {group.groupName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category *</Label>
+              <Select value={accountFormData.category || ''} onValueChange={(value) => setAccountFormData({...accountFormData, category: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expenses">Expenses</SelectItem>
+                  <SelectItem value="Cost of Sales">Cost of Sales</SelectItem>
+                  <SelectItem value="Assets">Assets</SelectItem>
+                  <SelectItem value="Liabilities">Liabilities</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsAccountAddOpen(false)}>Cancel</Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleSaveNewAccount}>Add Account</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAccountEditOpen} onOpenChange={setIsAccountEditOpen}>
+        <DialogContent className="max-w-lg border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Edit Account</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.code || ''} disabled />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.name || ''} onChange={(e) => setAccountFormData({...accountFormData, name: e.target.value})} />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Group Number *</Label>
+              <Select value={accountFormData.groupNumber || ''} onValueChange={(value) => setAccountFormData({...accountFormData, groupNumber: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {chartOfAccounts.flatMap(cat => cat.groups).map(group => (
+                    <SelectItem key={group.groupNumber} value={group.groupNumber}>{group.groupNumber} - {group.groupName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category *</Label>
+              <Select value={accountFormData.category || ''} onValueChange={(value) => setAccountFormData({...accountFormData, category: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expenses">Expenses</SelectItem>
+                  <SelectItem value="Cost of Sales">Cost of Sales</SelectItem>
+                  <SelectItem value="Assets">Assets</SelectItem>
+                  <SelectItem value="Liabilities">Liabilities</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsAccountEditOpen(false)}>Cancel</Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleUpdateAccount}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isAccountDeleteOpen} onOpenChange={setIsAccountDeleteOpen}>
+        <AlertDialogContent className="border-2 border-[#001f3f]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[#001f3f]">Delete Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedAccount && (
+                <div className="space-y-2">
+                  <p>Are you sure you want to delete this account?</p>
+                  <div className="bg-gray-100 p-3 rounded">
+                    <p className="font-semibold text-[#001f3f]">{selectedAccount.code} - {selectedAccount.name}</p>
+                  </div>
+                  {hasTransactions(selectedAccount.code) && (
+                    <div className="bg-red-50 border border-red-200 p-3 rounded">
+                      <p className="text-red-600 font-semibold">⚠️ Warning</p>
+                      <p className="text-red-600">This account has {getTransactionCount(selectedAccount.code)} transaction(s). It cannot be deleted.</p>
+                    </div>
+                  )}
+                  {deleteError && (
+                    <div className="bg-red-50 border border-red-200 p-3 rounded">
+                      <p className="text-red-600">{deleteError}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-[#001f3f] text-[#001f3f]">Cancel</AlertDialogCancel>
+            {selectedAccount && !hasTransactions(selectedAccount.code) && (
+              <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleConfirmDeleteAccount}>Delete</AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Dialog open={isDrilldownOpen} onOpenChange={setIsDrilldownOpen}>
         <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
           <DialogHeader>
@@ -2421,6 +2640,176 @@ const AccountsProduction: React.FC = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsDrilldownOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBImportOpen} onOpenChange={(open) => { setIsTBImportOpen(open); if (!open) { setImportStep('method'); setCsvData([]); setCsvHeaders([]); setAccountMapping({}); } }}>
+        <DialogContent className="max-w-4xl border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Import Trial Balance</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            {importStep === 'method' && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-[#001f3f]">Select Import Method</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'bookkeeping' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('bookkeeping')}>
+                    <CardContent className="pt-6 text-center">
+                      <Database className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">Bookkeeping Sync</h4>
+                      <p className="text-xs text-gray-600">Auto-sync from Bookkeeping module</p>
+                    </CardContent>
+                  </Card>
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'csv' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('csv')}>
+                    <CardContent className="pt-6 text-center">
+                      <Upload className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">CSV Import</h4>
+                      <p className="text-xs text-gray-600">Upload CSV file manually</p>
+                    </CardContent>
+                  </Card>
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'integration' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('integration')}>
+                    <CardContent className="pt-6 text-center">
+                      <Globe className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">Software Integration</h4>
+                      <p className="text-xs text-gray-600">Xero, Sage, QuickBooks</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                {importMethod === 'bookkeeping' && (
+                  <div className="bg-blue-50 border border-blue-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Automatic Synchronization</h4>
+                    <p className="text-sm text-gray-700 mb-3">This will automatically pull the latest trial balance data from the Bookkeeping module and synchronize it with Accounts Production.</p>
+                    <p className="text-sm text-gray-700">All account codes will be mapped to your Chart of Accounts automatically.</p>
+                  </div>
+                )}
+                {importMethod === 'csv' && (
+                  <div className="bg-green-50 border border-green-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Manual CSV Upload</h4>
+                    <p className="text-sm text-gray-700">Upload a CSV file containing account codes, names, and balances. You'll be able to map these to your standard Chart of Accounts.</p>
+                  </div>
+                )}
+                {importMethod === 'integration' && (
+                  <div className="bg-purple-50 border border-purple-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Third-Party Integration</h4>
+                    <p className="text-sm text-gray-700">Connect to Xero, Sage, or QuickBooks to import trial balance data directly from your bookkeeping software.</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {importStep === 'upload' && (
+              <div className="space-y-4">
+                <div className="border-2 border-dashed border-[#001f3f] rounded-lg p-8 text-center">
+                  <Upload className="h-12 w-12 mx-auto mb-4 text-[#001f3f]" />
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Upload CSV File</h3>
+                  <p className="text-sm text-gray-600 mb-4">Select a CSV file containing your trial balance data</p>
+                  <input type="file" accept=".csv" onChange={handleCSVUpload} className="hidden" id="csv-upload" />
+                  <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => document.getElementById('csv-upload')?.click()}>Choose File</Button>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded">
+                  <h4 className="font-semibold text-[#001f3f] mb-2">Expected CSV Format:</h4>
+                  <p className="text-sm text-gray-700">Your CSV should include columns for: Account Code, Account Name, Debit, Credit, and Category</p>
+                </div>
+              </div>
+            )}
+            {importStep === 'mapping' && (
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-200 p-4 rounded">
+                  <p className="text-sm text-green-800">✓ File uploaded successfully: {csvData.length} rows detected</p>
+                </div>
+                <h3 className="font-semibold text-[#001f3f]">Map CSV Columns to Trial Balance Fields</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Account Code</label>
+                    <Select value={accountMapping.code} onValueChange={(val) => setAccountMapping({...accountMapping, code: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Account Name</label>
+                    <Select value={accountMapping.name} onValueChange={(val) => setAccountMapping({...accountMapping, name: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Debit Amount</label>
+                    <Select value={accountMapping.debit} onValueChange={(val) => setAccountMapping({...accountMapping, debit: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Credit Amount</label>
+                    <Select value={accountMapping.credit} onValueChange={(val) => setAccountMapping({...accountMapping, credit: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#001f3f] mb-1">Category (Optional)</label>
+                    <Select value={accountMapping.category} onValueChange={(val) => setAccountMapping({...accountMapping, category: val})}>
+                      <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
+                      <SelectContent><SelectItem value="none">None</SelectItem>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="max-h-60 overflow-auto border border-[#001f3f] rounded">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>{csvHeaders.map(h => <TableHead key={h} className="text-[#001f3f]">{h}</TableHead>)}</TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {csvData.slice(0, 5).map((row, i) => (
+                        <TableRow key={i}>
+                          {csvHeaders.map(h => <TableCell key={h} className="text-[#001f3f]">{row[h]}</TableCell>)}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  {csvData.length > 5 && <p className="text-sm text-gray-500 p-2">Showing first 5 of {csvData.length} rows</p>}
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => {setIsTBImportOpen(false); setImportStep('method'); setCsvData([]); setCsvHeaders([]); setAccountMapping({})}}>Cancel</Button>
+            {importStep === 'method' && importMethod === 'bookkeeping' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => {
+                const bookkeepingData = [
+                  { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
+                  { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
+                  { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
+                  { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
+                ]
+                const newEntries = bookkeepingData.map(d => ({
+                  id: Date.now().toString() + Math.random(),
+                  accountCode: d.accountCode,
+                  accountName: d.accountName,
+                  debit: d.debit,
+                  credit: d.credit,
+                  category: d.category as any
+                }))
+                setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+                setIsTBImportOpen(false)
+              }}>
+                <Database className="h-4 w-4 mr-2" />Sync from Bookkeeping
+              </Button>
+            )}
+            {importStep === 'method' && importMethod === 'csv' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => setImportStep('upload')}>
+                Continue to Upload
+              </Button>
+            )}
+            {importStep === 'method' && importMethod === 'integration' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => alert('Integration setup will be available soon')}>
+                Connect Integration
+              </Button>
+            )}
+            {importStep === 'mapping' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" disabled={!accountMapping.code || !accountMapping.name || !accountMapping.debit || !accountMapping.credit} onClick={handleImportConfirm}>Import {csvData.length} Entries</Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
