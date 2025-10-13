@@ -1537,73 +1537,36 @@ const AccountsProduction: React.FC = () => {
   }
 
   const renderFiling = () => {
-    if (activeSubTab === 'companies-house') {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Companies House Filing</h2>
-            <p className="text-[#001f3f]">Submit annual accounts and confirmations to Companies House</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <FileCheck className="h-8 w-8 text-blue-600 mb-2" />
-                <h3 className="font-semibold text-[#001f3f]">Annual Accounts (AA01)</h3>
-                <p className="text-sm text-[#001f3f]">File statutory accounts</p>
-              </CardContent>
-            </Card>
-            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
-                <h3 className="font-semibold text-[#001f3f]">Confirmation Statement (CS01)</h3>
-                <p className="text-sm text-[#001f3f]">Annual confirmation of company details</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-[#001f3f]">Filing History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[#001f3f]">Recent Companies House submissions will appear here</p>
-            </CardContent>
-          </Card>
-        </div>
-      )
-    }
-
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#00703c]">HMRC Filing</h2>
-          <p className="text-[#00703c]">Submit tax computations and iXBRL accounts to HMRC</p>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Companies House Filing</h2>
+          <p className="text-[#001f3f]">Submit annual accounts and confirmations to Companies House</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <FileText className="h-8 w-8 text-[#00703c] mb-2" />
-              <h3 className="font-semibold text-[#00703c]">Corporation Tax (CT600)</h3>
-              <p className="text-sm text-[#00703c]">File CT600 return with computations</p>
+              <FileCheck className="h-8 w-8 text-blue-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Annual Accounts (AA01)</h3>
+              <p className="text-sm text-[#001f3f]">File statutory accounts</p>
             </CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-[#00703c]">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]">
             <CardContent className="pt-6">
-              <Globe className="h-8 w-8 text-[#00703c] mb-2" />
-              <h3 className="font-semibold text-[#00703c]">iXBRL Accounts</h3>
-              <p className="text-sm text-[#00703c]">Tagged accounts for HMRC</p>
+              <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
+              <h3 className="font-semibold text-[#001f3f]">Confirmation Statement (CS01)</h3>
+              <p className="text-sm text-[#001f3f]">Annual confirmation of company details</p>
             </CardContent>
           </Card>
         </div>
 
-        <Card className="border-[#00703c]">
+        <Card className="border-2 border-[#001f3f]">
           <CardHeader>
-            <CardTitle className="text-[#00703c]">HMRC Filing History</CardTitle>
+            <CardTitle className="text-[#001f3f]">Filing History</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-[#00703c]">Recent HMRC submissions will appear here</p>
+            <p className="text-[#001f3f]">Recent Companies House submissions will appear here</p>
           </CardContent>
         </Card>
       </div>
