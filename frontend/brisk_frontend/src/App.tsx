@@ -49,11 +49,16 @@ function App() {
         </Routes>
       </Router>
       <Toaster 
-        position="top-right" 
+        position="top-center" 
         expand={true}
         richColors={false}
         closeButton={true}
         duration={4000}
+        toastOptions={{
+          style: {
+            marginTop: '20vh',
+          },
+        }}
       />
     </ThemeProvider>
   )
