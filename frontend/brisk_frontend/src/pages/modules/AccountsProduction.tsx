@@ -26,14 +26,43 @@ interface Client {
   name: string
   type: 'sole-trader' | 'partnership' | 'limited-company' | 'llp' | 'charity' | 'academy' | 'cic'
   registrationNumber?: string
+  incorporationDate?: string
+  vatNumber?: string
+  utr?: string
+  
   yearEnd: string
   accountsStatus: 'not-started' | 'in-progress' | 'review' | 'completed' | 'filed'
   lastAccounts: string
   nextDue: string
   frsStandard: 'FRS 101' | 'FRS 102' | 'FRS 102 1A' | 'FRS 105' | 'IFRS'
+  
   contactPerson: string
   email: string
   phone: string
+  website?: string
+  
+  addressLine1?: string
+  addressLine2?: string
+  city?: string
+  county?: string
+  postcode?: string
+  country?: string
+  
+  industry?: string
+  turnover?: number
+  numberOfEmployees?: number
+  
+  auditRequired?: boolean
+  dormant?: boolean
+  
+  annualFee?: number
+  engagementLetterSigned?: boolean
+  engagementLetterDate?: string
+  
+  notes?: string
+  tags?: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface TrialBalanceEntry {
@@ -45,14 +74,29 @@ interface TrialBalanceEntry {
   category: 'Asset' | 'Liability' | 'Equity' | 'Revenue' | 'Expense'
 }
 
+interface JournalLine {
+  id: string
+  accountCode: string
+  accountName: string
+  description: string
+  debit: number
+  credit: number
+}
+
 interface Adjustment {
   id: string
-  type: 'prepayment' | 'accrual' | 'depreciation' | 'provision'
+  type: 'prepayment' | 'accrual' | 'depreciation' | 'provision' | 'reclassification' | 'write-off' | 'revaluation'
+  reference: string
   description: string
-  amount: number
   date: string
-  accountCode: string
   status: 'draft' | 'approved' | 'posted'
+  journalLines: JournalLine[]
+  totalDebit: number
+  totalCredit: number
+  createdBy?: string
+  approvedBy?: string
+  approvedDate?: string
+  notes?: string
 }
 
 interface FinancialStatement {
