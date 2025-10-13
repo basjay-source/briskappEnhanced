@@ -145,11 +145,6 @@ const AccountsProduction: React.FC = () => {
     { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
     { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
   ])
-  const [tbSearchCode, setTbSearchCode] = useState('')
-  const [tbSearchName, setTbSearchName] = useState('')
-  const [tbSearchCategory, setTbSearchCategory] = useState('')
-  const [tbSearchDebit, setTbSearchDebit] = useState('')
-  const [tbSearchCredit, setTbSearchCredit] = useState('')
   const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry | ''>('')
   const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
 
@@ -562,17 +557,10 @@ const AccountsProduction: React.FC = () => {
   }
 
   const getFilteredTBEntries = () => {
-    let filtered = trialBalanceEntries.filter(entry => {
-      const matchesCode = !tbSearchCode || entry.accountCode.includes(tbSearchCode)
-      const matchesName = !tbSearchName || entry.accountName.toLowerCase().includes(tbSearchName.toLowerCase())
-      const matchesCategory = !tbSearchCategory || tbSearchCategory === 'all' || entry.category === tbSearchCategory
-      const matchesDebit = !tbSearchDebit || entry.debit.toString().includes(tbSearchDebit)
-      const matchesCredit = !tbSearchCredit || entry.credit.toString().includes(tbSearchCredit)
-      return matchesCode && matchesName && matchesCategory && matchesDebit && matchesCredit
-    })
+    let filtered = [...trialBalanceEntries]
 
     if (tbSortField) {
-      filtered = [...filtered].sort((a, b) => {
+      filtered = filtered.sort((a, b) => {
         const aVal = a[tbSortField]
         const bVal = b[tbSortField]
         if (aVal === undefined || bVal === undefined) return 0
@@ -1212,77 +1200,20 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('accountCode')}>
-                        Code {getTBSortIcon('accountCode')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchCode}
-                        onChange={(e) => setTbSearchCode(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
+                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('accountCode')}>
+                    Code {getTBSortIcon('accountCode')}
                   </TableHead>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('accountName')}>
-                        Account Name {getTBSortIcon('accountName')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchName}
-                        onChange={(e) => setTbSearchName(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
+                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('accountName')}>
+                    Account Name {getTBSortIcon('accountName')}
                   </TableHead>
-                  <TableHead className="text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('category')}>
-                        Category {getTBSortIcon('category')}
-                      </div>
-                      <Select value={tbSearchCategory} onValueChange={setTbSearchCategory}>
-                        <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="All" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
-                          <SelectItem value="Asset">Asset</SelectItem>
-                          <SelectItem value="Liability">Liability</SelectItem>
-                          <SelectItem value="Equity">Equity</SelectItem>
-                          <SelectItem value="Revenue">Revenue</SelectItem>
-                          <SelectItem value="Expense">Expense</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('category')}>
+                    Category {getTBSortIcon('category')}
                   </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('debit')}>
-                        Debit {getTBSortIcon('debit')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchDebit}
-                        onChange={(e) => setTbSearchDebit(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
+                  <TableHead className="text-right text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('debit')}>
+                    Debit {getTBSortIcon('debit')}
                   </TableHead>
-                  <TableHead className="text-right text-[#001f3f]">
-                    <div className="space-y-2">
-                      <div className="cursor-pointer" onClick={() => handleTBSort('credit')}>
-                        Credit {getTBSortIcon('credit')}
-                      </div>
-                      <Input
-                        placeholder="Search..."
-                        value={tbSearchCredit}
-                        onChange={(e) => setTbSearchCredit(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                    </div>
+                  <TableHead className="text-right text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('credit')}>
+                    Credit {getTBSortIcon('credit')}
                   </TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
