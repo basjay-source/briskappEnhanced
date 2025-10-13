@@ -17,7 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../../components/ui/textarea'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
-import { getAllAccounts } from '../../data/chartOfAccounts'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../components/ui/alert-dialog'
+import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
 
 interface Client {
   id: string
@@ -211,6 +212,13 @@ const AccountsProduction: React.FC = () => {
   const [coaSearchGroup, setCoaSearchGroup] = useState('')
   const [coaSearchCategory, setCoaSearchCategory] = useState('')
 
+  const [isAccountAddOpen, setIsAccountAddOpen] = useState(false)
+  const [isAccountEditOpen, setIsAccountEditOpen] = useState(false)
+  const [isAccountDeleteOpen, setIsAccountDeleteOpen] = useState(false)
+  const [selectedAccount, setSelectedAccount] = useState<AccountCode | null>(null)
+  const [accountFormData, setAccountFormData] = useState<Partial<AccountCode>>({})
+  const [deleteError, setDeleteError] = useState('')
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -333,6 +341,57 @@ const AccountsProduction: React.FC = () => {
     setIsGenerateStatementOpen(true)
   }
 
+  const handleAddAccountOpen = () => {
+    setAccountFormData({ code: '', name: '', category: '', groupNumber: '' })
+    setIsAccountAddOpen(true)
+  }
+
+  const handleEditAccountOpen = (account: AccountCode) => {
+    setSelectedAccount(account)
+    setAccountFormData(account)
+    setIsAccountEditOpen(true)
+  }
+
+  const handleDeleteAccountOpen = (account: AccountCode) => {
+    setSelectedAccount(account)
+    setDeleteError('')
+    setIsAccountDeleteOpen(true)
+  }
+
+  const handleSaveNewAccount = () => {
+    if (!accountFormData.code || !accountFormData.name || !accountFormData.groupNumber || !accountFormData.category) {
+      alert('Please fill in all fields')
+      return
+    }
+    const success = addAccount(accountFormData as AccountCode)
+    if (success) {
+      setIsAccountAddOpen(false)
+      setAccountFormData({})
+    } else {
+      alert('Account code already exists')
+    }
+  }
+
+  const handleUpdateAccount = () => {
+    if (!selectedAccount) return
+    const success = updateAccount(selectedAccount.code, accountFormData)
+    if (success) {
+      setIsAccountEditOpen(false)
+      setSelectedAccount(null)
+      setAccountFormData({})
+    }
+  }
+
+  const handleConfirmDeleteAccount = () => {
+    if (!selectedAccount) return
+    const result = deleteAccount(selectedAccount.code)
+    if (result.success) {
+      setIsAccountDeleteOpen(false)
+      setSelectedAccount(null)
+    } else {
+      setDeleteError(result.message)
+    }
+  }
 
   const getFilteredClients = () => {
     let filtered = clients.filter(client => {
@@ -1588,7 +1647,7 @@ const AccountsProduction: React.FC = () => {
             <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
               <Download className="h-4 w-4 mr-2" />Export
             </Button>
-            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Adding new account...')}>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddAccountOpen}>
               <Plus className="h-4 w-4 mr-2" />New Account
             </Button>
           </div>
@@ -1677,7 +1736,13 @@ const AccountsProduction: React.FC = () => {
                     <TableCell className="text-[#001f3f]">{account.name}</TableCell>
                     <TableCell className="text-[#001f3f]">{account.groupNumber || '-'}</TableCell>
                     <TableCell><Badge className="bg-[#001f3f]">{account.category || 'N/A'}</Badge></TableCell>
-                    <TableCell><Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button></TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleAccountClick(account); }}><Eye className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" className="text-[#001f3f]" onClick={(e) => { e.stopPropagation(); handleEditAccountOpen(account); }}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" className="text-red-600" onClick={(e) => { e.stopPropagation(); handleDeleteAccountOpen(account); }}><Trash2 className="h-4 w-4" /></Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -2379,6 +2444,135 @@ const AccountsProduction: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={isAccountAddOpen} onOpenChange={setIsAccountAddOpen}>
+        <DialogContent className="max-w-lg border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Add New Account</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.code || ''} onChange={(e) => setAccountFormData({...accountFormData, code: e.target.value})} placeholder="Enter account code" />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.name || ''} onChange={(e) => setAccountFormData({...accountFormData, name: e.target.value})} placeholder="Enter account name" />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Group Number *</Label>
+              <Select value={accountFormData.groupNumber || ''} onValueChange={(value) => setAccountFormData({...accountFormData, groupNumber: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select group" /></SelectTrigger>
+                <SelectContent>
+                  {chartOfAccounts.flatMap(cat => cat.groups).map(group => (
+                    <SelectItem key={group.groupNumber} value={group.groupNumber}>{group.groupNumber} - {group.groupName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category *</Label>
+              <Select value={accountFormData.category || ''} onValueChange={(value) => setAccountFormData({...accountFormData, category: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expenses">Expenses</SelectItem>
+                  <SelectItem value="Cost of Sales">Cost of Sales</SelectItem>
+                  <SelectItem value="Assets">Assets</SelectItem>
+                  <SelectItem value="Liabilities">Liabilities</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsAccountAddOpen(false)}>Cancel</Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleSaveNewAccount}>Add Account</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAccountEditOpen} onOpenChange={setIsAccountEditOpen}>
+        <DialogContent className="max-w-lg border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Edit Account</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.code || ''} disabled />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name *</Label>
+              <Input className="border-[#001f3f]" value={accountFormData.name || ''} onChange={(e) => setAccountFormData({...accountFormData, name: e.target.value})} />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Group Number *</Label>
+              <Select value={accountFormData.groupNumber || ''} onValueChange={(value) => setAccountFormData({...accountFormData, groupNumber: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {chartOfAccounts.flatMap(cat => cat.groups).map(group => (
+                    <SelectItem key={group.groupNumber} value={group.groupNumber}>{group.groupNumber} - {group.groupName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category *</Label>
+              <Select value={accountFormData.category || ''} onValueChange={(value) => setAccountFormData({...accountFormData, category: value})}>
+                <SelectTrigger className="border-[#001f3f]"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expenses">Expenses</SelectItem>
+                  <SelectItem value="Cost of Sales">Cost of Sales</SelectItem>
+                  <SelectItem value="Assets">Assets</SelectItem>
+                  <SelectItem value="Liabilities">Liabilities</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsAccountEditOpen(false)}>Cancel</Button>
+            <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleUpdateAccount}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isAccountDeleteOpen} onOpenChange={setIsAccountDeleteOpen}>
+        <AlertDialogContent className="border-2 border-[#001f3f]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[#001f3f]">Delete Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedAccount && (
+                <div className="space-y-2">
+                  <p>Are you sure you want to delete this account?</p>
+                  <div className="bg-gray-100 p-3 rounded">
+                    <p className="font-semibold text-[#001f3f]">{selectedAccount.code} - {selectedAccount.name}</p>
+                  </div>
+                  {hasTransactions(selectedAccount.code) && (
+                    <div className="bg-red-50 border border-red-200 p-3 rounded">
+                      <p className="text-red-600 font-semibold">⚠️ Warning</p>
+                      <p className="text-red-600">This account has {getTransactionCount(selectedAccount.code)} transaction(s). It cannot be deleted.</p>
+                    </div>
+                  )}
+                  {deleteError && (
+                    <div className="bg-red-50 border border-red-200 p-3 rounded">
+                      <p className="text-red-600">{deleteError}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-[#001f3f] text-[#001f3f]">Cancel</AlertDialogCancel>
+            {selectedAccount && !hasTransactions(selectedAccount.code) && (
+              <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleConfirmDeleteAccount}>Delete</AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Dialog open={isDrilldownOpen} onOpenChange={setIsDrilldownOpen}>
         <DialogContent className="max-w-2xl border-2 border-[#001f3f]">

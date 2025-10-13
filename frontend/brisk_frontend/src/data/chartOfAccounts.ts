@@ -141,6 +141,14 @@ export const chartOfAccounts: AccountCategory[] = [
     ]}
 ]
 
+const accountTransactions: Record<string, number> = {
+  '1': 5,
+  '27': 12,
+  '568': 8,
+  '583': 15,
+  '611': 20
+}
+
 export function getAllAccounts() {
   const accounts: AccountCode[] = []
   chartOfAccounts.forEach(cat => cat.groups.forEach(g => accounts.push(...g.accounts)))
@@ -152,4 +160,65 @@ export function searchAccounts(term: string) {
   return getAllAccounts().filter(a => 
     a.code.toLowerCase().includes(lower) || a.name.toLowerCase().includes(lower)
   )
+}
+
+export function findAccount(code: string): AccountCode | undefined {
+  return getAllAccounts().find(a => a.code === code)
+}
+
+export function hasTransactions(code: string): boolean {
+  return (accountTransactions[code] || 0) > 0
+}
+
+export function getTransactionCount(code: string): number {
+  return accountTransactions[code] || 0
+}
+
+export function addAccount(account: AccountCode): boolean {
+  for (const cat of chartOfAccounts) {
+    const group = cat.groups.find(g => g.groupNumber === account.groupNumber)
+    if (group) {
+      const exists = getAllAccounts().some(a => a.code === account.code)
+      if (exists) {
+        return false
+      }
+      group.accounts.push(account)
+      return true
+    }
+  }
+  return false
+}
+
+export function updateAccount(code: string, updatedAccount: Partial<AccountCode>): boolean {
+  for (const cat of chartOfAccounts) {
+    for (const group of cat.groups) {
+      const accountIndex = group.accounts.findIndex(a => a.code === code)
+      if (accountIndex !== -1) {
+        group.accounts[accountIndex] = { ...group.accounts[accountIndex], ...updatedAccount }
+        return true
+      }
+    }
+  }
+  return false
+}
+
+export function deleteAccount(code: string): { success: boolean; message: string } {
+  if (hasTransactions(code)) {
+    return {
+      success: false,
+      message: `Cannot delete account ${code}. It has ${getTransactionCount(code)} transaction(s) associated with it.`
+    }
+  }
+
+  for (const cat of chartOfAccounts) {
+    for (const group of cat.groups) {
+      const accountIndex = group.accounts.findIndex(a => a.code === code)
+      if (accountIndex !== -1) {
+        group.accounts.splice(accountIndex, 1)
+        return { success: true, message: 'Account deleted successfully' }
+      }
+    }
+  }
+  
+  return { success: false, message: 'Account not found' }
 }
