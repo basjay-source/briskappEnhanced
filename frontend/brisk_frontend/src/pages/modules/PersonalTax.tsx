@@ -26,7 +26,7 @@ import {
   PieChart,
   Eye
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -40,6 +40,20 @@ import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 
+interface IndividualClient {
+  id: string
+  firstName: string
+  lastName: string
+  title?: string
+  email: string
+  phone: string
+  utr?: string
+  nationalInsuranceNumber?: string
+  taxStatus: string
+  businessType?: string
+  nextDueDate?: string
+}
+
 export default function PersonalTax() {
   const isMobile = useIsMobile()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -52,6 +66,23 @@ export default function PersonalTax() {
   const [selectedIncomeType, setSelectedIncomeType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [individualClients, setIndividualClients] = useState<IndividualClient[]>([])
+
+  useEffect(() => {
+    const loadClientsFromPracticeManagement = () => {
+      try {
+        const saved = localStorage.getItem('individualClients')
+        if (saved) {
+          const clients = JSON.parse(saved)
+          setIndividualClients(clients)
+          console.log(`✅ Loaded ${clients.length} individual clients from Practice Management`)
+        }
+      } catch (e) {
+        console.error('Failed to load individual clients from Practice Management:', e)
+      }
+    }
+    loadClientsFromPracticeManagement()
+  }, [])
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -338,6 +369,32 @@ export default function PersonalTax() {
             </Button>
           </div>
         </div>
+
+        {/* Practice Management Integration Status */}
+        <Card className="border-2 border-[#001f3f] bg-blue-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Users className="h-8 w-8 text-[#001f3f]" />
+                <div>
+                  <h3 className="font-bold text-[#001f3f]">Practice Management Integration</h3>
+                  <p className="text-sm text-[#001f3f]">
+                    {individualClients.length > 0 ? (
+                      <span>✅ <strong>{individualClients.length}</strong> individual client{individualClients.length !== 1 ? 's' : ''} loaded from Practice Management</span>
+                    ) : (
+                      <span>⚠️ No clients found - Add individual clients in Practice Management module</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+              {individualClients.length > 0 && (
+                <Badge className="bg-green-600 text-white">
+                  Synced
+                </Badge>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
           {kpis.map((kpi, index) => {
@@ -739,12 +796,21 @@ export default function PersonalTax() {
                   <div className="flex items-center gap-4">
                     <Select value={selectedClient} onValueChange={setSelectedClient}>
                       <SelectTrigger className="w-64">
-                        <SelectValue placeholder="Select client" />
+                        <SelectValue placeholder={individualClients.length > 0 ? "Select client from Practice Management" : "No clients available - Add in Practice Management"} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="john">John Smith</SelectItem>
-                        <SelectItem value="sarah">Sarah Johnson</SelectItem>
-                        <SelectItem value="michael">Michael Brown</SelectItem>
+                        {individualClients.length === 0 ? (
+                          <div className="p-4 text-center text-sm text-gray-500">
+                            <p>No individual clients found</p>
+                            <p className="text-xs mt-1">Add clients in Practice Management module</p>
+                          </div>
+                        ) : (
+                          individualClients.map((client) => (
+                            <SelectItem key={client.id} value={client.id}>
+                              {client.title} {client.firstName} {client.lastName} ({client.utr || 'No UTR'})
+                            </SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
                     <Button variant="outline">
