@@ -41,7 +41,7 @@ import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import { IndividualClientForm } from '../../components/IndividualClientForm'
-import { SAReturnForm } from '../../components/SAReturnForm'
+import ComprehensiveSAReturnForm from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
 import { 
   Dialog,
@@ -1441,13 +1441,11 @@ export default function PersonalTax() {
       />
 
       {/* SA Return Form */}
-      <SAReturnForm
+      <ComprehensiveSAReturnForm
         open={isSAReturnFormOpen}
         onOpenChange={setIsSAReturnFormOpen}
-        saReturn={selectedSAReturn}
+        clients={individualClients.map(c => ({ id: c.id, name: `${c.firstName} ${c.lastName}` }))}
         onSave={handleSaveSAReturn}
-        mode={saReturnFormMode}
-        clients={individualClients}
       />
 
       {/* Client List Dialog */}
