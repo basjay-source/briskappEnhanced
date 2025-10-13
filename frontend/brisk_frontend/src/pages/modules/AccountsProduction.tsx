@@ -188,7 +188,6 @@ const AccountsProduction: React.FC = () => {
 
   const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
-  const [_isTBAddOpen, setIsTBAddOpen] = useState(false)
   const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
   const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
@@ -292,12 +291,6 @@ const AccountsProduction: React.FC = () => {
     setIsTBEditOpen(true)
   }
 
-  const handleAddTBEntry = () => {
-    setTBFormData({
-      accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset'
-    })
-    setIsTBAddOpen(true)
-  }
 
   const handleSaveTBEntry = () => {
     if (selectedTBEntry) {
@@ -1068,19 +1061,64 @@ const AccountsProduction: React.FC = () => {
     
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-[#001f3f]">Trial Balance</h2>
-            <p className="text-[#001f3f]">Import and review trial balance entries</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setIsTBImportOpen(true)}>
-              <Upload className="h-4 w-4 mr-2" />Import TB
-            </Button>
-            <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Plus className="h-4 w-4 mr-2" />Add Entry
-            </Button>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Trial Balance</h2>
+          <p className="text-[#001f3f]">Import and review trial balance entries</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
+            const bookkeepingData = [
+              { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
+              { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
+              { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
+              { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
+            ]
+            const newEntries = bookkeepingData.map(d => ({
+              id: Date.now().toString() + Math.random(),
+              accountCode: d.accountCode,
+              accountName: d.accountName,
+              debit: d.debit,
+              credit: d.credit,
+              category: d.category as any
+            }))
+            setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+          }}>
+            <CardContent className="pt-6 text-center">
+              <Database className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Sync from Bookkeeping</h3>
+              <p className="text-sm text-gray-600 mb-3">Auto-pull trial balance from Bookkeeping module</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Database className="h-4 w-4 mr-2" />Sync Now
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
+            setImportMethod('csv')
+            setIsTBImportOpen(true)
+            setImportStep('upload')
+          }}>
+            <CardContent className="pt-6 text-center">
+              <Upload className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Upload CSV File</h3>
+              <p className="text-sm text-gray-600 mb-3">Import from CSV with code mapping</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Upload className="h-4 w-4 mr-2" />Choose File
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => alert('Integration with Xero, Sage, and QuickBooks coming soon')}>
+            <CardContent className="pt-6 text-center">
+              <Globe className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
+              <h3 className="font-bold text-[#001f3f] mb-2">Software Integration</h3>
+              <p className="text-sm text-gray-600 mb-3">Connect Xero, Sage, QuickBooks</p>
+              <Button className="bg-[#001f3f] hover:bg-[#003366] w-full">
+                <Globe className="h-4 w-4 mr-2" />Connect
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         <Card>
