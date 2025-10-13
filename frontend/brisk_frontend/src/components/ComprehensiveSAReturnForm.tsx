@@ -92,6 +92,19 @@ interface BankInterestDetails {
   country?: string
 }
 
+interface CapitalGainsAsset {
+  id: string
+  assetType: 'property' | 'shares' | 'crypto' | 'other'
+  description: string
+  dateAcquired: string
+  acquisitionCost: number
+  dateDisposed: string
+  disposalProceeds: number
+  allowableExpenses: number
+  gain: number
+  loss: number
+}
+
 interface RentalProperty {
   id: string
   propertyType: 'uk-rental' | 'fhl-uk' | 'fhl-eea' | 'other'
@@ -161,6 +174,7 @@ interface SAReturn {
   bankInterestDetails?: BankInterestDetails[]
   savingsInterest: number
   capitalGains: number
+  capitalGainsAssets?: CapitalGainsAsset[]
   otherIncome: number
   totalIncome: number
   personalAllowance: number
@@ -670,13 +684,14 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
         ) : (
           <form onSubmit={handleSubmit}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-8 bg-gray-100">
+            <TabsList className="grid w-full grid-cols-9 bg-gray-100">
               <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Basic Info</TabsTrigger>
               <TabsTrigger value="income" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Income</TabsTrigger>
               <TabsTrigger value="deductions" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Deductions</TabsTrigger>
-              <TabsTrigger value="capitalallowances" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Capital Allowances</TabsTrigger>
+              <TabsTrigger value="capitalallowances" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Capital Allow.</TabsTrigger>
+              <TabsTrigger value="capitalgains" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Capital Gains</TabsTrigger>
               <TabsTrigger value="losses" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Losses</TabsTrigger>
-              <TabsTrigger value="paymentonaccount" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Payment on Account</TabsTrigger>
+              <TabsTrigger value="paymentonaccount" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Payment/Acc</TabsTrigger>
               <TabsTrigger value="other" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Other</TabsTrigger>
               <TabsTrigger value="summary" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Summary</TabsTrigger>
             </TabsList>
@@ -2546,6 +2561,257 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                   </div>
                 </div>
               </div>
+            </TabsContent>
+            <TabsContent value="capitalgains" className="space-y-4 mt-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-[#001f3f]">Capital Gains Tax - Asset Disposals</h3>
+                {!isReadOnly && (
+                  <Button 
+                    type="button" 
+                    size="sm" 
+                    onClick={() => {
+                      const newAsset: CapitalGainsAsset = {
+                        id: `cgt-${Date.now()}`,
+                        assetType: 'shares',
+                        description: '',
+                        dateAcquired: '',
+                        acquisitionCost: 0,
+                        dateDisposed: '',
+                        disposalProceeds: 0,
+                        allowableExpenses: 0,
+                        gain: 0,
+                        loss: 0
+                      }
+                      setFormData({
+                        ...formData,
+                        capitalGainsAssets: [...(formData.capitalGainsAssets || []), newAsset]
+                      })
+                    }}
+                    className="bg-[#001f3f] hover:bg-[#003366]"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Asset Disposal
+                  </Button>
+                )}
+              </div>
+
+              {formData.capitalGainsAssets && formData.capitalGainsAssets.length > 0 ? (
+                <div className="space-y-4">
+                  {formData.capitalGainsAssets.map((asset, index) => {
+                    const calculatedGain = asset.disposalProceeds - asset.acquisitionCost - asset.allowableExpenses
+                    const isGain = calculatedGain > 0
+                    const isLoss = calculatedGain < 0
+
+                    return (
+                      <div key={asset.id} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold text-[#001f3f]">Asset Disposal {index + 1}</h4>
+                          {!isReadOnly && (
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => {
+                                const updated = formData.capitalGainsAssets!.filter((_, i) => i !== index)
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Asset Type*</Label>
+                            <Select
+                              value={asset.assetType}
+                              onValueChange={(value: any) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].assetType = value
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              disabled={isReadOnly}
+                            >
+                              <SelectTrigger className="border-[#001f3f]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="property">Property/Land</SelectItem>
+                                <SelectItem value="shares">Shares/Securities</SelectItem>
+                                <SelectItem value="crypto">Cryptocurrency</SelectItem>
+                                <SelectItem value="other">Other Assets</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Description*</Label>
+                            <Input
+                              value={asset.description}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].description = e.target.value
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                              placeholder="Brief description of asset"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Date Acquired*</Label>
+                            <Input
+                              type="date"
+                              value={asset.dateAcquired}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].dateAcquired = e.target.value
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Acquisition Cost £*</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={asset.acquisitionCost}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].acquisitionCost = parseFloat(e.target.value) || 0
+                                const calc = updated[index].disposalProceeds - parseFloat(e.target.value || '0') - updated[index].allowableExpenses
+                                updated[index].gain = calc > 0 ? calc : 0
+                                updated[index].loss = calc < 0 ? Math.abs(calc) : 0
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Date Disposed*</Label>
+                            <Input
+                              type="date"
+                              value={asset.dateDisposed}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].dateDisposed = e.target.value
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-[#001f3f]">Disposal Proceeds £*</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={asset.disposalProceeds}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].disposalProceeds = parseFloat(e.target.value) || 0
+                                const calc = parseFloat(e.target.value || '0') - updated[index].acquisitionCost - updated[index].allowableExpenses
+                                updated[index].gain = calc > 0 ? calc : 0
+                                updated[index].loss = calc < 0 ? Math.abs(calc) : 0
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                            />
+                          </div>
+
+                          <div className="space-y-2 col-span-2">
+                            <Label className="text-[#001f3f]">Allowable Expenses £</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={asset.allowableExpenses}
+                              onChange={(e) => {
+                                const updated = [...formData.capitalGainsAssets!]
+                                updated[index].allowableExpenses = parseFloat(e.target.value) || 0
+                                const calc = updated[index].disposalProceeds - updated[index].acquisitionCost - parseFloat(e.target.value || '0')
+                                updated[index].gain = calc > 0 ? calc : 0
+                                updated[index].loss = calc < 0 ? Math.abs(calc) : 0
+                                setFormData({ ...formData, capitalGainsAssets: updated })
+                              }}
+                              className="border-[#001f3f]"
+                              disabled={isReadOnly}
+                              placeholder="Legal fees, improvement costs, etc."
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mt-4 p-3 bg-gray-50 rounded border border-gray-300">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label className="text-[#001f3f] text-sm">Calculated Result:</Label>
+                              {isGain && (
+                                <div className="text-lg font-bold text-green-600">
+                                  Gain: £{calculatedGain.toFixed(2)}
+                                </div>
+                              )}
+                              {isLoss && (
+                                <div className="text-lg font-bold text-red-600">
+                                  Loss: £{Math.abs(calculatedGain).toFixed(2)}
+                                </div>
+                              )}
+                              {!isGain && !isLoss && (
+                                <div className="text-lg font-bold text-gray-600">
+                                  No Gain/Loss
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <Label className="text-[#001f3f] text-sm">Days Held:</Label>
+                              {asset.dateAcquired && asset.dateDisposed && (
+                                <div className="text-lg font-bold text-[#001f3f]">
+                                  {Math.floor((new Date(asset.dateDisposed).getTime() - new Date(asset.dateAcquired).getTime()) / (1000 * 60 * 60 * 24))} days
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  <div className="p-4 bg-blue-50 border-2 border-blue-300 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Summary</h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label className="text-sm text-[#001f3f]">Total Gains:</Label>
+                        <div className="text-xl font-bold text-green-600">
+                          £{(formData.capitalGainsAssets?.reduce((sum, a) => sum + a.gain, 0) || 0).toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm text-[#001f3f]">Total Losses:</Label>
+                        <div className="text-xl font-bold text-red-600">
+                          £{(formData.capitalGainsAssets?.reduce((sum, a) => sum + a.loss, 0) || 0).toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm text-[#001f3f]">Net Position:</Label>
+                        <div className="text-xl font-bold text-[#001f3f]">
+                          £{((formData.capitalGainsAssets?.reduce((sum, a) => sum + a.gain, 0) || 0) - (formData.capitalGainsAssets?.reduce((sum, a) => sum + a.loss, 0) || 0)).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-[#001f3f]">
+                  <p>No capital gains disposals added yet. Click "Add Asset Disposal" to get started.</p>
+                </div>
+              )}
             </TabsContent>
 
             {/* Losses Tab */}
