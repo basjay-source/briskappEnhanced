@@ -570,32 +570,6 @@ export default function PersonalTax() {
           </div>
         </div>
 
-        {/* Practice Management Integration Status */}
-        <Card className="border-2 border-[#001f3f] bg-blue-50">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Users className="h-8 w-8 text-[#001f3f]" />
-                <div>
-                  <h3 className="font-bold text-[#001f3f]">Practice Management Integration</h3>
-                  <p className="text-sm text-[#001f3f]">
-                    {individualClients.length > 0 ? (
-                      <span>✅ <strong>{individualClients.length}</strong> individual client{individualClients.length !== 1 ? 's' : ''} loaded from Practice Management</span>
-                    ) : (
-                      <span>⚠️ No clients found - Add individual clients in Practice Management module</span>
-                    )}
-                  </p>
-                </div>
-              </div>
-              {individualClients.length > 0 && (
-                <Badge className="bg-green-600 text-white">
-                  Synced
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
         <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon
