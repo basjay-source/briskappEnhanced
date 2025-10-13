@@ -24,7 +24,8 @@ import {
   Target,
   ChevronDown,
   PieChart,
-  Eye
+  Eye,
+  UserPlus
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -39,6 +40,25 @@ import KPICard from '../../components/KPICard'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import { IndividualClientForm } from '../../components/IndividualClientForm'
+import { SAReturnForm } from '../../components/SAReturnForm'
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from '@/components/ui/dialog'
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import { Trash2 } from 'lucide-react'
 
 interface IndividualClient {
   id: string
@@ -52,6 +72,38 @@ interface IndividualClient {
   taxStatus: string
   businessType?: string
   nextDueDate?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+interface SAReturn {
+  id: string
+  clientId: string
+  clientName: string
+  taxYear: string
+  status: 'draft' | 'in_progress' | 'review' | 'submitted' | 'approved'
+  dueDate: string
+  submittedDate?: string
+  utr: string
+  niNumber: string
+  employmentIncome: number
+  selfEmploymentIncome: number
+  propertyIncome: number
+  dividendIncome: number
+  savingsInterest: number
+  capitalGains: number
+  otherIncome: number
+  totalIncome: number
+  personalAllowance: number
+  taxRelief: number
+  pensionContributions: number
+  charitableGiving: number
+  taxableIncome: number
+  estimatedTax: number
+  progress: number
+  notes?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export default function PersonalTax() {
@@ -67,6 +119,17 @@ export default function PersonalTax() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [individualClients, setIndividualClients] = useState<IndividualClient[]>([])
+  const [isClientFormOpen, setIsClientFormOpen] = useState(false)
+  const [clientFormData, setClientFormData] = useState<Partial<IndividualClient>>({})
+  const [selectedClientForEdit, setSelectedClientForEdit] = useState<IndividualClient | null>(null)
+  const [clientFormMode, setClientFormMode] = useState<'add' | 'edit' | 'view'>('add')
+  
+  const [saReturnsData, setSAReturnsData] = useState<SAReturn[]>([])
+  const [isSAReturnFormOpen, setIsSAReturnFormOpen] = useState(false)
+  const [selectedSAReturn, setSelectedSAReturn] = useState<SAReturn | null>(null)
+  const [saReturnFormMode, setSAReturnFormMode] = useState<'add' | 'edit' | 'view'>('add')
+  const [showClientList, setShowClientList] = useState(false)
+  const [showSAReturnList, setShowSAReturnList] = useState(false)
 
   useEffect(() => {
     const loadClientsFromPracticeManagement = () => {
@@ -82,6 +145,20 @@ export default function PersonalTax() {
       }
     }
     loadClientsFromPracticeManagement()
+
+    const loadSAReturns = () => {
+      try {
+        const saved = localStorage.getItem('saReturns')
+        if (saved) {
+          const returns = JSON.parse(saved)
+          setSAReturnsData(returns)
+          console.log(`✅ Loaded ${returns.length} SA Returns`)
+        }
+      } catch (e) {
+        console.error('Failed to load SA Returns:', e)
+      }
+    }
+    loadSAReturns()
   }, [])
 
   const handleAIQuestion = async (question: string) => {
@@ -94,6 +171,121 @@ export default function PersonalTax() {
       setIsAILoading(false)
     }
   }
+
+  const handleAddClient = () => {
+    setSelectedClientForEdit(null)
+    setClientFormMode('add')
+    setIsClientFormOpen(true)
+  }
+
+  const handleEditClient = (client: IndividualClient) => {
+    setSelectedClientForEdit(client)
+    setClientFormMode('edit')
+    setIsClientFormOpen(true)
+  }
+
+  const handleViewClient = (client: IndividualClient) => {
+    setSelectedClientForEdit(client)
+    setClientFormMode('view')
+    setIsClientFormOpen(true)
+  }
+
+  const handleSaveClient = (data: Partial<IndividualClient>) => {
+    if (clientFormMode === 'add') {
+      const newClient: IndividualClient = {
+        id: `ind-${Date.now()}`,
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as IndividualClient
+      
+      const updated = [...individualClients, newClient]
+      setIndividualClients(updated)
+      localStorage.setItem('individualClients', JSON.stringify(updated))
+      console.log('✅ Client added from Personal Tax and synced to Practice Management')
+    } else if (clientFormMode === 'edit') {
+      const updated = individualClients.map(c => 
+        c.id === selectedClientForEdit?.id 
+          ? { ...c, ...data, updatedAt: new Date().toISOString() } as IndividualClient
+          : c
+      )
+      setIndividualClients(updated)
+      localStorage.setItem('individualClients', JSON.stringify(updated))
+      console.log('✅ Client updated and synced to Practice Management')
+    }
+    setIsClientFormOpen(false)
+  }
+
+  const handleDeleteClient = (clientId: string) => {
+    if (confirm('Are you sure you want to delete this client? This will also delete all associated SA returns.')) {
+      const updated = individualClients.filter(c => c.id !== clientId)
+      setIndividualClients(updated)
+      localStorage.setItem('individualClients', JSON.stringify(updated))
+      
+      const updatedReturns = saReturnsData.filter(r => r.clientId !== clientId)
+      setSAReturnsData(updatedReturns)
+      localStorage.setItem('saReturns', JSON.stringify(updatedReturns))
+      console.log('✅ Client and associated SA returns deleted')
+    }
+  }
+
+  const handleAddSAReturn = () => {
+    if (individualClients.length === 0) {
+      alert('Please add at least one client before creating an SA return')
+      return
+    }
+    setSelectedSAReturn(null)
+    setSAReturnFormMode('add')
+    setIsSAReturnFormOpen(true)
+  }
+
+  const handleEditSAReturn = (saReturn: SAReturn) => {
+    setSelectedSAReturn(saReturn)
+    setSAReturnFormMode('edit')
+    setIsSAReturnFormOpen(true)
+  }
+
+  const handleViewSAReturn = (saReturn: SAReturn) => {
+    setSelectedSAReturn(saReturn)
+    setSAReturnFormMode('view')
+    setIsSAReturnFormOpen(true)
+  }
+
+  const handleSaveSAReturn = (data: Partial<SAReturn>) => {
+    if (saReturnFormMode === 'add') {
+      const newReturn: SAReturn = {
+        id: `sa-${Date.now()}`,
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as SAReturn
+      
+      const updated = [...saReturnsData, newReturn]
+      setSAReturnsData(updated)
+      localStorage.setItem('saReturns', JSON.stringify(updated))
+      console.log('✅ SA Return created successfully')
+    } else if (saReturnFormMode === 'edit') {
+      const updated = saReturnsData.map(r => 
+        r.id === selectedSAReturn?.id 
+          ? { ...r, ...data, updatedAt: new Date().toISOString() } as SAReturn
+          : r
+      )
+      setSAReturnsData(updated)
+      localStorage.setItem('saReturns', JSON.stringify(updated))
+      console.log('✅ SA Return updated successfully')
+    }
+    setIsSAReturnFormOpen(false)
+  }
+
+  const handleDeleteSAReturn = (returnId: string) => {
+    if (confirm('Are you sure you want to delete this SA return?')) {
+      const updated = saReturnsData.filter(r => r.id !== returnId)
+      setSAReturnsData(updated)
+      localStorage.setItem('saReturns', JSON.stringify(updated))
+      console.log('✅ SA Return deleted successfully')
+    }
+  }
+  
   const [selectedClient, setSelectedClient] = useState('')
 
   const taxYearOptions = [
@@ -359,13 +551,32 @@ export default function PersonalTax() {
             <p className="text-[#001f3f] mt-2">SA returns, CGT optimization, and personal tax planning</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={isMobile ? 'w-full' : ''}>
-              <Upload className="h-4 w-4 mr-2" />
-              Import Data
+            <Button variant="outline" className={`border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white ${isMobile ? 'w-full' : ''}`} onClick={handleAddClient}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add New Client
             </Button>
-            <Button className={`bg-brisk-primary hover:bg-brisk-primary-600 ${isMobile ? 'w-full' : ''}`}>
+            <Button 
+              variant="outline" 
+              className={`border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white ${isMobile ? 'w-full' : ''}`}
+              onClick={() => setShowClientList(true)}
+            >
+              <Users className="h-4 w-4 mr-2" />
+              View All Clients ({individualClients.length})
+            </Button>
+            <Button 
+              className={`bg-[#001f3f] hover:bg-[#001f3f]/90 text-white ${isMobile ? 'w-full' : ''}`}
+              onClick={handleAddSAReturn}
+            >
               <Plus className="h-4 w-4 mr-2" />
               New SA Return
+            </Button>
+            <Button 
+              variant="outline"
+              className={`border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white ${isMobile ? 'w-full' : ''}`}
+              onClick={() => setShowSAReturnList(true)}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              View All SA Returns ({saReturnsData.length})
             </Button>
           </div>
         </div>
@@ -1362,6 +1573,225 @@ export default function PersonalTax() {
         description="Get expert guidance on personal tax planning, SA returns, and CGT calculations"
         recentQuestions={[]}
       />
+
+      {/* Individual Client Form */}
+      <IndividualClientForm
+        open={isClientFormOpen}
+        onOpenChange={setIsClientFormOpen}
+        client={selectedClientForEdit}
+        onSave={handleSaveClient}
+        mode={clientFormMode}
+      />
+
+      {/* SA Return Form */}
+      <SAReturnForm
+        open={isSAReturnFormOpen}
+        onOpenChange={setIsSAReturnFormOpen}
+        saReturn={selectedSAReturn}
+        onSave={handleSaveSAReturn}
+        mode={saReturnFormMode}
+        clients={individualClients}
+      />
+
+      {/* Client List Dialog */}
+      <Dialog open={showClientList} onOpenChange={setShowClientList}>
+        <DialogContent className="max-w-5xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f] text-xl">All Clients</DialogTitle>
+            <DialogDescription className="text-[#001f3f]">
+              Manage your individual tax clients
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {individualClients.length === 0 ? (
+              <div className="text-center py-8 text-[#001f3f]">
+                <Users className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <p>No clients found. Add your first client to get started.</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-[#001f3f]">
+                    <TableHead className="text-[#001f3f] font-bold">Name</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Email</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Phone</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">UTR</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">NI Number</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {individualClients.map((client) => (
+                    <TableRow key={client.id} className="border-[#001f3f]">
+                      <TableCell className="text-[#001f3f]">
+                        {client.title ? `${client.title} ` : ''}{client.firstName} {client.lastName}
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{client.email}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.phone}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.utr || '-'}</TableCell>
+                      <TableCell className="text-[#001f3f]">{client.nationalInsuranceNumber || '-'}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                            onClick={() => {
+                              setShowClientList(false)
+                              handleViewClient(client)
+                            }}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                            onClick={() => {
+                              setShowClientList(false)
+                              handleEditClient(client)
+                            }}
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                            onClick={() => handleDeleteClient(client.id)}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowClientList(false)}>
+              Close
+            </Button>
+            <Button 
+              className="bg-[#001f3f] hover:bg-[#001f3f]/90 text-white"
+              onClick={() => {
+                setShowClientList(false)
+                handleAddClient()
+              }}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add New Client
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* SA Return List Dialog */}
+      <Dialog open={showSAReturnList} onOpenChange={setShowSAReturnList}>
+        <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f] text-xl">All SA Returns</DialogTitle>
+            <DialogDescription className="text-[#001f3f]">
+              View and manage Self Assessment tax returns
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {saReturnsData.length === 0 ? (
+              <div className="text-center py-8 text-[#001f3f]">
+                <FileText className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <p>No SA returns found. Create your first SA return to get started.</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-[#001f3f]">
+                    <TableHead className="text-[#001f3f] font-bold">Client</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Tax Year</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Status</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Due Date</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Estimated Tax</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {saReturnsData.map((saReturn) => (
+                    <TableRow key={saReturn.id} className="border-[#001f3f]">
+                      <TableCell className="text-[#001f3f] font-medium">{saReturn.clientName}</TableCell>
+                      <TableCell className="text-[#001f3f]">{saReturn.taxYear}</TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(saReturn.status)}>
+                          {saReturn.status.replace('_', ' ').toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[#001f3f]">{new Date(saReturn.dueDate).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-[#001f3f] font-medium">
+                        £{saReturn.estimatedTax?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                            onClick={() => {
+                              setShowSAReturnList(false)
+                              handleViewSAReturn(saReturn)
+                            }}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                            onClick={() => {
+                              setShowSAReturnList(false)
+                              handleEditSAReturn(saReturn)
+                            }}
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                            onClick={() => handleDeleteSAReturn(saReturn.id)}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSAReturnList(false)}>
+              Close
+            </Button>
+            <Button 
+              className="bg-[#001f3f] hover:bg-[#001f3f]/90 text-white"
+              onClick={() => {
+                setShowSAReturnList(false)
+                handleAddSAReturn()
+              }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New SA Return
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </ResponsiveLayout>
   )
 }
