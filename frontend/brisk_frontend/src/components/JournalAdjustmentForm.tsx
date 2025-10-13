@@ -151,6 +151,11 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
       line.accountCode && line.accountName && (line.debit > 0 || line.credit > 0)
     )
     
+    if (validLines.length === 0) {
+      alert('Cannot save a blank journal. Please add journal entries with amounts, or save as Draft.')
+      return
+    }
+    
     if (validLines.length < 2) {
       alert('Please add at least 2 journal lines (minimum one debit and one credit)')
       return
@@ -328,7 +333,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                         <Input
                           type="number"
                           step="0.01"
-                          value={line.debit || 0}
+                          value={(line.debit || 0).toFixed(2)}
                           onChange={(e) => updateLine(line.id, 'debit', parseFloat(e.target.value) || 0)}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
                         />
@@ -337,7 +342,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                         <Input
                           type="number"
                           step="0.01"
-                          value={line.credit || 0}
+                          value={(line.credit || 0).toFixed(2)}
                           onChange={(e) => updateLine(line.id, 'credit', parseFloat(e.target.value) || 0)}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
                         />
