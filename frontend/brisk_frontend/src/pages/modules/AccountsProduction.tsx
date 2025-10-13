@@ -130,16 +130,76 @@ const AccountsProduction: React.FC = () => {
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([])
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
-    { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2500, date: '2024-03-31', status: 'posted', accountCode: '1200' },
-    { id: '2', type: 'accrual', description: 'Utilities Accrual', amount: 1200, date: '2024-03-31', status: 'posted', accountCode: '2100' },
-    { id: '3', type: 'depreciation', description: 'Office Equipment Depreciation', amount: 5000, date: '2024-03-31', status: 'posted', accountCode: '6200' },
-    { id: '4', type: 'prepayment', description: 'Rent Prepayment', amount: 15000, date: '2024-03-31', status: 'approved', accountCode: '1201' },
-    { id: '5', type: 'accrual', description: 'Professional Fees Accrual', amount: 3500, date: '2024-03-31', status: 'draft', accountCode: '2101' },
-    { id: '6', type: 'depreciation', description: 'Motor Vehicles Depreciation', amount: 8000, date: '2024-03-31', status: 'posted', accountCode: '6201' },
-    { id: '7', type: 'provision', description: 'Bad Debt Provision', amount: 4500, date: '2024-03-31', status: 'approved', accountCode: '6500' },
-    { id: '8', type: 'reclassification', description: 'Reclassify Fixed Assets', amount: 12000, date: '2024-03-31', status: 'draft', accountCode: '1500' },
-    { id: '9', type: 'write-off', description: 'Write-off Obsolete Inventory', amount: 2200, date: '2024-03-31', status: 'posted', accountCode: '5500' },
-    { id: '10', type: 'revaluation', description: 'Property Revaluation', amount: 50000, date: '2024-03-31', status: 'approved', accountCode: '1600' }
+    { 
+      id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2500, date: '2024-03-31', status: 'posted', accountCode: '1200',
+      journalLines: [
+        { id: 'L1-1', accountCode: '1200', accountName: 'Prepayments', description: 'Insurance prepaid', debit: 2500, credit: 0 },
+        { id: 'L1-2', accountCode: '5100', accountName: 'Insurance Expense', description: 'Reverse insurance', debit: 0, credit: 2500 }
+      ]
+    },
+    { 
+      id: '2', type: 'accrual', description: 'Utilities Accrual', amount: 1200, date: '2024-03-31', status: 'posted', accountCode: '2100',
+      journalLines: [
+        { id: 'L2-1', accountCode: '5200', accountName: 'Utilities Expense', description: 'Utilities accrued', debit: 1200, credit: 0 },
+        { id: 'L2-2', accountCode: '2100', accountName: 'Accruals', description: 'Utilities payable', debit: 0, credit: 1200 }
+      ]
+    },
+    { 
+      id: '3', type: 'depreciation', description: 'Office Equipment Depreciation', amount: 5000, date: '2024-03-31', status: 'posted', accountCode: '6200',
+      journalLines: [
+        { id: 'L3-1', accountCode: '6200', accountName: 'Depreciation Expense', description: 'Equipment depreciation', debit: 5000, credit: 0 },
+        { id: 'L3-2', accountCode: '0220', accountName: 'Accumulated Depreciation', description: 'Equipment accumulated dep', debit: 0, credit: 5000 }
+      ]
+    },
+    { 
+      id: '4', type: 'prepayment', description: 'Rent Prepayment', amount: 15000, date: '2024-03-31', status: 'approved', accountCode: '1201',
+      journalLines: [
+        { id: 'L4-1', accountCode: '1201', accountName: 'Rent Prepaid', description: 'Advance rent payment', debit: 15000, credit: 0 },
+        { id: 'L4-2', accountCode: '5300', accountName: 'Rent Expense', description: 'Reverse rent charge', debit: 0, credit: 15000 }
+      ]
+    },
+    { 
+      id: '5', type: 'accrual', description: 'Professional Fees Accrual', amount: 3500, date: '2024-03-31', status: 'draft', accountCode: '2101',
+      journalLines: [
+        { id: 'L5-1', accountCode: '5400', accountName: 'Professional Fees', description: 'Consultancy fees', debit: 3500, credit: 0 },
+        { id: 'L5-2', accountCode: '2101', accountName: 'Accrued Expenses', description: 'Fees payable', debit: 0, credit: 3500 }
+      ]
+    },
+    { 
+      id: '6', type: 'depreciation', description: 'Motor Vehicles Depreciation', amount: 8000, date: '2024-03-31', status: 'posted', accountCode: '6201',
+      journalLines: [
+        { id: 'L6-1', accountCode: '6201', accountName: 'Depreciation - Vehicles', description: 'Vehicle depreciation', debit: 8000, credit: 0 },
+        { id: 'L6-2', accountCode: '0230', accountName: 'Acc Dep - Vehicles', description: 'Vehicle accumulated dep', debit: 0, credit: 8000 }
+      ]
+    },
+    { 
+      id: '7', type: 'provision', description: 'Bad Debt Provision', amount: 4500, date: '2024-03-31', status: 'approved', accountCode: '6500',
+      journalLines: [
+        { id: 'L7-1', accountCode: '6500', accountName: 'Bad Debt Expense', description: 'Provision for doubtful debts', debit: 4500, credit: 0 },
+        { id: 'L7-2', accountCode: '0130', accountName: 'Provision for Bad Debts', description: 'Increase provision', debit: 0, credit: 4500 }
+      ]
+    },
+    { 
+      id: '8', type: 'reclassification', description: 'Reclassify Fixed Assets', amount: 12000, date: '2024-03-31', status: 'draft', accountCode: '1500',
+      journalLines: [
+        { id: 'L8-1', accountCode: '0210', accountName: 'Plant & Machinery', description: 'Reclassify to machinery', debit: 12000, credit: 0 },
+        { id: 'L8-2', accountCode: '0200', accountName: 'Office Equipment', description: 'Reclassify from equipment', debit: 0, credit: 12000 }
+      ]
+    },
+    { 
+      id: '9', type: 'write-off', description: 'Write-off Obsolete Inventory', amount: 2200, date: '2024-03-31', status: 'posted', accountCode: '5500',
+      journalLines: [
+        { id: 'L9-1', accountCode: '5500', accountName: 'Inventory Write-off', description: 'Obsolete stock', debit: 2200, credit: 0 },
+        { id: 'L9-2', accountCode: '0110', accountName: 'Inventory', description: 'Remove obsolete items', debit: 0, credit: 2200 }
+      ]
+    },
+    { 
+      id: '10', type: 'revaluation', description: 'Property Revaluation', amount: 50000, date: '2024-03-31', status: 'approved', accountCode: '1600',
+      journalLines: [
+        { id: 'L10-1', accountCode: '0300', accountName: 'Land & Buildings', description: 'Property revaluation gain', debit: 50000, credit: 0 },
+        { id: 'L10-2', accountCode: '3100', accountName: 'Revaluation Reserve', description: 'Increase in property value', debit: 0, credit: 50000 }
+      ]
+    }
   ])
   const [adjSearchType, setAdjSearchType] = useState('')
   const [adjSearchStatus, setAdjSearchStatus] = useState('')
