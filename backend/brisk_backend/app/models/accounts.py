@@ -87,6 +87,10 @@ class AccountsProductionClient(Base):
     
     year_end = Column(Date, nullable=False)
     accounts_status = Column(String, default="not-started")
+    accounts_finalized = Column(Boolean, default=False)
+    accounts_filed = Column(Boolean, default=False)
+    finalized_date = Column(Date)
+    filed_date = Column(Date)
     last_accounts = Column(Date)
     next_due = Column(Date)
     frs_standard = Column(String, default="FRS 102")
@@ -167,8 +171,6 @@ class ChartOfAccount(Base):
     is_system = Column(Boolean, default=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
-    balances = relationship("AccountBalance", back_populates="account")
 
 class AccountBalance(Base):
     __tablename__ = "account_balances"
@@ -186,8 +188,6 @@ class AccountBalance(Base):
     closing_debit = Column(Numeric(15, 2), default=0)
     closing_credit = Column(Numeric(15, 2), default=0)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    
-    account = relationship("ChartOfAccount", back_populates="balances")
 
 class NominalLedgerEntry(Base):
     __tablename__ = "nominal_ledger_entries"

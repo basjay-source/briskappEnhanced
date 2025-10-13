@@ -26,7 +26,8 @@ import {
   UserPlus,
   Upload,
   ImageIcon,
-  Eye
+  Eye,
+  Building2
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -49,6 +50,7 @@ import WorkflowBuilderAdvanced from '../../components/WorkflowBuilderAdvanced'
 import CapacityPlanningAdvanced from '../../components/CapacityPlanningAdvanced'
 import ComplianceAutomation from '../../components/ComplianceAutomation'
 import { ExportButton } from '@/components/ExportButton'
+import { IndividualClientForm } from '../../components/IndividualClientForm'
 import { api } from '@/lib/api'
 
 interface Job {
@@ -102,6 +104,44 @@ interface DashboardData {
     upcoming_deadlines: number
     this_week_hours: number
   }
+}
+
+interface IndividualClient {
+  id: string
+  firstName: string
+  lastName: string
+  title?: 'Mr' | 'Mrs' | 'Miss' | 'Ms' | 'Dr' | 'Prof'
+  dateOfBirth?: string
+  nationalInsuranceNumber?: string
+  utr?: string
+  businessStartDate?: string
+  businessType?: 'self-employed' | 'partnership' | 'rental-income' | 'investment-income' | 'employed'
+  tradingName?: string
+  vatNumber?: string
+  vatScheme?: 'non-vat' | 'standard-accrual' | 'standard-cash' | 'flat-rate-accrual' | 'flat-rate-cash'
+  vatRegDate?: string
+  vatSubmitType?: 'monthly' | 'quarterly' | 'yearly'
+  accountOfficeRef?: string
+  payeRef?: string
+  email: string
+  phone: string
+  mobile?: string
+  addressLine1?: string
+  addressLine2?: string
+  city?: string
+  county?: string
+  postcode?: string
+  country?: string
+  taxStatus: 'self-assessment' | 'paye' | 'both' | 'non-uk-resident'
+  lastTaxReturn?: string
+  nextDueDate?: string
+  annualFee?: number
+  engagementLetterSigned?: boolean
+  engagementLetterDate?: string
+  notes?: string
+  tags?: string[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 export default function PracticeManagement() {
@@ -173,11 +213,27 @@ export default function PracticeManagement() {
   const [selectedDeadlineStatus, setSelectedDeadlineStatus] = useState('all')
   const [selectedDeadlinePriority, setSelectedDeadlinePriority] = useState('all')
 
+  const [individualClients, setIndividualClients] = useState<IndividualClient[]>([])
+  const [isIndividualClientDialogOpen, setIsIndividualClientDialogOpen] = useState(false)
+  const [isIndividualClientEditOpen, setIsIndividualClientEditOpen] = useState(false)
+  const [isIndividualClientAddOpen, setIsIndividualClientAddOpen] = useState(false)
+  const [selectedIndividualClient, setSelectedIndividualClient] = useState<IndividualClient | null>(null)
+  const [individualClientFormData, setIndividualClientFormData] = useState<Partial<IndividualClient>>({})
+  const [clientSearchTerm, setClientSearchTerm] = useState('')
+
   useEffect(() => {
     loadDashboardData()
     loadJobs()
     loadDeadlines()
     loadTimeEntries()
+    const saved = localStorage.getItem('individualClients')
+    if (saved) {
+      try {
+        setIndividualClients(JSON.parse(saved))
+      } catch (e) {
+        console.error('Failed to load individual clients:', e)
+      }
+    }
   }, [])
 
   const loadDashboardData = async () => {
@@ -532,6 +588,55 @@ export default function PracticeManagement() {
     }
   }
 
+  const handleAddIndividualClient = () => {
+    setIndividualClientFormData({
+      firstName: '', lastName: '', email: '', phone: '', taxStatus: 'self-assessment'
+    })
+    setIsIndividualClientAddOpen(true)
+  }
+
+  const handleEditIndividualClient = (client: IndividualClient) => {
+    setSelectedIndividualClient(client)
+    setIndividualClientFormData(client)
+    setIsIndividualClientEditOpen(true)
+  }
+
+  const handleSaveIndividualClient = () => {
+    if (selectedIndividualClient) {
+      const updated = individualClients.map(c => 
+        c.id === selectedIndividualClient.id ? { ...selectedIndividualClient, ...individualClientFormData, updatedAt: new Date().toISOString() } as IndividualClient : c
+      )
+      setIndividualClients(updated)
+      localStorage.setItem('individualClients', JSON.stringify(updated))
+    }
+    setIsIndividualClientEditOpen(false)
+    showNotification('Success', 'Client updated successfully', 'success')
+  }
+
+  const handleSaveNewIndividualClient = () => {
+    const newClient: IndividualClient = {
+      id: `ind-${Date.now()}`,
+      ...individualClientFormData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    } as IndividualClient
+    const updated = [...individualClients, newClient]
+    setIndividualClients(updated)
+    localStorage.setItem('individualClients', JSON.stringify(updated))
+    setIsIndividualClientAddOpen(false)
+    setIndividualClientFormData({})
+    showNotification('Success', 'Client added successfully', 'success')
+  }
+
+  const handleDeleteIndividualClient = async (clientId: string) => {
+    if (!confirm('Are you sure you want to delete this client?')) return
+    
+    const updated = individualClients.filter(c => c.id !== clientId)
+    setIndividualClients(updated)
+    localStorage.setItem('individualClients', JSON.stringify(updated))
+    showNotification('Success', 'Client deleted successfully', 'success')
+  }
+
   const statusOptions = [
     { value: 'all', label: 'All Status' },
     { value: 'not_started', label: 'Not Started' },
@@ -584,6 +689,15 @@ export default function PracticeManagement() {
       label: 'Dashboard',
       icon: Calendar,
       hasSubTabs: false
+    },
+    clients: {
+      label: 'Client Management',
+      icon: UserPlus,
+      hasSubTabs: true,
+      subTabs: {
+        individuals: { label: 'Individual Clients', icon: Users },
+        business: { label: 'Business Clients', icon: Building2 }
+      }
     },
     jobs: {
       label: 'Jobs & Tasks',
@@ -2151,6 +2265,138 @@ export default function PracticeManagement() {
     )
   }
 
+  const renderIndividualClients = () => {
+    const filteredClients = individualClients.filter(client => {
+      const fullName = `${client.firstName} ${client.lastName}`.toLowerCase()
+      const searchLower = clientSearchTerm.toLowerCase()
+      return fullName.includes(searchLower) || 
+             client.email?.toLowerCase().includes(searchLower) ||
+             client.utr?.toLowerCase().includes(searchLower) ||
+             client.nationalInsuranceNumber?.toLowerCase().includes(searchLower)
+    })
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-[#001f3f]">Individual Clients</h2>
+            <p className="text-[#001f3f]">Manage individual tax clients for Personal Tax module</p>
+          </div>
+          <Button onClick={handleAddIndividualClient} className="bg-[#001f3f] hover:bg-[#003366]">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Individual Client
+          </Button>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-[#001f3f]">Client List ({filteredClients.length})</CardTitle>
+              <Input
+                placeholder="Search clients..."
+                value={clientSearchTerm}
+                onChange={(e) => setClientSearchTerm(e.target.value)}
+                className="max-w-sm"
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            {filteredClients.length === 0 ? (
+              <div className="text-center py-12">
+                <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No individual clients found</p>
+                <p className="text-gray-400 text-sm mb-4">Add your first individual client to start managing personal tax</p>
+                <Button onClick={handleAddIndividualClient} className="bg-[#001f3f] hover:bg-[#003366]">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add First Client
+                </Button>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {filteredClients.map((client) => (
+                  <Card key={client.id} className="border-2 border-[#001f3f] hover:shadow-lg transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Users className="h-5 w-5 text-[#001f3f]" />
+                              <h3 className="text-lg font-bold text-[#001f3f]">
+                                {client.title} {client.firstName} {client.lastName}
+                              </h3>
+                            </div>
+                            <div className="text-sm space-y-1">
+                              <div className="text-[#001f3f]">
+                                <span className="font-semibold">Email:</span> {client.email}
+                              </div>
+                              <div className="text-[#001f3f]">
+                                <span className="font-semibold">Phone:</span> {client.phone}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-sm space-y-1">
+                            <div className="text-[#001f3f]">
+                              <span className="font-semibold">UTR:</span> {client.utr || 'N/A'}
+                            </div>
+                            <div className="text-[#001f3f]">
+                              <span className="font-semibold">NI Number:</span> {client.nationalInsuranceNumber || 'N/A'}
+                            </div>
+                            <div>
+                              <Badge className="bg-[#001f3f] text-white">
+                                {client.taxStatus}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          <div className="text-sm space-y-1">
+                            <div className="text-[#001f3f]">
+                              <span className="font-semibold">Business Type:</span> {client.businessType || 'N/A'}
+                            </div>
+                            <div className="text-[#001f3f]">
+                              <span className="font-semibold">Next Due:</span> {client.nextDueDate || 'N/A'}
+                            </div>
+                            {client.tags && client.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {client.tags.map((tag, i) => (
+                                  <Badge key={i} variant="outline" className="text-xs">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 ml-4">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditIndividualClient(client)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteIndividualClient(client.id)}
+                            className="border-red-600 text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   const renderClientPortal = () => {
     const [activePortalTab, setActivePortalTab] = useState('overview')
     
@@ -3330,6 +3576,10 @@ export default function PracticeManagement() {
   const renderMainContent = () => {
     if (activeSubTab) {
       switch (`${activeMainTab}.${activeSubTab}`) {
+        case 'clients.individuals':
+          return renderIndividualClients()
+        case 'clients.business':
+          return <div className="text-center py-12 text-[#001f3f]">Business Clients - Coming Soon</div>
         case 'jobs.overview':
           return renderJobOverview()
         case 'jobs.tracking':
@@ -3354,6 +3604,8 @@ export default function PracticeManagement() {
     switch (activeMainTab) {
       case 'dashboard':
         return renderDashboard()
+      case 'clients':
+        return renderIndividualClients()
       case 'client-portal':
         return renderClientPortal()
       case 'capacity':
@@ -3472,6 +3724,23 @@ export default function PracticeManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Individual Client Forms */}
+      <IndividualClientForm
+        open={isIndividualClientEditOpen}
+        onOpenChange={setIsIndividualClientEditOpen}
+        client={selectedIndividualClient}
+        onSave={handleSaveIndividualClient}
+        mode="edit"
+      />
+
+      <IndividualClientForm
+        open={isIndividualClientAddOpen}
+        onOpenChange={setIsIndividualClientAddOpen}
+        client={null}
+        onSave={handleSaveNewIndividualClient}
+        mode="add"
+      />
 
     </ResponsiveLayout>
   )

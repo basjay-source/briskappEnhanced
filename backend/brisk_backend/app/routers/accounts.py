@@ -440,6 +440,9 @@ def create_adjustment(
         )
         db.add(line)
     
+    db.flush()  # Ensure journal lines are available in the session
+    db.refresh(adjustment)  # Refresh to load the journal_lines relationship
+    
     if adjustment.status == "posted":
         post_journal_to_ledger(db, request.state.tenant_id, adjustment)
     
@@ -470,8 +473,13 @@ def update_adjustment(
     if not adjustment:
         raise HTTPException(status_code=404, detail="Adjustment not found")
     
-    if adjustment.status == "posted":
-        raise HTTPException(status_code=400, detail="Cannot edit a posted journal entry")
+    client = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id,
+        AccountsProductionClient.id == adjustment.company_id
+    ).first()
+    
+    if client and (client.accounts_finalized or client.accounts_filed):
+        raise HTTPException(status_code=400, detail="Cannot edit journal entry - accounts have been finalized or filed")
     
     if adjustment_data.journal_lines is not None:
         total_debit = sum(line.debit for line in adjustment_data.journal_lines)
@@ -524,8 +532,13 @@ def delete_adjustment(
     if not adjustment:
         raise HTTPException(status_code=404, detail="Adjustment not found")
     
-    if adjustment.status == "posted":
-        raise HTTPException(status_code=400, detail="Cannot delete a posted journal entry. Reverse it instead.")
+    client = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id,
+        AccountsProductionClient.id == adjustment.company_id
+    ).first()
+    
+    if client and (client.accounts_finalized or client.accounts_filed):
+        raise HTTPException(status_code=400, detail="Cannot delete journal entry - accounts have been finalized or filed")
     
     db.delete(adjustment)
     db.commit()

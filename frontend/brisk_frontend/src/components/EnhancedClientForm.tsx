@@ -16,7 +16,13 @@ interface Client {
   type: 'sole-trader' | 'partnership' | 'limited-company' | 'llp' | 'charity' | 'academy' | 'cic'
   registrationNumber?: string
   incorporationDate?: string
+  businessStartDate?: string
   vatNumber?: string
+  vatScheme?: 'non-vat' | 'standard-accrual' | 'standard-cash' | 'flat-rate-accrual' | 'flat-rate-cash'
+  vatRegDate?: string
+  vatSubmitType?: 'monthly' | 'quarterly' | 'yearly'
+  accountOfficeRef?: string
+  payeRef?: string
   utr?: string
   yearEnd: string
   accountsStatus: 'not-started' | 'in-progress' | 'review' | 'completed' | 'filed'
@@ -376,6 +382,92 @@ export const EnhancedClientForm: React.FC<EnhancedClientFormProps> = ({
           {/* Tab 3: Business Details */}
           <TabsContent value="business" className="space-y-4 mt-4">
             <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f] font-semibold">Business Start Date</Label>
+                <Input
+                  type="date"
+                  value={formData.businessStartDate || ''}
+                  onChange={(e) => updateField('businessStartDate', e.target.value)}
+                  className="text-[#001f3f] border-[#001f3f]"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#001f3f] font-semibold">Year End Date (Month/Year)</Label>
+                <Input
+                  type="date"
+                  value={formData.yearEnd || ''}
+                  onChange={(e) => updateField('yearEnd', e.target.value)}
+                  className="text-[#001f3f] border-[#001f3f]"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <Label className="text-[#001f3f] font-semibold">VAT Scheme</Label>
+                <Select 
+                  value={formData.vatScheme} 
+                  onValueChange={(value) => updateField('vatScheme', value)}
+                >
+                  <SelectTrigger className="border-[#001f3f]">
+                    <SelectValue placeholder="Select VAT scheme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="non-vat">Non-VAT Registered</SelectItem>
+                    <SelectItem value="standard-accrual">Cash-Based Normal Scheme</SelectItem>
+                    <SelectItem value="standard-cash">Accrual Based</SelectItem>
+                    <SelectItem value="flat-rate-accrual">Flat Rate Accrual Based</SelectItem>
+                    <SelectItem value="flat-rate-cash">Flat Rate Cash Based</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-[#001f3f] font-semibold">VAT Registration Date</Label>
+                <Input
+                  type="date"
+                  value={formData.vatRegDate || ''}
+                  onChange={(e) => updateField('vatRegDate', e.target.value)}
+                  className="text-[#001f3f] border-[#001f3f]"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#001f3f] font-semibold">VAT Submit Type</Label>
+                <Select 
+                  value={formData.vatSubmitType} 
+                  onValueChange={(value) => updateField('vatSubmitType', value)}
+                >
+                  <SelectTrigger className="border-[#001f3f]">
+                    <SelectValue placeholder="Select frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-[#001f3f] font-semibold">Accounts Office Reference No.</Label>
+                <Input
+                  value={formData.accountOfficeRef || ''}
+                  onChange={(e) => updateField('accountOfficeRef', e.target.value)}
+                  className="text-[#001f3f] border-[#001f3f]"
+                  placeholder="e.g., 123PA45678901"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#001f3f] font-semibold">PAYE Reference No.</Label>
+                <Input
+                  value={formData.payeRef || ''}
+                  onChange={(e) => updateField('payeRef', e.target.value)}
+                  className="text-[#001f3f] border-[#001f3f]"
+                  placeholder="e.g., 123/AB45678"
+                />
+              </div>
+
               <div className="col-span-2">
                 <Label className="text-[#001f3f] font-semibold">Industry/Sector</Label>
                 <Input
