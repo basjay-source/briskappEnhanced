@@ -40,7 +40,7 @@ import KPICard from '../../components/KPICard'
 import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
-import { IndividualClientForm } from '../../components/IndividualClientForm'
+import ComprehensiveIndividualClientForm from '../../components/ComprehensiveIndividualClientForm'
 import ComprehensiveSAReturnForm from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
 import { 
@@ -1432,7 +1432,7 @@ export default function PersonalTax() {
       />
 
       {/* Individual Client Form */}
-      <IndividualClientForm
+      <ComprehensiveIndividualClientForm
         open={isClientFormOpen}
         onOpenChange={setIsClientFormOpen}
         client={selectedClientForEdit}
