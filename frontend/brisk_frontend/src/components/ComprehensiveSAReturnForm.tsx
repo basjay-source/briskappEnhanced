@@ -362,19 +362,19 @@ export default function ComprehensiveSAReturnForm({
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-gray-100">
-            <TabsTrigger value="basic" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white text-sm">
+            <TabsTrigger value="basic" className="bg-[#001f3f] text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
               Basic Details
             </TabsTrigger>
-            <TabsTrigger value="employment" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white text-sm">
+            <TabsTrigger value="employment" className="bg-[#001f3f] text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
               Employment
             </TabsTrigger>
-            <TabsTrigger value="self-employment" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white text-sm">
+            <TabsTrigger value="self-employment" className="bg-[#001f3f] text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
               Self-Employment
             </TabsTrigger>
-            <TabsTrigger value="property" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white text-sm">
+            <TabsTrigger value="property" className="bg-[#001f3f] text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
               Property
             </TabsTrigger>
-            <TabsTrigger value="dividends" className="data-[state=active]:bg-[#001f3f] data-[state=active]:text-white text-sm">
+            <TabsTrigger value="dividends" className="bg-[#001f3f] text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-sm">
               Dividends & More
             </TabsTrigger>
           </TabsList>
