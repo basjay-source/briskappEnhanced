@@ -132,6 +132,8 @@ export default function PersonalTax() {
   const [saReturnFormMode, setSAReturnFormMode] = useState<'add' | 'edit' | 'view'>('add')
   const [showClientList, setShowClientList] = useState(false)
   const [showSAReturnList, setShowSAReturnList] = useState(false)
+  const [sortField, setSortField] = useState<'client' | 'taxYear' | 'estimatedTax' | 'dueDate'>('dueDate')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
   useEffect(() => {
     const loadClientsFromPracticeManagement = () => {
@@ -542,12 +544,43 @@ export default function PersonalTax() {
     }
   }
 
+  const handleSort = (field: 'client' | 'taxYear' | 'estimatedTax' | 'dueDate') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+
+  const sortReturns = (returns: typeof saReturns) => {
+    return [...returns].sort((a, b) => {
+      let aVal: any = a[sortField === 'client' ? 'client' : sortField]
+      let bVal: any = b[sortField === 'client' ? 'client' : sortField]
+      
+      if (sortField === 'estimatedTax') {
+        aVal = a.estimatedTax
+        bVal = b.estimatedTax
+        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
+      }
+      
+      if (sortField === 'dueDate' || sortField === 'taxYear') {
+        aVal = String(aVal)
+        bVal = String(bVal)
+      }
+      
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
   function renderMainContent() {
     if (activeSubTab) {
       switch (activeSubTab) {
         case 'current': return renderCurrentReturns()
-        case 'drafts': return renderCurrentReturns()
-        case 'submitted': return renderCurrentReturns()
+        case 'drafts': return renderDraftReturns()
+        case 'submitted': return renderSubmittedReturns()
         case 'amendments': return renderCurrentReturns()
         case 'calculator': return renderCGTCalculator()
         case 'optimization': return renderOptimization()
@@ -812,16 +845,18 @@ export default function PersonalTax() {
   }
 
   function renderCurrentReturns() {
+    const currentReturns = sortReturns(saReturns.filter(r => r.status === 'in_progress' || r.status === 'review'))
+    
     return (
       <div className="space-y-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-[#001f3f]">SA100 Returns Management</CardTitle>
-                    <CardDescription>Create and manage Self Assessment returns</CardDescription>
+                    <CardTitle className="text-[#001f3f]">Current SA Returns</CardTitle>
+                    <CardDescription>Returns currently being prepared or in review</CardDescription>
                   </div>
-                  <Button>
+                  <Button onClick={handleAddSAReturn}>
                     <Plus className="h-4 w-4 mr-2" />
                     New Return
                   </Button>
@@ -891,40 +926,239 @@ export default function PersonalTax() {
                     </Button>
                   </div>
 
-                  <div className="grid gap-4">
-                    {saReturns.map((saReturn) => (
-                      <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
-                        <CardContent className="p-6">
-                          <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
-                            <div className="flex items-center gap-4">
-                              {getStatusIcon(saReturn.status)}
-                              <div>
-                                <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
-                                <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
-                                <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
-                                  {saReturn.status.replace('_', ' ')}
-                                </Badge>
+                  {currentReturns.length > 0 ? (
+                    <div className="grid gap-4">
+                      {currentReturns.map((saReturn) => (
+                        <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
+                          <CardContent className="p-6">
+                            <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
+                              <div className="flex items-center gap-4">
+                                {getStatusIcon(saReturn.status)}
+                                <div>
+                                  <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                                  <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                                  <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
+                                    {saReturn.status.replace('_', ' ')}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
+                                <div>
+                                  <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
+                                  <p className="text-sm text-[#001f3f]">Estimated Tax</p>
+                                  <p className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</p>
+                                </div>
+                                <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
+                                  <Button size="sm" variant="outline" onClick={() => handleEditSAReturn(saReturn)}>Edit</Button>
+                                  <Button size="sm" onClick={() => handleViewSAReturn(saReturn)}>View</Button>
+                                  <Button size="sm" variant="destructive" onClick={() => handleDeleteSAReturn(saReturn.id)}>Delete</Button>
+                                </div>
                               </div>
                             </div>
-                            <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
-                              <div>
-                                <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
-                                <p className="text-sm text-[#001f3f]">Estimated Tax</p>
-                                <p className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</p>
-                              </div>
-                              <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
-                                <Button size="sm" variant="outline">Edit</Button>
-                                <Button size="sm">File</Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-[#001f3f]">
+                      <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                      <p className="text-lg font-semibold">No current returns</p>
+                      <p className="text-sm mt-2">Start a new return to begin</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
+      </div>
+    )
+  }
+
+  function renderDraftReturns() {
+    const draftReturns = sortReturns(saReturns.filter(r => r.status === 'draft' || r.status === 'in_progress'))
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Draft SA Returns</CardTitle>
+                <CardDescription>Returns in progress or saved as drafts</CardDescription>
+              </div>
+              <Button onClick={handleAddSAReturn}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Draft
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <SearchFilterHeader
+                searchPlaceholder="Search draft returns..."
+                searchValue={searchTerm}
+                onSearchChange={setSearchTerm}
+                filters={[
+                  {
+                    label: 'Tax Year',
+                    options: taxYearOptions,
+                    value: selectedTaxYear,
+                    onChange: setSelectedTaxYear
+                  }
+                ]}
+                dateRange={{
+                  from: dateFrom,
+                  to: dateTo,
+                  onFromChange: setDateFrom,
+                  onToChange: setDateTo
+                }}
+              />
+
+              {draftReturns.length > 0 ? (
+                <div className="grid gap-4">
+                  {draftReturns.map((saReturn) => (
+                    <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <Edit className="h-8 w-8 text-orange-500" />
+                            <div>
+                              <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                              <Badge className="text-xs mt-1 bg-orange-100 text-orange-800">
+                                {saReturn.status === 'draft' ? 'Draft' : 'In Progress'}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div>
+                              <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
+                              <p className="text-sm text-[#001f3f]">Estimated Tax</p>
+                              <div className="mt-2">
+                                <div className="text-xs text-[#001f3f] mb-1">Progress: {saReturn.progress}%</div>
+                                <div className="w-32 bg-gray-200 rounded-full h-2">
+                                  <div className="bg-orange-500 h-2 rounded-full" style={{width: `${saReturn.progress}%`}}></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 mt-3">
+                              <Button size="sm" variant="outline" onClick={() => handleEditSAReturn(saReturn)}>
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                              <Button size="sm" variant="destructive" onClick={() => handleDeleteSAReturn(saReturn.id)}>
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-[#001f3f]">
+                  <Edit className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-lg font-semibold">No draft returns</p>
+                  <p className="text-sm mt-2">Start a new return to begin</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderSubmittedReturns() {
+    const submittedReturns = sortReturns(saReturns.filter(r => r.status === 'submitted' || r.status === 'completed'))
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Submitted SA Returns</CardTitle>
+                <CardDescription>Successfully submitted and completed returns</CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export All
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <SearchFilterHeader
+                searchPlaceholder="Search submitted returns..."
+                searchValue={searchTerm}
+                onSearchChange={setSearchTerm}
+                filters={[
+                  {
+                    label: 'Tax Year',
+                    options: taxYearOptions,
+                    value: selectedTaxYear,
+                    onChange: setSelectedTaxYear
+                  }
+                ]}
+                dateRange={{
+                  from: dateFrom,
+                  to: dateTo,
+                  onFromChange: setDateFrom,
+                  onToChange: setDateTo
+                }}
+              />
+
+              {submittedReturns.length > 0 ? (
+                <div className="grid gap-4">
+                  {submittedReturns.map((saReturn) => (
+                    <Card key={saReturn.id} className="hover:shadow-md transition-shadow border-l-4 border-l-green-500">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <CheckCircle className="h-8 w-8 text-green-600" />
+                            <div>
+                              <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                              <Badge className="text-xs mt-1 bg-green-100 text-green-800">
+                                Submitted
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div>
+                              <p className="font-semibold text-green-600">£{saReturn.estimatedTax.toLocaleString()}</p>
+                              <p className="text-sm text-[#001f3f]">Tax Paid</p>
+                              <p className="text-xs text-[#001f3f] mt-1">Submitted: {saReturn.dueDate}</p>
+                            </div>
+                            <div className="flex gap-2 mt-3">
+                              <Button size="sm" variant="outline" onClick={() => handleViewSAReturn(saReturn)}>
+                                <FileText className="h-3 w-3 mr-1" />
+                                View
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Download className="h-3 w-3 mr-1" />
+                                Download
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-[#001f3f]">
+                  <CheckCircle className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-lg font-semibold">No submitted returns</p>
+                  <p className="text-sm mt-2">Completed returns will appear here</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }

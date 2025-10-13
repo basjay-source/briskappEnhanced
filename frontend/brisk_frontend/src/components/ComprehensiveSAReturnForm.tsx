@@ -477,6 +477,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
   const isReadOnly = mode === 'view'
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -3173,5 +3174,6 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   )
 }
