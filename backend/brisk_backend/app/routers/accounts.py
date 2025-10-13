@@ -618,24 +618,23 @@ def update_trial_balance(
     tb_entry = db.query(TrialBalance).filter(
         TrialBalance.tenant_id == tenant_id,
         TrialBalance.company_id == company_id,
-        TrialBalance.account_code == account_code,
-        TrialBalance.period_end >= transaction_date
+        TrialBalance.account_code == account_code
     ).first()
     
-    if not tb_entry:
+    if tb_entry:
+        tb_entry.debit_balance += debit_amount
+        tb_entry.credit_balance += credit_amount
+    else:
         tb_entry = TrialBalance(
             tenant_id=tenant_id,
             company_id=company_id,
             period_end=date(transaction_date.year, 12, 31),
             account_code=account_code,
             account_name=account_name,
-            debit_balance=0,
-            credit_balance=0
+            debit_balance=debit_amount,
+            credit_balance=credit_amount
         )
         db.add(tb_entry)
-    
-    tb_entry.debit_balance += debit_amount
-    tb_entry.credit_balance += credit_amount
 
 class ChartOfAccountCreate(BaseModel):
     code: str
