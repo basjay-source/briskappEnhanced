@@ -630,7 +630,7 @@ export default function PersonalTax() {
           </div>
         </div>
 
-        <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
+        <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-3'}>
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon
             const drillDownData = {
