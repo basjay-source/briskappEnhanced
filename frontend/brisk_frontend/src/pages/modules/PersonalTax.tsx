@@ -317,13 +317,22 @@ export default function PersonalTax() {
   
   const [selectedClient, setSelectedClient] = useState('')
 
-  const taxYearOptions = [
-    { label: 'All Tax Years', value: 'all' },
-    { label: '2024/25', value: '2024' },
-    { label: '2023/24', value: '2023' },
-    { label: '2022/23', value: '2022' },
-    { label: '2021/22', value: '2021' }
-  ]
+  const generateTaxYears = () => {
+    const currentYear = new Date().getFullYear()
+    const taxYears = [{ label: 'All Tax Years', value: 'all' }]
+    
+    for (let i = 0; i < 30; i++) {
+      const year = currentYear - i
+      taxYears.push({
+        label: `${year}/${String(year + 1).slice(-2)}`,
+        value: String(year)
+      })
+    }
+    
+    return taxYears
+  }
+
+  const taxYearOptions = generateTaxYears()
 
   const statusOptions = [
     { label: 'All Statuses', value: 'all' },

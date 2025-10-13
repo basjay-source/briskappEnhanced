@@ -730,10 +730,14 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="2024/25">2024/25</SelectItem>
-                      <SelectItem value="2023/24">2023/24</SelectItem>
-                      <SelectItem value="2022/23">2022/23</SelectItem>
-                      <SelectItem value="2021/22">2021/22</SelectItem>
+                      {Array.from({ length: 30 }, (_, i) => {
+                        const year = new Date().getFullYear() - i
+                        return (
+                          <SelectItem key={year} value={`${year}/${String(year + 1).slice(-2)}`}>
+                            {year}/{String(year + 1).slice(-2)}
+                          </SelectItem>
+                        )
+                      })}
                     </SelectContent>
                   </Select>
                 </div>
