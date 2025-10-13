@@ -81,8 +81,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ExportButton } from '@/components/ExportButton'
-import { chartOfAccounts, getAllAccounts, searchAccounts } from '../../data/chartOfAccounts'
+import { getAllAccounts } from '../../data/chartOfAccounts'
 
 export default function Bookkeeping() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')

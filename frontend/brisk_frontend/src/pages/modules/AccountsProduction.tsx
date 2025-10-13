@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../../components/ui/textarea'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
-import { chartOfAccounts, getAllAccounts, searchAccounts } from '../../data/chartOfAccounts'
+import { getAllAccounts } from '../../data/chartOfAccounts'
 
 interface Client {
   id: string
@@ -165,7 +165,7 @@ const AccountsProduction: React.FC = () => {
   const [adjSortField, setAdjSortField] = useState<keyof Adjustment | ''>('')
   const [adjSortDirection, setAdjSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const [statements, setStatements] = useState<FinancialStatement[]>([
+  const [statements, _setStatements] = useState<FinancialStatement[]>([
     { id: '1', clientId: '1', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '2', clientId: '1', type: 'profit-loss', period: '2024', generatedDate: '2024-01-15', status: 'finalized', frsStandard: 'FRS 102' },
     { id: '3', clientId: '2', type: 'balance-sheet', period: '2024', generatedDate: '2024-01-10', status: 'review', frsStandard: 'FRS 102' }
@@ -181,26 +181,26 @@ const AccountsProduction: React.FC = () => {
   const [isClientViewOpen, setIsClientViewOpen] = useState(false)
   const [isClientEditOpen, setIsClientEditOpen] = useState(false)
   const [isClientAddOpen, setIsClientAddOpen] = useState(false)
-  const [isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
+  const [_isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
 
-  const [isTBViewOpen, setIsTBViewOpen] = useState(false)
+  const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
-  const [isTBAddOpen, setIsTBAddOpen] = useState(false)
+  const [_isTBAddOpen, setIsTBAddOpen] = useState(false)
   const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
   const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
-  const [isAdjViewOpen, setIsAdjViewOpen] = useState(false)
+  const [_isAdjViewOpen, setIsAdjViewOpen] = useState(false)
   const [isAdjEditOpen, setIsAdjEditOpen] = useState(false)
-  const [isAdjAddOpen, setIsAdjAddOpen] = useState(false)
+  const [_isAdjAddOpen, setIsAdjAddOpen] = useState(false)
   const [selectedAdjustment, setSelectedAdjustment] = useState<Adjustment | null>(null)
   const [adjFormData, setAdjFormData] = useState<Partial<Adjustment>>({})
 
-  const [isStatementViewOpen, setIsStatementViewOpen] = useState(false)
-  const [isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
-  const [selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
-  const [statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
+  const [_isStatementViewOpen, setIsStatementViewOpen] = useState(false)
+  const [_isGenerateStatementOpen, setIsGenerateStatementOpen] = useState(false)
+  const [_selectedStatement, setSelectedStatement] = useState<FinancialStatement | null>(null)
+  const [_statementFormData, setStatementFormData] = useState<Partial<FinancialStatement>>({})
 
   const [isDrilldownOpen, setIsDrilldownOpen] = useState(false)
   const [drilldownTitle, setDrilldownTitle] = useState('')
@@ -263,12 +263,6 @@ const AccountsProduction: React.FC = () => {
     setIsClientAddOpen(false)
   }
 
-  const confirmDeleteClient = () => {
-    if (selectedClient) {
-      setClients(clients.filter(c => c.id !== selectedClient.id))
-    }
-    setIsClientDeleteOpen(false)
-  }
 
   const handleViewTBEntry = (entry: TrialBalanceEntry) => {
     setSelectedTBEntry(entry)
@@ -297,14 +291,6 @@ const AccountsProduction: React.FC = () => {
     setIsTBEditOpen(false)
   }
 
-  const handleSaveNewTBEntry = () => {
-    const newEntry: TrialBalanceEntry = {
-      ...tbFormData as TrialBalanceEntry,
-      id: Date.now().toString()
-    }
-    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
-    setIsTBAddOpen(false)
-  }
 
   const handleViewAdjustment = (adj: Adjustment) => {
     setSelectedAdjustment(adj)
@@ -333,14 +319,6 @@ const AccountsProduction: React.FC = () => {
     setIsAdjEditOpen(false)
   }
 
-  const handleSaveNewAdjustment = () => {
-    const newAdj: Adjustment = {
-      ...adjFormData as Adjustment,
-      id: Date.now().toString()
-    }
-    setAdjustments([...adjustments, newAdj])
-    setIsAdjAddOpen(false)
-  }
 
   const handleViewStatement = (stmt: FinancialStatement) => {
     setSelectedStatement(stmt)
@@ -355,15 +333,6 @@ const AccountsProduction: React.FC = () => {
     setIsGenerateStatementOpen(true)
   }
 
-  const handleSaveNewStatement = () => {
-    const newStatement: FinancialStatement = {
-      ...statementFormData as FinancialStatement,
-      id: Date.now().toString(),
-      generatedDate: new Date().toISOString().split('T')[0]
-    }
-    setStatements([...statements, newStatement])
-    setIsGenerateStatementOpen(false)
-  }
 
   const getFilteredClients = () => {
     let filtered = clients.filter(client => {
