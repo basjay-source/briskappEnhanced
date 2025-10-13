@@ -310,40 +310,44 @@ export const BookkeepingJournalForm: React.FC<BookkeepingJournalFormProps> = ({
                         />
                       </TableCell>
                       <TableCell className="p-2">
-                        <Input
+                        <input
                           type="text"
-                          value={line.debit === 0 ? '' : line.debit.toFixed(2)}
-                          onChange={(e) => {
-                            const value = e.target.value
-                            if (value === '' || value === '0') {
+                          defaultValue={line.debit === 0 ? '' : line.debit.toFixed(2)}
+                          onBlur={(e) => {
+                            const value = e.target.value.trim()
+                            if (value === '' || value === '0' || parseFloat(value) === 0) {
                               updateLine(line.id, 'debit', 0)
+                              e.target.value = ''
                             } else {
                               const numValue = parseFloat(value)
                               if (!isNaN(numValue)) {
                                 updateLine(line.id, 'debit', numValue)
+                                e.target.value = numValue.toFixed(2)
                               }
                             }
                           }}
-                          className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
+                          className="flex h-9 w-full rounded-md border border-[#001f3f] bg-transparent px-3 py-1 text-sm text-[#001f3f] shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-right"
                           placeholder="0.00"
                         />
                       </TableCell>
                       <TableCell className="p-2">
-                        <Input
+                        <input
                           type="text"
-                          value={line.credit === 0 ? '' : line.credit.toFixed(2)}
-                          onChange={(e) => {
-                            const value = e.target.value
-                            if (value === '' || value === '0') {
+                          defaultValue={line.credit === 0 ? '' : line.credit.toFixed(2)}
+                          onBlur={(e) => {
+                            const value = e.target.value.trim()
+                            if (value === '' || value === '0' || parseFloat(value) === 0) {
                               updateLine(line.id, 'credit', 0)
+                              e.target.value = ''
                             } else {
                               const numValue = parseFloat(value)
                               if (!isNaN(numValue)) {
                                 updateLine(line.id, 'credit', numValue)
+                                e.target.value = numValue.toFixed(2)
                               }
                             }
                           }}
-                          className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
+                          className="flex h-9 w-full rounded-md border border-[#001f3f] bg-transparent px-3 py-1 text-sm text-[#001f3f] shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-right"
                           placeholder="0.00"
                         />
                       </TableCell>
