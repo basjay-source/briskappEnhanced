@@ -6,7 +6,7 @@ from datetime import date
 from decimal import Decimal
 
 from app.database import get_db
-from app.models import LedgerAccount, JournalEntry, TrialBalance, FinancialStatement
+from app.models import LedgerAccount, JournalEntry, TrialBalance, FinancialStatement, AccountsProductionClient, YearEndAdjustment, ChartOfAccount
 
 router = APIRouter()
 
@@ -225,3 +225,347 @@ def generate_ixbrl(
             "schema_valid": True
         }
     }
+
+class AccountsProductionClientCreate(BaseModel):
+    name: str
+    type: str
+    registration_number: Optional[str] = None
+    year_end: date
+    accounts_status: str = "not-started"
+    last_accounts: Optional[date] = None
+    next_due: Optional[date] = None
+    frs_standard: str = "FRS 102"
+    contact_person: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+
+class AccountsProductionClientUpdate(BaseModel):
+    name: Optional[str] = None
+    type: Optional[str] = None
+    registration_number: Optional[str] = None
+    year_end: Optional[date] = None
+    accounts_status: Optional[str] = None
+    last_accounts: Optional[date] = None
+    next_due: Optional[date] = None
+    frs_standard: Optional[str] = None
+    contact_person: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+
+@router.get("/production/clients")
+def get_production_clients(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    clients = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id
+    ).all()
+    return clients
+
+@router.post("/production/clients")
+def create_production_client(
+    client_data: AccountsProductionClientCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    client = AccountsProductionClient(
+        tenant_id=request.state.tenant_id,
+        **client_data.dict()
+    )
+    db.add(client)
+    db.commit()
+    db.refresh(client)
+    return client
+
+@router.get("/production/clients/{client_id}")
+def get_production_client(
+    client_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    client = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id,
+        AccountsProductionClient.id == client_id
+    ).first()
+    
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    
+    return client
+
+@router.put("/production/clients/{client_id}")
+def update_production_client(
+    client_id: str,
+    client_data: AccountsProductionClientUpdate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    client = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id,
+        AccountsProductionClient.id == client_id
+    ).first()
+    
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    
+    for key, value in client_data.dict(exclude_unset=True).items():
+        setattr(client, key, value)
+    
+    db.commit()
+    db.refresh(client)
+    return client
+
+@router.delete("/production/clients/{client_id}")
+def delete_production_client(
+    client_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    client = db.query(AccountsProductionClient).filter(
+        AccountsProductionClient.tenant_id == request.state.tenant_id,
+        AccountsProductionClient.id == client_id
+    ).first()
+    
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    
+    db.delete(client)
+    db.commit()
+    return {"message": "Client deleted successfully"}
+
+class YearEndAdjustmentCreate(BaseModel):
+    company_id: str
+    adjustment_type: str
+    description: str
+    amount: Decimal
+    adjustment_date: date
+    account_code: str
+    status: str = "draft"
+
+class YearEndAdjustmentUpdate(BaseModel):
+    adjustment_type: Optional[str] = None
+    description: Optional[str] = None
+    amount: Optional[Decimal] = None
+    adjustment_date: Optional[date] = None
+    account_code: Optional[str] = None
+    status: Optional[str] = None
+
+@router.get("/production/adjustments/{company_id}")
+def get_adjustments(
+    company_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    adjustments = db.query(YearEndAdjustment).filter(
+        YearEndAdjustment.tenant_id == request.state.tenant_id,
+        YearEndAdjustment.company_id == company_id
+    ).all()
+    return adjustments
+
+@router.post("/production/adjustments")
+def create_adjustment(
+    adjustment_data: YearEndAdjustmentCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    adjustment = YearEndAdjustment(
+        tenant_id=request.state.tenant_id,
+        **adjustment_data.dict()
+    )
+    db.add(adjustment)
+    db.commit()
+    db.refresh(adjustment)
+    return adjustment
+
+@router.put("/production/adjustments/{adjustment_id}")
+def update_adjustment(
+    adjustment_id: str,
+    adjustment_data: YearEndAdjustmentUpdate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    adjustment = db.query(YearEndAdjustment).filter(
+        YearEndAdjustment.tenant_id == request.state.tenant_id,
+        YearEndAdjustment.id == adjustment_id
+    ).first()
+    
+    if not adjustment:
+        raise HTTPException(status_code=404, detail="Adjustment not found")
+    
+    for key, value in adjustment_data.dict(exclude_unset=True).items():
+        setattr(adjustment, key, value)
+    
+    db.commit()
+    db.refresh(adjustment)
+    return adjustment
+
+@router.delete("/production/adjustments/{adjustment_id}")
+def delete_adjustment(
+    adjustment_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    adjustment = db.query(YearEndAdjustment).filter(
+        YearEndAdjustment.tenant_id == request.state.tenant_id,
+        YearEndAdjustment.id == adjustment_id
+    ).first()
+    
+    if not adjustment:
+        raise HTTPException(status_code=404, detail="Adjustment not found")
+    
+    db.delete(adjustment)
+    db.commit()
+    return {"message": "Adjustment deleted successfully"}
+
+class ChartOfAccountCreate(BaseModel):
+    code: str
+    name: str
+    group_number: Optional[str] = None
+    category: Optional[str] = None
+    is_system: bool = False
+    is_active: bool = True
+
+class ChartOfAccountUpdate(BaseModel):
+    code: Optional[str] = None
+    name: Optional[str] = None
+    group_number: Optional[str] = None
+    category: Optional[str] = None
+    is_active: Optional[bool] = None
+
+@router.get("/chart-of-accounts")
+def get_chart_of_accounts(
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    accounts = db.query(ChartOfAccount).filter(
+        ChartOfAccount.tenant_id == request.state.tenant_id,
+        ChartOfAccount.is_active == True
+    ).all()
+    return accounts
+
+@router.post("/chart-of-accounts")
+def create_chart_account(
+    account_data: ChartOfAccountCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    account = ChartOfAccount(
+        tenant_id=request.state.tenant_id,
+        **account_data.dict()
+    )
+    db.add(account)
+    db.commit()
+    db.refresh(account)
+    return account
+
+@router.put("/chart-of-accounts/{account_id}")
+def update_chart_account(
+    account_id: str,
+    account_data: ChartOfAccountUpdate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    account = db.query(ChartOfAccount).filter(
+        ChartOfAccount.tenant_id == request.state.tenant_id,
+        ChartOfAccount.id == account_id
+    ).first()
+    
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+    
+    for key, value in account_data.dict(exclude_unset=True).items():
+        setattr(account, key, value)
+    
+    db.commit()
+    db.refresh(account)
+    return account
+
+@router.delete("/chart-of-accounts/{account_id}")
+def delete_chart_account(
+    account_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    account = db.query(ChartOfAccount).filter(
+        ChartOfAccount.tenant_id == request.state.tenant_id,
+        ChartOfAccount.id == account_id
+    ).first()
+    
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+    
+    if account.is_system:
+        raise HTTPException(status_code=403, detail="Cannot delete system account")
+    
+    db.delete(account)
+    db.commit()
+    return {"message": "Account deleted successfully"}
+
+class TrialBalanceEntryCreate(BaseModel):
+    company_id: str
+    period_end: date
+    account_code: str
+    account_name: str
+    debit_balance: Decimal = 0
+    credit_balance: Decimal = 0
+
+class TrialBalanceEntryUpdate(BaseModel):
+    account_code: Optional[str] = None
+    account_name: Optional[str] = None
+    debit_balance: Optional[Decimal] = None
+    credit_balance: Optional[Decimal] = None
+
+@router.post("/trial-balance/entry")
+def create_trial_balance_entry(
+    entry_data: TrialBalanceEntryCreate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    entry = TrialBalance(
+        tenant_id=request.state.tenant_id,
+        **entry_data.dict()
+    )
+    db.add(entry)
+    db.commit()
+    db.refresh(entry)
+    return entry
+
+@router.put("/trial-balance/entry/{entry_id}")
+def update_trial_balance_entry(
+    entry_id: str,
+    entry_data: TrialBalanceEntryUpdate,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    entry = db.query(TrialBalance).filter(
+        TrialBalance.tenant_id == request.state.tenant_id,
+        TrialBalance.id == entry_id
+    ).first()
+    
+    if not entry:
+        raise HTTPException(status_code=404, detail="Trial balance entry not found")
+    
+    for key, value in entry_data.dict(exclude_unset=True).items():
+        setattr(entry, key, value)
+    
+    db.commit()
+    db.refresh(entry)
+    return entry
+
+@router.delete("/trial-balance/entry/{entry_id}")
+def delete_trial_balance_entry(
+    entry_id: str,
+    request: Request = None,
+    db: Session = Depends(get_db)
+):
+    entry = db.query(TrialBalance).filter(
+        TrialBalance.tenant_id == request.state.tenant_id,
+        TrialBalance.id == entry_id
+    ).first()
+    
+    if not entry:
+        raise HTTPException(status_code=404, detail="Trial balance entry not found")
+    
+    db.delete(entry)
+    db.commit()
+    return {"message": "Trial balance entry deleted successfully"}

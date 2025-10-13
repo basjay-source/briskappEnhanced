@@ -72,3 +72,50 @@ class ConsolidationRule(Base):
     target_account = Column(String)
     elimination_percentage = Column(Numeric(5, 2), default=100)
     is_active = Column(Boolean, default=True)
+
+class AccountsProductionClient(Base):
+    __tablename__ = "accounts_production_clients"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    name = Column(String, nullable=False)
+    type = Column(String, nullable=False)
+    registration_number = Column(String)
+    year_end = Column(Date, nullable=False)
+    accounts_status = Column(String, default="not-started")
+    last_accounts = Column(Date)
+    next_due = Column(Date)
+    frs_standard = Column(String, default="FRS 102")
+    contact_person = Column(String)
+    email = Column(String)
+    phone = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+class YearEndAdjustment(Base):
+    __tablename__ = "year_end_adjustments"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    company_id = Column(String, ForeignKey("companies.id"), nullable=False)
+    adjustment_type = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
+    adjustment_date = Column(Date, nullable=False)
+    account_code = Column(String, nullable=False)
+    status = Column(String, default="draft")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+class ChartOfAccount(Base):
+    __tablename__ = "chart_of_accounts"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tenant_id = Column(String, ForeignKey("tenants.id"), nullable=False)
+    code = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    group_number = Column(String)
+    category = Column(String)
+    is_system = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
