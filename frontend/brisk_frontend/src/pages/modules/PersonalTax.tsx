@@ -41,7 +41,7 @@ import ResponsiveLayout, { ResponsiveGrid } from '@/components/ResponsiveLayout'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import ComprehensiveIndividualClientForm from '../../components/ComprehensiveIndividualClientForm'
-import ComprehensiveSAReturnForm from '../../components/ComprehensiveSAReturnForm'
+import { SAReturnForm as ComprehensiveSAReturnForm } from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
 import { 
   Dialog,
