@@ -145,8 +145,6 @@ const AccountsProduction: React.FC = () => {
     { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
     { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
   ])
-  const [tbSortField, setTbSortField] = useState<keyof TrialBalanceEntry | ''>('')
-  const [tbSortDirection, setTbSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
     { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2400, date: '2024-12-31', accountCode: '1200', status: 'approved' },
@@ -557,23 +555,7 @@ const AccountsProduction: React.FC = () => {
   }
 
   const getFilteredTBEntries = () => {
-    let filtered = [...trialBalanceEntries]
-
-    if (tbSortField) {
-      filtered = filtered.sort((a, b) => {
-        const aVal = a[tbSortField]
-        const bVal = b[tbSortField]
-        if (aVal === undefined || bVal === undefined) return 0
-        
-        if (tbSortDirection === 'asc') {
-          return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
-        } else {
-          return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
-        }
-      })
-    }
-
-    return filtered
+    return [...trialBalanceEntries]
   }
 
   const getFilteredAdjustments = () => {
@@ -736,24 +718,6 @@ const AccountsProduction: React.FC = () => {
       return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
     }
     return clientSortDirection === 'asc' 
-      ? <ArrowUp className="h-3 w-3 ml-1 inline" />
-      : <ArrowDown className="h-3 w-3 ml-1 inline" />
-  }
-
-  const handleTBSort = (field: keyof TrialBalanceEntry) => {
-    if (tbSortField === field) {
-      setTbSortDirection(tbSortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setTbSortField(field)
-      setTbSortDirection('asc')
-    }
-  }
-
-  const getTBSortIcon = (field: keyof TrialBalanceEntry) => {
-    if (tbSortField !== field) {
-      return <ArrowUpDown className="h-3 w-3 ml-1 inline" />
-    }
-    return tbSortDirection === 'asc' 
       ? <ArrowUp className="h-3 w-3 ml-1 inline" />
       : <ArrowDown className="h-3 w-3 ml-1 inline" />
   }
@@ -1200,21 +1164,10 @@ const AccountsProduction: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('accountCode')}>
-                    Code {getTBSortIcon('accountCode')}
-                  </TableHead>
-                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('accountName')}>
-                    Account Name {getTBSortIcon('accountName')}
-                  </TableHead>
-                  <TableHead className="text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('category')}>
-                    Category {getTBSortIcon('category')}
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('debit')}>
-                    Debit {getTBSortIcon('debit')}
-                  </TableHead>
-                  <TableHead className="text-right text-[#001f3f] cursor-pointer" onClick={() => handleTBSort('credit')}>
-                    Credit {getTBSortIcon('credit')}
-                  </TableHead>
+                  <TableHead className="text-[#001f3f]">Code</TableHead>
+                  <TableHead className="text-[#001f3f]">Account Name</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
+                  <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
                   <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -1227,9 +1180,6 @@ const AccountsProduction: React.FC = () => {
                   >
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{entry.category}</Badge>
-                    </TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.debit > 0 ? `£${entry.debit.toLocaleString()}` : '-'}
                     </TableCell>
@@ -1264,7 +1214,7 @@ const AccountsProduction: React.FC = () => {
                   </TableRow>
                 ))}
                 <TableRow className="bg-[#001f3f] text-white font-bold border-t-4 border-[#001f3f]">
-                  <TableCell colSpan={3} className="text-white text-right pr-4">TOTAL:</TableCell>
+                  <TableCell colSpan={2} className="text-white text-right pr-4">TOTAL:</TableCell>
                   <TableCell className="text-right text-white">
                     £{filteredEntries.reduce((sum, entry) => sum + (entry.debit || 0), 0).toLocaleString()}
                   </TableCell>
@@ -1884,19 +1834,132 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches', <div className="space-y-2"><p className="text-[#001f3f]">5 batches in draft status</p><p className="text-[#001f3f]">Total entries: 23</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Draft Batches - Detailed Breakdown', 
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Draft Batches Summary</h3>
+                <p className="text-[#001f3f]">5 batches awaiting approval</p>
+                <p className="text-[#001f3f]">Total entries: 23 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £48,500</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Batch List:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                      <TableHead className="text-[#001f3f]">Value</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Depreciation Q4</TableCell><TableCell className="text-[#001f3f]">8</TableCell><TableCell className="text-[#001f3f]">£12,500</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Accruals Dec</TableCell><TableCell className="text-[#001f3f]">5</TableCell><TableCell className="text-[#001f3f]">£8,200</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Prepayments</TableCell><TableCell className="text-[#001f3f]">4</TableCell><TableCell className="text-[#001f3f]">£15,800</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Reclassifications</TableCell><TableCell className="text-[#001f3f]">4</TableCell><TableCell className="text-[#001f3f]">£9,000</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Other Adjustments</TableCell><TableCell className="text-[#001f3f]">2</TableCell><TableCell className="text-[#001f3f]">£3,000</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Draft Batches</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">5</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches', <div className="space-y-2"><p className="text-[#001f3f]">23 batches posted</p><p className="text-[#001f3f]">Total entries: 342</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Posted Batches - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Posted Batches Summary</h3>
+                <p className="text-[#001f3f]">23 batches successfully posted</p>
+                <p className="text-[#001f3f]">Total entries: 342 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £1,245,800</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Recent Posted Batches:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Date Posted</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Year End 2024</TableCell><TableCell className="text-[#001f3f]">2024-12-31</TableCell><TableCell className="text-[#001f3f]">15</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Month End Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-30</TableCell><TableCell className="text-[#001f3f]">28</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Payroll Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-28</TableCell><TableCell className="text-[#001f3f]">45</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Sales Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-27</TableCell><TableCell className="text-[#001f3f]">120</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Purchases Dec</TableCell><TableCell className="text-[#001f3f]">2024-12-26</TableCell><TableCell className="text-[#001f3f]">89</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Posted</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">23</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches', <div className="space-y-2"><p className="text-[#001f3f]">12 batches approved</p><p className="text-[#001f3f]">Pending posting</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Approved Batches - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">Approved Batches Summary</h3>
+                <p className="text-[#001f3f]">12 batches approved and pending posting</p>
+                <p className="text-[#001f3f]">Total entries: 86 journal entries</p>
+                <p className="text-[#001f3f]">Total value: £234,500</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Approved Batches Awaiting Posting:</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Batch</TableHead>
+                      <TableHead className="text-[#001f3f]">Approved By</TableHead>
+                      <TableHead className="text-[#001f3f]">Entries</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">Jan Adjustments</TableCell><TableCell className="text-[#001f3f]">Manager A</TableCell><TableCell className="text-[#001f3f]">12</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">VAT Return Q4</TableCell><TableCell className="text-[#001f3f]">Manager B</TableCell><TableCell className="text-[#001f3f]">8</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Stock Adj</TableCell><TableCell className="text-[#001f3f]">Manager A</TableCell><TableCell className="text-[#001f3f]">15</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Bank Reconciliation</TableCell><TableCell className="text-[#001f3f]">Manager C</TableCell><TableCell className="text-[#001f3f]">22</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">Fixed Assets</TableCell><TableCell className="text-[#001f3f]">Manager B</TableCell><TableCell className="text-[#001f3f]">18</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Approved</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">12</p></CardContent>
           </Card>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Entries', <div className="space-y-2"><p className="text-[#001f3f]">156 total journal entries</p><p className="text-[#001f3f]">Across all batches</p></div>)}>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-[#001f3f]" onClick={() => handleBatchClick('Total Journal Entries - Detailed Breakdown',
+            <div className="space-y-4">
+              <div className="border-b-2 border-[#001f3f] pb-3">
+                <h3 className="font-bold text-[#001f3f] text-lg mb-2">All Journal Entries</h3>
+                <p className="text-[#001f3f]">156 total journal entries across all batches</p>
+                <p className="text-[#001f3f]">Total value: £1,528,800</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-[#001f3f] mb-2">Sample Journal Entries (using Chart of Accounts codes):</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-[#001f3f]">Code</TableHead>
+                      <TableHead className="text-[#001f3f]">Account</TableHead>
+                      <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
+                      <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow><TableCell className="text-[#001f3f]">1</TableCell><TableCell className="text-[#001f3f]">Sales</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell><TableCell className="text-right text-[#001f3f]">£25,000</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">17</TableCell><TableCell className="text-[#001f3f]">Opening stock</TableCell><TableCell className="text-right text-[#001f3f]">£18,000</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">27</TableCell><TableCell className="text-[#001f3f]">Purchases</TableCell><TableCell className="text-right text-[#001f3f]">£12,500</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">101</TableCell><TableCell className="text-[#001f3f]">Buildings cost</TableCell><TableCell className="text-right text-[#001f3f]">£45,000</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell></TableRow>
+                    <TableRow><TableCell className="text-[#001f3f]">220</TableCell><TableCell className="text-[#001f3f]">Bank current account</TableCell><TableCell className="text-right text-[#001f3f]">-</TableCell><TableCell className="text-right text-[#001f3f]">£55,500</TableCell></TableRow>
+                  </TableBody>
+                </Table>
+                <p className="text-sm text-[#001f3f] mt-3 italic">All account codes match Chart of Accounts (codes 1-1193)</p>
+              </div>
+            </div>
+          )}>
             <CardHeader><CardTitle className="text-lg text-[#001f3f]">Total Entries</CardTitle></CardHeader>
             <CardContent><p className="text-2xl font-bold text-[#001f3f]">156</p></CardContent>
           </Card>
