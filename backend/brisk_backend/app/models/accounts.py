@@ -87,6 +87,10 @@ class AccountsProductionClient(Base):
     
     year_end = Column(Date, nullable=False)
     accounts_status = Column(String, default="not-started")
+    accounts_finalized = Column(Boolean, default=False)
+    accounts_filed = Column(Boolean, default=False)
+    finalized_date = Column(Date)
+    filed_date = Column(Date)
     last_accounts = Column(Date)
     next_due = Column(Date)
     frs_standard = Column(String, default="FRS 102")
