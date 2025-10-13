@@ -231,6 +231,20 @@ const AccountsProduction: React.FC = () => {
   const [importStep, setImportStep] = useState<'method' | 'upload' | 'mapping' | 'review'>('method')
   const [importMethod, setImportMethod] = useState<'bookkeeping' | 'csv' | 'integration'>('bookkeeping')
 
+  const [isBatchAddOpen, setIsBatchAddOpen] = useState(false)
+  const [batchFormData, setBatchFormData] = useState<{name?: string, type?: string, description?: string}>({})
+
+  const handleAddNewBatch = () => {
+    setBatchFormData({ name: '', type: 'Manual Entry', description: '' })
+    setIsBatchAddOpen(true)
+  }
+
+  const handleSaveNewBatch = () => {
+    console.log('New batch created:', batchFormData)
+    setIsBatchAddOpen(false)
+    setBatchFormData({})
+  }
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
@@ -460,6 +474,22 @@ const AccountsProduction: React.FC = () => {
     } else {
       setDeleteError(result.message)
     }
+  }
+
+  const handleExportCoA = () => {
+    const allAccounts = getAllAccounts()
+    const csv = [
+      ['Code', 'Name', 'Category', 'Group Number'].join(','),
+      ...allAccounts.map(acc => [acc.code, `"${acc.name}"`, acc.category || '', acc.groupNumber || ''].join(','))
+    ].join('\n')
+    
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `chart-of-accounts-${new Date().toISOString().split('T')[0]}.csv`
+    a.click()
+    window.URL.revokeObjectURL(url)
   }
 
   const handleCSVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1737,7 +1767,7 @@ const AccountsProduction: React.FC = () => {
             <p className="text-[#001f3f]">IAS Chart of Accounts - {allAccounts.length} total accounts</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => console.log('Exporting...')}>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={handleExportCoA}>
               <Download className="h-4 w-4 mr-2" />Export
             </Button>
             <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddAccountOpen}>
@@ -1907,7 +1937,7 @@ const AccountsProduction: React.FC = () => {
             <h2 className="text-xl font-bold text-[#001f3f]">Posting Batches</h2>
             <p className="text-[#001f3f]">Manage journal entries and posting batches</p>
           </div>
-          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => console.log('Creating new batch...')}>
+          <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddNewBatch}>
             <Plus className="h-4 w-4 mr-2" />New Batch
           </Button>
         </div>
@@ -2613,23 +2643,23 @@ const AccountsProduction: React.FC = () => {
             <DialogTitle className="text-[#001f3f]">Confirm Bookkeeping Sync</DialogTitle>
           </DialogHeader>
           <div>
-            <p className="mb-3">This will import 12 trial balance entries from the Bookkeeping module. Preview:</p>
-            <div className="max-h-60 overflow-y-auto border rounded p-2">
-              <table className="w-full text-sm">
+            <p className="mb-3 text-[#001f3f]">This will import 12 trial balance entries from the Bookkeeping module. Preview:</p>
+            <div className="max-h-60 overflow-y-auto border-2 border-[#001f3f] rounded p-2">
+              <table className="w-full text-sm text-[#001f3f]">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-1">Code</th>
-                    <th className="text-left p-1">Account Name</th>
-                    <th className="text-right p-1">Debit</th>
-                    <th className="text-right p-1">Credit</th>
+                  <tr className="border-b-2 border-[#001f3f]">
+                    <th className="text-left p-1 text-[#001f3f]">Code</th>
+                    <th className="text-left p-1 text-[#001f3f]">Account Name</th>
+                    <th className="text-right p-1 text-[#001f3f]">Debit</th>
+                    <th className="text-right p-1 text-[#001f3f]">Credit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td className="p-1">1</td><td className="p-1">Cash at bank</td><td className="text-right p-1">£50,000</td><td className="text-right p-1">-</td></tr>
-                  <tr><td className="p-1">2</td><td className="p-1">Trade debtors</td><td className="text-right p-1">£75,000</td><td className="text-right p-1">-</td></tr>
-                  <tr><td className="p-1">101</td><td className="p-1">Sales - goods</td><td className="text-right p-1">-</td><td className="text-right p-1">£250,000</td></tr>
-                  <tr><td className="p-1">102</td><td className="p-1">Sales - services</td><td className="text-right p-1">-</td><td className="text-right p-1">£150,000</td></tr>
-                  <tr className="text-gray-500"><td colSpan={4} className="p-1 text-center">... 8 more entries</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">1</td><td className="p-1">Cash at bank</td><td className="text-right p-1">£50,000</td><td className="text-right p-1">-</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">2</td><td className="p-1">Trade debtors</td><td className="text-right p-1">£75,000</td><td className="text-right p-1">-</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">101</td><td className="p-1">Sales - goods</td><td className="text-right p-1">-</td><td className="text-right p-1">£250,000</td></tr>
+                  <tr className="border-b border-[#001f3f]"><td className="p-1">102</td><td className="p-1">Sales - services</td><td className="text-right p-1">-</td><td className="text-right p-1">£150,000</td></tr>
+                  <tr className="text-[#001f3f]"><td colSpan={4} className="p-1 text-center">... 8 more entries</td></tr>
                 </tbody>
               </table>
             </div>
@@ -2649,30 +2679,79 @@ const AccountsProduction: React.FC = () => {
             <DialogTitle className="text-[#001f3f]">Software Integration</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p>Connect your accounting software to import trial balance data:</p>
+            <p className="text-[#001f3f]">Connect your accounting software to import trial balance data:</p>
             <div className="grid gap-3">
-              <Button className="justify-start h-auto p-4" variant="outline">
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
                 <div className="text-left">
-                  <div className="font-semibold">Xero</div>
-                  <div className="text-xs text-gray-500">Import from Xero accounting</div>
+                  <div className="font-semibold text-[#001f3f]">Xero</div>
+                  <div className="text-xs text-[#001f3f]">Import from Xero accounting</div>
                 </div>
               </Button>
-              <Button className="justify-start h-auto p-4" variant="outline">
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
                 <div className="text-left">
-                  <div className="font-semibold">Sage</div>
-                  <div className="text-xs text-gray-500">Import from Sage 50/200</div>
+                  <div className="font-semibold text-[#001f3f]">Sage</div>
+                  <div className="text-xs text-[#001f3f]">Import from Sage 50/200</div>
                 </div>
               </Button>
-              <Button className="justify-start h-auto p-4" variant="outline">
+              <Button className="justify-start h-auto p-4 border-[#001f3f]" variant="outline">
                 <div className="text-left">
-                  <div className="font-semibold">QuickBooks</div>
-                  <div className="text-xs text-gray-500">Import from QuickBooks Online</div>
+                  <div className="font-semibold text-[#001f3f]">QuickBooks</div>
+                  <div className="text-xs text-[#001f3f]">Import from QuickBooks Online</div>
                 </div>
               </Button>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsIntegrationOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isBatchAddOpen} onOpenChange={setIsBatchAddOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Create New Posting Batch</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Batch Name</Label>
+              <Input
+                value={batchFormData.name || ''}
+                onChange={(e) => setBatchFormData({...batchFormData, name: e.target.value})}
+                className="text-[#001f3f] border-[#001f3f]"
+                placeholder="e.g., Month End Adjustments"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Type</Label>
+              <Select value={batchFormData.type || 'Manual Entry'} onValueChange={(value) => setBatchFormData({...batchFormData, type: value})}>
+                <SelectTrigger className="border-[#001f3f]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Manual Entry">Manual Entry</SelectItem>
+                  <SelectItem value="Year-End">Year-End</SelectItem>
+                  <SelectItem value="Month-End">Month-End</SelectItem>
+                  <SelectItem value="Adjustment">Adjustment</SelectItem>
+                  <SelectItem value="Reclassification">Reclassification</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Description</Label>
+              <Textarea
+                value={batchFormData.description || ''}
+                onChange={(e) => setBatchFormData({...batchFormData, description: e.target.value})}
+                className="text-[#001f3f] border-[#001f3f]"
+                placeholder="Enter batch description..."
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBatchAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveNewBatch} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Create Batch
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
