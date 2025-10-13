@@ -53,7 +53,7 @@ export default function EmailRibbon({
   const tabs = [
     { id: 'home', label: 'Home', color: 'bg-blue-500 hover:bg-blue-600' },
     { id: 'insert', label: 'Insert', color: 'bg-green-500 hover:bg-green-600' },
-    { id: 'format', label: 'Format', color: 'bg-blue-500 hover:bg-[#001f3f]' },
+    { id: 'format', label: 'Format', color: 'bg-blue-500 hover:bg-orange-600' },
     { id: 'templates', label: 'Templates', color: 'bg-purple-500 hover:bg-purple-600' },
     { id: 'send', label: 'Send', color: 'bg-red-500 hover:bg-red-600' }
   ]

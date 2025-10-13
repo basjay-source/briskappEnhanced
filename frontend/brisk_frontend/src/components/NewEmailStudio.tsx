@@ -83,7 +83,7 @@ export default function NewEmailStudio() {
     { id: 'home', label: 'Home', color: 'bg-blue-600' },
     { id: 'insert', label: 'Insert', color: 'bg-green-600' },
     { id: 'format', label: 'Format', color: 'bg-purple-600' },
-    { id: 'templates', label: 'Templates', color: 'bg-[#001f3f]' },
+    { id: 'templates', label: 'Templates', color: 'bg-orange-600' },
     { id: 'send', label: 'Send', color: 'bg-red-600' }
   ]
 
