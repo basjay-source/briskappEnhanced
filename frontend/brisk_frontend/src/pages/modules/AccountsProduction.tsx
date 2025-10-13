@@ -179,7 +179,7 @@ const AccountsProduction: React.FC = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
 
-  const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
+  const [_isTBViewOpen, _setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
   const [isTBAddOpen, setIsTBAddOpen] = useState(false)
   const [isTBDeleteOpen, setIsTBDeleteOpen] = useState(false)
@@ -291,18 +291,6 @@ const AccountsProduction: React.FC = () => {
   }
 
 
-  const handleViewTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setIsTBViewOpen(true)
-  }
-
-  const handleEditTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setTBFormData(entry)
-    setIsTBEditOpen(true)
-  }
-
-
   const handleAddTBEntry = () => {
     setTBFormData({ accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset' })
     setIsTBAddOpen(true)
@@ -329,11 +317,6 @@ const AccountsProduction: React.FC = () => {
       ))
     }
     setIsTBEditOpen(false)
-  }
-
-  const handleDeleteTBEntry = (entry: TrialBalanceEntry) => {
-    setSelectedTBEntry(entry)
-    setIsTBDeleteOpen(true)
   }
 
   const handleConfirmDeleteTBEntry = () => {
@@ -1168,15 +1151,13 @@ const AccountsProduction: React.FC = () => {
                   <TableHead className="text-[#001f3f]">Account Name</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Debit</TableHead>
                   <TableHead className="text-right text-[#001f3f]">Credit</TableHead>
-                  <TableHead className="text-[#001f3f]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredEntries.map(entry => (
                   <TableRow 
                     key={entry.id} 
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleViewTBEntry(entry)}
+                    className="hover:bg-gray-50"
                   >
                     <TableCell className="text-[#001f3f] font-mono">{entry.accountCode}</TableCell>
                     <TableCell className="text-[#001f3f]">{entry.accountName}</TableCell>
@@ -1185,31 +1166,6 @@ const AccountsProduction: React.FC = () => {
                     </TableCell>
                     <TableCell className="text-right text-[#001f3f]">
                       {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleEditTBEntry(entry)
-                          }}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 hover:text-red-700"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDeleteTBEntry(entry)
-                          }}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1221,7 +1177,6 @@ const AccountsProduction: React.FC = () => {
                   <TableCell className="text-right text-white">
                     £{filteredEntries.reduce((sum, entry) => sum + (entry.credit || 0), 0).toLocaleString()}
                   </TableCell>
-                  <TableCell></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
