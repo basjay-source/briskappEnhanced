@@ -551,10 +551,6 @@ export default function PersonalTax() {
             <p className="text-[#001f3f] mt-2">SA returns, CGT optimization, and personal tax planning</p>
           </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center gap-3'}`}>
-            <Button variant="outline" className={`border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white ${isMobile ? 'w-full' : ''}`} onClick={handleAddClient}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Add New Client
-            </Button>
             <Button 
               variant="outline" 
               className={`border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white ${isMobile ? 'w-full' : ''}`}
@@ -562,13 +558,6 @@ export default function PersonalTax() {
             >
               <Users className="h-4 w-4 mr-2" />
               View All Clients ({individualClients.length})
-            </Button>
-            <Button 
-              className={`bg-[#001f3f] hover:bg-[#001f3f]/90 text-white ${isMobile ? 'w-full' : ''}`}
-              onClick={handleAddSAReturn}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              New SA Return
             </Button>
             <Button 
               variant="outline"
@@ -652,6 +641,39 @@ export default function PersonalTax() {
             )
           })}
         </ResponsiveGrid>
+
+        {/* Quick Actions Section */}
+        <Card className="border-2 border-[#001f3f]">
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Quick Actions</CardTitle>
+            <CardDescription className="text-[#001f3f]">Add new clients and create SA returns</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
+              <Button 
+                variant="outline" 
+                className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white h-24 flex flex-col items-center justify-center gap-2"
+                onClick={handleAddClient}
+              >
+                <UserPlus className="h-8 w-8" />
+                <div className="flex flex-col items-center">
+                  <span className="font-semibold">Add New Client</span>
+                  <span className="text-xs">Create individual tax client</span>
+                </div>
+              </Button>
+              <Button 
+                className="bg-[#001f3f] hover:bg-[#001f3f]/90 text-white h-24 flex flex-col items-center justify-center gap-2"
+                onClick={handleAddSAReturn}
+              >
+                <Plus className="h-8 w-8" />
+                <div className="flex flex-col items-center">
+                  <span className="font-semibold">New SA Return</span>
+                  <span className="text-xs">Create Self Assessment return</span>
+                </div>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
