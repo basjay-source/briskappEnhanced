@@ -20,6 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../components/ui/alert-dialog'
 import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
 import { api } from '../../lib/api'
+import { EnhancedClientForm } from '../../components/EnhancedClientForm'
 
 interface Client {
   id: string
@@ -2449,142 +2450,21 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isClientEditOpen} onOpenChange={setIsClientEditOpen}>
-        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Edit Client</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#001f3f]">Client Name</Label>
-                <Input
-                  value={clientFormData.name || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Entity Type</Label>
-                <Select 
-                  value={clientFormData.type} 
-                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="limited-company">Limited Company</SelectItem>
-                    <SelectItem value="llp">LLP</SelectItem>
-                    <SelectItem value="partnership">Partnership</SelectItem>
-                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Year End</Label>
-                <Input
-                  type="date"
-                  value={clientFormData.yearEnd || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Contact Person</Label>
-                <Input
-                  value={clientFormData.contactPerson || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsClientEditOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveClient} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Save className="h-4 w-4 mr-2" />Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EnhancedClientForm
+        open={isClientEditOpen}
+        onOpenChange={setIsClientEditOpen}
+        client={selectedClient}
+        onSave={handleSaveClient}
+        mode="edit"
+      />
 
-      <Dialog open={isClientAddOpen} onOpenChange={setIsClientAddOpen}>
-        <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
-          <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Add New Client</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#001f3f]">Client Name</Label>
-                <Input
-                  value={clientFormData.name || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, name: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Entity Type</Label>
-                <Select 
-                  value={clientFormData.type} 
-                  onValueChange={(value) => setClientFormData({...clientFormData, type: value as any})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="limited-company">Limited Company</SelectItem>
-                    <SelectItem value="llp">LLP</SelectItem>
-                    <SelectItem value="partnership">Partnership</SelectItem>
-                    <SelectItem value="sole-trader">Sole Trader</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Year End</Label>
-                <Input
-                  type="date"
-                  value={clientFormData.yearEnd || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, yearEnd: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Contact Person</Label>
-                <Input
-                  value={clientFormData.contactPerson || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, contactPerson: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Email</Label>
-                <Input
-                  type="email"
-                  value={clientFormData.email || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, email: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-              <div>
-                <Label className="text-[#001f3f]">Phone</Label>
-                <Input
-                  value={clientFormData.phone || ''}
-                  onChange={(e) => setClientFormData({...clientFormData, phone: e.target.value})}
-                  className="text-[#001f3f]"
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsClientAddOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveNewClient} className="bg-[#001f3f] hover:bg-[#003366]">
-              <Plus className="h-4 w-4 mr-2" />Add Client
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EnhancedClientForm
+        open={isClientAddOpen}
+        onOpenChange={setIsClientAddOpen}
+        client={null}
+        onSave={handleSaveNewClient}
+        mode="add"
+      />
 
       <Dialog open={isTBEditOpen} onOpenChange={setIsTBEditOpen}>
         <DialogContent className="border-2 border-[#001f3f]">
