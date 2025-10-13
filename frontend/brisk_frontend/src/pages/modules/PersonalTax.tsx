@@ -686,7 +686,11 @@ export default function PersonalTax() {
               <CardContent>
                 <div className="space-y-4">
                   {saReturns.map((saReturn) => (
-                    <div key={saReturn.id} className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                    <div 
+                      key={saReturn.id} 
+                      className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}
+                      onClick={() => handleViewSAReturn(saReturn)}
+                    >
                       <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                         {getStatusIcon(saReturn.status)}
                         <div className="flex-1">
