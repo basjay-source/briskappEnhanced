@@ -1164,7 +1164,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="Asset">Asset</SelectItem>
                           <SelectItem value="Liability">Liability</SelectItem>
                           <SelectItem value="Equity">Equity</SelectItem>
@@ -1276,7 +1276,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="prepayment">Prepayment</SelectItem>
                           <SelectItem value="accrual">Accrual</SelectItem>
                           <SelectItem value="depreciation">Depreciation</SelectItem>
@@ -1334,7 +1334,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="approved">Approved</SelectItem>
                           <SelectItem value="posted">Posted</SelectItem>
@@ -1457,7 +1457,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="balance-sheet">Balance Sheet</SelectItem>
                           <SelectItem value="profit-loss">Profit & Loss</SelectItem>
                           <SelectItem value="cash-flow">Cash Flow</SelectItem>
@@ -1501,7 +1501,7 @@ const AccountsProduction: React.FC = () => {
                           <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">All</SelectItem>
+                          <SelectItem value="all">All</SelectItem>
                           <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="review">Review</SelectItem>
                           <SelectItem value="finalized">Finalized</SelectItem>
@@ -2751,7 +2751,7 @@ const AccountsProduction: React.FC = () => {
                     <label className="block text-sm font-medium text-[#001f3f] mb-1">Category (Optional)</label>
                     <Select value={accountMapping.category} onValueChange={(val) => setAccountMapping({...accountMapping, category: val})}>
                       <SelectTrigger className="border-[#001f3f]"><SelectValue placeholder="Select column..." /></SelectTrigger>
-                      <SelectContent><SelectItem value="">None</SelectItem>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
+                      <SelectContent><SelectItem value="none">None</SelectItem>{csvHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
                 </div>
