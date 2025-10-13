@@ -186,11 +186,33 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
   }
 
   const calculateTotals = () => {
+    const employmentTotal = (formData.employmentDetails || []).reduce((sum, emp) => 
+      sum + Number(emp.grossPay || 0) + Number(emp.benefits || 0) - Number(emp.expenses || 0), 0
+    )
+
+    const selfEmploymentTotal = (formData.selfEmploymentDetails || []).reduce((sum, business) =>
+      sum + Number(business.turnover || 0) - Number(business.allowableExpenses || 0) - Number(business.capitalAllowances || 0), 0
+    )
+
+    const rentalTotal = (formData.rentalProperties || []).reduce((sum, property) =>
+      sum + Number(property.rentalIncome || 0) - Number(property.mortgageInterest || 0) - 
+      Number(property.repairs || 0) - Number(property.insurance || 0) - Number(property.otherExpenses || 0), 0
+    )
+
+    const dividendTotal = (formData.dividendDetails || []).reduce((sum, div) =>
+      sum + Number(div.dividendAmount || 0), 0
+    )
+
+    const pensionTotal = (formData.pensionDetails || []).reduce((sum, pension) =>
+      sum + Number(pension.grossAmount || 0), 0
+    )
+
     const totalIncome = 
-      Number(formData.employmentIncome || 0) +
-      Number(formData.selfEmploymentIncome || 0) +
-      Number(formData.propertyIncome || 0) +
-      Number(formData.dividendIncome || 0) +
+      employmentTotal +
+      selfEmploymentTotal +
+      rentalTotal +
+      dividendTotal +
+      pensionTotal +
       Number(formData.savingsInterest || 0) +
       Number(formData.otherIncome || 0)
 
@@ -219,6 +241,11 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
 
     setFormData({
       ...formData,
+      employmentIncome: employmentTotal,
+      selfEmploymentIncome: selfEmploymentTotal,
+      propertyIncome: rentalTotal,
+      dividendIncome: dividendTotal,
+      pensionIncome: pensionTotal,
       totalIncome,
       taxableIncome,
       estimatedTax: Math.round(estimatedTax * 100) / 100
