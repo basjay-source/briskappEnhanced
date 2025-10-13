@@ -271,26 +271,26 @@ export default function ComprehensiveIndividualClientForm({
         )}
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 gap-px bg-gray-100">
-            <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+          <TabsList className="grid w-full grid-cols-7 bg-gray-100">
+            <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Basic Info
             </TabsTrigger>
-            <TabsTrigger value="contact" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="contact" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Contact
             </TabsTrigger>
-            <TabsTrigger value="employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Employment
             </TabsTrigger>
-            <TabsTrigger value="business" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="business" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Business
             </TabsTrigger>
-            <TabsTrigger value="property" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="property" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Property
             </TabsTrigger>
-            <TabsTrigger value="tax" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="tax" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Tax & VAT
             </TabsTrigger>
-            <TabsTrigger value="notes" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">
+            <TabsTrigger value="notes" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">
               Notes
             </TabsTrigger>
           </TabsList>
