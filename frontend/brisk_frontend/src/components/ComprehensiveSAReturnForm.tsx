@@ -596,7 +596,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                   {formData.employmentDetails && formData.employmentDetails.length > 0 ? (
                     <div className="space-y-4">
                       {formData.employmentDetails.map((employment, index) => (
-                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-4">
                           <div className="flex justify-between items-center">
                             <h4 className="font-semibold text-[#001f3f]">Employment {index + 1}</h4>
                             {!isReadOnly && (
@@ -614,94 +614,438 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                               </Button>
                             )}
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Employer Name*</Label>
-                              <Input
-                                value={employment.employerName}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].employerName = e.target.value
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                                placeholder="Enter employer name"
-                              />
+                          
+                          {/* Basic Employment Details */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Employment Information (Box 4-6.1)</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">PAYE Reference (Box 4)*</Label>
+                                <Input
+                                  value={employment.payeReference}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].payeReference = e.target.value
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  placeholder="123/AB12345"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Employer Name (Box 5)*</Label>
+                                <Input
+                                  value={employment.employerName}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].employerName = e.target.value
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  placeholder="Enter employer name"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Director?</Label>
+                                <Select
+                                  value={employment.directorIndicator ? 'yes' : 'no'}
+                                  onValueChange={(val) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].directorIndicator = val === 'yes'
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  disabled={isReadOnly}
+                                >
+                                  <SelectTrigger className="border-[#001f3f]">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="no">No</SelectItem>
+                                    <SelectItem value="yes">Yes</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              {employment.directorIndicator && (
+                                <div className="space-y-2">
+                                  <Label className="text-[#001f3f]">Date Stopped Being Director (Box 6.1)</Label>
+                                  <Input
+                                    type="date"
+                                    value={employment.dateStoppedBeingDirector}
+                                    onChange={(e) => {
+                                      const updated = [...formData.employmentDetails!]
+                                      updated[index].dateStoppedBeingDirector = e.target.value
+                                      setFormData({ ...formData, employmentDetails: updated })
+                                    }}
+                                    className="border-[#001f3f]"
+                                    disabled={isReadOnly}
+                                  />
+                                </div>
+                              )}
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Off-Payroll Working (Box 8)</Label>
+                                <Select
+                                  value={employment.offPayrollWorkingIndicator ? 'yes' : 'no'}
+                                  onValueChange={(val) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].offPayrollWorkingIndicator = val === 'yes'
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  disabled={isReadOnly}
+                                >
+                                  <SelectTrigger className="border-[#001f3f]">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="no">No</SelectItem>
+                                    <SelectItem value="yes">Yes</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">PAYE Reference</Label>
-                              <Input
-                                value={employment.payeReference}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].payeReference = e.target.value
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                                placeholder="123/AB12345"
-                              />
+                          </div>
+
+                          {/* Pay and Tax (Box 1-3) */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Pay & Tax (Box 1-3)</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Pay from Employment (Box 1) £*</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.payFromEmployment}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].payFromEmployment = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Tax Deducted (Box 2) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.taxDeducted}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].taxDeducted = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Tips & Other Payments (Box 3) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.tipsAndOtherPayments}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].tipsAndOtherPayments = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Gross Pay (£)*</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={employment.grossPay}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].grossPay = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
+                          </div>
+
+                          {/* Benefits (Box 9-12) */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Benefits from Employment (Box 9-12)</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Company Car & Van (Box 9) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.benefits.companyCarAndVan}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].benefits = { ...updated[index].benefits, companyCarAndVan: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Fuel for Company Car (Box 10) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.benefits.fuelForCompanyCar}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].benefits = { ...updated[index].benefits, fuelForCompanyCar: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Private Medical/Dental (Box 11) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.benefits.privateMedicalDental}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].benefits = { ...updated[index].benefits, privateMedicalDental: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Vouchers/Credit Cards (Box 12) £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.benefits.vouchersCreditsCards}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].benefits = { ...updated[index].benefits, vouchersCreditsCards: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Benefits £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.benefits.otherBenefits}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].benefits = { ...updated[index].benefits, otherBenefits: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Tax Deducted (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={employment.taxDeducted}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].taxDeducted = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
+                          </div>
+
+                          {/* Expenses (Box 17-20) */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Employment Expenses (Box 17-20)</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Travel Expenses £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.expenses.travelExpenses}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, travelExpenses: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Professional Fees £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.expenses.professionalFees}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, professionalFees: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Expenses £</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.expenses.otherExpenses}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, otherExpenses: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2 col-span-3">
+                                <Label className="text-[#001f3f]">Expenses Description</Label>
+                                <Textarea
+                                  value={employment.expenses.expensesDescription}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, expensesDescription: e.target.value }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  rows={2}
+                                  placeholder="Describe employment expenses"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Fuel Benefit (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.fuelBenefit || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, fuelBenefit: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Medical Insurance (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.medicalInsurance || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, medicalInsurance: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Accommodation (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.accommodation || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, accommodation: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Loans (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.loans || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, loans: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Mileage Allowance (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.mileageAllowance || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, mileageAllowance: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Benefits (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.p11dBenefits?.otherBenefits || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].p11dBenefits = { ...updated[index].p11dBenefits, otherBenefits: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Benefits/P11D (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={employment.benefits}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].benefits = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Employment Expenses (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={employment.expenses}
-                                onChange={(e) => {
-                                  const updated = [...formData.employmentDetails!]
-                                  updated[index].expenses = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, employmentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
+                          </div>
+
+                          {/* Employment Expenses */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Employment Expenses</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Travel Expenses (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.employmentExpenses?.travelExpenses || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].employmentExpenses = { ...updated[index].employmentExpenses, travelExpenses: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Professional Fees (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.employmentExpenses?.professionalFees || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].employmentExpenses = { ...updated[index].employmentExpenses, professionalFees: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Expenses (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={employment.employmentExpenses?.otherExpenses || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.employmentDetails!]
+                                    updated[index].employmentExpenses = { ...updated[index].employmentExpenses, otherExpenses: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, employmentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -748,7 +1092,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                   {formData.selfEmploymentDetails && formData.selfEmploymentDetails.length > 0 ? (
                     <div className="space-y-4">
                       {formData.selfEmploymentDetails.map((business, index) => (
-                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                        <div key={index} className="p-4 border-2 border-[#001f3f] rounded space-y-4">
                           <div className="flex justify-between items-center">
                             <h4 className="font-semibold text-[#001f3f]">Business {index + 1}</h4>
                             {!isReadOnly && (
@@ -766,101 +1110,401 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                               </Button>
                             )}
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[#001f3f]">Business Name*</Label>
-                              <Input
-                                value={business.businessName}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].businessName = e.target.value
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                                placeholder="Enter business/trading name"
-                              />
+                          
+                          {/* Business Information */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Business Information</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Business Name*</Label>
+                                <Input
+                                  value={business.businessName}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].businessName = e.target.value
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  placeholder="Enter business/trading name"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Nature of Business*</Label>
+                                <Input
+                                  value={business.natureOfBusiness}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].natureOfBusiness = e.target.value
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  placeholder="e.g., Consultant, Trader"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Accounting Period Start</Label>
+                                <Input
+                                  type="date"
+                                  value={business.accountingPeriodStart}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].accountingPeriodStart = e.target.value
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Accounting Period End</Label>
+                                <Input
+                                  type="date"
+                                  value={business.accountingPeriodEnd}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].accountingPeriodEnd = e.target.value
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Business Address (Postcode)</Label>
+                                <Input
+                                  value={business.businessPostcode}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].businessPostcode = e.target.value
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                  placeholder="SW1A 1AA"
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[#001f3f]">Nature of Business*</Label>
-                              <Input
-                                value={business.natureOfBusiness}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].natureOfBusiness = e.target.value
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                                placeholder="e.g., Consultant, Freelancer, Trader"
-                              />
+                          </div>
+
+                          {/* Income */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Income</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Turnover (£)*</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.turnover}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].turnover = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Business Income (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.otherBusinessIncome || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].otherBusinessIncome = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Turnover (£)*</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={business.turnover}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].turnover = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
+                          </div>
+
+                          {/* Detailed Allowable Expenses (Box 17-30) */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Allowable Business Expenses</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Cost of Goods Bought (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.costOfGoodsBought || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, costOfGoodsBought: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Construction Industry Scheme (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.cisPayments || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, cisPayments: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Wages, Salaries & Staff Costs (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.wagesSalaries || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, wagesSalaries: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Car, Van & Travel Expenses (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.carVanTravel || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, carVanTravel: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Premises Running Costs (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.premisesRunningCosts || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, premisesRunningCosts: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Repairs & Renewals (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.repairsRenewals || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, repairsRenewals: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Phone, Fax, Stationery (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.phoneStationery || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, phoneStationery: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Advertising & Business Entertainment (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.advertisingEntertainment || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, advertisingEntertainment: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Interest on Bank & Loans (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.interestOnLoans || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, interestOnLoans: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Bank, Credit Card & Other Charges (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.bankCharges || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, bankCharges: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Irrecoverable Debts (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.irrecoverableDebts || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, irrecoverableDebts: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Accountancy, Legal & Professional (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.professionalFees || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, professionalFees: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Depreciation & Loss/Profit on Sale (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.depreciation || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, depreciation: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Other Business Expenses (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.expenses?.otherExpenses || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].expenses = { ...updated[index].expenses, otherExpenses: parseFloat(e.target.value) || 0 }
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Gross Profit (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={business.grossProfit}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].grossProfit = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
+                          </div>
+
+                          {/* Use of Home */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Use of Home as Office</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Business Use of Home (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.useOfHome || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].useOfHome = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
                             </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Allowable Expenses (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={business.allowableExpenses}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].allowableExpenses = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Capital Allowances (£)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={business.capitalAllowances}
-                                onChange={(e) => {
-                                  const updated = [...formData.selfEmploymentDetails!]
-                                  updated[index].capitalAllowances = parseFloat(e.target.value) || 0
-                                  setFormData({ ...formData, selfEmploymentDetails: updated })
-                                }}
-                                className="border-[#001f3f]"
-                                disabled={isReadOnly}
-                              />
-                            </div>
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[#001f3f] font-semibold">Net Profit (£)</Label>
-                              <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
-                                <span className="text-xl font-bold text-[#001f3f]">
-                                  £{(business.turnover - business.allowableExpenses - business.capitalAllowances).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </span>
+                          </div>
+
+                          {/* Capital Allowances & Net Profit */}
+                          <div className="space-y-3">
+                            <h5 className="font-medium text-[#001f3f] text-sm">Capital Allowances & Net Profit</h5>
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Capital Allowances (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.capitalAllowances}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].capitalAllowances = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f]">Goods Taken for Own Use (£)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={business.goodsTakenForOwnUse || 0}
+                                  onChange={(e) => {
+                                    const updated = [...formData.selfEmploymentDetails!]
+                                    updated[index].goodsTakenForOwnUse = parseFloat(e.target.value) || 0
+                                    setFormData({ ...formData, selfEmploymentDetails: updated })
+                                  }}
+                                  className="border-[#001f3f]"
+                                  disabled={isReadOnly}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-[#001f3f] font-semibold">Net Profit (£)</Label>
+                                <div className="p-3 bg-blue-50 border-2 border-[#001f3f] rounded">
+                                  <span className="text-xl font-bold text-[#001f3f]">
+                                    £{(business.turnover - (business.expenses?.costOfGoodsBought || 0) - (business.expenses?.cisPayments || 0) - (business.expenses?.wagesSalaries || 0) - (business.expenses?.carVanTravel || 0) - (business.expenses?.premisesRunningCosts || 0) - (business.expenses?.repairsRenewals || 0) - (business.expenses?.phoneStationery || 0) - (business.expenses?.advertisingEntertainment || 0) - (business.expenses?.interestOnLoans || 0) - (business.expenses?.bankCharges || 0) - (business.expenses?.irrecoverableDebts || 0) - (business.expenses?.professionalFees || 0) - (business.expenses?.depreciation || 0) - (business.expenses?.otherExpenses || 0) - business.capitalAllowances - (business.useOfHome || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
