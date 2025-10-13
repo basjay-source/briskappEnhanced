@@ -716,9 +716,9 @@ const AccountsProduction: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[#001f3f]">Accounts Production Dashboard</h2>
-          <p className="text-[#001f3f]">Client accounts and production workflow</p>
+          <p className="text-[#001f3f]">Client accounts and production workflow {isLoading && '(Loading...)'}</p>
         </div>
-        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]">
+        <Button onClick={handleAddClient} className="bg-[#001f3f] hover:bg-[#003366]" disabled={isLoading}>
           <Plus className="h-4 w-4 mr-2" />New Client
         </Button>
       </div>
