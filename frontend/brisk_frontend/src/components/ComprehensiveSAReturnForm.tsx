@@ -356,7 +356,7 @@ export default function ComprehensiveSAReturnForm({
             Comprehensive Self Assessment Tax Return
           </DialogTitle>
           <DialogDescription className="text-[#001f3f]">
-            Enterprise-grade SA return with full IRIS-level functionality
+            Enterprise-grade SA return with comprehensive functionality
           </DialogDescription>
         </DialogHeader>
 

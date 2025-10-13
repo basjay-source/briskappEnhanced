@@ -255,7 +255,7 @@ export default function ComprehensiveIndividualClientForm({
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto border-2 border-[#001f3f]">
         <DialogHeader>
           <DialogTitle className="text-[#001f3f] text-2xl font-bold">
-            {mode === 'add' ? 'Add New Individual Client - IRIS Level' : mode === 'edit' ? 'Edit Individual Client' : 'View Client Details'}
+            {mode === 'add' ? 'Add New Individual Client' : mode === 'edit' ? 'Edit Individual Client' : 'View Client Details'}
           </DialogTitle>
         </DialogHeader>
 
@@ -471,7 +471,7 @@ export default function ComprehensiveIndividualClientForm({
             </div>
           </TabsContent>
 
-          {/* EMPLOYMENT HISTORY TAB - IRIS LEVEL */}
+          {/* EMPLOYMENT HISTORY TAB */}
           <TabsContent value="employment" className="space-y-4 mt-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-[#001f3f]">Employment History</h3>
@@ -520,7 +520,7 @@ export default function ComprehensiveIndividualClientForm({
             )}
           </TabsContent>
 
-          {/* BUSINESS TAB - IRIS LEVEL */}
+          {/* BUSINESS TAB */}
           <TabsContent value="business" className="space-y-4 mt-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-[#001f3f]">Self-Employment & Partnerships</h3>
@@ -553,7 +553,7 @@ export default function ComprehensiveIndividualClientForm({
             ))}
           </TabsContent>
 
-          {/* PROPERTY TAB - IRIS LEVEL */}
+          {/* PROPERTY TAB */}
           <TabsContent value="property" className="space-y-4 mt-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-[#001f3f]">Property Portfolio</h3>
