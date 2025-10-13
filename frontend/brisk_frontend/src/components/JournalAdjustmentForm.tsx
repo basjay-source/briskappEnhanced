@@ -331,19 +331,31 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       </TableCell>
                       <TableCell className="p-2">
                         <Input
-                          type="number"
-                          step="0.01"
+                          type="text"
                           value={(line.debit || 0).toFixed(2)}
-                          onChange={(e) => updateLine(line.id, 'debit', parseFloat(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^\d.]/g, '')
+                            updateLine(line.id, 'debit', parseFloat(value) || 0)
+                          }}
+                          onBlur={(e) => {
+                            const value = parseFloat(e.target.value) || 0
+                            updateLine(line.id, 'debit', value)
+                          }}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
                         />
                       </TableCell>
                       <TableCell className="p-2">
                         <Input
-                          type="number"
-                          step="0.01"
+                          type="text"
                           value={(line.credit || 0).toFixed(2)}
-                          onChange={(e) => updateLine(line.id, 'credit', parseFloat(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^\d.]/g, '')
+                            updateLine(line.id, 'credit', parseFloat(value) || 0)
+                          }}
+                          onBlur={(e) => {
+                            const value = parseFloat(e.target.value) || 0
+                            updateLine(line.id, 'credit', value)
+                          }}
                           className="text-[#001f3f] border-[#001f3f] h-9 text-sm text-right"
                         />
                       </TableCell>
