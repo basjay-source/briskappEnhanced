@@ -432,11 +432,15 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
 
         <form onSubmit={handleSubmit}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-gray-100">
-              <TabsTrigger value="basic" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Basic Info</TabsTrigger>
-              <TabsTrigger value="income" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Income</TabsTrigger>
-              <TabsTrigger value="deductions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Deductions</TabsTrigger>
-              <TabsTrigger value="summary" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Summary</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-8 bg-gray-100">
+              <TabsTrigger value="basic" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Basic Info</TabsTrigger>
+              <TabsTrigger value="income" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Income</TabsTrigger>
+              <TabsTrigger value="deductions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Deductions</TabsTrigger>
+              <TabsTrigger value="capitalallowances" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Capital Allowances</TabsTrigger>
+              <TabsTrigger value="losses" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Losses</TabsTrigger>
+              <TabsTrigger value="paymentonaccount" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Payment on Account</TabsTrigger>
+              <TabsTrigger value="other" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Other</TabsTrigger>
+              <TabsTrigger value="summary" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Summary</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic" className="space-y-4 mt-4">
@@ -538,12 +542,13 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
 
             <TabsContent value="income" className="space-y-4 mt-4">
               <Tabs value={currentIncomeTab} onValueChange={setCurrentIncomeTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-6 bg-gray-100">
+                <TabsList className="grid w-full grid-cols-7 bg-gray-100">
                   <TabsTrigger value="employment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Employment</TabsTrigger>
                   <TabsTrigger value="selfemployment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Self-Employed</TabsTrigger>
                   <TabsTrigger value="rental" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Rental</TabsTrigger>
                   <TabsTrigger value="dividends" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Dividends</TabsTrigger>
                   <TabsTrigger value="pensions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Pensions</TabsTrigger>
+                  <TabsTrigger value="interest" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Interest</TabsTrigger>
                   <TabsTrigger value="other" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Other</TabsTrigger>
                 </TabsList>
 
@@ -1684,27 +1689,37 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                 {/* Dividends Tab */}
                 <TabsContent value="dividends" className="space-y-4 mt-4">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-[#001f3f]">Dividend Income</h3>
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Dividend Income with Exchange Integration</h3>
                     {!isReadOnly && (
-                      <Button 
-                        type="button" 
-                        size="sm" 
-                        onClick={() => {
-                          const newDividend: DividendDetails = {
-                            companyName: '',
-                            dividendAmount: 0,
-                            isDomestic: true
-                          }
-                          setFormData({
-                            ...formData,
-                            dividendDetails: [...(formData.dividendDetails || []), newDividend]
-                          })
-                        }}
-                        className="bg-[#001f3f] hover:bg-[#003366]"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Dividend
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          type="button" 
+                          size="sm" 
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Sync from Exchange
+                        </Button>
+                        <Button 
+                          type="button" 
+                          size="sm" 
+                          onClick={() => {
+                            const newDividend: DividendDetails = {
+                              companyName: '',
+                              dividendAmount: 0,
+                              isDomestic: true
+                            }
+                            setFormData({
+                              ...formData,
+                              dividendDetails: [...(formData.dividendDetails || []), newDividend]
+                            })
+                          }}
+                          className="bg-[#001f3f] hover:bg-[#003366]"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Manual
+                        </Button>
+                      </div>
                     )}
                   </div>
 
@@ -1729,9 +1744,9 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                               </Button>
                             )}
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-3 gap-4">
                             <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Company Name*</Label>
+                              <Label className="text-[#001f3f]">Company/Stock Name (Box 1)*</Label>
                               <Input
                                 value={dividend.companyName}
                                 onChange={(e) => {
@@ -1741,11 +1756,52 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                                 }}
                                 className="border-[#001f3f]"
                                 disabled={isReadOnly}
-                                placeholder="Name of company paying dividend"
+                                placeholder="Company/Stock ticker"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label className="text-[#001f3f]">Dividend Amount (£)*</Label>
+                              <Label className="text-[#001f3f]">Stock Exchange</Label>
+                              <Select disabled={isReadOnly}>
+                                <SelectTrigger className="border-[#001f3f]">
+                                  <SelectValue placeholder="Select exchange" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="lse">London Stock Exchange (LSE)</SelectItem>
+                                  <SelectItem value="nyse">New York Stock Exchange (NYSE)</SelectItem>
+                                  <SelectItem value="nasdaq">NASDAQ</SelectItem>
+                                  <SelectItem value="euronext">Euronext</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Stock Ticker Symbol</Label>
+                              <Input
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="e.g., AAPL, TSLA"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Number of Shares</Label>
+                              <Input
+                                type="number"
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                                placeholder="Quantity"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Dividend per Share (Box 2) £</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Total Dividend (Box 3) £*</Label>
                               <Input
                                 type="number"
                                 step="0.01"
@@ -1759,8 +1815,8 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                                 disabled={isReadOnly}
                               />
                             </div>
-                            <div className="space-y-2 col-span-2">
-                              <Label className="text-[#001f3f]">Dividend Type</Label>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Dividend Type (Box 4)</Label>
                               <Select
                                 value={dividend.isDomestic ? 'domestic' : 'foreign'}
                                 onValueChange={(value) => {
@@ -1779,13 +1835,35 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                                 </SelectContent>
                               </Select>
                             </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Tax Credit (Box 5) £</Label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-[#001f3f]">Payment Date</Label>
+                              <Input
+                                type="date"
+                                className="border-[#001f3f]"
+                                disabled={isReadOnly}
+                              />
+                            </div>
+                          </div>
+                          <div className="p-2 bg-blue-50 border border-blue-300 rounded">
+                            <p className="text-xs text-[#001f3f]">
+                              💡 <strong>Real-time Integration:</strong> Use "Sync from Exchange" to automatically import dividend data from connected brokerage platforms (Interactive Brokers, Charles Schwab, Trading 212, etc.)
+                            </p>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="text-center py-8 text-[#001f3f]">
-                      <p>No dividend income added yet. Click "Add Dividend" to get started.</p>
+                      <p>No dividend income added yet. Click "Sync from Exchange" to import from brokers or "Add Manual" to enter manually.</p>
                     </div>
                   )}
                 </TabsContent>
@@ -1916,20 +1994,153 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                     </div>
                   )}
                 </TabsContent>
+
+                {/* Bank Interest Tab */}
+                <TabsContent value="interest" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f]">Bank Interest & Investment Income</h3>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                      <h4 className="font-semibold text-[#001f3f]">UK Bank & Building Society Interest</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Institution Name*</Label>
+                          <Input
+                            value={formData.savingsInterest || 0}
+                            onChange={(e) => setFormData({ ...formData, savingsInterest: parseFloat(e.target.value) || 0 })}
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                            placeholder="Bank/Building Society name"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Account Number</Label>
+                          <Input
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                            placeholder="Account number"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Gross Interest (Box 1) £*</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={formData.savingsInterest || 0}
+                            onChange={(e) => setFormData({ ...formData, savingsInterest: parseFloat(e.target.value) || 0 })}
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Tax Deducted (Box 2) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                      <h4 className="font-semibold text-[#001f3f]">Foreign Bank Interest & Investment Income</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Foreign Institution Name</Label>
+                          <Input
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                            placeholder="Foreign bank/institution"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Country</Label>
+                          <Input
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                            placeholder="Country"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Foreign Interest (Box 3) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Foreign Tax Credit (Box 4) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                      <h4 className="font-semibold text-[#001f3f]">Other Investment Income</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Gilts & Government Securities (Box 5) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Unit Trusts & OEICs (Box 6) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Purchased Life Annuities (Box 7) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[#001f3f]">Stock Dividends (Box 8) £</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            className="border-[#001f3f]"
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-blue-50 border border-[#001f3f] rounded">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-[#001f3f]">Total Interest & Investment Income:</span>
+                        <span className="text-xl font-bold text-[#001f3f]">
+                          £{(formData.savingsInterest || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
                 <TabsContent value="other" className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="savingsInterest" className="text-[#001f3f]">Savings Interest (£)</Label>
-                      <Input
-                        id="savingsInterest"
-                        type="number"
-                        step="0.01"
-                        value={formData.savingsInterest}
-                        onChange={(e) => setFormData({ ...formData, savingsInterest: parseFloat(e.target.value) || 0 })}
-                        className="border-[#001f3f]"
-                        disabled={isReadOnly}
-                      />
-                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="capitalGains" className="text-[#001f3f]">Capital Gains (£)</Label>
                       <Input
@@ -2021,6 +2232,222 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     className="border-[#001f3f]"
                     rows={4}
+                    disabled={isReadOnly}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Capital Allowances Tab */}
+            <TabsContent value="capitalallowances" className="space-y-4 mt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Capital Allowances</h3>
+              <div className="space-y-4">
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Plant & Machinery</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Annual Investment Allowance (Box 1) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">First Year Allowance (Box 2) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Writing Down Allowance (Box 3) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Structures & Buildings Allowance</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Structures & Buildings Allowance (Box 4) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Enhanced Structures Allowance (Box 5) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Other Allowances</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Balancing Charges (Box 6) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Total Capital Allowances (Box 7) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-blue-50 border border-[#001f3f] rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-[#001f3f]">Total Capital Allowances Claimed:</span>
+                    <span className="text-xl font-bold text-[#001f3f]">£0.00</span>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Losses Tab */}
+            <TabsContent value="losses" className="space-y-4 mt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Losses</h3>
+              <div className="space-y-4">
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Trading Losses</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Loss from This Year (Box 1) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Loss Brought Forward (Box 2) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Loss Set Against Other Income (Box 3) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Loss to Carry Forward (Box 4) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Property Losses</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Property Loss This Year (Box 5) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Property Loss Brought Forward (Box 6) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Capital Losses</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Capital Loss This Year (Box 7) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Capital Loss Brought Forward (Box 8) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-blue-50 border border-[#001f3f] rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-[#001f3f]">Total Losses to Carry Forward:</span>
+                    <span className="text-xl font-bold text-[#001f3f]">£0.00</span>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Payment on Account Tab */}
+            <TabsContent value="paymentonaccount" className="space-y-4 mt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Payment on Account</h3>
+              <div className="space-y-4">
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Current Tax Year Payments</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">First Payment on Account (Box 1) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} placeholder="Payment due 31 January" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Second Payment on Account (Box 2) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} placeholder="Payment due 31 July" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Balancing Payment (Box 3) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Total Tax Payable (Box 4) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 border-2 border-[#001f3f] rounded space-y-3">
+                  <h4 className="font-semibold text-[#001f3f]">Payments Already Made</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">First Payment Made (Box 5) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Second Payment Made (Box 6) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Tax Deducted at Source (Box 7) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[#001f3f]">Total Payments Made (Box 8) £</Label>
+                      <Input type="number" step="0.01" className="border-[#001f3f]" disabled={isReadOnly} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-[#001f3f]">Total Tax Due:</span>
+                      <span className="text-xl font-bold text-[#001f3f]">£0.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-[#001f3f]">Amount Outstanding:</span>
+                      <span className="text-xl font-bold text-red-600">£0.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Other Tab */}
+            <TabsContent value="other" className="space-y-4 mt-4">
+              <h3 className="text-lg font-semibold text-[#001f3f] mb-4">Other Income & Information</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="capitalGains" className="text-[#001f3f]">Capital Gains (£)</Label>
+                  <Input
+                    id="capitalGains"
+                    type="number"
+                    step="0.01"
+                    value={formData.capitalGains}
+                    onChange={(e) => setFormData({ ...formData, capitalGains: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
+                    disabled={isReadOnly}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="otherIncome" className="text-[#001f3f]">Other Income (£)</Label>
+                  <Input
+                    id="otherIncome"
+                    type="number"
+                    step="0.01"
+                    value={formData.otherIncome}
+                    onChange={(e) => setFormData({ ...formData, otherIncome: parseFloat(e.target.value) || 0 })}
+                    className="border-[#001f3f]"
                     disabled={isReadOnly}
                   />
                 </div>
