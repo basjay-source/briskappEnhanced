@@ -137,13 +137,13 @@ const AccountsProduction: React.FC = () => {
   const [clientSortDirection, setClientSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([
-    { id: '1', accountCode: '1000', accountName: 'Fixed Assets', debit: 250000, credit: 0, category: 'Asset' },
-    { id: '2', accountCode: '1100', accountName: 'Current Assets', debit: 85000, credit: 0, category: 'Asset' },
-    { id: '3', accountCode: '2000', accountName: 'Current Liabilities', debit: 0, credit: 45000, category: 'Liability' },
-    { id: '4', accountCode: '3000', accountName: 'Share Capital', debit: 0, credit: 100000, category: 'Equity' },
-    { id: '5', accountCode: '4000', accountName: 'Sales Revenue', debit: 0, credit: 450000, category: 'Revenue' },
-    { id: '6', accountCode: '5000', accountName: 'Cost of Sales', debit: 180000, credit: 0, category: 'Expense' },
-    { id: '7', accountCode: '6000', accountName: 'Operating Expenses', debit: 80000, credit: 0, category: 'Expense' }
+    { id: '1', accountCode: '1', accountName: 'Sales', debit: 0, credit: 450000, category: 'Revenue' },
+    { id: '2', accountCode: '27', accountName: 'Purchases', debit: 180000, credit: 0, category: 'Expense' },
+    { id: '3', accountCode: '101', accountName: 'Salaries', debit: 80000, credit: 0, category: 'Expense' },
+    { id: '4', accountCode: '501', accountName: 'Freehold property', debit: 250000, credit: 0, category: 'Asset' },
+    { id: '5', accountCode: '601', accountName: 'Bank accounts', debit: 85000, credit: 0, category: 'Asset' },
+    { id: '6', accountCode: '801', accountName: 'Trade creditors', debit: 0, credit: 45000, category: 'Liability' },
+    { id: '7', accountCode: '1001', accountName: 'Called up share capital', debit: 0, credit: 100000, category: 'Equity' }
   ])
 
   const [adjustments, setAdjustments] = useState<Adjustment[]>([
