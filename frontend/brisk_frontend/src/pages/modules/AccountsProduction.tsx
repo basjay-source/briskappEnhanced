@@ -558,10 +558,9 @@ const AccountsProduction: React.FC = () => {
     {
       id: 'trial-balance', label: 'Trial Balance', icon: Calculator, hasSubTabs: true,
       subTabs: {
-        'import': { label: 'Import TB', icon: Upload },
+        'overview': { label: 'Trial Balance', icon: Calculator },
         'chart-accounts': { label: 'Chart of Accounts', icon: FileText },
-        'posting': { label: 'Posting Batches', icon: Calculator },
-        'review': { label: 'Review & Adjust', icon: Eye }
+        'posting': { label: 'Posting Batches', icon: Calculator }
       }
     },
     {
@@ -2128,21 +2127,7 @@ const AccountsProduction: React.FC = () => {
     if (activeMainTab === 'dashboard') return renderDashboard()
     if (activeMainTab === 'clients') return renderClientManagement()
     if (activeMainTab === 'trial-balance') {
-      if (activeSubTab === 'import') {
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#001f3f]">Import Trial Balance</h2>
-            <p className="text-[#001f3f]">Upload trial balance from accounting software</p>
-            <Card>
-              <CardContent className="pt-6">
-                <Button className="bg-[#001f3f] hover:bg-[#003366]">
-                  <Upload className="h-4 w-4 mr-2" />Upload File
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )
-      }
+      if (activeSubTab === 'overview') return renderTrialBalance()
       if (activeSubTab === 'chart-accounts') return renderChartOfAccounts()
       if (activeSubTab === 'posting') return renderPostingBatches()
       return renderTrialBalance()
