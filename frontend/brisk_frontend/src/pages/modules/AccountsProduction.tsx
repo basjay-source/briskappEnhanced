@@ -188,6 +188,10 @@ const AccountsProduction: React.FC = () => {
 
   const [_isTBViewOpen, setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
+  const [isTBAddOpen, setIsTBAddOpen] = useState(false)
+  const [isTBDeleteOpen, setIsTBDeleteOpen] = useState(false)
+  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false)
+  const [isIntegrationOpen, setIsIntegrationOpen] = useState(false)
   const [selectedTBEntry, setSelectedTBEntry] = useState<TrialBalanceEntry | null>(null)
   const [tbFormData, setTBFormData] = useState<Partial<TrialBalanceEntry>>({})
 
@@ -292,6 +296,25 @@ const AccountsProduction: React.FC = () => {
   }
 
 
+  const handleAddTBEntry = () => {
+    setTBFormData({ accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset' })
+    setIsTBAddOpen(true)
+  }
+
+  const handleSaveNewTBEntry = () => {
+    const newEntry: TrialBalanceEntry = {
+      id: Date.now().toString(),
+      accountCode: tbFormData.accountCode || '',
+      accountName: tbFormData.accountName || '',
+      debit: tbFormData.debit || 0,
+      credit: tbFormData.credit || 0,
+      category: tbFormData.category || 'Asset'
+    }
+    setTrialBalanceEntries([...trialBalanceEntries, newEntry])
+    setIsTBAddOpen(false)
+    setTBFormData({})
+  }
+
   const handleSaveTBEntry = () => {
     if (selectedTBEntry) {
       setTrialBalanceEntries(trialBalanceEntries.map(e => 
@@ -299,6 +322,50 @@ const AccountsProduction: React.FC = () => {
       ))
     }
     setIsTBEditOpen(false)
+  }
+
+  const handleDeleteTBEntry = (entry: TrialBalanceEntry) => {
+    setSelectedTBEntry(entry)
+    setIsTBDeleteOpen(true)
+  }
+
+  const handleConfirmDeleteTBEntry = () => {
+    if (selectedTBEntry) {
+      setTrialBalanceEntries(trialBalanceEntries.filter(e => e.id !== selectedTBEntry.id))
+      setIsTBDeleteOpen(false)
+      setSelectedTBEntry(null)
+    }
+  }
+
+  const handleBookkeepingSync = () => {
+    setIsSyncConfirmOpen(true)
+  }
+
+  const handleConfirmSync = () => {
+    const bookkeepingData = [
+      { accountCode: '1', accountName: 'Cash at bank and in hand', debit: 50000, credit: 0, category: 'Asset' },
+      { accountCode: '2', accountName: 'Trade debtors', debit: 75000, credit: 0, category: 'Asset' },
+      { accountCode: '3', accountName: 'Prepayments and accrued income', debit: 5000, credit: 0, category: 'Asset' },
+      { accountCode: '101', accountName: 'Sales - goods', debit: 0, credit: 250000, category: 'Income' },
+      { accountCode: '102', accountName: 'Sales - services', debit: 0, credit: 150000, category: 'Income' },
+      { accountCode: '201', accountName: 'Cost of goods sold - materials', debit: 80000, credit: 0, category: 'Expenses' },
+      { accountCode: '301', accountName: 'Wages and salaries', debit: 120000, credit: 0, category: 'Expenses' },
+      { accountCode: '401', accountName: 'Rent', debit: 24000, credit: 0, category: 'Expenses' },
+      { accountCode: '501', accountName: 'Bank charges', debit: 1000, credit: 0, category: 'Expenses' },
+      { accountCode: '601', accountName: 'Trade creditors', debit: 0, credit: 45000, category: 'Liability' },
+      { accountCode: '651', accountName: 'Equipment', debit: 85000, credit: 0, category: 'Asset' },
+      { accountCode: '701', accountName: 'Share capital', debit: 0, credit: 100000, category: 'Equity' }
+    ]
+    const newEntries = bookkeepingData.map(d => ({
+      id: Date.now().toString() + Math.random(),
+      accountCode: d.accountCode,
+      accountName: d.accountName,
+      debit: d.debit,
+      credit: d.credit,
+      category: d.category as any
+    }))
+    setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+    setIsSyncConfirmOpen(false)
   }
 
 
@@ -1066,23 +1133,7 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => {
-            const bookkeepingData = [
-              { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
-              { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
-              { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
-              { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
-            ]
-            const newEntries = bookkeepingData.map(d => ({
-              id: Date.now().toString() + Math.random(),
-              accountCode: d.accountCode,
-              accountName: d.accountName,
-              debit: d.debit,
-              credit: d.credit,
-              category: d.category as any
-            }))
-            setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
-          }}>
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={handleBookkeepingSync}>
             <CardContent className="pt-6 text-center">
               <Database className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
               <h3 className="font-bold text-[#001f3f] mb-2">Sync from Bookkeeping</h3>
@@ -1108,7 +1159,7 @@ const AccountsProduction: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => alert('Integration with Xero, Sage, and QuickBooks coming soon')}>
+          <Card className="cursor-pointer border-2 border-[#001f3f] hover:shadow-lg transition-all" onClick={() => setIsIntegrationOpen(true)}>
             <CardContent className="pt-6 text-center">
               <Globe className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
               <h3 className="font-bold text-[#001f3f] mb-2">Software Integration</h3>
@@ -1121,8 +1172,11 @@ const AccountsProduction: React.FC = () => {
         </div>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-[#001f3f]">Trial Balance Entries</CardTitle>
+            <Button onClick={handleAddTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Entry
+            </Button>
           </CardHeader>
           <CardContent>
             <Table>
@@ -1222,16 +1276,29 @@ const AccountsProduction: React.FC = () => {
                       {entry.credit > 0 ? `£${entry.credit.toLocaleString()}` : '-'}
                     </TableCell>
                     <TableCell>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleEditTBEntry(entry)
-                        }}
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleEditTBEntry(entry)
+                          }}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteTBEntry(entry)
+                          }}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -2447,6 +2514,165 @@ const AccountsProduction: React.FC = () => {
             <Button onClick={handleSaveTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
               <Save className="h-4 w-4 mr-2" />Save
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBAddOpen} onOpenChange={setIsTBAddOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Add Trial Balance Entry</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-[#001f3f]">Account Code</Label>
+              <Input
+                value={tbFormData.accountCode || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountCode: e.target.value})}
+                className="text-[#001f3f]"
+                placeholder="Enter account code from Chart of Accounts"
+              />
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Account Name</Label>
+              <Input
+                value={tbFormData.accountName || ''}
+                onChange={(e) => setTBFormData({...tbFormData, accountName: e.target.value})}
+                className="text-[#001f3f]"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-[#001f3f]">Debit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.debit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, debit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+              <div>
+                <Label className="text-[#001f3f]">Credit</Label>
+                <Input
+                  type="number"
+                  value={tbFormData.credit || 0}
+                  onChange={(e) => setTBFormData({...tbFormData, credit: parseFloat(e.target.value)})}
+                  className="text-[#001f3f]"
+                />
+              </div>
+            </div>
+            <div>
+              <Label className="text-[#001f3f]">Category</Label>
+              <Select value={tbFormData.category || 'Asset'} onValueChange={(value) => setTBFormData({...tbFormData, category: value as any})}>
+                <SelectTrigger className="border-[#001f3f]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Asset">Asset</SelectItem>
+                  <SelectItem value="Liability">Liability</SelectItem>
+                  <SelectItem value="Equity">Equity</SelectItem>
+                  <SelectItem value="Income">Income</SelectItem>
+                  <SelectItem value="Expense">Expense</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTBAddOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveNewTBEntry} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Plus className="h-4 w-4 mr-2" />Add Entry
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTBDeleteOpen} onOpenChange={setIsTBDeleteOpen}>
+        <DialogContent className="border-2 border-red-600">
+          <DialogHeader>
+            <DialogTitle className="text-red-600">Delete Trial Balance Entry</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete this trial balance entry?</p>
+          {selectedTBEntry && (
+            <div className="bg-gray-50 p-3 rounded">
+              <p className="text-sm"><strong>Code:</strong> {selectedTBEntry.accountCode}</p>
+              <p className="text-sm"><strong>Name:</strong> {selectedTBEntry.accountName}</p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTBDeleteOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmDeleteTBEntry} className="bg-red-600 hover:bg-red-700">
+              <Trash2 className="h-4 w-4 mr-2" />Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isSyncConfirmOpen} onOpenChange={setIsSyncConfirmOpen}>
+        <DialogContent className="border-2 border-[#001f3f] max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Confirm Bookkeeping Sync</DialogTitle>
+          </DialogHeader>
+          <div>
+            <p className="mb-3">This will import 12 trial balance entries from the Bookkeeping module. Preview:</p>
+            <div className="max-h-60 overflow-y-auto border rounded p-2">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-1">Code</th>
+                    <th className="text-left p-1">Account Name</th>
+                    <th className="text-right p-1">Debit</th>
+                    <th className="text-right p-1">Credit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td className="p-1">1</td><td className="p-1">Cash at bank</td><td className="text-right p-1">£50,000</td><td className="text-right p-1">-</td></tr>
+                  <tr><td className="p-1">2</td><td className="p-1">Trade debtors</td><td className="text-right p-1">£75,000</td><td className="text-right p-1">-</td></tr>
+                  <tr><td className="p-1">101</td><td className="p-1">Sales - goods</td><td className="text-right p-1">-</td><td className="text-right p-1">£250,000</td></tr>
+                  <tr><td className="p-1">102</td><td className="p-1">Sales - services</td><td className="text-right p-1">-</td><td className="text-right p-1">£150,000</td></tr>
+                  <tr className="text-gray-500"><td colSpan={4} className="p-1 text-center">... 8 more entries</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSyncConfirmOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmSync} className="bg-[#001f3f] hover:bg-[#003366]">
+              <Database className="h-4 w-4 mr-2" />Import Entries
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isIntegrationOpen} onOpenChange={setIsIntegrationOpen}>
+        <DialogContent className="border-2 border-[#001f3f]">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Software Integration</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p>Connect your accounting software to import trial balance data:</p>
+            <div className="grid gap-3">
+              <Button className="justify-start h-auto p-4" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold">Xero</div>
+                  <div className="text-xs text-gray-500">Import from Xero accounting</div>
+                </div>
+              </Button>
+              <Button className="justify-start h-auto p-4" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold">Sage</div>
+                  <div className="text-xs text-gray-500">Import from Sage 50/200</div>
+                </div>
+              </Button>
+              <Button className="justify-start h-auto p-4" variant="outline">
+                <div className="text-left">
+                  <div className="font-semibold">QuickBooks</div>
+                  <div className="text-xs text-gray-500">Import from QuickBooks Online</div>
+                </div>
+              </Button>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsIntegrationOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
