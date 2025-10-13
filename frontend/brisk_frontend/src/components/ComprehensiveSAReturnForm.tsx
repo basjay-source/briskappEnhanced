@@ -230,6 +230,17 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
   const [currentIncomeTab, setCurrentIncomeTab] = useState('employment')
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const tabs = ['basic', 'income', 'deductions', 'summary']
+  
+  const [showSetup, setShowSetup] = useState(mode === 'add')
+  const [setupData, setSetupData] = useState({
+    refNo: `SA-${Math.floor(Math.random() * 1000)}`,
+    description: '',
+    taxYear: '2024-25',
+    returnType: 'new' as 'new' | 'amended',
+    importSource: 'manual' as 'manual' | 'previous' | 'bookkeeping' | 'accounts',
+    previousReturnId: '',
+    addToQuestionnaire: false
+  })
 
   useEffect(() => {
     if (saReturn && mode !== 'add') {
@@ -401,6 +412,15 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
     setValidationErrors([])
   }
 
+  const handleSetupComplete = () => {
+    setFormData({
+      ...formData,
+      taxYear: setupData.taxYear.replace('-', '/'),
+      status: setupData.returnType === 'new' ? 'draft' : 'amended'
+    })
+    setShowSetup(false)
+  }
+
   const isReadOnly = mode === 'view'
 
   return (
@@ -430,7 +450,167 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        {showSetup && mode === 'add' ? (
+          <div className="space-y-6 py-4">
+            <h3 className="text-xl font-semibold text-gray-700">Create new SA100 Tax Return</h3>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-gray-700">Ref No <span className="text-red-600">*</span></Label>
+                  <Input
+                    value={setupData.refNo}
+                    onChange={(e) => setSetupData({ ...setupData, refNo: e.target.value })}
+                    className="border-gray-300 bg-gray-100"
+                    disabled
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-700">Description</Label>
+                  <Input
+                    value={setupData.description}
+                    onChange={(e) => setSetupData({ ...setupData, description: e.target.value })}
+                    className="border-gray-300"
+                    placeholder="Optional description"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-700">Tax Year <span className="text-red-600">*</span></Label>
+                <Select
+                  value={setupData.taxYear}
+                  onValueChange={(value) => setSetupData({ ...setupData, taxYear: value })}
+                >
+                  <SelectTrigger className="border-gray-300">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2024-25">2024-25</SelectItem>
+                    <SelectItem value="2023-24">2023-24</SelectItem>
+                    <SelectItem value="2022-23">2022-23</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-700">Return Type <span className="text-red-600">*</span></Label>
+                <div className="flex gap-8">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.returnType === 'new'}
+                      onChange={() => setSetupData({ ...setupData, returnType: 'new' })}
+                      className="w-4 h-4 text-green-600"
+                    />
+                    <span className="text-gray-700">New</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.returnType === 'amended'}
+                      onChange={() => setSetupData({ ...setupData, returnType: 'amended' })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-gray-700">Amended</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-700">Import Data</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.importSource === 'previous'}
+                      onChange={() => setSetupData({ ...setupData, importSource: 'previous' })}
+                      className="w-4 h-4 text-green-600"
+                    />
+                    <span className="text-gray-700">Previous Year</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.importSource === 'bookkeeping'}
+                      onChange={() => setSetupData({ ...setupData, importSource: 'bookkeeping' })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-gray-700">Bookkeeping</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.importSource === 'manual'}
+                      onChange={() => setSetupData({ ...setupData, importSource: 'manual' })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-gray-700">Manual</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={setupData.importSource === 'accounts'}
+                      onChange={() => setSetupData({ ...setupData, importSource: 'accounts' })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-gray-700">Accounts Production</span>
+                  </label>
+                </div>
+              </div>
+
+              {setupData.importSource === 'previous' && (
+                <div className="space-y-2">
+                  <Label className="text-gray-700">Select Tax Return</Label>
+                  <Select
+                    value={setupData.previousReturnId}
+                    onValueChange={(value) => setSetupData({ ...setupData, previousReturnId: value })}
+                  >
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue placeholder="SA-4 2023-24" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sa4-2023">SA-4 2023-24</SelectItem>
+                      <SelectItem value="sa3-2022">SA-3 2022-23</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="questionnaire"
+                  checked={setupData.addToQuestionnaire}
+                  onChange={(e) => setSetupData({ ...setupData, addToQuestionnaire: e.target.checked })}
+                  className="w-4 h-4"
+                />
+                <Label htmlFor="questionnaire" className="text-gray-700 cursor-pointer">
+                  Add this client's return to the Questionnaire dashboard
+                </Label>
+              </div>
+            </div>
+
+            <DialogFooter className="flex justify-between">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => onOpenChange(false)}
+                className="flex items-center gap-2"
+              >
+                ← Back
+              </Button>
+              <Button 
+                type="button" 
+                onClick={handleSetupComplete}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                Save & Continue
+              </Button>
+            </DialogFooter>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
             <TabsList className="grid w-full grid-cols-8 bg-gray-100">
               <TabsTrigger value="basic" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Basic Info</TabsTrigger>
@@ -2563,6 +2743,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
             </div>
           </DialogFooter>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   )
