@@ -332,10 +332,10 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       <TableCell className="p-2">
                         <Input
                           type="text"
-                          value={line.debit === 0 ? '0.00' : line.debit.toFixed(2)}
+                          value={line.debit === 0 ? '' : line.debit.toFixed(2)}
                           onChange={(e) => {
                             const value = e.target.value
-                            if (value === '' || value === '0' || value === '0.') {
+                            if (value === '' || value === '0') {
                               updateLine(line.id, 'debit', 0)
                             } else {
                               const numValue = parseFloat(value)
@@ -351,10 +351,10 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                       <TableCell className="p-2">
                         <Input
                           type="text"
-                          value={line.credit === 0 ? '0.00' : line.credit.toFixed(2)}
+                          value={line.credit === 0 ? '' : line.credit.toFixed(2)}
                           onChange={(e) => {
                             const value = e.target.value
-                            if (value === '' || value === '0' || value === '0.') {
+                            if (value === '' || value === '0') {
                               updateLine(line.id, 'credit', 0)
                             } else {
                               const numValue = parseFloat(value)
