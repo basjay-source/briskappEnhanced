@@ -525,7 +525,7 @@ export default function PersonalTax() {
       case 'in_progress':
         return <Clock className="h-4 w-4 text-[#001f3f]" />
       default:
-        return <Clock className="h-4 w-4 text-gray-400" />
+        return <Clock className="h-4 w-4 text-[#001f3f]" />
     }
   }
 
@@ -676,208 +676,38 @@ export default function PersonalTax() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Recent SA Returns
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {saReturns.map((saReturn, index) => {
-                  return (
-                    <div key={index} className="flex items-center justify-between p-3 border-2 border-[#001f3f] rounded-[2px]">
-                      <div className="flex items-center gap-3">
+        <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
+          <div className={isMobile ? '' : 'lg:col-span-2'}>
+            <Card className="border-2 border-[#001f3f]">
+              <CardHeader>
+                <CardTitle className="text-[#001f3f]">Recent SA Returns</CardTitle>
+                <CardDescription className="text-[#001f3f]">Current tax year progress</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {saReturns.map((saReturn) => (
+                    <div key={saReturn.id} className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                      <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
                         {getStatusIcon(saReturn.status)}
-                        <div>
-                          <div className="font-medium">{saReturn.client}</div>
-                          <div className="text-sm text-gray-500">Tax Year: {saReturn.taxYear}</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">£{saReturn.estimatedTax.toLocaleString()}</div>
-                        <Badge variant={saReturn.status === 'submitted' ? 'default' : 'secondary'}>
-                          {saReturn.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Tax Optimization Opportunities
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {optimizationOpportunities.map((opportunity, index) => (
-                  <div key={index} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{opportunity.opportunity}</div>
-                      <Badge variant="outline">£{opportunity.potentialSaving}</Badge>
-                    </div>
-                    <div className="text-sm text-[#001f3f] mb-2">{opportunity.description}</div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">Priority: {opportunity.priority}</span>
-                      <Button size="sm" variant="outline">
-                        <Eye className="h-3 w-3 mr-1" />
-                        Review
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-            <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
-              {kpis.map((kpi, index) => {
-                const Icon = kpi.icon
-                const drillDownData = {
-                  title: `${kpi.title} Analysis`,
-                  description: `Detailed personal tax analysis and breakdown for ${kpi.title.toLowerCase()}`,
-                  content: (
-                    <div className="space-y-6">
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
-                          <h4 className="font-semibold text-[#001f3f] mb-2">Current Period</h4>
-                          <p className="text-xl font-bold">{kpi.value}</p>
-                          <p className={`text-sm ${kpi.color}`}>{kpi.change}</p>
-                        </div>
-                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
-                          <h4 className="font-semibold text-[#001f3f] mb-2">Tax Efficiency</h4>
-                          <p className="text-sm text-[#001f3f]">Personal tax optimization</p>
-                          <div className="mt-2">
-                            <div className="flex justify-between text-xs">
-                              <span>Efficiency Score</span>
-                              <span className="text-green-600">88%</span>
-                            </div>
-                            <Progress value={88} className="h-2" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-[#001f3f]">{saReturn.client}</h4>
+                          <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
+                              {saReturn.status.replace('_', ' ')}
+                            </Badge>
+                            <span className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</span>
                           </div>
                         </div>
                       </div>
-                      
-                      {kpi.title === 'Active SA Returns' && (
+                      <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
                         <div>
-                          <h4 className="font-semibold text-[#001f3f] mb-3">Return Breakdown</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>In Progress</span>
-                              <span className="font-semibold">8 returns</span>
-                            </div>
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>Ready for Review</span>
-                              <span className="font-semibold">3 returns</span>
-                            </div>
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>Submitted</span>
-                              <span className="font-semibold">1 return</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {kpi.title === 'Tax Saved (YTD)' && (
-                        <div>
-                          <h4 className="font-semibold text-[#001f3f] mb-3">Savings Breakdown</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>Pension Contributions</span>
-                              <span className="font-semibold">£18,500</span>
-                            </div>
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>CGT Optimization</span>
-                              <span className="font-semibold">£15,200</span>
-                            </div>
-                            <div className="flex justify-between p-2 border-2 border-[#001f3f] rounded">
-                              <span>Allowance Utilization</span>
-                              <span className="font-semibold">£11,500</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {kpi.title === 'CGT Optimization' && (
-                        <div>
-                          <h4 className="font-semibold text-[#001f3f] mb-3">CGT Opportunities</h4>
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                              <span>Timing Optimization</span>
-                              <Badge variant="default">£4,200</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                              <span>Annual Exemption</span>
-                              <Badge variant="secondary">£2,800</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-2 border-2 border-[#001f3f] rounded">
-                              <span>Loss Harvesting</span>
-                              <Badge variant="outline">£1,500</Badge>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="flex gap-2 pt-4">
-                        <Button variant="outline">Export Tax Data</Button>
-                        <Button>Generate SA100</Button>
-                      </div>
-                    </div>
-                  )
-                }
-                return (
-                  <KPICard
-                    key={index}
-                    title={kpi.title}
-                    value={kpi.value}
-                    change={kpi.change}
-                    icon={Icon}
-                    color={kpi.color}
-                    drillDownData={drillDownData}
-                  />
-                )
-              })}
-            </ResponsiveGrid>
-
-            <div className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
-              <div className={isMobile ? '' : 'lg:col-span-2'}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-[#001f3f]">Recent SA Returns</CardTitle>
-                    <CardDescription>Current tax year progress</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {saReturns.map((saReturn) => (
-                        <div key={saReturn.id} className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-gray-50 ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                          <div className={`flex items-center gap-4 ${isMobile ? 'justify-between' : ''}`}>
-                            {getStatusIcon(saReturn.status)}
-                            <div className="flex-1">
-                              <h4 className="font-medium text-[#001f3f]">{saReturn.client}</h4>
-                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge className={`text-xs ${getStatusColor(saReturn.status)}`}>
-                                  {saReturn.status.replace('_', ' ')}
-                                </Badge>
-                                <span className="text-xs text-gray-500">Due: {saReturn.dueDate}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
-                            <div>
-                              <p className="text-sm font-medium">Est. Tax: £{saReturn.estimatedTax.toLocaleString()}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <div className={`bg-gray-200 rounded-full h-2 ${isMobile ? 'w-16' : 'w-20'}`}>
-                                  <div 
-                                    className="bg-brisk-primary h-2 rounded-full" 
-                                    style={{ width: `${saReturn.progress}%` }}
+                          <p className="text-sm font-medium text-[#001f3f]">Est. Tax: £{saReturn.estimatedTax.toLocaleString()}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className={`bg-gray-200 rounded-full h-2 ${isMobile ? 'w-16' : 'w-20'}`}>
+                              <div 
+                                className="bg-[#001f3f] h-2 rounded-full" 
+                                style={{ width: `${saReturn.progress}%` }}
                                   ></div>
                                 </div>
                                 <span className="text-xs text-[#001f3f]">{saReturn.progress}%</span>
@@ -966,7 +796,7 @@ export default function PersonalTax() {
                           <p className="font-medium text-sm">CGT Annual Exemption</p>
                           <p className="text-xs text-[#001f3f]">Planning required</p>
                         </div>
-                        <Badge className="bg-brisk-primary-50 text-brisk-primary">45 days</Badge>
+                        <Badge className="bg-[#001f3f] text-white">45 days</Badge>
                       </div>
                     </div>
                   </CardContent>
@@ -1034,7 +864,7 @@ export default function PersonalTax() {
                       </SelectTrigger>
                       <SelectContent>
                         {individualClients.length === 0 ? (
-                          <div className="p-4 text-center text-sm text-gray-500">
+                          <div className="p-4 text-center text-sm text-[#001f3f]">
                             <p>No individual clients found</p>
                             <p className="text-xs mt-1">Add clients in Practice Management module</p>
                           </div>
@@ -1076,7 +906,7 @@ export default function PersonalTax() {
                               <div>
                                 <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
                                 <p className="text-sm text-[#001f3f]">Estimated Tax</p>
-                                <p className="text-xs text-gray-500">Due: {saReturn.dueDate}</p>
+                                <p className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</p>
                               </div>
                               <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
                                 <Button size="sm" variant="outline">Edit</Button>
@@ -1628,7 +1458,7 @@ export default function PersonalTax() {
           <div className="mt-4">
             {individualClients.length === 0 ? (
               <div className="text-center py-8 text-[#001f3f]">
-                <Users className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <Users className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
                 <p>No clients found. Add your first client to get started.</p>
               </div>
             ) : (
@@ -1754,7 +1584,7 @@ export default function PersonalTax() {
           <div className="mt-4">
             {saReturnsData.length === 0 ? (
               <div className="text-center py-8 text-[#001f3f]">
-                <FileText className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <FileText className="h-12 w-12 mx-auto mb-3 text-[#001f3f]" />
                 <p>No SA returns found. Create your first SA return to get started.</p>
               </div>
             ) : (
