@@ -71,6 +71,7 @@ interface IndividualClient {
   nationalInsuranceNumber?: string
   taxStatus: string
   businessType?: string
+  clientType?: 'individual' | 'sole-trader'
   nextDueDate?: string
   createdAt?: string
   updatedAt?: string
@@ -195,6 +196,7 @@ export default function PersonalTax() {
       const newClient: IndividualClient = {
         id: `ind-${Date.now()}`,
         ...data,
+        clientType: data.clientType || 'individual',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       } as IndividualClient
@@ -283,6 +285,22 @@ export default function PersonalTax() {
       setSAReturnsData(updated)
       localStorage.setItem('saReturns', JSON.stringify(updated))
       console.log('✅ SA Return deleted successfully')
+    }
+  }
+
+  const getClientSAReturnInfo = (clientId: string) => {
+    const clientReturns = saReturnsData.filter(r => r.clientId === clientId)
+    if (clientReturns.length === 0) {
+      return { status: 'not-created', taxAmount: 0 }
+    }
+    
+    const latestReturn = clientReturns.reduce((latest, current) => {
+      return new Date(current.updatedAt) > new Date(latest.updatedAt) ? current : latest
+    }, clientReturns[0])
+    
+    return {
+      status: latestReturn.status,
+      taxAmount: latestReturn.estimatedTax || 0
     }
   }
   
@@ -1608,63 +1626,91 @@ export default function PersonalTax() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-[#001f3f]">
-                    <TableHead className="text-[#001f3f] font-bold">Name</TableHead>
-                    <TableHead className="text-[#001f3f] font-bold">Email</TableHead>
-                    <TableHead className="text-[#001f3f] font-bold">Phone</TableHead>
-                    <TableHead className="text-[#001f3f] font-bold">UTR</TableHead>
-                    <TableHead className="text-[#001f3f] font-bold">NI Number</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">S No.</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Client ID</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Client Name</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Client Type</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">NINO</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">UTR No.</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Status</TableHead>
+                    <TableHead className="text-[#001f3f] font-bold">Tax Amount Due</TableHead>
                     <TableHead className="text-[#001f3f] font-bold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {individualClients.map((client) => (
-                    <TableRow key={client.id} className="border-[#001f3f]">
-                      <TableCell className="text-[#001f3f]">
-                        {client.title ? `${client.title} ` : ''}{client.firstName} {client.lastName}
-                      </TableCell>
-                      <TableCell className="text-[#001f3f]">{client.email}</TableCell>
-                      <TableCell className="text-[#001f3f]">{client.phone}</TableCell>
-                      <TableCell className="text-[#001f3f]">{client.utr || '-'}</TableCell>
-                      <TableCell className="text-[#001f3f]">{client.nationalInsuranceNumber || '-'}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
-                            onClick={() => {
-                              setShowClientList(false)
-                              handleViewClient(client)
-                            }}
-                          >
-                            <Eye className="h-3 w-3 mr-1" />
-                            View
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
-                            onClick={() => {
-                              setShowClientList(false)
-                              handleEditClient(client)
-                            }}
-                          >
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-                            onClick={() => handleDeleteClient(client.id)}
-                          >
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {individualClients.map((client, index) => {
+                    const saInfo = getClientSAReturnInfo(client.id)
+                    return (
+                      <TableRow key={client.id} className="border-[#001f3f]">
+                        <TableCell className="text-[#001f3f]">{index + 1}</TableCell>
+                        <TableCell className="text-[#001f3f] font-mono text-xs">{client.id}</TableCell>
+                        <TableCell className="text-[#001f3f] font-medium">
+                          {client.title ? `${client.title} ` : ''}{client.firstName} {client.lastName}
+                        </TableCell>
+                        <TableCell className="text-[#001f3f]">
+                          <Badge variant="outline" className="border-[#001f3f] text-[#001f3f]">
+                            {client.clientType === 'sole-trader' ? 'Sole Trader' : 'Individual'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-[#001f3f] font-mono">{client.nationalInsuranceNumber || '-'}</TableCell>
+                        <TableCell className="text-[#001f3f] font-mono">{client.utr || '-'}</TableCell>
+                        <TableCell>
+                          <Badge className={
+                            saInfo.status === 'not-created' ? 'bg-gray-500 text-white' :
+                            saInfo.status === 'draft' ? 'bg-gray-400 text-white' :
+                            saInfo.status === 'in_progress' ? 'bg-blue-500 text-white' :
+                            saInfo.status === 'review' ? 'bg-orange-500 text-white' :
+                            saInfo.status === 'submitted' ? 'bg-green-600 text-white' :
+                            saInfo.status === 'approved' ? 'bg-green-700 text-white' :
+                            'bg-gray-500 text-white'
+                          }>
+                            {saInfo.status === 'not-created' ? 'Not Created' : 
+                             saInfo.status.replace('_', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-[#001f3f] font-medium">
+                          {saInfo.status === 'not-created' ? '-' : `£${saInfo.taxAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                              onClick={() => {
+                                setShowClientList(false)
+                                handleViewClient(client)
+                              }}
+                            >
+                              <Eye className="h-3 w-3 mr-1" />
+                              View
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white"
+                              onClick={() => {
+                                setShowClientList(false)
+                                handleEditClient(client)
+                              }}
+                            >
+                              <Edit className="h-3 w-3 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                              onClick={() => handleDeleteClient(client.id)}
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
             )}
