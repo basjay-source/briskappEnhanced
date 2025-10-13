@@ -7,6 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Plus } from 'lucide-react'
+import { importFromBookkeeping, importFromAccountsProduction, importFromPreviousYear } from '@/services/taxReturnDataImport'
+import { showNotification } from '@/lib/notifications'
+import { getTaxRatesForYear, calculateIncomeTax, calculateDividendTax, calculateCapitalGainsTax, generateTaxYears } from '@/services/taxRates'
 
 interface EmploymentDetails {
   id: string
@@ -318,28 +321,28 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
       Number(formData.savingsInterest || 0) +
       Number(formData.otherIncome || 0)
 
+    const taxYear = formData.taxYear?.replace('/', '-') || '2024-25'
+    const taxRates = getTaxRatesForYear(taxYear)
+
+    const nonDividendIncome = totalIncome - dividendTotal - Number(formData.capitalGains || 0)
+    
     const taxableIncome = Math.max(0, 
       totalIncome - 
-      Number(formData.personalAllowance || 0) -
+      taxRates.personalAllowance -
       Number(formData.taxRelief || 0) -
       Number(formData.pensionContributions || 0) -
       Number(formData.charitableGiving || 0)
     )
 
-    let estimatedTax = 0
-    if (taxableIncome > 125140) {
-      estimatedTax = (taxableIncome - 125140) * 0.45 + 50270 * 0.4 + 37700 * 0.2
-    } else if (taxableIncome > 50270) {
-      estimatedTax = (taxableIncome - 50270) * 0.4 + 37700 * 0.2
-    } else if (taxableIncome > 12570) {
-      estimatedTax = (taxableIncome - 12570) * 0.2
-    }
+    const incomeTax = calculateIncomeTax(nonDividendIncome, taxYear)
+    const dividendTax = calculateDividendTax(dividendTotal, nonDividendIncome, taxYear)
+    const capitalGainsTax = calculateCapitalGainsTax(
+      Number(formData.capitalGains || 0), 
+      taxableIncome - Number(formData.capitalGains || 0), 
+      taxYear
+    )
 
-    const capitalGainsTax = Number(formData.capitalGains || 0) > 6000 
-      ? (Number(formData.capitalGains || 0) - 6000) * 0.2 
-      : 0
-
-    estimatedTax += capitalGainsTax
+    const estimatedTax = incomeTax + dividendTax + capitalGainsTax
 
     setFormData({
       ...formData,
@@ -350,7 +353,8 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
       pensionIncome: pensionTotal,
       totalIncome,
       taxableIncome,
-      estimatedTax: Math.round(estimatedTax * 100) / 100
+      estimatedTax: Math.round(estimatedTax * 100) / 100,
+      personalAllowance: taxRates.personalAllowance
     })
   }
 
@@ -412,13 +416,41 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
     setValidationErrors([])
   }
 
-  const handleSetupComplete = () => {
-    setFormData({
-      ...formData,
-      taxYear: setupData.taxYear.replace('-', '/'),
-      status: setupData.returnType === 'new' ? 'draft' : 'amended'
-    })
-    setShowSetup(false)
+  const handleSetupComplete = async () => {
+    try {
+      let importedData: any = {}
+
+      if (setupData.importSource === 'bookkeeping' && formData.clientId) {
+        showNotification('Importing data from Bookkeeping module...', 'info')
+        importedData = await importFromBookkeeping(formData.clientId)
+        showNotification('Successfully imported data from Bookkeeping', 'success')
+      } else if (setupData.importSource === 'accounts' && formData.clientId) {
+        showNotification('Importing data from Accounts Production...', 'info')
+        importedData = await importFromAccountsProduction(formData.clientId)
+        showNotification('Successfully imported data from Accounts Production', 'success')
+      } else if (setupData.importSource === 'previous' && setupData.previousReturnId) {
+        showNotification('Importing data from previous year...', 'info')
+        importedData = await importFromPreviousYear(setupData.previousReturnId)
+        showNotification('Successfully imported data from previous year', 'success')
+      }
+
+      setFormData({
+        ...formData,
+        ...importedData,
+        taxYear: setupData.taxYear.replace('-', '/'),
+        status: setupData.returnType === 'new' ? 'draft' : 'amended'
+      })
+      setShowSetup(false)
+    } catch (error) {
+      console.error('Error importing data:', error)
+      showNotification('Failed to import data. Please try manual entry.', 'error')
+      setFormData({
+        ...formData,
+        taxYear: setupData.taxYear.replace('-', '/'),
+        status: setupData.returnType === 'new' ? 'draft' : 'amended'
+      })
+      setShowSetup(false)
+    }
   }
 
   const isReadOnly = mode === 'view'
@@ -455,6 +487,25 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
             <h3 className="text-xl font-semibold text-gray-700">Create new SA100 Tax Return</h3>
             
             <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-gray-700">Select Client <span className="text-red-600">*</span></Label>
+                <Select
+                  value={formData.clientId}
+                  onValueChange={handleClientChange}
+                >
+                  <SelectTrigger className="border-gray-300">
+                    <SelectValue placeholder="Select client" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {clients.map((client) => (
+                      <SelectItem key={client.id} value={client.id}>
+                        {client.firstName} {client.lastName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-gray-700">Ref No <span className="text-red-600">*</span></Label>
@@ -485,10 +536,10 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                   <SelectTrigger className="border-gray-300">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2024-25">2024-25</SelectItem>
-                    <SelectItem value="2023-24">2023-24</SelectItem>
-                    <SelectItem value="2022-23">2022-23</SelectItem>
+                  <SelectContent className="max-h-[300px]">
+                    {generateTaxYears().map((year) => (
+                      <SelectItem key={year} value={year}>{year}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
