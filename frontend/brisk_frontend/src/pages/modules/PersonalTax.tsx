@@ -42,6 +42,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import { IndividualClientForm } from '../../components/IndividualClientForm'
 import { SAReturnForm } from '../../components/SAReturnForm'
+import notifications from '@/lib/notifications'
 import { 
   Dialog,
   DialogContent,
@@ -204,6 +205,7 @@ export default function PersonalTax() {
       const updated = [...individualClients, newClient]
       setIndividualClients(updated)
       localStorage.setItem('individualClients', JSON.stringify(updated))
+      notifications.created('Client', `${data.firstName} ${data.lastName}`)
       console.log('✅ Client added from Personal Tax and synced to Practice Management')
     } else if (clientFormMode === 'edit') {
       const updated = individualClients.map(c => 
@@ -213,12 +215,14 @@ export default function PersonalTax() {
       )
       setIndividualClients(updated)
       localStorage.setItem('individualClients', JSON.stringify(updated))
+      notifications.saved('Client', `${data.firstName} ${data.lastName}`)
       console.log('✅ Client updated and synced to Practice Management')
     }
     setIsClientFormOpen(false)
   }
 
   const handleDeleteClient = (clientId: string) => {
+    const client = individualClients.find(c => c.id === clientId)
     if (confirm('Are you sure you want to delete this client? This will also delete all associated SA returns.')) {
       const updated = individualClients.filter(c => c.id !== clientId)
       setIndividualClients(updated)
@@ -227,13 +231,14 @@ export default function PersonalTax() {
       const updatedReturns = saReturnsData.filter(r => r.clientId !== clientId)
       setSAReturnsData(updatedReturns)
       localStorage.setItem('saReturns', JSON.stringify(updatedReturns))
+      notifications.deleted('Client', client ? `${client.firstName} ${client.lastName}` : undefined)
       console.log('✅ Client and associated SA returns deleted')
     }
   }
 
   const handleAddSAReturn = () => {
     if (individualClients.length === 0) {
-      alert('Please add at least one client before creating an SA return')
+      notifications.warning('Please add at least one client before creating an SA return')
       return
     }
     setSelectedSAReturn(null)
@@ -265,6 +270,7 @@ export default function PersonalTax() {
       const updated = [...saReturnsData, newReturn]
       setSAReturnsData(updated)
       localStorage.setItem('saReturns', JSON.stringify(updated))
+      notifications.created('SA Return', `${data.clientName} - ${data.taxYear}`)
       console.log('✅ SA Return created successfully')
     } else if (saReturnFormMode === 'edit') {
       const updated = saReturnsData.map(r => 
@@ -274,16 +280,19 @@ export default function PersonalTax() {
       )
       setSAReturnsData(updated)
       localStorage.setItem('saReturns', JSON.stringify(updated))
+      notifications.saved('SA Return', `${data.clientName} - ${data.taxYear}`)
       console.log('✅ SA Return updated successfully')
     }
     setIsSAReturnFormOpen(false)
   }
 
   const handleDeleteSAReturn = (returnId: string) => {
+    const saReturn = saReturnsData.find(r => r.id === returnId)
     if (confirm('Are you sure you want to delete this SA return?')) {
       const updated = saReturnsData.filter(r => r.id !== returnId)
       setSAReturnsData(updated)
       localStorage.setItem('saReturns', JSON.stringify(updated))
+      notifications.deleted('SA Return', saReturn ? `${saReturn.clientName} - ${saReturn.taxYear}` : undefined)
       console.log('✅ SA Return deleted successfully')
     }
   }

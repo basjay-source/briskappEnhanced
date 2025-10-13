@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from 'sonner'
 import AppShell from '@/components/AppShell'
 import LandingPage from '@/pages/LandingPage'
 import LoginPage from '@/pages/LoginPage'
@@ -47,6 +48,13 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <Toaster 
+        position="top-right" 
+        expand={true}
+        richColors={false}
+        closeButton={true}
+        duration={4000}
+      />
     </ThemeProvider>
   )
 }
