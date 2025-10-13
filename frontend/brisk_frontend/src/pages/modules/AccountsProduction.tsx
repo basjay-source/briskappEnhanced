@@ -627,7 +627,8 @@ const AccountsProduction: React.FC = () => {
         'full': { label: 'Full Financial Statements', icon: FileSpreadsheet },
         'abbreviated': { label: 'Abbreviated Accounts', icon: FileCheck },
         'filleted': { label: 'Filleted Accounts', icon: FileText },
-        'dormant': { label: 'Dormant Accounts', icon: TrendingDown }
+        'dormant': { label: 'Dormant Accounts', icon: TrendingDown },
+        'consolidated': { label: 'Consolidated Accounts', icon: Building2 }
       }
     },
     {
@@ -1334,7 +1335,8 @@ const AccountsProduction: React.FC = () => {
     const statementType = activeSubTab
     const title = statementType === 'full' ? 'Full Financial Statements' : 
                   statementType === 'abbreviated' ? 'Abbreviated Accounts' :
-                  statementType === 'filleted' ? 'Filleted Accounts' : 'Dormant Accounts'
+                  statementType === 'filleted' ? 'Filleted Accounts' :
+                  statementType === 'consolidated' ? 'Consolidated Accounts' : 'Dormant Accounts'
     
     return (
       <div className="space-y-6">
