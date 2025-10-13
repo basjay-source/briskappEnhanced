@@ -21,6 +21,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { getAllAccounts, addAccount, updateAccount, deleteAccount, hasTransactions, getTransactionCount, type AccountCode, chartOfAccounts } from '../../data/chartOfAccounts'
 import { api } from '../../lib/api'
 import { EnhancedClientForm } from '../../components/EnhancedClientForm'
+import { IndividualClientForm } from '../../components/IndividualClientForm'
 import { JournalAdjustmentForm } from '../../components/JournalAdjustmentForm'
 
 interface Client {
@@ -67,6 +68,44 @@ interface Client {
   engagementLetterSigned?: boolean
   engagementLetterDate?: string
   
+  notes?: string
+  tags?: string[]
+  createdAt?: string
+  updatedAt?: string
+}
+
+interface IndividualClient {
+  id: string
+  firstName: string
+  lastName: string
+  title?: 'Mr' | 'Mrs' | 'Miss' | 'Ms' | 'Dr' | 'Prof'
+  dateOfBirth?: string
+  nationalInsuranceNumber?: string
+  utr?: string
+  businessStartDate?: string
+  businessType?: 'self-employed' | 'partnership' | 'rental-income' | 'investment-income' | 'employed'
+  tradingName?: string
+  vatNumber?: string
+  vatScheme?: 'non-vat' | 'standard-accrual' | 'standard-cash' | 'flat-rate-accrual' | 'flat-rate-cash'
+  vatRegDate?: string
+  vatSubmitType?: 'monthly' | 'quarterly' | 'yearly'
+  accountOfficeRef?: string
+  payeRef?: string
+  email: string
+  phone: string
+  mobile?: string
+  addressLine1?: string
+  addressLine2?: string
+  city?: string
+  county?: string
+  postcode?: string
+  country?: string
+  taxStatus: 'self-assessment' | 'paye' | 'both' | 'non-uk-resident'
+  lastTaxReturn?: string
+  nextDueDate?: string
+  annualFee?: number
+  engagementLetterSigned?: boolean
+  engagementLetterDate?: string
   notes?: string
   tags?: string[]
   createdAt?: string
@@ -235,6 +274,14 @@ const AccountsProduction: React.FC = () => {
   const [_isClientDeleteOpen, setIsClientDeleteOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientFormData, setClientFormData] = useState<Partial<Client>>({})
+
+  const [individualClients, setIndividualClients] = useState<IndividualClient[]>([])
+  const [isIndividualClientViewOpen, setIsIndividualClientViewOpen] = useState(false)
+  const [isIndividualClientEditOpen, setIsIndividualClientEditOpen] = useState(false)
+  const [isIndividualClientAddOpen, setIsIndividualClientAddOpen] = useState(false)
+  const [_isIndividualClientDeleteOpen, setIsIndividualClientDeleteOpen] = useState(false)
+  const [selectedIndividualClient, setSelectedIndividualClient] = useState<IndividualClient | null>(null)
+  const [individualClientFormData, setIndividualClientFormData] = useState<Partial<IndividualClient>>({})
 
   const [_isTBViewOpen, _setIsTBViewOpen] = useState(false)
   const [isTBEditOpen, setIsTBEditOpen] = useState(false)
@@ -414,6 +461,55 @@ const AccountsProduction: React.FC = () => {
     }
   }
 
+  const handleViewIndividualClient = (client: IndividualClient) => {
+    setSelectedIndividualClient(client)
+    setIsIndividualClientViewOpen(true)
+  }
+
+  const handleEditIndividualClient = (client: IndividualClient) => {
+    setSelectedIndividualClient(client)
+    setIndividualClientFormData(client)
+    setIsIndividualClientEditOpen(true)
+  }
+
+  const handleAddIndividualClient = () => {
+    setIndividualClientFormData({
+      firstName: '', lastName: '', email: '', phone: '', taxStatus: 'self-assessment'
+    })
+    setIsIndividualClientAddOpen(true)
+  }
+
+  const handleDeleteIndividualClient = (client: IndividualClient) => {
+    setSelectedIndividualClient(client)
+    setIsIndividualClientDeleteOpen(true)
+  }
+
+  const handleSaveIndividualClient = () => {
+    if (selectedIndividualClient) {
+      setIndividualClients(individualClients.map(c => 
+        c.id === selectedIndividualClient.id ? { ...selectedIndividualClient, ...individualClientFormData } as IndividualClient : c
+      ))
+    }
+    setIsIndividualClientEditOpen(false)
+  }
+
+  const handleSaveNewIndividualClient = () => {
+    const newClient: IndividualClient = {
+      id: `ind-${Date.now()}`,
+      ...individualClientFormData
+    } as IndividualClient
+    setIndividualClients([...individualClients, newClient])
+    setIsIndividualClientAddOpen(false)
+    setIndividualClientFormData({})
+  }
+
+  const handleConfirmDeleteIndividualClient = () => {
+    if (selectedIndividualClient) {
+      setIndividualClients(individualClients.filter(c => c.id !== selectedIndividualClient.id))
+      setIsIndividualClientDeleteOpen(false)
+      setSelectedIndividualClient(null)
+    }
+  }
 
   const handleAddTBEntry = () => {
     setTBFormData({ accountCode: '', accountName: '', debit: 0, credit: 0, category: 'Asset' })
@@ -3549,6 +3645,22 @@ const AccountsProduction: React.FC = () => {
         onOpenChange={setIsClientAddOpen}
         client={null}
         onSave={handleSaveNewClient}
+        mode="add"
+      />
+
+      <IndividualClientForm
+        open={isIndividualClientEditOpen}
+        onOpenChange={setIsIndividualClientEditOpen}
+        client={selectedIndividualClient}
+        onSave={handleSaveIndividualClient}
+        mode="edit"
+      />
+
+      <IndividualClientForm
+        open={isIndividualClientAddOpen}
+        onOpenChange={setIsIndividualClientAddOpen}
+        client={null}
+        onSave={handleSaveNewIndividualClient}
         mode="add"
       />
 
