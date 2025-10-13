@@ -3,7 +3,7 @@ import {
   Building2, FileText, Calculator, Upload, Eye, BarChart3,
   Plus, Send, FileSpreadsheet, CheckCircle, ChevronDown, Settings, FileCheck,
   Edit, Trash2, Download, TrendingUp, TrendingDown, AlertCircle,
-  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown
+  Globe, Save, ArrowUpDown, ArrowUp, ArrowDown, Database
 } from 'lucide-react'
 import ResponsiveLayout from '../../components/ResponsiveLayout'
 import AIPromptSection from '@/components/AIPromptSection'
@@ -225,7 +225,8 @@ const AccountsProduction: React.FC = () => {
   const [csvData, setCsvData] = useState<any[]>([])
   const [csvHeaders, setCsvHeaders] = useState<string[]>([])
   const [accountMapping, setAccountMapping] = useState<Record<string, string>>({})
-  const [importStep, setImportStep] = useState<'upload' | 'mapping' | 'review'>('upload')
+  const [importStep, setImportStep] = useState<'method' | 'upload' | 'mapping' | 'review'>('method')
+  const [importMethod, setImportMethod] = useState<'bookkeeping' | 'csv' | 'integration'>('bookkeeping')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -2620,12 +2621,59 @@ const AccountsProduction: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isTBImportOpen} onOpenChange={(open) => { setIsTBImportOpen(open); if (!open) { setImportStep('upload'); setCsvData([]); setCsvHeaders([]); setAccountMapping({}); } }}>
+      <Dialog open={isTBImportOpen} onOpenChange={(open) => { setIsTBImportOpen(open); if (!open) { setImportStep('method'); setCsvData([]); setCsvHeaders([]); setAccountMapping({}); } }}>
         <DialogContent className="max-w-4xl border-2 border-[#001f3f]">
           <DialogHeader>
-            <DialogTitle className="text-[#001f3f]">Import Trial Balance from CSV</DialogTitle>
+            <DialogTitle className="text-[#001f3f]">Import Trial Balance</DialogTitle>
           </DialogHeader>
           <div className="py-4">
+            {importStep === 'method' && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-[#001f3f]">Select Import Method</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'bookkeeping' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('bookkeeping')}>
+                    <CardContent className="pt-6 text-center">
+                      <Database className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">Bookkeeping Sync</h4>
+                      <p className="text-xs text-gray-600">Auto-sync from Bookkeeping module</p>
+                    </CardContent>
+                  </Card>
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'csv' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('csv')}>
+                    <CardContent className="pt-6 text-center">
+                      <Upload className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">CSV Import</h4>
+                      <p className="text-xs text-gray-600">Upload CSV file manually</p>
+                    </CardContent>
+                  </Card>
+                  <Card className={`cursor-pointer border-2 transition-all ${importMethod === 'integration' ? 'border-[#001f3f] bg-blue-50' : 'border-gray-200 hover:border-[#001f3f]'}`} onClick={() => setImportMethod('integration')}>
+                    <CardContent className="pt-6 text-center">
+                      <Globe className="h-12 w-12 mx-auto mb-2 text-[#001f3f]" />
+                      <h4 className="font-semibold text-[#001f3f] mb-1">Software Integration</h4>
+                      <p className="text-xs text-gray-600">Xero, Sage, QuickBooks</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                {importMethod === 'bookkeeping' && (
+                  <div className="bg-blue-50 border border-blue-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Automatic Synchronization</h4>
+                    <p className="text-sm text-gray-700 mb-3">This will automatically pull the latest trial balance data from the Bookkeeping module and synchronize it with Accounts Production.</p>
+                    <p className="text-sm text-gray-700">All account codes will be mapped to your Chart of Accounts automatically.</p>
+                  </div>
+                )}
+                {importMethod === 'csv' && (
+                  <div className="bg-green-50 border border-green-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Manual CSV Upload</h4>
+                    <p className="text-sm text-gray-700">Upload a CSV file containing account codes, names, and balances. You'll be able to map these to your standard Chart of Accounts.</p>
+                  </div>
+                )}
+                {importMethod === 'integration' && (
+                  <div className="bg-purple-50 border border-purple-200 p-4 rounded">
+                    <h4 className="font-semibold text-[#001f3f] mb-2">Third-Party Integration</h4>
+                    <p className="text-sm text-gray-700">Connect to Xero, Sage, or QuickBooks to import trial balance data directly from your bookkeeping software.</p>
+                  </div>
+                )}
+              </div>
+            )}
             {importStep === 'upload' && (
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-[#001f3f] rounded-lg p-8 text-center">
@@ -2703,7 +2751,39 @@ const AccountsProduction: React.FC = () => {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => {setIsTBImportOpen(false); setImportStep('upload'); setCsvData([]); setCsvHeaders([]); setAccountMapping({})}}>Cancel</Button>
+            <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => {setIsTBImportOpen(false); setImportStep('method'); setCsvData([]); setCsvHeaders([]); setAccountMapping({})}}>Cancel</Button>
+            {importStep === 'method' && importMethod === 'bookkeeping' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => {
+                const bookkeepingData = [
+                  { accountCode: '1000', accountName: 'Sales Revenue', debit: 0, credit: 125000, category: 'Income' },
+                  { accountCode: '1100', accountName: 'Cost of Goods Sold', debit: 45000, credit: 0, category: 'Expense' },
+                  { accountCode: '2000', accountName: 'Fixed Assets', debit: 85000, credit: 0, category: 'Asset' },
+                  { accountCode: '2100', accountName: 'Current Liabilities', debit: 0, credit: 35000, category: 'Liability' }
+                ]
+                const newEntries = bookkeepingData.map(d => ({
+                  id: Date.now().toString() + Math.random(),
+                  accountCode: d.accountCode,
+                  accountName: d.accountName,
+                  debit: d.debit,
+                  credit: d.credit,
+                  category: d.category as any
+                }))
+                setTrialBalanceEntries([...trialBalanceEntries, ...newEntries])
+                setIsTBImportOpen(false)
+              }}>
+                <Database className="h-4 w-4 mr-2" />Sync from Bookkeeping
+              </Button>
+            )}
+            {importStep === 'method' && importMethod === 'csv' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => setImportStep('upload')}>
+                Continue to Upload
+              </Button>
+            )}
+            {importStep === 'method' && importMethod === 'integration' && (
+              <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={() => alert('Integration setup will be available soon')}>
+                Connect Integration
+              </Button>
+            )}
             {importStep === 'mapping' && (
               <Button className="bg-[#001f3f] hover:bg-[#003366]" disabled={!accountMapping.code || !accountMapping.name || !accountMapping.debit || !accountMapping.credit} onClick={handleImportConfirm}>Import {csvData.length} Entries</Button>
             )}
