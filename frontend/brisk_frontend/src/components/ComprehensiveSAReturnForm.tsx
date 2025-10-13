@@ -432,7 +432,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
 
         <form onSubmit={handleSubmit}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-grid-cols-4 bg-gray-100">
+            <TabsList className="grid w-full grid-cols-4 bg-gray-100">
               <TabsTrigger value="basic" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Basic Info</TabsTrigger>
               <TabsTrigger value="income" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Income</TabsTrigger>
               <TabsTrigger value="deductions" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Deductions</TabsTrigger>
@@ -538,7 +538,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
 
             <TabsContent value="income" className="space-y-4 mt-4">
               <Tabs value={currentIncomeTab} onValueChange={setCurrentIncomeTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-grid-cols-6 bg-gray-100">
+                <TabsList className="grid w-full grid-cols-6 bg-gray-100">
                   <TabsTrigger value="employment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Employment</TabsTrigger>
                   <TabsTrigger value="selfemployment" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Self-Employed</TabsTrigger>
                   <TabsTrigger value="rental" className="bg-blue-500 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px">Rental</TabsTrigger>
