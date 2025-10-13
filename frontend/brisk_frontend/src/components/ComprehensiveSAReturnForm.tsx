@@ -660,14 +660,14 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
           <form onSubmit={handleSubmit}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
             <TabsList className="grid w-full grid-cols-8 bg-gray-100">
-              <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Basic Info</TabsTrigger>
-              <TabsTrigger value="income" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Income</TabsTrigger>
-              <TabsTrigger value="deductions" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Deductions</TabsTrigger>
-              <TabsTrigger value="capitalallowances" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Capital Allow.</TabsTrigger>
-              <TabsTrigger value="losses" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Losses</TabsTrigger>
-              <TabsTrigger value="paymentonaccount" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Payment/Acc</TabsTrigger>
-              <TabsTrigger value="other" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Other</TabsTrigger>
-              <TabsTrigger value="summary" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Summary</TabsTrigger>
+              <TabsTrigger value="basic" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Basic Info</TabsTrigger>
+              <TabsTrigger value="income" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Income</TabsTrigger>
+              <TabsTrigger value="deductions" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Deductions</TabsTrigger>
+              <TabsTrigger value="capitalallowances" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Capital Allowances</TabsTrigger>
+              <TabsTrigger value="losses" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Losses</TabsTrigger>
+              <TabsTrigger value="paymentonaccount" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Payment on Account</TabsTrigger>
+              <TabsTrigger value="other" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Other</TabsTrigger>
+              <TabsTrigger value="summary" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Summary</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic" className="space-y-4 mt-4">
@@ -770,13 +770,13 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
             <TabsContent value="income" className="space-y-4 mt-4">
               <Tabs value={currentIncomeTab} onValueChange={setCurrentIncomeTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-7 bg-gray-100">
-                  <TabsTrigger value="employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Employment</TabsTrigger>
-                  <TabsTrigger value="selfemployment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Self-Emp</TabsTrigger>
-                  <TabsTrigger value="rental" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Rental</TabsTrigger>
-                  <TabsTrigger value="dividends" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Dividends</TabsTrigger>
-                  <TabsTrigger value="pensions" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Pensions</TabsTrigger>
-                  <TabsTrigger value="interest" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Interest</TabsTrigger>
-                  <TabsTrigger value="other" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px truncate">Other</TabsTrigger>
+                  <TabsTrigger value="employment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Employment</TabsTrigger>
+                  <TabsTrigger value="selfemployment" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Self-Employed</TabsTrigger>
+                  <TabsTrigger value="rental" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Rental</TabsTrigger>
+                  <TabsTrigger value="dividends" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Dividends</TabsTrigger>
+                  <TabsTrigger value="pensions" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Pensions</TabsTrigger>
+                  <TabsTrigger value="interest" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Interest</TabsTrigger>
+                  <TabsTrigger value="other" className="bg-blue-500 text-white data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs mx-px whitespace-normal break-words">Other</TabsTrigger>
                 </TabsList>
 
                 {/* Employment Income Tab */}
@@ -1922,6 +1922,7 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                         <Button 
                           type="button" 
                           size="sm" 
+                          onClick={() => setShowExchangeSync(true)}
                           className="bg-green-600 hover:bg-green-700"
                         >
                           <Plus className="h-4 w-4 mr-2" />
