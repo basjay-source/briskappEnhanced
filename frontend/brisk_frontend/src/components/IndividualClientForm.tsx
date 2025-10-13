@@ -51,7 +51,7 @@ interface IndividualClientFormProps {
   onOpenChange: (open: boolean) => void
   client?: IndividualClient | null
   onSave: (client: Partial<IndividualClient>) => void
-  mode: 'add' | 'edit'
+  mode: 'add' | 'edit' | 'view'
 }
 
 export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
@@ -89,12 +89,14 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
     onOpenChange(false)
   }
 
+  const isReadOnly = mode === 'view'
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-[#001f3f]">
         <DialogHeader>
           <DialogTitle className="text-[#001f3f] text-2xl">
-            {mode === 'add' ? 'Add New Individual Client' : 'Edit Individual Client'}
+            {mode === 'add' ? 'Add New Individual Client' : mode === 'edit' ? 'Edit Individual Client' : 'View Client Details'}
           </DialogTitle>
         </DialogHeader>
 
@@ -126,7 +128,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   value={formData.title} 
                   onValueChange={(value) => updateField('title', value)}
                 >
-                  <SelectTrigger className="border-[#001f3f]">
+                  <SelectTrigger className="border-[#001f3f]" disabled={isReadOnly}>
                     <SelectValue placeholder="Select title" />
                   </SelectTrigger>
                   <SelectContent>
@@ -146,7 +148,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   type="date"
                   value={formData.dateOfBirth || ''}
                   onChange={(e) => updateField('dateOfBirth', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                 />
               </div>
 
@@ -155,7 +157,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.firstName || ''}
                   onChange={(e) => updateField('firstName', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="John"
                 />
               </div>
@@ -165,7 +167,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.lastName || ''}
                   onChange={(e) => updateField('lastName', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="Smith"
                 />
               </div>
@@ -175,7 +177,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.nationalInsuranceNumber || ''}
                   onChange={(e) => updateField('nationalInsuranceNumber', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="AB123456C"
                 />
               </div>
@@ -185,7 +187,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.utr || ''}
                   onChange={(e) => updateField('utr', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="10 digit UTR"
                 />
               </div>
@@ -203,7 +205,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="email"
                     value={formData.email || ''}
                     onChange={(e) => updateField('email', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="john.smith@email.com"
                   />
                 </div>
@@ -214,7 +216,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="tel"
                     value={formData.phone || ''}
                     onChange={(e) => updateField('phone', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="020 1234 5678"
                   />
                 </div>
@@ -225,7 +227,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="tel"
                     value={formData.mobile || ''}
                     onChange={(e) => updateField('mobile', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="07123 456789"
                   />
                 </div>
@@ -238,7 +240,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.addressLine1 || ''}
                     onChange={(e) => updateField('addressLine1', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="123 High Street"
                   />
                 </div>
@@ -248,7 +250,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.addressLine2 || ''}
                     onChange={(e) => updateField('addressLine2', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="Apartment/District (optional)"
                   />
                 </div>
@@ -258,7 +260,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.city || ''}
                     onChange={(e) => updateField('city', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="London"
                   />
                 </div>
@@ -268,7 +270,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.county || ''}
                     onChange={(e) => updateField('county', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="Greater London"
                   />
                 </div>
@@ -278,7 +280,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.postcode || ''}
                     onChange={(e) => updateField('postcode', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="SW1A 1AA"
                   />
                 </div>
@@ -288,7 +290,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   <Input
                     value={formData.country || 'United Kingdom'}
                     onChange={(e) => updateField('country', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   />
                 </div>
               </div>
@@ -304,7 +306,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   value={formData.businessType} 
                   onValueChange={(value) => updateField('businessType', value)}
                 >
-                  <SelectTrigger className="border-[#001f3f]">
+                  <SelectTrigger className="border-[#001f3f]" disabled={isReadOnly}>
                     <SelectValue placeholder="Select business type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -322,7 +324,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.tradingName || ''}
                   onChange={(e) => updateField('tradingName', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="Business trading name"
                 />
               </div>
@@ -333,7 +335,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   type="date"
                   value={formData.businessStartDate || ''}
                   onChange={(e) => updateField('businessStartDate', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                 />
               </div>
 
@@ -343,7 +345,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   value={formData.vatScheme} 
                   onValueChange={(value) => updateField('vatScheme', value)}
                 >
-                  <SelectTrigger className="border-[#001f3f]">
+                  <SelectTrigger className="border-[#001f3f]" disabled={isReadOnly}>
                     <SelectValue placeholder="Select VAT scheme" />
                   </SelectTrigger>
                   <SelectContent>
@@ -361,7 +363,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.vatNumber || ''}
                   onChange={(e) => updateField('vatNumber', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="GB123456789"
                 />
               </div>
@@ -372,7 +374,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   type="date"
                   value={formData.vatRegDate || ''}
                   onChange={(e) => updateField('vatRegDate', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                 />
               </div>
 
@@ -382,7 +384,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                   value={formData.vatSubmitType} 
                   onValueChange={(value) => updateField('vatSubmitType', value)}
                 >
-                  <SelectTrigger className="border-[#001f3f]">
+                  <SelectTrigger className="border-[#001f3f]" disabled={isReadOnly}>
                     <SelectValue placeholder="Select frequency" />
                   </SelectTrigger>
                   <SelectContent>
@@ -398,7 +400,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.accountOfficeRef || ''}
                   onChange={(e) => updateField('accountOfficeRef', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="e.g., 123PA45678901"
                 />
               </div>
@@ -408,7 +410,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                 <Input
                   value={formData.payeRef || ''}
                   onChange={(e) => updateField('payeRef', e.target.value)}
-                  className="text-[#001f3f] border-[#001f3f]"
+                  className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   placeholder="e.g., 123/AB45678"
                 />
               </div>
@@ -426,7 +428,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     value={formData.taxStatus} 
                     onValueChange={(value) => updateField('taxStatus', value)}
                   >
-                    <SelectTrigger className="border-[#001f3f]">
+                    <SelectTrigger className="border-[#001f3f]" disabled={isReadOnly}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -444,7 +446,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="date"
                     value={formData.lastTaxReturn || ''}
                     onChange={(e) => updateField('lastTaxReturn', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   />
                 </div>
 
@@ -454,7 +456,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="date"
                     value={formData.nextDueDate || ''}
                     onChange={(e) => updateField('nextDueDate', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   />
                 </div>
               </div>
@@ -467,7 +469,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="number"
                     value={formData.annualFee || ''}
                     onChange={(e) => updateField('annualFee', parseFloat(e.target.value) || 0)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="0.00"
                   />
                 </div>
@@ -478,7 +480,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     type="date"
                     value={formData.engagementLetterDate || ''}
                     onChange={(e) => updateField('engagementLetterDate', e.target.value)}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                   />
                 </div>
 
@@ -518,7 +520,7 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addTag()}
-                    className="text-[#001f3f] border-[#001f3f]"
+                    className="text-[#001f3f] border-[#001f3f]" disabled={isReadOnly}
                     placeholder="Add tag (e.g., VIP, Complex Tax)"
                   />
                   <Button 
@@ -549,15 +551,17 @@ export const IndividualClientForm: React.FC<IndividualClientFormProps> = ({
 
         <DialogFooter className="mt-6">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {mode === 'view' ? 'Close' : 'Cancel'}
           </Button>
-          <Button onClick={handleSave} className="bg-[#001f3f] hover:bg-[#003366]">
-            {mode === 'add' ? (
-              <><Plus className="h-4 w-4 mr-2" />Add Client</>
-            ) : (
-              <><Save className="h-4 w-4 mr-2" />Save Changes</>
-            )}
-          </Button>
+          {mode !== 'view' && (
+            <Button onClick={handleSave} className="bg-[#001f3f] hover:bg-[#003366]">
+              {mode === 'add' ? (
+                <><Plus className="h-4 w-4 mr-2" />Add Client</>
+              ) : (
+                <><Save className="h-4 w-4 mr-2" />Save Changes</>
+              )}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
