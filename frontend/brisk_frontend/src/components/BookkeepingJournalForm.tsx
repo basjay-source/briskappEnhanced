@@ -70,6 +70,20 @@ export const BookkeepingJournalForm: React.FC<BookkeepingJournalFormProps> = ({
   const chartAccounts = getAllAccounts()
 
   useEffect(() => {
+    if (open) {
+      setFormData(journalEntry || {
+        reference: `JE-${Date.now()}`,
+        date: new Date().toISOString().split('T')[0],
+        journalLines: getInitialLines(),
+        totalDebit: 0,
+        totalCredit: 0
+      })
+      setActiveSearchRow(null)
+      setSearchQuery('')
+    }
+  }, [open])
+
+  useEffect(() => {
     calculateTotals()
   }, [formData.journalLines])
 

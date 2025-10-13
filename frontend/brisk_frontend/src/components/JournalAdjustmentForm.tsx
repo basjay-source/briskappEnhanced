@@ -54,6 +54,22 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
   const chartAccounts = getAllAccounts()
 
   useEffect(() => {
+    if (open) {
+      setFormData(adjustment || {
+        type: 'accrual',
+        reference: `ADJ-${Date.now()}`,
+        date: new Date().toISOString().split('T')[0],
+        status: 'draft',
+        journalLines: getInitialLines(),
+        totalDebit: 0,
+        totalCredit: 0
+      })
+      setActiveSearchRow(null)
+      setSearchQuery('')
+    }
+  }, [open])
+
+  useEffect(() => {
     calculateTotals()
   }, [formData.journalLines])
 
