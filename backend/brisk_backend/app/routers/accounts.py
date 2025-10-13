@@ -440,6 +440,9 @@ def create_adjustment(
         )
         db.add(line)
     
+    db.flush()  # Ensure journal lines are available in the session
+    db.refresh(adjustment)  # Refresh to load the journal_lines relationship
+    
     if adjustment.status == "posted":
         post_journal_to_ledger(db, request.state.tenant_id, adjustment)
     
