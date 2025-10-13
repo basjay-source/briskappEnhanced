@@ -1654,7 +1654,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search code..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchCode}
-                        onChange={(e) => setCoaSearchCode(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchCode(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1665,7 +1668,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search name..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchName}
-                        onChange={(e) => setCoaSearchName(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchName(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1676,7 +1682,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search group..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchGroup}
-                        onChange={(e) => setCoaSearchGroup(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchGroup(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
@@ -1687,7 +1696,10 @@ const AccountsProduction: React.FC = () => {
                         placeholder="Search category..." 
                         className="h-8 text-xs border-[#001f3f]" 
                         value={coaSearchCategory}
-                        onChange={(e) => setCoaSearchCategory(e.target.value)}
+                        onChange={(e) => {
+                          setCoaSearchCategory(e.target.value)
+                          setCoaCurrentPage(1)
+                        }}
                       />
                     </div>
                   </TableHead>
