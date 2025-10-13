@@ -1064,8 +1064,6 @@ const AccountsProduction: React.FC = () => {
 
   const renderTrialBalance = () => {
     const filteredEntries = getFilteredTBEntries()
-    const totalDebit = filteredEntries.reduce((sum, entry) => sum + entry.debit, 0)
-    const totalCredit = filteredEntries.reduce((sum, entry) => sum + entry.credit, 0)
     
     return (
       <div className="space-y-6">
