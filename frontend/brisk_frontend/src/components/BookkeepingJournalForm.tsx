@@ -296,8 +296,8 @@ export const BookkeepingJournalForm: React.FC<BookkeepingJournalFormProps> = ({
                       <TableCell className="p-2">
                         <Input
                           value={line.accountName || ''}
-                          readOnly
-                          className="text-[#001f3f] border-[#001f3f] bg-gray-50 h-9 text-sm"
+                          onChange={(e) => updateLine(line.id, 'accountName', e.target.value)}
+                          className="text-[#001f3f] border-[#001f3f] h-9 text-sm"
                           placeholder="Account name"
                         />
                       </TableCell>
