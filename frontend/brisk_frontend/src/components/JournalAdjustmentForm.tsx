@@ -167,10 +167,24 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
     setSearchQuery('')
   }
 
+  const handleAccountCodeChange = (code: string) => {
+    setLineFormData(prev => ({...prev, accountCode: code}))
+    
+    const exactMatch = chartAccounts.find(acc => acc.code === code)
+    if (exactMatch) {
+      setLineFormData(prev => ({...prev, accountCode: code, accountName: exactMatch.name}))
+    } else {
+      setSearchQuery(code)
+      if (code.length > 0) {
+        setShowAccountSelector(true)
+      }
+    }
+  }
+
   const filteredAccounts = chartAccounts.filter(account =>
     account.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
     account.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ).slice(0, 10)
+  ).slice(0, 15)
 
   const handleSave = () => {
     if (!formData.reference || !formData.description || !formData.date) {
@@ -276,6 +290,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-[#001f3f]">Journal Lines</h3>
               <Button 
+                type="button"
                 onClick={() => setIsAddingLine(true)}
                 className="bg-[#001f3f] hover:bg-[#003366]"
                 size="sm"
@@ -291,51 +306,55 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
                   {editingLineId ? 'Edit Line' : 'New Line'}
                 </h4>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-[#001f3f] font-semibold">Account *</Label>
+                  <div className="col-span-2">
+                    <Label className="text-[#001f3f] font-semibold">Account Code *</Label>
                     <div className="flex gap-2">
-                      <Input
-                        value={lineFormData.accountCode || ''}
-                        onChange={(e) => setLineFormData({...lineFormData, accountCode: e.target.value})}
-                        className="text-[#001f3f] border-[#001f3f] w-24"
-                        placeholder="Code"
-                      />
-                      <Input
-                        value={lineFormData.accountName || ''}
-                        readOnly
-                        className="text-[#001f3f] border-[#001f3f] flex-1"
-                        placeholder="Account name"
-                      />
+                      <div className="relative flex-1">
+                        <Input
+                          value={lineFormData.accountCode || ''}
+                          onChange={(e) => handleAccountCodeChange(e.target.value)}
+                          className="text-[#001f3f] border-[#001f3f]"
+                          placeholder="Start typing account code..."
+                        />
+                        {showAccountSelector && filteredAccounts.length > 0 && (
+                          <div className="absolute z-50 mt-1 w-full p-2 border-2 border-[#001f3f] rounded bg-white max-h-60 overflow-y-auto shadow-lg">
+                            {filteredAccounts.map((account, idx) => (
+                              <div
+                                key={idx}
+                                className="p-2 hover:bg-blue-50 cursor-pointer border-b"
+                                onClick={() => selectAccount(account)}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-[#001f3f] min-w-[80px]">{account.code}</span>
+                                  <span className="text-sm text-gray-700">-</span>
+                                  <span className="text-sm text-gray-700">{account.name}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <Button 
                         type="button"
-                        onClick={() => setShowAccountSelector(!showAccountSelector)}
+                        onClick={() => {
+                          setShowAccountSelector(!showAccountSelector)
+                          if (!showAccountSelector) setSearchQuery('')
+                        }}
                         className="bg-[#001f3f] hover:bg-[#003366]"
                       >
                         <Search className="h-4 w-4" />
                       </Button>
                     </div>
-                    
-                    {/* Account Selector Dropdown */}
-                    {showAccountSelector && (
-                      <div className="mt-2 p-2 border-2 border-[#001f3f] rounded bg-white max-h-60 overflow-y-auto">
-                        <Input
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search accounts..."
-                          className="mb-2"
-                        />
-                        {filteredAccounts.map((account, idx) => (
-                          <div
-                            key={idx}
-                            className="p-2 hover:bg-gray-100 cursor-pointer border-b"
-                            onClick={() => selectAccount(account)}
-                          >
-                            <div className="font-semibold text-[#001f3f]">{account.code}</div>
-                            <div className="text-sm text-gray-600">{account.name}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  </div>
+
+                  <div className="col-span-2">
+                    <Label className="text-[#001f3f] font-semibold">Account Name</Label>
+                    <Input
+                      value={lineFormData.accountName || ''}
+                      readOnly
+                      className="text-[#001f3f] border-[#001f3f] bg-gray-50"
+                      placeholder="Auto-filled when account code is selected"
+                    />
                   </div>
 
                   <div>
@@ -373,12 +392,14 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
 
                 <div className="flex gap-2 mt-4">
                   <Button 
+                    type="button"
                     onClick={editingLineId ? updateJournalLine : addJournalLine}
                     className="bg-[#001f3f] hover:bg-[#003366]"
                   >
                     {editingLineId ? 'Update Line' : 'Add Line'}
                   </Button>
                   <Button 
+                    type="button"
                     variant="outline"
                     onClick={() => {
                       setIsAddingLine(false)
