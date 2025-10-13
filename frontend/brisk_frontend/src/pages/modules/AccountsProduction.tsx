@@ -129,7 +129,18 @@ const AccountsProduction: React.FC = () => {
 
   const [trialBalanceEntries, setTrialBalanceEntries] = useState<TrialBalanceEntry[]>([])
 
-  const [adjustments, setAdjustments] = useState<Adjustment[]>([])
+  const [adjustments, setAdjustments] = useState<Adjustment[]>([
+    { id: '1', type: 'prepayment', description: 'Insurance Prepayment', amount: 2500, date: '2024-03-31', status: 'posted', accountCode: '1200' },
+    { id: '2', type: 'accrual', description: 'Utilities Accrual', amount: 1200, date: '2024-03-31', status: 'posted', accountCode: '2100' },
+    { id: '3', type: 'depreciation', description: 'Office Equipment Depreciation', amount: 5000, date: '2024-03-31', status: 'posted', accountCode: '6200' },
+    { id: '4', type: 'prepayment', description: 'Rent Prepayment', amount: 15000, date: '2024-03-31', status: 'approved', accountCode: '1201' },
+    { id: '5', type: 'accrual', description: 'Professional Fees Accrual', amount: 3500, date: '2024-03-31', status: 'draft', accountCode: '2101' },
+    { id: '6', type: 'depreciation', description: 'Motor Vehicles Depreciation', amount: 8000, date: '2024-03-31', status: 'posted', accountCode: '6201' },
+    { id: '7', type: 'provision', description: 'Bad Debt Provision', amount: 4500, date: '2024-03-31', status: 'approved', accountCode: '6500' },
+    { id: '8', type: 'reclassification', description: 'Reclassify Fixed Assets', amount: 12000, date: '2024-03-31', status: 'draft', accountCode: '1500' },
+    { id: '9', type: 'write-off', description: 'Write-off Obsolete Inventory', amount: 2200, date: '2024-03-31', status: 'posted', accountCode: '5500' },
+    { id: '10', type: 'revaluation', description: 'Property Revaluation', amount: 50000, date: '2024-03-31', status: 'approved', accountCode: '1600' }
+  ])
   const [adjSearchType, setAdjSearchType] = useState('')
   const [adjSearchStatus, setAdjSearchStatus] = useState('')
   const [adjSearchDescription, setAdjSearchDescription] = useState('')

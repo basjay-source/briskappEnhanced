@@ -125,7 +125,7 @@ export const JournalAdjustmentForm: React.FC<JournalAdjustmentFormProps> = ({
       debit: 0,
       credit: 0
     })
-    setIsAddingLine(false)
+    // setIsAddingLine(false) - commented out so users can add multiple lines
   }
 
   const updateJournalLine = () => {
