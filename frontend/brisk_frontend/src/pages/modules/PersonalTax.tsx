@@ -262,6 +262,15 @@ export default function PersonalTax() {
   
   const [showIHTDrilldown, setShowIHTDrilldown] = useState(false)
   const [selectedIHTCalculation, setSelectedIHTCalculation] = useState<any>(null)
+  
+  const [showCGTDrilldown, setShowCGTDrilldown] = useState(false)
+  const [selectedCGTCalculation, setSelectedCGTCalculation] = useState<any>(null)
+  
+  const [showPensionDrilldown, setShowPensionDrilldown] = useState(false)
+  const [selectedPensionCalculation, setSelectedPensionCalculation] = useState<any>(null)
+  
+  const [showMarriageDrilldown, setShowMarriageDrilldown] = useState(false)
+  const [selectedMarriageCalculation, setSelectedMarriageCalculation] = useState<any>(null)
 
   const [activeTaxPlanningTab, setActiveTaxPlanningTab] = useState('cgt')
 
@@ -487,6 +496,45 @@ export default function PersonalTax() {
     localStorage.setItem('ihtCalculations', JSON.stringify(updated))
     notifications.deleted('IHT Calculation', 'Calculation removed successfully')
     setShowIHTDrilldown(false)
+  }
+
+  const handleViewCGTCalculation = (calculation: any) => {
+    setSelectedCGTCalculation(calculation)
+    setShowCGTDrilldown(true)
+  }
+
+  const handleDeleteCGTCalculation = (index: number) => {
+    const saved = JSON.parse(localStorage.getItem('cgtCalculations') || '[]')
+    saved.splice(index, 1)
+    localStorage.setItem('cgtCalculations', JSON.stringify(saved))
+    notifications.deleted('CGT Calculation', 'Calculation removed successfully')
+    setShowCGTDrilldown(false)
+  }
+
+  const handleViewPensionCalculation = (calculation: any) => {
+    setSelectedPensionCalculation(calculation)
+    setShowPensionDrilldown(true)
+  }
+
+  const handleDeletePensionCalculation = (id: string) => {
+    const updated = pensionCalculations.filter((calc: any) => calc.id !== id)
+    setPensionCalculations(updated)
+    localStorage.setItem('pensionCalculations', JSON.stringify(updated))
+    notifications.deleted('Pension Calculation', 'Calculation removed successfully')
+    setShowPensionDrilldown(false)
+  }
+
+  const handleViewMarriageCalculation = (calculation: any) => {
+    setSelectedMarriageCalculation(calculation)
+    setShowMarriageDrilldown(true)
+  }
+
+  const handleDeleteMarriageCalculation = (id: string) => {
+    const updated = familyTaxCalculations.filter((calc: any) => calc.id !== id)
+    setFamilyTaxCalculations(updated)
+    localStorage.setItem('familyTaxCalculations', JSON.stringify(updated))
+    notifications.deleted('Marriage Allowance Calculation', 'Calculation removed successfully')
+    setShowMarriageDrilldown(false)
   }
 
   const handleCalculatePension = () => {
@@ -1530,6 +1578,7 @@ export default function PersonalTax() {
 
     const saveCGTCalculation = () => {
       const calculation = {
+        id: Date.now().toString(),
         ...cgtInputs,
         ...cgtResults,
         date: new Date().toISOString()
@@ -1540,6 +1589,8 @@ export default function PersonalTax() {
       ]))
       notifications.custom('CGT calculation saved successfully', 'success')
     }
+
+    const savedCalculations = JSON.parse(localStorage.getItem('cgtCalculations') || '[]')
 
     return (
       <div className="space-y-6">
@@ -1656,10 +1707,152 @@ export default function PersonalTax() {
                         </div>
                       </CardContent>
                     </Card>
+                    {savedCalculations.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({savedCalculations.length})</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {savedCalculations.slice(-5).reverse().map((calc: any, index: number) => (
+                              <div 
+                                key={index} 
+                                className="p-2 border border-[#001f3f] rounded-[2px] text-sm cursor-pointer hover:bg-blue-50 transition-colors"
+                                onClick={() => handleViewCGTCalculation(calc)}
+                              >
+                                <div className="flex justify-between">
+                                  <span className="text-[#001f3f] font-medium">Gain: £{calc.capitalGain?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                                  <span className="text-[#001f3f] font-semibold">CGT: £{calc.cgtDue?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                                </div>
+                                <div className="flex justify-between items-center mt-1">
+                                  <span className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</span>
+                                  <span className="text-xs text-[#001f3f]">Click for details →</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </div>
               </CardContent>
             </Card>
+
+        {/* CGT Calculation Drilldown Modal */}
+        <Dialog open={showCGTDrilldown} onOpenChange={setShowCGTDrilldown}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b-2 border-[#001f3f] pb-3">
+                <h2 className="text-2xl font-bold text-[#001f3f] flex items-center gap-2">
+                  <Calculator className="h-6 w-6 text-green-600" />
+                  CGT Calculation Details
+                </h2>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-red-600 text-red-600 hover:bg-red-50"
+                  onClick={() => {
+                    const index = savedCalculations.findIndex((c: any) => c.date === selectedCGTCalculation?.date)
+                    if (index !== -1) handleDeleteCGTCalculation(index)
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
+              </div>
+
+              {selectedCGTCalculation && (
+                <div className="space-y-6">
+                  <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Calculation Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Tax Year</span>
+                        <span className="text-[#001f3f]">{selectedCGTCalculation.taxYear}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Calculation Date</span>
+                        <span className="text-[#001f3f]">{new Date(selectedCGTCalculation.date).toLocaleString()}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Asset Details</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Disposal Proceeds</span>
+                        <span className="font-semibold text-[#001f3f]">£{parseFloat(selectedCGTCalculation.disposalProceeds || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Acquisition Cost</span>
+                        <span className="font-semibold text-red-600">- £{parseFloat(selectedCGTCalculation.acquisitionCost || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Improvement Costs</span>
+                        <span className="font-semibold text-red-600">- £{parseFloat(selectedCGTCalculation.improvementCosts || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Disposal Costs</span>
+                        <span className="font-semibold text-red-600">- £{parseFloat(selectedCGTCalculation.disposalCosts || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-3 border-t-2 border-[#001f3f] bg-blue-50 px-3 rounded">
+                        <span className="font-bold text-[#001f3f]">Capital Gain</span>
+                        <span className="text-lg font-bold text-[#001f3f]">£{selectedCGTCalculation.capitalGain?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">CGT Calculation</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Capital Gain</span>
+                        <span className="font-semibold text-[#001f3f]">£{selectedCGTCalculation.capitalGain?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Less: Annual Exemption</span>
+                        <span className="font-semibold text-red-600">- £{selectedCGTCalculation.annualExemption?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between py-3 border-t-2 border-[#001f3f]">
+                        <span className="font-bold text-[#001f3f]">Taxable Gain</span>
+                        <span className="text-lg font-bold text-[#001f3f]">£{selectedCGTCalculation.taxableGain?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-t border-gray-200">
+                        <span className="text-[#001f3f]">Basic Rate CGT (10%)</span>
+                        <span className="font-semibold text-[#001f3f]">£{selectedCGTCalculation.basicRateCGT?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-[#001f3f]">Higher Rate CGT (20%)</span>
+                        <span className="font-semibold text-[#001f3f]">£{selectedCGTCalculation.higherRateCGT?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                      <div className="flex justify-between py-4 border-t-2 border-[#001f3f] bg-green-50 px-3 rounded">
+                        <span className="font-bold text-green-900 text-lg">Capital Gains Tax Due</span>
+                        <span className="text-2xl font-bold text-green-600">£{selectedCGTCalculation.cgtDue?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      className="flex-1 bg-[#001f3f] hover:bg-[#003366]"
+                      onClick={() => setShowCGTDrilldown(false)}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }
