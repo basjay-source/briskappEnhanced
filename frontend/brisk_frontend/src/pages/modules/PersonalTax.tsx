@@ -49,6 +49,7 @@ import { SAReturnForm as ComprehensiveSAReturnForm } from '../../components/Comp
 import notifications from '@/lib/notifications'
 import { hmrcMTDService } from '@/services/hmrcMTD'
 import { calculateIHT, calculatePensionAllowance, calculateMarriageAllowanceSaving, generateTaxYears as getTaxYearsList, calculateOpportunityEstimate } from '@/services/taxRates'
+import { getAIAdvice, type AIResponse } from '@/services/aiAdviser'
 import { 
   Dialog,
   DialogContent,
@@ -333,12 +334,32 @@ export default function PersonalTax() {
     loadOptimizationOpportunities()
   }, [])
 
+  const [aiResponse, setAiResponse] = useState<AIResponse | null>(null)
+  const [showAIResponse, setShowAIResponse] = useState(false)
+
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
-      console.log('AI Question:', question)
+      const response = await getAIAdvice(question, {
+        module: 'personal-tax',
+        specificContext: {
+          taxYear: selectedTaxYear,
+          clients: individualClients,
+          returns: saReturnsData,
+          recentCalculations: {
+            cgt: localStorage.getItem('cgtCalculations'),
+            iht: ihtCalculations,
+            pension: pensionCalculations,
+            marriage: familyTaxCalculations
+          }
+        }
+      })
+      setAiResponse(response)
+      setShowAIResponse(true)
+      notifications.custom('AI Adviser response ready', 'success')
     } catch (error) {
       console.error('Error asking AI:', error)
+      notifications.custom('Failed to get AI response', 'error')
     } finally {
       setIsAILoading(false)
     }
