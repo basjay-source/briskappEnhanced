@@ -199,64 +199,89 @@ export default function CorporationTax() {
     setShowRDModal(false)
   }
 
-  const handleViewCT600 = (client: CTClient) => {
-    const ct600Data = {
-      companyName: client.companyName,
-      companyNumber: client.companyNumber,
-      utr: client.utr,
-      accountingPeriodStart: client.accountingPeriodStart,
-      accountingPeriodEnd: client.accountingPeriodEnd,
-      status: client.status as any,
-      syncedFromAccounts: true,
-      lastSyncDate: new Date().toISOString(),
-      profitBeforeTax: 500000,
-      turnover: 2500000,
-      costOfSales: 1500000,
-      adminExpenses: 450000,
-      otherIncome: 50000,
-      financeCosts: 100000,
-      depreciationAddback: 50000,
-      legalProfessionalFees: 15000,
-      entertainmentDisallowed: 8000,
-      provisionsNotAllowed: 5000,
-      otherAdjustments: 2000,
-      annualInvestmentAllowance: 75000,
-      writingDownAllowance: 25000,
-      balancingChargeAllowance: 0,
-      lossesBroughtForward: 0,
-      lossesSetAgainstProfit: 0,
-      lossesCarriedBack: 0,
-      lossesCarriedForward: 0,
-      rdQualifyingExpenditure: 150000,
-      rdEnhancementRate: 231,
-      rdReliefClaimed: 46575,
-      rdTaxCredit: 0,
-      patentBoxRelief: 0,
-      creativeIndustryRelief: 0,
-      marginalRelief: 0,
-      groupRelief: 0,
-      otherReliefs: 0,
-      quarterlyPaymentsMade: 0,
-      corporationTaxRate: 19,
-      grossProfit: 0,
-      totalAdjustments: 0,
-      plantMachineryAdditions: 0,
-      plantMachineryDisposals: 0,
-      totalCapitalAllowances: 0,
-      taxableProfit: 0,
-      corporationTaxBeforeReliefs: 0,
-      totalReliefs: 0,
-      corporationTaxDue: 0,
-      balanceDue: 0
+  const handleViewCT600 = async (client: CTClient) => {
+    try {
+      setIsLoading(true)
+      const ct600Data = await ct600API.get(client.id)
+      setSelectedCT600Data(ct600Data)
+      setShowCT600Modal(true)
+    } catch (error) {
+      console.error('Failed to fetch CT600 data:', error)
+      const fallbackData = {
+        companyName: client.companyName,
+        companyNumber: client.companyNumber,
+        utr: client.utr,
+        accountingPeriodStart: client.accountingPeriodStart,
+        accountingPeriodEnd: client.accountingPeriodEnd,
+        status: client.status as any,
+        syncedFromAccounts: false,
+        lastSyncDate: new Date().toISOString(),
+        profitBeforeTax: 0,
+        turnover: 0,
+        costOfSales: 0,
+        adminExpenses: 0,
+        otherIncome: 0,
+        financeCosts: 0,
+        depreciationAddback: 0,
+        legalProfessionalFees: 0,
+        entertainmentDisallowed: 0,
+        provisionsNotAllowed: 0,
+        otherAdjustments: 0,
+        annualInvestmentAllowance: 0,
+        writingDownAllowance: 0,
+        balancingChargeAllowance: 0,
+        lossesBroughtForward: 0,
+        lossesSetAgainstProfit: 0,
+        lossesCarriedBack: 0,
+        lossesCarriedForward: 0,
+        rdQualifyingExpenditure: 0,
+        rdEnhancementRate: 0,
+        rdReliefClaimed: 0,
+        rdTaxCredit: 0,
+        patentBoxRelief: 0,
+        creativeIndustryRelief: 0,
+        marginalRelief: 0,
+        groupRelief: 0,
+        otherReliefs: 0,
+        quarterlyPaymentsMade: 0,
+        corporationTaxRate: 19,
+        grossProfit: 0,
+        totalAdjustments: 0,
+        plantMachineryAdditions: 0,
+        plantMachineryDisposals: 0,
+        totalCapitalAllowances: 0,
+        taxableProfit: 0,
+        corporationTaxBeforeReliefs: 0,
+        totalReliefs: 0,
+        corporationTaxDue: 0,
+        balanceDue: 0
+      }
+      setSelectedCT600Data(fallbackData)
+      setShowCT600Modal(true)
+      notifications.custom('Using empty form - no CT600 data found for this client', 'warning')
+    } finally {
+      setIsLoading(false)
     }
-    setSelectedCT600Data(ct600Data)
-    setShowCT600Modal(true)
   }
 
-  const handleSaveCT600 = (data: any) => {
-    console.log('Saving CT600 data:', data)
-    notifications.custom('CT600 computation saved successfully', 'success')
-    setShowCT600Modal(false)
+  const handleSaveCT600 = async (data: any) => {
+    try {
+      setIsLoading(true)
+      if (data.id) {
+        await ct600API.update(data.id, data)
+        notifications.custom('CT600 computation updated successfully', 'success')
+      } else {
+        await ct600API.create(data)
+        notifications.custom('CT600 computation created successfully', 'success')
+      }
+      setShowCT600Modal(false)
+      await loadDashboardStats()
+    } catch (error) {
+      console.error('Failed to save CT600 data:', error)
+      notifications.custom('Failed to save CT600 computation', 'error')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const stats = dashboardStats || ctDataService.getDashboardStats()
