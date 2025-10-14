@@ -247,6 +247,8 @@ export default function PersonalTax() {
     potentialSaving: 0
   })
 
+  const [activeTaxPlanningTab, setActiveTaxPlanningTab] = useState('cgt')
+
   const getCGTRatesByYear = (year: string) => {
     const yearNum = parseInt(year)
     if (yearNum >= 2024) {
@@ -587,13 +589,7 @@ export default function PersonalTax() {
     planning: { 
       label: 'Tax Planning', 
       icon: Target, 
-      hasSubTabs: true,
-      subTabs: {
-        cgt: { label: 'CGT Calculator', icon: Calculator },
-        optimization: { label: 'Tax Optimization', icon: Target },
-        iht: { label: 'IHT Planning', icon: Users },
-        pension: { label: 'Pension Planning', icon: PieChart }
-      }
+      hasSubTabs: false
     },
     filing: { label: 'Filing & Compliance', icon: Upload, hasSubTabs: false }
   }
@@ -865,7 +861,7 @@ export default function PersonalTax() {
     switch (activeMainTab) {
       case 'returns': return renderCurrentReturns()
       case 'quarterly': return renderQuarterlyOverview()
-      case 'planning': return renderCGTCalculator()
+      case 'planning': return renderTaxPlanning()
       case 'filing': return renderFiling()
       default: return renderDashboard()
     }
@@ -2218,6 +2214,50 @@ export default function PersonalTax() {
     )
   }
 
+
+  function renderTaxPlanning() {
+    const tabs = [
+      { key: 'cgt', label: 'CGT Calculator', icon: Calculator },
+      { key: 'optimization', label: 'Tax Optimization', icon: Target },
+      { key: 'iht', label: 'IHT Planning', icon: Heart },
+      { key: 'pension', label: 'Pension Planning', icon: PiggyBank },
+      { key: 'marriage', label: 'Marriage Allowance', icon: Users2 }
+    ]
+
+    return (
+      <div className="space-y-6">
+        <div className="flex gap-1 border-b border-gray-200">
+          {tabs.map(tab => {
+            const Icon = tab.icon
+            const isActive = activeTaxPlanningTab === tab.key
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTaxPlanningTab(tab.key)}
+                className={`
+                  flex items-center gap-2 px-6 py-3 font-medium rounded-t-lg transition-all
+                  ${isActive 
+                    ? 'bg-orange-500 text-white border-2 border-orange-500 border-b-0' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700 border-2 border-blue-600 border-b-0'}
+                `}
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+
+        <div>
+          {activeTaxPlanningTab === 'cgt' && renderCGTCalculator()}
+          {activeTaxPlanningTab === 'optimization' && renderOptimization()}
+          {activeTaxPlanningTab === 'iht' && renderIHTPlanning()}
+          {activeTaxPlanningTab === 'pension' && renderPensionPlanning()}
+          {activeTaxPlanningTab === 'marriage' && renderFamilyTax()}
+        </div>
+      </div>
+    )
+  }
 
   function renderFiling() {
     return (
