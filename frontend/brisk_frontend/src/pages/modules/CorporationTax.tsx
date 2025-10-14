@@ -726,8 +726,6 @@ export default function CorporationTax() {
   }
 
   function renderRDClaims() {
-    const [activeRDTab, setActiveRDTab] = useState('sme')
-
     const getRDProjectsByScheme = (scheme: string) => {
       return rdProjects.filter(p => p.claimType === scheme)
     }
