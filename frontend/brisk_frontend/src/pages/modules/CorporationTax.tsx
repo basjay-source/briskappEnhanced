@@ -13,16 +13,40 @@ import {
   Clock,
   ChevronDown,
   Send,
-  CheckCircle
+  CheckCircle,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  X,
+  Save,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Filter,
+  ArrowUpDown
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AIPromptSection from '../../components/AIPromptSection'
-import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import { hmrcMTDService } from '@/services/hmrcMTD'
 import notifications from '@/lib/notifications'
-import { calculateCorporationTax, getTaxRatesForYear, generateTaxYears } from '@/services/taxRates'
+import { calculateCorporationTax, generateTaxYears } from '@/services/taxRates'
+import { 
+  ctDataService, 
+  CTClient, 
+  RDProject, 
+  CapitalAllowance, 
+  GroupReliefClaim,
+  CTClientFormData,
+  RDProjectFormData 
+} from '@/services/corporationTaxData'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -30,19 +54,35 @@ export default function CorporationTax() {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedTaxYear, setSelectedTaxYear] = useState('2024-25')
+  const [selectedTaxYear, setSelectedTaxYear] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedType, setSelectedType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
-  const [profitBeforeTax, setProfitBeforeTax] = useState(125000)
-  const [adjustments, setAdjustments] = useState(8500)
-  const [rdRelief, setRdRelief] = useState(15000)
+  
+  const [clients, setClients] = useState<CTClient[]>(ctDataService.getClients())
+  const [rdProjects, setRDProjects] = useState<RDProject[]>(ctDataService.getRDProjects())
+  const [capitalAllowances, setCapitalAllowances] = useState<CapitalAllowance[]>(ctDataService.getCapitalAllowances())
+  const [groupReliefs, setGroupReliefs] = useState<GroupReliefClaim[]>(ctDataService.getGroupReliefs())
+  
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [showClientDetailModal, setShowClientDetailModal] = useState(false)
+  const [showRDModal, setShowRDModal] = useState(false)
+  const [showRDDetailModal, setShowRDDetailModal] = useState(false)
+  const [showCAModal, setShowCAModal] = useState(false)
+  const [showGRModal, setShowGRModal] = useState(false)
+  const [selectedClient, setSelectedClient] = useState<CTClient | null>(null)
+  const [selectedRDProject, setSelectedRDProject] = useState<RDProject | null>(null)
+  const [editingClient, setEditingClient] = useState<CTClient | null>(null)
+  const [editingRDProject, setEditingRDProject] = useState<RDProject | null>(null)
+  
+  const [sortColumn, setSortColumn] = useState<string>('')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
     try {
-      console.log('AI Question:', question)
+      console.log('Business Tax Adviser Question:', question)
     } catch (error) {
       console.error('Error asking AI:', error)
     } finally {
@@ -50,105 +90,119 @@ export default function CorporationTax() {
     }
   }
 
-  const taxYearOptions = [
-    { label: 'All Tax Years', value: 'all' },
-    ...generateTaxYears().map(year => ({ label: year, value: year }))
-  ]
-
-  const statusOptions = [
-    { label: 'All Statuses', value: 'all' },
-    { label: 'Draft', value: 'draft' },
-    { label: 'In Progress', value: 'progress' },
-    { label: 'Submitted', value: 'submitted' },
-    { label: 'Approved', value: 'approved' }
-  ]
-
-  const typeOptions = [
-    { label: 'All Types', value: 'all' },
-    { label: 'CT600', value: 'ct600' },
-    { label: 'R&D Claims', value: 'rd' },
-    { label: 'Reliefs', value: 'reliefs' },
-    { label: 'Computations', value: 'computations' }
-  ]
-
-  const taxableProfit = profitBeforeTax + adjustments
-  const ctCalculation = calculateCorporationTax(taxableProfit, selectedTaxYear)
-  const taxAfterRDRelief = Math.max(0, ctCalculation.corporationTax - rdRelief)
-  
-  const taxData = {
-    profitBeforeTax,
-    adjustments,
-    taxableProfit,
-    corporationTax: ctCalculation.corporationTax,
-    rdRelief,
-    optimizedTax: taxAfterRDRelief,
-    effectiveRate: ctCalculation.effectiveRate,
-    marginalRelief: ctCalculation.marginalRelief
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
   }
 
-  const rdClaims = [
-    {
-      project: 'AI Algorithm Development',
-      expenditure: 45000,
-      relief: 13500,
-      status: 'approved'
-    },
-    {
-      project: 'Green Energy Research',
-      expenditure: 32000,
-      relief: 9600,
-      status: 'pending'
-    },
-    {
-      project: 'Software Innovation',
-      expenditure: 28000,
-      relief: 8400,
-      status: 'draft'
-    }
-  ]
+  const handleAddClient = () => {
+    setEditingClient(null)
+    setShowClientModal(true)
+  }
 
-  const aiRecommendations = [
-    {
-      type: 'savings',
-      title: 'R and D Relief Opportunity',
-      description: 'Additional £12,000 in qualifying expenditure identified for R and D claims.',
-      impact: '£3,600 tax saving',
-      confidence: 94,
-      action: 'Review software development costs for Q3-Q4'
-    },
-    {
-      type: 'timing',
-      title: 'Capital Allowances Timing',
-      description: 'Consider accelerating equipment purchases to maximize AIA relief.',
-      impact: '£4,200 potential saving',
-      confidence: 87,
-      action: 'Purchase planned equipment before year-end'
-    },
-    {
-      type: 'compliance',
-      title: 'Filing Deadline Alert',
-      description: 'CT600 due in 45 days. All supporting documentation ready.',
-      impact: 'Avoid penalties',
-      confidence: 99,
-      action: 'Schedule final review meeting'
-    },
-    {
-      type: 'optimization',
-      title: 'Group Relief Optimization',
-      description: 'Brisk Services Ltd losses can offset £85,000 of current year profits.',
-      impact: '£20,400 tax saving',
-      confidence: 92,
-      action: 'Submit group relief election'
-    },
-    {
-      type: 'planning',
-      title: 'Patent Box Eligibility',
-      description: 'Recent IP development may qualify for 10% patent box rate.',
-      impact: '£7,650 annual saving',
-      confidence: 78,
-      action: 'Assess patent application timeline'
+  const handleEditClient = (client: CTClient) => {
+    setEditingClient(client)
+    setShowClientModal(true)
+  }
+
+  const handleViewClient = (client: CTClient) => {
+    setSelectedClient(client)
+    setShowClientDetailModal(true)
+  }
+
+  const handleDeleteClient = (id: string) => {
+    if (confirm('Are you sure you want to delete this client?')) {
+      ctDataService.deleteClient(id)
+      setClients(ctDataService.getClients())
+      notifications.custom('Client deleted successfully', 'success')
     }
-  ]
+  }
+
+  const handleSaveClient = (data: CTClientFormData) => {
+    if (editingClient) {
+      ctDataService.updateClient(editingClient.id, data)
+      notifications.custom('Client updated successfully', 'success')
+    } else {
+      ctDataService.createClient(data)
+      notifications.custom('Client created successfully', 'success')
+    }
+    setClients(ctDataService.getClients())
+    setShowClientModal(false)
+  }
+
+  const handleAddRDProject = () => {
+    setEditingRDProject(null)
+    setShowRDModal(true)
+  }
+
+  const handleEditRDProject = (project: RDProject) => {
+    setEditingRDProject(project)
+    setShowRDModal(true)
+  }
+
+  const handleViewRDProject = (project: RDProject) => {
+    setSelectedRDProject(project)
+    setShowRDDetailModal(true)
+  }
+
+  const handleDeleteRDProject = (id: string) => {
+    if (confirm('Are you sure you want to delete this R&D project?')) {
+      ctDataService.deleteRDProject(id)
+      setRDProjects(ctDataService.getRDProjects())
+      notifications.custom('R&D project deleted successfully', 'success')
+    }
+  }
+
+  const handleSaveRDProject = (data: RDProjectFormData) => {
+    if (editingRDProject) {
+      ctDataService.updateRDProject(editingRDProject.id, data)
+      notifications.custom('R&D project updated successfully', 'success')
+    } else {
+      ctDataService.createRDProject(data)
+      notifications.custom('R&D project created successfully', 'success')
+    }
+    setRDProjects(ctDataService.getRDProjects())
+    setShowRDModal(false)
+  }
+
+  const stats = ctDataService.getDashboardStats()
+
+  const getFilteredAndSortedClients = () => {
+    let filtered = clients.filter(client => {
+      const matchesSearch = searchTerm === '' || 
+        client.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.companyNumber.includes(searchTerm) ||
+        client.utr.includes(searchTerm)
+      
+      const matchesTaxYear = selectedTaxYear === 'all' || client.taxYear === selectedTaxYear
+      const matchesStatus = selectedStatus === 'all' || client.status === selectedStatus
+      
+      return matchesSearch && matchesTaxYear && matchesStatus
+    })
+
+    if (sortColumn) {
+      filtered.sort((a, b) => {
+        const aVal = a[sortColumn as keyof CTClient]
+        const bVal = b[sortColumn as keyof CTClient]
+        
+        if (typeof aVal === 'string' && typeof bVal === 'string') {
+          return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
+        }
+        
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
+        }
+        
+        return 0
+      })
+    }
+
+    return filtered
+  }
 
   const menuStructure = [
     {
@@ -161,13 +215,7 @@ export default function CorporationTax() {
       id: 'computation',
       label: 'CT Computation',
       icon: Calculator,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'ct600', label: 'CT600 Computation' },
-        { id: 'adjustments', label: 'Tax Adjustments' },
-        { id: 'schedules', label: 'Supporting Schedules' },
-        { id: 'validation', label: 'Validation' }
-      ]
+      hasSubTabs: false
     },
     {
       id: 'rd-claims',
@@ -175,10 +223,9 @@ export default function CorporationTax() {
       icon: TrendingUp,
       hasSubTabs: true,
       subTabs: [
-        { id: 'projects', label: 'R&D Projects' },
-        { id: 'expenditure', label: 'Qualifying Expenditure' },
-        { id: 'claims', label: 'Claims Management' },
-        { id: 'submissions', label: 'HMRC Submissions' }
+        { id: 'sme-scheme', label: 'SME Scheme' },
+        { id: 'rdec-scheme', label: 'RDEC Scheme' },
+        { id: 'merged-scheme', label: 'Merged Scheme' }
       ]
     },
     {
@@ -201,33 +248,20 @@ export default function CorporationTax() {
       subTabs: [
         { id: 'elections', label: 'Group Elections' },
         { id: 'surrenders', label: 'Loss Surrenders' },
-        { id: 'claims', label: 'Relief Claims' },
-        { id: 'planning', label: 'Group Planning' }
+        { id: 'claims', label: 'Relief Claims' }
       ]
     },
     {
       id: 'quarterly',
       label: 'Quarterly Payments',
       icon: Clock,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'calculations', label: 'Payment Calculations' },
-        { id: 'schedule', label: 'Payment Schedule' },
-        { id: 'submissions', label: 'HMRC Submissions' },
-        { id: 'reconciliation', label: 'Reconciliation' }
-      ]
+      hasSubTabs: false
     },
     {
       id: 'filing',
       label: 'Filing',
       icon: FileText,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'preparation', label: 'Return Preparation' },
-        { id: 'validation', label: 'Pre-submission Checks' },
-        { id: 'submission', label: 'HMRC Submission' },
-        { id: 'tracking', label: 'Status Tracking' }
-      ]
+      hasSubTabs: false
     }
   ]
 
@@ -256,14 +290,19 @@ export default function CorporationTax() {
   function renderMainContent() {
     if (activeSubTab) {
       switch (activeSubTab) {
-        case 'ct600': return renderCT600()
-        case 'adjustments': return renderAdjustments()
-        case 'schedules': return renderSchedules()
-        case 'validation': return renderValidation()
-        case 'projects': return renderRDClaims()
-        case 'expenditure': return renderRDClaims()
-        case 'claims': return renderRDClaims()
-        case 'submissions': return renderRDClaims()
+        case 'sme-scheme':
+        case 'rdec-scheme':
+        case 'merged-scheme':
+          return renderRDClaims()
+        case 'capital-allowances': return renderCapitalAllowances()
+        case 'patent-box':
+        case 'creative-relief':
+        case 'other-reliefs':
+          return renderReliefs()
+        case 'elections':
+        case 'surrenders':
+        case 'claims':
+          return renderGroupRelief()
         default: return renderDashboard()
       }
     }
@@ -271,7 +310,7 @@ export default function CorporationTax() {
     switch (activeMainTab) {
       case 'computation': return renderCT600()
       case 'rd-claims': return renderRDClaims()
-      case 'reliefs': return renderReliefs()
+      case 'reliefs': return renderCapitalAllowances()
       case 'group-relief': return renderGroupRelief()
       case 'quarterly': return renderQuarterly()
       case 'filing': return renderFiling()
@@ -280,165 +319,203 @@ export default function CorporationTax() {
   }
 
   function renderDashboard() {
+    const filteredClients = getFilteredAndSortedClients()
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-[#001f3f]">Corporation Tax Dashboard</h2>
-            <p className="text-[#001f3f] mt-2">CT600 computations, R&D claims, and corporation tax planning</p>
+            <p className="text-[#001f3f] mt-2">CT600 computations, R&D claims, and tax planning</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline">
-              <FileText className="h-4 w-4 mr-2" />
-              Export CT600
-            </Button>
-            <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
-              <Calculator className="h-4 w-4 mr-2" />
-              New Computation
-            </Button>
-          </div>
+          <Button onClick={handleAddClient} className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Client
+          </Button>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5" />
-                Corporation Tax Computation
-              </CardTitle>
-              <CardDescription>
-                Automated CT600 computation with real-time calculations
-              </CardDescription>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveMainTab('clients')}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Clients</CardTitle>
+              <Building2 className="h-4 w-4 text-[#001f3f]" />
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Profit Before Tax</label>
-                  <div className="text-xl font-bold text-green-600">
-                    £{taxData.profitBeforeTax.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-[#001f3f]">
-                    £{taxData.adjustments.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-xl font-bold text-[#001f3f]">
-                    £{taxData.taxableProfit.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Corporation Tax</label>
-                  <div className="text-xl font-bold text-red-600">
-                    £{taxData.corporationTax.toLocaleString()}
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">R&D Relief Applied</span>
-                  <span className="text-green-600 font-bold">
-                    -£{taxData.rdRelief.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                  <span className="font-bold">Optimized Tax Liability</span>
-                  <span className="text-xl font-bold text-brisk-primary">
-                    £{taxData.optimizedTax.toLocaleString()}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" className="flex-1">
-                  <FileText className="h-4 w-4 mr-2" />
-                  View CT600
-                </Button>
-                <Button className="flex-1 bg-brisk-primary hover:bg-brisk-primary-600">
-                  <Calculator className="h-4 w-4 mr-2" />
-                  Recalculate
-                </Button>
-              </div>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">{stats.totalClients}</div>
+              <p className="text-xs text-[#001f3f] mt-1">Active CT600 returns: {stats.activeCT600s}</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
-                R&D Claims
-              </CardTitle>
-              <CardDescription>
-                Research & Development relief claims
-              </CardDescription>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Tax Due</CardTitle>
+              <DollarSign className="h-4 w-4 text-red-600" />
             </CardHeader>
-            <CardContent className="space-y-4">
-              {rdClaims.map((claim, index) => (
-                <div key={index} className="p-3 border-2 border-[#001f3f] rounded-[2px]">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{claim.project}</span>
-                    <Badge variant={
-                      claim.status === 'approved' ? 'default' : 
-                      claim.status === 'pending' ? 'secondary' : 'outline'
-                    }>
-                      {claim.status}
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-[#001f3f] space-y-1">
-                    <div>Expenditure: £{claim.expenditure.toLocaleString()}</div>
-                    <div>Relief: £{claim.relief.toLocaleString()}</div>
-                  </div>
-                </div>
-              ))}
-              <Button variant="outline" className="w-full">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                New R&D Claim
-              </Button>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">£{stats.totalTaxDue.toLocaleString()}</div>
+              <p className="text-xs text-[#001f3f] mt-1">Across all clients</p>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveMainTab('rd-claims')}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">R&D Relief Claimed</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">£{stats.totalRDRelief.toLocaleString()}</div>
+              <p className="text-xs text-[#001f3f] mt-1">{stats.rdProjectsActive} active projects</p>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Upcoming Deadlines</CardTitle>
+              <Clock className="h-4 w-4 text-orange-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">{stats.upcomingDeadlines}</div>
+              <p className="text-xs text-[#001f3f] mt-1">Within next 90 days</p>
             </CardContent>
           </Card>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
-              AI Tax Recommendations
-            </CardTitle>
-            <CardDescription>
-              Intelligent suggestions for tax optimization and compliance
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {aiRecommendations.map((rec, index) => (
-              <div key={index} className="p-4 border-2 border-[#001f3f] rounded-[2px]">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    {rec.type === 'savings' && <DollarSign className="h-4 w-4 text-green-600" />}
-                    {rec.type === 'timing' && <Clock className="h-4 w-4 text-[#001f3f]" />}
-                    {rec.type === 'compliance' && <Shield className="h-4 w-4 text-orange-600" />}
-                    {rec.type === 'optimization' && <Zap className="h-4 w-4 text-purple-600" />}
-                    {rec.type === 'planning' && <Target className="h-4 w-4 text-indigo-600" />}
-                    <span className="font-medium">{rec.title}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline">{rec.confidence}% confidence</Badge>
-                    <Badge className="bg-green-100 text-green-800">{rec.impact}</Badge>
-                  </div>
-                </div>
-                <p className="text-sm text-[#001f3f] mb-2">{rec.description}</p>
-                <p className="text-xs font-medium text-brisk-primary">{rec.action}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Corporation Tax Clients</CardTitle>
+                <CardDescription>Manage CT600 computations and submissions</CardDescription>
               </div>
-            ))}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4 flex items-center gap-4 flex-wrap">
+              <div className="flex-1 min-w-[200px]">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-[#001f3f]" />
+                  <Input
+                    placeholder="Search clients, company number, UTR..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8 border-[#001f3f]"
+                  />
+                </div>
+              </div>
+              <Select value={selectedTaxYear} onValueChange={setSelectedTaxYear}>
+                <SelectTrigger className="w-[180px] border-[#001f3f]">
+                  <SelectValue placeholder="Tax Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tax Years</SelectItem>
+                  {generateTaxYears().map(year => (
+                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-[180px] border-[#001f3f]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="submitted">Submitted</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="filed">Filed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-[#001f3f]">
+                    <th className="text-left p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('id')}>
+                      <div className="flex items-center gap-2">
+                        ID <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-left p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('companyName')}>
+                      <div className="flex items-center gap-2">
+                        Company Name <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-left p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('companyNumber')}>
+                      <div className="flex items-center gap-2">
+                        Company No. <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-left p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('taxYear')}>
+                      <div className="flex items-center gap-2">
+                        Tax Year <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-left p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('status')}>
+                      <div className="flex items-center gap-2">
+                        Status <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-right p-3 text-[#001f3f] font-semibold cursor-pointer hover:bg-blue-50" onClick={() => handleSort('taxDue')}>
+                      <div className="flex items-center justify-end gap-2">
+                        Tax Due <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th className="text-right p-3 text-[#001f3f] font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredClients.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="text-center p-8 text-[#001f3f]">
+                        No clients found
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredClients.map((client) => (
+                      <tr key={client.id} className="border-b border-[#001f3f]/20 hover:bg-blue-50 cursor-pointer" onClick={() => handleViewClient(client)}>
+                        <td className="p-3 text-[#001f3f]">{client.id}</td>
+                        <td className="p-3 text-[#001f3f] font-medium">{client.companyName}</td>
+                        <td className="p-3 text-[#001f3f]">{client.companyNumber}</td>
+                        <td className="p-3 text-[#001f3f]">{client.taxYear}</td>
+                        <td className="p-3">
+                          <Badge variant={
+                            client.status === 'filed' ? 'default' :
+                            client.status === 'submitted' ? 'secondary' :
+                            client.status === 'in-progress' ? 'outline' : 'outline'
+                          }>
+                            {client.status}
+                          </Badge>
+                        </td>
+                        <td className="p-3 text-right text-[#001f3f] font-medium">
+                          £{client.taxDue.toLocaleString()}
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                            <Button size="sm" variant="ghost" onClick={() => handleViewClient(client)}>
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleEditClient(client)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteClient(client.id)}>
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
 
         <div className="bg-white rounded-[2px] border p-6">
           <AIPromptSection
-            title="Corporation Tax AI Assistant"
+            title="Ask your Business Tax Adviser"
             description="Get expert corporation tax guidance and optimization strategies"
             placeholder="Ask about CT600 computations, R&D claims, tax planning strategies..."
             recentQuestions={[
@@ -446,9 +523,7 @@ export default function CorporationTax() {
               "What R&D expenditure qualifies for relief claims?",
               "When are quarterly instalment payments due?",
               "How can we optimize group relief structures?",
-              "What are the latest corporation tax rates and allowances?",
-              "When should we consider quarterly instalment payments?",
-              "How can we maximize capital allowances claims?"
+              "What are the latest corporation tax rates and allowances?"
             ]}
             onSubmit={handleAIQuestion}
             isLoading={isAILoading}
@@ -461,169 +536,291 @@ export default function CorporationTax() {
   function renderCT600() {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">CT600 Computation</h2>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">CT600 Computation</h3>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">CT600 Computation</h2>
+            <p className="text-[#001f3f] mt-2">Corporation Tax computation and CT600 preparation</p>
           </div>
-          
-          <SearchFilterHeader
-            searchPlaceholder="Search tax computations, reliefs, R&D claims..."
-            searchValue={searchTerm}
-            onSearchChange={setSearchTerm}
-            filters={[
-              {
-                label: 'Tax Year',
-                options: taxYearOptions,
-                value: selectedTaxYear,
-                onChange: setSelectedTaxYear
-              },
-              {
-                label: 'Status',
-                options: statusOptions,
-                value: selectedStatus,
-                onChange: setSelectedStatus
-              },
-              {
-                label: 'Type',
-                options: typeOptions,
-                value: selectedType,
-                onChange: setSelectedType
-              }
-            ]}
-            dateRange={{
-              from: dateFrom,
-              to: dateTo,
-              onFromChange: setDateFrom,
-              onToChange: setDateTo
-            }}
-          />
+          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            New Computation
+          </Button>
+        </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-[#001f3f]">Corporation Tax Computation</CardTitle>
-              <CardDescription>Automated CT600 computation with real-time calculations</CardDescription>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Draft Returns</CardTitle>
+              <FileText className="h-4 w-4 text-[#001f3f]" />
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Profit Before Tax</label>
-                  <div className="text-xl font-bold text-green-600">
-                    £{taxData.profitBeforeTax.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Tax Adjustments</label>
-                  <div className="text-xl font-bold text-[#001f3f]">
-                    £{taxData.adjustments.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Taxable Profit</label>
-                  <div className="text-xl font-bold text-[#001f3f]">
-                    £{taxData.taxableProfit.toLocaleString()}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Corporation Tax</label>
-                  <div className="text-xl font-bold text-red-600">
-                    £{taxData.corporationTax.toLocaleString()}
-                  </div>
-                </div>
-              </div>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">{clients.filter(c => c.status === 'draft').length}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">In Progress</CardTitle>
+              <Clock className="h-4 w-4 text-orange-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">{clients.filter(c => c.status === 'in-progress').length}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Filed Returns</CardTitle>
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{clients.filter(c => c.status === 'filed').length}</div>
             </CardContent>
           </Card>
         </div>
-      </div>
-    )
-  }
 
-  function renderAdjustments() {
-    return (
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold">Tax Adjustments</h2>
-        <p className="text-[#001f3f]">Manage corporation tax adjustments and corrections</p>
-      </div>
-    )
-  }
-
-  function renderSchedules() {
-    return (
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold">Supporting Schedules</h2>
-        <p className="text-[#001f3f]">CT600 supporting schedules and computations</p>
-      </div>
-    )
-  }
-
-  function renderValidation() {
-    return (
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold">Validation</h2>
-        <p className="text-[#001f3f]">Validate CT600 computation and check for errors</p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Corporation Tax Computations</CardTitle>
+            <CardDescription>Manage CT600 computations and submissions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {clients.map((client) => (
+                <div key={client.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer" onClick={() => handleViewClient(client)}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-[#001f3f]">{client.companyName}</h3>
+                      <p className="text-sm text-[#001f3f] mt-1">
+                        Tax Year: {client.taxYear} | Tax Due: £{client.taxDue.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge>{client.status}</Badge>
+                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditClient(client); }}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   function renderRDClaims() {
+    const scheme = activeSubTab === 'sme-scheme' ? 'SME' : activeSubTab === 'rdec-scheme' ? 'RDEC' : 'Merged'
+    const filteredProjects = activeSubTab ? rdProjects.filter(p => p.scheme === scheme) : rdProjects
+
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">R&D Claims</h2>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">R&D Claims Management</h3>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">R&D Claims {scheme && `- ${scheme} Scheme`}</h2>
+            <p className="text-[#001f3f] mt-2">Research & Development tax relief claims</p>
           </div>
-          
-          <SearchFilterHeader
-            searchPlaceholder="Search R&D projects, claims, expenditure..."
-            searchValue={searchTerm}
-            onSearchChange={setSearchTerm}
-            filters={[
-              {
-                label: 'Status',
-                options: statusOptions,
-                value: selectedStatus,
-                onChange: setSelectedStatus
-              },
-              {
-                label: 'Tax Year',
-                options: taxYearOptions,
-                value: selectedTaxYear,
-                onChange: setSelectedTaxYear
-              }
-            ]}
-            dateRange={{
-              from: dateFrom,
-              to: dateTo,
-              onFromChange: setDateFrom,
-              onToChange: setDateTo
-            }}
-          />
+          <Button onClick={handleAddRDProject} className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            New R&D Project
+          </Button>
+        </div>
 
-          <div className="grid gap-4">
-            {rdClaims.map((claim, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Projects</CardTitle>
+              <TrendingUp className="h-4 w-4 text-[#001f3f]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">{filteredProjects.length}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Relief</CardTitle>
+              <DollarSign className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                £{filteredProjects.reduce((sum, p) => sum + p.reliefClaimed + p.taxCredit, 0).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Approved Claims</CardTitle>
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {filteredProjects.filter(p => p.status === 'approved').length}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">R&D Projects</CardTitle>
+            <CardDescription>Manage R&D claims and qualifying expenditure</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {filteredProjects.map((project) => (
+                <div key={project.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer" onClick={() => handleViewRDProject(project)}>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-[#001f3f]">{claim.project}</h3>
-                      <p className="text-sm text-[#001f3f]">
-                        Expenditure: £{claim.expenditure.toLocaleString()} | 
-                        Relief: £{claim.relief.toLocaleString()}
-                      </p>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-[#001f3f]">{project.projectName}</h3>
+                      <p className="text-sm text-[#001f3f] mt-1">{project.projectDescription}</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Scheme</p>
+                          <p className="font-medium text-[#001f3f]">{project.scheme}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Expenditure</p>
+                          <p className="font-medium text-[#001f3f]">£{project.totalQualifyingExpenditure.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Relief Claimed</p>
+                          <p className="font-medium text-green-600">£{project.reliefClaimed.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Tax Credit</p>
+                          <p className="font-medium text-green-600">£{project.taxCredit.toLocaleString()}</p>
+                        </div>
+                      </div>
                     </div>
-                    <Badge variant={
-                      claim.status === 'approved' ? 'default' : 
-                      claim.status === 'pending' ? 'secondary' : 'outline'
-                    }>
-                      {claim.status}
+                    <div className="flex items-center gap-2 ml-4">
+                      <Badge variant={project.status === 'approved' ? 'default' : 'secondary'}>
+                        {project.status}
+                      </Badge>
+                      <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEditRDProject(project); }}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleDeleteRDProject(project.id); }}>
+                        <Trash2 className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {filteredProjects.length === 0 && (
+                <div className="text-center p-8 text-[#001f3f]">
+                  No R&D projects found for {scheme} scheme
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderCapitalAllowances() {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Capital Allowances</h2>
+            <p className="text-[#001f3f] mt-2">Manage capital allowances and asset pools</p>
+          </div>
+          <Button onClick={() => setShowCAModal(true)} className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Asset
+          </Button>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Assets</CardTitle>
+              <Building2 className="h-4 w-4 text-[#001f3f]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">{capitalAllowances.length}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Cost</CardTitle>
+              <DollarSign className="h-4 w-4 text-[#001f3f]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">
+                £{capitalAllowances.reduce((sum, ca) => sum + ca.cost, 0).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Allowances Claimed</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                £{capitalAllowances.reduce((sum, ca) => sum + ca.allowanceClaimed, 0).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Capital Allowances Register</CardTitle>
+            <CardDescription>Track plant & machinery, buildings, and other capital assets</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {capitalAllowances.map((ca) => (
+                <div key={ca.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-[#001f3f]">{ca.assetDescription}</h3>
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-3">
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Asset Type</p>
+                          <p className="font-medium text-[#001f3f]">{ca.assetType}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Pool Type</p>
+                          <p className="font-medium text-[#001f3f]">{ca.poolType}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Cost</p>
+                          <p className="font-medium text-[#001f3f]">£{ca.cost.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">WDV</p>
+                          <p className="font-medium text-[#001f3f]">£{ca.writtenDownValue.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Allowance Claimed</p>
+                          <p className="font-medium text-green-600">£{ca.allowanceClaimed.toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Badge variant={ca.status === 'active' ? 'default' : 'secondary'}>
+                      {ca.status}
                     </Badge>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+                </div>
+              ))}
+              {capitalAllowances.length === 0 && (
+                <div className="text-center p-8 text-[#001f3f]">
+                  No capital allowances recorded
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -631,8 +828,34 @@ export default function CorporationTax() {
   function renderReliefs() {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">Reliefs & Credits</h2>
-        <p className="text-[#001f3f]">Manage corporation tax reliefs and credits</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Reliefs & Credits</h2>
+            <p className="text-[#001f3f] mt-2">Patent Box, Creative Industry Relief, and other tax reliefs</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#001f3f]">Patent Box</CardTitle>
+              <CardDescription>10% effective rate on qualifying IP profits</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-[#001f3f]">No Patent Box claims recorded</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#001f3f]">Creative Industry Relief</CardTitle>
+              <CardDescription>Film, TV, animation, video games, theatre, orchestra tax relief</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-[#001f3f]">No creative industry relief claims recorded</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }
@@ -640,8 +863,100 @@ export default function CorporationTax() {
   function renderGroupRelief() {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">Group Relief</h2>
-        <p className="text-[#001f3f]">Group relief elections and surrenders</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#001f3f]">Group Relief</h2>
+            <p className="text-[#001f3f] mt-2">Group relief elections, loss surrenders, and claims</p>
+          </div>
+          <Button onClick={() => setShowGRModal(true)} className="bg-brisk-primary hover:bg-brisk-primary-600">
+            <Plus className="h-4 w-4 mr-2" />
+            New Group Relief Claim
+          </Button>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Active Claims</CardTitle>
+              <Building2 className="h-4 w-4 text-[#001f3f]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">{groupReliefs.length}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Losses Claimed</CardTitle>
+              <DollarSign className="h-4 w-4 text-[#001f3f]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-[#001f3f]">
+                £{groupReliefs.reduce((sum, gr) => sum + gr.lossesClaimed, 0).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-[#001f3f]">Relief Value</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                £{groupReliefs.reduce((sum, gr) => sum + gr.reliefValue, 0).toLocaleString()}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Group Relief Claims</CardTitle>
+            <CardDescription>Track group relief elections and loss surrenders</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {groupReliefs.map((gr) => (
+                <div key={gr.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-[#001f3f]">
+                        From: {gr.surrenderingCompanyName}
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Tax Year</p>
+                          <p className="font-medium text-[#001f3f]">{gr.taxYear}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Losses Claimed</p>
+                          <p className="font-medium text-[#001f3f]">£{gr.lossesClaimed.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Relief Value</p>
+                          <p className="font-medium text-green-600">£{gr.reliefValue.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-[#001f3f]">Consent</p>
+                          <p className="font-medium text-[#001f3f]">{gr.consentReceived ? 'Received' : 'Pending'}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Badge variant={gr.status === 'approved' ? 'default' : 'secondary'}>
+                      {gr.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+              {groupReliefs.length === 0 && (
+                <div className="text-center p-8 text-[#001f3f]">
+                  No group relief claims recorded
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -649,8 +964,32 @@ export default function CorporationTax() {
   function renderQuarterly() {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">Quarterly Payments</h2>
-        <p className="text-[#001f3f]">Quarterly instalment payments and planning</p>
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">Quarterly Instalment Payments</h2>
+          <p className="text-[#001f3f] mt-2">Manage quarterly CT instalment payments for large companies</p>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">Quarterly Payments</CardTitle>
+            <CardDescription>Track quarterly instalment payment obligations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-[#001f3f]">
+              Quarterly instalment payments are required for companies with profits exceeding £1.5 million.
+              Large companies must pay corporation tax in four instalments during the accounting period.
+            </p>
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-[#001f3f]"><strong>Due dates:</strong></p>
+              <ul className="list-disc list-inside text-sm text-[#001f3f] space-y-1">
+                <li>Month 7: First instalment (50% of estimated liability × 3/12)</li>
+                <li>Month 10: Second instalment</li>
+                <li>Month 13 (M+1): Third instalment</li>
+                <li>Month 16 (M+4): Fourth and final instalment</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
