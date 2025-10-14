@@ -205,10 +205,10 @@ For ${context?.taxYear || '2024-25'}:
 4. Consider payments on account requirements
 5. File early to avoid technical issues`,
       suggestions: [
-        'Register for HMRC online services now',
-        'Set up reminders for key deadlines',
-        'Review last year's return for changes',
-        'Consider professional review before filing'
+        "Register for HMRC online services now",
+        "Set up reminders for key deadlines",
+        "Review last year's return for changes",
+        "Consider professional review before filing"
       ],
       relatedTopics: ['Payment on Account', 'Tax Code', 'Late Filing Penalties', 'Income Categories']
     }
