@@ -259,6 +259,9 @@ export default function PersonalTax() {
     potentialSaving: 0,
     taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
   })
+  
+  const [showIHTDrilldown, setShowIHTDrilldown] = useState(false)
+  const [selectedIHTCalculation, setSelectedIHTCalculation] = useState<any>(null)
 
   const [activeTaxPlanningTab, setActiveTaxPlanningTab] = useState('cgt')
 
@@ -471,6 +474,19 @@ export default function PersonalTax() {
     setIhtCalculations(updated)
     localStorage.setItem('ihtCalculations', JSON.stringify(updated))
     notifications.saved('IHT Calculation', `IHT due: £${result.ihtDue.toLocaleString(undefined, {minimumFractionDigits: 2})}`)
+  }
+
+  const handleViewIHTCalculation = (calculation: any) => {
+    setSelectedIHTCalculation(calculation)
+    setShowIHTDrilldown(true)
+  }
+
+  const handleDeleteIHTCalculation = (id: string) => {
+    const updated = ihtCalculations.filter((calc: any) => calc.id !== id)
+    setIhtCalculations(updated)
+    localStorage.setItem('ihtCalculations', JSON.stringify(updated))
+    notifications.deleted('IHT Calculation', 'Calculation removed successfully')
+    setShowIHTDrilldown(false)
   }
 
   const handleCalculatePension = () => {
@@ -2057,12 +2073,19 @@ export default function PersonalTax() {
                         <CardContent>
                           <div className="space-y-2 max-h-48 overflow-y-auto">
                             {ihtCalculations.slice(-5).reverse().map((calc: any) => (
-                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                              <div 
+                                key={calc.id} 
+                                className="p-2 border border-[#001f3f] rounded-[2px] text-sm cursor-pointer hover:bg-blue-50 transition-colors"
+                                onClick={() => handleViewIHTCalculation(calc)}
+                              >
                                 <div className="flex justify-between">
-                                  <span>Estate: £{calc.estateValue?.toLocaleString()}</span>
-                                  <span className="text-red-600">IHT: £{calc.ihtDue?.toLocaleString()}</span>
+                                  <span className="text-[#001f3f] font-medium">Estate: £{calc.estateValue?.toLocaleString()}</span>
+                                  <span className="text-red-600 font-semibold">IHT: £{calc.ihtDue?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                                 </div>
-                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                                <div className="flex justify-between items-center mt-1">
+                                  <span className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</span>
+                                  <span className="text-xs text-[#001f3f]">Click for details →</span>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -2073,6 +2096,156 @@ export default function PersonalTax() {
                 </div>
               </CardContent>
             </Card>
+
+        {/* IHT Calculation Drilldown Modal */}
+        <Dialog open={showIHTDrilldown} onOpenChange={setShowIHTDrilldown}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b-2 border-[#001f3f] pb-3">
+                <h2 className="text-2xl font-bold text-[#001f3f] flex items-center gap-2">
+                  <Heart className="h-6 w-6 text-red-600" />
+                  IHT Calculation Details
+                </h2>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-red-600 text-red-600 hover:bg-red-50"
+                  onClick={() => selectedIHTCalculation && handleDeleteIHTCalculation(selectedIHTCalculation.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
+              </div>
+
+              {selectedIHTCalculation && (
+                <div className="space-y-6">
+                  {/* Summary Section */}
+                  <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Calculation Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between items-center py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Tax Year</span>
+                        <span className="text-[#001f3f]">{selectedIHTCalculation.taxYear}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Calculation Date</span>
+                        <span className="text-[#001f3f]">{new Date(selectedIHTCalculation.date).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Total Estate Value</span>
+                        <span className="text-lg font-bold text-[#001f3f]">£{selectedIHTCalculation.estateValue?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-[#001f3f]">
+                        <span className="font-semibold text-[#001f3f]">Residence Value</span>
+                        <span className="text-[#001f3f]">£{selectedIHTCalculation.residenceValue?.toLocaleString()}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Allowances Breakdown */}
+                  <Card className="border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Allowances & Reliefs</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between items-center py-2">
+                        <div>
+                          <p className="font-medium text-[#001f3f]">Nil Rate Band (NRB)</p>
+                          <p className="text-xs text-gray-600">Standard inheritance tax threshold</p>
+                        </div>
+                        <span className="font-semibold text-[#001f3f]">£{selectedIHTCalculation.nilRateBand?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-t border-gray-200">
+                        <div>
+                          <p className="font-medium text-[#001f3f]">Residence Nil Rate Band</p>
+                          <p className="text-xs text-gray-600">Additional relief for main residence</p>
+                        </div>
+                        <span className="font-semibold text-[#001f3f]">£{selectedIHTCalculation.residenceNilRateBand?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-t-2 border-[#001f3f] bg-blue-50 px-3 rounded">
+                        <div>
+                          <p className="font-bold text-[#001f3f]">Total Nil Rate Band</p>
+                          <p className="text-xs text-gray-600">Combined tax-free allowance</p>
+                        </div>
+                        <span className="text-lg font-bold text-[#001f3f]">£{selectedIHTCalculation.totalNilRateBand?.toLocaleString()}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Tax Calculation */}
+                  <Card className="border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Tax Calculation</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-[#001f3f]">Total Estate Value</span>
+                        <span className="font-semibold text-[#001f3f]">£{selectedIHTCalculation.estateValue?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-[#001f3f]">Less: Total Nil Rate Band</span>
+                        <span className="font-semibold text-red-600">- £{selectedIHTCalculation.totalNilRateBand?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-t-2 border-[#001f3f]">
+                        <span className="font-bold text-[#001f3f]">Taxable Estate</span>
+                        <span className="text-lg font-bold text-[#001f3f]">£{selectedIHTCalculation.taxableEstate?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-t border-gray-200">
+                        <span className="text-[#001f3f]">IHT Rate</span>
+                        <span className="font-semibold text-[#001f3f]">40%</span>
+                      </div>
+                      <div className="flex justify-between items-center py-4 border-t-2 border-[#001f3f] bg-red-50 px-3 rounded">
+                        <div>
+                          <p className="font-bold text-red-900 text-lg">Inheritance Tax Due</p>
+                          <p className="text-xs text-red-700">Effective Rate: {selectedIHTCalculation.effectiveRate?.toFixed(2)}%</p>
+                        </div>
+                        <span className="text-2xl font-bold text-red-600">£{selectedIHTCalculation.ihtDue?.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Mitigation Strategies */}
+                  <Card className="border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-[#001f3f]">Potential Mitigation Strategies</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3 text-sm">
+                        <div className="p-3 bg-green-50 border border-green-200 rounded">
+                          <p className="font-semibold text-green-900">✓ Gifts and Exemptions</p>
+                          <p className="text-green-700">Consider annual gift exemptions (£3,000/year) and potentially exempt transfers</p>
+                        </div>
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+                          <p className="font-semibold text-blue-900">✓ Life Insurance Trusts</p>
+                          <p className="text-blue-700">Use life insurance policies in trust to cover IHT liability</p>
+                        </div>
+                        <div className="p-3 bg-purple-50 border border-purple-200 rounded">
+                          <p className="font-semibold text-purple-900">✓ Business & Agricultural Relief</p>
+                          <p className="text-purple-700">Explore reliefs for qualifying business assets and agricultural property</p>
+                        </div>
+                        <div className="p-3 bg-orange-50 border border-orange-200 rounded">
+                          <p className="font-semibold text-orange-900">✓ Charitable Donations</p>
+                          <p className="text-orange-700">Donate 10% of estate to charity for reduced IHT rate (36%)</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      className="flex-1 bg-[#001f3f] hover:bg-[#003366]"
+                      onClick={() => setShowIHTDrilldown(false)}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }
