@@ -186,6 +186,59 @@ export default function PersonalTax() {
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null)
   const [optimizationOpportunitiesData, setOptimizationOpportunitiesData] = useState<any[]>([])
 
+  const [ihtCalculations, setIhtCalculations] = useState(() => {
+    const saved = localStorage.getItem('ihtCalculations')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  const [currentIht, setCurrentIht] = useState({
+    estateValue: 0,
+    giftsMade: 0
+  })
+
+  const [ihtResult, setIhtResult] = useState({
+    estateValue: 0,
+    nilRateBand: 325000,
+    residenceNilRateBand: 175000,
+    totalAllowance: 500000,
+    taxableEstate: 0,
+    ihtDue: 0
+  })
+
+  const [pensionCalculations, setPensionCalculations] = useState(() => {
+    const saved = localStorage.getItem('pensionCalculations')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  const [currentPension, setCurrentPension] = useState({
+    annualIncome: 0,
+    currentContributions: 0,
+    pensionValue: 0,
+    unusedAllowance: 0
+  })
+
+  const [pensionResult, setPensionResult] = useState({
+    annualAllowance: 40000,
+    taperedAllowance: 40000,
+    usedThisYear: 0,
+    remainingAllowance: 40000,
+    lifetimeAllowance: 1073100,
+    utilizationPercent: 0,
+    remainingCapacity: 1073100
+  })
+
+  const [familyTaxCalculations, setFamilyTaxCalculations] = useState(() => {
+    const saved = localStorage.getItem('familyTaxCalculations')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  const [marriageAllowance, setMarriageAllowance] = useState({
+    spouse1Income: 0,
+    spouse2Income: 0,
+    potentialSaving: 0,
+    eligible: false
+  })
+
   const getCGTRatesByYear = (year: string) => {
     const yearNum = parseInt(year)
     if (yearNum >= 2024) {
@@ -379,6 +432,95 @@ export default function PersonalTax() {
     }
   }
 
+  const calculateIHT = () => {
+    const taxableEstate = Math.max(0, currentIht.estateValue - ihtResult.totalAllowance - currentIht.giftsMade)
+    const ihtDue = taxableEstate * 0.4
+    
+    setIhtResult({
+      ...ihtResult,
+      estateValue: currentIht.estateValue,
+      taxableEstate,
+      ihtDue
+    })
+    
+    const calculation = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      ...currentIht,
+      taxableEstate,
+      ihtDue
+    }
+    
+    const updated = [...ihtCalculations, calculation]
+    setIhtCalculations(updated)
+    localStorage.setItem('ihtCalculations', JSON.stringify(updated))
+    notifications.saved('IHT Calculation', `Estate value: £${currentIht.estateValue.toLocaleString()}`)
+  }
+
+  const calculatePension = () => {
+    const tapered = currentPension.annualIncome > 260000 
+      ? Math.max(10000, 40000 - ((currentPension.annualIncome - 260000) / 2))
+      : 40000
+    
+    const remainingAllowance = tapered - currentPension.currentContributions
+    const utilization = (currentPension.pensionValue / pensionResult.lifetimeAllowance) * 100
+    const remainingCapacity = pensionResult.lifetimeAllowance - currentPension.pensionValue
+    
+    setPensionResult({
+      ...pensionResult,
+      taperedAllowance: tapered,
+      usedThisYear: currentPension.currentContributions,
+      remainingAllowance,
+      utilizationPercent: utilization,
+      remainingCapacity
+    })
+    
+    const calculation = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      ...currentPension,
+      taperedAllowance: tapered,
+      remainingAllowance
+    }
+    
+    const updated = [...pensionCalculations, calculation]
+    setPensionCalculations(updated)
+    localStorage.setItem('pensionCalculations', JSON.stringify(updated))
+    notifications.saved('Pension Calculation', `Remaining allowance: £${remainingAllowance.toLocaleString()}`)
+  }
+
+  const calculateMarriageAllowance = () => {
+    const personalAllowance = 12570
+    const marriageAllowanceTransfer = 1260
+    
+    const spouse1BelowAllowance = marriageAllowance.spouse1Income < personalAllowance
+    const spouse2BelowAllowance = marriageAllowance.spouse2Income < personalAllowance
+    
+    const eligible = (spouse1BelowAllowance && !spouse2BelowAllowance) || 
+                     (!spouse1BelowAllowance && spouse2BelowAllowance)
+    
+    const potentialSaving = eligible ? marriageAllowanceTransfer * 0.20 : 0
+    
+    setMarriageAllowance({
+      ...marriageAllowance,
+      potentialSaving,
+      eligible
+    })
+    
+    const calculation = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      ...marriageAllowance,
+      potentialSaving,
+      eligible
+    }
+    
+    const updated = [...familyTaxCalculations, calculation]
+    setFamilyTaxCalculations(updated)
+    localStorage.setItem('familyTaxCalculations', JSON.stringify(updated))
+    notifications.saved('Marriage Allowance Calculation', `Potential saving: £${potentialSaving.toFixed(2)}`)
+  }
+
   const getClientSAReturnInfo = (clientId: string) => {
     const clientReturns = saReturnsData.filter(r => r.clientId === clientId)
     if (clientReturns.length === 0) {
@@ -469,26 +611,15 @@ export default function PersonalTax() {
         final: { label: 'Final Declaration', icon: CheckCircle }
       }
     },
-    cgt: { 
-      label: 'CGT Calculator', 
-      icon: Calculator, 
-      hasSubTabs: true,
-      subTabs: {
-        calculator: { label: 'CGT Calculator', icon: Calculator },
-        optimization: { label: 'Tax Optimization', icon: Target },
-        records: { label: 'Asset Records', icon: FileText },
-        reports: { label: 'CGT Reports', icon: BarChart3 }
-      }
-    },
     planning: { 
       label: 'Tax Planning', 
       icon: Target, 
       hasSubTabs: true,
       subTabs: {
+        cgt: { label: 'CGT Calculator', icon: Calculator },
+        optimization: { label: 'Tax Optimization', icon: Target },
         iht: { label: 'IHT Planning', icon: Users },
-        pension: { label: 'Pension Planning', icon: PieChart },
-        family: { label: 'Family Tax', icon: Users },
-        optimization: { label: 'Optimization', icon: TrendingUp }
+        pension: { label: 'Pension Planning', icon: PieChart }
       }
     },
     filing: { label: 'Filing & Compliance', icon: Upload, hasSubTabs: false }
@@ -613,7 +744,7 @@ export default function PersonalTax() {
     }
   }
 
-  const sortReturns = (returns: typeof saReturns) => {
+  const sortReturns = (returns: typeof saReturnsData) => {
     return [...returns].sort((a, b) => {
       let aVal: any = a[sortField === 'client' ? 'client' : sortField]
       let bVal: any = b[sortField === 'client' ? 'client' : sortField]
@@ -750,13 +881,10 @@ export default function PersonalTax() {
         case 'q3': return renderQuarterSubmission(3)
         case 'q4': return renderQuarterSubmission(4)
         case 'final': return renderFinalDeclaration()
-        case 'calculator': return renderCGTCalculator()
+        case 'cgt': return renderCGTCalculator()
         case 'optimization': return renderOptimization()
-        case 'records': return renderCGTCalculator()
-        case 'reports': return renderCGTCalculator()
         case 'iht': return renderIHTPlanning()
         case 'pension': return renderPensionPlanning()
-        case 'family': return renderFamilyTax()
         default: return renderDashboard()
       }
     }
@@ -764,8 +892,7 @@ export default function PersonalTax() {
     switch (activeMainTab) {
       case 'returns': return renderCurrentReturns()
       case 'quarterly': return renderQuarterlyOverview()
-      case 'cgt': return renderCGTCalculator()
-      case 'planning': return renderIHTPlanning()
+      case 'planning': return renderCGTCalculator()
       case 'filing': return renderFiling()
       default: return renderDashboard()
     }
@@ -887,7 +1014,7 @@ export default function PersonalTax() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {saReturns.map((saReturn) => (
+                  {saReturnsData.map((saReturn) => (
                     <div 
                       key={saReturn.id} 
                       className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}
@@ -1014,7 +1141,7 @@ export default function PersonalTax() {
   }
 
   function renderCurrentReturns() {
-    const currentReturns = sortReturns(saReturns.filter(r => r.status === 'in_progress' || r.status === 'review'))
+    const currentReturns = sortReturns(saReturnsData.filter(r => r.status === 'in_progress' || r.status === 'review'))
     
     return (
       <div className="space-y-6">
@@ -1143,7 +1270,7 @@ export default function PersonalTax() {
   }
 
   function renderDraftReturns() {
-    const draftReturns = sortReturns(saReturns.filter(r => r.status === 'draft' || r.status === 'in_progress'))
+    const draftReturns = sortReturns(saReturnsData.filter(r => r.status === 'draft' || r.status === 'in_progress'))
     
     return (
       <div className="space-y-6">
@@ -1239,7 +1366,7 @@ export default function PersonalTax() {
   }
 
   function renderSubmittedReturns() {
-    const submittedReturns = sortReturns(saReturns.filter(r => r.status === 'submitted' || r.status === 'completed'))
+    const submittedReturns = sortReturns(saReturnsData.filter(r => r.status === 'submitted' || r.status === 'completed'))
     
     return (
       <div className="space-y-6">
@@ -1668,21 +1795,33 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="estate-value" className="text-[#001f3f]">Total Estate Value</Label>
-                      <Input id="estate-value" placeholder="£0.00" />
+                      <Input 
+                        id="estate-value" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentIht.estateValue || ''}
+                        onChange={(e) => setCurrentIht({...currentIht, estateValue: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="nil-rate-band" className="text-[#001f3f]">Nil Rate Band Available</Label>
-                      <Input id="nil-rate-band" value="£325,000" readOnly />
+                      <Input id="nil-rate-band" value={`£${ihtResult.nilRateBand.toLocaleString()}`} readOnly />
                     </div>
                     <div>
                       <Label htmlFor="residence-nil-rate" className="text-[#001f3f]">Residence Nil Rate Band</Label>
-                      <Input id="residence-nil-rate" value="£175,000" readOnly />
+                      <Input id="residence-nil-rate" value={`£${ihtResult.residenceNilRateBand.toLocaleString()}`} readOnly />
                     </div>
                     <div>
                       <Label htmlFor="gifts-made" className="text-[#001f3f]">Gifts Made (Last 7 Years)</Label>
-                      <Input id="gifts-made" placeholder="£0.00" />
+                      <Input 
+                        id="gifts-made" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentIht.giftsMade || ''}
+                        onChange={(e) => setCurrentIht({...currentIht, giftsMade: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
-                    <Button className="w-full">
+                    <Button className="w-full bg-[#001f3f] hover:bg-[#001f3f]/90" onClick={calculateIHT}>
                       <Calculator className="h-4 w-4 mr-2" />
                       Calculate IHT Liability
                     </Button>
@@ -1696,46 +1835,43 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Estate Value</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="font-semibold">£{ihtResult.estateValue.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Total Nil Rate Bands</span>
-                            <span>£500,000</span>
+                            <span>£{ihtResult.totalAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Taxable Estate</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="font-semibold">£{ihtResult.taxableEstate.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>IHT Due (40%)</span>
-                            <span className="font-bold text-lg">£0.00</span>
+                            <span className="font-bold text-lg text-red-600">£{ihtResult.ihtDue.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">Gift Planning</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="p-3 bg-green-50 rounded-[2px]">
-                            <div className="flex items-center gap-2">
-                              <Gift className="h-4 w-4 text-green-600" />
-                              <span className="text-sm font-medium">Annual Exemption</span>
-                            </div>
-                            <p className="text-xs text-green-700">£3,000 per year available</p>
+                    {ihtCalculations.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({ihtCalculations.length})</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {ihtCalculations.slice(-5).reverse().map((calc: any) => (
+                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                                <div className="flex justify-between">
+                                  <span>Estate: £{calc.estateValue?.toLocaleString()}</span>
+                                  <span className="text-red-600">IHT: £{calc.ihtDue?.toLocaleString()}</span>
+                                </div>
+                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                              </div>
+                            ))}
                           </div>
-                          <div className="p-3 bg-blue-50 rounded-[2px]">
-                            <div className="flex items-center gap-2">
-                              <Home className="h-4 w-4 text-[#001f3f]" />
-                              <span className="text-sm font-medium">Potentially Exempt Transfers</span>
-                            </div>
-                            <p className="text-xs text-[#001f3f]">7-year rule applies</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -1760,21 +1896,45 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="annual-income" className="text-[#001f3f]">Annual Income</Label>
-                      <Input id="annual-income" placeholder="£0.00" />
+                      <Input 
+                        id="annual-income" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.annualIncome || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, annualIncome: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="current-contributions" className="text-[#001f3f]">Current Pension Contributions</Label>
-                      <Input id="current-contributions" placeholder="£0.00" />
+                      <Input 
+                        id="current-contributions" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.currentContributions || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, currentContributions: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="pension-value" className="text-[#001f3f]">Current Pension Value</Label>
-                      <Input id="pension-value" placeholder="£0.00" />
+                      <Input 
+                        id="pension-value" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.pensionValue || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, pensionValue: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="unused-allowance" className="text-[#001f3f]">Unused Allowance (3 years)</Label>
-                      <Input id="unused-allowance" placeholder="£0.00" />
+                      <Input 
+                        id="unused-allowance" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.unusedAllowance || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, unusedAllowance: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
-                    <Button className="w-full">
+                    <Button className="w-full bg-[#001f3f] hover:bg-[#001f3f]/90" onClick={calculatePension}>
                       <Calculator className="h-4 w-4 mr-2" />
                       Optimize Contributions
                     </Button>
@@ -1788,19 +1948,19 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Standard Allowance</span>
-                            <span>£40,000</span>
+                            <span>£{pensionResult.annualAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Tapered Allowance</span>
-                            <span className="font-semibold">£40,000</span>
+                            <span className="font-semibold">£{pensionResult.taperedAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Used This Year</span>
-                            <span>£0</span>
+                            <span>£{pensionResult.usedThisYear.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Allowance</span>
-                            <span className="font-bold text-lg">£40,000</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingAllowance.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1813,23 +1973,43 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Lifetime Allowance</span>
-                            <span>£1,073,100</span>
+                            <span>£{pensionResult.lifetimeAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Current Value</span>
-                            <span>£0</span>
+                            <span>£{currentPension.pensionValue.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Utilization</span>
-                            <span className="font-semibold">0%</span>
+                            <span className="font-semibold">{pensionResult.utilizationPercent.toFixed(1)}%</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Capacity</span>
-                            <span className="font-bold text-lg">£1,073,100</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingCapacity.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
+                    {pensionCalculations.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({pensionCalculations.length})</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {pensionCalculations.slice(-5).reverse().map((calc: any) => (
+                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                                <div className="flex justify-between">
+                                  <span>Income: £{calc.annualIncome?.toLocaleString()}</span>
+                                  <span className="text-green-600">Remaining: £{calc.remainingAllowance?.toLocaleString()}</span>
+                                </div>
+                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </div>
               </CardContent>
