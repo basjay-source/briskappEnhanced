@@ -239,6 +239,14 @@ export default function PersonalTax() {
     eligible: false
   })
 
+  const [isAddOpportunityModalOpen, setIsAddOpportunityModalOpen] = useState(false)
+  const [currentOpportunity, setCurrentOpportunity] = useState({
+    client: '',
+    opportunity: '',
+    description: '',
+    potentialSaving: 0
+  })
+
   const getCGTRatesByYear = (year: string) => {
     const yearNum = parseInt(year)
     if (yearNum >= 2024) {
@@ -541,14 +549,11 @@ export default function PersonalTax() {
 
   const generateTaxYears = () => {
     const currentYear = new Date().getFullYear()
-    const taxYears = [{ label: 'All Tax Years', value: 'all' }]
+    const taxYears = []
     
     for (let i = 0; i < 30; i++) {
       const year = currentYear - i
-      taxYears.push({
-        label: `${year}/${String(year + 1).slice(-2)}`,
-        value: String(year)
-      })
+      taxYears.push(String(year))
     }
     
     return taxYears
@@ -1622,10 +1627,12 @@ export default function PersonalTax() {
 
   function renderOptimization() {
     const handleApplyOptimization = (opportunity: any) => {
-      notifications.custom(`Applying ${opportunity.opportunity} for ${opportunity.client}`, 'info')
-      setTimeout(() => {
-        notifications.custom(`Successfully applied ${opportunity.opportunity}. Estimated saving: £${opportunity.potentialSaving.toLocaleString()}`, 'success')
-      }, 1000)
+      const updated = optimizationOpportunitiesData.map(opp => 
+        opp.id === opportunity.id ? { ...opp, status: 'applied', appliedDate: new Date().toISOString() } : opp
+      )
+      setOptimizationOpportunitiesData(updated)
+      localStorage.setItem('optimizationOpportunities', JSON.stringify(updated))
+      notifications.saved('Optimization Applied', `${opportunity.opportunity} - £${opportunity.potentialSaving.toLocaleString()} savings`)
     }
 
     const handleViewDetails = (opportunity: any) => {
@@ -1634,7 +1641,42 @@ export default function PersonalTax() {
     }
 
     const handleAddOpportunity = () => {
-      notifications.custom('Add new optimization opportunity feature - connect to client management', 'info')
+      setCurrentOpportunity({
+        client: '',
+        opportunity: '',
+        description: '',
+        potentialSaving: 0
+      })
+      setIsAddOpportunityModalOpen(true)
+    }
+
+    const handleSaveOpportunity = () => {
+      if (!currentOpportunity.client || !currentOpportunity.opportunity) {
+        notifications.custom('Please fill in all required fields', 'error')
+        return
+      }
+
+      const newOpportunity = {
+        id: Date.now().toString(),
+        ...currentOpportunity,
+        status: 'pending',
+        createdDate: new Date().toISOString()
+      }
+
+      const updated = [...optimizationOpportunitiesData, newOpportunity]
+      setOptimizationOpportunitiesData(updated)
+      localStorage.setItem('optimizationOpportunities', JSON.stringify(updated))
+      setIsAddOpportunityModalOpen(false)
+      notifications.created('Optimization Opportunity', currentOpportunity.opportunity)
+    }
+
+    const handleDeleteOpportunity = (id: string) => {
+      if (confirm('Are you sure you want to delete this optimization opportunity?')) {
+        const updated = optimizationOpportunitiesData.filter(opp => opp.id !== id)
+        setOptimizationOpportunitiesData(updated)
+        localStorage.setItem('optimizationOpportunities', JSON.stringify(updated))
+        notifications.deleted('Optimization Opportunity')
+      }
     }
 
     return (
@@ -1657,13 +1699,16 @@ export default function PersonalTax() {
                   {optimizationOpportunitiesData.length > 0 ? (
                     <div className="space-y-4">
                       {optimizationOpportunitiesData.map((opportunity, index) => (
-                      <Card key={index} className="border-l-4 border-l-blue-600">
+                      <Card key={opportunity.id || index} className="border-l-4 border-l-blue-600">
                         <CardContent className="p-4">
                           <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
                             <div className="flex-grow">
                               <h3 className="font-semibold text-[#001f3f] text-lg">{opportunity.client}</h3>
                               <p className="text-sm font-medium text-blue-600 mt-1">{opportunity.opportunity}</p>
                               <p className="text-sm text-[#001f3f] mt-2">{opportunity.description}</p>
+                              {opportunity.status === 'applied' && (
+                                <p className="text-xs text-green-600 mt-1">✓ Applied on {new Date(opportunity.appliedDate).toLocaleDateString()}</p>
+                              )}
                             </div>
                             <div className={`${isMobile ? 'flex justify-between items-center mt-3' : 'text-right flex-shrink-0 ml-4'}`}>
                               <div className="mr-4">
@@ -1680,13 +1725,23 @@ export default function PersonalTax() {
                                   <Eye className="h-3 w-3 mr-1" />
                                   Details
                                 </Button>
+                                {opportunity.status !== 'applied' && (
+                                  <Button 
+                                    size="sm" 
+                                    className="bg-green-600 hover:bg-green-700"
+                                    onClick={() => handleApplyOptimization(opportunity)}
+                                  >
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Apply
+                                  </Button>
+                                )}
                                 <Button 
                                   size="sm" 
-                                  className="bg-green-600 hover:bg-green-700"
-                                  onClick={() => handleApplyOptimization(opportunity)}
+                                  variant="outline"
+                                  className="border-red-600 text-red-600 hover:bg-red-50"
+                                  onClick={() => handleDeleteOpportunity(opportunity.id)}
                                 >
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Apply
+                                  <Trash2 className="h-3 w-3" />
                                 </Button>
                               </div>
                             </div>
@@ -1709,6 +1764,67 @@ export default function PersonalTax() {
                 </CardContent>
               </Card>
         </div>
+
+        {isAddOpportunityModalOpen && (
+          <Dialog open={isAddOpportunityModalOpen} onOpenChange={setIsAddOpportunityModalOpen}>
+            <DialogContent className="max-w-2xl border-2 border-[#001f3f]">
+              <DialogHeader>
+                <DialogTitle className="text-[#001f3f] text-2xl font-bold">Add Optimization Opportunity</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="opp-client" className="text-[#001f3f] font-semibold">Client Name *</Label>
+                  <Input 
+                    id="opp-client"
+                    className="border-[#001f3f]"
+                    value={currentOpportunity.client}
+                    onChange={(e) => setCurrentOpportunity({...currentOpportunity, client: e.target.value})}
+                    placeholder="Enter client name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="opp-opportunity" className="text-[#001f3f] font-semibold">Opportunity Type *</Label>
+                  <Input 
+                    id="opp-opportunity"
+                    className="border-[#001f3f]"
+                    value={currentOpportunity.opportunity}
+                    onChange={(e) => setCurrentOpportunity({...currentOpportunity, opportunity: e.target.value})}
+                    placeholder="e.g., Pension Contribution Optimization"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="opp-description" className="text-[#001f3f] font-semibold">Description</Label>
+                  <textarea
+                    id="opp-description"
+                    className="w-full min-h-[100px] border-2 border-[#001f3f] rounded p-2"
+                    value={currentOpportunity.description}
+                    onChange={(e) => setCurrentOpportunity({...currentOpportunity, description: e.target.value})}
+                    placeholder="Describe the optimization opportunity..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="opp-saving" className="text-[#001f3f] font-semibold">Potential Saving (£)</Label>
+                  <Input 
+                    id="opp-saving"
+                    type="number"
+                    min="0"
+                    className="border-[#001f3f]"
+                    value={currentOpportunity.potentialSaving || ''}
+                    onChange={(e) => setCurrentOpportunity({...currentOpportunity, potentialSaving: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+              <DialogFooter className="flex gap-2 mt-6">
+                <Button variant="outline" onClick={() => setIsAddOpportunityModalOpen(false)}>Cancel</Button>
+                <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleSaveOpportunity}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Save Opportunity
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
 
         {showOptimizationDetails && selectedOpportunity && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowOptimizationDetails(false)}>
