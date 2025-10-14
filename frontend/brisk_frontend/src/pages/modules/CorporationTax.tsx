@@ -343,35 +343,19 @@ export default function CorporationTax() {
       id: 'rd-claims',
       label: 'R&D Claims',
       icon: TrendingUp,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'sme-scheme', label: 'SME Scheme' },
-        { id: 'rdec-scheme', label: 'RDEC Scheme' },
-        { id: 'merged-scheme', label: 'Merged Scheme' }
-      ]
+      hasSubTabs: false
     },
     {
       id: 'reliefs',
       label: 'Reliefs & Credits',
       icon: DollarSign,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'capital-allowances', label: 'Capital Allowances' },
-        { id: 'patent-box', label: 'Patent Box' },
-        { id: 'creative-relief', label: 'Creative Industry Relief' },
-        { id: 'other-reliefs', label: 'Other Reliefs' }
-      ]
+      hasSubTabs: false
     },
     {
       id: 'group-relief',
       label: 'Group Relief',
       icon: Building2,
-      hasSubTabs: true,
-      subTabs: [
-        { id: 'elections', label: 'Group Elections' },
-        { id: 'surrenders', label: 'Loss Surrenders' },
-        { id: 'claims', label: 'Relief Claims' }
-      ]
+      hasSubTabs: false
     },
     {
       id: 'quarterly',
@@ -742,112 +726,135 @@ export default function CorporationTax() {
   }
 
   function renderRDClaims() {
-    const scheme = activeSubTab === 'sme-scheme' ? 'SME' : activeSubTab === 'rdec-scheme' ? 'RDEC' : 'Merged'
-    const filteredProjects = activeSubTab ? rdProjects.filter(p => p.scheme === scheme) : rdProjects
+    const [activeRDTab, setActiveRDTab] = useState('sme')
+
+    const getRDProjectsByScheme = (scheme: string) => {
+      return rdProjects.filter(p => p.claimType === scheme)
+    }
+
+    const renderSchemeProjects = (scheme: string, schemeName: string) => {
+      const projects = getRDProjectsByScheme(scheme)
+      
+      return (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-[#001f3f]">{schemeName} R&D Claims</h3>
+              <p className="text-sm text-[#001f3f]">{projects.length} active projects</p>
+            </div>
+            <Button onClick={handleAddRDProject} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+              <Plus className="h-4 w-4 mr-2" />
+              New {schemeName} Project
+            </Button>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-[#001f3f]">Total Projects</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-[#001f3f]">{projects.length}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-[#001f3f]">Total Relief</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">
+                  £{projects.reduce((sum, p) => sum + p.reliefClaimed, 0).toLocaleString()}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-[#001f3f]">Tax Credit</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">
+                  £{projects.reduce((sum, p) => sum + (p.taxCredit || 0), 0).toLocaleString()}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-3">
+            {projects.map((project) => (
+              <div key={project.id} className="p-4 border-2 border-[#001f3f] rounded hover:bg-blue-50 cursor-pointer" onClick={() => handleViewRDProject(project)}>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-[#001f3f]">{project.projectName}</h4>
+                    <p className="text-sm text-[#001f3f] mt-1">{project.description}</p>
+                    <div className="grid grid-cols-4 gap-4 mt-3">
+                      <div>
+                        <p className="text-xs text-[#001f3f]">Expenditure</p>
+                        <p className="font-medium text-[#001f3f]">£{project.totalQualifying.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#001f3f]">Enhancement</p>
+                        <p className="font-medium text-[#001f3f]">{project.enhancementRate}%</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#001f3f]">Relief</p>
+                        <p className="font-medium text-green-600">£{project.reliefClaimed.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#001f3f]">Credit</p>
+                        <p className="font-medium text-green-600">£{(project.taxCredit || 0).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Badge variant={project.status === 'approved' ? 'default' : 'secondary'}>
+                      {project.status}
+                    </Badge>
+                    <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEditRDProject(project); }}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleDeleteRDProject(project.id); }}>
+                      <Trash2 className="h-4 w-4 text-red-600" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {projects.length === 0 && (
+              <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
+                No {schemeName} R&D projects yet. Click "New {schemeName} Project" to get started.
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">R&D Claims {scheme && `- ${scheme} Scheme`}</h2>
-            <p className="text-[#001f3f] mt-2">Research & Development tax relief claims</p>
-          </div>
-          <Button onClick={handleAddRDProject} className="bg-brisk-primary hover:bg-brisk-primary-600">
-            <Plus className="h-4 w-4 mr-2" />
-            New R&D Project
-          </Button>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">R&D Tax Relief Claims</h2>
+          <p className="text-[#001f3f] mt-2">Manage Research & Development tax relief claims across all schemes</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Projects</CardTitle>
-              <TrendingUp className="h-4 w-4 text-[#001f3f]" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#001f3f]">{filteredProjects.length}</div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="sme" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="sme">SME Scheme</TabsTrigger>
+            <TabsTrigger value="rdec">RDEC Scheme</TabsTrigger>
+            <TabsTrigger value="merged">Merged Scheme</TabsTrigger>
+          </TabsList>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Total Relief</CardTitle>
-              <DollarSign className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                £{filteredProjects.reduce((sum, p) => sum + p.reliefClaimed + p.taxCredit, 0).toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
+          <TabsContent value="sme" className="mt-6">
+            {renderSchemeProjects('SME', 'SME')}
+          </TabsContent>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Approved Claims</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {filteredProjects.filter(p => p.status === 'approved').length}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          <TabsContent value="rdec" className="mt-6">
+            {renderSchemeProjects('RDEC', 'RDEC')}
+          </TabsContent>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">R&D Projects</CardTitle>
-            <CardDescription>Manage R&D claims and qualifying expenditure</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {filteredProjects.map((project) => (
-                <div key={project.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer" onClick={() => handleViewRDProject(project)}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[#001f3f]">{project.projectName}</h3>
-                      <p className="text-sm text-[#001f3f] mt-1">{project.projectDescription}</p>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Scheme</p>
-                          <p className="font-medium text-[#001f3f]">{project.scheme}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Expenditure</p>
-                          <p className="font-medium text-[#001f3f]">£{project.totalQualifyingExpenditure.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Relief Claimed</p>
-                          <p className="font-medium text-green-600">£{project.reliefClaimed.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Tax Credit</p>
-                          <p className="font-medium text-green-600">£{project.taxCredit.toLocaleString()}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 ml-4">
-                      <Badge variant={project.status === 'approved' ? 'default' : 'secondary'}>
-                        {project.status}
-                      </Badge>
-                      <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEditRDProject(project); }}>
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleDeleteRDProject(project.id); }}>
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {filteredProjects.length === 0 && (
-                <div className="text-center p-8 text-[#001f3f]">
-                  No R&D projects found for {scheme} scheme
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          <TabsContent value="merged" className="mt-6">
+            {renderSchemeProjects('Merged', 'Merged')}
+          </TabsContent>
+        </Tabs>
       </div>
     )
   }
@@ -958,34 +965,187 @@ export default function CorporationTax() {
   function renderReliefs() {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Reliefs & Credits</h2>
-            <p className="text-[#001f3f] mt-2">Patent Box, Creative Industry Relief, and other tax reliefs</p>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Reliefs & Credits</h2>
+          <p className="text-[#001f3f] mt-2">Manage all corporation tax reliefs and credits</p>
         </div>
 
-        <div className="grid gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-[#001f3f]">Patent Box</CardTitle>
-              <CardDescription>10% effective rate on qualifying IP profits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[#001f3f]">No Patent Box claims recorded</p>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="capital" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="capital">Capital Allowances</TabsTrigger>
+            <TabsTrigger value="patent">Patent Box</TabsTrigger>
+            <TabsTrigger value="creative">Creative Industry</TabsTrigger>
+            <TabsTrigger value="other">Other Reliefs</TabsTrigger>
+          </TabsList>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-[#001f3f]">Creative Industry Relief</CardTitle>
-              <CardDescription>Film, TV, animation, video games, theatre, orchestra tax relief</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[#001f3f]">No creative industry relief claims recorded</p>
-            </CardContent>
-          </Card>
-        </div>
+          <TabsContent value="capital" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Capital Allowances</h3>
+                  <p className="text-sm text-[#001f3f]">Annual Investment Allowance, Writing Down Allowances</p>
+                </div>
+                <Button onClick={() => setShowReliefsModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Capital Allowance
+                </Button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Assets</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">{capitalAllowances.length}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Allowances</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{capitalAllowances.reduce((sum, ca) => sum + ca.allowanceClaimed, 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Active Assets</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">
+                      {capitalAllowances.filter(ca => ca.status === 'active').length}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="space-y-3">
+                {capitalAllowances.map((ca) => (
+                  <div key={ca.id} className="p-4 border-2 border-[#001f3f] rounded hover:bg-blue-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#001f3f]">{ca.assetName}</h4>
+                        <div className="grid grid-cols-4 gap-4 mt-3">
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Pool</p>
+                            <p className="font-medium text-[#001f3f]">{ca.pool}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Cost</p>
+                            <p className="font-medium text-[#001f3f]">£{ca.cost.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">WDV</p>
+                            <p className="font-medium text-[#001f3f]">£{ca.writtenDownValue.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Allowance</p>
+                            <p className="font-medium text-green-600">£{ca.allowanceClaimed.toLocaleString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Badge variant={ca.status === 'active' ? 'default' : 'secondary'}>{ca.status}</Badge>
+                    </div>
+                  </div>
+                ))}
+                {capitalAllowances.length === 0 && (
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
+                    No capital allowances recorded. Click "Add Capital Allowance" to get started.
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="patent" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Patent Box Relief</h3>
+                  <p className="text-sm text-[#001f3f]">10% effective rate on qualifying intellectual property profits</p>
+                </div>
+                <Button onClick={() => setShowReliefsModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Patent Box Claim
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center p-8 text-[#001f3f]">
+                    No Patent Box claims recorded. Click "New Patent Box Claim" to get started.
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="creative" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Creative Industry Tax Reliefs</h3>
+                  <p className="text-sm text-[#001f3f]">Film, TV, Video Games, Theatre, Orchestra - up to 45% relief</p>
+                </div>
+                <Button onClick={() => setShowReliefsModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Creative Relief Claim
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center p-8 text-[#001f3f]">
+                    No creative industry relief claims recorded. Click "New Creative Relief Claim" to get started.
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="other" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Other Reliefs & Credits</h3>
+                  <p className="text-sm text-[#001f3f]">Land Remediation, Structures & Buildings, Marginal Relief, etc.</p>
+                </div>
+                <Button onClick={() => setShowReliefsModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Relief
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Land Remediation Relief</CardTitle>
+                    <CardDescription>150% deduction on qualifying remediation costs</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-[#001f3f]">No claims recorded</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Structures & Buildings Allowance</CardTitle>
+                    <CardDescription>3% annual allowance on non-residential structures</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-[#001f3f]">No claims recorded</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Marginal Relief</CardTitle>
+                    <CardDescription>Relief for profits between £50,000 and £250,000</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-[#001f3f]">Calculated automatically in CT600</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     )
   }
@@ -993,100 +1153,172 @@ export default function CorporationTax() {
   function renderGroupRelief() {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">Group Relief</h2>
-            <p className="text-[#001f3f] mt-2">Group relief elections, loss surrenders, and claims</p>
-          </div>
-          <Button onClick={() => setShowGRModal(true)} className="bg-brisk-primary hover:bg-brisk-primary-600">
-            <Plus className="h-4 w-4 mr-2" />
-            New Group Relief Claim
-          </Button>
+        <div>
+          <h2 className="text-2xl font-bold text-[#001f3f]">Group Relief</h2>
+          <p className="text-[#001f3f] mt-2">Manage group relief elections, loss surrenders, and claims</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Active Claims</CardTitle>
-              <Building2 className="h-4 w-4 text-[#001f3f]" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#001f3f]">{groupReliefs.length}</div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="elections" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="elections">Group Elections</TabsTrigger>
+            <TabsTrigger value="surrenders">Loss Surrenders</TabsTrigger>
+            <TabsTrigger value="claims">Relief Claims</TabsTrigger>
+          </TabsList>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Losses Claimed</CardTitle>
-              <DollarSign className="h-4 w-4 text-[#001f3f]" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#001f3f]">
-                £{groupReliefs.reduce((sum, gr) => sum + gr.lossesClaimed, 0).toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-[#001f3f]">Relief Value</CardTitle>
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                £{groupReliefs.reduce((sum, gr) => sum + gr.reliefValue, 0).toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#001f3f]">Group Relief Claims</CardTitle>
-            <CardDescription>Track group relief elections and loss surrenders</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <TabsContent value="elections" className="mt-6">
             <div className="space-y-4">
-              {groupReliefs.map((gr) => (
-                <div key={gr.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[#001f3f]">
-                        From: {gr.surrenderingCompanyName}
-                      </h3>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Tax Year</p>
-                          <p className="font-medium text-[#001f3f]">{gr.taxYear}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Losses Claimed</p>
-                          <p className="font-medium text-[#001f3f]">£{gr.lossesClaimed.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Relief Value</p>
-                          <p className="font-medium text-green-600">£{gr.reliefValue.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-[#001f3f]">Consent</p>
-                          <p className="font-medium text-[#001f3f]">{gr.consentReceived ? 'Received' : 'Pending'}</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Group Elections</h3>
+                  <p className="text-sm text-[#001f3f]">Nominate group relief and consent elections</p>
+                </div>
+                <Button onClick={() => setShowGroupReliefModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Election
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
+                    No group elections recorded. Click "New Election" to get started.
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="surrenders" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Loss Surrenders</h3>
+                  <p className="text-sm text-[#001f3f]">Track losses surrendered to other group companies</p>
+                </div>
+                <Button onClick={() => setShowGroupReliefModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Surrender
+                </Button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Surrendered</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">
+                      £{groupReliefs.reduce((sum, gr) => sum + gr.lossesClaimed, 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Active Surrenders</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">{groupReliefs.length}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Pending Consent</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-orange-600">
+                      {groupReliefs.filter(gr => !gr.consentReceived).length}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="space-y-3">
+                {groupReliefs.length === 0 && (
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
+                    No loss surrenders recorded. Click "New Surrender" to get started.
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="claims" className="mt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f]">Relief Claims</h3>
+                  <p className="text-sm text-[#001f3f]">Track group relief claims from other companies</p>
+                </div>
+                <Button onClick={() => setShowGroupReliefModal(true)} className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Claim
+                </Button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Claims</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">{groupReliefs.length}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Losses Claimed</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">
+                      £{groupReliefs.reduce((sum, gr) => sum + gr.lossesClaimed, 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Relief Value</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{groupReliefs.reduce((sum, gr) => sum + gr.reliefValue, 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="space-y-3">
+                {groupReliefs.map((gr) => (
+                  <div key={gr.id} className="p-4 border-2 border-[#001f3f] rounded hover:bg-blue-50 cursor-pointer" onClick={() => setShowGroupReliefModal(true)}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#001f3f]">From: {gr.surrenderingCompanyName}</h4>
+                        <div className="grid grid-cols-4 gap-4 mt-3">
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Tax Year</p>
+                            <p className="font-medium text-[#001f3f]">{gr.taxYear}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Losses Claimed</p>
+                            <p className="font-medium text-[#001f3f]">£{gr.lossesClaimed.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Relief Value</p>
+                            <p className="font-medium text-green-600">£{gr.reliefValue.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Consent</p>
+                            <p className="font-medium text-[#001f3f]">{gr.consentReceived ? 'Received' : 'Pending'}</p>
+                          </div>
                         </div>
                       </div>
+                      <Badge variant={gr.status === 'approved' ? 'default' : 'secondary'}>{gr.status}</Badge>
                     </div>
-                    <Badge variant={gr.status === 'approved' ? 'default' : 'secondary'}>
-                      {gr.status}
-                    </Badge>
                   </div>
-                </div>
-              ))}
-              {groupReliefs.length === 0 && (
-                <div className="text-center p-8 text-[#001f3f]">
-                  No group relief claims recorded
-                </div>
-              )}
+                ))}
+                {groupReliefs.length === 0 && (
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
+                    No relief claims recorded. Click "New Claim" to get started.
+                  </div>
+                )}
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     )
   }
