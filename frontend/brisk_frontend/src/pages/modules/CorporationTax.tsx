@@ -652,6 +652,10 @@ export default function CorporationTax() {
   }
 
   function renderCT600() {
+    const draftReturns = clients.filter(c => c.status === 'draft')
+    const inProgressReturns = clients.filter(c => c.status === 'in-progress')
+    const filedReturns = clients.filter(c => c.status === 'filed' || c.status === 'submitted')
+
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -659,40 +663,70 @@ export default function CorporationTax() {
             <h2 className="text-xl font-bold text-[#001f3f]">CT600 Computation</h2>
             <p className="text-[#001f3f] mt-2">Corporation Tax computation and CT600 preparation</p>
           </div>
-          <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+          <Button onClick={handleAddClient} className="bg-brisk-primary hover:bg-brisk-primary-600">
             <Plus className="h-4 w-4 mr-2" />
             New Computation
           </Button>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            notifications.info(`Viewing ${draftReturns.length} draft returns`)
+          }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">Draft Returns</CardTitle>
               <FileText className="h-4 w-4 text-[#001f3f]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#001f3f]">{clients.filter(c => c.status === 'draft').length}</div>
+              <div className="text-2xl font-bold text-[#001f3f]">{draftReturns.length}</div>
+              <p className="text-xs text-[#001f3f] mt-2">Click for deep drilldown →</p>
+              {draftReturns.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {draftReturns.slice(0, 2).map(c => (
+                    <p key={c.id} className="text-xs text-[#001f3f]">• {c.companyName}</p>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            notifications.info(`Viewing ${inProgressReturns.length} in-progress returns`)
+          }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">In Progress</CardTitle>
               <Clock className="h-4 w-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{clients.filter(c => c.status === 'in-progress').length}</div>
+              <div className="text-2xl font-bold text-orange-600">{inProgressReturns.length}</div>
+              <p className="text-xs text-[#001f3f] mt-2">Click for deep drilldown →</p>
+              {inProgressReturns.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {inProgressReturns.slice(0, 2).map(c => (
+                    <p key={c.id} className="text-xs text-[#001f3f]">• {c.companyName}</p>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => {
+            notifications.info(`Viewing ${filedReturns.length} filed returns`)
+          }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">Filed Returns</CardTitle>
               <CheckCircle className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{clients.filter(c => c.status === 'filed').length}</div>
+              <div className="text-2xl font-bold text-green-600">{filedReturns.length}</div>
+              <p className="text-xs text-[#001f3f] mt-2">Click for deep drilldown →</p>
+              {filedReturns.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {filedReturns.slice(0, 2).map(c => (
+                    <p key={c.id} className="text-xs text-[#001f3f]">• {c.companyName}</p>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
