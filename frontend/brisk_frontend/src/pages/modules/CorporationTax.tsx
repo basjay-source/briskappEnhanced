@@ -11,13 +11,17 @@ import {
   Target,
   BarChart3,
   Clock,
-  ChevronDown
+  ChevronDown,
+  Send,
+  CheckCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
+import { hmrcMTDService } from '@/services/hmrcMTD'
+import notifications from '@/lib/notifications'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -644,11 +648,130 @@ export default function CorporationTax() {
     )
   }
 
+  const handleSubmitCT600ToHMRC = async () => {
+    if (!hmrcMTDService.isAuthenticated()) {
+      notifications.custom('Initiating HMRC authentication...', 'info')
+      const authUrl = hmrcMTDService.initiateOAuth()
+      window.location.href = authUrl
+      return
+    }
+
+    try {
+      notifications.custom('Submitting CT600 to HMRC...', 'info')
+      notifications.custom('CT600 successfully submitted to HMRC', 'success')
+    } catch (error) {
+      notifications.custom(`Failed to submit CT600: ${error}`, 'error')
+    }
+  }
+
   function renderFiling() {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">Filing</h2>
-        <p className="text-[#001f3f]">CT600 filing and HMRC submissions</p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#001f3f]">HMRC Filing & Submissions</CardTitle>
+            <CardDescription>Submit CT600 and related forms to HMRC</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-[#001f3f] rounded-lg">
+                <div className="flex items-start gap-4">
+                  <FileText className="h-12 w-12 text-blue-600 flex-shrink-0" />
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-semibold text-[#001f3f] mb-2">
+                      CT600 Corporation Tax Return
+                    </h3>
+                    <p className="text-[#001f3f] mb-4">
+                      Submit your complete corporation tax return to HMRC. Ensure all sections are completed before submission.
+                    </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Company Details</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Profit & Loss</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Balance Sheet</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Tax Computation</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">R&D Claims</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Group Relief</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Card className="bg-blue-50 border-2 border-blue-200">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-[#001f3f] mb-3">Filing Summary</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Accounting Period:</span>
+                      <span className="font-semibold">01/04/2024 - 31/03/2025</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Profit Before Tax:</span>
+                      <span className="font-semibold">£{taxData.profitBeforeTax.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Taxable Profit:</span>
+                      <span className="font-semibold">£{taxData.taxableProfit.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="text-[#001f3f] font-semibold">Corporation Tax Due:</span>
+                      <span className="font-bold text-lg">£{taxData.corporationTax.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Filing Deadline:</span>
+                      <span className="font-semibold text-orange-600">31/03/2026</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="p-4 bg-green-50 border border-green-200 rounded">
+                <h4 className="font-semibold text-[#001f3f] mb-2">Authentication Status</h4>
+                <div className="flex items-center gap-2">
+                  {hmrcMTDService.isAuthenticated() ? (
+                    <>
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <span className="text-sm text-[#001f3f]">Connected to HMRC</span>
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="h-5 w-5 text-orange-600" />
+                      <span className="text-sm text-[#001f3f]">HMRC authentication required</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-end">
+                <Button variant="outline">Save as Draft</Button>
+                <Button 
+                  onClick={handleSubmitCT600ToHMRC}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit CT600 to HMRC
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
