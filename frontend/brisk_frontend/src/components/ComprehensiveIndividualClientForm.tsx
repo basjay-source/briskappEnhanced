@@ -538,15 +538,178 @@ export default function ComprehensiveIndividualClientForm({
 
             {(formData.selfEmploymentBusinesses || []).map((business, index) => (
               <div key={business.id} className="border-2 border-[#001f3f] rounded-lg p-4">
-                <h4 className="font-semibold text-[#001f3f] mb-4">Business {index + 1}</h4>
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-semibold text-[#001f3f]">Business {index + 1}</h4>
+                  {!isReadOnly && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-red-600 text-red-600 hover:bg-red-50"
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          selfEmploymentBusinesses: prev.selfEmploymentBusinesses?.filter(b => b.id !== business.id) || []
+                        }))
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-[#001f3f] font-semibold">Trade Name</Label>
-                    <Input className="border-[#001f3f]" value={business.tradeName} disabled={isReadOnly} />
+                    <Input 
+                      className="border-[#001f3f]" 
+                      value={business.tradeName} 
+                      onChange={(e) => {
+                        const updated = [...(formData.selfEmploymentBusinesses || [])]
+                        updated[index] = { ...updated[index], tradeName: e.target.value }
+                        setFormData(prev => ({ ...prev, selfEmploymentBusinesses: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                    />
                   </div>
                   <div>
                     <Label className="text-[#001f3f] font-semibold">Nature of Business</Label>
-                    <Input className="border-[#001f3f]" value={business.natureOfBusiness} disabled={isReadOnly} />
+                    <Input 
+                      className="border-[#001f3f]" 
+                      value={business.natureOfBusiness} 
+                      onChange={(e) => {
+                        const updated = [...(formData.selfEmploymentBusinesses || [])]
+                        updated[index] = { ...updated[index], natureOfBusiness: e.target.value }
+                        setFormData(prev => ({ ...prev, selfEmploymentBusinesses: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Start Date</Label>
+                    <Input 
+                      className="border-[#001f3f]" 
+                      type="date"
+                      value={business.startDate} 
+                      onChange={(e) => {
+                        const updated = [...(formData.selfEmploymentBusinesses || [])]
+                        updated[index] = { ...updated[index], startDate: e.target.value }
+                        setFormData(prev => ({ ...prev, selfEmploymentBusinesses: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Accounting Period End</Label>
+                    <Input 
+                      className="border-[#001f3f]" 
+                      type="date"
+                      value={business.accountingPeriodEnd} 
+                      onChange={(e) => {
+                        const updated = [...(formData.selfEmploymentBusinesses || [])]
+                        updated[index] = { ...updated[index], accountingPeriodEnd: e.target.value }
+                        setFormData(prev => ({ ...prev, selfEmploymentBusinesses: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {(formData.partnerships || []).map((partnership, index) => (
+              <div key={partnership.id} className="border-2 border-[#001f3f] rounded-lg p-4 bg-blue-50">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-semibold text-[#001f3f]">Partnership {index + 1}</h4>
+                  {!isReadOnly && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-red-600 text-red-600 hover:bg-red-50"
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          partnerships: prev.partnerships?.filter(p => p.id !== partnership.id) || []
+                        }))
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Partnership Name</Label>
+                    <Input 
+                      className="border-[#001f3f] bg-white" 
+                      value={partnership.partnershipName} 
+                      onChange={(e) => {
+                        const updated = [...(formData.partnerships || [])]
+                        updated[index] = { ...updated[index], partnershipName: e.target.value }
+                        setFormData(prev => ({ ...prev, partnerships: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                      placeholder="Enter partnership name"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Partnership UTR</Label>
+                    <Input 
+                      className="border-[#001f3f] bg-white" 
+                      value={partnership.partnershipUTR} 
+                      onChange={(e) => {
+                        const updated = [...(formData.partnerships || [])]
+                        updated[index] = { ...updated[index], partnershipUTR: e.target.value }
+                        setFormData(prev => ({ ...prev, partnerships: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                      placeholder="10-digit UTR"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Your Share (%)</Label>
+                    <Input 
+                      className="border-[#001f3f] bg-white" 
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={partnership.yourShare || ''} 
+                      onChange={(e) => {
+                        const updated = [...(formData.partnerships || [])]
+                        updated[index] = { ...updated[index], yourShare: parseFloat(e.target.value) || 0 }
+                        setFormData(prev => ({ ...prev, partnerships: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                      placeholder="0"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Accounting Period End</Label>
+                    <Input 
+                      className="border-[#001f3f] bg-white" 
+                      type="date"
+                      value={partnership.accountingPeriodEnd} 
+                      onChange={(e) => {
+                        const updated = [...(formData.partnerships || [])]
+                        updated[index] = { ...updated[index], accountingPeriodEnd: e.target.value }
+                        setFormData(prev => ({ ...prev, partnerships: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f] font-semibold">Your Profit Share (£)</Label>
+                    <Input 
+                      className="border-[#001f3f] bg-white" 
+                      type="number"
+                      min="0"
+                      value={partnership.profitShare || ''} 
+                      onChange={(e) => {
+                        const updated = [...(formData.partnerships || [])]
+                        updated[index] = { ...updated[index], profitShare: parseFloat(e.target.value) || 0 }
+                        setFormData(prev => ({ ...prev, partnerships: updated }))
+                      }}
+                      disabled={isReadOnly} 
+                      placeholder="0.00"
+                    />
                   </div>
                 </div>
               </div>
