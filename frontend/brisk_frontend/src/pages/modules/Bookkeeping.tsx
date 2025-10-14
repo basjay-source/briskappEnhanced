@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { 
+import { calculateVAT, getTaxRatesForYear } from '@/services/taxRates'
+import {
   CreditCard, 
   Receipt, 
   TrendingUp, 
