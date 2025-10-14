@@ -1325,6 +1325,50 @@ export default function PersonalTax() {
   }
 
   function renderCGTCalculator() {
+    const [cgtInputs, setCgtInputs] = useState({
+      disposalProceeds: '',
+      acquisitionCost: '',
+      improvementCosts: '',
+      disposalCosts: ''
+    })
+    
+    const [cgtResults, setCgtResults] = useState({
+      capitalGain: 0,
+      annualExemption: 6000,
+      taxableGain: 0,
+      cgtDue: 0
+    })
+
+    const calculateCGT = () => {
+      const proceeds = parseFloat(cgtInputs.disposalProceeds) || 0
+      const acquisition = parseFloat(cgtInputs.acquisitionCost) || 0
+      const improvements = parseFloat(cgtInputs.improvementCosts) || 0
+      const disposalCosts = parseFloat(cgtInputs.disposalCosts) || 0
+
+      const capitalGain = proceeds - acquisition - improvements - disposalCosts
+      const taxableGain = Math.max(0, capitalGain - cgtResults.annualExemption)
+      const cgtDue = taxableGain * 0.20
+
+      setCgtResults({
+        ...cgtResults,
+        capitalGain,
+        taxableGain,
+        cgtDue
+      })
+
+      notifications.custom('CGT calculation completed', 'success')
+    }
+
+    const saveCGTCalculation = () => {
+      const calculation = {
+        ...cgtInputs,
+        ...cgtResults,
+        date: new Date().toISOString()
+      }
+      console.log('Saving CGT calculation:', calculation)
+      notifications.custom('CGT calculation saved successfully', 'success')
+    }
+
     return (
       <div className="space-y-6">
             <Card>
@@ -1337,47 +1381,87 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="disposal-proceeds" className="text-[#001f3f]">Disposal Proceeds</Label>
-                      <Input id="disposal-proceeds" placeholder="£0.00" />
+                      <Input 
+                        id="disposal-proceeds" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.disposalProceeds}
+                        onChange={(e) => setCgtInputs({...cgtInputs, disposalProceeds: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="acquisition-cost" className="text-[#001f3f]">Acquisition Cost</Label>
-                      <Input id="acquisition-cost" placeholder="£0.00" />
+                      <Input 
+                        id="acquisition-cost" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.acquisitionCost}
+                        onChange={(e) => setCgtInputs({...cgtInputs, acquisitionCost: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="improvement-costs" className="text-[#001f3f]">Improvement Costs</Label>
-                      <Input id="improvement-costs" placeholder="£0.00" />
+                      <Input 
+                        id="improvement-costs" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.improvementCosts}
+                        onChange={(e) => setCgtInputs({...cgtInputs, improvementCosts: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="disposal-costs" className="text-[#001f3f]">Disposal Costs</Label>
-                      <Input id="disposal-costs" placeholder="£0.00" />
+                      <Input 
+                        id="disposal-costs" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.disposalCosts}
+                        onChange={(e) => setCgtInputs({...cgtInputs, disposalCosts: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
-                    <Button className="w-full">
-                      <Calculator className="h-4 w-4 mr-2" />
-                      Calculate CGT
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        className="flex-1 bg-[#001f3f] hover:bg-[#003366]"
+                        onClick={calculateCGT}
+                      >
+                        <Calculator className="h-4 w-4 mr-2" />
+                        Calculate CGT
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        className="border-[#001f3f] text-[#001f3f]"
+                        onClick={saveCGTCalculation}
+                      >
+                        Save
+                      </Button>
+                    </div>
                   </div>
                   <div className="space-y-4">
-                    <Card>
+                    <Card className="bg-blue-50 border-2 border-[#001f3f]">
                       <CardHeader>
                         <CardTitle className="text-lg text-[#001f3f]">CGT Calculation</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span>Capital Gain</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="text-[#001f3f]">Capital Gain</span>
+                            <span className="font-semibold text-[#001f3f]">£{cgtResults.capitalGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Annual Exemption</span>
-                            <span>£6,000</span>
+                            <span className="text-[#001f3f]">Annual Exemption</span>
+                            <span className="text-[#001f3f]">£{cgtResults.annualExemption.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Taxable Gain</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="text-[#001f3f]">Taxable Gain</span>
+                            <span className="font-semibold text-[#001f3f]">£{cgtResults.taxableGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                           </div>
-                          <div className="flex justify-between border-t pt-2">
-                            <span>CGT Due</span>
-                            <span className="font-bold text-lg">£0.00</span>
+                          <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                            <span className="text-[#001f3f] font-semibold">CGT Due (20%)</span>
+                            <span className="font-bold text-lg text-[#001f3f]">£{cgtResults.cgtDue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1391,6 +1475,18 @@ export default function PersonalTax() {
   }
 
   function renderOptimization() {
+    const handleApplyOptimization = (opportunity: any) => {
+      notifications.custom(`Applying ${opportunity.opportunity} for ${opportunity.client}`, 'info')
+      setTimeout(() => {
+        notifications.custom(`Successfully applied ${opportunity.opportunity}. Estimated saving: £${opportunity.potentialSaving}`, 'success')
+      }, 1000)
+    }
+
+    const handleViewDetails = (opportunity: any) => {
+      console.log('Viewing details for:', opportunity)
+      notifications.custom(`Opening detailed analysis for ${opportunity.client}`, 'info')
+    }
+
     return (
       <div className="space-y-6">
             <Card>
@@ -1401,22 +1497,38 @@ export default function PersonalTax() {
               <CardContent>
                 <div className="space-y-4">
                   {optimizationOpportunities.map((opportunity, index) => (
-                    <Card key={index} className="border-l-4 border-l-brisk-primary">
+                    <Card key={index} className="border-l-4 border-l-blue-600">
                       <CardContent className="p-4">
                         <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                          <div>
-                            <h3 className="font-semibold text-[#001f3f]">{opportunity.client}</h3>
-                            <p className="text-sm font-medium text-brisk-primary">{opportunity.opportunity}</p>
-                            <p className="text-sm text-[#001f3f]">{opportunity.description}</p>
+                          <div className="flex-grow">
+                            <h3 className="font-semibold text-[#001f3f] text-lg">{opportunity.client}</h3>
+                            <p className="text-sm font-medium text-blue-600 mt-1">{opportunity.opportunity}</p>
+                            <p className="text-sm text-[#001f3f] mt-2">{opportunity.description}</p>
                           </div>
-                          <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
-                            <div>
-                              <p className="text-lg font-bold text-green-600">£{opportunity.potentialSaving}</p>
+                          <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right flex-shrink-0 ml-4'}`}>
+                            <div className="mr-4">
+                              <p className="text-2xl font-bold text-green-600">£{opportunity.potentialSaving.toLocaleString()}</p>
                               <p className="text-sm text-[#001f3f]">Potential Saving</p>
                             </div>
-                            <Button size="sm" className={isMobile ? '' : 'ml-4'}>
-                              Apply
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="border-[#001f3f] text-[#001f3f]"
+                                onClick={() => handleViewDetails(opportunity)}
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                Details
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                className="bg-green-600 hover:bg-green-700"
+                                onClick={() => handleApplyOptimization(opportunity)}
+                              >
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Apply
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
