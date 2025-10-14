@@ -213,6 +213,18 @@ export default function PersonalTax() {
   })
 
   const [currentPension, setCurrentPension] = useState({
+    employmentIncome: 0,
+    selfEmploymentIncome: 0,
+    rentalIncome: 0,
+    dividendIncome: 0,
+    savingsInterest: 0,
+    pensionIncome: 0,
+    otherIncome: 0,
+    employeeContributions: 0,
+    employerContributions: 0,
+    personalContributions: 0,
+    totalIncome: 0,
+    netIncome: 0,
     adjustedIncome: 0,
     taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
   })
@@ -461,14 +473,34 @@ export default function PersonalTax() {
   }
 
   const handleCalculatePension = () => {
-    const result = calculatePensionAllowance(currentPension.adjustedIncome, currentPension.taxYear)
+    const totalIncome = 
+      currentPension.employmentIncome +
+      currentPension.selfEmploymentIncome +
+      currentPension.rentalIncome +
+      currentPension.dividendIncome +
+      currentPension.savingsInterest +
+      currentPension.pensionIncome +
+      currentPension.otherIncome
+    
+    const netIncome = totalIncome - currentPension.employeeContributions
+    const adjustedIncome = netIncome + currentPension.employerContributions
+    
+    const updatedPension = {
+      ...currentPension,
+      totalIncome,
+      netIncome,
+      adjustedIncome
+    }
+    setCurrentPension(updatedPension)
+    
+    const result = calculatePensionAllowance(adjustedIncome, currentPension.taxYear)
     
     setPensionResult(result)
     
     const calculation = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
-      ...currentPension,
+      ...updatedPension,
       ...result
     }
     
@@ -546,6 +578,27 @@ export default function PersonalTax() {
     { label: 'Property', value: 'property' },
     { label: 'Dividends', value: 'dividends' },
     { label: 'Capital Gains', value: 'capital-gains' }
+  ]
+
+  const opportunityTypes = [
+    { value: 'pension-contribution', label: 'Pension Contribution Optimization', estimatedSaving: 8000 },
+    { value: 'marriage-allowance', label: 'Marriage Allowance', estimatedSaving: 252 },
+    { value: 'dividend-optimization', label: 'Dividend vs Salary Optimization', estimatedSaving: 3500 },
+    { value: 'capital-allowances', label: 'Capital Allowances Claim', estimatedSaving: 5000 },
+    { value: 'tax-loss-harvesting', label: 'Tax Loss Harvesting', estimatedSaving: 2000 },
+    { value: 'iht-planning', label: 'Inheritance Tax Planning', estimatedSaving: 15000 },
+    { value: 'gift-aid', label: 'Gift Aid Contributions', estimatedSaving: 1200 },
+    { value: 'eis-seis', label: 'EIS/SEIS Tax Relief', estimatedSaving: 10000 },
+    { value: 'vct-investment', label: 'VCT Investment Relief', estimatedSaving: 6000 },
+    { value: 'rent-a-room', label: 'Rent-a-Room Relief', estimatedSaving: 1500 },
+    { value: 'trading-allowance', label: 'Trading Allowance', estimatedSaving: 1000 },
+    { value: 'property-allowance', label: 'Property Allowance', estimatedSaving: 1000 },
+    { value: 'child-benefit', label: 'Child Benefit Charge Optimization', estimatedSaving: 2000 },
+    { value: 'tax-code-review', label: 'Tax Code Review', estimatedSaving: 800 },
+    { value: 'business-expense', label: 'Business Expense Optimization', estimatedSaving: 2500 },
+    { value: 'incorporation', label: 'Incorporation Tax Benefits', estimatedSaving: 12000 },
+    { value: 'r&d-relief', label: 'R&D Tax Relief', estimatedSaving: 25000 },
+    { value: 'other', label: 'Other Optimization', estimatedSaving: 0 }
   ]
 
   type SubTabConfig = {
@@ -1748,13 +1801,28 @@ export default function PersonalTax() {
                 </div>
                 <div>
                   <Label htmlFor="opp-opportunity" className="text-[#001f3f] font-semibold">Opportunity Type *</Label>
-                  <Input 
-                    id="opp-opportunity"
-                    className="border-[#001f3f]"
-                    value={currentOpportunity.opportunity}
-                    onChange={(e) => setCurrentOpportunity({...currentOpportunity, opportunity: e.target.value})}
-                    placeholder="e.g., Pension Contribution Optimization"
-                  />
+                  <Select 
+                    value={currentOpportunity.opportunity} 
+                    onValueChange={(val) => {
+                      const selectedType = opportunityTypes.find(t => t.value === val)
+                      setCurrentOpportunity({
+                        ...currentOpportunity, 
+                        opportunity: selectedType?.label || val,
+                        potentialSaving: selectedType?.estimatedSaving || currentOpportunity.potentialSaving
+                      })
+                    }}
+                  >
+                    <SelectTrigger className="border-[#001f3f]">
+                      <SelectValue placeholder="Select opportunity type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {opportunityTypes.map(type => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label} {type.estimatedSaving > 0 && `(~£${type.estimatedSaving.toLocaleString()})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="opp-description" className="text-[#001f3f] font-semibold">Description</Label>
@@ -1988,105 +2056,177 @@ export default function PersonalTax() {
                   <PiggyBank className="h-5 w-5 text-indigo-600" />
                   Pension Annual Allowance Calculator
                 </CardTitle>
-                <CardDescription>Calculate your annual allowance with income-based tapering</CardDescription>
+                <CardDescription>Calculate your annual allowance with detailed income breakdown</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="pension-tax-year" className="text-[#001f3f]">Tax Year</Label>
-                      <Select value={currentPension.taxYear} onValueChange={(val) => setCurrentPension({...currentPension, taxYear: val})}>
-                        <SelectTrigger className="border-[#001f3f]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {getTaxYearsList().map(year => (
-                            <SelectItem key={year} value={year}>{year}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="adjusted-income" className="text-[#001f3f]">Adjusted Income (£)</Label>
-                      <Input 
-                        id="adjusted-income" 
-                        type="number" 
-                        placeholder="0.00" 
-                        value={currentPension.adjustedIncome || ''}
-                        onChange={(e) => setCurrentPension({...currentPension, adjustedIncome: parseFloat(e.target.value) || 0})}
-                        className="border-[#001f3f]"
-                      />
-                      <p className="text-xs text-gray-600 mt-1">Total income including employer pension contributions</p>
-                    </div>
-                    <Button className="w-full bg-[#001f3f] hover:bg-[#003366]" onClick={handleCalculatePension}>
-                      <Calculator className="h-4 w-4 mr-2" />
-                      Calculate Allowance
-                    </Button>
+                <div className="grid gap-6">
+                  <div className="mb-4">
+                    <Label htmlFor="pension-tax-year" className="text-[#001f3f] font-semibold">Tax Year</Label>
+                    <Select value={currentPension.taxYear} onValueChange={(val) => setCurrentPension({...currentPension, taxYear: val})}>
+                      <SelectTrigger className="border-[#001f3f]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getTaxYearsList().map(year => (
+                          <SelectItem key={year} value={year}>{year}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
+
                   <div className="space-y-4">
-                    <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                    <h3 className="text-lg font-semibold text-[#001f3f] border-b-2 border-[#001f3f] pb-2">Income Sources</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="employment-income" className="text-[#001f3f]">Employment Income (£)</Label>
+                        <Input id="employment-income" type="number" placeholder="0.00" value={currentPension.employmentIncome || ''} onChange={(e) => setCurrentPension({...currentPension, employmentIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="self-employment-income" className="text-[#001f3f]">Self-Employment Income (£)</Label>
+                        <Input id="self-employment-income" type="number" placeholder="0.00" value={currentPension.selfEmploymentIncome || ''} onChange={(e) => setCurrentPension({...currentPension, selfEmploymentIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="rental-income" className="text-[#001f3f]">Rental Income (£)</Label>
+                        <Input id="rental-income" type="number" placeholder="0.00" value={currentPension.rentalIncome || ''} onChange={(e) => setCurrentPension({...currentPension, rentalIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="dividend-income" className="text-[#001f3f]">Dividend Income (£)</Label>
+                        <Input id="dividend-income" type="number" placeholder="0.00" value={currentPension.dividendIncome || ''} onChange={(e) => setCurrentPension({...currentPension, dividendIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="savings-interest" className="text-[#001f3f]">Savings Interest (£)</Label>
+                        <Input id="savings-interest" type="number" placeholder="0.00" value={currentPension.savingsInterest || ''} onChange={(e) => setCurrentPension({...currentPension, savingsInterest: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="pension-income" className="text-[#001f3f]">Pension Income (£)</Label>
+                        <Input id="pension-income" type="number" placeholder="0.00" value={currentPension.pensionIncome || ''} onChange={(e) => setCurrentPension({...currentPension, pensionIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="other-income" className="text-[#001f3f]">Other Income (£)</Label>
+                        <Input id="other-income" type="number" placeholder="0.00" value={currentPension.otherIncome || ''} onChange={(e) => setCurrentPension({...currentPension, otherIncome: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-[#001f3f] border-b-2 border-[#001f3f] pb-2">Pension Contributions</h3>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="employee-contributions" className="text-[#001f3f]">Employee Contributions (£)</Label>
+                        <Input id="employee-contributions" type="number" placeholder="0.00" value={currentPension.employeeContributions || ''} onChange={(e) => setCurrentPension({...currentPension, employeeContributions: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                        <p className="text-xs text-gray-600 mt-1">Reduces net income</p>
+                      </div>
+                      <div>
+                        <Label htmlFor="employer-contributions" className="text-[#001f3f]">Employer Contributions (£)</Label>
+                        <Input id="employer-contributions" type="number" placeholder="0.00" value={currentPension.employerContributions || ''} onChange={(e) => setCurrentPension({...currentPension, employerContributions: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                        <p className="text-xs text-gray-600 mt-1">Added to adjusted income</p>
+                      </div>
+                      <div>
+                        <Label htmlFor="personal-contributions" className="text-[#001f3f]">Personal Contributions (£)</Label>
+                        <Input id="personal-contributions" type="number" placeholder="0.00" value={currentPension.personalContributions || ''} onChange={(e) => setCurrentPension({...currentPension, personalContributions: parseFloat(e.target.value) || 0})} className="border-[#001f3f]" />
+                        <p className="text-xs text-gray-600 mt-1">For reference only</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-[#001f3f]">Income Calculation Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-[#001f3f] font-medium">Total Income</span>
+                          <span className="text-[#001f3f] font-semibold">£{currentPension.totalIncome.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#001f3f]">Less: Employee Contributions</span>
+                          <span className="text-red-600">-£{currentPension.employeeContributions.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                          <span className="text-[#001f3f] font-medium">Net Income</span>
+                          <span className="text-[#001f3f] font-semibold">£{currentPension.netIncome.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#001f3f]">Add: Employer Contributions</span>
+                          <span className="text-green-600">+£{currentPension.employerContributions.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between border-t-2 pt-2 border-[#001f3f]">
+                          <span className="text-[#001f3f] font-bold">Adjusted Income</span>
+                          <span className="text-[#001f3f] font-bold text-lg">£{currentPension.adjustedIncome.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Button className="w-full bg-[#001f3f] hover:bg-[#003366]" onClick={handleCalculatePension}>
+                    <Calculator className="h-4 w-4 mr-2" />
+                    Calculate Annual Allowance
+                  </Button>
+
+                  <Card className="bg-green-50 border-2 border-green-600">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-[#001f3f]">Annual Allowance Results</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-[#001f3f]">Tax Year</span>
+                          <span className="font-semibold text-[#001f3f]">{currentPension.taxYear}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#001f3f]">Standard Allowance</span>
+                          <span className="text-[#001f3f]">£{pensionResult.annualAllowance.toLocaleString()}</span>
+                        </div>
+                        {pensionResult.tapered && (
+                          <>
+                            <div className="flex justify-between">
+                              <span className="text-[#001f3f]">Taper Reduction</span>
+                              <span className="text-red-600">-£{pensionResult.reduction.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                              <span className="text-[#001f3f] font-semibold">Tapered Allowance</span>
+                              <span className="font-bold text-lg text-[#001f3f]">£{pensionResult.availableAllowance.toLocaleString()}</span>
+                            </div>
+                          </>
+                        )}
+                        {!pensionResult.tapered && (
+                          <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                            <span className="text-[#001f3f] font-semibold">Available Allowance</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.availableAllowance.toLocaleString()}</span>
+                          </div>
+                        )}
+                        <div className="mt-2 p-2 bg-white rounded text-sm">
+                          <p className="text-[#001f3f]">
+                            {pensionResult.tapered 
+                              ? `Income above taper threshold - allowance reduced to minimum of £10,000`
+                              : `No tapering applied - full allowance available`}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {pensionCalculations.length > 0 && (
+                    <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">Annual Allowance Results</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({pensionCalculations.length})</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Tax Year</span>
-                            <span className="font-semibold text-[#001f3f]">{currentPension.taxYear}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Standard Allowance</span>
-                            <span className="text-[#001f3f]">£{pensionResult.annualAllowance.toLocaleString()}</span>
-                          </div>
-                          {pensionResult.tapered && (
-                            <>
+                        <div className="space-y-2 max-h-48 overflow-y-auto">
+                          {pensionCalculations.slice(-5).reverse().map((calc: any) => (
+                            <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
                               <div className="flex justify-between">
-                                <span className="text-[#001f3f]">Taper Reduction</span>
-                                <span className="text-red-600">-£{pensionResult.reduction.toLocaleString()}</span>
+                                <span>Adjusted Income: £{calc.adjustedIncome?.toLocaleString()}</span>
+                                <span className="text-green-600">Allowance: £{calc.availableAllowance?.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between border-t pt-2 border-[#001f3f]">
-                                <span className="text-[#001f3f] font-semibold">Tapered Allowance</span>
-                                <span className="font-bold text-lg text-[#001f3f]">£{pensionResult.availableAllowance.toLocaleString()}</span>
-                              </div>
-                            </>
-                          )}
-                          {!pensionResult.tapered && (
-                            <div className="flex justify-between border-t pt-2 border-[#001f3f]">
-                              <span className="text-[#001f3f] font-semibold">Available Allowance</span>
-                              <span className="font-bold text-lg text-green-600">£{pensionResult.availableAllowance.toLocaleString()}</span>
+                              <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
                             </div>
-                          )}
-                          <div className="mt-2 p-2 bg-white rounded text-sm">
-                            <p className="text-[#001f3f]">
-                              {pensionResult.tapered 
-                                ? `Income above taper threshold - allowance reduced to minimum of £10,000`
-                                : `No tapering applied - full allowance available`}
-                            </p>
-                          </div>
+                          ))}
                         </div>
                       </CardContent>
                     </Card>
-                    {pensionCalculations.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({pensionCalculations.length})</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {pensionCalculations.slice(-5).reverse().map((calc: any) => (
-                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
-                                <div className="flex justify-between">
-                                  <span>Adjusted Income: £{calc.adjustedIncome?.toLocaleString()}</span>
-                                  <span className="text-green-600">Allowance: £{calc.availableAllowance?.toLocaleString()}</span>
-                                </div>
-                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
