@@ -469,26 +469,15 @@ export default function PersonalTax() {
         final: { label: 'Final Declaration', icon: CheckCircle }
       }
     },
-    cgt: { 
-      label: 'CGT Calculator', 
-      icon: Calculator, 
-      hasSubTabs: true,
-      subTabs: {
-        calculator: { label: 'CGT Calculator', icon: Calculator },
-        optimization: { label: 'Tax Optimization', icon: Target },
-        records: { label: 'Asset Records', icon: FileText },
-        reports: { label: 'CGT Reports', icon: BarChart3 }
-      }
-    },
     planning: { 
       label: 'Tax Planning', 
       icon: Target, 
       hasSubTabs: true,
       subTabs: {
+        cgt: { label: 'CGT Calculator', icon: Calculator },
+        optimization: { label: 'Tax Optimization', icon: Target },
         iht: { label: 'IHT Planning', icon: Users },
-        pension: { label: 'Pension Planning', icon: PieChart },
-        family: { label: 'Family Tax', icon: Users },
-        optimization: { label: 'Optimization', icon: TrendingUp }
+        pension: { label: 'Pension Planning', icon: PieChart }
       }
     },
     filing: { label: 'Filing & Compliance', icon: Upload, hasSubTabs: false }
@@ -613,7 +602,7 @@ export default function PersonalTax() {
     }
   }
 
-  const sortReturns = (returns: typeof saReturns) => {
+  const sortReturns = (returns: typeof saReturnsData) => {
     return [...returns].sort((a, b) => {
       let aVal: any = a[sortField === 'client' ? 'client' : sortField]
       let bVal: any = b[sortField === 'client' ? 'client' : sortField]
@@ -750,13 +739,10 @@ export default function PersonalTax() {
         case 'q3': return renderQuarterSubmission(3)
         case 'q4': return renderQuarterSubmission(4)
         case 'final': return renderFinalDeclaration()
-        case 'calculator': return renderCGTCalculator()
+        case 'cgt': return renderCGTCalculator()
         case 'optimization': return renderOptimization()
-        case 'records': return renderCGTCalculator()
-        case 'reports': return renderCGTCalculator()
         case 'iht': return renderIHTPlanning()
         case 'pension': return renderPensionPlanning()
-        case 'family': return renderFamilyTax()
         default: return renderDashboard()
       }
     }
@@ -764,8 +750,7 @@ export default function PersonalTax() {
     switch (activeMainTab) {
       case 'returns': return renderCurrentReturns()
       case 'quarterly': return renderQuarterlyOverview()
-      case 'cgt': return renderCGTCalculator()
-      case 'planning': return renderIHTPlanning()
+      case 'planning': return renderCGTCalculator()
       case 'filing': return renderFiling()
       default: return renderDashboard()
     }
@@ -887,7 +872,7 @@ export default function PersonalTax() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {saReturns.map((saReturn) => (
+                  {saReturnsData.map((saReturn) => (
                     <div 
                       key={saReturn.id} 
                       className={`p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer transition-colors ${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}
@@ -1014,7 +999,7 @@ export default function PersonalTax() {
   }
 
   function renderCurrentReturns() {
-    const currentReturns = sortReturns(saReturns.filter(r => r.status === 'in_progress' || r.status === 'review'))
+    const currentReturns = sortReturns(saReturnsData.filter(r => r.status === 'in_progress' || r.status === 'review'))
     
     return (
       <div className="space-y-6">
@@ -1143,7 +1128,7 @@ export default function PersonalTax() {
   }
 
   function renderDraftReturns() {
-    const draftReturns = sortReturns(saReturns.filter(r => r.status === 'draft' || r.status === 'in_progress'))
+    const draftReturns = sortReturns(saReturnsData.filter(r => r.status === 'draft' || r.status === 'in_progress'))
     
     return (
       <div className="space-y-6">
@@ -1239,7 +1224,7 @@ export default function PersonalTax() {
   }
 
   function renderSubmittedReturns() {
-    const submittedReturns = sortReturns(saReturns.filter(r => r.status === 'submitted' || r.status === 'completed'))
+    const submittedReturns = sortReturns(saReturnsData.filter(r => r.status === 'submitted' || r.status === 'completed'))
     
     return (
       <div className="space-y-6">
