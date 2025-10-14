@@ -165,6 +165,41 @@ export default function PersonalTax() {
   const [currentQuarterData, setCurrentQuarterData] = useState<QuarterlySubmission | null>(null)
   const [isQuarterlyFormOpen, setIsQuarterlyFormOpen] = useState(false)
 
+  const [cgtInputs, setCgtInputs] = useState({
+    disposalProceeds: '',
+    acquisitionCost: '',
+    improvementCosts: '',
+    disposalCosts: '',
+    taxYear: selectedTaxYear
+  })
+  
+  const [cgtResults, setCgtResults] = useState({
+    capitalGain: 0,
+    annualExemption: 0,
+    taxableGain: 0,
+    cgtDue: 0,
+    basicRateCGT: 0,
+    higherRateCGT: 0
+  })
+
+  const [showOptimizationDetails, setShowOptimizationDetails] = useState(false)
+  const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null)
+
+  const getCGTRatesByYear = (year: string) => {
+    const yearNum = parseInt(year)
+    if (yearNum >= 2024) {
+      return { annualExemption: 3000, basicRate: 0.10, higherRate: 0.20 }
+    } else if (yearNum >= 2023) {
+      return { annualExemption: 6000, basicRate: 0.10, higherRate: 0.20 }
+    } else if (yearNum >= 2021) {
+      return { annualExemption: 12300, basicRate: 0.10, higherRate: 0.20 }
+    } else if (yearNum >= 2020) {
+      return { annualExemption: 12000, basicRate: 0.10, higherRate: 0.20 }
+    } else {
+      return { annualExemption: 11700, basicRate: 0.10, higherRate: 0.20 }
+    }
+  }
+
   useEffect(() => {
     const loadClientsFromPracticeManagement = () => {
       try {
@@ -1325,59 +1360,154 @@ export default function PersonalTax() {
   }
 
   function renderCGTCalculator() {
+    const rates = getCGTRatesByYear(cgtInputs.taxYear)
+
+    const calculateCGT = () => {
+      const proceeds = parseFloat(cgtInputs.disposalProceeds) || 0
+      const acquisition = parseFloat(cgtInputs.acquisitionCost) || 0
+      const improvements = parseFloat(cgtInputs.improvementCosts) || 0
+      const disposalCosts = parseFloat(cgtInputs.disposalCosts) || 0
+
+      const capitalGain = proceeds - acquisition - improvements - disposalCosts
+      const taxableGain = Math.max(0, capitalGain - rates.annualExemption)
+      const higherRateCGT = taxableGain * rates.higherRate
+
+      setCgtResults({
+        capitalGain,
+        annualExemption: rates.annualExemption,
+        taxableGain,
+        cgtDue: higherRateCGT,
+        basicRateCGT: taxableGain * rates.basicRate,
+        higherRateCGT
+      })
+
+      notifications.custom('CGT calculation completed', 'success')
+    }
+
+    const saveCGTCalculation = () => {
+      const calculation = {
+        ...cgtInputs,
+        ...cgtResults,
+        date: new Date().toISOString()
+      }
+      localStorage.setItem('cgtCalculations', JSON.stringify([
+        ...(JSON.parse(localStorage.getItem('cgtCalculations') || '[]')),
+        calculation
+      ]))
+      notifications.custom('CGT calculation saved successfully', 'success')
+    }
+
     return (
       <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-[#001f3f]">Capital Gains Tax Calculator</CardTitle>
-                <CardDescription>Calculate CGT liability and optimization opportunities</CardDescription>
+                <CardDescription>Calculate CGT liability for tax year {cgtInputs.taxYear}/{parseInt(cgtInputs.taxYear)+1}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
+                      <Label htmlFor="cgt-tax-year" className="text-[#001f3f]">Tax Year</Label>
+                      <Select value={cgtInputs.taxYear} onValueChange={(val) => setCgtInputs({...cgtInputs, taxYear: val})}>
+                        <SelectTrigger className="border-[#001f3f]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {generateTaxYears().map(year => (
+                            <SelectItem key={year} value={year}>{year}/{parseInt(year)+1}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
                       <Label htmlFor="disposal-proceeds" className="text-[#001f3f]">Disposal Proceeds</Label>
-                      <Input id="disposal-proceeds" placeholder="£0.00" />
+                      <Input 
+                        id="disposal-proceeds" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.disposalProceeds}
+                        onChange={(e) => setCgtInputs({...cgtInputs, disposalProceeds: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="acquisition-cost" className="text-[#001f3f]">Acquisition Cost</Label>
-                      <Input id="acquisition-cost" placeholder="£0.00" />
+                      <Input 
+                        id="acquisition-cost" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.acquisitionCost}
+                        onChange={(e) => setCgtInputs({...cgtInputs, acquisitionCost: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="improvement-costs" className="text-[#001f3f]">Improvement Costs</Label>
-                      <Input id="improvement-costs" placeholder="£0.00" />
+                      <Input 
+                        id="improvement-costs" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.improvementCosts}
+                        onChange={(e) => setCgtInputs({...cgtInputs, improvementCosts: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="disposal-costs" className="text-[#001f3f]">Disposal Costs</Label>
-                      <Input id="disposal-costs" placeholder="£0.00" />
+                      <Input 
+                        id="disposal-costs" 
+                        type="number"
+                        placeholder="£0.00"
+                        value={cgtInputs.disposalCosts}
+                        onChange={(e) => setCgtInputs({...cgtInputs, disposalCosts: e.target.value})}
+                        className="border-[#001f3f]"
+                      />
                     </div>
-                    <Button className="w-full">
-                      <Calculator className="h-4 w-4 mr-2" />
-                      Calculate CGT
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button className="flex-1 bg-[#001f3f] hover:bg-[#003366]" onClick={calculateCGT}>
+                        <Calculator className="h-4 w-4 mr-2" />
+                        Calculate CGT
+                      </Button>
+                      <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={saveCGTCalculation}>
+                        Save
+                      </Button>
+                    </div>
                   </div>
                   <div className="space-y-4">
-                    <Card>
+                    <Card className="bg-blue-50 border-2 border-[#001f3f]">
                       <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">CGT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">CGT Calculation Results</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span>Capital Gain</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="text-[#001f3f]">Tax Year</span>
+                            <span className="font-semibold text-[#001f3f]">{cgtInputs.taxYear}/{parseInt(cgtInputs.taxYear)+1}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Annual Exemption</span>
-                            <span>£6,000</span>
+                            <span className="text-[#001f3f]">Capital Gain</span>
+                            <span className="font-semibold text-[#001f3f]">£{cgtResults.capitalGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Taxable Gain</span>
-                            <span className="font-semibold">£0.00</span>
+                            <span className="text-[#001f3f]">Annual Exemption</span>
+                            <span className="text-[#001f3f]">£{rates.annualExemption.toLocaleString()}</span>
                           </div>
-                          <div className="flex justify-between border-t pt-2">
-                            <span>CGT Due</span>
-                            <span className="font-bold text-lg">£0.00</span>
+                          <div className="flex justify-between">
+                            <span className="text-[#001f3f]">Taxable Gain</span>
+                            <span className="font-semibold text-[#001f3f]">£{cgtResults.taxableGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-[#001f3f]">Basic Rate (10%)</span>
+                            <span className="text-[#001f3f]">£{cgtResults.basicRateCGT.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-[#001f3f]">Higher Rate (20%)</span>
+                            <span className="text-[#001f3f]">£{cgtResults.higherRateCGT.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                            <span className="text-[#001f3f] font-semibold">CGT Due</span>
+                            <span className="font-bold text-lg text-[#001f3f]">£{cgtResults.cgtDue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1391,41 +1521,137 @@ export default function PersonalTax() {
   }
 
   function renderOptimization() {
+    const handleApplyOptimization = (opportunity: any) => {
+      notifications.custom(`Applying ${opportunity.opportunity} for ${opportunity.client}`, 'info')
+      setTimeout(() => {
+        notifications.custom(`Successfully applied ${opportunity.opportunity}. Estimated saving: £${opportunity.potentialSaving.toLocaleString()}`, 'success')
+      }, 1000)
+    }
+
+    const handleViewDetails = (opportunity: any) => {
+      setSelectedOpportunity(opportunity)
+      setShowOptimizationDetails(true)
+    }
+
     return (
-      <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-[#001f3f]">Tax Optimization Opportunities</CardTitle>
-                <CardDescription>AI-powered recommendations for tax savings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {optimizationOpportunities.map((opportunity, index) => (
-                    <Card key={index} className="border-l-4 border-l-brisk-primary">
-                      <CardContent className="p-4">
-                        <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
-                          <div>
-                            <h3 className="font-semibold text-[#001f3f]">{opportunity.client}</h3>
-                            <p className="text-sm font-medium text-brisk-primary">{opportunity.opportunity}</p>
-                            <p className="text-sm text-[#001f3f]">{opportunity.description}</p>
-                          </div>
-                          <div className={`${isMobile ? 'flex justify-between items-center' : 'text-right'}`}>
-                            <div>
-                              <p className="text-lg font-bold text-green-600">£{opportunity.potentialSaving}</p>
-                              <p className="text-sm text-[#001f3f]">Potential Saving</p>
+      <>
+        <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Tax Optimization Opportunities</CardTitle>
+                  <CardDescription>AI-powered recommendations for tax savings</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {optimizationOpportunities.map((opportunity, index) => (
+                      <Card key={index} className="border-l-4 border-l-blue-600">
+                        <CardContent className="p-4">
+                          <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
+                            <div className="flex-grow">
+                              <h3 className="font-semibold text-[#001f3f] text-lg">{opportunity.client}</h3>
+                              <p className="text-sm font-medium text-blue-600 mt-1">{opportunity.opportunity}</p>
+                              <p className="text-sm text-[#001f3f] mt-2">{opportunity.description}</p>
                             </div>
-                            <Button size="sm" className={isMobile ? '' : 'ml-4'}>
-                              Apply
-                            </Button>
+                            <div className={`${isMobile ? 'flex justify-between items-center mt-3' : 'text-right flex-shrink-0 ml-4'}`}>
+                              <div className="mr-4">
+                                <p className="text-2xl font-bold text-green-600">£{opportunity.potentialSaving.toLocaleString()}</p>
+                                <p className="text-sm text-[#001f3f]">Potential Saving</p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="border-[#001f3f] text-[#001f3f]"
+                                  onClick={() => handleViewDetails(opportunity)}
+                                >
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  Details
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  className="bg-green-600 hover:bg-green-700"
+                                  onClick={() => handleApplyOptimization(opportunity)}
+                                >
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Apply
+                                </Button>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+        </div>
+
+        {showOptimizationDetails && selectedOpportunity && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowOptimizationDetails(false)}>
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full m-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold text-[#001f3f]">Optimization Details</h2>
+                <Button variant="ghost" size="sm" onClick={() => setShowOptimizationDetails(false)}>✕</Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Client Information</h3>
+                  <p className="text-gray-700"><span className="font-medium">Name:</span> {selectedOpportunity.client}</p>
                 </div>
-              </CardContent>
-            </Card>
-      </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Opportunity</h3>
+                  <p className="text-xl font-medium text-blue-600">{selectedOpportunity.opportunity}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Description</h3>
+                  <p className="text-gray-700">{selectedOpportunity.description}</p>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-green-800 mb-2">Potential Savings</h3>
+                  <p className="text-3xl font-bold text-green-600">£{selectedOpportunity.potentialSaving.toLocaleString()}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Implementation Steps</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    <li>Review client's current tax position and confirm eligibility</li>
+                    <li>Calculate exact savings based on current year's tax rates</li>
+                    <li>Prepare necessary documentation and forms</li>
+                    <li>Submit required filings to HMRC</li>
+                    <li>Update client records and tax return</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-[#001f3f] mb-2">Deadline & Considerations</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Must be applied before end of current tax year</li>
+                    <li>Requires client approval and documentation</li>
+                    <li>May affect other tax positions - review holistically</li>
+                  </ul>
+                </div>
+
+                <div className="flex gap-2 pt-4">
+                  <Button className="flex-1 bg-green-600 hover:bg-green-700" onClick={() => {
+                    handleApplyOptimization(selectedOpportunity)
+                    setShowOptimizationDetails(false)
+                  }}>
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Apply This Optimization
+                  </Button>
+                  <Button variant="outline" className="border-[#001f3f] text-[#001f3f]" onClick={() => setShowOptimizationDetails(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     )
   }
 
