@@ -165,6 +165,20 @@ export default function PersonalTax() {
   const [currentQuarterData, setCurrentQuarterData] = useState<QuarterlySubmission | null>(null)
   const [isQuarterlyFormOpen, setIsQuarterlyFormOpen] = useState(false)
 
+  const [cgtInputs, setCgtInputs] = useState({
+    disposalProceeds: '',
+    acquisitionCost: '',
+    improvementCosts: '',
+    disposalCosts: ''
+  })
+  
+  const [cgtResults, setCgtResults] = useState({
+    capitalGain: 0,
+    annualExemption: 6000,
+    taxableGain: 0,
+    cgtDue: 0
+  })
+
   useEffect(() => {
     const loadClientsFromPracticeManagement = () => {
       try {
@@ -1325,20 +1339,6 @@ export default function PersonalTax() {
   }
 
   function renderCGTCalculator() {
-    const [cgtInputs, setCgtInputs] = useState({
-      disposalProceeds: '',
-      acquisitionCost: '',
-      improvementCosts: '',
-      disposalCosts: ''
-    })
-    
-    const [cgtResults, setCgtResults] = useState({
-      capitalGain: 0,
-      annualExemption: 6000,
-      taxableGain: 0,
-      cgtDue: 0
-    })
-
     const calculateCGT = () => {
       const proceeds = parseFloat(cgtInputs.disposalProceeds) || 0
       const acquisition = parseFloat(cgtInputs.acquisitionCost) || 0
