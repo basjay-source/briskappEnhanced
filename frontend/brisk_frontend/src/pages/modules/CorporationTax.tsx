@@ -658,15 +658,9 @@ export default function CorporationTax() {
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-[#001f3f]">CT600 Computation</h2>
-            <p className="text-[#001f3f] mt-2">Corporation Tax computation and CT600 preparation</p>
-          </div>
-          <Button onClick={handleAddClient} className="bg-brisk-primary hover:bg-brisk-primary-600">
-            <Plus className="h-4 w-4 mr-2" />
-            New Computation
-          </Button>
+        <div>
+          <h2 className="text-xl font-bold text-[#001f3f]">CT600 Computation</h2>
+          <p className="text-[#001f3f] mt-2">Corporation Tax computations automatically synced from Accounts Production module</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
