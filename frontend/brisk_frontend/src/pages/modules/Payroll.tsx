@@ -583,11 +583,11 @@ export default function Payroll() {
               <tbody>
                 {employees.map((emp, idx) => (
                   <tr key={emp.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-4 py-3">{emp.employeeNumber}</td>
-                    <td className="px-4 py-3 font-medium">{emp.name}</td>
-                    <td className="px-4 py-3">{emp.department}</td>
-                    <td className="px-4 py-3">{emp.jobTitle}</td>
-                    <td className="px-4 py-3">£{emp.salary.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{emp.employeeNumber}</td>
+                    <td className="px-4 py-3 font-medium text-[#001f3f]">{emp.name}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{emp.department}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{emp.jobTitle}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">£{emp.salary.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <Badge variant={emp.status === 'Active' ? 'default' : 'secondary'}>{emp.status}</Badge>
                     </td>
@@ -636,10 +636,10 @@ export default function Payroll() {
               <tbody>
                 {rtiSubmissions.filter(s => s.type === 'FPS').map((sub, idx) => (
                   <tr key={sub.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-4 py-3 font-medium">{sub.type}</td>
-                    <td className="px-4 py-3">{sub.period}</td>
-                    <td className="px-4 py-3">{sub.submissionDate}</td>
-                    <td className="px-4 py-3">{sub.employeeCount}</td>
+                    <td className="px-4 py-3 font-medium text-[#001f3f]">{sub.type}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{sub.period}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{sub.submissionDate}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{sub.employeeCount}</td>
                     <td className="px-4 py-3">
                       <Badge variant={sub.status === 'Accepted' ? 'default' : 'secondary'}>{sub.status}</Badge>
                     </td>
@@ -685,10 +685,10 @@ export default function Payroll() {
               <tbody>
                 {cisSubcontractors.map((cis, idx) => (
                   <tr key={cis.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-4 py-3 font-medium">{cis.name}</td>
-                    <td className="px-4 py-3">{cis.utr}</td>
-                    <td className="px-4 py-3">{cis.verificationNumber}</td>
-                    <td className="px-4 py-3">{cis.deductionRate}%</td>
+                    <td className="px-4 py-3 font-medium text-[#001f3f]">{cis.name}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{cis.utr}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{cis.verificationNumber}</td>
+                    <td className="px-4 py-3 text-[#001f3f]">{cis.deductionRate}%</td>
                     <td className="px-4 py-3">
                       <Badge variant={cis.status === 'Active' ? 'default' : 'secondary'}>{cis.status}</Badge>
                     </td>
