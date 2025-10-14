@@ -394,71 +394,391 @@ export default function RDClaimForm({
             </TabsContent>
 
             <TabsContent value="costs" className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="staffCosts" className="text-[#001f3f]">Staff Costs (100% qualifying)</Label>
-                  <Input
-                    id="staffCosts"
-                    type="number"
-                    value={formData.staffCosts}
-                    onChange={(e) => updateField('staffCosts', parseFloat(e.target.value) || 0)}
-                    disabled={!editMode}
-                    className="border-[#001f3f]"
-                  />
+              <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Staff Costs (100% Qualifying Expenditure)
+                </h3>
+                <div className="grid gap-4 md:grid-cols-3 mb-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="staffDirectlyEmployed" className="text-[#001f3f] font-semibold">Directly Employed Staff Salaries</Label>
+                    <Input
+                      id="staffDirectlyEmployed"
+                      type="number"
+                      value={formData.staffDirectlyEmployed}
+                      onChange={(e) => updateField('staffDirectlyEmployed', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Gross salaries for R&D staff</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="staffExternallyProvided" className="text-[#001f3f] font-semibold">Externally Provided Workers (EPWs)</Label>
+                    <Input
+                      id="staffExternallyProvided"
+                      type="number"
+                      value={formData.staffExternallyProvided}
+                      onChange={(e) => updateField('staffExternallyProvided', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Agency & contract workers</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="staffNICosts" className="text-[#001f3f] font-semibold">Employer's NI Contributions</Label>
+                    <Input
+                      id="staffNICosts"
+                      type="number"
+                      value={formData.staffNICosts}
+                      onChange={(e) => updateField('staffNICosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Class 1 NI on R&D salaries</p>
+                  </div>
+                </div>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="staffPensionCosts" className="text-[#001f3f] font-semibold">Employer Pension Contributions</Label>
+                    <Input
+                      id="staffPensionCosts"
+                      type="number"
+                      value={formData.staffPensionCosts}
+                      onChange={(e) => updateField('staffPensionCosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Pension contributions for R&D staff</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="staffBenefitsCosts" className="text-[#001f3f] font-semibold">Other Benefits & Reimbursements</Label>
+                    <Input
+                      id="staffBenefitsCosts"
+                      type="number"
+                      value={formData.staffBenefitsCosts}
+                      onChange={(e) => updateField('staffBenefitsCosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Benefits, expenses, training</p>
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Total Staff Costs</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.staffDirectlyEmployed || 0) + (formData.staffExternallyProvided || 0) + (formData.staffNICosts || 0) + (formData.staffPensionCosts || 0) + (formData.staffBenefitsCosts || 0)).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                    <p className="text-xs text-green-700">100% qualifying</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-6 rounded-lg border-2 border-purple-200">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Subcontractor Costs (65% Qualifying Expenditure)</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="subcontractorRDCosts" className="text-[#001f3f] font-semibold">R&D Subcontractor Costs</Label>
+                    <Input
+                      id="subcontractorRDCosts"
+                      type="number"
+                      value={formData.subcontractorRDCosts}
+                      onChange={(e) => updateField('subcontractorRDCosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">R&D work by third parties</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="subcontractorNonRDCosts" className="text-[#001f3f] font-semibold">Non-R&D Support Costs</Label>
+                    <Input
+                      id="subcontractorNonRDCosts"
+                      type="number"
+                      value={formData.subcontractorNonRDCosts}
+                      onChange={(e) => updateField('subcontractorNonRDCosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                    <p className="text-xs text-gray-600">Support services (not qualifying)</p>
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Qualifying Amount (65%)</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.subcontractorRDCosts || 0) * 0.65).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                    <p className="text-xs text-gray-700">Total: £{(formData.subcontractorRDCosts || 0).toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-orange-50 p-6 rounded-lg border-2 border-orange-200">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Consumables & Materials (100% Qualifying)</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="materialsPrototyping" className="text-[#001f3f] font-semibold">Prototyping Materials</Label>
+                    <Input
+                      id="materialsPrototyping"
+                      type="number"
+                      value={formData.materialsPrototyping}
+                      onChange={(e) => updateField('materialsPrototyping', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="materialsRawMaterials" className="text-[#001f3f] font-semibold">Raw Materials</Label>
+                    <Input
+                      id="materialsRawMaterials"
+                      type="number"
+                      value={formData.materialsRawMaterials}
+                      onChange={(e) => updateField('materialsRawMaterials', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="materialsDisposables" className="text-[#001f3f] font-semibold">Lab Consumables</Label>
+                    <Input
+                      id="materialsDisposables"
+                      type="number"
+                      value={formData.materialsDisposables}
+                      onChange={(e) => updateField('materialsDisposables', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Total Materials</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.materialsPrototyping || 0) + (formData.materialsRawMaterials || 0) + (formData.materialsDisposables || 0)).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-cyan-50 p-6 rounded-lg border-2 border-cyan-200">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Software & Technology Costs (100% Qualifying)</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="softwareLicenses" className="text-[#001f3f] font-semibold">Software Licenses</Label>
+                    <Input
+                      id="softwareLicenses"
+                      type="number"
+                      value={formData.softwareLicenses}
+                      onChange={(e) => updateField('softwareLicenses', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="softwareCloudServices" className="text-[#001f3f] font-semibold">Cloud Services & APIs</Label>
+                    <Input
+                      id="softwareCloudServices"
+                      type="number"
+                      value={formData.softwareCloudServices}
+                      onChange={(e) => updateField('softwareCloudServices', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="softwareDataStorage" className="text-[#001f3f] font-semibold">Data Storage & Computing</Label>
+                    <Input
+                      id="softwareDataStorage"
+                      type="number"
+                      value={formData.softwareDataStorage}
+                      onChange={(e) => updateField('softwareDataStorage', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Total Software</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.softwareLicenses || 0) + (formData.softwareCloudServices || 0) + (formData.softwareDataStorage || 0)).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 p-6 rounded-lg border-2 border-red-200">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Clinical Trial Costs (if applicable)</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="clinicalTrialVolunteerCosts" className="text-[#001f3f] font-semibold">Volunteer Payments</Label>
+                    <Input
+                      id="clinicalTrialVolunteerCosts"
+                      type="number"
+                      value={formData.clinicalTrialVolunteerCosts}
+                      onChange={(e) => updateField('clinicalTrialVolunteerCosts', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="clinicalTrialEthicsApproval" className="text-[#001f3f] font-semibold">Ethics & Regulatory Costs</Label>
+                    <Input
+                      id="clinicalTrialEthicsApproval"
+                      type="number"
+                      value={formData.clinicalTrialEthicsApproval}
+                      onChange={(e) => updateField('clinicalTrialEthicsApproval', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Total Clinical</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.clinicalTrialVolunteerCosts || 0) + (formData.clinicalTrialEthicsApproval || 0)).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-100 p-6 rounded-lg border-2 border-gray-400">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Other Qualifying Costs</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="otherUtilities" className="text-[#001f3f] font-semibold">Utilities & Lab Running Costs</Label>
+                    <Input
+                      id="otherUtilities"
+                      type="number"
+                      value={formData.otherUtilities}
+                      onChange={(e) => updateField('otherUtilities', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="otherEquipment" className="text-[#001f3f] font-semibold">Equipment & Tooling</Label>
+                    <Input
+                      id="otherEquipment"
+                      type="number"
+                      value={formData.otherEquipment}
+                      onChange={(e) => updateField('otherEquipment', parseFloat(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f] font-mono"
+                      placeholder="£0.00"
+                    />
+                  </div>
+                  <div className="space-y-2 bg-green-100 p-3 rounded border-2 border-green-500">
+                    <Label className="text-green-800 font-bold">Total Other</Label>
+                    <div className="text-2xl font-bold text-green-700">
+                      £{((formData.otherUtilities || 0) + (formData.otherEquipment || 0)).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 rounded-lg border-4 border-green-800 shadow-2xl">
+                <h2 className="text-2xl font-bold text-white mb-4">TOTAL QUALIFYING EXPENDITURE</h2>
+                <div className="text-5xl font-bold text-white">
+                  £{totals.totalQualifyingExpenditure.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                </div>
+                <p className="text-white mt-2 text-sm">This is the amount eligible for R&D tax relief enhancement</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="team" className="space-y-6">
+              <div className="bg-indigo-50 p-6 rounded-lg">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Project Team Information</h3>
+                <div className="grid gap-4 md:grid-cols-3 mb-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="staffCount" className="text-[#001f3f]">Number of R&D Staff</Label>
+                    <Input
+                      id="staffCount"
+                      type="number"
+                      value={formData.staffCount}
+                      onChange={(e) => updateField('staffCount', parseInt(e.target.value) || 0)}
+                      disabled={!editMode}
+                      className="border-[#001f3f]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="projectManager" className="text-[#001f3f]">Project Manager</Label>
+                    <Input
+                      id="projectManager"
+                      value={formData.projectManager}
+                      onChange={(e) => updateField('projectManager', e.target.value)}
+                      disabled={!editMode}
+                      className="border-[#001f3f]"
+                      placeholder="Name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="technicalLead" className="text-[#001f3f]">Technical Lead</Label>
+                    <Input
+                      id="technicalLead"
+                      value={formData.technicalLead}
+                      onChange={(e) => updateField('technicalLead', e.target.value)}
+                      disabled={!editMode}
+                      className="border-[#001f3f]"
+                      placeholder="Name"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="staffCount" className="text-[#001f3f]">Number of Staff</Label>
-                  <Input
-                    id="staffCount"
-                    type="number"
-                    value={formData.staffCount}
-                    onChange={(e) => updateField('staffCount', parseInt(e.target.value) || 0)}
+                  <Label htmlFor="teamMembers" className="text-[#001f3f]">Key Team Members</Label>
+                  <Textarea
+                    id="teamMembers"
+                    value={formData.teamMembers}
+                    onChange={(e) => updateField('teamMembers', e.target.value)}
                     disabled={!editMode}
+                    rows={3}
                     className="border-[#001f3f]"
+                    placeholder="List key R&D team members and their roles..."
                   />
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="subcontractorCosts" className="text-[#001f3f]">Subcontractor Costs (65% qualifying)</Label>
-                  <Input
-                    id="subcontractorCosts"
-                    type="number"
-                    value={formData.subcontractorCosts}
-                    onChange={(e) => updateField('subcontractorCosts', parseFloat(e.target.value) || 0)}
-                    disabled={!editMode}
-                    className="border-[#001f3f]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="consumablesCosts" className="text-[#001f3f]">Consumables & Materials</Label>
-                  <Input
-                    id="consumablesCosts"
-                    type="number"
-                    value={formData.consumablesCosts}
-                    onChange={(e) => updateField('consumablesCosts', parseFloat(e.target.value) || 0)}
-                    disabled={!editMode}
-                    className="border-[#001f3f]"
-                  />
+              <div className="bg-yellow-50 p-6 rounded-lg">
+                <h3 className="text-lg font-bold text-[#001f3f] mb-4">Project Timeline & Milestones</h3>
+                <div className="grid gap-4 md:grid-cols-2 mb-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentPhase" className="text-[#001f3f]">Current Project Phase</Label>
+                    <Input
+                      id="currentPhase"
+                      value={formData.currentPhase}
+                      onChange={(e) => updateField('currentPhase', e.target.value)}
+                      disabled={!editMode}
+                      className="border-[#001f3f]"
+                      placeholder="e.g., Prototype Development, Testing Phase"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="milestonesAchieved" className="text-[#001f3f]">Key Milestones Achieved</Label>
+                    <Textarea
+                      id="milestonesAchieved"
+                      value={formData.milestonesAchieved}
+                      onChange={(e) => updateField('milestonesAchieved', e.target.value)}
+                      disabled={!editMode}
+                      rows={3}
+                      className="border-[#001f3f]"
+                      placeholder="List completed milestones and achievements..."
+                    />
+                  </div>
                 </div>
               </div>
+            </TabsContent>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="softwareCosts" className="text-[#001f3f]">Software & Cloud Costs</Label>
-                  <Input
-                    id="softwareCosts"
-                    type="number"
-                    value={formData.softwareCosts}
-                    onChange={(e) => updateField('softwareCosts', parseFloat(e.target.value) || 0)}
-                    disabled={!editMode}
-                    className="border-[#001f3f]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="clinicalTrialCosts" className="text-[#001f3f]">Clinical Trial Costs</Label>
-                  <Input
+            <TabsContent value="technical" className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="clinicalTrialCosts" className="text-[#001f3f]">Clinical Trial Costs</Label>
+                <Input
                     id="clinicalTrialCosts"
                     type="number"
                     value={formData.clinicalTrialCosts}
