@@ -417,7 +417,7 @@ export default function CorporationTax() {
     switch (activeMainTab) {
       case 'computation': return renderCT600()
       case 'rd-claims': return renderRDClaims()
-      case 'reliefs': return renderCapitalAllowances()
+      case 'reliefs': return renderReliefs()
       case 'group-relief': return renderGroupRelief()
       case 'quarterly': return renderQuarterly()
       case 'filing': return renderFiling()
