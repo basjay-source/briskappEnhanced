@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Calculator, 
   TrendingUp, 
@@ -48,6 +48,7 @@ import {
   RDProjectFormData 
 } from '@/services/corporationTaxData'
 import CT600Form from '@/components/corporation-tax/CT600Form'
+import { ct600API, rdClaimsAPI, dashboardAPI } from '@/services/corporationTaxAPI'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -60,11 +61,30 @@ export default function CorporationTax() {
   const [selectedType, setSelectedType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [dashboardStats, setDashboardStats] = useState<any>(null)
   
   const [clients, setClients] = useState<CTClient[]>(ctDataService.getClients())
   const [rdProjects, setRDProjects] = useState<RDProject[]>(ctDataService.getRDProjects())
   const [capitalAllowances, setCapitalAllowances] = useState<CapitalAllowance[]>(ctDataService.getCapitalAllowances())
   const [groupReliefs, setGroupReliefs] = useState<GroupReliefClaim[]>(ctDataService.getGroupReliefs())
+  
+  useEffect(() => {
+    loadDashboardStats()
+  }, [])
+  
+  const loadDashboardStats = async () => {
+    try {
+      setIsLoading(true)
+      const stats = await dashboardAPI.getStats()
+      setDashboardStats(stats)
+    } catch (error) {
+      console.error('Failed to load dashboard stats:', error)
+      setDashboardStats(ctDataService.getDashboardStats())
+    } finally {
+      setIsLoading(false)
+    }
+  }
   
   const [showClientModal, setShowClientModal] = useState(false)
   const [showClientDetailModal, setShowClientDetailModal] = useState(false)
@@ -238,7 +258,7 @@ export default function CorporationTax() {
     setShowCT600Modal(false)
   }
 
-  const stats = ctDataService.getDashboardStats()
+  const stats = dashboardStats || ctDataService.getDashboardStats()
 
   const getFilteredAndSortedClients = () => {
     let filtered = clients.filter(client => {
