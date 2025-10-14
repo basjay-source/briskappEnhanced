@@ -20,7 +20,8 @@ import {
   Upload,
   Send,
   UserPlus,
-  UserMinus
+  UserMinus,
+  X
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -48,6 +49,11 @@ export default function Payroll() {
   const [showRTIModal, setShowRTIModal] = useState(false)
   const [showCISModal, setShowCISModal] = useState(false)
   const [editingItem, setEditingItem] = useState<any>(null)
+  
+  const [showEmployeeDrilldown, setShowEmployeeDrilldown] = useState(false)
+  const [showRTIDrilldown, setShowRTIDrilldown] = useState(false)
+  const [showCISDrilldown, setShowCISDrilldown] = useState(false)
+  const [drilldownData, setDrilldownData] = useState<any>(null)
   
   const [employees, setEmployees] = useState<any[]>([
     {
@@ -582,7 +588,11 @@ export default function Payroll() {
               </thead>
               <tbody>
                 {employees.map((emp, idx) => (
-                  <tr key={emp.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <tr 
+                    key={emp.id} 
+                    className={`cursor-pointer transition-colors ${idx % 2 === 0 ? 'bg-gray-50 hover:bg-blue-100' : 'bg-white hover:bg-blue-100'}`}
+                    onClick={() => { setDrilldownData(emp); setShowEmployeeDrilldown(true); }}
+                  >
                     <td className="px-4 py-3 text-[#001f3f]">{emp.employeeNumber}</td>
                     <td className="px-4 py-3 font-medium text-[#001f3f]">{emp.name}</td>
                     <td className="px-4 py-3 text-[#001f3f]">{emp.department}</td>
@@ -591,7 +601,7 @@ export default function Payroll() {
                     <td className="px-4 py-3">
                       <Badge variant={emp.status === 'Active' ? 'default' : 'secondary'}>{emp.status}</Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center space-x-2">
                         <Button size="sm" variant="outline" onClick={() => { setEditingItem(emp); setShowEmployeeModal(true); }}>
                           <Edit className="h-3 w-3" />
@@ -635,7 +645,11 @@ export default function Payroll() {
               </thead>
               <tbody>
                 {rtiSubmissions.filter(s => s.type === 'FPS').map((sub, idx) => (
-                  <tr key={sub.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <tr 
+                    key={sub.id} 
+                    className={`cursor-pointer transition-colors ${idx % 2 === 0 ? 'bg-gray-50 hover:bg-blue-100' : 'bg-white hover:bg-blue-100'}`}
+                    onClick={() => { setDrilldownData(sub); setShowRTIDrilldown(true); }}
+                  >
                     <td className="px-4 py-3 font-medium text-[#001f3f]">{sub.type}</td>
                     <td className="px-4 py-3 text-[#001f3f]">{sub.period}</td>
                     <td className="px-4 py-3 text-[#001f3f]">{sub.submissionDate}</td>
@@ -643,7 +657,7 @@ export default function Payroll() {
                     <td className="px-4 py-3">
                       <Badge variant={sub.status === 'Accepted' ? 'default' : 'secondary'}>{sub.status}</Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center space-x-2">
                         <Button size="sm" variant="outline">
                           <Download className="h-3 w-3" />
@@ -684,7 +698,11 @@ export default function Payroll() {
               </thead>
               <tbody>
                 {cisSubcontractors.map((cis, idx) => (
-                  <tr key={cis.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <tr 
+                    key={cis.id} 
+                    className={`cursor-pointer transition-colors ${idx % 2 === 0 ? 'bg-gray-50 hover:bg-blue-100' : 'bg-white hover:bg-blue-100'}`}
+                    onClick={() => { setDrilldownData(cis); setShowCISDrilldown(true); }}
+                  >
                     <td className="px-4 py-3 font-medium text-[#001f3f]">{cis.name}</td>
                     <td className="px-4 py-3 text-[#001f3f]">{cis.utr}</td>
                     <td className="px-4 py-3 text-[#001f3f]">{cis.verificationNumber}</td>
@@ -692,7 +710,7 @@ export default function Payroll() {
                     <td className="px-4 py-3">
                       <Badge variant={cis.status === 'Active' ? 'default' : 'secondary'}>{cis.status}</Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center space-x-2">
                         <Button size="sm" variant="outline">
                           <Edit className="h-3 w-3" />
@@ -817,6 +835,410 @@ export default function Payroll() {
           </div>
         </div>
       </div>
+      
+      {showEmployeeDrilldown && drilldownData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowEmployeeDrilldown(false)}>
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b-2 border-[#001f3f] p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#001f3f] flex items-center">
+                  <Users className="h-6 w-6 mr-3" />
+                  Employee Details: {drilldownData.name}
+                </h2>
+                <p className="text-[#001f3f] mt-1">Complete employee record and payment history</p>
+              </div>
+              <Button variant="outline" onClick={() => setShowEmployeeDrilldown(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Personal Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Employee Number:</span>
+                      <span className="text-[#001f3f]">{drilldownData.employeeNumber}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Full Name:</span>
+                      <span className="text-[#001f3f]">{drilldownData.name}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">NI Number:</span>
+                      <span className="text-[#001f3f]">{drilldownData.niNumber}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Email:</span>
+                      <span className="text-[#001f3f]">{drilldownData.email}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Phone:</span>
+                      <span className="text-[#001f3f]">{drilldownData.phone}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Employment Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Department:</span>
+                      <span className="text-[#001f3f]">{drilldownData.department}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Job Title:</span>
+                      <span className="text-[#001f3f]">{drilldownData.jobTitle}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Start Date:</span>
+                      <span className="text-[#001f3f]">{drilldownData.startDate}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Status:</span>
+                      <Badge variant={drilldownData.status === 'Active' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Salary Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-2 border-[#001f3f]">
+                      <span className="font-semibold text-[#001f3f]">Annual Gross Salary:</span>
+                      <span className="text-xl font-bold text-[#001f3f]">£{drilldownData.salary.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="text-[#001f3f]">Monthly Gross:</span>
+                      <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="text-[#001f3f]">Employer NI (13.8%):</span>
+                      <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary * 0.138).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="text-[#001f3f]">Pension Contribution (3%):</span>
+                      <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary * 0.03).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+                    </div>
+                    <div className="flex justify-between border-t-2 border-[#001f3f] pt-2 mt-2">
+                      <span className="font-bold text-[#001f3f]">Total Employer Cost:</span>
+                      <span className="text-xl font-bold text-[#001f3f]">£{(drilldownData.salary * 1.168).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Recent Payment History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">December 2024</div>
+                        <div className="text-sm text-[#001f3f]">Paid: 28 Dec 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">£{(drilldownData.salary / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                        <Badge variant="default">Paid</Badge>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">November 2024</div>
+                        <div className="text-sm text-[#001f3f]">Paid: 30 Nov 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">£{(drilldownData.salary / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                        <Badge variant="default">Paid</Badge>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">October 2024</div>
+                        <div className="text-sm text-[#001f3f]">Paid: 31 Oct 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">£{(drilldownData.salary / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                        <Badge variant="default">Paid</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showRTIDrilldown && drilldownData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowRTIDrilldown(false)}>
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b-2 border-[#001f3f] p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#001f3f] flex items-center">
+                  <FileText className="h-6 w-6 mr-3" />
+                  RTI Submission Details: {drilldownData.type} - {drilldownData.period}
+                </h2>
+                <p className="text-[#001f3f] mt-1">Full Payment Submission breakdown and employee details</p>
+              </div>
+              <Button variant="outline" onClick={() => setShowRTIDrilldown(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Submission Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Submission Type:</span>
+                      <span className="text-[#001f3f]">{drilldownData.type}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Tax Period:</span>
+                      <span className="text-[#001f3f]">{drilldownData.period}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Submission Date:</span>
+                      <span className="text-[#001f3f]">{drilldownData.submissionDate}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Status:</span>
+                      <Badge variant={drilldownData.status === 'Accepted' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Submission Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Employees Included:</span>
+                      <span className="text-[#001f3f]">{drilldownData.employeeCount}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Total Gross Pay:</span>
+                      <span className="text-[#001f3f]">£980,000</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Total Tax Deducted:</span>
+                      <span className="text-[#001f3f]">£186,400</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Total NI Deducted:</span>
+                      <span className="text-[#001f3f]">£96,040</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Payment Breakdown by Department</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-2 border-[#001f3f]">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">Development</div>
+                        <div className="text-sm text-[#001f3f]">89 employees</div>
+                      </div>
+                      <span className="text-xl font-bold text-[#001f3f]">£425,000</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">Marketing</div>
+                        <div className="text-sm text-[#001f3f]">45 employees</div>
+                      </div>
+                      <span className="font-bold text-[#001f3f]">£225,000</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">Finance</div>
+                        <div className="text-sm text-[#001f3f]">32 employees</div>
+                      </div>
+                      <span className="font-bold text-[#001f3f]">£192,000</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">HR</div>
+                        <div className="text-sm text-[#001f3f]">18 employees</div>
+                      </div>
+                      <span className="font-bold text-[#001f3f]">£138,000</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">HMRC Response</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-4 bg-green-50 border-2 border-green-600 rounded">
+                    <div className="flex items-center mb-2">
+                      <Badge variant="default" className="mr-2">Accepted</Badge>
+                      <span className="font-semibold text-[#001f3f]">Submission Successful</span>
+                    </div>
+                    <p className="text-[#001f3f]">Your Full Payment Submission has been successfully received and processed by HMRC.</p>
+                    <div className="mt-3 text-sm text-[#001f3f]">
+                      <strong>Confirmation Number:</strong> FPS-2024-12-28-001
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showCISDrilldown && drilldownData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowCISDrilldown(false)}>
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b-2 border-[#001f3f] p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#001f3f] flex items-center">
+                  <Building className="h-6 w-6 mr-3" />
+                  CIS Subcontractor Details: {drilldownData.name}
+                </h2>
+                <p className="text-[#001f3f] mt-1">Complete subcontractor record and payment history</p>
+              </div>
+              <Button variant="outline" onClick={() => setShowCISDrilldown(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Business Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Business Name:</span>
+                      <span className="text-[#001f3f]">{drilldownData.name}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">UTR Number:</span>
+                      <span className="text-[#001f3f]">{drilldownData.utr}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Verification Number:</span>
+                      <span className="text-[#001f3f]">{drilldownData.verificationNumber}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Status:</span>
+                      <Badge variant={drilldownData.status === 'Active' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">CIS Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Deduction Rate:</span>
+                      <span className="text-[#001f3f]">{drilldownData.deductionRate}%</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Verification Status:</span>
+                      <Badge variant="default">Verified</Badge>
+                    </div>
+                    <div className="flex justify-between border-b pb-2">
+                      <span className="font-semibold text-[#001f3f]">Last Verified:</span>
+                      <span className="text-[#001f3f]">15 Nov 2024</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Recent Payment History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">December 2024</div>
+                        <div className="text-sm text-[#001f3f]">Payment Date: 28 Dec 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">Gross: £15,000</div>
+                        <div className="text-sm text-[#001f3f]">CIS Deduction: £3,000</div>
+                        <div className="font-bold text-green-600">Net: £12,000</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">November 2024</div>
+                        <div className="text-sm text-[#001f3f]">Payment Date: 30 Nov 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">Gross: £18,500</div>
+                        <div className="text-sm text-[#001f3f]">CIS Deduction: £3,700</div>
+                        <div className="font-bold text-green-600">Net: £14,800</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-semibold text-[#001f3f]">October 2024</div>
+                        <div className="text-sm text-[#001f3f]">Payment Date: 31 Oct 2024</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-[#001f3f]">Gross: £12,000</div>
+                        <div className="text-sm text-[#001f3f]">CIS Deduction: £2,400</div>
+                        <div className="font-bold text-green-600">Net: £9,600</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Year to Date Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded text-center">
+                      <div className="text-sm text-[#001f3f] mb-1">Total Gross Paid</div>
+                      <div className="text-2xl font-bold text-[#001f3f]">£156,500</div>
+                    </div>
+                    <div className="p-4 bg-orange-50 border-2 border-orange-500 rounded text-center">
+                      <div className="text-sm text-[#001f3f] mb-1">Total CIS Deducted</div>
+                      <div className="text-2xl font-bold text-[#001f3f]">£31,300</div>
+                    </div>
+                    <div className="p-4 bg-green-50 border-2 border-green-600 rounded text-center">
+                      <div className="text-sm text-[#001f3f] mb-1">Total Net Paid</div>
+                      <div className="text-2xl font-bold text-green-600">£125,200</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
       
       <AIPromptSection
         title="Ask your HR Adviser"
