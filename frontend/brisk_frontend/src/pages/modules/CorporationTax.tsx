@@ -30,11 +30,14 @@ export default function CorporationTax() {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
   const [isAILoading, setIsAILoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedTaxYear, setSelectedTaxYear] = useState('2024')
+  const [selectedTaxYear, setSelectedTaxYear] = useState('2024-25')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedType, setSelectedType] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [profitBeforeTax, setProfitBeforeTax] = useState(125000)
+  const [adjustments, setAdjustments] = useState(8500)
+  const [rdRelief, setRdRelief] = useState(15000)
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -49,10 +52,7 @@ export default function CorporationTax() {
 
   const taxYearOptions = [
     { label: 'All Tax Years', value: 'all' },
-    { label: '2024', value: '2024' },
-    { label: '2023', value: '2023' },
-    { label: '2022', value: '2022' },
-    { label: '2021', value: '2021' }
+    ...generateTaxYears().map(year => ({ label: year, value: year }))
   ]
 
   const statusOptions = [
@@ -71,13 +71,19 @@ export default function CorporationTax() {
     { label: 'Computations', value: 'computations' }
   ]
 
+  const taxableProfit = profitBeforeTax + adjustments
+  const ctCalculation = calculateCorporationTax(taxableProfit, selectedTaxYear)
+  const taxAfterRDRelief = Math.max(0, ctCalculation.corporationTax - rdRelief)
+  
   const taxData = {
-    profitBeforeTax: 125000,
-    adjustments: 8500,
-    taxableProfit: 133500,
-    corporationTax: 25365,
-    rdRelief: 15000,
-    optimizedTax: 22615
+    profitBeforeTax,
+    adjustments,
+    taxableProfit,
+    corporationTax: ctCalculation.corporationTax,
+    rdRelief,
+    optimizedTax: taxAfterRDRelief,
+    effectiveRate: ctCalculation.effectiveRate,
+    marginalRelief: ctCalculation.marginalRelief
   }
 
   const rdClaims = [
