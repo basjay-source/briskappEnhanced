@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Plus } from 'lucide-react'
+import { Plus, Send } from 'lucide-react'
 import { importFromBookkeeping, importFromAccountsProduction, importFromPreviousYear } from '@/services/taxReturnDataImport'
 import { getTaxRatesForYear, calculateIncomeTax, calculateDividendTax, calculateCapitalGainsTax, generateTaxYears } from '@/services/taxRates'
+import { hmrcMTDService } from '@/services/hmrcMTD'
+import notifications from '@/lib/notifications'
 
 interface EmploymentDetails {
   id: string
@@ -442,6 +444,34 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
     onSave(formData)
     onOpenChange(false)
     setValidationErrors([])
+  }
+
+  const handleSubmitToHMRC = async () => {
+    if (!validateForm()) {
+      setCurrentTab('basic')
+      notifications.custom('Please complete all required fields before submitting to HMRC', 'error')
+      return
+    }
+
+    if (!hmrcMTDService.isAuthenticated()) {
+      notifications.custom('Initiating HMRC authentication...', 'info')
+      const authUrl = hmrcMTDService.initiateOAuth()
+      window.location.href = authUrl
+      return
+    }
+
+    try {
+      notifications.custom('Submitting SA return to HMRC...', 'info')
+      
+      onSave(formData)
+      
+      
+      notifications.custom('SA return successfully submitted to HMRC', 'success')
+      onOpenChange(false)
+      setValidationErrors([])
+    } catch (error) {
+      notifications.custom(`Failed to submit to HMRC: ${error}`, 'error')
+    }
   }
 
   const handleSetupComplete = async () => {
@@ -3078,9 +3108,19 @@ export function SAReturnForm({ open, onOpenChange, saReturn, onSave, mode, clien
                 </Button>
               )}
               {!isReadOnly && currentTab === 'summary' && (
-                <Button type="submit" className="bg-[#001f3f] hover:bg-[#001f3f]/90">
-                  {mode === 'add' ? 'Create SA Return' : 'Update SA Return'}
-                </Button>
+                <>
+                  <Button type="submit" className="bg-[#001f3f] hover:bg-[#001f3f]/90">
+                    {mode === 'add' ? 'Create SA Return' : 'Update SA Return'}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    onClick={handleSubmitToHMRC}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Submit to HMRC
+                  </Button>
+                </>
               )}
             </div>
           </DialogFooter>
