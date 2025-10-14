@@ -728,7 +728,7 @@ export default function CorporationTax() {
 
   function renderRDClaims() {
     const getRDProjectsByScheme = (scheme: string) => {
-      return rdProjects.filter(p => p.claimType === scheme)
+      return rdProjects.filter(p => p.scheme === scheme)
     }
 
     const renderSchemeProjects = (scheme: string, schemeName: string) => {
