@@ -12,6 +12,26 @@ import {
   fetchPublicCompanyData,
   getCurrentTaxRates
 } from './publicDataSources'
+import {
+  getFRS102Details,
+  getFRS105Details,
+  getFRS101Details,
+  getIASOverview,
+  getIFRSOverview,
+  getUKGAAPOverview,
+  getFinancialStatementTypes,
+  getCompaniesActRequirements,
+  getAccountingGuidanceForScenario
+} from './accountingStandards'
+import {
+  getCharitiesSORP_FRS102,
+  getReceiptsAndPaymentsGuidance,
+  getCharityCommissionRequirements,
+  getCharityTypes,
+  getCharityAccountingTopics,
+  getCharitySectorUpdates,
+  getCharityComplianceGuidance
+} from './charityStandards'
 
 export interface ConversationMessage {
   id: string
@@ -545,8 +565,156 @@ The specific answer to your query requires consideration of multiple factors inc
     return Promise.resolve("Bookkeeping response...")
   }
 
-  private buildAccountsProductionResponse(q: string, d: any, c: any, h: ConversationMessage[]): Promise<string> {
-    return Promise.resolve("Accounts Production response...")
+  private async buildAccountsProductionResponse(
+    question: string,
+    data: any,
+    context: any,
+    history: ConversationMessage[]
+  ): Promise<string> {
+    const lowerQ = question.toLowerCase()
+    
+    let response = `**Professional Accountant - Accounts Production**\n\n`
+    
+    if (history.filter(m => m.role === 'user').length === 1) {
+      response += `Good ${this.getTimeOfDay()}! I'm your professional accountant specializing in UK accounts production, financial reporting standards, and company law compliance.\n\n`
+    }
+    
+    response += `**Regarding:** "${question}"\n\n`
+    
+    if (lowerQ.includes('frs 102') || lowerQ.includes('frs102')) {
+      const frs102 = getFRS102Details()
+      response += `**FRS 102 Guidance:**\n\n`
+      response += `${frs102.fullName}\n\n`
+      response += `**Applicable To:**\n${frs102.applicableTo.map(a => `• ${a}`).join('\n')}\n\n`
+      response += `**Key Requirements:**\n${frs102.keyRequirements.slice(0, 5).map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Disclosure Requirements:**\n${frs102.disclosureRequirements.slice(0, 5).map(d => `• ${d}`).join('\n')}\n\n`
+      response += `**Legislative Reference:** ${frs102.legislativeReference}\n\n`
+    } else if (lowerQ.includes('frs 105') || lowerQ.includes('frs105') || lowerQ.includes('micro')) {
+      const frs105 = getFRS105Details()
+      response += `**FRS 105 - Micro-entities Regime:**\n\n`
+      response += `**Eligibility:** ${frs105.applicableTo[1]}\n\n`
+      response += `**Key Advantages:**\n${frs105.keyRequirements.map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Simplified Disclosures:**\n${frs105.disclosureRequirements.slice(0, 4).map(d => `• ${d}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('frs 101') || lowerQ.includes('frs101') || lowerQ.includes('reduced disclosure')) {
+      const frs101 = getFRS101Details()
+      response += `**FRS 101 - Reduced Disclosure Framework:**\n\n`
+      response += `**Purpose:** Apply full IFRS measurement with reduced disclosures\n\n`
+      response += `**Eligible Entities:**\n${frs101.applicableTo.map(a => `• ${a}`).join('\n')}\n\n`
+      response += `**Key Requirements:**\n${frs101.keyRequirements.slice(0, 5).map(r => `• ${r}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('ias') || lowerQ.includes('international accounting')) {
+      const ias = getIASOverview()
+      response += `**International Accounting Standards (IAS):**\n\n`
+      response += `${ias.description}\n\n`
+      response += `**Key Standards:**\n`
+      ias.keyStandards.slice(0, 4).forEach(std => {
+        response += `\n**${std.number} - ${std.title}:**\n${std.keyPoints.slice(0, 3).map(p => `• ${p}`).join('\n')}\n`
+      })
+    } else if (lowerQ.includes('ifrs') || lowerQ.includes('international financial')) {
+      const ifrs = getIFRSOverview()
+      response += `**International Financial Reporting Standards (IFRS):**\n\n`
+      response += `${ifrs.description}\n\n`
+      response += `**Key Standards:**\n`
+      ifrs.keyStandards.slice(0, 3).forEach(std => {
+        response += `\n**${std.number} - ${std.title}:**\n${std.keyPoints.slice(0, 3).map(p => `• ${p}`).join('\n')}\n`
+      })
+    } else if (lowerQ.includes('gaap') || lowerQ.includes('uk gaap')) {
+      const gaap = getUKGAAPOverview()
+      response += `**UK GAAP Framework:**\n\n`
+      response += `${gaap.description}\n\n`
+      response += `**Framework Components:**\n${gaap.components.map(c => `• ${c}`).join('\n')}\n\n`
+      response += `**Reporting Hierarchy:**\n`
+      response += `• Tier 1: ${gaap.hierarchy.tier1}\n`
+      response += `• Tier 2: ${gaap.hierarchy.tier2}\n`
+      response += `• Tier 3: ${gaap.hierarchy.tier3}\n`
+      response += `• Tier 4: ${gaap.hierarchy.tier4}\n\n`
+    } else if (lowerQ.includes('statement') && (lowerQ.includes('type') || lowerQ.includes('full') || lowerQ.includes('abbreviated') || lowerQ.includes('filleted') || lowerQ.includes('dormant'))) {
+      const statementTypes = getFinancialStatementTypes()
+      response += `**Financial Statement Types:**\n\n`
+      
+      if (lowerQ.includes('full')) {
+        const full = statementTypes.full
+        response += `**Full Accounts:**\n`
+        response += `• **Eligibility:** ${full.eligibility}\n`
+        response += `• **Required Statements:** ${full.requiredStatements.join(', ')}\n`
+        response += `• **Disclosure Level:** ${full.disclosureLevel}\n`
+        response += `• **Audit:** ${full.auditRequirement}\n\n`
+      } else if (lowerQ.includes('abbreviated')) {
+        const abbr = statementTypes.abbreviated
+        response += `**Abbreviated Accounts:**\n`
+        response += `• **Eligibility:** ${abbr.eligibility}\n`
+        response += `• **Thresholds:** Turnover ${abbr.companySizeThresholds.turnover}, Balance Sheet ${abbr.companySizeThresholds.balanceSheet}, Employees ${abbr.companySizeThresholds.employees}\n`
+        response += `• **Required:** ${abbr.requiredStatements.join(', ')}\n`
+        response += `• **Audit:** ${abbr.auditRequirement}\n\n`
+      } else if (lowerQ.includes('filleted')) {
+        const fill = statementTypes.filleted
+        response += `**Filleted Accounts:**\n`
+        response += `• **Eligibility:** ${fill.eligibility}\n`
+        response += `• **Medium Company Thresholds:** Turnover ${fill.companySizeThresholds.turnover}, Balance Sheet ${fill.companySizeThresholds.balanceSheet}\n`
+        response += `• **Required:** ${fill.requiredStatements.join(', ')}\n`
+        response += `• **Key Feature:** ${fill.disclosureLevel}\n\n`
+      } else if (lowerQ.includes('dormant')) {
+        const dorm = statementTypes.dormant
+        response += `**Dormant Accounts:**\n`
+        response += `• **Definition:** ${dorm.eligibility}\n`
+        response += `• **Required:** ${dorm.requiredStatements.join(', ')}\n`
+        response += `• **Audit:** ${dorm.auditRequirement}\n\n`
+      } else {
+        response += `**Available Types:**\n`
+        response += `• **Full Accounts** - All companies (mandatory for public/large)\n`
+        response += `• **Abbreviated Accounts** - Small/medium companies (public filing only)\n`
+        response += `• **Filleted Accounts** - Medium companies (reduced P&L disclosure)\n`
+        response += `• **Micro-entity Accounts** - Very small companies (minimal disclosure)\n`
+        response += `• **Dormant Accounts** - Non-trading companies\n\n`
+      }
+    } else if (lowerQ.includes('companies act') || lowerQ.includes('company law')) {
+      const companiesAct = getCompaniesActRequirements()
+      response += `**Companies Act 2006 Requirements:**\n\n`
+      response += `**Accounting Obligations:**\n${companiesAct.keyRequirements.accounting.map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Filing Deadlines:**\n${companiesAct.keyRequirements.filing.map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Audit Requirements:**\n${companiesAct.keyRequirements.audit.slice(0, 4).map(r => `• ${r}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('companies house') && context?.companyNumber) {
+      const chData = await fetchPublicCompanyData(context.companyNumber)
+      response += `**Companies House Information:**\n\n`
+      if (chData.filingDeadlines) {
+        response += `**Filing Deadlines:**\n${Object.entries(chData.filingDeadlines).map(([k, v]) => `• ${k}: ${v}`).join('\n')}\n\n`
+      }
+      if (chData.accountTypes) {
+        response += `**Account Types & Criteria:**\n`
+        Object.entries(chData.accountTypes).forEach(([type, info]: [string, any]) => {
+          response += `• **${type}:** ${info.criteria}\n`
+        })
+        response += `\n`
+      }
+    } else {
+      response += `**Comprehensive Accounts Production Guidance:**\n\n`
+      response += `I can provide expert advice on:\n\n`
+      response += `**Accounting Standards:**\n`
+      response += `• FRS 102 (UK GAAP) - full guidance\n`
+      response += `• FRS 105 (Micro-entities)\n`
+      response += `• FRS 101 (Reduced Disclosure)\n`
+      response += `• IAS (International Accounting Standards)\n`
+      response += `• IFRS (International Financial Reporting Standards)\n\n`
+      response += `**Financial Statement Types:**\n`
+      response += `• Full Accounts (all disclosure requirements)\n`
+      response += `• Abbreviated Accounts (small/medium companies)\n`
+      response += `• Filleted Accounts (medium companies)\n`
+      response += `• Micro-entity Accounts (minimal disclosure)\n`
+      response += `• Dormant Accounts\n\n`
+      response += `**Company Law & Compliance:**\n`
+      response += `• Companies Act 2006 requirements\n`
+      response += `• Filing deadlines and penalties\n`
+      response += `• Audit requirements and exemptions\n`
+      response += `• Directors report requirements\n`
+      response += `• Companies House compliance\n\n`
+      response += `**Ask me specific questions about:**\n`
+      response += `• Which accounting framework applies to your client\n`
+      response += `• Specific FRS/IAS/IFRS standards\n`
+      response += `• Statement preparation requirements\n`
+      response += `• Companies House filing obligations\n`
+      response += `• Client company information (provide company number)\n\n`
+    }
+    
+    return response
   }
 
   private buildPayrollResponse(q: string, d: any, c: any, h: ConversationMessage[]): Promise<string> {
@@ -557,8 +725,165 @@ The specific answer to your query requires consideration of multiple factors inc
     return Promise.resolve("AML Compliance response...")
   }
 
-  private buildCharityResponse(q: string, d: any, c: any, h: ConversationMessage[]): Promise<string> {
-    return Promise.resolve("Charity Accounts response...")
+  private async buildCharityResponse(
+    question: string,
+    data: any,
+    context: any,
+    history: ConversationMessage[]
+  ): Promise<string> {
+    const lowerQ = question.toLowerCase()
+    
+    let response = `**Professional Charity Accountant**\n\n`
+    
+    if (history.filter(m => m.role === 'user').length === 1) {
+      response += `Good ${this.getTimeOfDay()}! I'm your professional charity accountant specializing in charity accounting, SORP compliance, and Charity Commission regulations.\n\n`
+    }
+    
+    response += `**Regarding:** "${question}"\n\n`
+    
+    if (lowerQ.includes('sorp')) {
+      const sorp = getCharitiesSORP_FRS102()
+      response += `**Charities SORP (FRS 102):**\n\n`
+      response += `${sorp.fullName}\n\n`
+      response += `**Applicable To:**\n${sorp.applicableTo.map(a => `• ${a}`).join('\n')}\n\n`
+      response += `**Key Requirements:**\n${sorp.keyRequirements.slice(0, 6).map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Reporting Requirements:**\n${sorp.reportingRequirements.slice(0, 6).map(r => `• ${r}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('receipts') && lowerQ.includes('payments')) {
+      const rp = getReceiptsAndPaymentsGuidance()
+      response += `**Receipts and Payments Accounts:**\n\n`
+      response += `**Applicable To:** ${rp.applicableTo.join('; ')}\n\n`
+      response += `**Description:** ${rp.description}\n\n`
+      response += `**Requirements:**\n${rp.requirements.map(r => `• ${r}`).join('\n')}\n\n`
+      response += `**Advantages:**\n${rp.advantages.map(a => `• ${a}`).join('\n')}\n\n`
+      response += `**Limitations:**\n${rp.limitations.map(l => `• ${l}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('charity commission') || lowerQ.includes('registration') || lowerQ.includes('filing')) {
+      const cc = getCharityCommissionRequirements()
+      response += `**Charity Commission Requirements:**\n\n`
+      
+      response += `**Registration Thresholds:**\n`
+      response += `• England & Wales: ${cc.registrationThresholds.england_wales.threshold}\n`
+      response += `• Scotland (OSCR): ${cc.registrationThresholds.scotland.threshold}\n`
+      response += `• Northern Ireland: ${cc.registrationThresholds.northernIreland.threshold}\n\n`
+      
+      response += `**Accounts Submission Requirements:**\n`
+      Object.entries(cc.annualReturnRequirements.accountsThresholds).forEach(([key, value]: [string, any]) => {
+        response += `\n**Income ${value.income}:**\n`
+        response += `• Requirement: ${value.requirement}\n`
+        response += `• Audit/Examination: ${value.audit}\n`
+        if (value.submission) response += `• Submission: ${value.submission}\n`
+      })
+      response += `\n`
+      
+      response += `**Filing Deadlines:**\n`
+      response += `• Charity Commission: ${cc.filingDeadlines.charityCommission}\n`
+      response += `• Companies House (if charitable company): ${cc.filingDeadlines.companiesHouse}\n\n`
+      
+    } else if (lowerQ.includes('charity type') || lowerQ.includes('cio') || lowerQ.includes('charitable company') || lowerQ.includes('trust')) {
+      const types = getCharityTypes()
+      response += `**Charity Types and Structures:**\n\n`
+      
+      Object.values(types).forEach(type => {
+        response += `**${type.type}:**\n`
+        response += `• Regulatory Body: ${type.regulatoryBody}\n`
+        response += `• Registration: ${type.registrationThreshold}\n`
+        response += `• Accounts: ${type.accountsRequirements.join('; ')}\n`
+        response += `• Filing: ${type.filingDeadlines.join('; ')}\n\n`
+      })
+    } else if (lowerQ.includes('fund') && lowerQ.includes('accounting')) {
+      const topics = getCharityAccountingTopics()
+      response += `**Charity Funds Accounting:**\n\n`
+      response += `${topics.fundsAccounting.description}\n\n`
+      
+      topics.fundsAccounting.fundTypes.forEach(fund => {
+        response += `**${fund.type}:**\n`
+        response += `• Definition: ${fund.definition}\n`
+        response += `• Use: ${fund.use}\n`
+        if (fund.examples) response += `• Examples: ${fund.examples.join(', ')}\n`
+        if (fund.accounting) response += `• Accounting: ${fund.accounting}\n`
+        response += `\n`
+      })
+    } else if (lowerQ.includes('income') && lowerQ.includes('recognition')) {
+      const topics = getCharityAccountingTopics()
+      response += `**Charity Income Recognition:**\n\n`
+      
+      response += `**Donations:**\n`
+      response += `• Recognition: ${topics.incomeRecognition.donations.recognition}\n`
+      response += `• Gift Aid: ${topics.incomeRecognition.donations.giftAid}\n`
+      response += `• Pledges: ${topics.incomeRecognition.donations.pledges}\n\n`
+      
+      response += `**Legacies:**\n`
+      response += `• Recognition: ${topics.incomeRecognition.legacies.recognition}\n`
+      response += `• Timing: ${topics.incomeRecognition.legacies.timing}\n`
+      response += `• Uncertainty: ${topics.incomeRecognition.legacies.uncertainty}\n\n`
+      
+      response += `**Grants:**\n`
+      response += `• Performance Conditions: ${topics.incomeRecognition.grants.performanceConditions}\n`
+      response += `• Donor Conditions: ${topics.incomeRecognition.grants.donorConditions}\n`
+      response += `• Advance Grants: ${topics.incomeRecognition.grants.advanceGrants}\n\n`
+    } else if (lowerQ.includes('trustee') && lowerQ.includes('remuneration')) {
+      const topics = getCharityAccountingTopics()
+      response += `**Trustees Remuneration and Benefits:**\n\n`
+      response += `**General Rule:** ${topics.trusteesRemunerationAndBenefits.generalRule}\n\n`
+      response += `**Exceptions:**\n${topics.trusteesRemunerationAndBenefits.exceptions.map(e => `• ${e}`).join('\n')}\n\n`
+      response += `**Disclosure Required:**\n${topics.trusteesRemunerationAndBenefits.disclosure.map(d => `• ${d}`).join('\n')}\n\n`
+    } else if (lowerQ.includes('public benefit')) {
+      const compliance = getCharityComplianceGuidance()
+      response += `**Public Benefit Requirement:**\n\n`
+      response += `**Requirement:** ${compliance.publicBenefit.requirement}\n\n`
+      response += `**Principles:**\n${compliance.publicBenefit.principles.map(p => `• ${p}`).join('\n')}\n\n`
+      response += `**Disclosure:** ${compliance.publicBenefit.disclosure}\n\n`
+    } else if (lowerQ.includes('serious incident')) {
+      const compliance = getCharityComplianceGuidance()
+      response += `**Serious Incidents Reporting:**\n\n`
+      response += `**Definition:** ${compliance.seriousIncidents.definition}\n\n`
+      response += `**Examples:**\n${compliance.seriousIncidents.examples.map(e => `• ${e}`).join('\n')}\n\n`
+      response += `**Reporting:** ${compliance.seriousIncidents.reporting}\n`
+      response += `**Consequence:** ${compliance.seriousIncidents.consequence}\n\n`
+    } else if (lowerQ.includes('update') || lowerQ.includes('recent') || lowerQ.includes('change')) {
+      const updates = getCharitySectorUpdates()
+      response += `**Recent Charity Sector Updates:**\n\n`
+      
+      updates.recentChanges.forEach(change => {
+        response += `**${change.date}: ${change.title}**\n`
+        response += `${change.summary}\n`
+        response += `**Key Changes:**\n${change.keyChanges.map(c => `• ${c}`).join('\n')}\n\n`
+      })
+    } else {
+      response += `**Comprehensive Charity Accounting Guidance:**\n\n`
+      response += `I can provide expert advice on:\n\n`
+      response += `**Charity Accounting Standards:**\n`
+      response += `• Charities SORP (FRS 102) - full compliance guidance\n`
+      response += `• Receipts & Payments accounts (simplified)\n`
+      response += `• Funds accounting (unrestricted, restricted, endowment)\n`
+      response += `• Income recognition (donations, legacies, grants)\n`
+      response += `• Expenditure classification\n\n`
+      response += `**Charity Commission Requirements:**\n`
+      response += `• Registration thresholds (England/Wales, Scotland, NI)\n`
+      response += `• Annual return requirements\n`
+      response += `• Accounts submission thresholds\n`
+      response += `• Audit and independent examination\n`
+      response += `• Trustees Annual Report content\n`
+      response += `• Serious incidents reporting\n\n`
+      response += `**Charity Structures:**\n`
+      response += `• Charitable Companies (dual regulation)\n`
+      response += `• CIOs (Charity Commission only)\n`
+      response += `• Charitable Trusts\n`
+      response += `• Unincorporated Associations\n\n`
+      response += `**Compliance Topics:**\n`
+      response += `• Public benefit demonstration\n`
+      response += `• Trustees duties and responsibilities\n`
+      response += `• Reserves policies\n`
+      response += `• Fundraising regulation\n`
+      response += `• Recent sector updates\n\n`
+      response += `**Ask me specific questions about:**\n`
+      response += `• SORP requirements for your charity\n`
+      response += `• Charity Commission filing obligations\n`
+      response += `• Funds accounting treatment\n`
+      response += `• Income/expenditure recognition\n`
+      response += `• Recent regulatory changes\n\n`
+    }
+    
+    return response
   }
 
   private buildGenericResponse(q: string, d: any, c: any, h: ConversationMessage[]): Promise<string> {
