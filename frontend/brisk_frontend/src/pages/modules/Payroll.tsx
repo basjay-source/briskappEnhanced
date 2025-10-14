@@ -238,11 +238,18 @@ export default function Payroll() {
 
   const handleMainTabClick = (tabId: string) => {
     setActiveMainTab(tabId)
-    setActiveSubTab('')
     
     const category = menuStructure.find(cat => cat.id === tabId)
-    if (category?.hasSubTabs && !expandedCategories.includes(tabId)) {
-      toggleCategory(tabId)
+    
+    if (category?.hasSubTabs) {
+      if (!expandedCategories.includes(tabId)) {
+        toggleCategory(tabId)
+      }
+      if (category.subTabs && category.subTabs.length > 0) {
+        setActiveSubTab(category.subTabs[0].id)
+      }
+    } else {
+      setActiveSubTab('')
     }
   }
 
