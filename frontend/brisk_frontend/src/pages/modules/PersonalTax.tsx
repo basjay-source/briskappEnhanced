@@ -48,6 +48,7 @@ import ComprehensiveIndividualClientForm from '../../components/ComprehensiveInd
 import { SAReturnForm as ComprehensiveSAReturnForm } from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
 import { hmrcMTDService } from '@/services/hmrcMTD'
+import { calculateIHT, calculatePensionAllowance, calculateMarriageAllowanceSaving, generateTaxYears as getTaxYearsList } from '@/services/taxRates'
 import { 
   Dialog,
   DialogContent,
@@ -193,16 +194,17 @@ export default function PersonalTax() {
 
   const [currentIht, setCurrentIht] = useState({
     estateValue: 0,
-    giftsMade: 0
+    residenceValue: 0,
+    taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
   })
 
   const [ihtResult, setIhtResult] = useState({
-    estateValue: 0,
-    nilRateBand: 325000,
-    residenceNilRateBand: 175000,
-    totalAllowance: 500000,
+    nilRateBand: 0,
+    residenceNilRateBand: 0,
+    totalNilRateBand: 0,
     taxableEstate: 0,
-    ihtDue: 0
+    ihtDue: 0,
+    effectiveRate: 0
   })
 
   const [pensionCalculations, setPensionCalculations] = useState(() => {
@@ -211,20 +213,15 @@ export default function PersonalTax() {
   })
 
   const [currentPension, setCurrentPension] = useState({
-    annualIncome: 0,
-    currentContributions: 0,
-    pensionValue: 0,
-    unusedAllowance: 0
+    adjustedIncome: 0,
+    taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
   })
 
   const [pensionResult, setPensionResult] = useState({
-    annualAllowance: 40000,
-    taperedAllowance: 40000,
-    usedThisYear: 0,
-    remainingAllowance: 40000,
-    lifetimeAllowance: 1073100,
-    utilizationPercent: 0,
-    remainingCapacity: 1073100
+    annualAllowance: 0,
+    tapered: false,
+    reduction: 0,
+    availableAllowance: 0
   })
 
   const [familyTaxCalculations, setFamilyTaxCalculations] = useState(() => {
@@ -235,8 +232,11 @@ export default function PersonalTax() {
   const [marriageAllowance, setMarriageAllowance] = useState({
     spouse1Income: 0,
     spouse2Income: 0,
-    potentialSaving: 0,
-    eligible: false
+    taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2),
+    eligible: false,
+    transferableAmount: 0,
+    taxSaving: 0,
+    reason: ''
   })
 
   const [isAddOpportunityModalOpen, setIsAddOpportunityModalOpen] = useState(false)
@@ -440,93 +440,61 @@ export default function PersonalTax() {
     }
   }
 
-  const calculateIHT = () => {
-    const taxableEstate = Math.max(0, currentIht.estateValue - ihtResult.totalAllowance - currentIht.giftsMade)
-    const ihtDue = taxableEstate * 0.4
+  const handleCalculateIHT = () => {
+    const result = calculateIHT(currentIht.estateValue, currentIht.residenceValue, currentIht.taxYear)
     
-    setIhtResult({
-      ...ihtResult,
-      estateValue: currentIht.estateValue,
-      taxableEstate,
-      ihtDue
-    })
+    setIhtResult(result)
     
     const calculation = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
       ...currentIht,
-      taxableEstate,
-      ihtDue
+      ...result
     }
     
     const updated = [...ihtCalculations, calculation]
     setIhtCalculations(updated)
     localStorage.setItem('ihtCalculations', JSON.stringify(updated))
-    notifications.saved('IHT Calculation', `Estate value: £${currentIht.estateValue.toLocaleString()}`)
+    notifications.saved('IHT Calculation', `IHT due: £${result.ihtDue.toLocaleString(undefined, {minimumFractionDigits: 2})}`)
   }
 
-  const calculatePension = () => {
-    const tapered = currentPension.annualIncome > 260000 
-      ? Math.max(10000, 40000 - ((currentPension.annualIncome - 260000) / 2))
-      : 40000
+  const handleCalculatePension = () => {
+    const result = calculatePensionAllowance(currentPension.adjustedIncome, currentPension.taxYear)
     
-    const remainingAllowance = tapered - currentPension.currentContributions
-    const utilization = (currentPension.pensionValue / pensionResult.lifetimeAllowance) * 100
-    const remainingCapacity = pensionResult.lifetimeAllowance - currentPension.pensionValue
-    
-    setPensionResult({
-      ...pensionResult,
-      taperedAllowance: tapered,
-      usedThisYear: currentPension.currentContributions,
-      remainingAllowance,
-      utilizationPercent: utilization,
-      remainingCapacity
-    })
+    setPensionResult(result)
     
     const calculation = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
       ...currentPension,
-      taperedAllowance: tapered,
-      remainingAllowance
+      ...result
     }
     
     const updated = [...pensionCalculations, calculation]
     setPensionCalculations(updated)
     localStorage.setItem('pensionCalculations', JSON.stringify(updated))
-    notifications.saved('Pension Calculation', `Remaining allowance: £${remainingAllowance.toLocaleString()}`)
+    notifications.saved('Pension Allowance Calculation', `Available allowance: £${result.availableAllowance.toLocaleString()}`)
   }
 
-  const calculateMarriageAllowance = () => {
-    const personalAllowance = 12570
-    const marriageAllowanceTransfer = 1260
-    
-    const spouse1BelowAllowance = marriageAllowance.spouse1Income < personalAllowance
-    const spouse2BelowAllowance = marriageAllowance.spouse2Income < personalAllowance
-    
-    const eligible = (spouse1BelowAllowance && !spouse2BelowAllowance) || 
-                     (!spouse1BelowAllowance && spouse2BelowAllowance)
-    
-    const potentialSaving = eligible ? marriageAllowanceTransfer * 0.20 : 0
+  const handleCalculateMarriageAllowance = () => {
+    const result = calculateMarriageAllowanceSaving(marriageAllowance.spouse1Income, marriageAllowance.spouse2Income, marriageAllowance.taxYear)
     
     setMarriageAllowance({
       ...marriageAllowance,
-      potentialSaving,
-      eligible
+      ...result
     })
     
     const calculation = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
       ...marriageAllowance,
-      potentialSaving,
-      eligible
+      ...result
     }
     
     const updated = [...familyTaxCalculations, calculation]
     setFamilyTaxCalculations(updated)
     localStorage.setItem('familyTaxCalculations', JSON.stringify(updated))
-    notifications.saved('Marriage Allowance Calculation', `Potential saving: £${potentialSaving.toFixed(2)}`)
+    notifications.saved('Marriage Allowance Calculation', result.eligible ? `Tax saving: £${result.taxSaving.toFixed(2)}` : 'Not eligible')
   }
 
   const getClientSAReturnInfo = (clientId: string) => {
