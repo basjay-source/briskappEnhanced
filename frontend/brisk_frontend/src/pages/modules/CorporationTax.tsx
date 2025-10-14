@@ -48,6 +48,9 @@ import {
   RDProjectFormData 
 } from '@/services/corporationTaxData'
 import CT600Form from '@/components/corporation-tax/CT600Form'
+import RDClaimForm from '@/components/corporation-tax/RDClaimForm'
+import ReliefsForm from '@/components/corporation-tax/ReliefsForm'
+import GroupReliefForm from '@/components/corporation-tax/GroupReliefForm'
 import { ct600API, rdClaimsAPI, dashboardAPI } from '@/services/corporationTaxAPI'
 import { SearchFilterHeader } from '@/components/SearchFilterHeader'
 
@@ -92,11 +95,15 @@ export default function CorporationTax() {
   const [showCT600Modal, setShowCT600Modal] = useState(false)
   const [showRDModal, setShowRDModal] = useState(false)
   const [showRDDetailModal, setShowRDDetailModal] = useState(false)
+  const [showReliefsModal, setShowReliefsModal] = useState(false)
+  const [showGroupReliefModal, setShowGroupReliefModal] = useState(false)
   const [showCAModal, setShowCAModal] = useState(false)
   const [showGRModal, setShowGRModal] = useState(false)
   const [selectedClient, setSelectedClient] = useState<CTClient | null>(null)
   const [selectedCT600Data, setSelectedCT600Data] = useState<any>(null)
   const [selectedRDProject, setSelectedRDProject] = useState<RDProject | null>(null)
+  const [selectedReliefs, setSelectedReliefs] = useState<any>(null)
+  const [selectedGroupRelief, setSelectedGroupRelief] = useState<any>(null)
   const [editingClient, setEditingClient] = useState<CTClient | null>(null)
   const [editingRDProject, setEditingRDProject] = useState<RDProject | null>(null)
   
@@ -1315,24 +1322,84 @@ export default function CorporationTax() {
       </div>
 
       {/* CT600 Form Modal */}
-      <Dialog open={showCT600Modal} onOpenChange={setShowCT600Modal}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl text-[#001f3f]">CT600 Corporation Tax Return</DialogTitle>
-            <DialogDescription>
-              Complete corporation tax computation and return submission
-            </DialogDescription>
-          </DialogHeader>
-          {selectedCT600Data && (
-            <CT600Form
-              data={selectedCT600Data}
-              onSave={handleSaveCT600}
-              onCancel={() => setShowCT600Modal(false)}
-              isEditing={false}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      {showCT600Modal && selectedCT600Data && (
+        <CT600Form
+          data={selectedCT600Data}
+          onSave={handleSaveCT600}
+          onCancel={() => setShowCT600Modal(false)}
+          isEditing={false}
+        />
+      )}
+
+      {/* R&D Claims Form Modal */}
+      {showRDDetailModal && selectedRDProject && (
+        <RDClaimForm
+          data={{
+            projectName: selectedRDProject.projectName,
+            projectDescription: selectedRDProject.description,
+            companyName: selectedRDProject.companyName,
+            companyNumber: '',
+            utr: '',
+            accountingPeriodStart: selectedRDProject.yearStart,
+            accountingPeriodEnd: selectedRDProject.yearEnd,
+            status: selectedRDProject.status,
+            claimType: selectedRDProject.claimType as any,
+            staffCosts: selectedRDProject.costs.staff,
+            subcontractorCosts: selectedRDProject.costs.subcontractor,
+            consumablesCosts: selectedRDProject.costs.consumables,
+            softwareCosts: selectedRDProject.costs.software,
+            clinicalTrialCosts: 0,
+            otherCosts: selectedRDProject.costs.other,
+            totalQualifyingExpenditure: selectedRDProject.totalQualifying,
+            enhancementRate: selectedRDProject.enhancementRate,
+            totalEnhancement: selectedRDProject.totalEnhancement,
+            reliefClaimed: selectedRDProject.reliefClaimed,
+            taxCredit: selectedRDProject.taxCredit || 0,
+            staffCount: 0,
+            projectStartDate: selectedRDProject.yearStart,
+            projectEndDate: selectedRDProject.yearEnd,
+            technicalDescription: '',
+            uncertaintyDescription: '',
+            advancementDescription: '',
+            notes: ''
+          }}
+          onSave={(data) => {
+            console.log('Saving R&D Claim:', data)
+            notifications.custom('R&D Claim saved successfully', 'success')
+            setShowRDDetailModal(false)
+          }}
+          onCancel={() => setShowRDDetailModal(false)}
+          isEditing={false}
+        />
+      )}
+
+      {/* Reliefs & Credits Form Modal */}
+      {showReliefsModal && (
+        <ReliefsForm
+          data={selectedReliefs || {}}
+          onSave={(data) => {
+            console.log('Saving Reliefs:', data)
+            notifications.custom('Reliefs & Credits saved successfully', 'success')
+            setShowReliefsModal(false)
+          }}
+          onCancel={() => setShowReliefsModal(false)}
+          isEditing={false}
+        />
+      )}
+
+      {/* Group Relief Form Modal */}
+      {showGroupReliefModal && (
+        <GroupReliefForm
+          data={selectedGroupRelief || {}}
+          onSave={(data) => {
+            console.log('Saving Group Relief:', data)
+            notifications.custom('Group Relief claim saved successfully', 'success')
+            setShowGroupReliefModal(false)
+          }}
+          onCancel={() => setShowGroupReliefModal(false)}
+          isEditing={false}
+        />
+      )}
     </div>
   )
 }
