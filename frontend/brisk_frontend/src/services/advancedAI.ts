@@ -5,6 +5,13 @@
  */
 
 import { hmrcMTDService } from './hmrcMTD'
+import {
+  fetchAllPublicData,
+  fetchHMRCGuidance,
+  fetchLegislationUpdates,
+  fetchPublicCompanyData,
+  getCurrentTaxRates
+} from './publicDataSources'
 
 export interface ConversationMessage {
   id: string
@@ -255,83 +262,18 @@ export class AIAdviserEngine {
   }
 
   /**
-   * Fetch current UK tax rates from official sources
+   * Fetch current UK tax rates from public sources
    */
   private async fetchCurrentTaxRates(): Promise<any> {
-    
-    return {
-      taxYear: '2024-25',
-      incomeTax: {
-        personalAllowance: 12570,
-        basicRate: { threshold: 50270, rate: 0.20 },
-        higherRate: { threshold: 125140, rate: 0.40 },
-        additionalRate: { threshold: 125140, rate: 0.45 }
-      },
-      nationalInsurance: {
-        class1Employee: {
-          primaryThreshold: 12570,
-          upperEarningsLimit: 50270,
-          rate: 0.08,
-          additionalRate: 0.02
-        },
-        class1Employer: {
-          secondaryThreshold: 9100,
-          rate: 0.138
-        }
-      },
-      corporationTax: {
-        mainRate: 0.25,
-        smallProfitsRate: 0.19,
-        lowerThreshold: 50000,
-        upperThreshold: 250000
-      },
-      capitalGains: {
-        annualExemption: 3000,
-        basicRate: 0.10,
-        higherRate: 0.20,
-        propertyBasicRate: 0.18,
-        propertyHigherRate: 0.24
-      },
-      vat: {
-        standardRate: 0.20,
-        reducedRate: 0.05,
-        registrationThreshold: 90000,
-        deregistrationThreshold: 88000
-      },
-      inheritanceTax: {
-        nilRateBand: 325000,
-        residenceNilRateBand: 175000,
-        rate: 0.40,
-        reducedRate: 0.36,
-        taperingThreshold: 2000000
-      },
-      lastUpdated: new Date().toISOString(),
-      source: 'HM Revenue & Customs'
-    }
+    // Use comprehensive public data sources
+    return getCurrentTaxRates()
   }
 
   /**
-   * Fetch recent legislation updates
+   * Fetch recent legislation updates from public sources
    */
   private async fetchRecentLegislation(): Promise<any> {
-    
-    return {
-      recentUpdates: [
-        {
-          title: 'Finance Act 2024',
-          date: '2024-10-24',
-          summary: 'Annual tax legislation including rate changes',
-          relevantSections: ['Corporation Tax rates', 'Capital allowances', 'IHT thresholds']
-        },
-        {
-          title: 'Economic Crime and Corporate Transparency Act 2023',
-          date: '2023-10-26',
-          summary: 'Enhanced Companies House powers and identity verification',
-          relevantSections: ['Director verification', 'PSC requirements', 'Filing obligations']
-        }
-      ],
-      source: 'UK Legislation API'
-    }
+    return fetchLegislationUpdates()
   }
 
   /**
