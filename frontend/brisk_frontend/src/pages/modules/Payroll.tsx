@@ -1091,7 +1091,7 @@ export default function Payroll() {
                   <CardTitle className="text-[#001f3f]">HMRC Response</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded">
+                  <div className="p-4 bg-green-50 border-2 border-green-600 rounded">
                     <div className="flex items-center mb-2">
                       <Badge variant="default" className="mr-2">Accepted</Badge>
                       <span className="font-semibold text-[#001f3f]">Submission Successful</span>
@@ -1224,13 +1224,13 @@ export default function Payroll() {
                       <div className="text-sm text-[#001f3f] mb-1">Total Gross Paid</div>
                       <div className="text-2xl font-bold text-[#001f3f]">£156,500</div>
                     </div>
-                    <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded text-center">
+                    <div className="p-4 bg-orange-50 border-2 border-orange-500 rounded text-center">
                       <div className="text-sm text-[#001f3f] mb-1">Total CIS Deducted</div>
                       <div className="text-2xl font-bold text-[#001f3f]">£31,300</div>
                     </div>
-                    <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded text-center">
+                    <div className="p-4 bg-green-50 border-2 border-green-600 rounded text-center">
                       <div className="text-sm text-[#001f3f] mb-1">Total Net Paid</div>
-                      <div className="text-2xl font-bold text-[#001f3f]">£125,200</div>
+                      <div className="text-2xl font-bold text-green-600">£125,200</div>
                     </div>
                   </div>
                 </CardContent>
