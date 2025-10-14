@@ -22,6 +22,7 @@ import AIPromptSection from '../../components/AIPromptSection'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import { hmrcMTDService } from '@/services/hmrcMTD'
 import notifications from '@/lib/notifications'
+import { calculateCorporationTax, getTaxRatesForYear, generateTaxYears } from '@/services/taxRates'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')

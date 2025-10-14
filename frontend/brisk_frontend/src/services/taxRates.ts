@@ -46,6 +46,35 @@ interface TaxRates {
     transferableAmount: number
     incomeLimit: number
   }
+  corporationTax: {
+    mainRate: number
+    smallProfitsRate: number
+    smallProfitsThreshold: number
+    marginalReliefUpperLimit: number
+    marginalReliefLowerLimit: number
+    marginalReliefFraction: number
+  }
+  vat: {
+    standardRate: number
+    reducedRate: number
+    registrationThreshold: number
+    deregistrationThreshold: number
+    flatRateSchemes: {
+      accountancy: number
+      advertising: number
+      catering: number
+      construction: number
+      it: number
+      retail: number
+      other: number
+    }
+  }
+  capitalAllowances: {
+    annualInvestmentAllowance: number
+    writingDownAllowanceMain: number
+    writingDownAllowanceSpecial: number
+    firstYearAllowance: number
+  }
 }
 
 const historicalTaxRates: Record<string, TaxRates> = {
@@ -83,6 +112,35 @@ const historicalTaxRates: Record<string, TaxRates> = {
     marriageAllowance: {
       transferableAmount: 1260,
       incomeLimit: 50270
+    },
+    corporationTax: {
+      mainRate: 25,
+      smallProfitsRate: 19,
+      smallProfitsThreshold: 50000,
+      marginalReliefUpperLimit: 250000,
+      marginalReliefLowerLimit: 50000,
+      marginalReliefFraction: 0.015
+    },
+    vat: {
+      standardRate: 20,
+      reducedRate: 5,
+      registrationThreshold: 90000,
+      deregistrationThreshold: 88000,
+      flatRateSchemes: {
+        accountancy: 14.5,
+        advertising: 11,
+        catering: 12.5,
+        construction: 14.5,
+        it: 14.5,
+        retail: 7.5,
+        other: 12
+      }
+    },
+    capitalAllowances: {
+      annualInvestmentAllowance: 1000000,
+      writingDownAllowanceMain: 18,
+      writingDownAllowanceSpecial: 6,
+      firstYearAllowance: 100
     }
   },
   '2023-24': {
@@ -119,6 +177,35 @@ const historicalTaxRates: Record<string, TaxRates> = {
     marriageAllowance: {
       transferableAmount: 1260,
       incomeLimit: 50270
+    },
+    corporationTax: {
+      mainRate: 25,
+      smallProfitsRate: 19,
+      smallProfitsThreshold: 50000,
+      marginalReliefUpperLimit: 250000,
+      marginalReliefLowerLimit: 50000,
+      marginalReliefFraction: 0.015
+    },
+    vat: {
+      standardRate: 20,
+      reducedRate: 5,
+      registrationThreshold: 85000,
+      deregistrationThreshold: 83000,
+      flatRateSchemes: {
+        accountancy: 14.5,
+        advertising: 11,
+        catering: 12.5,
+        construction: 14.5,
+        it: 14.5,
+        retail: 7.5,
+        other: 12
+      }
+    },
+    capitalAllowances: {
+      annualInvestmentAllowance: 1000000,
+      writingDownAllowanceMain: 18,
+      writingDownAllowanceSpecial: 6,
+      firstYearAllowance: 100
     }
   },
   '2022-23': {
@@ -593,3 +680,164 @@ export function calculateOpportunityEstimate(
       return 0
   }
 }
+
+export function calculateCorporationTax(
+  taxableProfit: number,
+  taxYear: string
+): {
+  mainRate: number
+  smallProfitsRate: number
+  effectiveRate: number
+  corporationTax: number
+  marginalRelief: number
+} {
+  const rates = getTaxRatesForYear(taxYear)
+  const ct = rates.corporationTax
+  
+  if (taxableProfit <= ct.smallProfitsThreshold) {
+    return {
+      mainRate: ct.mainRate,
+      smallProfitsRate: ct.smallProfitsRate,
+      effectiveRate: ct.smallProfitsRate,
+      corporationTax: Math.round(taxableProfit * (ct.smallProfitsRate / 100)),
+      marginalRelief: 0
+    }
+  }
+  
+  if (taxableProfit >= ct.marginalReliefUpperLimit) {
+    const tax = Math.round(taxableProfit * (ct.mainRate / 100))
+    return {
+      mainRate: ct.mainRate,
+      smallProfitsRate: ct.smallProfitsRate,
+      effectiveRate: ct.mainRate,
+      corporationTax: tax,
+      marginalRelief: 0
+    }
+  }
+  
+  const standardTax = taxableProfit * (ct.mainRate / 100)
+  const marginalRelief = (ct.marginalReliefUpperLimit - taxableProfit) * ct.marginalReliefFraction
+  const corporationTax = Math.round(standardTax - marginalRelief)
+  const effectiveRate = (corporationTax / taxableProfit) * 100
+  
+  return {
+    mainRate: ct.mainRate,
+    smallProfitsRate: ct.smallProfitsRate,
+    effectiveRate: Math.round(effectiveRate * 100) / 100,
+    corporationTax,
+    marginalRelief: Math.round(marginalRelief)
+  }
+}
+
+export function calculateVAT(
+  netAmount: number,
+  vatRate: 'standard' | 'reduced' | 'zero' = 'standard',
+  taxYear: string = '2024-25'
+): {
+  netAmount: number
+  vatAmount: number
+  grossAmount: number
+  vatRate: number
+} {
+  const rates = getTaxRatesForYear(taxYear)
+  const rate = vatRate === 'standard' ? rates.vat.standardRate : 
+               vatRate === 'reduced' ? rates.vat.reducedRate : 0
+  
+  const vatAmount = Math.round((netAmount * rate / 100) * 100) / 100
+  const grossAmount = netAmount + vatAmount
+  
+  return {
+    netAmount,
+    vatAmount,
+    grossAmount,
+    vatRate: rate
+  }
+}
+
+export function calculateCapitalAllowances(
+  expenditure: number,
+  poolType: 'main' | 'special' | 'aia' | 'fya',
+  taxYear: string
+): {
+  allowance: number
+  writtenDownValue: number
+  allowanceRate: number
+} {
+  const rates = getTaxRatesForYear(taxYear)
+  const ca = rates.capitalAllowances
+  
+  let allowanceRate = 0
+  let allowance = 0
+  
+  switch (poolType) {
+    case 'aia':
+      allowance = Math.min(expenditure, ca.annualInvestmentAllowance)
+      allowanceRate = 100
+      break
+    case 'fya':
+      allowance = expenditure * (ca.firstYearAllowance / 100)
+      allowanceRate = ca.firstYearAllowance
+      break
+    case 'main':
+      allowance = expenditure * (ca.writingDownAllowanceMain / 100)
+      allowanceRate = ca.writingDownAllowanceMain
+      break
+    case 'special':
+      allowance = expenditure * (ca.writingDownAllowanceSpecial / 100)
+      allowanceRate = ca.writingDownAllowanceSpecial
+      break
+  }
+  
+  return {
+    allowance: Math.round(allowance),
+    writtenDownValue: Math.round(expenditure - allowance),
+    allowanceRate
+  }
+}
+
+// Helper function to add default CT/VAT/CA rates to older years
+const defaultCTVATRates = {
+  corporationTax: {
+    mainRate: 19,
+    smallProfitsRate: 19,
+    smallProfitsThreshold: 300000,
+    marginalReliefUpperLimit: 1500000,
+    marginalReliefLowerLimit: 300000,
+    marginalReliefFraction: 0.0075
+  },
+  vat: {
+    standardRate: 20,
+    reducedRate: 5,
+    registrationThreshold: 85000,
+    deregistrationThreshold: 83000,
+    flatRateSchemes: {
+      accountancy: 14.5,
+      advertising: 11,
+      catering: 12.5,
+      construction: 14.5,
+      it: 14.5,
+      retail: 7.5,
+      other: 12
+    }
+  },
+  capitalAllowances: {
+    annualInvestmentAllowance: 200000,
+    writingDownAllowanceMain: 18,
+    writingDownAllowanceSpecial: 8,
+    firstYearAllowance: 100
+  }
+}
+
+// Add missing rates to all years
+Object.keys(historicalTaxRates).forEach(year => {
+  const rates = historicalTaxRates[year] as any
+  if (!rates.corporationTax) {
+    rates.corporationTax = { ...defaultCTVATRates.corporationTax }
+  }
+  if (!rates.vat) {
+    rates.vat = { ...defaultCTVATRates.vat }
+  }
+  if (!rates.capitalAllowances) {
+    rates.capitalAllowances = { ...defaultCTVATRates.capitalAllowances }
+  }
+})
