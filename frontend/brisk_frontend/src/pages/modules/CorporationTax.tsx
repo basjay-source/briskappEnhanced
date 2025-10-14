@@ -784,19 +784,19 @@ export default function CorporationTax() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="font-semibold text-[#001f3f]">{project.projectName}</h4>
-                    <p className="text-sm text-[#001f3f] mt-1">{project.description}</p>
+                    <p className="text-sm text-[#001f3f] mt-1">{project.projectDescription}</p>
                     <div className="grid grid-cols-4 gap-4 mt-3">
                       <div>
                         <p className="text-xs text-[#001f3f]">Expenditure</p>
-                        <p className="font-medium text-[#001f3f]">£{project.totalQualifying.toLocaleString()}</p>
+                        <p className="font-medium text-[#001f3f]">£{(project.totalQualifyingExpenditure || 0).toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-[#001f3f]">Enhancement</p>
-                        <p className="font-medium text-[#001f3f]">{project.enhancementRate}%</p>
+                        <p className="text-xs text-[#001f3f]">Enhanced Exp</p>
+                        <p className="font-medium text-[#001f3f]">£{(project.enhancedExpenditure || 0).toLocaleString()}</p>
                       </div>
                       <div>
                         <p className="text-xs text-[#001f3f]">Relief</p>
-                        <p className="font-medium text-green-600">£{project.reliefClaimed.toLocaleString()}</p>
+                        <p className="font-medium text-green-600">£{(project.reliefClaimed || 0).toLocaleString()}</p>
                       </div>
                       <div>
                         <p className="text-xs text-[#001f3f]">Credit</p>
