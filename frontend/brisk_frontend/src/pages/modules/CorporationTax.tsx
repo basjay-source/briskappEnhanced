@@ -47,6 +47,7 @@ import {
   CTClientFormData,
   RDProjectFormData 
 } from '@/services/corporationTaxData'
+import CT600Form from '@/components/corporation-tax/CT600Form'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -67,17 +68,25 @@ export default function CorporationTax() {
   
   const [showClientModal, setShowClientModal] = useState(false)
   const [showClientDetailModal, setShowClientDetailModal] = useState(false)
+  const [showCT600Modal, setShowCT600Modal] = useState(false)
   const [showRDModal, setShowRDModal] = useState(false)
   const [showRDDetailModal, setShowRDDetailModal] = useState(false)
   const [showCAModal, setShowCAModal] = useState(false)
   const [showGRModal, setShowGRModal] = useState(false)
   const [selectedClient, setSelectedClient] = useState<CTClient | null>(null)
+  const [selectedCT600Data, setSelectedCT600Data] = useState<any>(null)
   const [selectedRDProject, setSelectedRDProject] = useState<RDProject | null>(null)
   const [editingClient, setEditingClient] = useState<CTClient | null>(null)
   const [editingRDProject, setEditingRDProject] = useState<RDProject | null>(null)
   
   const [sortColumn, setSortColumn] = useState<string>('')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
+  const taxData = {
+    profitBeforeTax: 500000,
+    taxableProfit: 475000,
+    corporationTax: 113750
+  }
 
   const handleAIQuestion = async (question: string) => {
     setIsAILoading(true)
@@ -167,6 +176,66 @@ export default function CorporationTax() {
     }
     setRDProjects(ctDataService.getRDProjects())
     setShowRDModal(false)
+  }
+
+  const handleViewCT600 = (client: CTClient) => {
+    const ct600Data = {
+      companyName: client.companyName,
+      companyNumber: client.companyNumber,
+      utr: client.utr,
+      accountingPeriodStart: client.accountingPeriodStart,
+      accountingPeriodEnd: client.accountingPeriodEnd,
+      status: client.status as any,
+      syncedFromAccounts: true,
+      lastSyncDate: new Date().toISOString(),
+      profitBeforeTax: 500000,
+      turnover: 2500000,
+      costOfSales: 1500000,
+      adminExpenses: 450000,
+      otherIncome: 50000,
+      financeCosts: 100000,
+      depreciationAddback: 50000,
+      legalProfessionalFees: 15000,
+      entertainmentDisallowed: 8000,
+      provisionsNotAllowed: 5000,
+      otherAdjustments: 2000,
+      annualInvestmentAllowance: 75000,
+      writingDownAllowance: 25000,
+      balancingChargeAllowance: 0,
+      lossesBroughtForward: 0,
+      lossesSetAgainstProfit: 0,
+      lossesCarriedBack: 0,
+      lossesCarriedForward: 0,
+      rdQualifyingExpenditure: 150000,
+      rdEnhancementRate: 231,
+      rdReliefClaimed: 46575,
+      rdTaxCredit: 0,
+      patentBoxRelief: 0,
+      creativeIndustryRelief: 0,
+      marginalRelief: 0,
+      groupRelief: 0,
+      otherReliefs: 0,
+      quarterlyPaymentsMade: 0,
+      corporationTaxRate: 19,
+      grossProfit: 0,
+      totalAdjustments: 0,
+      plantMachineryAdditions: 0,
+      plantMachineryDisposals: 0,
+      totalCapitalAllowances: 0,
+      taxableProfit: 0,
+      corporationTaxBeforeReliefs: 0,
+      totalReliefs: 0,
+      corporationTaxDue: 0,
+      balanceDue: 0
+    }
+    setSelectedCT600Data(ct600Data)
+    setShowCT600Modal(true)
+  }
+
+  const handleSaveCT600 = (data: any) => {
+    console.log('Saving CT600 data:', data)
+    notifications.custom('CT600 computation saved successfully', 'success')
+    setShowCT600Modal(false)
   }
 
   const stats = ctDataService.getDashboardStats()
@@ -335,7 +404,7 @@ export default function CorporationTax() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveMainTab('clients')}>
+          <Card className="cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200" onClick={() => setActiveMainTab('computation')}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">Total Clients</CardTitle>
               <Building2 className="h-4 w-4 text-[#001f3f]" />
@@ -343,10 +412,13 @@ export default function CorporationTax() {
             <CardContent>
               <div className="text-2xl font-bold text-[#001f3f]">{stats.totalClients}</div>
               <p className="text-xs text-[#001f3f] mt-1">Active CT600 returns: {stats.activeCT600s}</p>
+              <p className="text-xs text-blue-600 mt-2 font-medium">Click for deep drilldown →</p>
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200" onClick={() => {
+            if (clients.length > 0) handleViewCT600(clients[0])
+          }}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">Total Tax Due</CardTitle>
               <DollarSign className="h-4 w-4 text-red-600" />
@@ -354,10 +426,11 @@ export default function CorporationTax() {
             <CardContent>
               <div className="text-2xl font-bold text-red-600">£{stats.totalTaxDue.toLocaleString()}</div>
               <p className="text-xs text-[#001f3f] mt-1">Across all clients</p>
+              <p className="text-xs text-blue-600 mt-2 font-medium">Click for detailed breakdown →</p>
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveMainTab('rd-claims')}>
+          <Card className="cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200" onClick={() => setActiveMainTab('rd-claims')}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">R&D Relief Claimed</CardTitle>
               <TrendingUp className="h-4 w-4 text-green-600" />
@@ -365,10 +438,11 @@ export default function CorporationTax() {
             <CardContent>
               <div className="text-2xl font-bold text-green-600">£{stats.totalRDRelief.toLocaleString()}</div>
               <p className="text-xs text-[#001f3f] mt-1">{stats.rdProjectsActive} active projects</p>
+              <p className="text-xs text-blue-600 mt-2 font-medium">Click for project details →</p>
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <Card className="cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200" onClick={() => setActiveMainTab('filing')}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-[#001f3f]">Upcoming Deadlines</CardTitle>
               <Clock className="h-4 w-4 text-orange-600" />
@@ -376,6 +450,7 @@ export default function CorporationTax() {
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">{stats.upcomingDeadlines}</div>
               <p className="text-xs text-[#001f3f] mt-1">Within next 90 days</p>
+              <p className="text-xs text-blue-600 mt-2 font-medium">Click for filing schedule →</p>
             </CardContent>
           </Card>
         </div>
@@ -587,9 +662,9 @@ export default function CorporationTax() {
           <CardContent>
             <div className="space-y-4">
               {clients.map((client) => (
-                <div key={client.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer" onClick={() => handleViewClient(client)}>
+                <div key={client.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50">
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-semibold text-[#001f3f]">{client.companyName}</h3>
                       <p className="text-sm text-[#001f3f] mt-1">
                         Tax Year: {client.taxYear} | Tax Due: £{client.taxDue.toLocaleString()}
@@ -597,7 +672,11 @@ export default function CorporationTax() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge>{client.status}</Badge>
-                      <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditClient(client); }}>
+                      <Button size="sm" variant="outline" onClick={() => handleViewCT600(client)} className="border-[#00703c] text-[#00703c] hover:bg-[#00703c] hover:text-white">
+                        <FileText className="h-4 w-4 mr-1" />
+                        View CT600
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleEditClient(client)}>
                         <Edit className="h-4 w-4" />
                       </Button>
                     </div>
@@ -1190,6 +1269,26 @@ export default function CorporationTax() {
           {renderMainContent()}
         </div>
       </div>
+
+      {/* CT600 Form Modal */}
+      <Dialog open={showCT600Modal} onOpenChange={setShowCT600Modal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-[#001f3f]">CT600 Corporation Tax Return</DialogTitle>
+            <DialogDescription>
+              Complete corporation tax computation and return submission
+            </DialogDescription>
+          </DialogHeader>
+          {selectedCT600Data && (
+            <CT600Form
+              data={selectedCT600Data}
+              onSave={handleSaveCT600}
+              onCancel={() => setShowCT600Modal(false)}
+              isEditing={false}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
