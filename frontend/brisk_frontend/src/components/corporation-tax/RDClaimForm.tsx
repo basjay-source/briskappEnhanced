@@ -28,23 +28,69 @@ export interface RDClaimData {
   accountingPeriodEnd: string
   status: 'draft' | 'in-progress' | 'submitted' | 'approved' | 'rejected'
   claimType: 'SME' | 'RDEC' | 'Merged'
+  
   staffCosts: number
+  staffDirectlyEmployed: number
+  staffExternallyProvided: number
+  staffNICosts: number
+  staffPensionCosts: number
+  staffBenefitsCosts: number
+  
   subcontractorCosts: number
+  subcontractorRDCosts: number
+  subcontractorNonRDCosts: number
+  
   consumablesCosts: number
+  materialsPrototyping: number
+  materialsRawMaterials: number
+  materialsDisposables: number
+  
   softwareCosts: number
+  softwareLicenses: number
+  softwareCloudServices: number
+  softwareDataStorage: number
+  
   clinicalTrialCosts: number
+  clinicalTrialVolunteerCosts: number
+  clinicalTrialEthicsApproval: number
+  
   otherCosts: number
+  otherUtilities: number
+  otherEquipment: number
+  
   totalQualifyingExpenditure: number
   enhancementRate: number
   totalEnhancement: number
   reliefClaimed: number
   taxCredit: number
+  
   staffCount: number
+  projectManager: string
+  technicalLead: string
+  teamMembers: string
+  
   projectStartDate: string
   projectEndDate: string
+  milestonesAchieved: string
+  currentPhase: string
+  
+  // Technical Narratives
   technicalDescription: string
   uncertaintyDescription: string
   advancementDescription: string
+  baselineComparison: string
+  methodologyApplied: string
+  
+  hmrcAdvanceAssurance: boolean
+  advanceAssuranceRef: string
+  previousClaimsCount: number
+  lastClaimAmount: number
+  anticipatedCompetentProfessional: string
+  
+  supportingDocuments: string
+  technicalReports: string
+  projectLogs: string
+  
   notes?: string
   createdAt?: string
   updatedAt?: string
@@ -74,22 +120,54 @@ export default function RDClaimForm({
     status: 'draft',
     claimType: 'SME',
     staffCosts: 0,
+    staffDirectlyEmployed: 0,
+    staffExternallyProvided: 0,
+    staffNICosts: 0,
+    staffPensionCosts: 0,
+    staffBenefitsCosts: 0,
     subcontractorCosts: 0,
+    subcontractorRDCosts: 0,
+    subcontractorNonRDCosts: 0,
     consumablesCosts: 0,
+    materialsPrototyping: 0,
+    materialsRawMaterials: 0,
+    materialsDisposables: 0,
     softwareCosts: 0,
+    softwareLicenses: 0,
+    softwareCloudServices: 0,
+    softwareDataStorage: 0,
     clinicalTrialCosts: 0,
+    clinicalTrialVolunteerCosts: 0,
+    clinicalTrialEthicsApproval: 0,
     otherCosts: 0,
+    otherUtilities: 0,
+    otherEquipment: 0,
     totalQualifyingExpenditure: 0,
     enhancementRate: 230,
     totalEnhancement: 0,
     reliefClaimed: 0,
     taxCredit: 0,
     staffCount: 0,
+    projectManager: '',
+    technicalLead: '',
+    teamMembers: '',
     projectStartDate: '',
     projectEndDate: '',
+    milestonesAchieved: '',
+    currentPhase: '',
     technicalDescription: '',
     uncertaintyDescription: '',
     advancementDescription: '',
+    baselineComparison: '',
+    methodologyApplied: '',
+    hmrcAdvanceAssurance: false,
+    advanceAssuranceRef: '',
+    previousClaimsCount: 0,
+    lastClaimAmount: 0,
+    anticipatedCompetentProfessional: '',
+    supportingDocuments: '',
+    technicalReports: '',
+    projectLogs: '',
     notes: ''
   })
   
@@ -206,12 +284,14 @@ export default function RDClaimForm({
 
         <CardContent className="p-6">
           <Tabs defaultValue="project" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="project"><FileText className="h-4 w-4 mr-2" />Project Details</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-7 mb-6">
+              <TabsTrigger value="project"><FileText className="h-4 w-4 mr-2" />Project</TabsTrigger>
               <TabsTrigger value="costs"><DollarSign className="h-4 w-4 mr-2" />Costs</TabsTrigger>
+              <TabsTrigger value="team"><Users className="h-4 w-4 mr-2" />Team</TabsTrigger>
               <TabsTrigger value="technical"><Building2 className="h-4 w-4 mr-2" />Technical</TabsTrigger>
               <TabsTrigger value="calculation"><Calculator className="h-4 w-4 mr-2" />Calculation</TabsTrigger>
-              <TabsTrigger value="summary"><Users className="h-4 w-4 mr-2" />Summary</TabsTrigger>
+              <TabsTrigger value="compliance"><FileText className="h-4 w-4 mr-2" />HMRC</TabsTrigger>
+              <TabsTrigger value="summary"><FileText className="h-4 w-4 mr-2" />Summary</TabsTrigger>
             </TabsList>
 
             <TabsContent value="project" className="space-y-6">
