@@ -859,23 +859,23 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">Personal Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Employee Number:</span>
                       <span className="text-[#001f3f]">{drilldownData.employeeNumber}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Full Name:</span>
                       <span className="text-[#001f3f]">{drilldownData.name}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">NI Number:</span>
                       <span className="text-[#001f3f]">{drilldownData.niNumber}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Email:</span>
                       <span className="text-[#001f3f]">{drilldownData.email}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Phone:</span>
                       <span className="text-[#001f3f]">{drilldownData.phone}</span>
                     </div>
@@ -887,19 +887,19 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">Employment Details</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Department:</span>
                       <span className="text-[#001f3f]">{drilldownData.department}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Job Title:</span>
                       <span className="text-[#001f3f]">{drilldownData.jobTitle}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Start Date:</span>
                       <span className="text-[#001f3f]">{drilldownData.startDate}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Status:</span>
                       <Badge variant={drilldownData.status === 'Active' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
                     </div>
@@ -917,15 +917,15 @@ export default function Payroll() {
                       <span className="font-semibold text-[#001f3f]">Annual Gross Salary:</span>
                       <span className="text-xl font-bold text-[#001f3f]">£{drilldownData.salary.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="text-[#001f3f]">Monthly Gross:</span>
                       <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="text-[#001f3f]">Employer NI (13.8%):</span>
                       <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary * 0.138).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="text-[#001f3f]">Pension Contribution (3%):</span>
                       <span className="font-semibold text-[#001f3f]">£{(drilldownData.salary * 0.03).toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
                     </div>
@@ -1004,19 +1004,19 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">Submission Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Submission Type:</span>
                       <span className="text-[#001f3f]">{drilldownData.type}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Tax Period:</span>
                       <span className="text-[#001f3f]">{drilldownData.period}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Submission Date:</span>
                       <span className="text-[#001f3f]">{drilldownData.submissionDate}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Status:</span>
                       <Badge variant={drilldownData.status === 'Accepted' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
                     </div>
@@ -1028,19 +1028,19 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">Submission Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Employees Included:</span>
                       <span className="text-[#001f3f]">{drilldownData.employeeCount}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Total Gross Pay:</span>
                       <span className="text-[#001f3f]">£980,000</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Total Tax Deducted:</span>
                       <span className="text-[#001f3f]">£186,400</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Total NI Deducted:</span>
                       <span className="text-[#001f3f]">£96,040</span>
                     </div>
@@ -1131,19 +1131,19 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">Business Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Business Name:</span>
                       <span className="text-[#001f3f]">{drilldownData.name}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">UTR Number:</span>
                       <span className="text-[#001f3f]">{drilldownData.utr}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Verification Number:</span>
                       <span className="text-[#001f3f]">{drilldownData.verificationNumber}</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Status:</span>
                       <Badge variant={drilldownData.status === 'Active' ? 'default' : 'secondary'}>{drilldownData.status}</Badge>
                     </div>
@@ -1155,15 +1155,15 @@ export default function Payroll() {
                     <CardTitle className="text-[#001f3f]">CIS Details</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Deduction Rate:</span>
                       <span className="text-[#001f3f]">{drilldownData.deductionRate}%</span>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Verification Status:</span>
                       <Badge variant="default">Verified</Badge>
                     </div>
-                    <div className="flex justify-between border-b pb-2">
+                    <div className="flex justify-between border-b border-[#001f3f] pb-2">
                       <span className="font-semibold text-[#001f3f]">Last Verified:</span>
                       <span className="text-[#001f3f]">15 Nov 2024</span>
                     </div>
