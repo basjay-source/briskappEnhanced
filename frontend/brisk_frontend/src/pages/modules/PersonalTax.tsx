@@ -184,6 +184,7 @@ export default function PersonalTax() {
 
   const [showOptimizationDetails, setShowOptimizationDetails] = useState(false)
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null)
+  const [optimizationOpportunitiesData, setOptimizationOpportunitiesData] = useState<any[]>([])
 
   const getCGTRatesByYear = (year: string) => {
     const yearNum = parseInt(year)
@@ -228,6 +229,20 @@ export default function PersonalTax() {
       }
     }
     loadSAReturns()
+
+    const loadOptimizationOpportunities = () => {
+      try {
+        const saved = localStorage.getItem('optimizationOpportunities')
+        if (saved) {
+          const opportunities = JSON.parse(saved)
+          setOptimizationOpportunitiesData(opportunities)
+          console.log(`✅ Loaded ${opportunities.length} optimization opportunities`)
+        }
+      } catch (e) {
+        console.error('Failed to load optimization opportunities:', e)
+      }
+    }
+    loadOptimizationOpportunities()
   }, [])
 
   const handleAIQuestion = async (question: string) => {
@@ -581,29 +596,6 @@ export default function PersonalTax() {
     }
   ]
 
-  const optimizationOpportunities = [
-    {
-      client: 'John Smith',
-      opportunity: 'Pension Contribution',
-      potentialSaving: 1200,
-      description: 'Increase annual pension contribution to maximize tax relief',
-      priority: 'High'
-    },
-    {
-      client: 'Sarah Johnson',
-      opportunity: 'CGT Timing',
-      potentialSaving: 800,
-      description: 'Defer capital gains to next tax year for better rate',
-      priority: 'Medium'
-    },
-    {
-      client: 'Michael Brown',
-      opportunity: 'Dividend Timing',
-      potentialSaving: 450,
-      description: 'Optimize dividend extraction timing',
-      priority: 'Low'
-    }
-  ]
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -1533,17 +1525,30 @@ export default function PersonalTax() {
       setShowOptimizationDetails(true)
     }
 
+    const handleAddOpportunity = () => {
+      notifications.custom('Add new optimization opportunity feature - connect to client management', 'info')
+    }
+
     return (
       <>
         <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-[#001f3f]">Tax Optimization Opportunities</CardTitle>
-                  <CardDescription>AI-powered recommendations for tax savings</CardDescription>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle className="text-[#001f3f]">Tax Optimization Opportunities</CardTitle>
+                      <CardDescription>Identify and track tax-saving opportunities for clients</CardDescription>
+                    </div>
+                    <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddOpportunity}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Opportunity
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {optimizationOpportunities.map((opportunity, index) => (
+                  {optimizationOpportunitiesData.length > 0 ? (
+                    <div className="space-y-4">
+                      {optimizationOpportunitiesData.map((opportunity, index) => (
                       <Card key={index} className="border-l-4 border-l-blue-600">
                         <CardContent className="p-4">
                           <div className={`${isMobile ? 'space-y-3' : 'flex items-center justify-between'}`}>
@@ -1582,6 +1587,17 @@ export default function PersonalTax() {
                       </Card>
                     ))}
                   </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <Target className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                      <h3 className="text-lg font-semibold text-[#001f3f] mb-2">No Optimization Opportunities Yet</h3>
+                      <p className="text-sm text-gray-600 mb-4">Start identifying tax-saving opportunities for your clients</p>
+                      <Button className="bg-[#001f3f] hover:bg-[#003366]" onClick={handleAddOpportunity}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add First Opportunity
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
         </div>
