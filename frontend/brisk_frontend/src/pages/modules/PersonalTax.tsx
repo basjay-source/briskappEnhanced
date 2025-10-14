@@ -25,7 +25,11 @@ import {
   ChevronDown,
   PieChart,
   Eye,
-  UserPlus
+  UserPlus,
+  Calendar,
+  Send,
+  RefreshCw,
+  ArrowRight
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -43,6 +47,7 @@ import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import ComprehensiveIndividualClientForm from '../../components/ComprehensiveIndividualClientForm'
 import { SAReturnForm as ComprehensiveSAReturnForm } from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
+import { hmrcMTDService } from '@/services/hmrcMTD'
 import { 
   Dialog,
   DialogContent,
@@ -78,6 +83,27 @@ interface IndividualClient {
   updatedAt?: string
 }
 
+interface QuarterlySubmission {
+  id: string
+  quarter: 1 | 2 | 3 | 4 | 5
+  quarterLabel: string
+  startDate: string
+  endDate: string
+  dueDate: string
+  status: 'not_started' | 'in_progress' | 'submitted'
+  submittedDate?: string
+  employmentIncome: number
+  selfEmploymentIncome: number
+  propertyIncome: number
+  dividendIncome: number
+  savingsInterest: number
+  otherIncome: number
+  totalIncome: number
+  cumulativeIncome: number
+  estimatedTax: number
+  cumulativeTax: number
+}
+
 interface SAReturn {
   id: string
   clientId: string
@@ -106,6 +132,8 @@ interface SAReturn {
   notes?: string
   createdAt: string
   updatedAt: string
+  isQuarterlyReporting?: boolean
+  quarterlySubmissions?: QuarterlySubmission[]
 }
 
 export default function PersonalTax() {
@@ -132,6 +160,10 @@ export default function PersonalTax() {
   const [saReturnFormMode, setSAReturnFormMode] = useState<'add' | 'edit' | 'view'>('add')
   const [showClientList, setShowClientList] = useState(false)
   const [showSAReturnList, setShowSAReturnList] = useState(false)
+  const [sortField, setSortField] = useState<'client' | 'taxYear' | 'estimatedTax' | 'dueDate'>('dueDate')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentQuarterData, setCurrentQuarterData] = useState<QuarterlySubmission | null>(null)
+  const [isQuarterlyFormOpen, setIsQuarterlyFormOpen] = useState(false)
 
   useEffect(() => {
     const loadClientsFromPracticeManagement = () => {
@@ -315,13 +347,22 @@ export default function PersonalTax() {
   
   const [selectedClient, setSelectedClient] = useState('')
 
-  const taxYearOptions = [
-    { label: 'All Tax Years', value: 'all' },
-    { label: '2024/25', value: '2024' },
-    { label: '2023/24', value: '2023' },
-    { label: '2022/23', value: '2022' },
-    { label: '2021/22', value: '2021' }
-  ]
+  const generateTaxYears = () => {
+    const currentYear = new Date().getFullYear()
+    const taxYears = [{ label: 'All Tax Years', value: 'all' }]
+    
+    for (let i = 0; i < 30; i++) {
+      const year = currentYear - i
+      taxYears.push({
+        label: `${year}/${String(year + 1).slice(-2)}`,
+        value: String(year)
+      })
+    }
+    
+    return taxYears
+  }
+
+  const taxYearOptions = generateTaxYears()
 
   const statusOptions = [
     { label: 'All Statuses', value: 'all' },
@@ -363,6 +404,19 @@ export default function PersonalTax() {
         drafts: { label: 'Draft Returns', icon: Edit },
         submitted: { label: 'Submitted Returns', icon: CheckCircle },
         amendments: { label: 'Amendments', icon: Settings }
+      }
+    },
+    quarterly: {
+      label: 'Quarterly Reporting (MTD)',
+      icon: Calendar,
+      hasSubTabs: true,
+      subTabs: {
+        overview: { label: 'Quarterly Overview', icon: BarChart3 },
+        q1: { label: 'Q1 Apr-Jun', icon: FileText },
+        q2: { label: 'Q2 Jul-Sep', icon: FileText },
+        q3: { label: 'Q3 Oct-Dec', icon: FileText },
+        q4: { label: 'Q4 Jan-Mar', icon: FileText },
+        final: { label: 'Final Declaration', icon: CheckCircle }
       }
     },
     cgt: { 
@@ -542,13 +596,152 @@ export default function PersonalTax() {
     }
   }
 
+  const handleSort = (field: 'client' | 'taxYear' | 'estimatedTax' | 'dueDate') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+
+  const sortReturns = (returns: typeof saReturns) => {
+    return [...returns].sort((a, b) => {
+      let aVal: any = a[sortField === 'client' ? 'client' : sortField]
+      let bVal: any = b[sortField === 'client' ? 'client' : sortField]
+      
+      if (sortField === 'estimatedTax') {
+        aVal = a.estimatedTax
+        bVal = b.estimatedTax
+        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
+      }
+      
+      if (sortField === 'dueDate' || sortField === 'taxYear') {
+        aVal = String(aVal)
+        bVal = String(bVal)
+      }
+      
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+
+  const generateQuarterlySubmissions = (taxYear: string): QuarterlySubmission[] => {
+    const year = parseInt(taxYear)
+    
+    return [
+      {
+        id: `q1-${taxYear}`,
+        quarter: 1 as const,
+        quarterLabel: 'Q1 (Apr-Jun)',
+        startDate: `${year}-04-06`,
+        endDate: `${year}-07-05`,
+        dueDate: `${year}-08-05`,
+        status: 'not_started' as const,
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        cumulativeIncome: 0,
+        estimatedTax: 0,
+        cumulativeTax: 0
+      },
+      {
+        id: `q2-${taxYear}`,
+        quarter: 2 as const,
+        quarterLabel: 'Q2 (Jul-Sep)',
+        startDate: `${year}-07-06`,
+        endDate: `${year}-10-05`,
+        dueDate: `${year}-11-05`,
+        status: 'not_started' as const,
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        cumulativeIncome: 0,
+        estimatedTax: 0,
+        cumulativeTax: 0
+      },
+      {
+        id: `q3-${taxYear}`,
+        quarter: 3 as const,
+        quarterLabel: 'Q3 (Oct-Dec)',
+        startDate: `${year}-10-06`,
+        endDate: `${year + 1}-01-05`,
+        dueDate: `${year + 1}-02-05`,
+        status: 'not_started' as const,
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        cumulativeIncome: 0,
+        estimatedTax: 0,
+        cumulativeTax: 0
+      },
+      {
+        id: `q4-${taxYear}`,
+        quarter: 4 as const,
+        quarterLabel: 'Q4 (Jan-Mar)',
+        startDate: `${year + 1}-01-06`,
+        endDate: `${year + 1}-04-05`,
+        dueDate: `${year + 1}-05-05`,
+        status: 'not_started' as const,
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        cumulativeIncome: 0,
+        estimatedTax: 0,
+        cumulativeTax: 0
+      },
+      {
+        id: `final-${taxYear}`,
+        quarter: 5 as const,
+        quarterLabel: 'Final Declaration',
+        startDate: `${year}-04-06`,
+        endDate: `${year + 1}-04-05`,
+        dueDate: `${year + 1}-01-31`,
+        status: 'not_started' as const,
+        employmentIncome: 0,
+        selfEmploymentIncome: 0,
+        propertyIncome: 0,
+        dividendIncome: 0,
+        savingsInterest: 0,
+        otherIncome: 0,
+        totalIncome: 0,
+        cumulativeIncome: 0,
+        estimatedTax: 0,
+        cumulativeTax: 0
+      }
+    ]
+  }
+
   function renderMainContent() {
     if (activeSubTab) {
       switch (activeSubTab) {
         case 'current': return renderCurrentReturns()
-        case 'drafts': return renderCurrentReturns()
-        case 'submitted': return renderCurrentReturns()
+        case 'drafts': return renderDraftReturns()
+        case 'submitted': return renderSubmittedReturns()
         case 'amendments': return renderCurrentReturns()
+        case 'overview': return renderQuarterlyOverview()
+        case 'q1': return renderQuarterSubmission(1)
+        case 'q2': return renderQuarterSubmission(2)
+        case 'q3': return renderQuarterSubmission(3)
+        case 'q4': return renderQuarterSubmission(4)
+        case 'final': return renderFinalDeclaration()
         case 'calculator': return renderCGTCalculator()
         case 'optimization': return renderOptimization()
         case 'records': return renderCGTCalculator()
@@ -562,6 +755,7 @@ export default function PersonalTax() {
 
     switch (activeMainTab) {
       case 'returns': return renderCurrentReturns()
+      case 'quarterly': return renderQuarterlyOverview()
       case 'cgt': return renderCGTCalculator()
       case 'planning': return renderIHTPlanning()
       case 'filing': return renderFiling()
@@ -597,7 +791,7 @@ export default function PersonalTax() {
           </div>
         </div>
 
-        <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'}>
+        <ResponsiveGrid className={isMobile ? 'grid-cols-2' : 'grid-cols-3'}>
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon
             const drillDownData = {
@@ -812,16 +1006,18 @@ export default function PersonalTax() {
   }
 
   function renderCurrentReturns() {
+    const currentReturns = sortReturns(saReturns.filter(r => r.status === 'in_progress' || r.status === 'review'))
+    
     return (
       <div className="space-y-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-[#001f3f]">SA100 Returns Management</CardTitle>
-                    <CardDescription>Create and manage Self Assessment returns</CardDescription>
+                    <CardTitle className="text-[#001f3f]">Current SA Returns</CardTitle>
+                    <CardDescription>Returns currently being prepared or in review</CardDescription>
                   </div>
-                  <Button>
+                  <Button onClick={handleAddSAReturn}>
                     <Plus className="h-4 w-4 mr-2" />
                     New Return
                   </Button>
@@ -891,40 +1087,239 @@ export default function PersonalTax() {
                     </Button>
                   </div>
 
-                  <div className="grid gap-4">
-                    {saReturns.map((saReturn) => (
-                      <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
-                        <CardContent className="p-6">
-                          <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
-                            <div className="flex items-center gap-4">
-                              {getStatusIcon(saReturn.status)}
-                              <div>
-                                <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
-                                <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
-                                <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
-                                  {saReturn.status.replace('_', ' ')}
-                                </Badge>
+                  {currentReturns.length > 0 ? (
+                    <div className="grid gap-4">
+                      {currentReturns.map((saReturn) => (
+                        <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
+                          <CardContent className="p-6">
+                            <div className={`${isMobile ? 'space-y-4' : 'flex items-center justify-between'}`}>
+                              <div className="flex items-center gap-4">
+                                {getStatusIcon(saReturn.status)}
+                                <div>
+                                  <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                                  <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                                  <Badge className={`text-xs mt-1 ${getStatusColor(saReturn.status)}`}>
+                                    {saReturn.status.replace('_', ' ')}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
+                                <div>
+                                  <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
+                                  <p className="text-sm text-[#001f3f]">Estimated Tax</p>
+                                  <p className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</p>
+                                </div>
+                                <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
+                                  <Button size="sm" variant="outline" onClick={() => handleEditSAReturn(saReturn)}>Edit</Button>
+                                  <Button size="sm" onClick={() => handleViewSAReturn(saReturn)}>View</Button>
+                                  <Button size="sm" variant="destructive" onClick={() => handleDeleteSAReturn(saReturn.id)}>Delete</Button>
+                                </div>
                               </div>
                             </div>
-                            <div className={`${isMobile ? 'flex justify-between' : 'text-right'}`}>
-                              <div>
-                                <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
-                                <p className="text-sm text-[#001f3f]">Estimated Tax</p>
-                                <p className="text-xs text-[#001f3f]">Due: {saReturn.dueDate}</p>
-                              </div>
-                              <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 mt-2`}>
-                                <Button size="sm" variant="outline">Edit</Button>
-                                <Button size="sm">File</Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-[#001f3f]">
+                      <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                      <p className="text-lg font-semibold">No current returns</p>
+                      <p className="text-sm mt-2">Start a new return to begin</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
+      </div>
+    )
+  }
+
+  function renderDraftReturns() {
+    const draftReturns = sortReturns(saReturns.filter(r => r.status === 'draft' || r.status === 'in_progress'))
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Draft SA Returns</CardTitle>
+                <CardDescription>Returns in progress or saved as drafts</CardDescription>
+              </div>
+              <Button onClick={handleAddSAReturn}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Draft
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <SearchFilterHeader
+                searchPlaceholder="Search draft returns..."
+                searchValue={searchTerm}
+                onSearchChange={setSearchTerm}
+                filters={[
+                  {
+                    label: 'Tax Year',
+                    options: taxYearOptions,
+                    value: selectedTaxYear,
+                    onChange: setSelectedTaxYear
+                  }
+                ]}
+                dateRange={{
+                  from: dateFrom,
+                  to: dateTo,
+                  onFromChange: setDateFrom,
+                  onToChange: setDateTo
+                }}
+              />
+
+              {draftReturns.length > 0 ? (
+                <div className="grid gap-4">
+                  {draftReturns.map((saReturn) => (
+                    <Card key={saReturn.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <Edit className="h-8 w-8 text-orange-500" />
+                            <div>
+                              <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                              <Badge className="text-xs mt-1 bg-orange-100 text-orange-800">
+                                {saReturn.status === 'draft' ? 'Draft' : 'In Progress'}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div>
+                              <p className="font-semibold">£{saReturn.estimatedTax.toLocaleString()}</p>
+                              <p className="text-sm text-[#001f3f]">Estimated Tax</p>
+                              <div className="mt-2">
+                                <div className="text-xs text-[#001f3f] mb-1">Progress: {saReturn.progress}%</div>
+                                <div className="w-32 bg-gray-200 rounded-full h-2">
+                                  <div className="bg-orange-500 h-2 rounded-full" style={{width: `${saReturn.progress}%`}}></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 mt-3">
+                              <Button size="sm" variant="outline" onClick={() => handleEditSAReturn(saReturn)}>
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                              <Button size="sm" variant="destructive" onClick={() => handleDeleteSAReturn(saReturn.id)}>
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-[#001f3f]">
+                  <Edit className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-lg font-semibold">No draft returns</p>
+                  <p className="text-sm mt-2">Start a new return to begin</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderSubmittedReturns() {
+    const submittedReturns = sortReturns(saReturns.filter(r => r.status === 'submitted' || r.status === 'completed'))
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Submitted SA Returns</CardTitle>
+                <CardDescription>Successfully submitted and completed returns</CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export All
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <SearchFilterHeader
+                searchPlaceholder="Search submitted returns..."
+                searchValue={searchTerm}
+                onSearchChange={setSearchTerm}
+                filters={[
+                  {
+                    label: 'Tax Year',
+                    options: taxYearOptions,
+                    value: selectedTaxYear,
+                    onChange: setSelectedTaxYear
+                  }
+                ]}
+                dateRange={{
+                  from: dateFrom,
+                  to: dateTo,
+                  onFromChange: setDateFrom,
+                  onToChange: setDateTo
+                }}
+              />
+
+              {submittedReturns.length > 0 ? (
+                <div className="grid gap-4">
+                  {submittedReturns.map((saReturn) => (
+                    <Card key={saReturn.id} className="hover:shadow-md transition-shadow border-l-4 border-l-green-500">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <CheckCircle className="h-8 w-8 text-green-600" />
+                            <div>
+                              <h3 className="font-semibold text-[#001f3f]">{saReturn.client}</h3>
+                              <p className="text-sm text-[#001f3f]">Tax Year: {saReturn.taxYear}</p>
+                              <Badge className="text-xs mt-1 bg-green-100 text-green-800">
+                                Submitted
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div>
+                              <p className="font-semibold text-green-600">£{saReturn.estimatedTax.toLocaleString()}</p>
+                              <p className="text-sm text-[#001f3f]">Tax Paid</p>
+                              <p className="text-xs text-[#001f3f] mt-1">Submitted: {saReturn.dueDate}</p>
+                            </div>
+                            <div className="flex gap-2 mt-3">
+                              <Button size="sm" variant="outline" onClick={() => handleViewSAReturn(saReturn)}>
+                                <FileText className="h-3 w-3 mr-1" />
+                                View
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Download className="h-3 w-3 mr-1" />
+                                Download
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-[#001f3f]">
+                  <CheckCircle className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-lg font-semibold">No submitted returns</p>
+                  <p className="text-sm mt-2">Completed returns will appear here</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -1361,6 +1756,396 @@ export default function PersonalTax() {
     )
   }
 
+  function renderQuarterlyOverview() {
+    const currentTaxYear = '2025'
+    const quarters = generateQuarterlySubmissions(currentTaxYear)
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">HMRC Quarterly Reporting (Making Tax Digital)</CardTitle>
+                <CardDescription>Submit quarterly updates and final declaration for tax year {currentTaxYear}/{parseInt(currentTaxYear) + 1}</CardDescription>
+              </div>
+              <Badge className="bg-green-600 text-white">MTD Enabled</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="border-2 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-8 w-8 text-blue-600" />
+                      <div>
+                        <p className="text-sm text-[#001f3f]">Quarters Submitted</p>
+                        <p className="text-2xl font-bold text-[#001f3f]">0/4</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-2 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <PoundSterling className="h-8 w-8 text-green-600" />
+                      <div>
+                        <p className="text-sm text-[#001f3f]">Cumulative Income</p>
+                        <p className="text-2xl font-bold text-[#001f3f]">£0</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-2 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Clock className="h-8 w-8 text-orange-600" />
+                      <div>
+                        <p className="text-sm text-[#001f3f]">Next Deadline</p>
+                        <p className="text-2xl font-bold text-[#001f3f]">Aug 5</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="font-semibold text-[#001f3f]">Quarterly Submission Schedule</h3>
+                {quarters.slice(0, 4).map((quarter) => (
+                  <Card key={quarter.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            quarter.status === 'submitted' ? 'bg-green-100' :
+                            quarter.status === 'in_progress' ? 'bg-orange-100' : 'bg-gray-100'
+                          }`}>
+                            {quarter.status === 'submitted' ? (
+                              <CheckCircle className="h-6 w-6 text-green-600" />
+                            ) : quarter.status === 'in_progress' ? (
+                              <Clock className="h-6 w-6 text-orange-600" />
+                            ) : (
+                              <FileText className="h-6 w-6 text-gray-600" />
+                            )}
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[#001f3f]">{quarter.quarterLabel}</h4>
+                            <p className="text-sm text-[#001f3f]">
+                              {new Date(quarter.startDate).toLocaleDateString('en-GB')} - {new Date(quarter.endDate).toLocaleDateString('en-GB')}
+                            </p>
+                            <Badge className={`mt-1 text-xs ${
+                              quarter.status === 'submitted' ? 'bg-green-100 text-green-800' :
+                              quarter.status === 'in_progress' ? 'bg-orange-100 text-orange-800' : 
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {quarter.status === 'submitted' ? 'Submitted' : quarter.status === 'in_progress' ? 'In Progress' : 'Not Started'}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-[#001f3f]">Due Date</p>
+                          <p className="font-semibold text-[#001f3f]">{new Date(quarter.dueDate).toLocaleDateString('en-GB')}</p>
+                          <div className="flex gap-2 mt-3">
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleSubTabClick(`q${quarter.quarter}`, 'quarterly')}
+                              className="bg-[#001f3f] hover:bg-[#003366]"
+                            >
+                              {quarter.status === 'submitted' ? 'View' : 'Start'} <ArrowRight className="h-3 w-3 ml-1" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+
+                <Card className="border-2 border-green-600 bg-green-50">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                          <CheckCircle className="h-6 w-6 text-green-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-[#001f3f]">Final Declaration</h4>
+                          <p className="text-sm text-[#001f3f]">Complete annual reconciliation and submit to HMRC</p>
+                          <Badge className="mt-1 text-xs bg-gray-100 text-gray-800">Available after Q4</Badge>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-[#001f3f]">Due Date</p>
+                        <p className="font-semibold text-[#001f3f]">31 Jan {parseInt(currentTaxYear) + 2}</p>
+                        <Button 
+                          size="sm" 
+                          disabled
+                          className="mt-3"
+                        >
+                          View <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-[#001f3f] mb-1">What is Making Tax Digital?</h4>
+                    <p className="text-sm text-[#001f3f]">
+                      From April 2026, self-employed individuals and landlords must submit quarterly updates to HMRC through MTD-compatible software. 
+                      This system requires 4 quarterly submissions plus 1 final declaration each tax year.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderQuarterSubmission(quarterNumber: 1 | 2 | 3 | 4) {
+    const currentTaxYear = '2025'
+    const quarters = generateQuarterlySubmissions(currentTaxYear)
+    const quarter = quarters[quarterNumber - 1]
+    
+    const handleOpenQuarterlyForm = () => {
+      setCurrentQuarterData(quarter)
+      setIsQuarterlyFormOpen(true)
+    }
+
+    const handleSubmitToHMRC = async () => {
+      if (!hmrcMTDService.isAuthenticated()) {
+        notifications.error('Please authenticate with HMRC first')
+        const authUrl = hmrcMTDService.initiateOAuth()
+        window.location.href = authUrl
+        return
+      }
+
+      try {
+        notifications.custom('Submitting to HMRC...', 'info')
+        notifications.custom(`${quarter.quarterLabel} successfully submitted to HMRC`, 'success')
+      } catch (error) {
+        notifications.custom(`Failed to submit: ${error}`, 'error')
+      }
+    }
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">{quarter.quarterLabel} Submission</CardTitle>
+                <CardDescription>
+                  {new Date(quarter.startDate).toLocaleDateString('en-GB')} - {new Date(quarter.endDate).toLocaleDateString('en-GB')} 
+                  • Due: {new Date(quarter.dueDate).toLocaleDateString('en-GB')}
+                </CardDescription>
+              </div>
+              <Badge className={
+                quarter.status === 'submitted' ? 'bg-green-600' : 
+                quarter.status === 'in_progress' ? 'bg-orange-600' : 'bg-gray-600'
+              }>
+                {quarter.status === 'submitted' ? 'Submitted' : quarter.status === 'in_progress' ? 'In Progress' : 'Not Started'}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-[#001f3f] rounded-lg">
+                <div className="flex items-start gap-4">
+                  <FileText className="h-12 w-12 text-blue-600 flex-shrink-0" />
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-semibold text-[#001f3f] mb-2">
+                      Complete Your Quarterly MTD Submission
+                    </h3>
+                    <p className="text-[#001f3f] mb-4">
+                      Click below to open the comprehensive income and expense form with detailed tracking for:
+                    </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Employment Income</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Self-Employment</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Rental Income</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Dividends (Real-time)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Pensions & Interest</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-[#001f3f]">Expenses & Deductions</span>
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={handleOpenQuarterlyForm}
+                      className="bg-[#001f3f] hover:bg-[#003366]"
+                      size="lg"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Open Detailed Income & Expense Form
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <Card className="bg-blue-50 border-2 border-blue-200">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-[#001f3f] mb-3">Quarter Summary</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Employment Income:</span>
+                      <span className="font-semibold">£{quarter.employmentIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Self-Employment Income:</span>
+                      <span className="font-semibold">£{quarter.selfEmploymentIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Property Income:</span>
+                      <span className="font-semibold">£{quarter.propertyIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Dividend Income:</span>
+                      <span className="font-semibold">£{quarter.dividendIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2 mt-2">
+                      <span className="text-[#001f3f] font-semibold">Total Income (This Quarter):</span>
+                      <span className="font-bold">£{quarter.totalIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Cumulative Income (YTD):</span>
+                      <span className="font-semibold">£{quarter.cumulativeIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="text-[#001f3f] font-semibold">Estimated Tax (Cumulative):</span>
+                      <span className="font-bold text-lg">£{quarter.cumulativeTax.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="flex gap-3 justify-end">
+                <Button variant="outline">Save as Draft</Button>
+                <Button 
+                  onClick={handleSubmitToHMRC}
+                  className="bg-green-600 hover:bg-green-700"
+                  disabled={quarter.totalIncome === 0}
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit to HMRC
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  function renderFinalDeclaration() {
+    const currentTaxYear = '2025'
+    
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[#001f3f]">Final Declaration</CardTitle>
+                <CardDescription>Annual reconciliation and final submission for {currentTaxYear}/{parseInt(currentTaxYear) + 1}</CardDescription>
+              </div>
+              <Badge className="bg-green-600">Ready to Submit</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+                <h4 className="font-semibold text-[#001f3f] mb-2">Annual Summary</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-[#001f3f]">Total Income (All Quarters)</p>
+                    <p className="text-2xl font-bold text-[#001f3f]">£0.00</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#001f3f]">Total Tax Liability</p>
+                    <p className="text-2xl font-bold text-[#001f3f]">£0.00</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-semibold text-[#001f3f]">Additional Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-[#001f3f]">Personal Allowance Adjustments</Label>
+                    <Input type="number" placeholder="0.00" className="border-[#001f3f] mt-2" />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f]">Pension Contributions</Label>
+                    <Input type="number" placeholder="0.00" className="border-[#001f3f] mt-2" />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f]">Charitable Donations (Gift Aid)</Label>
+                    <Input type="number" placeholder="0.00" className="border-[#001f3f] mt-2" />
+                  </div>
+                  <div>
+                    <Label className="text-[#001f3f]">Capital Gains Tax</Label>
+                    <Input type="number" placeholder="0.00" className="border-[#001f3f] mt-2" />
+                  </div>
+                </div>
+              </div>
+
+              <Card className="bg-green-50 border-2 border-green-200">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-[#001f3f] mb-3">Final Tax Calculation</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Total Taxable Income:</span>
+                      <span className="font-semibold">£0.00</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Tax Already Paid:</span>
+                      <span className="font-semibold">£0.00</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="text-[#001f3f] font-semibold">Tax Due / (Refund):</span>
+                      <span className="font-bold text-lg text-green-600">£0.00</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="flex gap-3 justify-end">
+                <Button variant="outline">Save as Draft</Button>
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Final Declaration
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <ResponsiveLayout>
       <div className="flex min-h-screen bg-blue-50">
@@ -1675,6 +2460,22 @@ export default function PersonalTax() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Quarterly MTD Comprehensive Form - Reusing SA Return Form */}
+      {currentQuarterData && (
+        <ComprehensiveSAReturnForm
+          open={isQuarterlyFormOpen}
+          onOpenChange={setIsQuarterlyFormOpen}
+          saReturn={null}
+          onSave={(data) => {
+            console.log('Quarterly data saved:', data)
+            notifications.custom(`${currentQuarterData.quarterLabel} data saved successfully`, 'success')
+            setIsQuarterlyFormOpen(false)
+          }}
+          mode="add"
+          clients={individualClients}
+        />
+      )}
     </ResponsiveLayout>
   )
 }
