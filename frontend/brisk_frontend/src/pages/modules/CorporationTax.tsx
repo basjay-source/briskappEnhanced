@@ -49,6 +49,7 @@ import {
 } from '@/services/corporationTaxData'
 import CT600Form from '@/components/corporation-tax/CT600Form'
 import { ct600API, rdClaimsAPI, dashboardAPI } from '@/services/corporationTaxAPI'
+import { SearchFilterHeader } from '@/components/SearchFilterHeader'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -485,43 +486,41 @@ export default function CorporationTax() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="mb-4 flex items-center gap-4 flex-wrap">
-              <div className="flex-1 min-w-[200px]">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-[#001f3f]" />
-                  <Input
-                    placeholder="Search clients, company number, UTR..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8 border-[#001f3f]"
-                  />
-                </div>
-              </div>
-              <Select value={selectedTaxYear} onValueChange={setSelectedTaxYear}>
-                <SelectTrigger className="w-[180px] border-[#001f3f]">
-                  <SelectValue placeholder="Tax Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Tax Years</SelectItem>
-                  {generateTaxYears().map(year => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-[180px] border-[#001f3f]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="submitted">Submitted</SelectItem>
-                  <SelectItem value="approved">Approved</SelectItem>
-                  <SelectItem value="filed">Filed</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <SearchFilterHeader
+              searchPlaceholder="Search clients, company number, UTR..."
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              filters={[
+                {
+                  label: 'Tax Year',
+                  options: [
+                    { label: 'All Tax Years', value: 'all' },
+                    ...generateTaxYears().map(year => ({ label: year, value: year }))
+                  ],
+                  value: selectedTaxYear,
+                  onChange: setSelectedTaxYear
+                },
+                {
+                  label: 'Status',
+                  options: [
+                    { label: 'All Statuses', value: 'all' },
+                    { label: 'Draft', value: 'draft' },
+                    { label: 'In Progress', value: 'in-progress' },
+                    { label: 'Submitted', value: 'submitted' },
+                    { label: 'Approved', value: 'approved' },
+                    { label: 'Filed', value: 'filed' }
+                  ],
+                  value: selectedStatus,
+                  onChange: setSelectedStatus
+                }
+              ]}
+              dateRange={{
+                from: dateFrom,
+                to: dateTo,
+                onFromChange: setDateFrom,
+                onToChange: setDateTo
+              }}
+            />
 
             <div className="overflow-x-auto">
               <table className="w-full">
