@@ -1896,21 +1896,45 @@ export default function PersonalTax() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="annual-income" className="text-[#001f3f]">Annual Income</Label>
-                      <Input id="annual-income" placeholder="£0.00" />
+                      <Input 
+                        id="annual-income" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.annualIncome || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, annualIncome: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="current-contributions" className="text-[#001f3f]">Current Pension Contributions</Label>
-                      <Input id="current-contributions" placeholder="£0.00" />
+                      <Input 
+                        id="current-contributions" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.currentContributions || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, currentContributions: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="pension-value" className="text-[#001f3f]">Current Pension Value</Label>
-                      <Input id="pension-value" placeholder="£0.00" />
+                      <Input 
+                        id="pension-value" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.pensionValue || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, pensionValue: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="unused-allowance" className="text-[#001f3f]">Unused Allowance (3 years)</Label>
-                      <Input id="unused-allowance" placeholder="£0.00" />
+                      <Input 
+                        id="unused-allowance" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.unusedAllowance || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, unusedAllowance: parseFloat(e.target.value) || 0})}
+                      />
                     </div>
-                    <Button className="w-full">
+                    <Button className="w-full bg-[#001f3f] hover:bg-[#001f3f]/90" onClick={calculatePension}>
                       <Calculator className="h-4 w-4 mr-2" />
                       Optimize Contributions
                     </Button>
@@ -1924,19 +1948,19 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Standard Allowance</span>
-                            <span>£40,000</span>
+                            <span>£{pensionResult.annualAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Tapered Allowance</span>
-                            <span className="font-semibold">£40,000</span>
+                            <span className="font-semibold">£{pensionResult.taperedAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Used This Year</span>
-                            <span>£0</span>
+                            <span>£{pensionResult.usedThisYear.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Allowance</span>
-                            <span className="font-bold text-lg">£40,000</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingAllowance.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
@@ -1949,23 +1973,43 @@ export default function PersonalTax() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span>Lifetime Allowance</span>
-                            <span>£1,073,100</span>
+                            <span>£{pensionResult.lifetimeAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Current Value</span>
-                            <span>£0</span>
+                            <span>£{currentPension.pensionValue.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Utilization</span>
-                            <span className="font-semibold">0%</span>
+                            <span className="font-semibold">{pensionResult.utilizationPercent.toFixed(1)}%</span>
                           </div>
                           <div className="flex justify-between border-t pt-2">
                             <span>Remaining Capacity</span>
-                            <span className="font-bold text-lg">£1,073,100</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingCapacity.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
+                    {pensionCalculations.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({pensionCalculations.length})</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {pensionCalculations.slice(-5).reverse().map((calc: any) => (
+                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                                <div className="flex justify-between">
+                                  <span>Income: £{calc.annualIncome?.toLocaleString()}</span>
+                                  <span className="text-green-600">Remaining: £{calc.remainingAllowance?.toLocaleString()}</span>
+                                </div>
+                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </div>
               </CardContent>
