@@ -1878,60 +1878,79 @@ export default function PersonalTax() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="estate-value" className="text-[#001f3f]">Total Estate Value</Label>
+                      <Label htmlFor="iht-tax-year" className="text-[#001f3f]">Tax Year</Label>
+                      <Select value={currentIht.taxYear} onValueChange={(val) => setCurrentIht({...currentIht, taxYear: val})}>
+                        <SelectTrigger className="border-[#001f3f]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getTaxYearsList().map(year => (
+                            <SelectItem key={year} value={year}>{year}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="estate-value" className="text-[#001f3f]">Total Estate Value (£)</Label>
                       <Input 
                         id="estate-value" 
                         type="number" 
                         placeholder="0.00" 
                         value={currentIht.estateValue || ''}
                         onChange={(e) => setCurrentIht({...currentIht, estateValue: parseFloat(e.target.value) || 0})}
+                        className="border-[#001f3f]"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="nil-rate-band" className="text-[#001f3f]">Nil Rate Band Available</Label>
-                      <Input id="nil-rate-band" value={`£${ihtResult.nilRateBand.toLocaleString()}`} readOnly />
-                    </div>
-                    <div>
-                      <Label htmlFor="residence-nil-rate" className="text-[#001f3f]">Residence Nil Rate Band</Label>
-                      <Input id="residence-nil-rate" value={`£${ihtResult.residenceNilRateBand.toLocaleString()}`} readOnly />
-                    </div>
-                    <div>
-                      <Label htmlFor="gifts-made" className="text-[#001f3f]">Gifts Made (Last 7 Years)</Label>
+                      <Label htmlFor="residence-value" className="text-[#001f3f]">Residence Value (£)</Label>
                       <Input 
-                        id="gifts-made" 
+                        id="residence-value" 
                         type="number" 
                         placeholder="0.00" 
-                        value={currentIht.giftsMade || ''}
-                        onChange={(e) => setCurrentIht({...currentIht, giftsMade: parseFloat(e.target.value) || 0})}
+                        value={currentIht.residenceValue || ''}
+                        onChange={(e) => setCurrentIht({...currentIht, residenceValue: parseFloat(e.target.value) || 0})}
+                        className="border-[#001f3f]"
                       />
                     </div>
-                    <Button className="w-full bg-[#001f3f] hover:bg-[#001f3f]/90" onClick={calculateIHT}>
+                    <Button className="w-full bg-[#001f3f] hover:bg-[#003366]" onClick={handleCalculateIHT}>
                       <Calculator className="h-4 w-4 mr-2" />
                       Calculate IHT Liability
                     </Button>
                   </div>
                   <div className="space-y-4">
-                    <Card>
+                    <Card className="bg-blue-50 border-2 border-[#001f3f]">
                       <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">IHT Calculation</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">IHT Calculation Results</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span>Estate Value</span>
-                            <span className="font-semibold">£{ihtResult.estateValue.toLocaleString()}</span>
+                            <span className="text-[#001f3f]">Tax Year</span>
+                            <span className="font-semibold text-[#001f3f]">{currentIht.taxYear}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Total Nil Rate Bands</span>
-                            <span>£{ihtResult.totalAllowance.toLocaleString()}</span>
+                            <span className="text-[#001f3f]">Nil Rate Band</span>
+                            <span className="text-[#001f3f]">£{ihtResult.nilRateBand.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Taxable Estate</span>
-                            <span className="font-semibold">£{ihtResult.taxableEstate.toLocaleString()}</span>
+                            <span className="text-[#001f3f]">Residence NRB</span>
+                            <span className="text-[#001f3f]">£{ihtResult.residenceNilRateBand.toLocaleString()}</span>
                           </div>
-                          <div className="flex justify-between border-t pt-2">
-                            <span>IHT Due (40%)</span>
-                            <span className="font-bold text-lg text-red-600">£{ihtResult.ihtDue.toLocaleString()}</span>
+                          <div className="flex justify-between">
+                            <span className="text-[#001f3f]">Total NRB</span>
+                            <span className="font-semibold text-[#001f3f]">£{ihtResult.totalNilRateBand.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#001f3f]">Taxable Estate</span>
+                            <span className="font-semibold text-[#001f3f]">£{ihtResult.taxableEstate.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2 border-[#001f3f]">
+                            <span className="text-[#001f3f] font-semibold">IHT Due (40%)</span>
+                            <span className="font-bold text-lg text-red-600">£{ihtResult.ihtDue.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-[#001f3f]">Effective Rate</span>
+                            <span className="text-[#001f3f]">{ihtResult.effectiveRate.toFixed(2)}%</span>
                           </div>
                         </div>
                       </CardContent>
