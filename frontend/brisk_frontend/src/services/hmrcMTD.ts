@@ -97,9 +97,9 @@ class HMRCMTDService {
   private isProduction = false
   
   private config: HMRCAuthConfig = {
-    clientId: process.env.VITE_HMRC_CLIENT_ID || '',
-    clientSecret: process.env.VITE_HMRC_CLIENT_SECRET || '',
-    redirectUri: process.env.VITE_HMRC_REDIRECT_URI || 'http://localhost:5173/hmrc/callback',
+    clientId: import.meta.env.VITE_HMRC_CLIENT_ID || '',
+    clientSecret: import.meta.env.VITE_HMRC_CLIENT_SECRET || '',
+    redirectUri: import.meta.env.VITE_HMRC_REDIRECT_URI || 'http://localhost:5173/hmrc/callback',
     scopes: [
       'read:self-assessment',
       'write:self-assessment'
