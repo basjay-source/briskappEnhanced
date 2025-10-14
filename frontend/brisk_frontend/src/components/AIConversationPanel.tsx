@@ -4,6 +4,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Brain, Send, FileText, Download, Trash2, Copy, CheckCircle } from 'lucide-react'
 import { AIAdviserEngine, type ConversationMessage, type AIReport } from '@/services/advancedAI'
+import { generateReport, downloadReport, type ReportFormat } from '@/services/reportGenerator'
 import notifications from '@/lib/notifications'
 
 interface AIConversationPanelProps {
@@ -24,6 +25,7 @@ export default function AIConversationPanel({
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [showReportOptions, setShowReportOptions] = useState(false)
+  const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('html')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -60,10 +62,27 @@ export default function AIConversationPanel({
     setIsLoading(true)
     try {
       const topic = 'Tax Planning Analysis'
-      const report = await aiEngine.generateReport(topic, context)
+      const aiReport = await aiEngine.generateReport(topic, context)
       
-      downloadReport(report)
-      notifications.saved('Report Generated', 'Professional report ready for download')
+      const blob = await generateReport(aiReport, {
+        format: selectedFormat,
+        includeCharts: true,
+        includeAppendices: true,
+        brandColor: '#001f3f'
+      })
+      
+      const formatNames: Record<ReportFormat, string> = {
+        html: 'HTML',
+        pdf: 'PDF Instructions',
+        docx: 'Word (RTF)',
+        markdown: 'Markdown'
+      }
+      
+      downloadReport(blob, aiReport.title.replace(/\s+/g, '_'), selectedFormat)
+      notifications.saved(
+        'Report Generated',
+        `Professional ${formatNames[selectedFormat]} report ready for download`
+      )
     } catch (error) {
       console.error('Report generation error:', error)
       notifications.custom('Failed to generate report', 'error')
@@ -71,17 +90,6 @@ export default function AIConversationPanel({
       setIsLoading(false)
       setShowReportOptions(false)
     }
-  }
-
-  const downloadReport = (report: AIReport) => {
-    const reportContent = formatReportAsHTML(report)
-    const blob = new Blob([reportContent], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `${report.title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.html`
-    link.click()
-    URL.revokeObjectURL(url)
   }
 
   const formatReportAsHTML = (report: AIReport): string => {
@@ -345,7 +353,7 @@ export default function AIConversationPanel({
           <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-[#001f3f]">Generate Professional Report</CardTitle>
-              <CardDescription>Create a comprehensive client-ready report</CardDescription>
+              <CardDescription>Create a comprehensive client-ready report in multiple formats</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -362,6 +370,36 @@ export default function AIConversationPanel({
                 </ul>
               </div>
               
+              <div>
+                <label className="block text-sm font-medium text-[#001f3f] mb-2">
+                  Select Report Format:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(['html', 'pdf', 'docx', 'markdown'] as ReportFormat[]).map((format) => (
+                    <button
+                      key={format}
+                      onClick={() => setSelectedFormat(format)}
+                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedFormat === format
+                          ? 'border-[#ff9800] bg-[#ff9800] text-white'
+                          : 'border-[#001f3f] text-[#001f3f] hover:bg-gray-50'
+                      }`}
+                    >
+                      {format === 'html' && '📄 HTML'}
+                      {format === 'pdf' && '📑 PDF'}
+                      {format === 'docx' && '📝 Word'}
+                      {format === 'markdown' && '📋 Markdown'}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  {selectedFormat === 'html' && 'Interactive HTML report - can be printed to PDF'}
+                  {selectedFormat === 'pdf' && 'Instructions for converting HTML to PDF'}
+                  {selectedFormat === 'docx' && 'RTF format - opens in Microsoft Word'}
+                  {selectedFormat === 'markdown' && 'Plain text markdown format'}
+                </p>
+              </div>
+              
               <div className="flex gap-2">
                 <Button
                   onClick={handleGenerateReport}
@@ -369,7 +407,7 @@ export default function AIConversationPanel({
                   disabled={isLoading}
                 >
                   <FileText className="h-4 w-4 mr-2" />
-                  Generate Report
+                  Generate {selectedFormat.toUpperCase()} Report
                 </Button>
                 <Button
                   variant="outline"
