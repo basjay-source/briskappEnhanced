@@ -47,6 +47,7 @@ import {
   CTClientFormData,
   RDProjectFormData 
 } from '@/services/corporationTaxData'
+import { ctDataSyncService, CT600Data } from '@/services/ctDataSync'
 
 export default function CorporationTax() {
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
@@ -71,10 +72,13 @@ export default function CorporationTax() {
   const [showRDDetailModal, setShowRDDetailModal] = useState(false)
   const [showCAModal, setShowCAModal] = useState(false)
   const [showGRModal, setShowGRModal] = useState(false)
+  const [showCT600Modal, setShowCT600Modal] = useState(false)
   const [selectedClient, setSelectedClient] = useState<CTClient | null>(null)
   const [selectedRDProject, setSelectedRDProject] = useState<RDProject | null>(null)
   const [editingClient, setEditingClient] = useState<CTClient | null>(null)
   const [editingRDProject, setEditingRDProject] = useState<RDProject | null>(null)
+  const [ct600Data, setCT600Data] = useState<CT600Data | null>(null)
+  const [isLoadingCT600, setIsLoadingCT600] = useState(false)
   
   const [sortColumn, setSortColumn] = useState<string>('')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
@@ -109,9 +113,36 @@ export default function CorporationTax() {
     setShowClientModal(true)
   }
 
-  const handleViewClient = (client: CTClient) => {
+  const handleViewClient = async (client: CTClient) => {
     setSelectedClient(client)
     setShowClientDetailModal(true)
+    
+    // Automatically sync CT600 data from Accounts Production
+    setIsLoadingCT600(true)
+    try {
+      const ct600 = await ctDataSyncService.generateCT600Data(
+        client.id,
+        {
+          companyName: client.companyName,
+          companyNumber: client.companyNumber,
+          utr: client.utr,
+          accountingPeriodStart: client.accountingPeriodStart,
+          accountingPeriodEnd: client.accountingPeriodEnd,
+          taxYear: client.taxYear
+        },
+        `${client.accountingPeriodStart} - ${client.accountingPeriodEnd}`,
+        0,
+        [],
+        undefined
+      )
+      setCT600Data(ct600)
+      notifications.custom('CT600 data automatically synced from Accounts Production', 'success')
+    } catch (error) {
+      notifications.custom('Failed to sync CT600 data', 'error')
+      console.error(error)
+    } finally {
+      setIsLoadingCT600(false)
+    }
   }
 
   const handleDeleteClient = (id: string) => {
@@ -167,6 +198,36 @@ export default function CorporationTax() {
     }
     setRDProjects(ctDataService.getRDProjects())
     setShowRDModal(false)
+  }
+
+  const handleSyncCT600 = async (client: CTClient) => {
+    setIsLoadingCT600(true)
+    setSelectedClient(client)
+    try {
+      const ct600 = await ctDataSyncService.generateCT600Data(
+        client.id,
+        {
+          companyName: client.companyName,
+          companyNumber: client.companyNumber,
+          utr: client.utr,
+          accountingPeriodStart: client.accountingPeriodStart,
+          accountingPeriodEnd: client.accountingPeriodEnd,
+          taxYear: client.taxYear
+        },
+        `${client.accountingPeriodStart} - ${client.accountingPeriodEnd}`,
+        0,
+        [],
+        undefined
+      )
+      setCT600Data(ct600)
+      setShowCT600Modal(true)
+      notifications.custom('CT600 data synced from Accounts Production', 'success')
+    } catch (error) {
+      notifications.custom('Failed to sync CT600 data', 'error')
+      console.error(error)
+    } finally {
+      setIsLoadingCT600(false)
+    }
   }
 
   const stats = ctDataService.getDashboardStats()
@@ -587,9 +648,9 @@ export default function CorporationTax() {
           <CardContent>
             <div className="space-y-4">
               {clients.map((client) => (
-                <div key={client.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50 cursor-pointer" onClick={() => handleViewClient(client)}>
+                <div key={client.id} className="p-4 border-2 border-[#001f3f] rounded-[2px] hover:bg-blue-50">
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex-1 cursor-pointer" onClick={() => handleViewClient(client)}>
                       <h3 className="font-semibold text-[#001f3f]">{client.companyName}</h3>
                       <p className="text-sm text-[#001f3f] mt-1">
                         Tax Year: {client.taxYear} | Tax Due: £{client.taxDue.toLocaleString()}
@@ -597,6 +658,10 @@ export default function CorporationTax() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge>{client.status}</Badge>
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Auto-sync enabled
+                      </Badge>
                       <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); handleEditClient(client); }}>
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -1123,12 +1188,333 @@ export default function CorporationTax() {
   }
 
   return (
-    <div className="flex min-h-screen bg-blue-50">
-      <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
-        <div className="p-4 border-b-2 border-[#001f3f]">
-          <h1 className="text-lg font-semibold text-[#001f3f]">Corporation Tax</h1>
-          <p className="text-sm text-[#001f3f]">CT600 & R&D Claims</p>
-        </div>
+    <>
+      {/* CT600 Data Modal */}
+      <Dialog open={showCT600Modal} onOpenChange={setShowCT600Modal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">CT600 Corporation Tax Computation</DialogTitle>
+            <DialogDescription>
+              Automatically synced from Accounts Production - {selectedClient?.companyName}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {ct600Data && (
+            <div className="space-y-6">
+              {/* Profit & Loss Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Profit & Loss (from Accounts Production)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Turnover</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.profitAndLoss.turnover.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Gross Profit</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.profitAndLoss.grossProfit.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Operating Profit</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.profitAndLoss.operatingProfit.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Interest Receivable</p>
+                      <p className="font-semibold text-green-600">£{ct600Data.profitAndLoss.interestReceivable.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Interest Payable</p>
+                      <p className="font-semibold text-red-600">£{ct600Data.profitAndLoss.interestPayable.toLocaleString()}</p>
+                    </div>
+                    <div className="bg-blue-50 p-2 rounded">
+                      <p className="text-xs text-[#001f3f] font-semibold">Profit Before Tax</p>
+                      <p className="font-bold text-[#001f3f] text-lg">£{ct600Data.profitAndLoss.profitBeforeTax.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Tax Adjustments Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Tax Adjustments</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {ct600Data.taxAdjustments.map((adj) => (
+                      <div key={adj.id} className="flex items-center justify-between p-3 border border-[#001f3f] rounded">
+                        <div className="flex-1">
+                          <p className="font-medium text-[#001f3f]">{adj.category}</p>
+                          <p className="text-xs text-[#001f3f]">{adj.description}</p>
+                          <p className="text-xs text-[#001f3f] mt-1">{adj.notes}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-[#001f3f]">Adjustment</p>
+                          <p className={`font-semibold ${adj.isAddition ? 'text-red-600' : 'text-green-600'}`}>
+                            {adj.isAddition ? '+' : '-'}£{adj.adjustment.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Capital Allowances Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Capital Allowances (from Fixed Assets)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#001f3f]">Total Capital Allowances:</span>
+                      <span className="font-semibold text-green-600">-£{ct600Data.capitalAllowances.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Losses Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Losses</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Losses Brought Forward</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.losses.tradeLossesBroughtForward.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Loss Relief Claimed</p>
+                      <p className="font-semibold text-green-600">-£{ct600Data.losses.lossReliefClaimed.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Losses Carried Back</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.losses.lossesCarriedBack.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Losses Carried Forward</p>
+                      <p className="font-semibold text-[#001f3f]">£{ct600Data.losses.lossesCarriedForward.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* CT Calculation Section */}
+              <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Corporation Tax Calculation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-[#001f3f]">
+                      <span>Trading Profit:</span>
+                      <span className="font-semibold">£{ct600Data.tradingProfit.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[#001f3f]">
+                      <span>Non-Trading Income:</span>
+                      <span className="font-semibold">£{ct600Data.nonTradingIncome.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[#001f3f] border-t pt-2">
+                      <span>Total Profits:</span>
+                      <span className="font-semibold">£{ct600Data.totalProfits.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[#001f3f] border-t pt-2">
+                      <span className="font-bold">Taxable Profit:</span>
+                      <span className="font-bold text-lg">£{ct600Data.taxableProfit.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-[#001f3f]">
+                      <span>CT Rate:</span>
+                      <span className="font-semibold">{(ct600Data.corporationTaxRate * 100).toFixed(2)}%</span>
+                    </div>
+                    <div className="flex justify-between border-t pt-2">
+                      <span className="font-bold text-[#001f3f]">Corporation Tax Charge:</span>
+                      <span className="font-bold text-red-600 text-xl">£{ct600Data.corporationTaxCharge.toLocaleString()}</span>
+                    </div>
+                    {ct600Data.reliefs.marginalRelief > 0 && (
+                      <div className="flex justify-between text-green-600">
+                        <span>Marginal Relief:</span>
+                        <span className="font-semibold">-£{ct600Data.reliefs.marginalRelief.toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between border-t-2 border-[#001f3f] pt-3">
+                      <span className="font-bold text-[#001f3f] text-lg">Tax Due:</span>
+                      <span className="font-bold text-red-600 text-2xl">£{ct600Data.taxAfterReliefs.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Supplementary Pages */}
+              {ct600Data.supplementaryPages.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#001f3f]">Supplementary Pages</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {ct600Data.supplementaryPages.map((page) => (
+                        <div key={page.id} className="p-3 border border-[#001f3f] rounded">
+                          <p className="font-semibold text-[#001f3f]">{page.pageType} - {page.pageName}</p>
+                          {page.pageType === 'CT600A' && ct600Data.loansToParticipators && (
+                            <div className="mt-2 space-y-2">
+                              <p className="text-sm text-[#001f3f]">Loans Outstanding: £{ct600Data.loansToParticipators.totalLoansOutstanding.toLocaleString()}</p>
+                              <p className="text-sm text-red-600 font-semibold">s455 Tax Charge: £{page.data.s455TaxCharge.toLocaleString()}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setShowCT600Modal(false)}>
+                  Close
+                </Button>
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Save className="h-4 w-4 mr-2" />
+                  Save CT600
+                </Button>
+                <Button className="bg-brisk-primary hover:bg-brisk-primary-600">
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit to HMRC
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Client Detail Modal with Auto-Synced CT600 */}
+      <Dialog open={showClientDetailModal} onOpenChange={setShowClientDetailModal}>
+        <DialogContent className="max-w-7xl max-h-[95vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-[#001f3f]">Client Details & CT600 Computation</DialogTitle>
+            <DialogDescription>
+              {selectedClient?.companyName} - Automatically synced from Accounts Production
+            </DialogDescription>
+          </DialogHeader>
+          
+          {isLoadingCT600 ? (
+            <div className="flex items-center justify-center p-12">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#001f3f] mx-auto mb-4"></div>
+                <p className="text-[#001f3f]">Syncing CT600 data from Accounts Production...</p>
+              </div>
+            </div>
+          ) : ct600Data ? (
+            <div className="space-y-6">
+              {/* Company Details */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">Company Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Company Number</p>
+                      <p className="font-semibold text-[#001f3f]">{selectedClient?.companyNumber}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">UTR</p>
+                      <p className="font-semibold text-[#001f3f]">{selectedClient?.utr}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Accounting Period</p>
+                      <p className="font-semibold text-[#001f3f]">
+                        {new Date(selectedClient?.accountingPeriodStart!).toLocaleDateString()} - {new Date(selectedClient?.accountingPeriodEnd!).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#001f3f]">Tax Year</p>
+                      <p className="font-semibold text-[#001f3f]">{selectedClient?.taxYear}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quick Summary */}
+              <div className="grid gap-4 md:grid-cols-4">
+                <Card className="bg-blue-50 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <p className="text-xs text-[#001f3f]">Profit Before Tax</p>
+                    <p className="font-bold text-[#001f3f] text-xl">£{ct600Data.profitAndLoss.profitBeforeTax.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-blue-50 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <p className="text-xs text-[#001f3f]">Tax Adjustments</p>
+                    <p className="font-bold text-red-600 text-xl">
+                      +£{ct600Data.taxAdjustments.reduce((sum, adj) => sum + (adj.isAddition ? adj.adjustment : 0), 0).toLocaleString()}
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-blue-50 border-[#001f3f]">
+                  <CardContent className="p-4">
+                    <p className="text-xs text-[#001f3f]">Capital Allowances</p>
+                    <p className="font-bold text-green-600 text-xl">-£{ct600Data.capitalAllowances.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-red-50 border-red-600 border-2">
+                  <CardContent className="p-4">
+                    <p className="text-xs text-[#001f3f]">Corporation Tax Due</p>
+                    <p className="font-bold text-red-600 text-2xl">£{ct600Data.taxAfterReliefs.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Full CT600 Data in Tabs */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#001f3f]">CT600 Detailed Computation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    onClick={() => {
+                      setShowClientDetailModal(false)
+                      setShowCT600Modal(true)
+                    }}
+                    className="w-full bg-brisk-primary hover:bg-brisk-primary-600"
+                  >
+                    <Calculator className="h-4 w-4 mr-2" />
+                    View Full CT600 Computation
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setShowClientDetailModal(false)}>
+                  Close
+                </Button>
+                <Button className="bg-green-600 hover:bg-green-700" onClick={() => {
+                  setShowClientDetailModal(false)
+                  setShowCT600Modal(true)
+                }}>
+                  <Eye className="h-4 w-4 mr-2" />
+                  View Full CT600
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center p-8 text-[#001f3f]">
+              No CT600 data available
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <div className="flex min-h-screen bg-blue-50">
+        <div className="w-64 bg-white border-r-2 border-[#001f3f] flex flex-col">
+          <div className="p-4 border-b-2 border-[#001f3f]">
+            <h1 className="text-lg font-semibold text-[#001f3f]">Corporation Tax</h1>
+            <p className="text-sm text-[#001f3f]">CT600 & R&D Claims</p>
+          </div>
         
         <div className="flex-1 overflow-y-auto p-2">
           <nav className="space-y-0.5">
