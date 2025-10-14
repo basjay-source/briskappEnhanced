@@ -12,9 +12,17 @@ import {
   BarChart3,
   Shield,
   Building,
-  Calendar
+  Calendar,
+  Plus,
+  Edit,
+  Trash2,
+  Download,
+  Upload,
+  Send,
+  UserPlus,
+  UserMinus
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -35,6 +43,70 @@ export default function Payroll() {
   const [selectedDepartment, setSelectedDepartment] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedPayPeriod, setSelectedPayPeriod] = useState('all')
+  
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false)
+  const [showRTIModal, setShowRTIModal] = useState(false)
+  const [showCISModal, setShowCISModal] = useState(false)
+  const [editingItem, setEditingItem] = useState<any>(null)
+  
+  const [employees, setEmployees] = useState<any[]>([
+    {
+      id: '1',
+      name: 'John Smith',
+      employeeNumber: 'EMP001',
+      department: 'Development',
+      jobTitle: 'Senior Developer',
+      salary: 55000,
+      status: 'Active',
+      startDate: '2020-01-15',
+      niNumber: 'AB123456C',
+      email: 'john.smith@company.com',
+      phone: '07700 900123'
+    },
+    {
+      id: '2',
+      name: 'Sarah Johnson',
+      employeeNumber: 'EMP002',
+      department: 'Marketing',
+      jobTitle: 'Marketing Manager',
+      salary: 48000,
+      status: 'Active',
+      startDate: '2021-06-01',
+      niNumber: 'CD789012D',
+      email: 'sarah.johnson@company.com',
+      phone: '07700 900789'
+    }
+  ])
+  
+  const [rtiSubmissions, setRTISubmissions] = useState<any[]>([
+    {
+      id: '1',
+      type: 'FPS',
+      period: 'December 2024',
+      submissionDate: '2024-12-28',
+      status: 'Submitted',
+      employeeCount: 247
+    },
+    {
+      id: '2',
+      type: 'EPS',
+      period: 'December 2024',
+      submissionDate: '2024-12-28',
+      status: 'Accepted',
+      employeeCount: 247
+    }
+  ])
+  
+  const [cisSubcontractors, setCISSubcontractors] = useState<any[]>([
+    {
+      id: '1',
+      name: 'ABC Construction Ltd',
+      utr: '1234567890',
+      verificationNumber: 'VERIFY-123456',
+      deductionRate: 20,
+      status: 'Active'
+    }
+  ])
 
   const departmentOptions = [
     { label: 'All Departments', value: 'all' },
@@ -484,10 +556,165 @@ export default function Payroll() {
       )
     }
 
+    if (activeMainTab === 'employees' && activeSubTab === 'employee-records') {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-[#001f3f]">Employee Records</h3>
+            <Button onClick={() => { setEditingItem(null); setShowEmployeeModal(true); }} className="bg-gradient-to-r from-orange-500 to-orange-600">
+              <Plus className="h-4 w-4 mr-2" />
+              Add New Employee
+            </Button>
+          </div>
+          
+          <div className="bg-white rounded-[2px] border-2 border-[#001f3f] overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-[#001f3f] text-white">
+                <tr>
+                  <th className="px-4 py-3 text-left">Employee No.</th>
+                  <th className="px-4 py-3 text-left">Name</th>
+                  <th className="px-4 py-3 text-left">Department</th>
+                  <th className="px-4 py-3 text-left">Job Title</th>
+                  <th className="px-4 py-3 text-left">Salary</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((emp, idx) => (
+                  <tr key={emp.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-4 py-3">{emp.employeeNumber}</td>
+                    <td className="px-4 py-3 font-medium">{emp.name}</td>
+                    <td className="px-4 py-3">{emp.department}</td>
+                    <td className="px-4 py-3">{emp.jobTitle}</td>
+                    <td className="px-4 py-3">£{emp.salary.toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={emp.status === 'Active' ? 'default' : 'secondary'}>{emp.status}</Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button size="sm" variant="outline" onClick={() => { setEditingItem(emp); setShowEmployeeModal(true); }}>
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => setEmployees(employees.filter(e => e.id !== emp.id))}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+    
+    if (activeMainTab === 'rti' && activeSubTab === 'fps') {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-[#001f3f]">Full Payment Submission (FPS)</h3>
+            <Button onClick={() => setShowRTIModal(true)} className="bg-gradient-to-r from-orange-500 to-orange-600">
+              <Send className="h-4 w-4 mr-2" />
+              Submit New FPS
+            </Button>
+          </div>
+          
+          <div className="bg-white rounded-[2px] border-2 border-[#001f3f] overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-[#001f3f] text-white">
+                <tr>
+                  <th className="px-4 py-3 text-left">Submission Type</th>
+                  <th className="px-4 py-3 text-left">Tax Period</th>
+                  <th className="px-4 py-3 text-left">Submission Date</th>
+                  <th className="px-4 py-3 text-left">Employees</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rtiSubmissions.filter(s => s.type === 'FPS').map((sub, idx) => (
+                  <tr key={sub.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-4 py-3 font-medium">{sub.type}</td>
+                    <td className="px-4 py-3">{sub.period}</td>
+                    <td className="px-4 py-3">{sub.submissionDate}</td>
+                    <td className="px-4 py-3">{sub.employeeCount}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={sub.status === 'Accepted' ? 'default' : 'secondary'}>{sub.status}</Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button size="sm" variant="outline">
+                          <Download className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+    
+    if (activeMainTab === 'cis' && activeSubTab === 'subcontractors') {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-[#001f3f]">CIS Subcontractors</h3>
+            <Button onClick={() => setShowCISModal(true)} className="bg-gradient-to-r from-orange-500 to-orange-600">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Subcontractor
+            </Button>
+          </div>
+          
+          <div className="bg-white rounded-[2px] border-2 border-[#001f3f] overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-[#001f3f] text-white">
+                <tr>
+                  <th className="px-4 py-3 text-left">Business Name</th>
+                  <th className="px-4 py-3 text-left">UTR</th>
+                  <th className="px-4 py-3 text-left">Verification No.</th>
+                  <th className="px-4 py-3 text-left">Deduction Rate</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cisSubcontractors.map((cis, idx) => (
+                  <tr key={cis.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-4 py-3 font-medium">{cis.name}</td>
+                    <td className="px-4 py-3">{cis.utr}</td>
+                    <td className="px-4 py-3">{cis.verificationNumber}</td>
+                    <td className="px-4 py-3">{cis.deductionRate}%</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={cis.status === 'Active' ? 'default' : 'secondary'}>{cis.status}</Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="outline">
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-semibold mb-2">Content Coming Soon</h3>
-        <p className="text-[#001f3f]">This section is under development</p>
+        <h3 className="text-lg font-semibold mb-2 text-[#001f3f]">Feature In Progress</h3>
+        <p className="text-[#001f3f]">This section is being enhanced with full functionality</p>
       </div>
     )
   }
