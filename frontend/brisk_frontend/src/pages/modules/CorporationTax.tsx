@@ -44,6 +44,8 @@ import {
   CTClient, 
   RDProject, 
   CapitalAllowance, 
+  PatentBoxClaim,
+  CreativeIndustryRelief,
   GroupReliefClaim,
   CTClientFormData,
   RDProjectFormData 
@@ -72,6 +74,8 @@ export default function CorporationTax() {
   const [clients, setClients] = useState<CTClient[]>(ctDataService.getClients())
   const [rdProjects, setRDProjects] = useState<RDProject[]>(ctDataService.getRDProjects())
   const [capitalAllowances, setCapitalAllowances] = useState<CapitalAllowance[]>(ctDataService.getCapitalAllowances())
+  const [patentBoxClaims, setPatentBoxClaims] = useState<PatentBoxClaim[]>(ctDataService.getPatentBoxClaims())
+  const [creativeReliefs, setCreativeReliefs] = useState<CreativeIndustryRelief[]>(ctDataService.getCreativeReliefs())
   const [groupReliefs, setGroupReliefs] = useState<GroupReliefClaim[]>(ctDataService.getGroupReliefs())
   
   useEffect(() => {
@@ -110,6 +114,9 @@ export default function CorporationTax() {
   
   const [sortColumn, setSortColumn] = useState<string>('')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [activeReliefsTab, setActiveReliefsTab] = useState<string>('capital')
+  const [activeRDTab, setActiveRDTab] = useState<string>('sme')
+  const [activeGroupReliefTab, setActiveGroupReliefTab] = useState<string>('surrenders')
 
   const taxData = {
     profitBeforeTax: 500000,
@@ -835,7 +842,7 @@ export default function CorporationTax() {
           <p className="text-[#001f3f] mt-2">Manage Research & Development tax relief claims across all schemes</p>
         </div>
 
-        <Tabs defaultValue="sme" className="w-full">
+        <Tabs value={activeRDTab} onValueChange={setActiveRDTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sme">SME Scheme</TabsTrigger>
             <TabsTrigger value="rdec">RDEC Scheme</TabsTrigger>
@@ -969,7 +976,7 @@ export default function CorporationTax() {
           <p className="text-[#001f3f] mt-2">Manage all corporation tax reliefs and credits</p>
         </div>
 
-        <Tabs defaultValue="capital" className="w-full">
+        <Tabs value={activeReliefsTab} onValueChange={setActiveReliefsTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="capital">Capital Allowances</TabsTrigger>
             <TabsTrigger value="patent">Patent Box</TabsTrigger>
@@ -1069,13 +1076,92 @@ export default function CorporationTax() {
                   New Patent Box Claim
                 </Button>
               </div>
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center p-8 text-[#001f3f]">
+              
+              <div className="grid gap-4 md:grid-cols-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Claims</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">{patentBoxClaims.length}</div>
+                    <p className="text-xs text-[#001f3f] mt-1">Active patents</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total IP Income</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">
+                      £{patentBoxClaims.reduce((sum, p) => sum + p.relevantIpIncome, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Relevant IP income</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Qualifying Profit</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{patentBoxClaims.reduce((sum, p) => sum + p.qualifyingResidualProfit, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Total qualifying</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Deduction</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{patentBoxClaims.reduce((sum, p) => sum + p.patentBoxDeduction, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Tax relief claimed</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-3">
+                {patentBoxClaims.map((claim) => (
+                  <div key={claim.id} className="p-4 border-2 border-[#001f3f] rounded hover:bg-blue-50 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#001f3f]">{claim.patentName}</h4>
+                        <p className="text-sm text-[#001f3f] mt-1">Patent No: {claim.patentNumber} | Registered: {new Date(claim.patentRegistrationDate).toLocaleDateString('en-GB')}</p>
+                        <div className="grid grid-cols-5 gap-4 mt-3">
+                          <div>
+                            <p className="text-xs text-[#001f3f]">IP Income</p>
+                            <p className="font-medium text-[#001f3f]">£{claim.relevantIpIncome.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Routine Profit</p>
+                            <p className="font-medium text-[#001f3f]">£{claim.routineProfitFigure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Marketing Return</p>
+                            <p className="font-medium text-[#001f3f]">£{claim.marketingAssetsReturnFigure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Qualifying Profit</p>
+                            <p className="font-medium text-green-600">£{claim.qualifyingResidualProfit.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Deduction ({claim.effectiveTaxRate}%)</p>
+                            <p className="font-medium text-green-600">£{claim.patentBoxDeduction.toLocaleString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Badge variant={claim.status === 'approved' ? 'default' : 'secondary'}>{claim.status}</Badge>
+                    </div>
+                  </div>
+                ))}
+                {patentBoxClaims.length === 0 && (
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
                     No Patent Box claims recorded. Click "New Patent Box Claim" to get started.
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
             </div>
           </TabsContent>
 
@@ -1091,13 +1177,105 @@ export default function CorporationTax() {
                   New Creative Relief Claim
                 </Button>
               </div>
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center p-8 text-[#001f3f]">
+              
+              <div className="grid gap-4 md:grid-cols-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Productions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">{creativeReliefs.length}</div>
+                    <p className="text-xs text-[#001f3f] mt-1">Active claims</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Expenditure</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-[#001f3f]">
+                      £{creativeReliefs.reduce((sum, cr) => sum + cr.totalProductionExpenditure, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Production costs</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">UK Expenditure</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{creativeReliefs.reduce((sum, cr) => sum + cr.ukExpenditure, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Qualifying spend</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm text-[#001f3f]">Total Relief</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      £{creativeReliefs.reduce((sum, cr) => sum + cr.reliefClaimed + cr.taxCredit, 0).toLocaleString()}
+                    </div>
+                    <p className="text-xs text-[#001f3f] mt-1">Tax relief claimed</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-3">
+                {creativeReliefs.map((relief) => (
+                  <div key={relief.id} className="p-4 border-2 border-[#001f3f] rounded hover:bg-blue-50 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-semibold text-[#001f3f]">{relief.productionName}</h4>
+                          <Badge variant="outline" className="text-xs">{relief.reliefType}</Badge>
+                        </div>
+                        <p className="text-sm text-[#001f3f] mt-1">
+                          Production Period: {new Date(relief.productionStartDate).toLocaleDateString('en-GB')} - {new Date(relief.productionEndDate).toLocaleDateString('en-GB')}
+                        </p>
+                        <div className="grid grid-cols-6 gap-4 mt-3">
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Core Expenditure</p>
+                            <p className="font-medium text-[#001f3f]">£{relief.coreExpenditure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Total Production</p>
+                            <p className="font-medium text-[#001f3f]">£{relief.totalProductionExpenditure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">UK Expenditure</p>
+                            <p className="font-medium text-green-600">£{relief.ukExpenditure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Enhanced</p>
+                            <p className="font-medium text-green-600">£{relief.enhancedExpenditure.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Relief</p>
+                            <p className="font-medium text-green-600">£{relief.reliefClaimed.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-[#001f3f]">Certification</p>
+                            <p className="font-medium text-[#001f3f] text-xs">{relief.certificationNumber}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge variant={relief.status === 'approved' ? 'default' : 'secondary'}>{relief.status}</Badge>
+                        {relief.britishCertification && <Badge variant="outline" className="text-xs">British Certified</Badge>}
+                        {relief.culturalTest && <Badge variant="outline" className="text-xs">Cultural Test Passed</Badge>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {creativeReliefs.length === 0 && (
+                  <div className="text-center p-8 text-[#001f3f] border-2 border-dashed border-[#001f3f] rounded">
                     No creative industry relief claims recorded. Click "New Creative Relief Claim" to get started.
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
             </div>
           </TabsContent>
 
@@ -1157,11 +1335,11 @@ export default function CorporationTax() {
           <p className="text-[#001f3f] mt-2">Manage group relief elections, loss surrenders, and claims</p>
         </div>
 
-        <Tabs defaultValue="elections" className="w-full">
+        <Tabs value={activeGroupReliefTab} onValueChange={setActiveGroupReliefTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="elections">Group Elections</TabsTrigger>
             <TabsTrigger value="surrenders">Loss Surrenders</TabsTrigger>
             <TabsTrigger value="claims">Relief Claims</TabsTrigger>
+            <TabsTrigger value="elections">Group Elections</TabsTrigger>
           </TabsList>
 
           <TabsContent value="elections" className="mt-6">

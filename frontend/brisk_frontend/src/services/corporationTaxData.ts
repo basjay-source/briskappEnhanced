@@ -421,6 +421,92 @@ class CorporationTaxDataService {
         lastModified: '2024-11-18'
       }
     ]
+
+    this.patentBoxClaims = [
+      {
+        id: 'PB001',
+        clientId: 'CT001',
+        taxYear: '2024-25',
+        patentName: 'AI-Powered Data Analytics Engine',
+        patentNumber: 'GB2587654',
+        patentRegistrationDate: '2022-06-15',
+        relevantIpIncome: 850000,
+        routineProfitFigure: 425000,
+        marketingAssetsReturnFigure: 127500,
+        qualifyingResidualProfit: 297500,
+        patentBoxDeduction: 248437,
+        effectiveTaxRate: 10,
+        status: 'approved',
+        notes: 'Qualifying IP profits from patented AI algorithms',
+        createdDate: '2024-02-10',
+        lastModified: '2024-09-15'
+      },
+      {
+        id: 'PB002',
+        clientId: 'CT003',
+        taxYear: '2024-25',
+        patentName: 'Medical Diagnostic Software Suite',
+        patentNumber: 'GB2598432',
+        patentRegistrationDate: '2023-01-20',
+        relevantIpIncome: 1250000,
+        routineProfitFigure: 625000,
+        marketingAssetsReturnFigure: 187500,
+        qualifyingResidualProfit: 437500,
+        patentBoxDeduction: 365625,
+        effectiveTaxRate: 10,
+        status: 'approved',
+        notes: 'Patent Box relief on healthcare diagnostic software',
+        createdDate: '2024-03-05',
+        lastModified: '2024-10-12'
+      }
+    ]
+
+    this.creativeReliefs = [
+      {
+        id: 'CR001',
+        clientId: 'CT001',
+        taxYear: '2024-25',
+        reliefType: 'Video Games',
+        productionName: 'MetaQuest VR Experience',
+        productionStartDate: '2023-09-01',
+        productionEndDate: '2024-08-31',
+        coreExpenditure: 580000,
+        totalProductionExpenditure: 725000,
+        ukExpenditure: 652500,
+        enhancedExpenditure: 464000,
+        reliefClaimed: 92800,
+        taxCredit: 0,
+        britishCertification: true,
+        certificationNumber: 'VGTR-2024-0156',
+        culturalTest: true,
+        status: 'approved',
+        notes: 'Video Games Tax Relief - 80% enhancement on core expenditure',
+        createdDate: '2024-01-15',
+        lastModified: '2024-09-20'
+      },
+      {
+        id: 'CR002',
+        clientId: 'CT002',
+        taxYear: '2024-25',
+        reliefType: 'Film',
+        productionName: 'Urban Regeneration Documentary',
+        productionStartDate: '2024-01-10',
+        productionEndDate: '2024-06-30',
+        coreExpenditure: 320000,
+        totalProductionExpenditure: 400000,
+        ukExpenditure: 380000,
+        enhancedExpenditure: 256000,
+        reliefClaimed: 64000,
+        taxCredit: 0,
+        britishCertification: true,
+        certificationNumber: 'FTR-2024-0892',
+        culturalTest: true,
+        status: 'submitted',
+        notes: 'Film Tax Relief - documentary on sustainable construction',
+        createdDate: '2024-02-01',
+        lastModified: '2024-07-15'
+      }
+    ]
   }
 
   getClients(): CTClient[] {
