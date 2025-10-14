@@ -2611,12 +2611,19 @@ export default function PersonalTax() {
                       <CardContent>
                         <div className="space-y-2 max-h-48 overflow-y-auto">
                           {pensionCalculations.slice(-5).reverse().map((calc: any) => (
-                            <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                            <div 
+                              key={calc.id} 
+                              className="p-2 border border-[#001f3f] rounded-[2px] text-sm cursor-pointer hover:bg-blue-50 transition-colors"
+                              onClick={() => handleViewPensionCalculation(calc)}
+                            >
                               <div className="flex justify-between">
-                                <span>Adjusted Income: £{calc.adjustedIncome?.toLocaleString()}</span>
-                                <span className="text-green-600">Allowance: £{calc.availableAllowance?.toLocaleString()}</span>
+                                <span className="text-[#001f3f] font-medium">Adjusted Income: £{calc.adjustedIncome?.toLocaleString()}</span>
+                                <span className="text-green-600 font-semibold">Allowance: £{calc.availableAllowance?.toLocaleString()}</span>
                               </div>
-                              <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                              <div className="flex justify-between items-center mt-1">
+                                <span className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</span>
+                                <span className="text-xs text-[#001f3f]">Click for details →</span>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -2728,14 +2735,21 @@ export default function PersonalTax() {
                         <CardContent>
                           <div className="space-y-2 max-h-48 overflow-y-auto">
                             {familyTaxCalculations.slice(-5).reverse().map((calc: any) => (
-                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
+                              <div 
+                                key={calc.id} 
+                                className="p-2 border border-[#001f3f] rounded-[2px] text-sm cursor-pointer hover:bg-blue-50 transition-colors"
+                                onClick={() => handleViewMarriageCalculation(calc)}
+                              >
                                 <div className="flex justify-between">
-                                  <span className={calc.eligible ? 'text-green-600' : 'text-red-600'}>
+                                  <span className={calc.eligible ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
                                     {calc.eligible ? '✓ Eligible' : '✗ Not Eligible'}
                                   </span>
-                                  {calc.eligible && <span className="text-green-600">Saving: £{calc.taxSaving?.toFixed(2)}</span>}
+                                  {calc.eligible && <span className="text-green-600 font-semibold">Saving: £{calc.taxSaving?.toFixed(2)}</span>}
                                 </div>
-                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
+                                <div className="flex justify-between items-center mt-1">
+                                  <span className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</span>
+                                  <span className="text-xs text-[#001f3f]">Click for details →</span>
+                                </div>
                               </div>
                             ))}
                           </div>
