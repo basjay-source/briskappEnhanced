@@ -48,7 +48,7 @@ import ComprehensiveIndividualClientForm from '../../components/ComprehensiveInd
 import { SAReturnForm as ComprehensiveSAReturnForm } from '../../components/ComprehensiveSAReturnForm'
 import notifications from '@/lib/notifications'
 import { hmrcMTDService } from '@/services/hmrcMTD'
-import { calculateIHT, calculatePensionAllowance, calculateMarriageAllowanceSaving, generateTaxYears as getTaxYearsList } from '@/services/taxRates'
+import { calculateIHT, calculatePensionAllowance, calculateMarriageAllowanceSaving, generateTaxYears as getTaxYearsList, calculateOpportunityEstimate } from '@/services/taxRates'
 import { 
   Dialog,
   DialogContent,
@@ -256,7 +256,8 @@ export default function PersonalTax() {
     client: '',
     opportunity: '',
     description: '',
-    potentialSaving: 0
+    potentialSaving: 0,
+    taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
   })
 
   const [activeTaxPlanningTab, setActiveTaxPlanningTab] = useState('cgt')
@@ -580,26 +581,31 @@ export default function PersonalTax() {
     { label: 'Capital Gains', value: 'capital-gains' }
   ]
 
-  const opportunityTypes = [
-    { value: 'pension-contribution', label: 'Pension Contribution Optimization', estimatedSaving: 8000 },
-    { value: 'marriage-allowance', label: 'Marriage Allowance', estimatedSaving: 252 },
-    { value: 'dividend-optimization', label: 'Dividend vs Salary Optimization', estimatedSaving: 3500 },
-    { value: 'capital-allowances', label: 'Capital Allowances Claim', estimatedSaving: 5000 },
-    { value: 'tax-loss-harvesting', label: 'Tax Loss Harvesting', estimatedSaving: 2000 },
-    { value: 'iht-planning', label: 'Inheritance Tax Planning', estimatedSaving: 15000 },
-    { value: 'gift-aid', label: 'Gift Aid Contributions', estimatedSaving: 1200 },
-    { value: 'eis-seis', label: 'EIS/SEIS Tax Relief', estimatedSaving: 10000 },
-    { value: 'vct-investment', label: 'VCT Investment Relief', estimatedSaving: 6000 },
-    { value: 'rent-a-room', label: 'Rent-a-Room Relief', estimatedSaving: 1500 },
-    { value: 'trading-allowance', label: 'Trading Allowance', estimatedSaving: 1000 },
-    { value: 'property-allowance', label: 'Property Allowance', estimatedSaving: 1000 },
-    { value: 'child-benefit', label: 'Child Benefit Charge Optimization', estimatedSaving: 2000 },
-    { value: 'tax-code-review', label: 'Tax Code Review', estimatedSaving: 800 },
-    { value: 'business-expense', label: 'Business Expense Optimization', estimatedSaving: 2500 },
-    { value: 'incorporation', label: 'Incorporation Tax Benefits', estimatedSaving: 12000 },
-    { value: 'r&d-relief', label: 'R&D Tax Relief', estimatedSaving: 25000 },
-    { value: 'other', label: 'Other Optimization', estimatedSaving: 0 }
-  ]
+  const getOpportunityTypes = (taxYear: string) => {
+    return [
+      { value: 'pension-contribution', label: 'Pension Contribution Optimization' },
+      { value: 'marriage-allowance', label: 'Marriage Allowance' },
+      { value: 'dividend-optimization', label: 'Dividend vs Salary Optimization' },
+      { value: 'capital-allowances', label: 'Capital Allowances Claim' },
+      { value: 'tax-loss-harvesting', label: 'Tax Loss Harvesting' },
+      { value: 'iht-planning', label: 'Inheritance Tax Planning' },
+      { value: 'gift-aid', label: 'Gift Aid Contributions' },
+      { value: 'eis-seis', label: 'EIS/SEIS Tax Relief' },
+      { value: 'vct-investment', label: 'VCT Investment Relief' },
+      { value: 'rent-a-room', label: 'Rent-a-Room Relief' },
+      { value: 'trading-allowance', label: 'Trading Allowance' },
+      { value: 'property-allowance', label: 'Property Allowance' },
+      { value: 'child-benefit', label: 'Child Benefit Charge Optimization' },
+      { value: 'tax-code-review', label: 'Tax Code Review' },
+      { value: 'business-expense', label: 'Business Expense Optimization' },
+      { value: 'incorporation', label: 'Incorporation Tax Benefits' },
+      { value: 'r&d-relief', label: 'R&D Tax Relief' },
+      { value: 'other', label: 'Other Optimization' }
+    ].map(type => ({
+      ...type,
+      estimatedSaving: calculateOpportunityEstimate(type.value, taxYear)
+    }))
+  }
 
   type SubTabConfig = {
     label: string
@@ -1662,7 +1668,8 @@ export default function PersonalTax() {
         client: '',
         opportunity: '',
         description: '',
-        potentialSaving: 0
+        potentialSaving: 0,
+        taxYear: new Date().getFullYear().toString() + '-' + (new Date().getFullYear() + 1).toString().slice(-2)
       })
       setIsAddOpportunityModalOpen(true)
     }
@@ -1790,6 +1797,22 @@ export default function PersonalTax() {
               </DialogHeader>
               <div className="space-y-4">
                 <div>
+                  <Label htmlFor="opp-tax-year" className="text-[#001f3f] font-semibold">Tax Year *</Label>
+                  <Select 
+                    value={currentOpportunity.taxYear} 
+                    onValueChange={(val) => setCurrentOpportunity({...currentOpportunity, taxYear: val})}
+                  >
+                    <SelectTrigger className="border-[#001f3f]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getTaxYearsList().map(year => (
+                        <SelectItem key={year} value={year}>{year}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
                   <Label htmlFor="opp-client" className="text-[#001f3f] font-semibold">Client Name *</Label>
                   <Input 
                     id="opp-client"
@@ -1804,19 +1827,26 @@ export default function PersonalTax() {
                   <Select 
                     value={currentOpportunity.opportunity} 
                     onValueChange={(val) => {
+                      const opportunityTypes = getOpportunityTypes(currentOpportunity.taxYear)
                       const selectedType = opportunityTypes.find(t => t.value === val)
                       setCurrentOpportunity({
                         ...currentOpportunity, 
-                        opportunity: selectedType?.label || val,
-                        potentialSaving: selectedType?.estimatedSaving || currentOpportunity.potentialSaving
+                        opportunity: val,
+                        potentialSaving: selectedType?.estimatedSaving || 0
                       })
                     }}
                   >
                     <SelectTrigger className="border-[#001f3f]">
-                      <SelectValue placeholder="Select opportunity type" />
+                      <SelectValue placeholder="Select opportunity type">
+                        {currentOpportunity.opportunity && (() => {
+                          const opportunityTypes = getOpportunityTypes(currentOpportunity.taxYear)
+                          const selected = opportunityTypes.find(t => t.value === currentOpportunity.opportunity)
+                          return selected ? `${selected.label} ${selected.estimatedSaving > 0 ? `(~£${selected.estimatedSaving.toLocaleString()})` : ''}` : currentOpportunity.opportunity
+                        })()}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      {opportunityTypes.map(type => (
+                      {getOpportunityTypes(currentOpportunity.taxYear).map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label} {type.estimatedSaving > 0 && `(~£${type.estimatedSaving.toLocaleString()})`}
                         </SelectItem>

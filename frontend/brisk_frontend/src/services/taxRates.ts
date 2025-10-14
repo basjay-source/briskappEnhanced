@@ -520,3 +520,76 @@ export function calculateMarriageAllowanceSaving(spouse1Income: number, spouse2I
     reason: result.reason
   }
 }
+export function calculateOpportunityEstimate(
+  opportunityType: string,
+  taxYear: string,
+  assumedIncome: number = 50000
+): number {
+  const rates = getTaxRatesForYear(taxYear)
+  
+  switch (opportunityType) {
+    case 'pension-contribution':
+      return Math.round(assumedIncome * 0.16)
+    
+    case 'marriage-allowance':
+      return Math.round(rates.marriageAllowance.transferableAmount * 0.20)
+    
+    case 'dividend-optimization':
+      const dividendSavings = rates.dividendAllowance * (rates.dividendTaxRates.basic / 100)
+      return Math.round(dividendSavings + (5000 * 0.135))
+    
+    case 'capital-allowances':
+      return Math.round(assumedIncome * 0.10)
+    
+    case 'tax-loss-harvesting':
+      return Math.round(rates.capitalGainsTax.allowance * (rates.capitalGainsTax.basicRate / 100))
+    
+    case 'iht-planning':
+      return Math.round(rates.inheritanceTax.nilRateBand * (rates.inheritanceTax.rate / 100))
+    
+    case 'gift-aid':
+      const giftAidContribution = 5000
+      return Math.round(giftAidContribution * 0.25)
+    
+    case 'eis-seis':
+      const eisInvestment = 50000
+      return Math.round(eisInvestment * 0.30)
+    
+    case 'vct-investment':
+      const vctInvestment = 30000
+      return Math.round(vctInvestment * 0.30)
+    
+    case 'rent-a-room':
+      return Math.round(7500 * 0.20)
+    
+    case 'trading-allowance':
+      return Math.round(1000 * 0.20)
+    
+    case 'property-allowance':
+      return Math.round(1000 * 0.20)
+    
+    case 'child-benefit':
+      const childBenefitAmount = 2200
+      return Math.round(childBenefitAmount * 0.50)
+    
+    case 'tax-code-review':
+      return Math.round(assumedIncome * 0.015)
+    
+    case 'business-expense':
+      const expenseClaim = 12000
+      return Math.round(expenseClaim * 0.20)
+    
+    case 'incorporation':
+      const corporationTaxSaving = assumedIncome * (0.20 - 0.19)
+      const dividendSaving = assumedIncome * 0.15
+      return Math.round(corporationTaxSaving + dividendSaving)
+    
+    case 'r&d-relief':
+      const rdExpenditure = 100000
+      return Math.round(rdExpenditure * 0.25)
+    
+    case 'other':
+    default:
+      return 0
+  }
+}
