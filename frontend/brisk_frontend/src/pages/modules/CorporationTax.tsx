@@ -1774,7 +1774,73 @@ export default function CorporationTax() {
         />
       )}
 
-      {/* R&D Claims Form Modal */}
+      {/* R&D Claims Add/Edit Modal */}
+      {showRDModal && (
+        <RDClaimForm
+          data={editingRDProject ? {
+            projectName: editingRDProject.projectName,
+            projectDescription: editingRDProject.projectDescription,
+            companyName: clients.find(c => c.id === editingRDProject.clientId)?.companyName || '',
+            companyNumber: clients.find(c => c.id === editingRDProject.clientId)?.companyNumber || '',
+            utr: clients.find(c => c.id === editingRDProject.clientId)?.utr || '',
+            accountingPeriodStart: editingRDProject.startDate,
+            accountingPeriodEnd: editingRDProject.endDate,
+            status: editingRDProject.status,
+            claimType: editingRDProject.scheme as any,
+            staffCosts: editingRDProject.staffCosts,
+            subcontractorCosts: editingRDProject.subcontractorCosts,
+            consumablesCosts: editingRDProject.materialsCosts,
+            softwareCosts: editingRDProject.softwareCosts,
+            clinicalTrialCosts: 0,
+            otherCosts: editingRDProject.otherCosts,
+            totalQualifyingExpenditure: editingRDProject.totalQualifyingExpenditure,
+            enhancementRate: 0,
+            totalEnhancement: editingRDProject.enhancedExpenditure,
+            reliefClaimed: editingRDProject.reliefClaimed,
+            taxCredit: editingRDProject.taxCredit || 0,
+            staffCount: 0,
+            projectStartDate: editingRDProject.startDate,
+            projectEndDate: editingRDProject.endDate,
+            technicalDescription: editingRDProject.technicalNarrative || '',
+            uncertaintyDescription: editingRDProject.uncertainties || '',
+            advancementDescription: editingRDProject.advancementInField || '',
+            notes: editingRDProject.notes || ''
+          } : {
+            projectName: '',
+            projectDescription: '',
+            companyName: '',
+            companyNumber: '',
+            utr: '',
+            accountingPeriodStart: '',
+            accountingPeriodEnd: '',
+            status: 'draft' as any,
+            claimType: 'SME' as any,
+            staffCosts: 0,
+            subcontractorCosts: 0,
+            consumablesCosts: 0,
+            softwareCosts: 0,
+            clinicalTrialCosts: 0,
+            otherCosts: 0,
+            totalQualifyingExpenditure: 0,
+            enhancementRate: 0,
+            totalEnhancement: 0,
+            reliefClaimed: 0,
+            taxCredit: 0,
+            staffCount: 0,
+            projectStartDate: '',
+            projectEndDate: '',
+            technicalDescription: '',
+            uncertaintyDescription: '',
+            advancementDescription: '',
+            notes: ''
+          }}
+          onSave={handleSaveRDProject}
+          onCancel={() => setShowRDModal(false)}
+          isEditing={!!editingRDProject}
+        />
+      )}
+
+      {/* R&D Claims View Detail Modal */}
       {showRDDetailModal && selectedRDProject && (
         <RDClaimForm
           data={{
