@@ -1990,82 +1990,105 @@ export default function PersonalTax() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PiggyBank className="h-5 w-5 text-indigo-600" />
-                  Pension Annual Allowance Calculator
+                  Pension Planning and Optimization
                 </CardTitle>
-                <CardDescription>Calculate your annual allowance with income-based tapering</CardDescription>
+                <CardDescription>Annual and lifetime allowance planning</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="pension-tax-year" className="text-[#001f3f]">Tax Year</Label>
-                      <Select value={currentPension.taxYear} onValueChange={(val) => setCurrentPension({...currentPension, taxYear: val})}>
-                        <SelectTrigger className="border-[#001f3f]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {getTaxYearsList().map(year => (
-                            <SelectItem key={year} value={year}>{year}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="adjusted-income" className="text-[#001f3f]">Adjusted Income (£)</Label>
+                      <Label htmlFor="annual-income" className="text-[#001f3f]">Annual Income</Label>
                       <Input 
-                        id="adjusted-income" 
+                        id="annual-income" 
                         type="number" 
                         placeholder="0.00" 
-                        value={currentPension.adjustedIncome || ''}
-                        onChange={(e) => setCurrentPension({...currentPension, adjustedIncome: parseFloat(e.target.value) || 0})}
-                        className="border-[#001f3f]"
+                        value={currentPension.annualIncome || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, annualIncome: parseFloat(e.target.value) || 0})}
                       />
-                      <p className="text-xs text-gray-600 mt-1">Total income including employer pension contributions</p>
                     </div>
-                    <Button className="w-full bg-[#001f3f] hover:bg-[#003366]" onClick={handleCalculatePension}>
+                    <div>
+                      <Label htmlFor="current-contributions" className="text-[#001f3f]">Current Pension Contributions</Label>
+                      <Input 
+                        id="current-contributions" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.currentContributions || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, currentContributions: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="pension-value" className="text-[#001f3f]">Current Pension Value</Label>
+                      <Input 
+                        id="pension-value" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.pensionValue || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, pensionValue: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="unused-allowance" className="text-[#001f3f]">Unused Allowance (3 years)</Label>
+                      <Input 
+                        id="unused-allowance" 
+                        type="number" 
+                        placeholder="0.00" 
+                        value={currentPension.unusedAllowance || ''}
+                        onChange={(e) => setCurrentPension({...currentPension, unusedAllowance: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    <Button className="w-full bg-[#001f3f] hover:bg-[#001f3f]/90" onClick={calculatePension}>
                       <Calculator className="h-4 w-4 mr-2" />
-                      Calculate Allowance
+                      Optimize Contributions
                     </Button>
                   </div>
                   <div className="space-y-4">
-                    <Card className="bg-blue-50 border-2 border-[#001f3f]">
+                    <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">Annual Allowance Results</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Annual Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Tax Year</span>
-                            <span className="font-semibold text-[#001f3f]">{currentPension.taxYear}</span>
+                            <span>Standard Allowance</span>
+                            <span>£{pensionResult.annualAllowance.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Standard Allowance</span>
-                            <span className="text-[#001f3f]">£{pensionResult.annualAllowance.toLocaleString()}</span>
+                            <span>Tapered Allowance</span>
+                            <span className="font-semibold">£{pensionResult.taperedAllowance.toLocaleString()}</span>
                           </div>
-                          {pensionResult.tapered && (
-                            <>
-                              <div className="flex justify-between">
-                                <span className="text-[#001f3f]">Taper Reduction</span>
-                                <span className="text-red-600">-£{pensionResult.reduction.toLocaleString()}</span>
-                              </div>
-                              <div className="flex justify-between border-t pt-2 border-[#001f3f]">
-                                <span className="text-[#001f3f] font-semibold">Tapered Allowance</span>
-                                <span className="font-bold text-lg text-[#001f3f]">£{pensionResult.availableAllowance.toLocaleString()}</span>
-                              </div>
-                            </>
-                          )}
-                          {!pensionResult.tapered && (
-                            <div className="flex justify-between border-t pt-2 border-[#001f3f]">
-                              <span className="text-[#001f3f] font-semibold">Available Allowance</span>
-                              <span className="font-bold text-lg text-green-600">£{pensionResult.availableAllowance.toLocaleString()}</span>
-                            </div>
-                          )}
-                          <div className="mt-2 p-2 bg-white rounded text-sm">
-                            <p className="text-[#001f3f]">
-                              {pensionResult.tapered 
-                                ? `Income above taper threshold - allowance reduced to minimum of £10,000`
-                                : `No tapering applied - full allowance available`}
-                            </p>
+                          <div className="flex justify-between">
+                            <span>Used This Year</span>
+                            <span>£{pensionResult.usedThisYear.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2">
+                            <span>Remaining Allowance</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingAllowance.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg text-[#001f3f]">Lifetime Allowance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span>Lifetime Allowance</span>
+                            <span>£{pensionResult.lifetimeAllowance.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Current Value</span>
+                            <span>£{currentPension.pensionValue.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Utilization</span>
+                            <span className="font-semibold">{pensionResult.utilizationPercent.toFixed(1)}%</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2">
+                            <span>Remaining Capacity</span>
+                            <span className="font-bold text-lg text-green-600">£{pensionResult.remainingCapacity.toLocaleString()}</span>
                           </div>
                         </div>
                       </CardContent>
@@ -2080,8 +2103,8 @@ export default function PersonalTax() {
                             {pensionCalculations.slice(-5).reverse().map((calc: any) => (
                               <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
                                 <div className="flex justify-between">
-                                  <span>Adjusted Income: £{calc.adjustedIncome?.toLocaleString()}</span>
-                                  <span className="text-green-600">Allowance: £{calc.availableAllowance?.toLocaleString()}</span>
+                                  <span>Income: £{calc.annualIncome?.toLocaleString()}</span>
+                                  <span className="text-green-600">Remaining: £{calc.remainingAllowance?.toLocaleString()}</span>
                                 </div>
                                 <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
                               </div>
@@ -2097,7 +2120,6 @@ export default function PersonalTax() {
       </div>
     )
   }
-
 
   function renderFamilyTax() {
     return (
@@ -2105,119 +2127,102 @@ export default function PersonalTax() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Users2 className="h-5 w-5 text-pink-600" />
-                  Marriage Allowance Calculator
+                  <Users2 className="h-5 w-5 text-teal-600" />
+                  Family Tax Planning
                 </CardTitle>
-                <CardDescription>Check eligibility and calculate potential tax savings</CardDescription>
+                <CardDescription>Income splitting and family allowance optimization</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="marriage-tax-year" className="text-[#001f3f]">Tax Year</Label>
-                      <Select value={marriageAllowance.taxYear} onValueChange={(val) => setMarriageAllowance({...marriageAllowance, taxYear: val})}>
-                        <SelectTrigger className="border-[#001f3f]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {getTaxYearsList().map(year => (
-                            <SelectItem key={year} value={year}>{year}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="spouse1-income" className="text-[#001f3f]">Spouse 1 Income (£)</Label>
-                      <Input 
-                        id="spouse1-income" 
-                        type="number" 
-                        placeholder="0.00" 
-                        value={marriageAllowance.spouse1Income || ''}
-                        onChange={(e) => setMarriageAllowance({...marriageAllowance, spouse1Income: parseFloat(e.target.value) || 0})}
-                        className="border-[#001f3f]"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="spouse2-income" className="text-[#001f3f]">Spouse 2 Income (£)</Label>
-                      <Input 
-                        id="spouse2-income" 
-                        type="number" 
-                        placeholder="0.00" 
-                        value={marriageAllowance.spouse2Income || ''}
-                        onChange={(e) => setMarriageAllowance({...marriageAllowance, spouse2Income: parseFloat(e.target.value) || 0})}
-                        className="border-[#001f3f]"
-                      />
-                    </div>
-                    <Button className="w-full bg-[#001f3f] hover:bg-[#003366]" onClick={handleCalculateMarriageAllowance}>
-                      <Calculator className="h-4 w-4 mr-2" />
-                      Check Eligibility
-                    </Button>
-                  </div>
-                  <div className="space-y-4">
-                    <Card className={`border-2 ${marriageAllowance.eligible ? 'bg-green-50 border-green-600' : 'bg-red-50 border-red-600'}`}>
+                <div className="grid gap-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg text-[#001f3f]">Eligibility Results</CardTitle>
+                        <CardTitle className="text-lg text-[#001f3f]">Marriage Allowance</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Tax Year</span>
-                            <span className="font-semibold text-[#001f3f]">{marriageAllowance.taxYear}</span>
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="spouse1-income" className="text-[#001f3f]">Spouse 1 Income</Label>
+                            <Input id="spouse1-income" placeholder="£0.00" />
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-[#001f3f]">Status</span>
-                            <span className={`font-bold ${marriageAllowance.eligible ? 'text-green-600' : 'text-red-600'}`}>
-                              {marriageAllowance.eligible ? '✓ Eligible' : '✗ Not Eligible'}
-                            </span>
+                          <div>
+                            <Label htmlFor="spouse2-income" className="text-[#001f3f]">Spouse 2 Income</Label>
+                            <Input id="spouse2-income" placeholder="£0.00" />
                           </div>
-                          {marriageAllowance.eligible && (
-                            <>
-                              <div className="flex justify-between">
-                                <span className="text-[#001f3f]">Transferable Amount</span>
-                                <span className="text-[#001f3f]">£{marriageAllowance.transferableAmount.toLocaleString()}</span>
-                              </div>
-                              <div className="flex justify-between border-t pt-2 border-green-600">
-                                <span className="text-[#001f3f] font-semibold">Annual Tax Saving</span>
-                                <span className="font-bold text-lg text-green-600">£{marriageAllowance.taxSaving.toFixed(2)}</span>
-                              </div>
-                            </>
-                          )}
-                          <div className="mt-2 p-2 bg-white rounded text-sm">
-                            <p className="text-[#001f3f]">{marriageAllowance.reason || 'Enter income details to check eligibility'}</p>
+                          <Button className="w-full" variant="outline">
+                            Calculate Marriage Allowance
+                          </Button>
+                          <div className="p-3 bg-teal-50 rounded-[2px]">
+                            <p className="text-sm font-medium text-teal-900">Potential Saving</p>
+                            <p className="text-lg font-bold text-teal-600">£252</p>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
-                    {familyTaxCalculations.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-lg text-[#001f3f]">Saved Calculations ({familyTaxCalculations.length})</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {familyTaxCalculations.slice(-5).reverse().map((calc: any) => (
-                              <div key={calc.id} className="p-2 border rounded-[2px] text-sm">
-                                <div className="flex justify-between">
-                                  <span className={calc.eligible ? 'text-green-600' : 'text-red-600'}>
-                                    {calc.eligible ? '✓ Eligible' : '✗ Not Eligible'}
-                                  </span>
-                                  {calc.eligible && <span className="text-green-600">Saving: £{calc.taxSaving?.toFixed(2)}</span>}
-                                </div>
-                                <div className="text-xs text-gray-500">{new Date(calc.date).toLocaleDateString()}</div>
-                              </div>
-                            ))}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg text-[#001f3f]">Child Benefit</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="children-count" className="text-[#001f3f]">Number of Children</Label>
+                            <Input id="children-count" type="number" placeholder="0" />
                           </div>
-                        </CardContent>
-                      </Card>
-                    )}
+                          <div>
+                            <Label htmlFor="high-earner-income" className="text-[#001f3f]">High Earner Income</Label>
+                            <Input id="high-earner-income" placeholder="£0.00" />
+                          </div>
+                          <Button className="w-full" variant="outline">
+                            Calculate HICBC
+                          </Button>
+                          <div className="p-3 bg-blue-50 rounded-[2px]">
+                            <p className="text-sm font-medium text-[#001f3f]">HICBC Charge</p>
+                            <p className="text-lg font-bold text-[#001f3f]">£0</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg text-[#001f3f]">Family Investment Planning</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Banknote className="h-4 w-4 text-[#001f3f]" />
+                            <span className="font-medium">Junior ISAs</span>
+                          </div>
+                          <p className="text-sm text-[#001f3f]">£9,000 annual allowance per child</p>
+                          <Button size="sm" className="mt-2" variant="outline">Setup</Button>
+                        </div>
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Shield className="h-4 w-4 text-green-600" />
+                            <span className="font-medium">Education Planning</span>
+                          </div>
+                          <p className="text-sm text-[#001f3f]">Tax-efficient education funding</p>
+                          <Button size="sm" className="mt-2" variant="outline">Plan</Button>
+                        </div>
+                        <div className="p-4 border-2 border-[#001f3f] rounded-[2px]">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Users className="h-4 w-4 text-purple-600" />
+                            <span className="font-medium">Income Splitting</span>
+                          </div>
+                          <p className="text-sm text-[#001f3f]">Optimize family income distribution</p>
+                          <Button size="sm" className="mt-2" variant="outline">Analyze</Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </CardContent>
             </Card>
       </div>
     )
   }
-
 
   function renderFiling() {
     return (
