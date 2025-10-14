@@ -261,20 +261,20 @@ export default function Payroll() {
                 <h4 className="font-semibold text-[#001f3f] mb-2">Department Breakdown</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Development</span>
-                    <span className="font-semibold">89 employees</span>
+                    <span className="text-[#001f3f]">Development</span>
+                    <span className="font-semibold text-[#001f3f]">89 employees</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Marketing</span>
-                    <span className="font-semibold">45 employees</span>
+                    <span className="text-[#001f3f]">Marketing</span>
+                    <span className="font-semibold text-[#001f3f]">45 employees</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Finance</span>
-                    <span className="font-semibold">32 employees</span>
+                    <span className="text-[#001f3f]">Finance</span>
+                    <span className="font-semibold text-[#001f3f]">32 employees</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>HR</span>
-                    <span className="font-semibold">18 employees</span>
+                    <span className="text-[#001f3f]">HR</span>
+                    <span className="font-semibold text-[#001f3f]">18 employees</span>
                   </div>
                 </div>
               </div>
@@ -282,16 +282,16 @@ export default function Payroll() {
                 <h4 className="font-semibold text-[#001f3f] mb-2">Employment Status</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Full-time</span>
-                    <span className="font-semibold">198 employees</span>
+                    <span className="text-[#001f3f]">Full-time</span>
+                    <span className="font-semibold text-[#001f3f]">198 employees</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Part-time</span>
-                    <span className="font-semibold">34 employees</span>
+                    <span className="text-[#001f3f]">Part-time</span>
+                    <span className="font-semibold text-[#001f3f]">34 employees</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Contract</span>
-                    <span className="font-semibold">15 employees</span>
+                    <span className="text-[#001f3f]">Contract</span>
+                    <span className="font-semibold text-[#001f3f]">15 employees</span>
                   </div>
                 </div>
               </div>
@@ -315,16 +315,16 @@ export default function Payroll() {
               <h4 className="font-semibold text-[#001f3f] mb-2">Cost Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>Gross Pay</span>
-                  <span className="font-semibold">£980,000</span>
+                  <span className="text-[#001f3f]">Gross Pay</span>
+                  <span className="font-semibold text-[#001f3f]">£980,000</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Employer NI</span>
-                  <span className="font-semibold">£135,000</span>
+                  <span className="text-[#001f3f]">Employer NI</span>
+                  <span className="font-semibold text-[#001f3f]">£135,000</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Pension Contributions</span>
-                  <span className="font-semibold">£85,000</span>
+                  <span className="text-[#001f3f]">Pension Contributions</span>
+                  <span className="font-semibold text-[#001f3f]">£85,000</span>
                 </div>
               </div>
             </div>
@@ -347,15 +347,15 @@ export default function Payroll() {
               <h4 className="font-semibold text-[#001f3f] mb-2">Submission History</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span>December 2024</span>
+                  <span className="text-[#001f3f]">December 2024</span>
                   <Badge variant="default">Submitted</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>November 2024</span>
+                  <span className="text-[#001f3f]">November 2024</span>
                   <Badge variant="default">Submitted</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>October 2024</span>
+                  <span className="text-[#001f3f]">October 2024</span>
                   <Badge variant="default">Submitted</Badge>
                 </div>
               </div>
@@ -379,15 +379,15 @@ export default function Payroll() {
               <h4 className="font-semibold text-[#001f3f] mb-2">Action Items</h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span>New starter forms</span>
+                  <span className="text-[#001f3f]">New starter forms</span>
                   <Badge variant="destructive">Urgent</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Pension opt-outs</span>
+                  <span className="text-[#001f3f]">Pension opt-outs</span>
                   <Badge variant="secondary">Review</Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Salary adjustments</span>
+                  <span className="text-[#001f3f]">Salary adjustments</span>
                   <Badge variant="outline">Pending</Badge>
                 </div>
               </div>
