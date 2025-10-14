@@ -521,80 +521,61 @@ export default function PersonalTax() {
     setActiveMainTab(mainTab)
   }
 
-  const kpis = [
-    {
-      title: 'Active SA Returns',
-      value: '12',
-      change: '+3 from last month',
-      icon: FileText,
-      color: 'text-blue-600'
-    },
-    {
-      title: 'Tax Saved (YTD)',
-      value: '£45,200',
-      change: '+18% vs last year',
-      icon: PoundSterling,
-      color: 'text-green-600'
-    },
-    {
-      title: 'CGT Optimization',
-      value: '£8,500',
-      change: 'Potential savings',
-      icon: TrendingUp,
-      color: 'text-purple-600'
-    },
-    {
-      title: 'IHT Exposure',
-      value: '£2.1M',
-      change: 'Across 8 estates',
-      icon: Heart,
-      color: 'text-red-600'
-    },
-    {
-      title: 'Pension Allowance',
-      value: '87%',
-      change: 'Average utilization',
-      icon: PiggyBank,
-      color: 'text-indigo-600'
-    },
-    {
-      title: 'Family Tax Savings',
-      value: '£12,400',
-      change: 'Through optimization',
-      icon: Users2,
-      color: 'text-teal-600'
-    }
-  ]
+  const calculateKPIs = () => {
+    const totalClients = individualClients.length
+    const activeReturns = saReturnsData.filter(r => r.status === 'in_progress' || r.status === 'draft')
+    const completedReturns = saReturnsData.filter(r => r.status === 'submitted' || r.status === 'approved')
+    const totalSavings = optimizationOpportunitiesData.reduce((sum, opp) => sum + (opp.potentialSaving || 0), 0)
+    const cgtCalculations = JSON.parse(localStorage.getItem('cgtCalculations') || '[]')
+    const totalCGTSavings = cgtCalculations.reduce((sum: number, calc: any) => sum + (calc.cgtDue || 0), 0)
+    
+    return [
+      {
+        title: 'Total Clients',
+        value: totalClients.toString(),
+        change: individualClients.length > 0 ? 'Individual clients' : 'No clients yet',
+        icon: Users,
+        color: 'text-[#001f3f]'
+      },
+      {
+        title: 'Active Returns',
+        value: activeReturns.length.toString(),
+        change: activeReturns.length > 0 ? 'In progress' : 'No active returns',
+        icon: FileText,
+        color: 'text-blue-600'
+      },
+      {
+        title: 'Completed Returns',
+        value: completedReturns.length.toString(),
+        change: completedReturns.length > 0 ? 'Submitted' : 'No completed returns',
+        icon: CheckCircle,
+        color: 'text-green-600'
+      },
+      {
+        title: 'Optimization Savings',
+        value: totalSavings > 0 ? `£${totalSavings.toLocaleString()}` : '£0',
+        change: `${optimizationOpportunitiesData.length} opportunities`,
+        icon: TrendingUp,
+        color: 'text-green-600'
+      },
+      {
+        title: 'CGT Calculations',
+        value: cgtCalculations.length.toString(),
+        change: totalCGTSavings > 0 ? `£${totalCGTSavings.toLocaleString()} liability` : 'No calculations',
+        icon: Calculator,
+        color: 'text-indigo-600'
+      },
+      {
+        title: 'Total Returns',
+        value: saReturnsData.length.toString(),
+        change: saReturnsData.length > 0 ? 'All statuses' : 'No returns yet',
+        icon: PoundSterling,
+        color: 'text-purple-600'
+      }
+    ]
+  }
 
-  const saReturns = [
-    {
-      id: '1',
-      client: 'John Smith',
-      taxYear: '2023-24',
-      status: 'in_progress',
-      dueDate: '2024-01-31',
-      estimatedTax: 4500,
-      progress: 75
-    },
-    {
-      id: '2',
-      client: 'Sarah Johnson',
-      taxYear: '2023-24',
-      status: 'review',
-      dueDate: '2024-01-31',
-      estimatedTax: 2800,
-      progress: 90
-    },
-    {
-      id: '3',
-      client: 'Michael Brown',
-      taxYear: '2023-24',
-      status: 'completed',
-      dueDate: '2024-01-31',
-      estimatedTax: 6200,
-      progress: 100
-    }
-  ]
+  const kpis = calculateKPIs()
 
 
   const getStatusIcon = (status: string) => {
