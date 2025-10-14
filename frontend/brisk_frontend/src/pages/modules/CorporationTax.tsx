@@ -1774,6 +1774,70 @@ export default function CorporationTax() {
         />
       )}
 
+      {/* Add/Edit Client Modal */}
+      {showClientModal && (
+        <CT600Form
+          data={editingClient ? {
+            companyName: editingClient.companyName,
+            companyNumber: editingClient.companyNumber,
+            utr: editingClient.utr,
+            accountingPeriodStart: editingClient.accountingPeriodStart,
+            accountingPeriodEnd: editingClient.accountingPeriodEnd,
+            status: editingClient.status,
+            syncedFromAccounts: false,
+            lastSyncDate: new Date().toISOString(),
+            profitBeforeTax: 0,
+            turnover: 0,
+            costOfSales: 0,
+            adminExpenses: 0,
+            otherIncome: 0,
+            financeCosts: 0,
+            depreciationAddback: 0,
+            capitalAllowances: 0,
+            adjustments: 0,
+            taxableProfit: 0,
+            corporationTaxRate: 19,
+            corporationTaxDue: 0,
+            rdRelief: 0,
+            otherReliefs: 0,
+            totalTaxDue: 0,
+            paymentDate: editingClient.taxDueDate,
+            filingDeadline: editingClient.filingDeadline,
+            notes: ''
+          } : {
+            companyName: '',
+            companyNumber: '',
+            utr: '',
+            accountingPeriodStart: '',
+            accountingPeriodEnd: '',
+            status: 'draft' as any,
+            syncedFromAccounts: false,
+            lastSyncDate: new Date().toISOString(),
+            profitBeforeTax: 0,
+            turnover: 0,
+            costOfSales: 0,
+            adminExpenses: 0,
+            otherIncome: 0,
+            financeCosts: 0,
+            depreciationAddback: 0,
+            capitalAllowances: 0,
+            adjustments: 0,
+            taxableProfit: 0,
+            corporationTaxRate: 19,
+            corporationTaxDue: 0,
+            rdRelief: 0,
+            otherReliefs: 0,
+            totalTaxDue: 0,
+            paymentDate: '',
+            filingDeadline: '',
+            notes: ''
+          }}
+          onSave={handleSaveClient}
+          onCancel={() => setShowClientModal(false)}
+          isEditing={!!editingClient}
+        />
+      )}
+
       {/* R&D Claims Add/Edit Modal */}
       {showRDModal && (
         <RDClaimForm
