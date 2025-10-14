@@ -777,33 +777,6 @@ export default function RDClaimForm({
 
             <TabsContent value="technical" className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="clinicalTrialCosts" className="text-[#001f3f]">Clinical Trial Costs</Label>
-                <Input
-                    id="clinicalTrialCosts"
-                    type="number"
-                    value={formData.clinicalTrialCosts}
-                    onChange={(e) => updateField('clinicalTrialCosts', parseFloat(e.target.value) || 0)}
-                    disabled={!editMode}
-                    className="border-[#001f3f]"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="otherCosts" className="text-[#001f3f]">Other Qualifying Costs</Label>
-                <Input
-                  id="otherCosts"
-                  type="number"
-                  value={formData.otherCosts}
-                  onChange={(e) => updateField('otherCosts', parseFloat(e.target.value) || 0)}
-                  disabled={!editMode}
-                  className="border-[#001f3f]"
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="technical" className="space-y-6">
-              <div className="space-y-2">
                 <Label htmlFor="technicalDescription" className="text-[#001f3f]">
                   Technical Description - What are you trying to achieve?
                 </Label>
