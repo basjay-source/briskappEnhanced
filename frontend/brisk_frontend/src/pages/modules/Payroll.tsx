@@ -33,9 +33,12 @@ import ResponsiveLayout from '@/components/ResponsiveLayout'
 import { SearchFilterHeader } from '../../components/SearchFilterHeader'
 import KPICard from '../../components/KPICard'
 import AIPromptSection from '../../components/AIPromptSection'
+import { hmrcPAYEService } from '@/services/hmrcPAYE'
+import { useToast } from '@/hooks/use-toast'
 
 export default function Payroll() {
   const isMobile = useIsMobile()
+  const { toast } = useToast()
   const [activeMainTab, setActiveMainTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState('')
   const [expandedCategories, setExpandedCategories] = useState<string[]>([])
@@ -54,6 +57,9 @@ export default function Payroll() {
   const [showRTIDrilldown, setShowRTIDrilldown] = useState(false)
   const [showCISDrilldown, setShowCISDrilldown] = useState(false)
   const [drilldownData, setDrilldownData] = useState<any>(null)
+  
+  const [hmrcAuthenticated, setHmrcAuthenticated] = useState(false)
+  const [isSubmittingRTI, setIsSubmittingRTI] = useState(false)
   
   const [employees, setEmployees] = useState<any[]>([
     {
@@ -144,6 +150,41 @@ export default function Payroll() {
       console.error('Error asking AI:', error)
     } finally {
       setIsAILoading(false)
+    }
+  }
+
+  useEffect(() => {
+    hmrcPAYEService.setNotificationCallback((notification) => {
+      toast({
+        variant: notification.type === 'error' || notification.type === 'warning' ? 'destructive' : 'default',
+        title: notification.title,
+        description: notification.message,
+      })
+    })
+
+    const authStatus = hmrcPAYEService.isAuthenticated()
+    setHmrcAuthenticated(authStatus)
+  }, [toast])
+
+  const handleHMRCAuthentication = () => {
+    const authUrl = hmrcPAYEService.initiateOAuth()
+    window.open(authUrl, '_blank', 'width=600,height=700')
+  }
+
+  const handleSubmitRTI = async (rtiData: any) => {
+    setIsSubmittingRTI(true)
+    try {
+      const response = await hmrcPAYEService.submitRTI(rtiData)
+      toast({
+        variant: 'default',
+        title: 'RTI Submission Successful',
+        description: `Your submission has been accepted by HMRC. Reference: ${response.submissionId}`,
+      })
+      setShowRTIModal(false)
+    } catch (error) {
+      console.error('RTI submission error:', error)
+    } finally {
+      setIsSubmittingRTI(false)
     }
   }
 
@@ -431,6 +472,64 @@ export default function Payroll() {
               )
             })}
           </div>
+
+          <Card className="border-2 border-[#001f3f] rounded-[2px]">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Shield className="h-5 w-5 mr-2 text-[#001f3f]" />
+                  <span className="text-[#001f3f]">HMRC Integration Status</span>
+                </div>
+                {hmrcAuthenticated ? (
+                  <Badge variant="default" className="bg-green-600">
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    Connected
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">
+                    <AlertCircle className="h-3 w-3 mr-1" />
+                    Not Connected
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 border-2 border-[#001f3f] rounded-[2px]">
+                  <p className="text-sm text-[#001f3f] mb-3">
+                    {hmrcAuthenticated 
+                      ? 'You are connected to HMRC and can submit RTI returns directly from this system.'
+                      : 'Connect to HMRC to enable automatic RTI submission and real-time validation.'}
+                  </p>
+                  {!hmrcAuthenticated && (
+                    <Button 
+                      onClick={handleHMRCAuthentication}
+                      className="w-full bg-[#00703c] hover:bg-[#005a30] text-white"
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Connect to HMRC
+                    </Button>
+                  )}
+                  {hmrcAuthenticated && (
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-[#001f3f]">
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                        RTI Submissions Enabled
+                      </div>
+                      <div className="flex items-center text-sm text-[#001f3f]">
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                        Real-time Validation
+                      </div>
+                      <div className="flex items-center text-sm text-[#001f3f]">
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                        Automatic Error Checking
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="grid gap-6 lg:grid-cols-2">
             <Card className="border-2 border-[#001f3f] rounded-[2px]">
