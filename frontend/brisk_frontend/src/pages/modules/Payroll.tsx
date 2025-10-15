@@ -433,7 +433,7 @@ export default function Payroll() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
+            <Card className="border-2 border-[#001f3f] rounded-[2px]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
@@ -460,7 +460,7 @@ export default function Payroll() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2 border-[#001f3f] rounded-[2px]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <TrendingUp className="h-5 w-5 mr-2" />
@@ -520,7 +520,7 @@ export default function Payroll() {
           </div>
           
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+            <Card className="border-2 border-[#001f3f] rounded-[2px]">
               <CardHeader>
                 <CardTitle className="text-[#001f3f]">Current Pay Period</CardTitle>
                 <CardDescription>December 2024 - Monthly</CardDescription>
@@ -543,7 +543,7 @@ export default function Payroll() {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="border-2 border-[#001f3f] rounded-[2px]">
               <CardHeader>
                 <CardTitle className="text-[#001f3f]">Payroll Checklist</CardTitle>
               </CardHeader>
@@ -861,7 +861,7 @@ export default function Payroll() {
             
             <div className="p-6 space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">Personal Information</CardTitle>
                   </CardHeader>
@@ -889,7 +889,7 @@ export default function Payroll() {
                   </CardContent>
                 </Card>
                 
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">Employment Details</CardTitle>
                   </CardHeader>
@@ -914,7 +914,7 @@ export default function Payroll() {
                 </Card>
               </div>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">Salary Breakdown</CardTitle>
                 </CardHeader>
@@ -944,7 +944,7 @@ export default function Payroll() {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">Recent Payment History</CardTitle>
                 </CardHeader>
@@ -1006,7 +1006,7 @@ export default function Payroll() {
             
             <div className="p-6 space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">Submission Information</CardTitle>
                   </CardHeader>
@@ -1030,7 +1030,7 @@ export default function Payroll() {
                   </CardContent>
                 </Card>
                 
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">Submission Summary</CardTitle>
                   </CardHeader>
@@ -1055,7 +1055,7 @@ export default function Payroll() {
                 </Card>
               </div>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">Payment Breakdown by Department</CardTitle>
                 </CardHeader>
@@ -1093,7 +1093,7 @@ export default function Payroll() {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">HMRC Response</CardTitle>
                 </CardHeader>
@@ -1133,7 +1133,7 @@ export default function Payroll() {
             
             <div className="p-6 space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">Business Information</CardTitle>
                   </CardHeader>
@@ -1157,7 +1157,7 @@ export default function Payroll() {
                   </CardContent>
                 </Card>
                 
-                <Card>
+                <Card className="border-2 border-[#001f3f] rounded-[2px]">
                   <CardHeader>
                     <CardTitle className="text-[#001f3f]">CIS Details</CardTitle>
                   </CardHeader>
@@ -1178,7 +1178,7 @@ export default function Payroll() {
                 </Card>
               </div>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">Recent Payment History</CardTitle>
                 </CardHeader>
@@ -1221,7 +1221,7 @@ export default function Payroll() {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="border-2 border-[#001f3f] rounded-[2px]">
                 <CardHeader>
                   <CardTitle className="text-[#001f3f]">Year to Date Summary</CardTitle>
                 </CardHeader>
